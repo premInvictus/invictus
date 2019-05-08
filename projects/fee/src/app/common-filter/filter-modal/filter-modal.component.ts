@@ -1,9 +1,8 @@
 import { Component, OnInit, Input, Inject, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { environment } from '../../../environments/environment';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { SisService, CommonAPIService, FeeService } from '../../_services/index';
 import { DynamicReport } from './filter-modal.model';
 import { MatTableDataSource, MatDatepickerInputEvent } from '@angular/material';
 
@@ -49,7 +48,10 @@ export class FilterModalComponent implements OnInit {
 		{ filterId: 'epd_parent_occupation_type', apiName: 'getOccupationType', fieldId: 'ocpt_id', fieldValue: 'ocpt_name' },
 		{ filterId: 'au_enrollment_status', apiName: 'getEnrollmentStatus', fieldId: 'enrol_id', fieldValue: 'enrol_name' },
 		{ filterId: 'upd_gender', apiName: 'getGender', fieldId: 'gen_id', fieldValue: 'gen_name' },
-		{ filterId: 'upd_category', apiName: 'getCategory', fieldId: 'cat_id', fieldValue: 'cat_name' }
+		{ filterId: 'upd_category', apiName: 'getCategory', fieldId: 'cat_id', fieldValue: 'cat_name' },
+		{ filterId: 'fcc_id', apiName: 'getConcessionCategory', fieldId: 'fcc_id', fieldValue: 'fcc_name' },
+		{ filterId: 'ts_id', apiName: 'getSlabs', fieldId: 'ts_id', fieldValue: 'ts_name' },
+		{ filterId: 'tr_id', apiName: 'getRoutes', fieldId: 'tr_id', fieldValue: 'tr_name' }
 	];
 	filtertype = null;
 	constructor(
@@ -57,6 +59,7 @@ export class FilterModalComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private fbuild: FormBuilder,
 		private sisService: SisService,
+		private feeService: FeeService,
 		private commonAPIService: CommonAPIService
 	) { }
 
@@ -68,7 +71,7 @@ export class FilterModalComponent implements OnInit {
 		this.filtersItemArray = this.data.filterResult;
 		console.log('in modal', this.filtersItemArray);
 		this.buildForm();
-		this.getFormFieldsForFilter('field');
+		// this.getFormFieldsForFilter('field');
 		this.getFormFieldsForFilter('filter');
 	}
 	closemodal(): void {
@@ -136,6 +139,7 @@ export class FilterModalComponent implements OnInit {
 		} else if (type === 'filter') {
 			this.filterArray = [];
 			param.ff_filter_status = 'Y';
+			param.ff_project_id = '3';
 		}
 		this.sisService.getFormFieldsForFilter(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -223,6 +227,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -237,6 +243,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -251,6 +259,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -265,6 +275,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -279,6 +291,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -293,6 +307,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -307,6 +323,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -321,6 +339,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -335,6 +355,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -349,6 +371,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -363,6 +387,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -377,6 +403,8 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -391,6 +419,56 @@ export class FilterModalComponent implements OnInit {
 										});
 									}
 								}
+							} else {
+								this.handleApiError(result);
+							}
+						});
+						break;
+						case 'getConcessionCategory':
+						this.feeService.getConcessionCategory({}).subscribe((result: any) => {
+							if (result && result.status === 'ok') {
+								if (result.data.length > 0) {
+									for (const item1 of result.data) {
+										this.dropdownArray.push({
+											field_id: item1[item.fieldId],
+											field_name: item1[item.fieldValue]
+										});
+									}
+								}
+							} else {
+								this.handleApiError(result);
+							}
+						});
+						break;
+						case 'getSlabs':
+						this.feeService.getSlabs({}).subscribe((result: any) => {
+							if (result && result.status === 'ok') {
+								if (result.data.length > 0) {
+									for (const item1 of result.data) {
+										this.dropdownArray.push({
+											field_id: item1[item.fieldId],
+											field_name: item1[item.fieldValue]
+										});
+									}
+								}
+							} else {
+								this.handleApiError(result);
+							}
+						});
+						break;
+						case 'getRoutes':
+						this.feeService.getRoutes({}).subscribe((result: any) => {
+							if (result && result.status === 'ok') {
+								if (result.data.length > 0) {
+									for (const item1 of result.data) {
+										this.dropdownArray.push({
+											field_id: item1[item.fieldId],
+											field_name: item1[item.fieldValue]
+										});
+									}
+								}
+							} else {
+								this.handleApiError(result);
 							}
 						});
 						break;
@@ -564,5 +642,10 @@ export class FilterModalComponent implements OnInit {
 			eachFilter.discrete = [];
 			eachFilter.discretevalue = '';
 		});
+	}
+	handleApiError(value) {
+		if (value.status === 'error') {
+			this.commonAPIService.showSuccessErrorMessage(value.message, 'error');
+		}
 	}
 }
