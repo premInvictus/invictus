@@ -261,7 +261,7 @@
               "projects/sis/src/assets"
             ],
             "styles": [
-              "projects/sis/src/styles.css"
+              "projects/sis/src/styles.scss"
             ],
             "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
           },
@@ -380,7 +380,7 @@
               "projects/fee/src/assets"
             ],
             "styles": [
-              "projects/fee/src/styles.css"
+              "projects/fee/src/styles.scss"
             ],
             "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
           },

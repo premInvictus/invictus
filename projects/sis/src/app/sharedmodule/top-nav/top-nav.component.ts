@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSidenav, MatTooltip } from '@angular/material';
-import { environment } from '../../../environments/environment';
-import { ManageUsersService } from '../../manage-users/service/manage-users.service';
-import { SisService, CommonAPIService } from '../../_services/index';
-import { Router, CanActivate, ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
+import { environment } from 'src/environments/environment';
+import { UserTypeService } from 'projects/fee/src/app/usertype/usertype.service';
+import { SisService, CommonAPIService } from 'projects/fee/src/app/_services';
 @Component({
 	selector: 'app-top-nav',
 	templateUrl: './top-nav.component.html',
@@ -18,8 +18,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild('sidenav') sidenav: MatSidenav;
 	@ViewChild('tooltip') tooltip: MatTooltip;
 
-
-	hosturl = environment.apiUrl;
+	hosturl = environment.apiAxiomUrl;
 	today = new Date().getFullYear();
 	schooldetailsArray: any[];
 	currentUser: any = {};
@@ -56,7 +55,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
 		private sisService: SisService,
 		private router: Router,
-		private manageUsersService: ManageUsersService,
+		private userTypeService: UserTypeService,
 		private commonAPIService: CommonAPIService, private _cookieService: CookieService,
 		private route: ActivatedRoute) {
 
@@ -68,6 +67,8 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	ngOnDestroy(): void {
 		this.mobileQuery.removeListener(this._mobileQueryListener);
 	}
+
+
 
 
 	sidenavOpen() {
@@ -84,10 +85,17 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getSession();
 		this.getProjectList();
+		const wrapperMenu = document.querySelector('.wrapper-menu');
+
+		wrapperMenu.addEventListener('click', function () {
+			wrapperMenu.classList.toggle('open');
+		});
 	}
 
 	ngAfterViewInit() {
-		this.tooltip.show();
+		if (this.tooltip) {
+			this.tooltip.show();
+		}
 	}
 	getSession() {
 		this.sisService.getSession().subscribe((result2: any) => {
@@ -139,7 +147,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 	}
 	getProjectList() {
-		this.manageUsersService.getProjectList({}).subscribe(
+		this.userTypeService.getProjectList({}).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.projectsArray = result.data;
@@ -148,24 +156,19 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	logout() {
-		if (this._cookieService.get('userData')) {
-			this.userData = JSON.parse(this._cookieService.get('userData'));
-			if (this.userData) {
-				this.sisService.logout({ au_login_id: this.userData['LN'] }).subscribe(
-					(result: any) => {
-						if (result.status === 'ok') {
-							localStorage.clear();
-							this._cookieService.removeAll();
-							this.router.navigate(['/login']);
-						} else {
-							this.commonAPIService.showSuccessErrorMessage('Error While Logout', 'error');
-						}
-					});
-			}
-		} else {
-			this.router.navigate(['/login']);
+		this.userData = JSON.parse(this._cookieService.get('userData'));
+		if (this.userData) {
+			this.sisService.logout({ au_login_id: this.userData['LN'] }).subscribe(
+				(result: any) => {
+					if (result.status === 'ok') {
+						localStorage.clear();
+						this._cookieService.removeAll();
+						this.router.navigate(['/login']);
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Error While Logout', 'error');
+					}
+				});
 		}
 	}
-
 
 }
