@@ -37,6 +37,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	currentLoginId: string;
 	minInvoiceDate = new Date();
 	minDueDate = new Date();
+	pageEvent: PageEvent;
 
 	getCalculationMethods() {
 		this.invoiceType = [];
@@ -93,7 +94,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		private feeService: FeeService,
 		private sisService: SisService,
 		private fb: FormBuilder,
-		private commonAPIService: CommonAPIService,
+		public commonAPIService: CommonAPIService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private processtypeService: ProcesstypeService

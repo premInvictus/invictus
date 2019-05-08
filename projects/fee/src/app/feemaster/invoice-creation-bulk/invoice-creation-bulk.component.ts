@@ -43,6 +43,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	minInvoiceDate = new Date();
 	minDueDate = new Date();
 	totalRecords: any;
+	pageEvent: PageEvent;
 	getClass() {
 		this.classArray = [];
 		this.sisService.getClass({}).subscribe((result: any) => {
@@ -111,7 +112,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		public dialog: MatDialog,
 		private feeService: FeeService,
 		private fb: FormBuilder,
-		private commonAPIService: CommonAPIService,
+		public commonAPIService: CommonAPIService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private sisService: SisService
@@ -270,6 +271,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	openFilterDialog() {
 		const dialogRefFilter = this.dialog.open(FilterModalComponent, {
 			width: '80%',
+			height: '100%',
 			data: {
 				filterResult: this.filterResult,
 				pro_id: '3'

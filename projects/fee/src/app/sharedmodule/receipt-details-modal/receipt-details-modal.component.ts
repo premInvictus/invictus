@@ -30,7 +30,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data,
 		private feeService: FeeService,
 		private fb: FormBuilder,
-		private commonAPIService: CommonAPIService
+		public commonAPIService: CommonAPIService
 	) { }
 
 	ngOnInit() {
@@ -70,7 +70,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		console.log(this.invoiceBifurcationArray);
 		this.invoiceDetialsTable(this.invoiceBifurcationArray);
 	}
-	recalculateInvoice() {
+	recalculateInvoice(event) {
 		this.feeService.insertInvoice({ recalculation_flag: '1', inv_id: [this.invoiceDetails.inv_id], inv_activity: 'invoice' })
 			.subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -128,7 +128,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			this.openEditDialog({ data: datalist, reqParam: params });
 		}
 	}
-	deleteInvoice() {
+	deleteInvoice(event) {
 		this.feeService.deleteInvoice({ inv_id: [this.invoiceDetails.inv_id] })
 			.subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -174,5 +174,6 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			}
 		});
 	}
+	editConfirm() {}
 
 }
