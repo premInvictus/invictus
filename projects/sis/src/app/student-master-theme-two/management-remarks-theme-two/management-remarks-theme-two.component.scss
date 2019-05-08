@@ -1,0 +1,10 @@
+
+:host ::ng-deep #marks_remark .mat-form-field-infix { 
+    
+    width:0 !important;
+    height:0 !important;
+  }
+
+  :host ::ng-deep #marks_remark .table td, .table th {
+      vertical-align: middle !important;
+  }

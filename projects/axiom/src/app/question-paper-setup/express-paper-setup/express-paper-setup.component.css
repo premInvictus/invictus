@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+  overflow: hidden;
+}
+
+.main-body {
+	background-color: #dddede;
+}
+
+.user-table {
+  padding-top: 10px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+tr, th, td {
+  padding: 5px;
+}
+
+.quesSelected {
+  float: right;
+  cursor: not-allowed;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.25rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  border-radius: .2rem;
+  margin-bottom: 0px;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.modal-backdrop.show {
+  opacity: none !important;
+}
+
+.example-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 20%;
+}
+
+/* .mat-table {
+  overflow: auto;
+  max-height: 550px;
+} */
+
+.top_header {
+  background-color: #e6e5df;
+}
+
+.mat-header-cell {
+  color: #343a40;
+  font-weight: 500;
+}
+
+.mat-cell
+{
+  overflow:visible;
+}
+
+.mat-row
+{
+  margin-top:10px;
+}
+
+
+.padding
+{
+  padding-left:10px;
+  text-align: vertical;
+}
+
+.btn-stepfour {
+  float:right;
+}
+
+.fa-lg{
+  padding-left: 40px;
+}
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.margin-top-10 {
+  margin-top: 10px;
+}
+table {
+  font-size: 14px;
+}
+
+
+
+@media screen and (max-width:362px) {
+  #materil {
+    width: 100%;
+    height: 458px;
+    position: relative;
+    display: initial;
+    flex-direction: column;
+    min-width: 300px;
+ }
+}
+.add-padding-left-express-level1
+{
+  padding-left: 15rem !important
+}
+
+.add-padding-left-express-level2
+{
+  padding-left: 20rem !important
+}
+.mat-chip-list-inline {
+  display: inline-block;
+}
+.mat-cell {
+  word-break: break-word !important;
+}
+@-moz-document url-prefix() {
+  .mat-cell {
+      word-break: break-all !important;
+    }
+}

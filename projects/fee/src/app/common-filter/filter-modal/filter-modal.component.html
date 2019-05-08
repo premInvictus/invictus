@@ -1,0 +1,189 @@
+<div *ngIf="filterone">
+  <div class="filter-header-container">
+    <div class="row">
+      <div class="col-12 margin-top-10">
+        <h4>Filter</h4>
+      </div>
+    </div>
+  </div>
+  <div class="filter-body-white-container-filterone">
+    <div class="row table-container">
+      <div class="col-12 remove-col-padding" *ngIf="filterdiv">
+        <table mat-table [dataSource]="dataSource" class=" table-100">
+          <ng-container matColumnDef="fieldlabel">
+            <th mat-header-cell *matHeaderCellDef> Field </th>
+            <td mat-cell *matCellDef="let element" (click)="filterTwo(element)" class="text-center filterpointer" > {{element.fieldlabel}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="fromto">
+            <th mat-header-cell *matHeaderCellDef> From - To </th>
+            <td mat-cell *matCellDef="let element" class="text-center"> {{element.fromto}} </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="equalto">
+            <th mat-header-cell *matHeaderCellDef> Equal To </th>
+            <td mat-cell *matCellDef="let element" class="text-center"> {{element.equalto}} </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="discrete">
+            <th mat-header-cell *matHeaderCellDef> Discrete </th>
+            <td mat-cell *matCellDef="let element" class="text-center"> {{element.discrete}} </td>
+          </ng-container>
+
+          <!-- Action Column -->
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <td mat-cell *matCellDef="let element" class="text-center"> <button mat-raised-button class="print-btn btn-spacer"
+                (click)="resetOneFilter(element)">Reset</button> </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </div>
+    <div class="filter-body-white-container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <br>
+          <br>
+          <button mat-raised-button class="btn-success" (click)="filterSubmit()">Submit</button>
+          <button mat-raised-button class="btn-danger btn-spacer" (click)="filterCancel()">Cancel</button>
+          <br>
+          <br>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div *ngIf="filterdivtwo">
+  <div class="filter-header-container">
+    <div class="row">
+      <div class="col-12 margin-top-10">
+        <h4>Filter</h4>
+      </div>
+    </div>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-12 ">
+          <i class="far fa-hand-point-right"></i>&nbsp;&nbsp;<span>{{currentFilterStatus.fieldlabel}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-white-container">
+      <ng-container *ngIf="currentFilterStatus.ff_field_type == 'text'">
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="From" [(value)]="fromvalue" (change)="fromTextValue($event, 'fromto')">
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="To" [(value)]="tovalue" (change)="toTextValue($event, 'fromto')">
+            </mat-form-field>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currentFilterStatus.ff_field_type == 'date'">
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field class="form-field">
+              <input matInput [matDatepicker]="picker" [(value)]="fromvalue" placeholder="From"
+                (dateChange)="fromDateValue($event, 'fromto')">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field class="form-field">
+              <input matInput [matDatepicker]="picker1" [(value)]="tovalue" placeholder="To"
+                (dateChange)="toDateValue($event, 'fromto')">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </ng-container>
+      <div class="row" *ngIf="currentFilterStatus.ff_field_type == 'text'">
+        <div class="col-6">
+          <mat-form-field class="form-field">
+            <mat-select placeholder="Equal To" [(value)]="equaltoFC">
+              <mat-option value="EqualTo" selected>Equal To</mat-option>
+              <mat-option value="greterThan">Greater Than</mat-option>
+              <mat-option value="greterThanEqualTo">Greater Than Equal To</mat-option>
+              <mat-option value="lessThan">Less Than</mat-option>
+              <mat-option value="lessThanEqualTo">Less Than Equal To</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <ng-container *ngIf="currentFilterStatus.ff_field_type == 'text'">
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="form-field">
+                  <input matInput placeholder="Enter Value" [(value)]="equalto" (change)="equaltoTextValue($event, 'equalto')">
+                </mat-form-field>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+    </div>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-6">
+          <span>Add Discrete Value</span>
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-white-container">
+      <div class="row">
+        <div class="col-12 filter-discrete-val-container">
+          <ng-container *ngIf="currentFilterStatus.ff_field_type == 'text'">
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="form-field">
+                  <input matInput placeholder="Enter Value" [(value)]="discreteValue"
+                    (change)="discreteTextValue($event, 'discrete')">
+                </mat-form-field>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="currentFilterStatus.ff_field_type == 'dropdown'">
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="form-field">
+                  <mat-select placeholder="Select Value" [(value)]="discreteValue"
+                    (selectionChange)="discreteSelectValue($event, 'discrete')" multiple>
+                    <mat-option *ngFor="let item of dropdownArray" [value]="item.field_id">
+                      {{item.field_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+      </div>
+      <hr>
+      <br>
+      <br>
+      <div class="row">
+        <div class="col-12 text-center">
+          <button mat-raised-button class="btn-success" (click)="filterok()">Ok</button>
+          <button mat-raised-button class="btn-danger btn-spacer" (click)="gobacktofilterOne()">Cancel</button>
+        </div>
+      </div>
+      <br>
+      <br>
+    </div>
+  </div>
+</div>

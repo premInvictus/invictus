@@ -1,0 +1,128 @@
+<div class="container-box__grey">
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-content__container margin-bottom-140">
+        <mat-card-title>
+          <h1>Stoppages</h1>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-4 custom-col-27">
+              <form [formGroup]="transportStopagges" autocomplete="off">
+                <div class="row">
+                  <div class="col-12 margin-top-25">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Transport Stop Name</mat-label>
+                      <input matInput placeholder="Transport Stop Name" formControlName="transport_stop_name" required>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Distance From School(in KMs)</mat-label>
+                      <input matInput placeholder="Distance From School(in KMs)"
+                        formControlName="transport_distance_from_school" required>
+                    </mat-form-field>
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Select Slab</mat-label>
+                      <mat-select placeholder="Select Slab" formControlName="transport_slab" required>
+                        <mat-option *ngFor="let item of slabsData; let i = index;" [value]="item?.ts_id">
+                          {{item?.ts_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="text-center margin-top-25">
+                  <div class="inline-flex">
+                  <button mat-raised-button class="btn-primary btn-custom btn-success" (click)="saveForm()">Submit</button>
+                  <button mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer"
+                    (click)="resetForm()">Reset</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="col-1 custom-col-2">
+              <div class="vertical-line"></div>
+            </div>
+            <div class="col-7 custom-col-69">
+              <div class="row">
+                <div class="col-12 remove-col-padding">
+                  <div class="table-container">
+                    <mat-form-field>
+                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      <i class="fas fa-filter table-filter" matPrefix></i>
+
+                    </mat-form-field>
+                    <table class="table-100 text-center " mat-table [dataSource]="stoppageDataSource" matSort>
+
+                      <ng-container matColumnDef="counter">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> S.No. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.counter}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="stop_name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Stop Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.stop_name | titlecase}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="distance_from_school">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Distance From School </th>
+                        <td mat-cell *matCellDef="let element"> {{element.distance_from_school}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="transport_slab">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Transport Slab </th>
+                        <td mat-cell *matCellDef="let element"> {{element.transport_slab}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                        <!-- <td mat-cell *matCellDef="let element"> {{element.status}} </td> -->
+                        <td mat-cell *matCellDef="let element">
+                          <mat-slide-toggle [ngModel]="element.status == '1' ? 'checked' : ''"
+                            (change)="changeStatus(element, $event)"></mat-slide-toggle>
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Action </th>
+                        <td mat-cell *matCellDef="let element"> <i class="material-icons icon-edit"
+                            (click)="editStoppage(element)">
+                            create
+                          </i> <i class="material-icons icon-danger icon-spacer" (click)="deleteStoppage(element)">
+                            delete
+                          </i> </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+                    </table>
+                    <table class="table-100 text-center" style="margin-top:5px;">
+                        <tr *ngIf="stoppageRoutesData.length == 0">
+                          <td colspan="6">No Record Found</td>
+                        </tr>
+                      </table>
+                    <mat-paginator #paginator  [hidden]="!(stoppageRoutesData.length>0)"  [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                    </mat-paginator>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete!'" (deleteOk)="deleteConfirm($event)">
+  </app-delete-modal>

@@ -1,0 +1,244 @@
+<div class="container-box__white">
+
+   <div class="row">
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+     </div> -->
+      <div class="col-8">
+         <h4 class="text-uppercase"><b>Skills and rewards</b></h4>
+      </div>
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+     </div> -->
+      <div class="col-4">
+         <div class="float-right">
+            <button *ngIf="viewOnly && isExistUserAccessMenu('request')" mat-raised-button class="btn-neutral-dull" (click)="enableEditRequest()"><mat-icon class="btn-top-icon">create</mat-icon>&nbsp; &nbsp;Edit Request</button>
+         </div>
+      </div>
+   </div>
+   <br>
+   <h6 class="text-uppercase text-center"><b>Add Activity</b></h6>
+   <form [formGroup]="activityform">
+      <div class="row">
+         <div class="col-4" *ngIf="checkIfFieldExist('esk_activity_name')">
+            <mat-form-field class="form-field">
+               <mat-select placeholder="Activity Name" formControlName="esk_activity_name" required [disabled]="viewOnly"
+                  [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of activityArray" [value]="item.act_id">{{item.act_name}}</mat-option>
+               </mat-select>
+               <mat-error>
+                  Please select an activity name
+               </mat-error>
+            </mat-form-field>
+         </div>
+         <div class="col-4" *ngIf="checkIfFieldExist('esk_level_of_interest')">
+            <mat-form-field class="form-field">
+               <mat-select placeholder="Level of Interest" formControlName="esk_level_of_interest" required [disabled]="viewOnly"
+                  [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of levelOfIntrestArray" [value]="item.loi_id">{{item.loi_name}}</mat-option>
+               </mat-select>
+               <mat-error>
+                  Please select level of interest
+               </mat-error>
+            </mat-form-field>
+         </div>
+         <div class="col-4" *ngIf="checkIfFieldExist('esk_activity_club')">
+            <mat-form-field class="form-field">
+               <mat-select placeholder="Activity Club" formControlName="esk_activity_club" required [disabled]="viewOnly"
+                  [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of activityClubArray" [value]="item.acl_id">{{item.acl_name}}</mat-option>
+               </mat-select>
+               <mat-error>
+                  Please select a activity club
+               </mat-error>
+            </mat-form-field>
+         </div>
+         <div class="col-4" *ngIf="checkIfFieldExist('esk_enrollment_duration')">
+            <mat-form-field class="form-field">
+               <input class="text-capitalize" matInput formControlName="esk_enrollment_duration" placeholder="Enter duration in days or months..."
+                  [errorStateMatcher]="confirmValidParentMatcher" pattern="[0-9]*" minlength="1" maxlength="50"
+                  required [readonly]="viewOnly">
+               <mat-error>
+                  Duration in days or months is required in number format
+               </mat-error>
+            </mat-form-field>
+         </div>
+         <div class="col-4" *ngIf="checkIfFieldExist('esk_teacher_remark')">
+            <mat-form-field class="form-field">
+               <input class="text-capitalize" matInput placeholder="Teacher Remarks eg. Excellent" formControlName="esk_teacher_remark"
+                  required [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+               <mat-error>
+                  Teacher Remark is required
+               </mat-error>
+            </mat-form-field>
+         </div>
+      </div>
+   </form>
+   <br>
+   <div class="row">
+      <div class="col-12">
+         <div class="text-center">
+            <button *ngIf="!activityUpdateFlag" mat-raised-button class="btn-success" [disabled]="viewOnly" (click)="addActivityList()">Add
+               to list</button>
+            <button *ngIf="activityUpdateFlag" mat-raised-button class="btn-success" [disabled]="viewOnly" (click)="updateActivityList()">Update</button>
+         </div>
+         <br>
+      </div>
+   </div>
+   <br>
+   <div *ngIf="finalActivityArray.length > 0 " class="row">
+      <div class="col-12">
+         <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+               <tr class="custom-tr">
+                  <th class="custom-th">Sr.No</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('esk_activity_name')">Activity Name</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('esk_activity_club')">Activity Club</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('esk_level_of_interest')">Level of intrest</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('esk_enrollment_duration')">Enrollment Duration</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('esk_teacher_remark')">Teacher Remark</th>
+                  <th class="custom-th" *ngIf="viewOnly == false">Modify</th>
+               </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+               <tr class="custom-tr" *ngFor="let item of finalActivityArray;let i=index">
+                  <td class="custom-td">{{i+1}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('esk_activity_name')">{{getActivityName(item.esk_activity_name)}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('esk_activity_club')">{{getActivityClubName(item.esk_activity_club)}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('esk_level_of_interest')">{{getLevelofInterestName(item.esk_level_of_interest)}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('esk_enrollment_duration')">{{item.esk_enrollment_duration}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('esk_teacher_remark')">{{item.esk_teacher_remark}}</td>
+                  <td class="custom-td" *ngIf="viewOnly == false"><i class="far fa-edit modify-icon" (click)="editActivityList(i)"></i>&nbsp;
+                     <i class="far fa-trash-alt inline-form-radio-spacing delete-icon" (click)="deleteActivityList(i)"></i>
+                  </td>
+            </tbody>
+         </table>
+      </div>
+   </div>
+   <br>
+   <br>
+   <h6 class="text-uppercase text-center"><b>Add Awards</b></h6>
+   <form [formGroup]="awardsform">
+      <div class="row">
+         <div class="col-4" *ngIf="checkIfFieldExist('eaw_activity_name')">
+            <mat-form-field class="form-field">
+               <mat-select placeholder="Activity Name" [disabled]="viewOnly" formControlName="eaw_activity_name"
+                  required [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of activityArray" [value]="item.act_id">{{item.act_name}}</mat-option>
+               </mat-select>
+               <mat-error>
+                  Please select an activity name
+               </mat-error>
+            </mat-form-field>
+         </div>
+         <div class="col-4" *ngIf="checkIfFieldExist('eaw_level_of_interest')">
+            <mat-form-field class="form-field">
+               <mat-select placeholder="Level of Interest" [disabled]="viewOnly" formControlName="eaw_level_of_interest"
+                  required [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of levelOfIntrestArray" [value]="item.loi_id">{{item.loi_name}}</mat-option>
+               </mat-select>
+               <mat-error>
+                  Please select a level of interest
+               </mat-error>
+            </mat-form-field>
+         </div>
+         <div class="col-4" *ngIf="checkIfFieldExist('eaw_authority')">
+            <mat-form-field class="form-field">
+               <mat-select placeholder="Awarding Authority.." [disabled]="viewOnly" formControlName="eaw_authority"
+                  required [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of authorityArray" [value]="item.aut_id">{{item.aut_name}}</mat-option>
+               </mat-select>
+               <mat-error>
+                  Please select a authority name
+               </mat-error>
+            </mat-form-field>
+         </div>
+         <div class="col-4" *ngIf="checkIfFieldExist('eaw_event_level')">
+            <mat-form-field class="form-field">
+               <mat-select placeholder="Event Level" formControlName="eaw_event_level" required [disabled]="viewOnly"
+                  [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of eventLevelArray" [value]="item.el_id">{{item.el_name}}</mat-option>
+               </mat-select>
+               <mat-error>
+                  Please select a event level
+               </mat-error>
+            </mat-form-field>
+         </div>
+         <div class="col-4" *ngIf="checkIfFieldExist('eaw_teacher_remark')">
+            <mat-form-field class="form-field">
+               <input class="text-capitalize" matInput placeholder="Teacher Remarks eg. Excellent" [readonly]="viewOnly" formControlName="eaw_teacher_remark"
+                  required [errorStateMatcher]="confirmValidParentMatcher">
+               <mat-error>
+                  Teacher Remark is required
+               </mat-error>
+            </mat-form-field>
+         </div>
+      </div>
+   </form>
+   <br>
+   <div class="row">
+      <div class="col-12">
+         <div class="text-center">
+            <button *ngIf="!awardUpdateFlag" mat-raised-button class="btn-success" [disabled]="viewOnly" (click)="addAwardsList()">Add
+               to list</button>
+            <button *ngIf="awardUpdateFlag" mat-raised-button class="btn-success" [disabled]="viewOnly" (click)="updateAwardsList()">Update</button>
+         </div>
+         <br>
+      </div>
+   </div>
+   <br>
+   <div *ngIf="finalAwardArray.length > 0 " class="row">
+      <div class="col-12">
+         <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+               <tr class="custom-tr">
+                  <th class="custom-th">Sr.No</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('eaw_activity_name')">Activity Name</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('eaw_level_of_interest')">Level of intrest</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('eaw_authority')">Authority</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('eaw_event_level')">Event Level</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('eaw_teacher_remark')">Teacher Remark</th>
+                  <th class="custom-th" *ngIf="viewOnly == false">Modify</th>
+               </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+               <tr class="custom-tr" *ngFor="let item of finalAwardArray;let i=index">
+                  <td class="custom-td">{{i+1}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('eaw_activity_name')">{{getActivityName(item.eaw_activity_name)}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('eaw_level_of_interest')">{{getLevelofInterestName(item.eaw_level_of_interest)}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('eaw_authority')">{{getAuthorityName(item.eaw_authority)}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('eaw_event_level')">{{getEventLevelName(item.eaw_event_level)}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('eaw_teacher_remark')">{{item.eaw_teacher_remark}}</td>
+                  <td class="custom-td" *ngIf="viewOnly == false"><i class="far fa-edit modify-icon" (click)="editAwardsList(i)"></i>&nbsp;
+                     <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="deleteAwardList(i)"></i>
+                  </td>
+            </tbody>
+         </table>
+      </div>
+   </div>
+   <br>
+   <br>
+   <div class="text-center tab-margin-button-bottom">
+      <button *ngIf="addOnly && !editRequestFlag" mat-raised-button class="btn-success" (click)="insertSkillsAwards()">Save
+         & Continue</button>
+      <button *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer" (click)="updateSkillsAwards(true)">Submit</button>
+      <button  *ngIf="saveFlag" mat-raised-button class="btn-green btn-spacer" (click)="updateSkillsAwards(false)">Update
+         & Continue</button>
+      <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag" (click)="checkFormChangedValue();openEditDialog({data: [finalArray] ,reqParam: [reqObj]})">Edit
+         & Continue</button>
+      <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+   </div>
+   <br>
+   <br>
+   <br>
+   <br>
+   <br>
+</div>
+<app-edit-request-modal #editReference (confirm)="editConfirm($event)"></app-edit-request-modal>

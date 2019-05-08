@@ -1,0 +1,97 @@
+.user-table {
+    padding-top: 10px;
+    overflow-x: auto;
+    width: 100%;
+}
+
+tr, th, td {
+    padding: 5px;
+}
+
+.create-new-school {
+    float: right;
+    margin-right: 10px;
+}
+
+.form-group-filter {
+  margin-bottom: 0rem;
+}
+
+.card1 {
+    border-style: dashed;
+    border-color: #6f42c1;
+    border-width: 0.1rem;
+}
+
+.card2 {
+
+  border-style: dashed;
+    border-color: #fd7e14;
+    border-width: 0.1rem;
+}
+
+.card3 {
+
+  border-style: dashed;
+    border-color:  #007bff;
+    border-width: 0.1rem;
+}
+
+.top-card {
+  border-color: #fff;
+}
+
+.inner-card {
+  border-color: #fff;
+}
+
+table {
+  font-size: 14px;
+}
+
+.flag-excellent {
+    color: #28a745;
+}
+
+.flag-attention {
+    color: #dc3545;
+}
+
+.flag-critical {
+    color: #ffc108;
+}
+.card-body {
+    font-size: 14px;
+}
+.review {
+        color: #ffc107;
+    }
+
+.skip{
+        color: #6610f2;
+    }
+
+@media screen and (max-width: 1448px) {
+    .margin-right-list {
+        padding-right: 20%;
+    }
+.quest-btn {
+        padding-left: 2px;
+        border-radius: 100%;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .margin-right-list {
+        padding-right: 20%;
+    }
+  
+}
+
+@media only screen and (max-width:1543px){
+    .text-center{ 
+     margin-top: 53px;
+    }
+}
+  

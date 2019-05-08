@@ -1,0 +1,68 @@
+<!--Style 1-->
+    <div style="float: right">
+    <button mat-icon-button class="close-button" (click)="closeDialog()">
+    <img src="../../../../../assets/images/clear-button.svg"></button>
+    </div>
+    <ng-container *ngIf="data.adm_no">
+    <h4 class="text-center text-uppercase">{{studentDetails.au_full_name}}</h4>
+    <div *ngIf="idCardConfig.ps_card_style == '1'" 
+    id="printCard" style="margin-left: -80px">
+    <app-idcard-style1
+    [studentDetails]="studentDetails"
+    [idCardConfig]="idCardConfig"></app-idcard-style1>
+    <br>
+    <div class="text-center">
+      <button mat-button class="btn-green" (click)="print()">Print</button>
+    </div>
+    </div>
+    <div *ngIf="idCardConfig.ps_card_style == '2'" 
+    id="printCard" style="margin-left: -80px">
+    <app-idcard-style2
+    [studentDetails]="studentDetails"
+    [idCardConfig]="idCardConfig"></app-idcard-style2>
+    <br>
+    <div class="text-center">
+      <button mat-button class="btn-green" (click)="print()">Print</button>
+    </div>
+    </div>
+    <div *ngIf="idCardConfig.ps_card_style == '3'" 
+    id="printCard" style="margin-left: -80px">
+    <app-idcard-style3
+    [studentDetails]="studentDetails"
+    [idCardConfig]="idCardConfig"></app-idcard-style3>
+    <br>
+    <div class="text-center">
+      <button mat-button class="btn-green" (click)="print()">Print</button>
+    </div>
+    </div>
+    </ng-container>
+    <!--Bulk-->
+    <div id="printCard" *ngIf="!data.adm_no">
+      <div *ngFor="let item of studentDetailsArray">
+      <div *ngIf="idCardConfig.ps_card_style == '1'" 
+      style="margin-left: -80px">
+      <app-idcard-style1
+      [studentDetails]="item"
+      [idCardConfig]="idCardConfig"></app-idcard-style1>
+      <br>
+      </div>
+      <div *ngIf="idCardConfig.ps_card_style == '2'" 
+      style="margin-left: -80px">
+      <app-idcard-style2
+      [studentDetails]="item"
+      [idCardConfig]="idCardConfig"></app-idcard-style2>
+      <br>
+      </div>
+      <div *ngIf="idCardConfig.ps_card_style == '3'" 
+      style="margin-left: -80px">
+      <app-idcard-style3
+      [studentDetails]="item"
+      [idCardConfig]="idCardConfig"></app-idcard-style3>
+      <br>
+      </div>
+      </div>
+      <div class="text-center">
+          <button mat-button class="btn-green" (click)="print()">Print</button>
+        </div>
+      </div>
+    <!--End-->

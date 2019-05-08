@@ -1,0 +1,497 @@
+<div *ngIf="dynamicreport">
+  <div class="container-box__grey">
+    <div class="container-box__white">
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            
+            <div class="col-4">
+              <form [formGroup]="generateReportForm" novalidate>
+              <div class="container-outline__black ">
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input matInput placeholder="Report Title" class="text-capitalize" formControlName="title" required>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <mat-select placeholder="Enrollment Type" formControlName="enrollment_type" required>
+                        <mat-option value="1" >Enquiry</mat-option>
+                        <mat-option value="2" >Registration</mat-option>
+                        <mat-option value="3" >Provisional</mat-option>
+                        <mat-option value="4" >Admission</mat-option>
+                        <mat-option value="5" >Alumini</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <mat-select placeholder="Select Action" formControlName="action" required>
+                        <mat-option value="pdf">pdf</mat-option>
+                        <mat-option value="excel">excel</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 tab-remove-left-right-padding text-center">
+                    <div class="hide-for-tab-screen">
+                    <button mat-raised-button class="btn-success" (click)="finalSubmit()" >Submit</button>
+                    <button mat-raised-button class="btn-neutral btn-spacer" (click)="filter()"><mat-icon class="material-icon mat-icon-no-color">tune</mat-icon>&nbsp;Filter</button>
+                    <button mat-raised-button class="btn-setting btn-spacer" (click)="sort()"><mat-icon class="material-icon mat-icon-no-color">sort</mat-icon>&nbsp;Sort</button>
+                    <button mat-raised-button class="btn-danger btn-spacer" (click)="ResetForm()">Reset</button>
+                  </div>
+                    <div class="hide-for-large-screen">
+                        <button mat-raised-button class="btn-success" (click)="finalSubmit()" >Submit</button>
+                        <button mat-raised-button class="btn-neutral tab-btn-spacer" (click)="filter()">Filter</button>
+                        <button mat-raised-button class="btn-setting tab-btn-spacer" (click)="sort()">Sort</button>
+                        <button mat-raised-button class="btn-danger tab-btn-spacer" (click)="ResetForm()">Reset</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            </div>
+            
+            <div class="col-4">
+              <div class="container-outline__black dynamic-report-drag-container sis-overflow">
+                <div class="text-center margin-bottom-10">
+                  <h4>Availiable Fields</h4>
+                  <hr>
+                </div>
+                <div cdkDropList #availableList="cdkDropList" [cdkDropListData]="availableArray"
+                  [cdkDropListConnectedTo]="[selectedList]" class="drag-drop-list" (cdkDropListDropped)="drop($event)">
+                  <div class="drag-drop-box" *ngFor="let item of availableArray" cdkDrag>{{item.ff_label}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="container-outline__black dynamic-report-drag-container sis-overflow">
+                <div class="text-center ">
+                  <h4>Selected Fields : {{selectedArray.length}}</h4>
+                </div>
+                <hr>
+                <div cdkDropList #selectedList="cdkDropList" [cdkDropListData]="selectedArray" [cdkDropListConnectedTo]="[availableList]"
+                  class="drag-drop-list" (cdkDropListDropped)="drop($event)">
+                  <div class="drag-drop-box" *ngFor="let item of selectedArray" cdkDrag>{{item.ff_label}}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="filterone">
+  <div class="filter-header-container">
+    <div class="row">
+      <div class="col-12 margin-top-10">
+        <h4>Filter</h4>
+      </div>
+    </div>
+  </div>
+  <div class="filter-body-white-container-filterone" >
+    <div class="row table-container">
+      <div class="col-12" *ngIf="filterdiv">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table-100">
+            <ng-container matColumnDef="fieldlabel">
+              <th mat-header-cell *matHeaderCellDef> Field </th>
+              <td mat-cell *matCellDef="let element" (click)="filterTwo(element)"> {{element.fieldlabel}} </td>
+            </ng-container>
+          
+            <!-- Name Column -->
+            <ng-container matColumnDef="fromto">
+              <th mat-header-cell *matHeaderCellDef> From - To </th>
+              <td mat-cell *matCellDef="let element"> {{element.fromto}} </td>
+            </ng-container>
+          
+            <!-- Weight Column -->
+            <ng-container matColumnDef="equalto">
+              <th mat-header-cell *matHeaderCellDef> Equal To </th>
+              <td mat-cell *matCellDef="let element"> {{element.equalto}} </td>
+            </ng-container>
+          
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="discrete">
+              <th mat-header-cell *matHeaderCellDef> Discrete </th>
+              <td mat-cell *matCellDef="let element"> {{element.discrete}} </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef> Action </th>
+              <td mat-cell *matCellDef="let element"> <button mat-raised-button class="btn-danger btn-spacer" (click)="resetOneFilter(element)" >Reset</button> </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+      </div>
+    </div>
+    <div class="filter-body-white-container">
+        <div class="row">
+          <div class="col-12 text-center">
+            <br>
+            <br>
+            <button mat-raised-button class="btn-success" (click)="filterSubmit()" >Submit</button>
+            <button mat-raised-button class="btn-danger btn-spacer" (click)="gobacktodynamicreport()">Cancel</button>
+            <br>
+            <br>
+          </div>
+        </div>
+  
+    </div>
+    <!-- <div class="filter-body-white-container-filterone">
+      <div class="row">
+        <div class="col-3">
+          <label (click)="filterTwo()">Admission No.</label>
+        </div>
+        <div class="col-3">
+          <label>From-To</label>
+        </div>
+        <div class="col-3">
+          <label>Equal To</label>
+        </div>
+        <div class="col-3">
+          <label>Discrete</label>
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-12 ">
+          <mat-checkbox>Left Date</mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-white-container-filterone">
+      <div class="row">
+        <div class="col-12">
+          <mat-checkbox>Left Reason</mat-checkbox>
+        </div>
+      </div>
+
+    </div>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-12 ">
+          <mat-checkbox>Wing</mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-white-container-filterone">
+      <div class="row">
+        <div class="col-12">
+          <mat-checkbox>Class</mat-checkbox>
+        </div>
+      </div>
+
+    </div>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-12 ">
+          <mat-checkbox>Section</mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-white-container-filterone">
+      <div class="row">
+        <div class="col-12">
+          <mat-checkbox>Gender</mat-checkbox>
+        </div>
+      </div>
+
+    </div>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-12 ">
+          <mat-checkbox>Age</mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-white-container-filterone">
+      <div class="row">
+        <div class="col-12">
+          <mat-checkbox>Birth Date</mat-checkbox>
+        </div>
+      </div>
+
+    </div>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-12 ">
+          <mat-checkbox>Month Birth</mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-white-container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <br>
+          <br>
+          <button mat-raised-button class="btn-success">Submit</button>
+          <button mat-raised-button class="btn-danger btn-spacer" (click)="gobacktodynamicreport()">Cancel</button>
+          <br>
+          <br>
+        </div>
+      </div>
+
+    </div> -->
+  </div>
+</div>
+
+<div *ngIf="filterdivtwo">
+  <div class="filter-header-container">
+    <div class="row">
+      <div class="col-12 margin-top-10">
+        <h4>Filter</h4>
+      </div>
+    </div>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-12 ">
+          <i class="far fa-hand-point-right"></i>&nbsp;&nbsp;<span>{{currentFilterStatus.fieldlabel}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-white-container">
+      <ng-container *ngIf="currentFilterStatus.ff_field_type == 'text'">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field class="form-field">
+                  <input matInput placeholder="From" [(value)]="fromvalue" (change)="fromTextValue($event, 'fromto')">
+              </mat-form-field>
+            </div>
+            <div class="col-6">
+              <mat-form-field class="form-field">
+                  <input matInput placeholder="To" [(value)]="tovalue" (change)="toTextValue($event, 'fromto')">
+              </mat-form-field>
+            </div>
+          </div>
+      </ng-container>
+      <ng-container *ngIf="currentFilterStatus.ff_field_type == 'date'">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field class="form-field">
+                <input matInput [matDatepicker]="picker" [(value)]="fromvalue" placeholder="From" (dateChange)="fromDateValue($event, 'fromto')">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-6">
+              <mat-form-field class="form-field">
+                <input matInput [matDatepicker]="picker1" [(value)]="tovalue" placeholder="To" (dateChange)="toDateValue($event, 'fromto')">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+      </ng-container>
+      <!-- <ng-container *ngIf="currentFilterStatus.ff_field_type == 'dropdown'">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field class="form-field">
+                  <mat-select placeholder="From" (selectionChange)="fromSelectValue($event)">
+                      <mat-option *ngFor="let item of dropdownArray" [value]="item.field_id">
+                          {{item.field_name}}
+                      </mat-option>
+                  </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-6">
+              <mat-form-field class="form-field">
+                  <mat-select placeholder="To" (selectionChange)="toSelectValue($event)">
+                      <mat-option *ngFor="let item of dropdownArray" [value]="item.field_id">
+                          {{item.field_name}}
+                      </mat-option>
+                  </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+      </ng-container> -->
+      <div class="row" *ngIf="currentFilterStatus.ff_field_type == 'text'">
+        <div class="col-6">
+          <mat-form-field class="form-field">
+            <mat-select placeholder="Equal To" [(value)]="equaltoFC">
+              <mat-option value="EqualTo" selected>Equal To</mat-option>
+              <mat-option value="greterThan">Greater Than</mat-option>
+              <mat-option value="greterThanEqualTo">Greater Than Equal To</mat-option>
+              <mat-option value="lessThan">Less Than</mat-option>
+              <mat-option value="lessThanEqualTo">Less Than Equal To</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <ng-container *ngIf="currentFilterStatus.ff_field_type == 'text'">
+              <div class="row">
+                <div class="col-12">
+                  <mat-form-field class="form-field">
+                      <input matInput placeholder="Enter Value" (change)="equaltoTextValue($event, 'equalto')">
+                  </mat-form-field>
+                </div>
+              </div>
+          </ng-container>
+          <!-- <ng-container *ngIf="currentFilterStatus.ff_field_type == 'date'">
+              <div class="row">
+                <div class="col-12">
+                  <mat-form-field class="form-field">
+                      <input matInput placeholder="Enter Value" (change)="equaltoDateValue($event)">
+                  </mat-form-field>
+                </div>
+              </div>
+          </ng-container>
+          <ng-container *ngIf="currentFilterStatus.ff_field_type == 'dropdown'">
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="form-field">
+                    <mat-select placeholder="From" (selectionChange)="equaltoSelectValue($event)">
+                        <mat-option *ngFor="let item of dropdownArray" [value]="item.field_id">
+                            {{item.field_name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </ng-container> -->
+        </div>
+      </div>
+
+    </div>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-6">
+          <span>Add Discrete Value</span>
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-white-container">
+      <div class="row">
+        <div class="col-12 filter-discrete-val-container">
+          <ng-container *ngIf="currentFilterStatus.ff_field_type == 'text'">
+              <div class="row">
+                <div class="col-12">
+                  <mat-form-field class="form-field">
+                      <input matInput placeholder="Enter Value" [(value)]="discreteValue" (change)="discreteTextValue($event, 'discrete')">
+                  </mat-form-field>
+                </div>
+              </div>
+          </ng-container>
+          <ng-container *ngIf="currentFilterStatus.ff_field_type == 'dropdown'">
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="form-field">
+                    <mat-select placeholder="Select Value" [(value)]="discreteValue" (selectionChange)="discreteSelectValue($event, 'discrete')" multiple>
+                        <mat-option *ngFor="let item of dropdownArray" [value]="item.field_id">
+                            {{item.field_name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+      </div>
+      <hr>
+      <!-- <div class="row">
+        <div class="col-12">
+          <button mat-raised-button class="btn-neutral">
+            <mat-icon class="material-icon">cloud_upload</mat-icon>&nbsp;&nbsp;Upload Excel
+          </button><span class="btn-spacer">*Excel must content data in first column</span>
+        </div>
+      </div> -->
+      <br>
+      <br>
+      <div class="row">
+        <div class="col-12 text-center">
+          <button mat-raised-button class="btn-success" (click)="filterok()">Ok</button>
+          <button mat-raised-button class="btn-danger btn-spacer" (click)="gobacktofilterOne()">Cancel</button>
+        </div>
+      </div>
+      <br>
+      <br>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="sortdiv">
+  <div class="filter-header-container">
+    <div class="row">
+      <div class="col-12 margin-top-10">
+        <h4>Sort</h4>
+      </div>
+    </div>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-10">
+          <span><b></b></span>
+        </div>
+        <div class="col-2">
+          <button mat-raised-button class="btn-setting btn-spacer" (click)="addsortParam()">Add</button>
+        </div>
+      </div>
+    </div>
+    <form [formGroup]="sortbyform" novalidate>
+    
+    <div class="filter-body-white-container" formArrayName="sort_param">      
+      <div class="row" *ngFor="let item of sortParam.controls; let spindex=index" [formGroupName]="spindex">
+        <div class="col-12 ">
+            <span *ngIf="spindex == 0"><b>Sort By</b></span>
+            <span *ngIf="spindex != 0"><b>Then By</b></span>
+        </div>
+        <div class="col-5 margin-top-15">
+          <mat-form-field class="form-field">
+            <mat-select placeholder="Select Sort By" formControlName="sortname">
+              <mat-option value="">Select Sort By</mat-option>
+              <mat-option *ngFor="let item of filterArray" [value]="item">
+                {{item.ff_label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-5 margin-top-15">
+          <mat-radio-group formControlName="sortorder">
+            <mat-radio-button value="asc">Ascending</mat-radio-button><br>
+            <mat-radio-button value="desc">Descending</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="col-2 margin-top-15" style="float: right" *ngIf="spindex != 0">
+          <button mat-raised-button class="btn-setting btn-spacer" (click)="deletesortParam(spindex)" >Delete</button>
+        </div>
+      </div>    
+    </div>
+    </form>
+    <div class="filter-body-green-container">
+      <div class="row">
+        <div class="col-12 ">
+
+        </div>
+      </div>
+    </div>
+    <div class="filter-body-white-container">
+      <br>
+      <br>
+      <div class="row">
+        <div class="col-12 text-center">
+          <button mat-raised-button class="btn-success" (click)="sortbyOk()">Ok</button>
+          <button mat-raised-button class="btn-danger btn-spacer" (click)="gobacktodynamicreport()">Cancel</button>
+        </div>
+      </div>
+      <br>
+      <br>
+
+
+    </div>
+
+
+  </div>
+</div>

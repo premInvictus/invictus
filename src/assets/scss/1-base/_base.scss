@@ -1,0 +1,48 @@
+html, body {
+    font-size: $font-size-base;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+body {
+    // zoom: 100%;
+    width: 100%;
+}
+
+h1 {
+	font-size: 2rem !important;
+}
+
+h2 {
+    font-size: 1.75rem !important
+}
+
+h3 {
+    font-size: 1.5rem !important;
+}
+
+h4 {
+    font-size: 1.25rem !important;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+a:hover {
+    text-decoration: none !important;
+}
+
+.mat-drawer-content {
+    overflow-x:  hidden !important;
+    overflow-y: auto !important;
+    height: 100vh !important;
+}
+
+.mat-sidenav-content {
+    background-color: #f1f1f1;
+}
+
+.cdk-overlay-pane {
+    transform: none !important; 
+}

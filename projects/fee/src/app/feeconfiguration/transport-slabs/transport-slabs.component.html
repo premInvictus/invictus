@@ -1,0 +1,230 @@
+<div class="container-box__grey">
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-content__container margin-bottom-140">
+        <mat-card-title>
+          <h1>Transport Slabs</h1>
+          
+        </mat-card-title>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-4 custom-col-27">
+              <form [formGroup]="transportSlabs" novalidate>
+                <div class="row">
+                  <div class="col-12 margin-top-25">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Slab name</mat-label>
+                      <input matInput placeholder="Slab Name" formControlName="slab_name" required>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-4">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Fee type</mat-label>
+                      <mat-select placeholder="Fee Type" formControlName="slab_fee_type" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of feetypeArray" [value]="item.ft_id">{{item.ft_name}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Fee Period</mat-label>
+                      <mat-select formControlName="slab_fee_period" placeholder="Fee Period" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of feeperiodArray" [value]="item.fp_id">{{item.fp_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Month</mat-label>
+                      <mat-select placeholder="Months" multiple formControlName="slab_months" required>
+                        <mat-option *ngFor="let item of feemonthArray" [value]="item.fm_id">{{item.fm_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Calculation Method</mat-label>
+                      <mat-select placeholder="Calculation Method" formControlName="slab_calcualtion_method" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of calculationmethodArray" [value]="item.calm_id">
+                          {{item.calm_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Slab Amount</mat-label>
+                      <input matInput placeholder="Slab Amount" formControlName="slab_amount" required maxlength="6">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 margin-top-25">
+                    <h4 class="font-medium">Additional Filter</h4>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Gender</mat-label>
+                      <mat-select placeholder="Gender" formControlName="slab_filter_gender">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of genderArray" [value]="item.gen_id">{{item.gen_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Others</mat-label>
+                      <mat-select placeholder="others" formControlName="slab_filter_others">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of feeotherArray" [value]="item.fo_id">{{item.fo_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Hostel</mat-label>
+                      <mat-select placeholder="Hostel" formControlName="slab_filter_hostel">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option value="1">Yes</mat-option>
+                        <mat-option value="0">No</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Concession Category</mat-label>
+                      <mat-select placeholder="Concession Category" formControlName="slab_filter_concession_category">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of concessionruleArray" [value]="item.fcc_id">{{item.fcc_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                </div>
+                <div class="text-center margin-top-25">
+                  <div class="inline-flex">
+
+                  
+                  <button mat-raised-button class="btn-primary btn-custom btn-success" (click)="saveForm()">Submit</button>
+                  <button mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer"
+                    (click)="resetForm()">Reset</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-1 custom-col-2"><div class="vertical-line"></div></div>
+            <div class="col-7 custom-col-69">
+              <div class="row">
+                <div class="col-12 remove-col-padding">
+                  <div class="table-container">
+                    <mat-form-field>
+                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      <i class="fas fa-filter table-filter" matPrefix></i>
+
+                    </mat-form-field>
+
+                    <table class="table-100 text-center" mat-table [dataSource]="transportSlabDataSource" matSort>
+                      <ng-container matColumnDef="counter">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> S.No. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.counter}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="slab_name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Slab </th>
+                        <td mat-cell *matCellDef="let element"> {{element.slab_name | titlecase}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="fee_type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Type </th>
+                        <td mat-cell *matCellDef="let element"> {{element.fee_type}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="fee_period">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Period </th>
+                        <td mat-cell *matCellDef="let element"> {{element.fee_period}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="fee_month">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Month </th>
+                        <td mat-cell *matCellDef="let element"> {{getMonthsList(element.fee_month)}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="calculation_type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Calculation Type </th>
+                        <td mat-cell *matCellDef="let element"> {{element.calculation_type}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+                        <td mat-cell *matCellDef="let element"> <i class="fas fa-rupee-sign"></i> {{element.amount}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="entry_date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Entry Date </th>
+                        <td mat-cell *matCellDef="let element"> {{element.entry_date | date : 'd-MMM-y'}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                        <!-- <td mat-cell *matCellDef="let element"> {{element.status}} </td> -->
+                        <td mat-cell *matCellDef="let element">
+                          <mat-slide-toggle [ngModel]="element.status == '1' ? 'checked' : ''"
+                            (change)="changeStatus(element, $event)"></mat-slide-toggle>
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef class="mat-action-transport"> Action </th>
+                        <td mat-cell *matCellDef="let element" class="mat-action-transport"> <i class="material-icons icon-edit"
+                            (click)="editTransportSlab(element)">
+                            create
+                          </i> <i class="material-icons icon-danger icon-spacer" (click)="deleteTransportSlab(element)">
+                            delete
+                          </i> </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+                    </table>
+                    <table class="table-100 text-center" style="margin-top:5px;">
+                      <tr *ngIf="transportSlabData.length == 0">
+                        <td colspan="12">No Record Found</td>
+                      </tr>
+                    </table>
+                    <mat-paginator #paginator  [hidden]="!(transportSlabData.length>0)" [pageSize]="10"
+                      [pageSizeOptions]="[5, 10, 25, 100]">
+                    </mat-paginator>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete!'" (deleteOk)="deleteConfirm($event)">
+</app-delete-modal>

@@ -1,0 +1,71 @@
+.sub-menu-accordion-content {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.mat-drawer {
+    background-color: $sidebar-nav-background;
+}
+
+mat-expansion-panel.side-nav-main-menu-title-panel {
+    background-color: #CFD8DC !important;
+}
+
+.side-nav-main-menu-title-panel-header:hover {
+    background-color:#02ed10 !important;
+}
+
+.side-nav-sub-menu-btn:hover {
+    background-color: #02ed10 !important;
+    font-weight: 600;
+}
+
+.mat-drawer-side {
+    border-right: none;
+}
+
+.axiom-component-viewer-sidenav .axiom-component-viewer-sidenav-content button i {
+    margin-right: 8px;
+    font-size: 24px;
+  }
+
+  .axiom-component-viewer-sidenav .axiom-component-viewer-sidenav-content button {
+    color: #ffffff !important;
+    font-weight: 400 !important;
+    border-bottom: 1px solid #1085a3 !important;
+    height: 60px !important;
+  }
+
+ 
+
+  .axiom-component-viewer-sidenav .axiom-component-viewer-sidenav-content button.sub-menu-button {
+    height: 40px !important;
+    background-color: #006580 !important;
+    border-bottom: 1px solid #0b6b85 !important;
+  }
+
+  .sidenav-title b {
+      font-weight: 400 !important;
+      font-size: 15px !important;
+  }
+
+.sidenav-title {
+    margin-left: 20px;
+    font-size: 14px;
+    font-weight: 400;
+
+}
+
+.sub-menu-button .mat-button-wrapper .sidenav-title i.fas {
+    font-size: 16px !important;
+}
+
+// .mainmenu li.active .submenu {
+//     display: block !important;
+//     max-height: 200px !important;
+//   }
+
+// .submenu.active {
+//     display: block !important;
+//     max-height: 100% !important;
+// }

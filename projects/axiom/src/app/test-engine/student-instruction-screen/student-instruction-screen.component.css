@@ -1,0 +1,15 @@
+.custom-container {
+    padding-left: 5%;
+    padding-right: 5%;
+    font-size: 14px;
+}
+.card-title-right {
+    float: right;
+    margin-left: 5px;
+}
+.container-cu {
+    height: 60%;
+}	    
+.last-instruct {
+    margin-top: 5px;
+}

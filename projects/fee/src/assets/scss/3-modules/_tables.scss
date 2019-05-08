@@ -1,0 +1,306 @@
+// .document-table tbody tr td.document-table--title {
+//     padding-top: 20px;
+// }
+// .document-table tr {
+//     border: 3px solid #ffffff;
+// }
+// .table-skill__body {
+//     background-color: #ffffff;
+// }
+// .table-margin {
+//     margin: 15px;
+// }
+// td.remove-tb-padding {
+//     padding: 0px !important; 
+// }
+// .table-100 {
+//     width: 100%;
+// }
+// table.custom-table {  
+//     color: #333;
+//     font-family: Helvetica, Arial, sans-serif;
+//     width: 100%; 
+//     border-collapse: 
+//     collapse; border-spacing: 0; 
+// }
+// td.custom-td, th.custom-th {  
+//     border: 1px solid transparent; /* No more visible border */
+//     height: 30px; 
+//     transition: all 0.3s;  /* Simple transition for hover effect */
+// }
+// th.custom-th {  
+//     background: #DFDFDF;  /* Darken header a bit */
+//     font-weight: bold;
+// }
+// td.custom-td {  
+//     background: #FAFAFA;
+//     text-align: center;
+// }
+// /* Cells in even rows (2,4,6...) are one color */        
+// tr.custom-tr:nth-child(even) td.custom-td { background: #F1F1F1; }   
+// /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */        
+// tr.custom-tr:nth-child(odd) td.custom-td { background: #FEFEFE; }  
+// tr.custom-tr td.custom-td:hover { background: #f1f1f1; color: #000; }  
+// /* Hover cell effect! */
+// .mat-row:nth-child(even){
+//     background-color:#F1F1F1;
+//     }
+// .mat-row:nth-child(odd){
+//     background-color:#FEFEFE;
+//     }
+// .mat-header-row {
+//     background: #DFDFDF !important;
+// }
+// .mat-header-cell {
+//     color: rgba(0,0,0,.54);
+//     font-size: 14px;
+//     font-weight: bold;
+// }
+// mat-cell{
+//     display:flex !important;
+//     justify-content:center!important;
+//   }
+//   mat-header-cell {
+//     display:flex;
+//     justify-content:center;
+//   }
+//   th.mat-header-cell {
+//     text-align: center !important;
+// }
+// td.mat-cell {
+//     text-align: center !important;
+// }
+// .mat-cell {
+//     text-align: center;
+// }
+//   .click-icon {
+//       cursor: pointer !important;
+//   }
+//   .process-adm-ul {
+//       list-style: none;
+//       margin-bottom: 0rem;
+//   }
+//   .process_adm_reg{
+//       max-width: 8% !important;
+//       flex: 0 0 8% !important;
+//   }
+//   .process_adm_name{
+//     max-width: 12% !important;
+//     flex: 0 0 12% !important;
+// }
+// .process_adm_class {
+//     max-width: 10% !important;
+//     flex: 0 0 10% !important;
+// }
+// .process_adm_contact {
+//     max-width: 5% !important;
+//     flex: 0 0 5% !important;
+// }
+// .process_adm_date {
+//     max-width: 20% !important;
+//     flex: 0 0 20% !important;
+// }
+// .process_adm_score {
+//     max-width: 25% !important;
+//     flex: 0 0 25% !important;
+//     padding-top: 5px !important;
+//     padding-bottom: 5px !important;
+// }
+// .er_sn_no {
+//     max-width: 8% !important;
+//     flex: 0 0 8% !important;
+// }
+// .er_sn_no_pad {
+//     padding-left: 24px;
+// }
+// .er_sn_no_rem_pad {
+//     padding-left: 0px !important;
+// }
+// .table thead th {
+//     border: 1px solid #bbbbbb;
+// }
+// .table tbody td {
+//     border: 1px solid #bbbbbb;
+// }
+// .table.custom-table th {
+//     border-top: 1px solid #bbbbbb !important;
+// }
+// .table-remark-width {
+//     width: 25%;
+// }
+// .mat-header-cell {
+//     border-bottom: 1px solid #bbbbbb;
+//     border-left: 1px solid #bbbbbb;
+// }
+// .mat-header-row {
+//     border-top: 1px solid #bbbbbb;
+//     border-right: 1px solid #bbbbbb;
+// }
+// .mat-row {
+//     border-bottom: 1px solid #bbbbbb;
+//     border-left: 1px solid #bbbbbb;
+//     border-right: 1px solid #bbbbbb;
+// }
+// .mat-cell {
+//     border-right: 1px solid #bbbbbb;
+// }
+.table-100 {
+    width: 100% !important;
+}
+
+tr.mat-header-row {
+    background: $table-header;
+}
+
+th.mat-header-cell {
+    text-align: center !important;
+    font-size: 15px;
+    border-right: 3px solid #ffffff;
+}
+
+tr.mat-row:nth-child(even) {
+    background-color: #f1f4f7;
+}
+
+tr.mat-row:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+td.mat-cell,
+td.mat-footer-cell,
+th.mat-header-cell {
+    border-bottom-width: none !important;
+    border-bottom-style: none !important;
+}
+
+td.mat-cell {
+    border-right: 3px solid #fff !important;
+}
+
+.table-container {
+    padding: 15px;
+}
+
+.table-filter {
+    font-size: 24px;
+    margin-right: 10px;
+    color: #131313;
+    opacity: 0.5;
+}
+
+.mat-paginator, .mat-paginator-page-size .mat-select-trigger {
+    color: #000;
+}
+
+.mat-select-value {
+    color: #000;
+}
+
+th.mat-column-description {
+    width: 35% !important;
+    flex: 0 0 35% !important;  
+}
+
+// th.mat-header-cell:first-of-type {
+//   padding-left: 0px !important;
+// }
+
+.icon-spacer {
+    margin-left: 10px;
+}
+
+.icon-edit {
+    color: #747D8C;
+    cursor: pointer;
+}
+
+.icon-danger {
+    color: $font-danger;
+    cursor: pointer;
+}
+
+td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:first-of-type {
+    padding-left: 0px !important;
+}
+
+tspan {
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.mat-sort-header-container {
+    display: inline-flex !important;
+}
+
+.vertical-line {
+border-left: 2px solid #EFEFEF;
+height: 100%;
+margin-left: 50%;
+}
+
+
+.select-checkbox {
+    width: 5%;
+    flex: 0 0 5%;
+}
+
+.mat-column-feehead {
+    text-align: left !important;
+    padding-left: 5px !important;
+}
+
+.mat-column-head {
+    text-align: left !important;
+    padding-left: 5px !important;
+}
+
+.mat-column-remark {
+    width: 25% !important;
+    flex: 0 0 25% !important;
+}
+
+.mat-column-remark {
+    text-align: left !important;
+    padding-left: 5px !important;
+}
+
+.mat-column-description {
+    text-align: left !important;
+    padding-left: 5px !important;
+}
+
+.mat-column-category {
+    text-align: left !important;
+    padding-left: 5px !important;
+}
+
+.mat-column-srno {
+    width: 8% !important;
+    flex: 0 0 8% !important;
+}
+
+.mat-column-counter {
+    width: 8% !important;
+    flex: 0 0 8% !important;
+}
+
+.mat-column-fee_month {
+    width: 30% !important;
+    flex: 0 0 30% !important;
+}
+
+td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type, th.mat-header-cell:last-of-type {
+    padding-right: 0px !important;
+}
+
+.mat-action-transport {
+    width: 8% !important;
+    flex: 0 0 8% !important;
+}
+
+td p {
+    margin-bottom: 0px !important;
+}
+
+
+

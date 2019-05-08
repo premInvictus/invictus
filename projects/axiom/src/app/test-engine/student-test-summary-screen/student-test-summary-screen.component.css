@@ -1,0 +1,115 @@
+/*Angular Gauge styling*/
+.gauges-container {
+    display: flex;
+    height: 150px;
+    width: 150px;
+}
+
+canvas{
+    width: 164px;
+}
+
+/* ngx-gauge{
+    margin-left: -68px;
+} */
+
+.fa-check {
+    color: #28a745;
+}
+
+.fa-times {
+    color: #dc3545;
+}
+.test-summary-title-blue{
+    font-size: 24px;
+    color: #398FDC;
+}
+.test-summary-title-green{
+    font-size: 24px;
+    color: #57AA75;
+}
+.test-summary-title-purple{
+    font-size: 24px;
+    color: #8404B2;
+}
+
+.report-card-container {
+    text-align: center;
+    width: 900px;
+    margin: auto;
+}
+
+.report-card-title {
+    padding-top: 25px;
+    font-size: 36px;
+    font-family: 'Open Sans', sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.report-card-sub-title {
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+}
+
+.test-report-icon {
+    width: 120px;
+    height: 120px;
+}
+
+.congrats-message {
+    font-style: italic;
+    color: #04CDE4;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.congrats-icon {
+    width: 25px;
+    margin-left: 10px;
+}
+
+ngx-gauge .reading-block {
+    font-size: 26px !important;
+    line-height: 150px !important;
+}
+
+.test-report-card-value {
+    color: #5e5f62;
+}
+
+.report-rest-title {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.gauges-container-test-summary ngx-gauge canvas {
+    height: 150px !important;
+}
+
+.gauges-container-test-summary ngx-gauge {
+    margin-left: 0px !important;
+}
+
+.test {
+    background-color: #000;
+}
+
+@media (max-width: 992px) {
+
+  .report-card-container {
+    text-align: center;
+    width: 100%;
+    margin: auto;
+  }
+}
+
+
+@media (min-width: 960px) and (max-width: 991px) {
+
+.student-report {
+  overflow: hidden !important;
+}
+
+}

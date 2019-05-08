@@ -23,9 +23,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
           },
           "configurations": {
             "production": {
@@ -74,7 +74,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
+            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"],
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -115,6 +115,363 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "axiom": {
+      "root": "projects/axiom/",
+      "sourceRoot": "projects/axiom/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/axiom",
+            "index": "projects/axiom/src/index.html",
+            "main": "projects/axiom/src/main.ts",
+            "polyfills": "projects/axiom/src/polyfills.ts",
+            "tsConfig": "projects/axiom/tsconfig.app.json",
+            "assets": [
+              "projects/axiom/src/favicon.ico",
+              "projects/axiom/src/assets"
+            ],
+            "styles": [
+              "projects/axiom/src/styles.css"
+            ],
+            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/axiom/src/environments/environment.ts",
+                  "with": "projects/axiom/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "axiom:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "axiom:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "axiom:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/axiom/src/test.ts",
+            "polyfills": "projects/axiom/src/polyfills.ts",
+            "tsConfig": "projects/axiom/tsconfig.spec.json",
+            "karmaConfig": "projects/axiom/karma.conf.js",
+            "styles": [
+              "projects/axiom/src/styles.css"
+            ],
+            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"],
+            "assets": [
+              "projects/axiom/src/favicon.ico",
+              "projects/axiom/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/axiom/tsconfig.app.json",
+              "projects/axiom/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "axiom-e2e": {
+      "root": "projects/axiom-e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/axiom-e2e/protractor.conf.js",
+            "devServerTarget": "axiom:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "axiom:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/axiom-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "sis": {
+      "root": "projects/sis/",
+      "sourceRoot": "projects/sis/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/sis",
+            "index": "projects/sis/src/index.html",
+            "main": "projects/sis/src/main.ts",
+            "polyfills": "projects/sis/src/polyfills.ts",
+            "tsConfig": "projects/sis/tsconfig.app.json",
+            "assets": [
+              "projects/sis/src/favicon.ico",
+              "projects/sis/src/assets"
+            ],
+            "styles": [
+              "projects/sis/src/styles.css"
+            ],
+            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/sis/src/environments/environment.ts",
+                  "with": "projects/sis/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "sis:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "sis:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "sis:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/sis/src/test.ts",
+            "polyfills": "projects/sis/src/polyfills.ts",
+            "tsConfig": "projects/sis/tsconfig.spec.json",
+            "karmaConfig": "projects/sis/karma.conf.js",
+            "styles": [
+              "projects/sis/src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/sis/src/favicon.ico",
+              "projects/sis/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/sis/tsconfig.app.json",
+              "projects/sis/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "sis-e2e": {
+      "root": "projects/sis-e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/sis-e2e/protractor.conf.js",
+            "devServerTarget": "sis:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "sis:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/sis-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "fee": {
+      "root": "projects/fee/",
+      "sourceRoot": "projects/fee/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/fee",
+            "index": "projects/fee/src/index.html",
+            "main": "projects/fee/src/main.ts",
+            "polyfills": "projects/fee/src/polyfills.ts",
+            "tsConfig": "projects/fee/tsconfig.app.json",
+            "assets": [
+              "projects/fee/src/favicon.ico",
+              "projects/fee/src/assets"
+            ],
+            "styles": [
+              "projects/fee/src/styles.css"
+            ],
+            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/fee/src/environments/environment.ts",
+                  "with": "projects/fee/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "fee:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "fee:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "fee:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/fee/src/test.ts",
+            "polyfills": "projects/fee/src/polyfills.ts",
+            "tsConfig": "projects/fee/tsconfig.spec.json",
+            "karmaConfig": "projects/fee/karma.conf.js",
+            "styles": [
+              "projects/fee/src/styles.css"
+            ],
+            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"],
+            "assets": [
+              "projects/fee/src/favicon.ico",
+              "projects/fee/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/fee/tsconfig.app.json",
+              "projects/fee/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "fee-e2e": {
+      "root": "projects/fee-e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/fee-e2e/protractor.conf.js",
+            "devServerTarget": "fee:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "fee:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/fee-e2e/tsconfig.e2e.json",
             "exclude": [
               "**/node_modules/**"
             ]

@@ -1,0 +1,42 @@
+<div class="add-question-content">
+  <div class="row row-remove-top-margin">
+     <div class="col-lg-12 col-mobile-view-add-ques">
+        <div class="white-box">
+           <div id="printModal" class="white-box-content">
+              <br>
+              <div *ngIf="OverallPerformanceDiv && overallPerformanceArray.length == 0">
+                      <div class="row">
+                         <div class="col-lg-12">
+                            <div class="text-center">
+                               No Records Found
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+              <div *ngIf="OverallPerformanceDiv && overallPerformanceArray.length > 0">
+                 <div class="row">
+                    <div class="col-lg-12">
+                       <div class="float-right">
+                          <button class="submit-button" mat-button (click)="printOverAllPerformance()"><i class="fas fa-print dialog-table-print-icon"></i> &nbsp;Print</button>
+                       </div>
+                    </div>
+                 </div>
+                 <br>
+                 <div class="row">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                       <mat-card class="performance-graph detail-question-box-grey">
+                          <mat-card-content>
+                                <div *ngIf="OverallPerformanceDiv && overallPerformanceArray.length > 0"
+                                     style="overflow-x:auto;overflow-y: hidden"class="overallChart">
+                                  <app-common-dynamic-chart [options]="splineChart"></app-common-dynamic-chart>
+                              </div>
+                          </mat-card-content>
+                       </mat-card>
+                    </div>
+                 </div>
+                 <br>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>

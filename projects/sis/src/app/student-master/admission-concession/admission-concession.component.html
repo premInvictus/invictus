@@ -1,0 +1,234 @@
+<div class="container-box__white">
+  <br>
+  <div class="row">
+     
+     <div class="col-12">
+        <h4 class="text-uppercase"><b>Remarks And Comments</b></h4>
+     </div>
+     
+  </div>
+  <br>
+  <div class="row">
+     <div class="col-6">
+        <form [formGroup]="generalRemarkForm">
+           <div class="container-outline__black">
+              <h6 class="text-uppercase text-center"><b>General Remarks</b></h6>
+              <div *ngIf="checkIfFieldExist('era_doj')" class="row">
+                 <div class="col-12">
+                    <mat-form-field class="form-field">
+                       <input matInput  [errorStateMatcher]="confirmValidParentMatcher"
+                       [matDatepicker]="picker" [max]="minDate" placeholder="Date" formControlName="era_doj" (dateChange)="addEvent('change', $event)" [readonly]="viewOnly">
+                       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                       <mat-datepicker #picker></mat-datepicker>
+                       <mat-error>
+                        This field is required*
+                     </mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div *ngIf="checkIfFieldExist('era_aut_id')" class="row">
+                 <div class="col-12">
+                    <mat-form-field class="form-field">
+                       <mat-select placeholder="Authority.." [errorStateMatcher]="confirmValidParentMatcher"
+                       formControlName="era_aut_id" required [disabled]="viewOnly">
+                           <mat-option value="">Please Select</mat-option>
+                          <mat-option *ngFor="let item of authorityArray" [value]="item.aut_id">{{item.aut_name}}</mat-option>
+                       </mat-select>
+                       <mat-error>
+                        This field is required*
+                     </mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div *ngIf="checkIfFieldExist('era_ar_id')" class="row">
+                 <div class="col-12">
+                    <mat-form-field class="form-field">
+                       <mat-select placeholder="Area.."  [errorStateMatcher]="confirmValidParentMatcher"
+                       formControlName="era_ar_id" required [disabled]="viewOnly">
+                       <mat-option value="">Please Select</mat-option>   
+                       <mat-option *ngFor="let item of areaArray" [value]="item.ar_id">{{item.ar_name}}</mat-option>
+                       </mat-select>
+                       <mat-error>
+                        This field is required*
+                     </mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div *ngIf="checkIfFieldExist('era_teachers_remark')" class="row">
+                 <div class="col-12">
+                    <mat-form-field class="form-field">
+                       <textarea rows="6" matInput  [errorStateMatcher]="confirmValidParentMatcher"
+                       placeholder="Teacher Remarks" formControlName="era_teachers_remark" [readOnly]="viewOnly" required></textarea>
+                       <mat-error>
+                        This field is required*
+                     </mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <br>
+              <div class="row">
+                 <div class="col-12">
+                    <div class="text-center">
+                       <button [disabled]="viewOnly" *ngIf="!generalAddToList" mat-raised-button class="btn-success" (click)="addGeneralRemarkList()">Add to list</button>
+                       <button *ngIf="generalRemarkUpdateFlag && !viewOnly && generalAddToList" mat-raised-button class="btn-success" (click)="updateGeneralRemarkList()">Update List</button>
+                       <button [disabled]="viewOnly"   mat-raised-button class="btn-danger btn-spacer" (click)="resetGeneralRemarkList()">Reset</button>
+                    </div>
+                    <br>
+                 </div>
+              </div>
+           </div>
+        </form>
+     </div>
+     <div class="col-6">
+        <div class="container-outline__black">
+           <h6 class="text-uppercase text-center"><b>List of General Remarks</b></h6>
+           
+           <div *ngIf="finalGeneralRemarkArray?.length > 0 " class="row">
+              <div class="col-12">
+                 <table class="table table-borderd table-stripped custom-table">
+                    <thead class="table-skill__head text-center">
+                       <tr class="custom-tr">
+                          <th class="custom-th">Sr.No</th>
+                          <th class="custom-th" *ngIf="checkIfFieldExist('era_doj')">Date</th>
+                          <th class="custom-th" *ngIf="checkIfFieldExist('era_aut_id')">Authority</th>
+                          <th class="custom-th" *ngIf="checkIfFieldExist('era_ar_id')">Area</th>
+                          <th class="custom-th" *ngIf="checkIfFieldExist('era_teachers_remark')">Remarks</th>
+                          <th class="custom-th" *ngIf="!viewOnly">Action</th>
+                       </tr>
+                    </thead>
+                    <tbody class="table-skill__body text-center">
+                       <tr class="custom-tr" *ngFor="let item of finalGeneralRemarkArray;let i=index">
+                          <td class="custom-td">{{i+1}}</td>
+                          <td class="custom-td" *ngIf="checkIfFieldExist('era_doj')">{{item.era_doj | date}}</td>
+                          <td class="custom-td" *ngIf="checkIfFieldExist('era_aut_id')">{{getAuthorityName(item.era_aut_id)}}</td>
+                          <td class="custom-td" *ngIf="checkIfFieldExist('era_ar_id')">{{getAreaName(item.era_ar_id)}}</td>
+                          <td class="custom-td" *ngIf="checkIfFieldExist('era_teachers_remark')">{{item.era_teachers_remark}}</td>
+                          <td class="custom-td" *ngIf="!viewOnly"><i class="far fa-edit modify-icon" (click)="editGeneralRemarkList(i)"></i>&nbsp;
+                             <i class="far fa-trash-alt inline-form-table-icon-spacing delete-icon" (click)="deleteGeneralRemarkList(i)"></i>
+                          </td>
+                    </tbody>
+                 </table>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+  <br>
+  <br>
+  <div class="row">
+     <div class="col-6">
+        <form [formGroup]="parentRemarkForm">
+           <div class="container-outline__black">
+              <h6 class="text-uppercase text-center"><b>Parent Remarks</b></h6>
+              <div *ngIf="checkIfFieldExist('era_doj')" class="row">
+                 <div class="col-12">
+                    <mat-form-field class="form-field">
+                       <input [errorStateMatcher]="confirmValidParentMatcher" [max]="minDate"
+                       matInput [matDatepicker]="picker_parent" placeholder="Date of Admission" formControlName="era_doj" (dateChange)="addEvent('change', $event)" [readonly]="viewOnly">
+                       <mat-datepicker-toggle matSuffix [for]="picker_parent"></mat-datepicker-toggle>
+                       <mat-datepicker #picker_parent></mat-datepicker>
+                       <mat-error>
+                        This field is required*
+                     </mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div *ngIf="checkIfFieldExist('era_aut_id')" class="row">
+                 <div class="col-12">
+                    <mat-form-field class="form-field">
+                       <mat-select [errorStateMatcher]="confirmValidParentMatcher"
+                       placeholder="Authority.." formControlName="era_aut_id" required [disabled]="viewOnly">
+                       <mat-option value="">Please Select</mat-option>   
+                       <mat-option *ngFor="let item of authorityArray" [value]="item.aut_id">{{item.aut_name}}</mat-option>
+                       </mat-select>
+                       <mat-error>
+                        This field is required*
+                     </mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div *ngIf="checkIfFieldExist('era_ar_id')" class="row">
+                 <div class="col-12">
+                    <mat-form-field class="form-field">
+                       <mat-select  [errorStateMatcher]="confirmValidParentMatcher"
+                       placeholder="Area.." formControlName="era_ar_id" required [disabled]="viewOnly">
+                       <mat-option value="">Please Select</mat-option>   
+                       <mat-option *ngFor="let item of areaArray" [value]="item.ar_id">{{item.ar_name}}</mat-option>
+                       </mat-select>
+                       <mat-error>
+                        This field is required*
+                     </mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div *ngIf="checkIfFieldExist('era_teachers_remark')" class="row">
+                 <div class="col-12">
+                    <mat-form-field class="form-field">
+                       <textarea  [errorStateMatcher]="confirmValidParentMatcher"
+                       rows="6" matInput placeholder="Parent Remarks" formControlName="era_teachers_remark" required
+                       [disabled]="viewOnly"></textarea>
+                       <mat-error>
+                        This field is required*
+                     </mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <br>
+              <div class="row">
+                 <div class="col-12">
+                    <div class="text-center">
+                       <button [disabled]="viewOnly" *ngIf="!parentAddToList" mat-raised-button class="btn-success" (click)="addParentRemarkList()">Add to list&nbsp;&nbsp;</button>
+                       <button *ngIf="parentRemarkUpdateFlag && !viewOnly && parentAddToList" mat-raised-button class="btn-success" (click)="updateParentRemarkList()">Update List</button>
+                       <button [disabled]="viewOnly"  mat-raised-button class="btn-danger btn-spacer" (click)="resetParentRemarkList()">Reset</button>
+                    </div>
+                    <br>
+                 </div>
+              </div>
+           </div>
+        </form>
+     </div>
+     <div class="col-6">
+        <div class="container-outline__black">
+           <h6 class="text-uppercase text-center"><b>List of Parent Remarks</b></h6>
+           
+           <div *ngIf="finalParentRemarkArray?.length > 0 " class="row">
+              <div class="col-12">
+                 <table class="table table-borderd table-stripped custom-table">
+                    <thead class="table-skill__head text-center">
+                       <tr class="custom-tr">
+                        <th class="custom-th">Sr.No</th>
+                        <th class="custom-th" *ngIf="checkIfFieldExist('era_doj')">Date</th>
+                        <th class="custom-th" *ngIf="checkIfFieldExist('era_aut_id')">Authority</th>
+                        <th class="custom-th" *ngIf="checkIfFieldExist('era_ar_id')">Area</th>
+                        <th class="custom-th" *ngIf="checkIfFieldExist('era_teachers_remark')">Remarks</th>
+                          <th class="custom-th" *ngIf="!viewOnly">Modify</th>
+                       </tr>
+                    </thead>
+                    <tbody class="table-skill__body text-center">
+                       <tr class="custom-tr" *ngFor="let item of finalParentRemarkArray;let i=index">
+                          <td class="custom-td">{{i+1}}</td>
+                          <td class="custom-td" *ngIf="checkIfFieldExist('era_doj')">{{item.era_doj | date}}</td>
+                          <td class="custom-td" *ngIf="checkIfFieldExist('era_aut_id')">{{getAuthorityName(item.era_aut_id)}}</td>
+                          <td class="custom-td" *ngIf="checkIfFieldExist('era_ar_id')">{{getAreaName(item.era_ar_id)}}</td>
+                          <td class="custom-td" *ngIf="checkIfFieldExist('era_teachers_remark')">{{item.era_teachers_remark}}</td>
+                          <td class="custom-td" *ngIf="!viewOnly"><i class="far fa-edit modify-icon" (click)="editParentRemarkList(i)"></i>&nbsp;
+                             <i class="far fa-trash-alt delete-icon inline-form-table-icon-spacing" (click)="deleteParentRemarkList(i)"></i>
+                          </td>
+                    </tbody>
+                 </table>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+  <br>
+  <div class="text-center">
+     <button mat-raised-button class="btn-success" *ngIf="addOnly" (click)="insertRemarks()">Save & Continue</button>
+     <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateRemarks(true)">Submit</button>
+     <button  mat-raised-button class="btn-success btn-spacer" *ngIf="saveFlag" (click)="updateRemarks(false)">Update & Continue</button>
+     <button  *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+  </div>
+  <br>
+  <br>
+  <br>
+</div>

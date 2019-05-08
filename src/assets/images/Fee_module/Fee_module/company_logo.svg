@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="130.964" height="51.074" viewBox="0 0 130.964 51.074">
+  <g id="company_logo" transform="translate(-20.667 -12.655)">
+    <g id="Group_182" data-name="Group 182" transform="translate(20.667 12.655)">
+      <path id="Path_191" data-name="Path 191" d="M39.153,50.566l12.064-11.81a8.808,8.808,0,0,1,1.382,5.57L39.156,58.716l-12.98-13.6s-1.839-5.365.809-6.252" transform="translate(-19.729 -7.642)" fill="#d2d2d2"/>
+      <path id="Path_192" data-name="Path 192" d="M30.583,34.248l8.423,8.162,9.315-9.448,3.3,4.278L39.006,50.253,26.076,36.437l3.348-3.476Z" transform="translate(-19.629 -8.755)" fill="#d2d2d2"/>
+      <path id="Path_193" data-name="Path 193" d="M36.111,12.655,48.74,24.739s8.363,7.487,4.887,17.915a17.819,17.819,0,0,0-4.836-9.8c-4.278-4.278-12.68-11.676-12.68-11.676Z" transform="translate(-17.701 -12.655)" fill="#005c87"/>
+      <path id="Path_194" data-name="Path 194" d="M36.111,21.3,48.672,32.349s7.373,8.112,1.669,15.331c0,0-.068-5.526-6.009-11.854l-8.22-7.487Z" transform="translate(-17.701 -10.995)" fill="#dc9f37"/>
+      <path id="Path_195" data-name="Path 195" d="M48.912,32.85,48.5,24.739,36.111,12.655v8.518Z" transform="translate(-17.701 -12.655)" fill="#007d9e"/>
+      <path id="Path_196" data-name="Path 196" d="M36.111,21.3v7.042l8.747,7.93,3.572-3.919Z" transform="translate(-17.701 -10.995)" fill="#e2a74f"/>
+      <path id="Path_197" data-name="Path 197" d="M33.16,24.512v7.576L30.247,35.87l-3.6-4.406Z" transform="translate(-19.519 -10.378)" fill="#e2a74f"/>
+      <path id="Path_198" data-name="Path 198" d="M25.363,25.285l7.328-1.017-6.249,6.24-2.271-4.543Z" transform="translate(-19.994 -10.425)" fill="#007d9e"/>
+      <path id="Path_199" data-name="Path 199" d="M25.8,37.952" transform="translate(-19.682 -7.797)" fill="#a6a4a6"/>
+      <path id="Path_200" data-name="Path 200" d="M24.778,25.581l2.336,4.675s-5.12,5.058-3.782,11.476C23.332,41.732,16.465,34.968,24.778,25.581Z" transform="translate(-20.667 -10.172)" fill="#005c87"/>
+      <path id="Path_201" data-name="Path 201" d="M27.371,30.344s-7.91,7.816-.819,16.387a12.082,12.082,0,0,1,.809-6.252,17.478,17.478,0,0,1,3.675-5.729Z" transform="translate(-20.104 -9.258)" fill="#dc9f37"/>
+    </g>
+    <g id="Group_183" data-name="Group 183" transform="translate(63.632 19.673)">
+      <text id="INVICTUS_" data-name="INVICTUS " transform="translate(0 16)" fill="#fff" font-size="16" font-family="Lato-Bold, Lato" font-weight="700" letter-spacing="0.08em"><tspan x="0" y="0">INVICTUS </tspan></text>
+      <text id="DIGISOFT" transform="translate(22.581 28.437)" fill="#fff" font-size="12" font-family="Lato-Bold, Lato" font-weight="700" letter-spacing="0.08em"><tspan x="0" y="0">DIGISOFT</tspan></text>
+    </g>
+  </g>
+</svg>

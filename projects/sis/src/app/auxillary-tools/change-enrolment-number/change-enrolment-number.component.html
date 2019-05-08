@@ -1,0 +1,139 @@
+<div class="container-box__grey">
+  <form [formGroup]="changeNumberForm" autocomplete="off">
+    <div class="row">
+        <div class="col-12">
+            <!-- <div class="row">
+                <div class="col-4 text-center">
+                    <div class="line-divider"></div>
+                </div>
+                <div class="col-4 text-center">
+                    <h6 class="text-uppercase text-center"><b>Change Enrollment Number</b></h6>
+                </div>
+                <div class="col-4 text-center">
+                    <div class="line-divider"></div>
+                </div>
+            </div>
+            <br> -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="container-box__white">
+                            <div class="row">
+                                    <!-- <div class="col-4 text-center">
+                                        <div class="line-divider"></div>
+                                    </div> -->
+                                    <div class="col-12 text-center">
+                                        <h4 class="text-uppercase text-center"><b>Change Enrollment Number</b></h4>
+                                    </div>
+                                    <!-- <div class="col-4 text-center">
+                                        <div class="line-divider"></div>
+                                    </div> -->
+                                </div>
+                                <br>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <mat-form-field class="form-field">
+                                           <mat-select placeholder="Enrolment Type" formControlName="enrolment_type" required (selectionChange)="setEnrolmentPlaceholder($event)">
+                                                <mat-option value="">Please Select</mat-option>
+                                            <mat-option *ngFor="let item of enrollMentTypeArray" value="{{item?.au_process_type}}">{{item?.au_process_name}}</mat-option>
+                                        </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-9">
+                                        <mat-form-field class="form-field">
+                                            <input matInput placeholder="{{enrolmentPlaceholder}} No." formControlName="enrollment_no" (blur)="getStudentData($event)" required>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-9" style="display: none;">
+                                        <mat-form-field class="form-field">
+                                            <input matInput placeholder="Login Id" formControlName="login_id">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-3 margin-top-10">
+                                       
+                                            <button [disabled]="!viewFlag" mat-raised-button class="btn-success" target="_blank" (click)="viewStudentProfile()">View Profile</button>
+                                        
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <mat-form-field class="form-field">
+                                            <input matInput placeholder="Class - Section" formControlName="class_section">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <mat-form-field class="form-field">
+                                            <input class="text-capitalize" matInput placeholder="Student Name" formControlName="au_full_name">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <mat-form-field class="form-field">
+                                            <input matInput [matDatepicker]="picker" placeholder="Date of {{enrolmentPlaceholder}}" formControlName="doa" (dateInput)="enrolAdmissionToEvent('input', $event)">
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <!-- <br>
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <a [disabled]="!viewFlag" mat-raised-button class="btn-purple" target="_blank" (click)="viewStudentProfile()">View Profile</a>
+                                    </div>
+                                </div>
+                                <br> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="margin-bottom-10"></div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="container-box__white">
+                        <div class="row">
+                            <div class="col-6">
+                                <mat-form-field class="form-field">
+                                    <input matInput placeholder="Change {{enrolmentPlaceholder}} No. To" formControlName="enrolment_to" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field class="form-field">
+                                    <mat-select placeholder="Reason for change" formControlName="reason_id" required>
+                                            <mat-option value="">Please Select</mat-option>    
+                                        <mat-option value="Select" *ngFor="let item of reasonDataArray" value="{{item?.reason_id}}">{{item?.reason_title}}</mat-option>
+                                        </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <mat-form-field class="form-field">
+                                    <textarea rows="3" matInput placeholder="Remarks" formControlName="remarks" required></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="text-center">
+                            <button mat-raised-button class="btn-success" (click)="saveEnrolmentNumber()">Save</button>
+                            <button class="btn-danger btn-spacer" mat-raised-button (click)="reset()">Reset</button>
+                        </div>
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </form>
+</div>

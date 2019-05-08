@@ -1,0 +1,184 @@
+<div class="row">
+  <div class="col-lg-12">
+     <div *ngIf="essaytable" class="float-left">
+        <button mat-icon-button class="page-double-backward" matTooltip="Select Table" (click)="movebacktoSelect()">
+        <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+        </button>
+     </div>
+     <div class="close-button-content">
+        <button mat-icon-button class="close-button" (click)="closeMainDialog()" matTooltip="Close">
+        <img src="../../../../../assets/images/clear-button.svg">
+        </button>
+     </div>
+  </div>
+</div>
+<div *ngIf="essayDiv == 'detail'">
+  <div class="row">
+     <div class="col-lg-12">
+        <div class="white-box-content-title">
+           <span>Essay</span>
+        </div>
+     </div>
+  </div>
+  <mat-dialog-content>
+     <div class="row">
+        <div class="col-lg-12">
+           <div class="table-box" style="word-break: break-all !important;height:405px !important">
+              <div class="row">
+                 <div class="col-lg-12 col-remove-padding">
+                    <div class="dialog-table-review-main normal-table-responsive">
+                       <div [MathJax]="essayDetails.ess_description"></div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </mat-dialog-content>
+</div>
+<section *ngIf="essayDiv == 'list'">
+  <div *ngIf="selectEssayList">
+     <div class="row">
+        <div class="col-lg-12">
+           <div class="row row-remove-top-margin">
+              <div class="col-lg-12 col-mobile-view-add-ques">
+                 <div class="white-box">
+                    <div class="row row-remove-top-margin">
+                       <div class="col-lg-12 col-mobile-view-add-ques">
+                          <div class="white-box-content-title">
+                             <span>Select Essay</span>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="row">
+                    <div class="col-lg-12 remove-col-modal-padding">
+                       <div class="table-box essay-select-table-box">
+                          <div class="dialog-table-review-main normal-table-responsive essay-select-table-box-content">
+                             <table class="dialog-table-review table">
+                                <thead>
+                                   <tr class="dialog-table-review-header">
+                                      <td class="text-center" style="width:3rem;">Select</td>
+                                      <td style="width:5rem;">S.No</td>
+                                      <td style="width:20rem;">Essay Title</td>
+                                      <td class="text-center" style="width:5rem;">Modify</td>
+                                   </tr>
+                                </thead>
+                                <tbody>
+                                   <tr class="table-dialog-review-row" *ngFor="let item of essayArray; let i=index;">
+                                      <td class="text-center">
+                                         <mat-radio-group class="add-instruct-radio" name="radio">
+                                            <mat-radio-button [value]="item.ess_id" (click)="setEssayDetails(item)">
+                                            </mat-radio-button>
+                                         </mat-radio-group>
+                                      </td>
+                                      <td>{{i+1}}</td>
+                                      <td style="width:20rem;word-wrap:break-word;">{{item.ess_title}}</td>
+                                      <td class="text-center">
+                                         <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top"
+                                            matTooltip="Edit" aria-hidden="true" (click)="editEssay(item)"></i>
+                                         <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                            matTooltip="Delete" aria-hidden="true" (click)="deleteEssay(item)"></i>
+                                      </td>
+                                   </tr>
+                                </tbody>
+                             </table>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="row">
+                    <div class="col-lg-12 remove-col-modal-padding">
+                       <button mat-button class="submit-button" (click)="selectEssay()">Submit</button>
+                       <div class="create-new-instruction float-right">
+                          <div class="button-content">
+                             <mat-chip-list>
+                                <mat-chip class="essay-insruct-chip instruct-chip" (click)="openAddDialog()"
+                                   matTooltip="Add Essay">
+                                   <i class="fas fa-plus-circle instruct-add-icon instruct-content-one"></i>
+                                   <span class="instruct-content-two button-instruct-title">Add Essay</span>
+                                </mat-chip>
+                             </mat-chip-list>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</section>
+<section *ngIf="essaytable">
+  <div class="row">
+     <div class="col-lg-12">
+        <div class="white-box-content-title">
+           <span>View Selected Essay</span>
+        </div>
+     </div>
+  </div>
+  <div class="row">
+     <div class="col-lg-12">
+        <form [formGroup]="paraDetailForm">
+           <div class="row">
+              <div class="col-lg-12 remove-col-modal-padding">
+                 <div class="table-box  view-selected-essay" style="word-break:break-all !important">
+                    <div class="row">
+                       <div class="col-lg-12 col-remove-padding ">
+                          <div class="dialog-table-review-main normal-table-responsive">
+                             <!-- <div [innerHTML]="essayDetails.ess_description"></div> -->
+                             <div [MathJax]="essayDetails.ess_description"></div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </form>
+        <div class="row">
+           <div class="col-lg-12 remove-col-modal-padding">
+              <button mat-button class="submit-button" (click)="selectEssay()">Submit</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</section>
+<section *ngIf="essayDiv == 'add'">
+  <div *ngIf="addnewEssay">
+     <div class="row">
+        <div class="col-lg-12">
+           <div class="white-box-content-title">
+              <span>Add New Essay</span>
+           </div>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-lg-12">
+           <form [formGroup]="essayForm">
+              <div class="row">
+                 <div class="col-lg-12">
+                    <mat-form-field class="form-field">
+                       <input matInput formControlName="ess_title" placeholder="Essay Title">
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div class="row">
+                 <div class="col-lg-12">
+                    <ckeditor ngDefaultControl required name="mcq-explanation" id="mcq-explanation" class="text-editor"
+                    formControlName="ess_description" #essdescription [config]="ckeConfig" debounce="500">
+                    </ckeditor>
+                 </div>
+              </div>
+           </form>
+           <div class="row">
+              <div class="col-lg-12">
+                 <button class="submit-button" *ngIf="!updateDiv" mat-button type="button" (click)="addEssay()">Add</button>
+                 <button class="submit-button" *ngIf="updateDiv" mat-button type="button"
+                 (click)="updateEssay()">Update</button>
+                 <button class="reset-button" *ngIf="!updateDiv" mat-button type="button" mat-dialog-close>Reset</button>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</section>

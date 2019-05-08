@@ -1,0 +1,65 @@
+.legend-box {
+    width: 16px;
+    height: 16px;
+}
+
+.legend-silver {
+    background-color: #d9dfe5;
+}
+
+.legend-green {
+ background-color: #66BB6A;
+}
+
+.legend-cheque {
+    background-color:#4B7BEC ;
+}
+
+.legend-cash {
+    background-color:#26DE81 ;
+}
+
+.legend-paymentgateway{
+    background-color:#45AAF2 ;
+}
+
+.legend-netbanking {
+    background-color:#FED330 ;
+}
+
+.legend-others {
+    background-color:#D1D8E0 ;
+}
+
+.legend-month {
+    background-color: #FFD558;
+}
+
+.legend-onemonth {
+    background-color: #FFA502;
+}
+
+.legend-moremonth {
+    background-color: #F93434;
+}
+
+.pie-text {
+    color: #A8A8A8;
+}
+
+.pie-middle-text {
+    position: absolute !important;
+    z-index: 1 !important;
+    left: -56% !important;
+    top: 40% !important;
+    text-align: center;
+
+}
+
+.top-pie-middle-text {
+    z-index: 1;
+    position: absolute;
+    top: 43%;
+    left: 45%;
+    text-align: center;
+}

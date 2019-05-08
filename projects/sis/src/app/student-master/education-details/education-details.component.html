@@ -1,0 +1,123 @@
+<div class="container-box__white">
+  
+  <div class="row">
+    <!-- <div class="col-4 text-center">
+      <div class="line-divider"></div>
+    </div> -->
+    <div class="col-8">
+      <h4><b>PREVIOUS SCHOOL INFORMATION</b></h4>
+    </div>
+    <div class="col-4">
+      <div class="float-right">
+        <button *ngIf="viewOnly && isExistUserAccessMenu('request')" mat-raised-button class="btn-neutral-dull" (click)="editRequest()"><mat-icon class="btn-top-icon">create</mat-icon>&nbsp; &nbsp;Edit Request</button>
+      </div>
+      </div>
+
+    <!-- <div class="col-4 text-center">
+      <div class="line-divider"></div>
+    </div> -->
+  </div>
+  <br>
+  <form [formGroup]="Education_Form">
+    <ng-container formArrayName="eed_array" >
+    <ng-container *ngFor="let item of previousEducations.controls; let i = index" [formGroupName]="i" >
+    <div class="row">
+      <div class="col-3" *ngIf="checkIfFieldExist('eed_previous_school_name')">
+        <mat-form-field class="form-field">
+          <input class="text-capitalize" formControlName="eed_previous_school_name" matInput placeholder="Name of Previos school/ Pre-School/ Nursery/ Cre'che" [readonly]="viewOnly">
+        </mat-form-field>
+      </div>
+      <div class="col-3" *ngIf="checkIfFieldExist('eed_joining_from')">
+        <mat-form-field class="form-field">
+          <input formControlName="eed_joining_from" [max]="maxDate" matInput [matDatepicker]="picker1" placeholder="Date of Joining" [readonly]="viewOnly">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="col-3" *ngIf="checkIfFieldExist('eed_admitted_class')">
+        <mat-form-field class="form-field">
+          <mat-select formControlName="eed_admitted_class" placeholder="Admitted in Class" [disabled]="viewOnly">
+              <mat-option value="">Please Select</mat-option>  
+            <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                  {{item.class_name}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-3" *ngIf="checkIfFieldExist('eed_current_class')">
+        <mat-form-field class="form-field">
+          <mat-select formControlName="eed_current_class" placeholder="Present Class" [disabled]="viewOnly">
+              <mat-option value="">Please Select</mat-option>  
+            <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                  {{item.class_name}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-3" *ngIf="checkIfFieldExist('eed_joining_to')">
+        <mat-form-field class="form-field">
+          <input formControlName="eed_joining_to" [max]="maxDate" matInput [matDatepicker]="picker2" placeholder="Date of Leaving" [readonly]="viewOnly">
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="col-3" *ngIf="checkIfFieldExist('eed_reason_of_leaving')">
+        <mat-form-field class="form-field">
+          <mat-select formControlName="eed_reason_of_leaving" placeholder="Reason of Leaving" [disabled]="viewOnly">
+              <mat-option value="">Please Select</mat-option>  
+            <mat-option *ngFor="let item of reasonArray" [value]="item.reason_id">
+                  {{item.reason_title}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-3" *ngIf="checkIfFieldExist('eed_specify_reason')">
+        <mat-form-field class="form-field">
+          <input class="text-capitalize" formControlName="eed_specify_reason"  matInput placeholder="Specify the Reason" [readonly]="viewOnly">
+        </mat-form-field>
+      </div>
+      <div class="col-3" *ngIf="i != 0">
+          <button [disabled]="viewOnly" mat-raised-button class="btn-danger" (click)="deletePreviousEducations(i)"><mat-icon class="btn-top-icon">delete</mat-icon>&nbsp; &nbsp;Delete</button>
+        </div>
+    </div>
+  </ng-container>
+    <div class="row">
+      <div class="col-12">
+        <button [disabled]="viewOnly" mat-raised-button class="btn-success" (click)="addPreviousEducations()"><mat-icon class="btn-top-icon">add</mat-icon>&nbsp; &nbsp;Add More</button>
+      </div>
+    </div>
+    <br>
+
+    <br>
+    <div class="text-center tab-margin-button-bottom">
+        <!-- <button *ngIf="!editOnly && !editRequestFlag" mat-raised-button class="btn-green" (click)="saveForm()" [disabled]="viewOnly">Save & Continue</button>
+        <button *ngIf="editOnly" mat-raised-button class="btn-green" (click)="updateForm()" [disabled]="viewOnly">Update & Continue</button>
+        <button mat-raised-button class="btn-green" *ngIf="editRequestFlag" [disabled]="viewOnly" (click)="checkFormChangedValue()">Edit & Continue</button> -->
+
+        <button *ngIf="addOnly" mat-raised-button class="btn-success" (click)="saveForm()">Save & Continue</button>
+        <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+        <button  *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer" (click)="updateForm(false)">Update & Continue</button>
+        <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag" (click)="checkFormChangedValue()">Edit & Continue</button>
+        <button   *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+      <!-- <button class="btn-purple btn-spacer" mat-raised-button>Reset</button> -->
+    </div>
+    <br>
+    <!-- <div class="row">
+      <div class="col-3">
+        <button mat-raised-button class="btn-green" (click)="editForm()" [disabled]="!viewOnly">Edit</button>
+      </div>
+      <div class="col-3">
+         <button mat-raised-button [disabled]="viewOnly" class="btn-green">Delete</button>
+      </div>
+      <div class="col-3">
+          <button mat-raised-button class="btn-green" [disabled]="!viewOnly" (click)="editRequest()">Edit Request</button>
+      </div>
+      <div class="col-3">
+         <button mat-raised-button class="btn-green">Config</button>
+      </div>
+   </div> -->
+    <br>
+  </ng-container>
+  </form>
+</div>
+<app-edit-request-modal #editReference (confirm)="editConfirm($event)"></app-edit-request-modal>

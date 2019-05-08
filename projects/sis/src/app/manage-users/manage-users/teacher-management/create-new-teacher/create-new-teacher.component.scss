@@ -1,0 +1,34 @@
+
+
+.teacher-img {
+  background-image: url('http://via.placeholder.com/109x145');
+}
+/* @media only screen and (max-width:996px){
+   .col-md-2{
+   margin-top: 5px;
+  }
+
+} */
+.image-upload > input
+{
+  display: none;
+}
+
+.image-upload img
+{
+  cursor: pointer;
+}
+
+.white-box{
+margin-bottom: 25px;
+}
+
+.user-table {
+  padding-top: 10px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+#teacherImage{
+  background-image : url("../../../../../assets/images/avatar-pic.png");
+}

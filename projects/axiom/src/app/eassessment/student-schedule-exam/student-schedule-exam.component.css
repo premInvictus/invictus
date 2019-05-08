@@ -1,0 +1,29 @@
+
+@media screen and (max-width: 420px) {
+  .top_header{
+  width:755px;
+  float: left;
+ }
+ .mat-row{
+  width:755px;
+   float: left;
+  } 
+  .mat-cell {
+    font-size: 12px !important;
+    padding-right: 0px !important;
+  }
+  }
+
+
+.mat-column-Test-Date {
+  flex:0 0 15%;
+}
+
+  @media (max-width: 426px){
+  .col-mobile-view-add-ques {
+    padding-bottom: 35px;
+  }
+  }
+  .fa-play {
+    color: #ffc108;
+  }

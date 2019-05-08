@@ -1,0 +1,19 @@
+.overallChart{
+  min-width: 310px; 
+  height: 400px; 
+  margin: 0 auto;
+  display: block;
+}
+
+.rowBold{
+  font-weight: bold;
+}
+.grade-value
+{
+  color: #ffffff;
+  font-weight: bolder;
+}
+.grade-button-border
+{
+  border:none !important
+}

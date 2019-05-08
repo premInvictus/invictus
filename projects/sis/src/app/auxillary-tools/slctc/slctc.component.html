@@ -1,0 +1,175 @@
+<div class="container-box__grey">
+  <div class="container-box__white">
+    <form [formGroup]="tcform1" novalidate>
+    <div class="row">
+      <div class="col-10 ">
+        <label><b>Select SLC/TC List Type :</b></label>
+        <mat-radio-group formControlName="tc_approval_status" (change)="approvalStatus()" >
+          <mat-radio-button class="inline-form-radio-spacing" value="0" checked="checked">Pending List</mat-radio-button>
+          <mat-radio-button class="inline-form-radio-spacing" value="1" >Issued List</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="col-2 text-right" *ngIf="isExistUserAccessMenu('262')">
+        <button mat-raised-button class="btn-neutral-dull" (click)="requestSlctc()" >Request SLC/TC</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+<div class="container-box__grey">
+  <div class="container-box__white">
+    <div>
+      <div class="row">
+        <div class="col-4 text-center">
+          <div class="line-divider"></div>
+        </div>
+        <div class="col-4 text-center">
+          <h6 class="text-uppercase text-center"><b>{{divHeader}}</b></h6>
+        </div>
+        <div class="col-4 text-center">
+          <div class="line-divider"></div>
+        </div>
+      </div>
+      <br>
+      <form [formGroup]="tcform2" novalidate>
+      <div class="row">
+        <div class="col-12 text-center">
+          <label><b>Filter based on :</b></label>
+          <mat-radio-group (change)="filterStatus()" formControlName="based_on">
+            <mat-radio-button class="inline-form-radio-spacing" value="1" #radioOne checked>From - To</mat-radio-button>
+            <mat-radio-button class="inline-form-radio-spacing" value="2" #radioTwo>Admission No.</mat-radio-button>
+            <mat-radio-button class="inline-form-radio-spacing" value="3" #radioThree>Class - Section</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12" *ngIf="radioOne.checked">
+          <div class="row">
+            <div class="col-5">
+              <mat-form-field class="form-field">
+                <input matInput [matDatepicker]="picker1" placeholder="From" formControlName="tc_fromdate">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-5">
+              <mat-form-field class="form-field">
+                <input matInput [matDatepicker]="picker2" placeholder="To" formControlName="tc_todate">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-2 margin-top-10">
+                <button mat-raised-button class="btn-success" (click)="getSlcTc()" >Generate</button>
+              </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-12">
+              <button mat-raised-button class="btn-deeppurple" (click)="getSlcTc()" >Generate</button>
+            </div>
+          </div> -->
+        </div>
+        <div class="col-12" *ngIf="radioTwo.checked">
+          <div class="row">
+            <div class="col-10">
+              <mat-form-field class="form-field">
+                <input matInput placeholder="Admission No." formControlName="tc_admission_no">
+              </mat-form-field>
+            </div>
+            <div class="col-2 margin-top-10">
+                <button mat-raised-button class="btn-success" (click)="getSlcTc()">Generate</button>
+              </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-12">
+              <button mat-raised-button class="btn-deeppurple" (click)="getSlcTc()">Generate</button>
+            </div>
+          </div> -->
+        </div>
+        <div class="col-12" *ngIf="radioThree.checked">
+          <div class="row">
+            <div class="col-5">
+              <mat-form-field class="form-field">
+                  <mat-select formControlName="class_id" placeholder="Class" (ngModelChange)="getSectionsByClass()">
+                      <mat-option value="">Please Select</mat-option>  
+                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                          {{item.class_name}}
+                      </mat-option>
+                  </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-5">
+              <mat-form-field class="form-field">
+                <mat-select placeholder="Section" formControlName="sec_id">
+                    <mat-option value="">Please Select</mat-option>  
+                  <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                        {{item.sec_name}}
+                    </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-2 margin-top-10">
+                <button mat-raised-button class="btn-success" (click)="getSlcTc()">Generate</button>
+              </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-12">
+              <button mat-raised-button class="btn-deeppurple" (click)="getSlcTc()">Generate</button>
+            </div>
+          </div> -->
+        </div>
+      </div>
+      </form>
+      <br>
+      <div class="divider__grey"></div>
+      <div class="row" *ngIf="tableDiv === false">
+        <div class="col-12">
+          <div class="container-box">
+              <h6>No Records Found.</h6>
+              <p class="remove-bottom-margin">Select parameter to generate records.</p>
+          </div>
+          
+        </div>
+      </div>
+      <div class="row" *ngIf="tableDiv">
+        <div class="col-12">
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table-100">
+            <!-- Position Column -->
+            <ng-container *ngFor="let column of renderTable.columnDef; let i=index">
+              <ng-container [matColumnDef]="column">
+                <th mat-header-cell *matHeaderCellDef> {{renderTable.colunmHeader[i]}} </th>
+                <ng-container *ngIf="column != 'action';else else_content">
+                    <td mat-cell *matCellDef="let element" class="text-capitalize"> {{element[column]}} </td>
+                </ng-container>                
+                <ng-template #else_content>
+                    <td mat-cell *matCellDef="let element"> 
+                        <ng-container *ngFor="let action of renderTable.actions">
+                          <ng-container *ngIf="action.actionpermission != '' && isExistUserAccessMenu(action.actionpermission)">
+                              <button 
+                              mat-raised-button [ngClass]="action.actionclass" 
+                              (click)="actionConfig(action.actionfunction,element[column])" >{{action.actionname}}</button>
+                          </ng-container>
+                          <ng-container *ngIf="action.actionpermission == '' ">
+                              <button [hidden]="element.status == 'Approved' && (action.actionname == 'Reissue' || action.actionname == 'Issue' ) 
+                              || element.status == 'Issued' && (action.actionname == 'Issue' || action.actionname == 'Print') ||
+                              element.status == 'Printed' && (action.actionname == 'Print' || action.actionname == 'Reissue') || 
+                              element.status == 'Reissued' && (action.actionname == 'Print' || action.actionname == 'Issue')"
+                              mat-raised-button [ngClass]="action.actionclass" (click)="actionConfig(action.actionfunction,element[column])" >{{action.actionname}}</button>
+                          </ng-container>                            
+                        </ng-container>
+                    </td>
+                </ng-template>
+              </ng-container>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="renderTable.columnDef"></tr>
+            <tr mat-row *matRowDef="let row; columns: renderTable.columnDef;"></tr>
+          </table>
+        </div>
+      </div>
+    
+  </div>
+  </div>
+</div>

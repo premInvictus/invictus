@@ -1,0 +1,87 @@
+<div class="container-box__white">
+  
+  <div class="row">
+  <div class="col-lg-12">
+  <div class="row">
+     
+     <div class="col-12 text-center">
+        <h4 class="text-uppercase"><b>Admission Remarks</b></h4>
+     </div>
+     
+  </div>
+  <br>
+  <form [formGroup]="admissionRemarkForm">
+     <div class="row">
+        <ng-container formArrayName="admission_array" >
+           <ng-container *ngFor="let item of admissionRemarkFields.controls; let i = index" [formGroupName]="i" >
+           <div class="col-6">
+              <input type="hidden" formControlName="equs_id" value="{{item.controls?.equs_id.value}}">
+              <label><b>Q.{{i+1}}</b> {{item.controls?.equs_name.value}}</label>
+              <mat-form-field class="form-field">
+                 <textarea matInput placeholder="Write Your Answer" formControlName="eqa_answer" 
+                 value="{{item.controls?.eqa_answer.value}}" [readonly]="viewOnly"></textarea>
+              </mat-form-field>
+           </div>
+        </ng-container>
+        </ng-container>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+           <div class="col-4 text-center">
+              <div class="line-divider"></div>
+           </div>
+           <div class="col-4 text-center">
+              <h4><b>HOW DO YOU LEARN ABOUT THE SCHOOL</b></h4>
+           </div>
+           <div class="col-4 text-center">
+              <div class="line-divider"></div>
+           </div>
+        </div>
+        <br>
+        <div class="row">
+           <ng-container formArrayName="learn_array" >
+              <ng-container *ngFor="let item of learnFields.controls; let i = index" [formGroupName]="i" >
+              <div class="col-6">
+                 <mat-checkbox class="known-school-checkbox" checked={{item.controls.eqa_answer?.value}} 
+                 (change)="setCheckedId(item.controls.equs_id?.value)" [disabled]="viewOnly"> {{item.controls.equs_name?.value}}</mat-checkbox>
+              </div>
+              <div class="col-6">
+                 <mat-form-field class="form-field">
+                    <input class="text-capitalize" matInput placeholder="From Whom" formControlName="eqa_answer" 
+                    value="{{item.controls.eqa_answer?.value}}" [readonly]="viewOnly">
+                 </mat-form-field>
+              </div>
+           </ng-container>
+           </ng-container>
+        </div>
+        <br>
+        <br>
+        <div class="text-center">
+           <!-- <button mat-raised-button class="btn-green" *ngIf="!editFlag" (click)="insertAdmissionRemarks()" [disabled]="viewOnly">Save & Continue</button>
+           <button mat-raised-button class="btn-green"  *ngIf="editFlag" (click)="updateAdmissionRemarks()">Update & Continue</button> -->
+           <button mat-raised-button class="btn-success" *ngIf="addOnly" (click)="insertAdmissionRemarks()">Save & Continue</button>
+           <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateAdmissionRemarks(true)">Submit</button>
+            <button  mat-raised-button class="btn-success btn-spacer" *ngIf="saveFlag" (click)="updateAdmissionRemarks(false)">Update & Continue</button>
+            <button  *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+
+        </div>
+      
+      <br>
+  <!-- <div class="row">
+    <div class="col-4">
+       <button mat-raised-button class="btn-green" (click)="enableEditing()">Edit</button>
+    </div>
+    <div class="col-4">
+       <button mat-raised-button class="btn-green">Edit Request</button>
+    </div>
+    <div class="col-4">
+       <button mat-raised-button class="btn-green">Config</button>
+    </div>
+ </div> -->
+ <br>
+ <br>
+  </form>
+  </div>
+</div>
+</div>

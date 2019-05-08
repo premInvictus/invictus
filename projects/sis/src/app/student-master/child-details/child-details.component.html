@@ -1,0 +1,259 @@
+<form [formGroup]="childdetialsform" novalidate>
+      <div class="container-box__white">
+         <!-- <div class="row margin-bottom-15">
+            <div class="col-12">
+               <div class="float-right">
+             <button *ngIf="viewOnly" mat-raised-button class="btn-neutral" (click)="editRequest()"><mat-icon class="btn-top-icon">create</mat-icon>&nbsp; &nbsp;Edit Request</button>
+            </div>
+            </div> 
+            </div> -->
+         <div class="row">
+            <!-- <div class="col-3 text-center">
+               <div class="line-divider"></div>
+               </div> -->
+            <div class="col-6 text-left">
+               <h4 class="text-uppercase"><b>Personal Details</b></h4>
+            </div>
+            <!-- <div class="col-3 text-center">
+               <div class="line-divider"></div>
+               </div> -->
+            <div class="col-6">
+               <div class="float-right">
+                  <button *ngIf="viewOnly && isExistUserAccessMenu('request')" mat-raised-button class="btn-neutral-dull" (click)="editRequest()" (keydown.enter)="$event.preventDefault()">
+                  <mat-icon class="btn-top-icon">create</mat-icon>
+                  &nbsp; &nbsp;Edit Request</button>
+               </div>
+            </div>
+         </div>
+         <br>
+         <div class="row">
+            <div class="col-4" *ngIf="checkIfFieldExist('upd_aadhaar_no')">
+               <!-- <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Aadhaar No.</mat-label> -->
+               <mat-form-field class="form-field">
+                  <input formControlName="upd_aadhaar_no" mask="0000 0000 0000 0000" minlength="12" maxlength="14" matInput placeholder="Aadhar No." [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-error>
+                     This field is required
+                  </mat-error>
+               </mat-form-field>
+            </div>
+            <div class="col-4" *ngIf="checkIfFieldExist('upd_dob')">
+               <!-- <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Date of Birth</mat-label> -->
+               <mat-form-field class="form-field">
+                  <input formControlName="upd_dob" [max]="dobDate" matInput [matDatepicker]="picker" placeholder="Date of birth" (dateChange)="addEvent('change', $event)" required [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker [disabled]="viewOnly"></mat-datepicker>
+                  <mat-error>
+                     This field is required
+                  </mat-error>
+               </mat-form-field>
+            </div>
+            <div class="col-4" *ngIf="checkIfFieldExist('upd_doj')">
+               <!-- <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Date of Joining</mat-label> -->
+               <mat-form-field class="form-field">
+                  <input formControlName="upd_doj" [max]="maxDate" matInput [matDatepicker]="picker1" placeholder="Date of Enrollment" (dateChange)="addEvent1('change', $event)" required [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1 [disabled]="viewOnly"></mat-datepicker>
+                  <mat-error>
+                     This field is required
+                  </mat-error>
+               </mat-form-field>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-4" *ngIf="checkIfFieldExist('upd_nationality')">
+               <div class="row">
+                  <div class="col-12">
+                     <label>Nationality</label><br>
+                     <mat-radio-group formControlName="upd_nationality" required [disabled]="viewOnly">
+                     <mat-radio-button value="91">Indian</mat-radio-button>
+                     <mat-radio-button value="Others" #nationlityothers class="inline-form-radio-spacing">Others</mat-radio-button>
+                     </mat-radio-group>
+                  </div>
+                  <div class="col-12" *ngIf="nationlityothers.checked">
+                     <mat-form-field class="form-field">
+                        <mat-select formControlName="upd_nationality_other" (ngModelChange)="set_upd_nationality()" placeholder="Select Country" [disabled]="viewOnly">
+                           <mat-option value="">Please Select</mat-option>
+                           <mat-option *ngFor="let item of arrayCountry" [value]="item.cou_id">
+                           {{item.cou_name}}
+                           </mat-option>
+                        </mat-select>
+                     </mat-form-field>
+                  </div>
+               </div>
+            </div>
+            <div class="col-4" *ngIf="checkIfFieldExist('upd_gender')">
+               <label>Gender</label><br>
+               <mat-radio-group formControlName="upd_gender" required [disabled]="viewOnly">
+                  <mat-radio-button value="M">Male</mat-radio-button>
+                  <mat-radio-button class="inline-form-radio-spacing" value="F">Female</mat-radio-button>
+                  <mat-radio-button class="inline-form-radio-spacing" value="O">Others</mat-radio-button>
+               </mat-radio-group>
+            </div>
+            <div class="col-4" *ngIf="checkIfFieldExist('upd_special_need')">
+               <label>Child with special need</label><br>
+               <mat-radio-group formControlName="upd_special_need" [disabled]="viewOnly">
+                  <mat-radio-button value="Y">Yes</mat-radio-button>
+                  <mat-radio-button class="inline-form-radio-spacing" value="N">No</mat-radio-button>
+               </mat-radio-group>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-4" *ngIf="checkIfFieldExist('upd_category')">
+               <div class="row">
+                  <div class="col-12">
+                     <label>Category</label><br>
+                     <mat-radio-group formControlName="upd_category" required [disabled]="viewOnly">
+                     <mat-radio-button value="ST/SC">ST/SC</mat-radio-button>
+                     <mat-radio-button value="OBC" class="inline-form-radio-spacing">OBC</mat-radio-button>
+                     <mat-radio-button value="GEN" class="inline-form-radio-spacing">GEN</mat-radio-button>
+                     <mat-radio-button value="Others" #categoryothers class="inline-form-radio-spacing">Others</mat-radio-button>
+                     </mat-radio-group>
+                  </div>
+                  <div class="col-12" *ngIf="categoryothers.checked">
+                     <!-- <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Others</mat-label> -->
+                     <mat-form-field class="form-field">
+                        <input matInput formControlName="upd_category_other" placeholder="Please Specify" [readonly]="viewOnly">
+                     </mat-form-field>
+                  </div>
+               </div>
+            </div>
+            <div class="col-4" *ngIf="checkIfFieldExist('upd_religion_id')">
+               <!-- <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Religion</mat-label> -->
+               <br>
+               <mat-form-field class="form-field">
+                  <mat-select formControlName="upd_religion_id" placeholder="Religion" required [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of arrayReligion" [value]="item.rel_id">
+                  {{item.rel_name}}
+                  </mat-option>
+                  </mat-select>
+                  <mat-error>
+                     This field is required
+                  </mat-error>
+               </mat-form-field>
+            </div>
+            <div class="col-4" *ngIf="checkIfFieldExist('upd_mt_id')">
+               <br>
+               <!-- <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Mother Tongue</mat-label> -->
+               <mat-form-field class="form-field">
+                  <mat-select formControlName="upd_mt_id" placeholder="Mother Tongue" required [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of arrayMotherTongue" [value]="item.mt_id">
+                  {{item.mt_name}}
+                  </mat-option>
+                  </mat-select>
+                  <mat-error>
+                     This field is required
+                  </mat-error>
+               </mat-form-field>
+            </div>
+         </div>
+         <br />
+         <div class="row">
+            <!-- <div class="col-4 text-center">
+               <div class="line-divider"></div>
+               </div> -->
+            <div class="col-12">
+               <h4 class="text-uppercase"><b>RESIDENTIAL ADDRESS</b></h4>
+            </div>
+            <!-- <div class="col-4 text-center">
+               <div class="line-divider"></div>
+               </div> -->
+         </div>
+         <br />
+         <div class="row" *ngIf="checkIfFieldExist('ea_address1')">
+            <div class="col-12" >
+               <!-- <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Address Line 1</mat-label> -->
+               <mat-form-field class="form-field ">
+                  <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address Line 1" required [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"/>
+                  <mat-error>
+                     This field is required
+                  </mat-error>
+               </mat-form-field>
+            </div>
+         </div>
+         <div class="row" *ngIf="checkIfFieldExist('ea_address2')">
+            <div class="col-12">
+               <mat-form-field class="form-field" >
+                  <input class="text-capitalize" formControlName="ea_address2" matInput placeholder="Address Line 2" [readonly]="viewOnly" />
+               </mat-form-field>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-4" *ngIf="checkIfFieldExist('ea_city')">
+               <mat-form-field class="form-field" >
+                  <mat-select formControlName="ea_city" placeholder="City" required [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of arrayCity" [value]="item.cit_id">
+                  {{item.cit_name}}
+                  </mat-option>
+                  </mat-select>
+                  <mat-error>
+                     This field is required
+                  </mat-error>
+               </mat-form-field>
+            </div>
+            <div class="col-4" *ngIf="checkIfFieldExist('ea_state')">
+               <mat-form-field class="form-field" >
+                  <mat-select formControlName="ea_state" placeholder="State" required [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
+                  {{item.sta_name}}
+                  </mat-option>
+                  </mat-select>
+                  <mat-error>
+                     This field is required
+                  </mat-error>
+               </mat-form-field>
+            </div>
+            <div class="col-4" *ngIf="checkIfFieldExist('ea_country')">
+               <mat-form-field class="form-field" >
+                  <mat-select formControlName="ea_country" placeholder="Country" required [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of arrayCountry" [value]="item.cou_id">
+                  {{item.cou_name}}
+                  </mat-option>
+                  </mat-select>
+                  <mat-error>
+                     This field is required
+                  </mat-error>
+               </mat-form-field>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-4" *ngIf="checkIfFieldExist('ea_pincode')">
+               <mat-form-field class="form-field" >
+                  <input formControlName="ea_pincode" minlength="6" maxlength="7"  mask="000 000" matInput placeholder="Zip/Pin Code" required [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"/>
+                  <mat-error>
+                     This field is required
+                  </mat-error>
+               </mat-form-field>
+            </div>
+         </div>
+         <br>
+         <br>
+         <div class="text-center tab-margin-button-bottom">
+            <button *ngIf="addOnly" mat-raised-button class="btn-success" (click)="saveForm()">Save & Continue</button>
+            <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+            <button  *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer" (click)="updateForm(false)">Update & Continue</button>
+            <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag" (click)="checkFormChangedValue()">Edit & Continue</button>
+            <button   *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+            <!-- <button class="btn-purple btn-spacer" mat-raised-button>Reset</button> -->
+         </div>
+         <br>
+         <!-- <div class="row">         
+            <div class="col-2">
+               <button *ngIf="!viewOnly" [disabled]="viewOnly" mat-raised-button class="btn-green" (click)="cancelForm()">Cancel</button>
+            </div>                
+            </div> -->
+         <br>
+      </div>
+   </form>
+   <app-edit-request-modal #editReference (confirm)="editConfirm($event)"></app-edit-request-modal>

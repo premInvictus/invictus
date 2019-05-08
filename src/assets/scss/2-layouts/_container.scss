@@ -1,0 +1,253 @@
+// .container-box__grey {
+//     margin: 8px;
+//     background-color: #f1f1f1;
+// }
+
+// .container-box__uploadbox:hover {
+//     padding: 30px;
+   
+//     background-color: #cfd8dc;
+// }
+
+// .container-box__uploadbox {
+//     padding: 15px;
+   
+//     background-color: #f1f1f1;
+// }
+
+// .bulk-upload-content {
+//     margin: 15px;
+//     height: 95vh;
+//     border: 4px dashed #88a3af;
+// }
+
+// .bulk-upload-sub-content {
+//     margin-top: 18%;
+// }
+
+// .container-box {
+//     padding: 25px 25px 0px 25px;
+// }
+
+// .container-box__white {
+//     background-color: #ffffff;
+//     padding: 10px;
+// }
+
+// .dynamic-report-drag-container {
+//     height: 100vh;
+// }
+
+
+// .container-outline__white {
+//     border: 2px solid #ffffff;
+//     padding: 25px;
+// }
+
+// .divider__grey {
+//     border-top: 8px solid #f1f1f1;
+//     margin: 0 -25px !important;
+
+// }
+
+// .container-outline__black {
+//     border: 1px solid #000000;
+//     padding: 25px;
+// }
+
+// .container-outline__dashblue {
+//     border: 2px solid #3599F5;
+//     padding: 15px;
+// }
+
+// .container-outline__dashyellow {
+//     border: 2px solid #CACCD4;
+//     padding: 15px;
+// }
+
+// .container-outline__dashpurple {
+//     border: 2px solid #6B55F5;
+//     padding: 15px;
+// }
+
+// .container-outline__dashgray {
+//     border: 2px solid #FCAC31;
+//     padding: 15px;
+// }
+
+// .container-student-img {
+//     height: 314.94px;
+// }
+
+// .container-padding {
+//     padding: 25px;
+// }
+
+// .container-box__idcard {
+//     border: 2px solid #000;
+// }
+
+// .container-box__idheader {
+//     background: #f9a61a;
+// }
+
+// .container-box__idbody {
+//     background-color: #ffffff;
+//     padding: 35px;
+// }
+
+// .container-printid-landscape {
+//     width: 324px;
+//     height: 204px;
+// }
+
+// .container-printid-portrait {
+//     width: 204px;
+//     height: 324px;
+// }
+
+// .container-portrait-box__white {
+//     background-color: #ffffff;
+//     position: relative;
+//     border-radius: 15px;
+// }
+
+// .container-landscape-box__white {
+//     background-color: #ffffff;
+//     border-radius: 15px;
+// }
+
+// #id_card_portrait_body {
+//     position: absolute;
+//     top: 40px;
+//     padding: 0 10px 0 10px;
+// }
+
+// #id_card_portrait_body_style3 {
+//     position: absolute;
+//     top: 7px;
+//     padding: 0 10px 0 10px;
+// }
+
+// #id_card_landscape_body {
+//     position: absolute;
+//     top: 8px;
+//     width: 324px;
+// }
+
+// #id_card_portrait_body_style2 {
+//     position: absolute;
+//     top: 7px;
+//     padding: 0 10px 0 10px;
+// }
+
+
+
+// #id_card_header {
+//     background-color: #013243;
+//     padding-bottom: 2px;
+//     color: #ffffff;
+//     border-top-right-radius: 15px;
+//     border-top-left-radius: 15px;
+// }
+
+// #id_card_body {
+//     padding: 4px 8px 0px 8px;
+// }
+
+// .filter-header-container {
+//     background-color: #02ed10;
+//     padding: 5px 5px;
+//     color: #ffffff;
+// }
+
+// .filter-body-green-container {
+//     background-color: #e7fbe0;
+//     padding: 15px 25px;
+//     color: #000;
+//     height: 55px;
+// }
+
+// .filter-body-white-container {
+//     background-color: #ffffff;
+//     padding: 5px 25px;
+//     color: #000;
+// }
+
+// .filter-body-white-container-filterone {
+//     background-color: #ffffff;
+//     padding: 15px 25px;
+//     color: #000;
+//     height: 55px;
+// }
+
+// .filter-discrete-val-container {
+//     height: 300px;
+// }
+
+// .student-img__container {
+//     height: 357.44px;
+// }
+
+.container-box__grey {
+    padding: 25px;
+    background-color: $sidenav-content-background;
+}
+
+.container-report-box__grey {
+    padding: 16px;
+    background-color: $sidenav-content-background;
+}
+
+.card-content__container {
+    padding: 40px 47px !important;
+}
+
+.card-top-title__container {
+    padding: 20px;
+}
+
+.card-top-form__container {
+    padding: 30px !important;
+}
+
+.processid-container {
+    background-color: #F5F5F5;
+    height: 40px;
+    width:100%;
+    padding: 10px;
+}
+
+.liveadm-container {
+    background-color: #43A047;
+    height: 40px;
+    width:100%;
+    padding: 10px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.blue-box {
+    background-color: #1E88E5;
+    padding: 8px 35px;
+    width: 248px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.grey-box {
+    background-color: #C8D6E5;
+    padding: 19px;
+    height: 62px;
+}
+
+.card-height-570 {
+    height: 570.5px;
+}
+
+.report-card__container {
+    margin-top: 25px;
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-bottom: 25px;
+}
