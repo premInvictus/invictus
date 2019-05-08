@@ -25,12 +25,14 @@ import {ResolverService} from './_services/resolver.service';
 // import component
 import { AppComponent } from './app.component';
 import { MAT_DATE_LOCALE } from '@angular/material';
+import { LoaderService } from './_services/loader.service';
 const providers = [CommonAPIService,
 	SisService,
 	ProcesstypeService,
 	NotificationsService,
 	RoutingStateService,
 	ResolverService,
+	LoaderService,
 	{provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
 	{provide: HTTP_INTERCEPTORS, useClass: ApiPrefixInterceptor, multi: true},
 	{provide: HTTP_INTERCEPTORS, useClass: SuccessErrorInterceptor, multi: true}];

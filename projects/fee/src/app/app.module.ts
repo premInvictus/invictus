@@ -26,6 +26,7 @@ import { UserTypeService } from './usertype/usertype.service';
 import { AppComponent } from './app.component';
 import { MAT_DATE_LOCALE } from '@angular/material';
 import { AuthGuard } from './_guards';
+import { LoaderService } from './_services/loader.service';
 const providers = [CommonAPIService,
 	SisService,
 	ProcesstypeService,
@@ -35,6 +36,7 @@ const providers = [CommonAPIService,
 	AuthGuard,
 	UserTypeService,
 	ResolverService,
+	LoaderService,
 	{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
 	{ provide: HTTP_INTERCEPTORS, useClass: ApiPrefixInterceptor, multi: true },
 	{ provide: HTTP_INTERCEPTORS, useClass: SuccessErrorInterceptor, multi: true }];

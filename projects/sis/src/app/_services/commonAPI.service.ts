@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { Subject } from 'rxjs';
 import { TreeviewItem } from 'ngx-treeview';
 import { NotificationsService } from 'angular2-notifications';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import {LoaderService} from './loader.service';
 import { DatePipe } from '@angular/common';
 import { CookieService } from 'ngx-cookie';
 
@@ -15,6 +15,7 @@ export class CommonAPIService {
 	userData: any;
 	constructor(private http: HttpClient,
 		private _notificationService: NotificationsService,
+		private loader: LoaderService,
 		private _cookieService: CookieService) { }
 	UserAccessMenu: any[] = [];
 	showLoading = new Subject();
@@ -29,11 +30,11 @@ export class CommonAPIService {
 	}
 
 	startLoading() {
-		this.showLoading.next(true);
+		this.loader.startLoading();
 	}
 
 	stopLoading() {
-		this.showLoading.next(false);
+		this.loader.stopLoading();
 	}
 
 	getCokkieData() {

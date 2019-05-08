@@ -8,7 +8,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DatePipe } from '@angular/common';
 import { CookieService } from 'ngx-cookie';
 import { environment } from 'src/environments/environment';
-
+import {LoaderService} from './loader.service';
 @Injectable()
 export class CommonAPIService {
 
@@ -17,7 +17,8 @@ export class CommonAPIService {
 	menus: any[] = [];
 	constructor(private http: HttpClient,
 		private _notificationService: NotificationsService,
-		private _cookieService: CookieService) {
+		private _cookieService: CookieService,
+		private loader: LoaderService) {
 			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
 			(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
 		 }
@@ -34,11 +35,11 @@ export class CommonAPIService {
 	}
 
 	startLoading() {
-		this.showLoading.next(true);
+		this.loader.startLoading();
 	}
 
 	stopLoading() {
-		this.showLoading.next(false);
+		this.loader.stopLoading();
 	}
 
 	getCokkieData() {
