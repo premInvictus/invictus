@@ -7,7 +7,7 @@ import {
 	NavigationStart,
 	Router
 } from '@angular/router';
-import { CommonAPIService } from './_services/index';
+import { CommonAPIService } from 'src/app/_services';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',

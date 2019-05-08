@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoaderService } from './_services/loader.service';
-import { CommonAPIService } from './_services';
+import { CommonAPIService } from 'src/app/_services';
 import {
 	Event,
 	NavigationCancel,
@@ -9,7 +8,6 @@ import {
 	NavigationStart,
 	Router
 } from '@angular/router';
-import { CookieService } from 'ngx-cookie';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -24,10 +22,9 @@ export class AppComponent implements OnInit {
 		lastOnBottom: true
 	};
 	showLoadingFlag = false;
-	constructor(private router: Router, private loaderService: LoaderService,
-		private _cookieService: CookieService,
+	constructor(private router: Router,
 		private commonAPIService: CommonAPIService) {
-		this.loaderService.showLoading.subscribe((flag: boolean) => {
+		this.commonAPIService.showLoading.subscribe((flag: boolean) => {
 			this.showLoadingFlag = flag;
 		});
 		this.router.events.subscribe((event: Event) => {
