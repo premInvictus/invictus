@@ -51,7 +51,7 @@ export class FilterModalComponent implements OnInit {
 		{ filterId: 'upd_category', apiName: 'getCategory', fieldId: 'cat_id', fieldValue: 'cat_name' },
 		{ filterId: 'fcc_id', apiName: 'getConcessionCategory', fieldId: 'fcc_id', fieldValue: 'fcc_name' },
 		{ filterId: 'ts_id', apiName: 'getSlabs', fieldId: 'ts_id', fieldValue: 'ts_name' },
-		{ filterId: 'tr_id', apiName: 'getRoutes', fieldId: 'tr_id', fieldValue: 'tr_name' }
+		{ filterId: 'tr_id', apiName: 'getRoutes', fieldId: 'tr_id', fieldValue: 'tr_route_name' }
 	];
 	filtertype = null;
 	constructor(
@@ -425,7 +425,7 @@ export class FilterModalComponent implements OnInit {
 						});
 						break;
 						case 'getConcessionCategory':
-						this.feeService.getConcessionCategory({}).subscribe((result: any) => {
+						this.feeService.getConcessionCategory({fcc_is_hostel_fee: '0'}).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								if (result.data.length > 0) {
 									for (const item1 of result.data) {

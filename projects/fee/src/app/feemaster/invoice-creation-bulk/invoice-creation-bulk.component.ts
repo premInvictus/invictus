@@ -270,6 +270,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	openFilterDialog() {
 		const dialogRefFilter = this.dialog.open(FilterModalComponent, {
 			width: '80%',
+			height: '100%',
 			data: {
 				filterResult: this.filterResult,
 				pro_id: '3'
