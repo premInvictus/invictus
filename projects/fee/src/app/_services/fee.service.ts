@@ -158,15 +158,15 @@ export class FeeService {
 	}
 	insertFeeAccount(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + environment.apiSisUrl + '/feeAccount/insertFeeAccount', value);
+		return this.http.post(environment.apiSisUrl + '/feeAccount/insertFeeAccount', value);
 	}
 	updateFeeAccount(value) {
 		this.service.startLoading();
-		return this.http.put(environment.apiFeeUrl + environment.apiSisUrl + '/feeAccount/updateFeeAccount/' + value.accd_id , value);
+		return this.http.put(environment.apiSisUrl + '/feeAccount/updateFeeAccount/' + value.accd_id , value);
 	}
 	getFeeAccount(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + environment.apiSisUrl + '/feeAccount/getFeeAccount', value);
+		return this.http.post(environment.apiSisUrl + '/feeAccount/getFeeAccount', value);
 	}
 	getInvoiceBifurcation(value) {
 		this.service.startLoading();
