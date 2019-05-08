@@ -6,6 +6,7 @@ import { CookieService } from 'ngx-cookie';
 import { environment } from 'src/environments/environment';
 import { UserTypeService } from 'projects/fee/src/app/usertype/usertype.service';
 import { SisService, CommonAPIService } from 'projects/fee/src/app/_services';
+import {LoaderService} from 'projects/fee/src/app/_services/loader.service';
 @Component({
 	selector: 'app-top-nav',
 	templateUrl: './top-nav.component.html',
@@ -57,6 +58,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		private sisService: SisService,
 		private router: Router,
 		private userTypeService: UserTypeService,
+		private loader: LoaderService,
 		private commonAPIService: CommonAPIService, private _cookieService: CookieService,
 		private route: ActivatedRoute) {
 
@@ -126,7 +128,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		});
 	}
 	goToProject(pro_url, pro_status, pro_id) {
-		console.log(pro_id);
+		this.loader.startLoading();
 		const findex = this.projectsArray.findIndex(f => f.pro_id === pro_id);
 		if (findex !== -1) {
 			this.defaultProject = this.projectsArray[findex].pro_name;
