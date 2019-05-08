@@ -324,7 +324,7 @@ export class SisService {
 	}
 	getCategory() {
 		this.service.startLoading();
-		return this.http.get('/siSetup/category');
+		return this.http.get(environment.apiSisUrl + '/siSetup/category');
 	}
 	getState() {
 		this.service.startLoading();
