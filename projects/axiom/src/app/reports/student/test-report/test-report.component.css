@@ -1,0 +1,43 @@
+
+.fa-trophy {
+  color: #28a745;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.example-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 20%;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 550px;
+}
+
+.top_header {
+  background-color: #e6e5df;
+}
+
+
+.mat-header-cell {
+  color: #343a40;
+  font-weight: 500;
+}
+
+.mat-column-name {
+  flex: 0 0 15%;
+}
+
+.mat-column-position {
+  flex: 0 0 5%;
+}

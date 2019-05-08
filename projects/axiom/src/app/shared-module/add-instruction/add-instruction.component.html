@@ -1,0 +1,195 @@
+<div class="row">
+    <div class="col-lg-12">
+            <button *ngIf="!tableCollection" mat-icon-button class="page-double-backward float-left clear-response-button" matTooltip="Go Back" (click)="gobacktable()">
+                    <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+                    </button>
+        <div class="close-button-content">
+            <button mat-icon-button class="close-button" (click)="closeMainDialog()" matTooltip="Close">
+                <img src="../../../../../assets/images/clear-button.svg">
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="row">
+    <div class="col-lg-12">
+      <div class="information-bar">
+        <div class="information-bar-content"> -->
+<!-- <div class="row">
+            <div class="col-lg-12">
+              <span class="info-template-name"><b>Add Instruction</b> </span>
+            </div>
+          </div> -->
+<!-- <br> -->
+<!-- <div class="row row-remove-top-margin">
+            <div class="col-lg-12 remove-col-modal-padding" >
+              <div class="row row-remove-top-margin">
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-first-circle"></i> <span><b>Class:</b> </span>
+                </div>
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-second-circle"></i> <span><b>Section:</b> </span>
+                </div>
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-third-circle"></i> <span><b>Subject:</b> </span>
+                </div>
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-four-circle"></i> <span><b>Marks:</b> }</span>
+                </div>
+              </div>
+            </div>
+          </div> -->
+<!-- </div>
+      </div>
+    </div>
+  </div> -->
+  <div *ngIf="tableCollection">
+<div class="row">
+    <div class="col-lg-12">
+            <div class="white-box-content-title">
+                    <span>Select Instruction</span>
+                </div>
+    </div>
+</div>
+</div>
+<div *ngIf="instructionForm">
+<div class="row">
+        <div class="col-lg-12">
+            <div class="white-box-content-title">
+             <!-- <button class="back-button button-right-margin float-left" mat-button (click)="gobacktable()">Back</button> -->
+             <span>{{title}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="table-box">
+            <div class="row">
+                <div class="col-lg-12 col-remove-padding">
+                    <div *ngIf="tableCollection">
+                        <div class="dialog-table-review-main normal-table-responsive">
+                            <table class="dialog-table-review table">
+                                <thead>
+                                    <tr class="dialog-table-review-header">
+                                        <td class="text-center" style="width:3rem;">Select</td>
+                                        <td style="width:5rem;">S.No</td>
+                                        <td style="width:20rem;">Instruction</td>
+                                        <td class="text-center" style="width:5rem;">Modify</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-dialog-review-row" *ngFor="let item of instructionArray; let i=index;">
+                                        <td class="text-center">
+                                            <mat-radio-group class="add-instruct-radio" name="radio">
+                                                <mat-radio-button  [value]="item.ti_id" (click)="getInstructionId(item.ti_id)"></mat-radio-button>
+                                            </mat-radio-group>
+                                        </td>
+                                        <td>{{i+1}}</td>
+                                        <td style="width:20rem;word-wrap:break-word;">{{item.ti_instruction}}</td>
+                                        <td class="text-center">
+                                            <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top"
+                                            matTooltip="Edit" aria-hidden="true" (click)="editInstructionForm(item)"></i>&nbsp;
+                                            <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top" matTooltip="Delete" aria-hidden="true"
+                                                (click)="deleteInstruction(item.ti_id)"></i>
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td style="width:7rem;"><b>Total Marks: </b></td>
+                  <td class="text-center">{{printTemplate.tp_marks}}</td>
+              </tr> -->
+                                </tbody>
+                                <br>
+                                <!-- <div class="row">
+              <div class="col-lg-12">
+                Total : {{printTemplate.tp_marks}}
+              </div>
+            </div>
+            <br> -->
+                            </table>
+                        </div>
+                    </div>
+                    <div *ngIf="instructionForm">
+                            <form [formGroup]="instruction_form">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row">
+
+                                    <div class="col-lg-6">
+                                        <mat-form-field class="form-field">
+                                            <input matInput formControlName="ti_instruction" placeholder="Add Instruction Title : General Instruction" required>
+                                        </mat-form-field>
+                                    </div>
+                                   </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <mat-form-field class="form-field">
+                                            <textarea matInput formControlName="ti_description" rows="7" placeholder="Write a Description" required></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<br>
+
+<div *ngIf="tableCollection">
+<div class="row">
+    <div class="col-lg-12">
+        <div class="create-new-instruction float-left">
+            <div class="button-content">
+                <mat-chip-list>
+                    <mat-chip class="instruct-chip" style="width:165px !important" (click)="clickaddinstruction()" matTooltip="Add Instruction">
+                    <i class="fas fa-plus-circle instruct-add-icon instruct-content-one"></i>
+                        <span class="instruct-content-two button-instruct-title">New Instruction</span>
+                            <!-- <span class="left-title"></span> -->
+                        </mat-chip>
+                </mat-chip-list>
+            </div>
+        </div>
+        <div class="float-right">
+            <button  [disabled]="!instruction_form.value.ti_id" mat-raised-button class="submit-button" matTooltip="Submit Instruction" style="margin-right:0px !important" (click)="closeDialog()">Submit</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<div *ngIf="instructionForm">
+<div class="row">
+        <div class="col-lg-12">
+            <button mat-button *ngIf="!editInstructionFlag" class="submit-button" matTooltip="Insert Instruction" (click)="insertInstruction()">Add</button>
+            <button  *ngIf="editInstructionFlag" mat-button class="submit-button" matTooltip="Update Instruction" (click)="updateInstruction()">Update</button>
+            <button mat-button  class="reset-button button-right-margin" matTooltip="Reset" (click)="resetInstruction()">Reset</button>
+            <!-- <button class="back-button button-right-margin" mat-button (click)="gobacktable()">Back</button> -->
+        </div>
+    </div>
+    </div>
+
+<!--   
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="print-button-content">
+          <button class="submit-button" mat-button (click)="printStudentCopy()"><i class="fas fa-print dialog-table-print-icon"></i> &nbsp;Print</button>
+      </div>
+    </div>
+  </div> -->

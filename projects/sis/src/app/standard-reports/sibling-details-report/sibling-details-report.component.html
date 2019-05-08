@@ -1,0 +1,242 @@
+
+<div class="container-box__grey">
+    <div class="container-box__white">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h4 class="text-uppercase"><b>Siblings Report</b></h4>
+            </div>
+        </div>
+        <bR>
+        <form [formGroup]="studentSiblingsReportForm" autocomplete="off">
+            <div class="row">
+                <div class="col-3" *ngIf="showDate">
+                        <mat-form-field class="form-field">
+                                <input matInput [matDatepicker]="cpicker" placeholder="Date" formControlName="cdate">
+                                <mat-datepicker-toggle matSuffix [for]="cpicker" (dateInput)="cpicker('input', $event)">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #cpicker></mat-datepicker>
+                            </mat-form-field>
+                </div>
+                <div class="col-3" *ngIf="showDateRange">
+                        <mat-form-field class="form-field">
+                                <input matInput [matDatepicker]="fpicker" placeholder="From" formControlName="fdate">
+                                <mat-datepicker-toggle matSuffix [for]="fpicker" (dateInput)="fpicker('input', $event)">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #fpicker></mat-datepicker>
+                            </mat-form-field>
+                </div>
+                <div class="col-3" *ngIf="showDateRange">
+                        <mat-form-field class="form-field">
+                                <input matInput [matDatepicker]="tpicker" placeholder="To" formControlName="tdate">
+                                <mat-datepicker-toggle matSuffix [for]="tpicker" (dateInput)="tpicker('input', $event)">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #tpicker></mat-datepicker>
+                            </mat-form-field>
+                </div>
+                <div class="col-3">
+                        <button class="btn-success" mat-raised-button (click)="submit()">Submit</button>
+                </div>
+            </div>
+            <div class="row">
+                    <div class="col-12 margin-top-10">
+                        <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
+                    </div>
+                </div>
+        </form>
+        <br>
+        <div class="row">
+            <div class="col-12">
+                    <mat-form-field class="form-feild" *ngIf="SIBLING_REPORT_ELEMENT_DATA.length > 0">
+                            <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
+                        </mat-form-field>
+                        <div class="row" id="siblingReportPrint" class="overflow-auto">
+                            <div class="col-12 tab-table-overflow" [hidden]="!(SIBLING_REPORT_ELEMENT_DATA.length>0)" #TABLE>
+                                <table mat-table #table [dataSource]="studentSiblingDataSource" matSort
+                                    class="table-100 tab-table-180 sibling-details-report mat-elevation-z1">
+                                    <ng-container matColumnDef="counter">
+                                        <mat-header-cell class="mat-sno-sibling" *matHeaderCellDef mat-sort-header>
+                                            S.No.
+                                        </mat-header-cell>
+                                        <mat-cell class="mat-sno-sibling" *matCellDef="let element">
+                                            {{ element.counter }}
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="class_name">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Class
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.class_name">{{ element.class_name }}</span>
+                                            <span *ngIf="!element.class_name">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="sec_name">
+                                        <mat-header-cell class="mat-section-sibling" *matHeaderCellDef mat-sort-header>
+                                            Section
+                                        </mat-header-cell>
+                                        <mat-cell class="mat-section-sibling" *matCellDef="let element">
+                                            <span *ngIf="element.sec_name">{{ element.sec_name }}</span>
+                                            <span *ngIf="!element.sec_name">N/A</span>
+                                        </mat-cell>
+                                        
+                                    </ng-container>
+                                    <ng-container matColumnDef="admission_no">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Adm No.
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.admission_no">{{ element.admission_no }}</span>
+                                            <span *ngIf="!element.admission_no">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="full_name">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Student Name
+                                        </mat-header-cell>
+                                        
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.full_name">{{ element.full_name | titlecase }}</span>
+                                            <span *ngIf="!element.full_name">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="gender">
+                                        <mat-header-cell class="mat-gender-sibling" *matHeaderCellDef mat-sort-header>
+                                            Gender
+                                        </mat-header-cell>
+                                        <mat-cell class="mat-gender-sibling" *matCellDef="let element">
+                                            <span *ngIf="element.gender">{{ element.gender }}</span>
+                                            <span *ngIf="!element.gender">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="admission_date">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Admission Date
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.admission_date">{{ element.admission_date |  date:'d-MMM-y'}}</span>
+                                            <span *ngIf="!element.admission_date">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="alumini_date">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Left Date
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.alumini_date">{{ element.alumini_date |  date:'d-MMM-y'}}</span>
+                                            <span *ngIf="!element.alumini_date">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="enrollment_status">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Enrolment Status
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.enrollment_status">{{ element.enrollment_status | titlecase }}</span>
+                                            <span *ngIf="!element.enrollment_status">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="email">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Email
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.email">{{ element.email }}</span>
+                                            <span *ngIf="!element.email">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="mobile">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Mobile
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.mobile">{{ element.mobile }}</span>
+                                            <span *ngIf="!element.mobile">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="father_name">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Father Name
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.father_name">{{ element.father_name | titlecase }}</span>
+                                            <span *ngIf="!element.father_name">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="mother_name">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Mother Name
+                                        </mat-header-cell>
+
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.mother_name">{{ element.mother_name | titlecase }}</span>
+                                            <span *ngIf="!element.mother_name">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="guardian_name">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Guardian Name
+                                        </mat-header-cell>
+
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.guardian_name">{{ element.guardian_name | titlecase }}</span>
+                                            <span *ngIf="!element.guardian_name">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="transport_required">
+                                        <mat-header-cell class="mat-transport-sibling" *matHeaderCellDef mat-sort-header>
+                                            Transport Required
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let element">
+                                            <span *ngIf="element.transport_required">{{ element.transport_required | titlecase }}</span>
+                                            <span *ngIf="!element.transport_required">N/A</span>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <!-- Student Column -->
+                                    <!-- <ng-container matColumnDef="parent_data">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Parent Details
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <ul>
+                                                <li *ngFor="let item of element.parent_data">
+                                                    <span *ngIf="item?.epd_parent_type == 'G'">
+                                                       <b> Guardian Name : </b> <span *ngIf="item?.epd_parent_name">{{item?.epd_parent_name}}</span>
+                                                        <span *ngIf="!(item?.epd_parent_name)">N/A</span>
+                                                    </span>
+                                                    <span *ngIf="item?.epd_parent_type == 'M'">
+                                                        <b>Mother Name : </b><span *ngIf="item?.epd_parent_name">{{item?.epd_parent_name}}</span>
+                                                        <span *ngIf="!(item?.epd_parent_name)">N/A</span>
+                                                    </span>
+                                                    <span *ngIf="item?.epd_parent_type == 'F'">
+                                                        <b>Father Name : </b><span *ngIf="item?.epd_parent_name">{{item?.epd_parent_name}}</span>
+                                                        <span *ngIf="!(item?.epd_parent_name)">N/A</span>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </ng-container> -->
+                                    <mat-header-row *matHeaderRowDef="displayedSiblingsColumns"></mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: displayedSiblingsColumns"></mat-row>
+                                </table>
+                            </div>
+                            <div class="col-12" *ngIf="SIBLING_REPORT_ELEMENT_DATA.length === 0">
+                                <span style="text-align: center;"> No Record Found</span>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row" *ngIf="SIBLING_REPORT_ELEMENT_DATA.length > 0" class="tab-margin-button-bottom">
+                            <div class="col-12">
+                                <button mat-raised-button class="btn-neutral" (click)="print()">
+                                    <mat-icon class="material-icon">local_printshop</mat-icon>&nbsp;&nbsp;Print
+                                </button>
+                                <button mat-raised-button class="btn-success btn-spacer" (click)="exportAsExcel()">
+                                    <mat-icon class="material-icon">publish</mat-icon>&nbsp;&nbsp;Export
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+            </div>
+        </div>
+    </div>
+</div>

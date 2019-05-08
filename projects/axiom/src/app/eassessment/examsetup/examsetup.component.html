@@ -1,0 +1,350 @@
+<!-- Breadcrumb-->
+<div class="breadcrumb-section">
+  <div class="row">
+    <div class="bread-col-1 col-lg-1">
+      <a [routerLink]="[homeUrl]">
+        <i class="breadcrumb-icon fas fa-home"></i>
+      </a>
+    </div>
+    <div class="bread-col-1 col-lg-1">
+      <div class="vertical-line"></div>
+    </div>
+    <div class="col-lg-10 first-breadcrumb-title-col">
+      <div class="first-breadcrumb-title">
+        <span class="bread-title">E-Assessment</span>
+        <span class="bread-divider">-</span>
+        <span class="bread-link">Exam Setup</span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumb ends-->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="white-box">
+      <div class="white-box-content">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="white-box-content-title">
+              <span>EXAM SETUP AND SCHEDULING</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <form [formGroup]="Exam_setup_Form" novalidate>
+              <div class="row">
+                <div class="col-lg-6 fin-tab-col-50 mobile-view-hk">
+                  <div class="detail-question-box-blue">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-lg-12">
+                          <div class="white-box-content-title">
+                            <span>EXAM SETUP</span>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-lg-6 fin-tab-col-50">
+                              <mat-form-field class="form-field">
+                                <mat-select placeholder="Class" formControlName="es_class_id"
+                                  (selectionChange)="getSubjectsByClass();getSectionsByClass()" required>
+                                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                    {{item.class_name}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-lg-6 fin-tab-col-50">
+                              <mat-form-field class="form-field">
+                                <mat-select placeholder="Section" formControlName="es_sec_id" required>
+                                  <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                    {{item.sec_name}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-lg-6 fin-tab-col-50">
+                              <mat-form-field class="form-field">
+                                <mat-select placeholder="Subject" formControlName="es_sub_id"
+                                  (selectionChange)="getQuestionPaper();getAllTeacher()" required>
+                                  <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                    {{item.sub_name}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-lg-6 fin-tab-col-50">
+                              <mat-form-field class="form-field">
+                                <mat-select placeholder="Teacher" formControlName="es_teacher_id" required>
+                                  <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id">
+                                    {{item.au_full_name}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-lg-4 fin-tab-col-4">
+                              <mat-form-field class="form-field">
+                                <mat-select placeholder="Question Paper" formControlName="es_qp_id"
+                                  (ngModelChange)="getCurrentQuestionpaper($event)" required>
+                                  <mat-option *ngFor="let item of questionpaperArray" [value]="item.qp_id">
+                                    {{item.qp_name}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-lg-4 fin-tab-col-50">
+                              <mat-form-field class="form-field">
+                                <mat-select [disabled]="updateExamFlag" placeholder="Exam Type"
+                                  formControlName="es_exam_type">
+                                  <mat-option *ngFor="let item of examTypeArray" [value]="item.exam_type_id">
+                                    {{item.exam_type_name}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-lg-3 fin-tab-col-50">
+                              <mat-form-field class="form-field">
+                                <mat-select [disabled]="updateExamFlag" placeholder="Template Type"
+                                  formControlName="es_template_type">
+                                  <mat-option value="1">Default</mat-option>
+                                  <mat-option value="2">Jee Mains</mat-option>
+                                  <mat-option value="3">Jee Advanced</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-lg-1 fin-tab-col-10">
+                              <div class="left-parameter-content test-question-list" matTooltip="View Question Paper">
+                                <button mat-button [hidden]="!Exam_setup_Form.value.es_qp_id"
+                                  (click)="openQuestionPaperDialog(currentQuestion)" class="view-eye-button">
+                                  <i class="fas fa-eye view-eye-icon"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 fin-tab-col-50 mobile-view-hk">
+                  <div class="detail-question-box col-margin-hk">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-lg-12">
+                          <div class="white-box-content-title">
+                            <span>Exam Scheduler</span>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-lg-6 fin-tab-col-50">
+                              <mat-form-field class="form-field">
+                                <mat-select placeholder="Lab Location" formControlName="es_lab_id" required>
+                                  <mat-option *ngFor="let item of labArray" [value]="item.lab_id">
+                                    {{item.lab_name}}{{item.lab_description}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-lg-6 fin-tab-col-50">
+                              <mat-form-field class="form-field">
+                                <input matInput [matDatepicker]="scheduleDate" min="{{mintoday}}"
+                                  placeholder="Schedule Date" formControlName="es_start_date"
+                                  (dateChange)="addEvent('change', $event)">
+                                <mat-datepicker-toggle matTooltip="Choose Date" class="calendar-color" matSuffix
+                                  [for]="scheduleDate"></mat-datepicker-toggle>
+                                <mat-datepicker #scheduleDate></mat-datepicker>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-lg-4 fin-tab-col-4">
+                              <label>Start Time*
+                                <i class="far fa-clock clock-color"></i>
+                              </label>
+                            </div>
+                            <div class="col-lg-4 fin-tab-col-4">
+                              <mat-form-field class="form-field">
+                                <input matInput type="time" id="example-time-input" formControlName="es_start_time"
+                                  (change)="setEndTime()" required>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-lg-4 fin-tab-col-4" *ngIf="Exam_setup_Form.value.es_exam_type == 2">
+                              <mat-form-field class="form-field">
+                                <input matInput [matDatepicker]="endDate" min="{{mintoday}}" placeholder="End Date"
+                                  formControlName="es_end_date" (dateChange)="addEvent1('change', $event)">
+                                <mat-datepicker-toggle matTooltip="Choose Date" class="calendar-color" matSuffix
+                                  [for]="endDate"></mat-datepicker-toggle>
+                                <mat-datepicker #endDate></mat-datepicker>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-lg-4 fin-tab-col-4">
+                              <label>End Time*
+                                <i class="far fa-clock clock-color"></i>
+                              </label>
+                            </div>
+                            <div class="col-lg-4 fin-tab-col-4">
+                              <mat-form-field class="form-field">
+                                <input matInput type="time" id="example-time-input" formControlName="es_end_time"
+                                  required>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-lg-12 mobile-view">
+            <form [formGroup]="exam_toggle_Form">
+              <div class="detail-question-box-grey">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-lg-6 fin-tab-col-50">
+                      <div class="form-group row">
+                        <div class="col-lg-8 fin-tab-col-80">
+                          <label class="toggleAreaLabel">Question Shuffling</label>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20">
+                          <mat-slide-toggle class="exam-setup-toggle" formControlName="es_shuffle_question"
+                            aria-hidden="true"></mat-slide-toggle>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-lg-8 fin-tab-col-80">
+                          <label class="toggleAreaLabel">Clock Format (hh:mm:ss vs mm:ss)</label>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20">
+                          <mat-slide-toggle class="exam-setup-toggle" formControlName="es_clock_format"
+                            aria-hidden="true"></mat-slide-toggle>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-lg-8 fin-tab-col-80">
+                          <label class="toggleAreaLabel">Duplicate Rank</label>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20">
+                          <mat-slide-toggle class="exam-setup-toggle" formControlName="es_rank_duplication"
+                            aria-hidden="true"></mat-slide-toggle>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-lg-8 fin-tab-col-80">
+                          <label class="toggleAreaLabel">Display test report immediately</label>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20">
+                          <mat-slide-toggle class="exam-setup-toggle" formControlName="es_test_taker_report"
+                            aria-hidden="true"></mat-slide-toggle>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-lg-8 fin-tab-col-80">
+                          <label class="toggleAreaLabel">Notify User for test creation</label>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20">
+                          <mat-slide-toggle class="exam-setup-toggle" formControlName="es_notify_test"
+                            aria-hidden="true"></mat-slide-toggle>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-lg-8 fin-tab-col-80">
+                          <label class="toggleAreaLabel">Notify the result to the users on publish</label>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20">
+                          <mat-slide-toggle class="exam-setup-toggle" formControlName="es_notify_result"
+                            aria-hidden="true"></mat-slide-toggle>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 fin-tab-col-50">
+                      <div class="form-group row">
+                        <div class="col-lg-8 fin-tab-col-80">
+                          <label class="toggleAreaLabel">Allow Negative Marks</label>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20">
+                          <mat-slide-toggle class="exam-setup-toggle" formControlName="es_notify_negative_mark"
+                            aria-hidden="true"></mat-slide-toggle>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-lg-8 fin-tab-col-80">
+                          <label class="toggleAreaLabel">Allow Grace Period</label>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20">
+                          <mat-slide-toggle (change)=getGraceTimeToggle($event) class="exam-setup-toggle"
+                            formControlName="es_grace_time_extend" aria-hidden="true"
+                            [disabled]="Exam_setup_Form.value.es_exam_type == 2"></mat-slide-toggle>
+                        </div>
+                      </div>
+                      <div *ngIf="showGraceTime" class="form-group row">
+                        <div class="col-lg-8 fin-tab-col-7">
+                          <label class="toggleAreaLabel">Choose Grace Period</label>
+                        </div>
+                        <div class="col-lg-4 fin-tab-col-3">
+                          <mat-form-field class="form-field">
+                            <!-- <input matInput type="time"  formControlName="es_grace_extended_time" placeholder="Grace Time" required/> -->
+                            <mat-select [disabled]="Exam_setup_Form.value.es_exam_type == 2"
+                              formControlName="es_grace_hour" placeholder="Select Hour">
+                              <mat-option *ngFor="let hour of hourArray" [value]="hour">{{hour}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field class="form-field">
+                            <!-- <input matInput type="time"  formControlName="es_grace_extended_time" placeholder="Grace Time" required/> -->
+                            <mat-select [disabled]="Exam_setup_Form.value.es_exam_type == 2"
+                              formControlName="es_grace_minute" placeholder="Select Minutes">
+                              <mat-option *ngFor="let minute of minutesArray" [value]="minute">{{minute}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-lg-6  fin-tab-col-50">
+                          <label class="labelPercentage">Pass/Fail Marks in Percentage*</label>
+                        </div>
+                        <div class="col-lg-6 fin-tab-col-50">
+                          <mat-form-field class="form-field">
+                            <input matInput type="number" value="null" formControlName="es_pass_marks"
+                              placeholder="Percentage" required />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-lg-6 fin-tab-col-50">
+                          <label class="labelPercentage">Custom Message: At the end of test</label>
+                        </div>
+                        <div class="col-lg-6 fin-tab-col-50">
+                          <mat-form-field class="form-field">
+                            <textarea matInput value="" rows="10" placeholder="Write your Message"
+                              formControlName="es_message"></textarea>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-12 add-question-button-collection">
+            <button mat-raised-button class="submit-button examSetupBtn" matTooltip="Create Exam"
+              *ngIf="!updateExamFlag" (click)="applyForm()">Submit</button>
+            <button mat-raised-button class="submit-button examSetupBtn" matTooltip="Update Details"
+              *ngIf="updateExamFlag" (click)="updateExamSetup()">Update</button>
+            <button mat-raised-button class="reset-button examSetupBtn" matTooltip="Reset"
+              (click)="saveief()">Reset</button>
+          </div>
+        </div>
+        <br>
+        <br>

@@ -1,0 +1,148 @@
+<div class="container-box__grey">
+    <div class="container-box__white">
+        <br>
+        <div class="row">
+            <!-- <div class="col-4 text-center">
+                <div class="line-divider"></div>
+            </div> -->
+            <div class="col-12 text-center">
+                <h4 class="text-uppercase text-center"><b>Process Admission</b></h4>
+            </div>
+            <!-- <div class="col-4 text-center">
+                <div class="line-divider"></div>
+            </div> -->
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-12" [hidden]="!(PROCESS_ELEMENT_DATA.length>0)">
+                <mat-form-field class="form-feild">
+                    <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
+                </mat-form-field>
+                <mat-table [dataSource]="userDataSource" matSort class="table-100 mat-elevation-z1">
+                    
+                    <ng-container matColumnDef="regd_no">
+                        <mat-header-cell class="process_adm_reg" *matHeaderCellDef mat-sort-header>
+                            Reg No.
+                        </mat-header-cell>
+                        <mat-cell class="process_adm_reg" *matCellDef="let element">
+                            {{ element.regd_no }}
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Admission Column -->
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell class="process_adm_name" *matHeaderCellDef mat-sort-header>
+                            Student Name
+                        </mat-header-cell>
+                        <mat-cell class="process_adm_name" *matCellDef="let element">
+                            {{ element.name | titlecase }}
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Student Column -->
+                    <ng-container matColumnDef="class">
+                        <mat-header-cell class="process_adm_class" *matHeaderCellDef mat-sort-header>
+                            Applied for class
+                        </mat-header-cell>
+                        <mat-cell class="process_adm_class" *matCellDef="let element">
+                            {{ element.class }}
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Class Column -->
+                    <ng-container matColumnDef="contact">
+                        <mat-header-cell class="process_adm_contact" *matHeaderCellDef mat-sort-header>
+                            Contact
+                        </mat-header-cell>
+                        <mat-cell class="process_adm_contact" *matCellDef="let element">
+                            {{ element.contact }}
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Section Column -->
+                    <ng-container matColumnDef="dates">
+                        <mat-header-cell class="process_adm_date" *matHeaderCellDef mat-sort-header>
+                            Dates
+                        </mat-header-cell>
+                        <mat-cell class="process_adm_date" *matCellDef="let element">
+                            <ul class="process-adm-ul" *ngIf="element.dates">
+                            <li matTooltip="Date of Birth">Date of Birth : 
+                                <span *ngIf="!element.dates?.dob">N/A</span>
+                                <span *ngIf="element.dates?.dob">{{element.dates?.dob |  date: 'dd-MMM-yyyy'}}</span>
+                            </li>
+                            <li matTooltip="Date of Registration">Date of Registration : 
+                                <span *ngIf="!element.dates?.dor">N/A</span>
+                                <span *ngIf="element.dates?.dor">{{element.dates?.dor | date: 'dd-MMM-yyyy'}}</span>
+                            </li>
+                            <li>Test Date : 
+                                <span *ngIf="!element.dates?.dot">N/A</span>
+                                <span *ngIf="element.dates?.dot">{{element.dates?.dot | date: 'dd-MMM-yyyy'}}</span>
+                            </li>
+                            <li>Interview Date : 
+                                <span *ngIf="!element.dates?.doi">N/A</span>
+                                <span *ngIf="element.dates?.doi">{{element.dates?.doi | date: 'dd-MMM-yyyy'}}</span>
+                            </li>
+                          </ul>
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Section Column -->
+                    <ng-container matColumnDef="score">
+                        <mat-header-cell class="process_adm_score" *matHeaderCellDef mat-sort-header>
+                            Score
+                        </mat-header-cell>
+                        <mat-cell class="process_adm_score" *matCellDef="let element">
+                          <ul class="process-adm-ul" *ngIf="element.score">
+                            <li>Document Status: 
+                            <span *ngIf="element.score?.documentStatus == '1'">Completed</span>
+                            <span *ngIf="element.score?.documentStatus == '0'">Pending</span>
+                            </li>
+                            <li>Admission Test : 
+                                <span *ngIf="!element.score?.admission_mark">N/A</span>
+                                <span *ngIf="element.score?.admission_mark">Done</span>
+                            </li>
+                            <li>Student Interaction/Interview : 
+                                <span *ngIf="!element.score?.student_mark">N/A</span>
+                                <span *ngIf="element.score?.student_mark">Done</span>
+                            </li> 
+                            <li>Parent Interaction/Interview : 
+                                <span *ngIf="!element.score?.parent_mark">N/A</span>
+                                <span *ngIf="element.score?.parent_mark">Done</span>
+                            </li> 
+                            <!-- <li><b>Final Score : 
+                            <span *ngIf="!element.score?.final_score">N/A</span>
+                            <span *ngIf="element.score?.final_score">{{element.score?.final_score}}</span>
+                            </b></li> -->
+
+                          </ul>
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Status
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <span class="process-adm-font"  [ngStyle]="element.status == 'Approved' ? {'color':'#02ed10'} : element.status == 'Pending' ? 
+                            {'color':'#0091EA'}  : {'color':'#e11022' } ">{{element?.status}}</span>
+                            <!-- <span class="process-adm-font" *ngIf="element.status == '0'" style="color:#0091EA;">Pending</span>
+                            <span class="process-adm-font" *ngIf="element.status == '2'" style="color:#e11022;">Declined</span> -->
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Promote Column -->
+                    <ng-container matColumnDef="admit">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Admit
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <button *ngIf="element.status == 'Approved' && isExistUserAccessMenu('279')" mat-raised-button class="btn-success btn-promote" (click)="openDeleteDialog(element)">Admit</button>
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                </mat-table>
+            </div>            
+        </div>
+            <div class="col-12" *ngIf="PROCESS_ELEMENT_DATA.length == 0">
+               <span style="text-align: center;"> No Record Found</span>
+            </div>
+    </div>
+    <br>
+    <br>
+</div>
+<app-delete-modal #deleteModal [deleteMessage]="migrationMessage"
+(deleteOk)="moveToAdmission($event)" (deleteCancel)="deleteCancel()"></app-delete-modal>

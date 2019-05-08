@@ -1,0 +1,167 @@
+<div class="container-box__grey">
+  <div class="container-box__white">
+    <div class="row">
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
+      <div class="col-12 text-center">
+        <h5 class="text-uppercase text-center"><b>Approve SLC/ TC Request</b></h5>
+      </div>
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
+    </div>
+    <br>
+    <form [formGroup]="studentdetailsform" novalidate >
+    <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Admission No." formControlName="tc_admission_no" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Student Name" formControlName="au_full_name" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field class="form-field">
+              <mat-select formControlName="class_id" placeholder="Class" (ngModelChange)="getSectionsByClass()" disabled tabindex="-1"> 
+                  <mat-option value="">Please Select</mat-option>
+                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                    {{item.class_name}}
+                </mat-option>
+            </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field class="form-field">
+              <mat-select placeholder="Section" formControlName="sec_id" disabled tabindex="-1">
+                  <mat-option value="">Please Select</mat-option>
+                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                    {{item.sec_name}}
+                </mat-option>
+            </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Email ID" formControlName="au_email" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Father's Name" formControlName="father_name" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Mother's Name" formControlName="mother_name" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Contact No." formControlName="au_mobile" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <br>
+    <div class="divider__grey"></div>
+    <br>
+    <div class="row">
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
+      <div class="col-12 text-center">
+        <h4 class="text-uppercase text-center"><b>Reasons For Change</b></h4>
+      </div>
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <mat-form-field class="form-field">
+          <mat-select placeholder="Reason For Change" formControlName="tc_reason" required disabled>
+              <mat-option value="">Please Select</mat-option>
+            <mat-option value="Select" *ngFor="let item of reasonDataArray" value="{{item.reason_id}}">{{item.reason_title}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <mat-form-field class="form-field">
+          <textarea rows="3" matInput placeholder="Remarks" formControlName="tc_remark" required readonly></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+    
+    <br>
+  </form>
+  <div class="divider__grey"></div>
+  <br>
+    <!-- <div class="row">
+      <div class="col-12 text-center">
+        <h4 class="text-uppercase text-center"><b>Approval CheckList</b></h4>
+      </div>
+    </div>
+     <br>
+    <div class="row">
+      <div class="col-6" *ngFor="let item of departmentArray">
+        <div class="row">
+          <div class="col-6">
+            <label><a>{{item.dept_name}}</a></label>
+          </div>
+          <div class="col-6">
+            <mat-checkbox (change)="addDept(item.dept_id)" ></mat-checkbox>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <br>
+    <div  class="row">
+        <div class="col-1" *ngFor="let image of requestDoc">
+            <div class="">
+              <button *ngIf="image.tcd_doc_link" mat-button class="upload-document-delete-btn"> 
+                  <mat-icon class="btn-upload-icon">delete</mat-icon>
+              </button>
+               
+            </div>
+            <div class="">
+                <img *ngIf="image.tcd_doc_link" class="btn-doc-upload-preview" [src]="image.tcd_doc_link" (click)="previewImage(image)">
+            </div>     
+                    
+            
+          </div>
+      </div>
+    <br>
+    <br>
+    <div class="text-center">
+      <button mat-raised-button class="btn-danger btn-spacer" (click)="backUrl()" >Back</button>
+    </div>
+    <br>
+    <br>
+  </div>
+  <br>
+  <br>
+</div>

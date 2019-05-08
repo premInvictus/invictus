@@ -1,0 +1,83 @@
+<div class="container-box__white">
+    <div class="functional-button-five">
+        <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request') && editableStatus == '1')"
+        mat-raised-button (click)="editRequest()"
+        (keydown.enter)="$event.preventDefault()"> <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span></button>
+      </div>
+    <!-- <div class="row">
+        <div class="col-8">
+        </div>
+        <div class="col-4">
+          <div class="float-right">
+            <button *ngIf="(viewOnly && isExistUserAccessMenu('request') && editableStatus == '1')"
+            mat-raised-button class="btn-neutral-dull" (click)="editRequest()">
+            <mat-icon class="btn-top-icon">create</mat-icon>&nbsp; &nbsp;Edit Request</button>
+          </div>
+          </div>
+      </div>
+      <br> -->
+  <div class="row">
+    <div class="col-12">
+      <mat-accordion multi="true" class="theme-accordion">
+        <mat-expansion-panel [expanded]="'true'" *ngIf="common.isExistUserAccessMenuByLabel(parentId,'Education Details')">
+          <mat-expansion-panel-header class="exp-header-new-stu-detail">
+            <mat-panel-title>
+              <span class="text-uppercase">Details of Previous Schools</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-education-details-theme-two #edu
+          [educationFormData]="educationDetails"
+          [addOnly]="addOnly"
+          [viewOnly]="viewOnly"
+          [configSetting]="settingsArray"
+          ></app-education-details-theme-two>
+        </mat-expansion-panel>
+        <mat-expansion-panel [expanded]="'true'" class="margin-top-10" *ngIf="common.isExistUserAccessMenuByLabel(parentId,'Skills & Awards')">
+          <mat-expansion-panel-header class="exp-header-new-stu-detail">
+            <mat-panel-title>
+              <span class="text-uppercase">Skills & Awards</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-skills-awards-theme-two #skill
+          [skillsFormData]="awardsDetails"
+          [addOnly]="addOnly"
+          [viewOnly]="viewOnly"
+          [editRequestFlag]="editRequestFlag"
+          [configSetting]="settingsArray"
+          ></app-skills-awards-theme-two>
+        </mat-expansion-panel>
+        <mat-expansion-panel [expanded]="'true'" class="margin-top-10" *ngIf="common.isExistUserAccessMenuByLabel(parentId,'Documents')">
+          <mat-expansion-panel-header class="exp-header-new-stu-detail">
+            <mat-panel-title>
+              <span class="text-uppercase">Enclosure(s)</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-documents-theme-two #doc
+          [documentFormData]="documentDetails"
+          [addOnly]="addOnly"
+          [viewOnly]="viewOnly"
+          [editFlag]="editFlag"
+          [configSetting]="settingsArray"
+          [docContext]="context.studentdetails.studentdetailsform.value.au_login_id ? 
+          context.studentdetails.studentdetailsform.value.au_login_id : ''"></app-documents-theme-two>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <br>
+  <br>
+  <div class="row">
+    <div class="col-12">
+    <div class="text-center margin-bottom-65">
+        <button *ngIf="addOnly" mat-raised-button class="btn-success" (click)="saveForm()">Save & Continue</button>
+        <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+        <button  *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer" (click)="updateForm(false)">Update & Continue</button>
+        <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag" (click)="checkFormChangedValue();openEditDialog({data: [finalArray] ,reqParam: params})">Edit & Continue</button>
+        <button   *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+  </div>
+  </div>
+  </div>
+  <br>
+  <br>
+</div>
+<app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>

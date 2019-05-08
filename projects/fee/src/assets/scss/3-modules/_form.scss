@@ -1,0 +1,118 @@
+// .form-field {
+//     width: 100%;
+// }
+
+// .form-field-80 {
+//     width: 80%;
+// }
+
+// .student-detail-col-1 {
+//     max-width: 10%;
+//     flex: 0 0 10%;
+// }
+
+// .student-detail-col-3 {
+//     max-width: 30%;
+//     flex: 0 0 30%;
+// }
+
+// .form-feild-top-margin {
+//     margin-top: 8px !important;
+// }
+
+// // .mat-form-field-label {
+// //     font-weight: 600 !important;
+// // }
+
+// .mat-form-field.mat-focused .mat-form-field-label {
+//     color: #000;
+// }
+
+// .mat-form-field.mat-focused .mat-form-field-ripple {
+//     background-color: #02ed10;
+// }
+
+// .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+//     color: #02ed10;
+// }
+
+// .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+//     color: #02ed10;
+// }
+
+// .mat-form-field-label  {
+//     font-size: 16px !important;
+//    }
+
+//    .mat-form-field-appearance-legacy .mat-form-field-label {
+//     color: #000000;
+// }
+
+// .mat-select-value {
+//     color: rgba(0,0,0,.87);
+//     font-size: 16px;
+// }
+
+//    .mat-input-element {
+//        font-size: 16px !important; 
+//    }
+
+.form-field {
+    width: 100%;
+}
+
+// .mat-form-field-appearance-legacy .mat-form-field-label {
+//     top: 0.8em;
+// }
+
+// .mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+//     -webkit-transform: translateY(-0.5em) scale(.9) perspective(100px) translateZ(.001px) !important;
+//     transform: translateY(-0.5em) scale(.9) perspective(100px) translateZ(.001px) !important;
+//     -ms-transform: translateY(-0.5em) scale(.9) !important;
+// }
+
+// input.mat-input-element {
+//     margin-top: .625em;
+// }
+
+.mat-input-element {
+    font-size: 16px !important;
+}
+
+// .mat-form-field-label { 
+//     font-size: 16px !important;
+// }
+
+// .mat-form-field-label-wrapper {
+//     top: -1.4375em;
+// }
+
+.mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #007D9E;
+}
+
+.mat-form-field-outline {
+    background-color: rgba(129,195,255, 0.08);
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: #005AAB !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: rgba(0,90,171,0.87)
+}
+
+.mat-form-field.mat-focused .mat-form-field-label {
+    color: #005AAB !important;
+}
+
+
+// .cheque-control-tool .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix {
+//     padding: 0 0 0 0 !important;
+// }
+
+// .cheque-control-tool .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix .mat-form-field-label-wrapper  .mat-form-field-label {
+//     top: 14px !important;
+   
+// }

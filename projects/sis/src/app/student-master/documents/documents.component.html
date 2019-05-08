@@ -1,0 +1,149 @@
+<!-- *ngIf="isExistUserAccessMenu('126')" -->
+<div class="container-box__white">
+
+    <div class="row">
+
+        <div class="col-12">
+            <h4><b>DOCUMENTS</b></h4>
+        </div>
+
+    </div>
+
+    <form>
+        <div class="row">
+            <div class="col-6">
+                <!-- <table class="table document-table">
+                    <tr *ngFor="let item of documentsArray;let i =index">
+                        <td class="document-table--title">{{item.docreq_name}}</td>
+                        <td>
+                            <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
+                                multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
+                                style="display: none !important">
+                            <button mat-stroked-button class="document-btn__greencolor">
+                                <label class="btn-document-label" [for]="item.docreq_id">
+                                    Choose File <i class="fas fa-cloud-upload-alt"></i>
+                                </label>
+                            </button><br>
+                            <div class="row">
+                                <div class="col-lg-4" *ngFor="let img of this.imageArray;let i = index">
+                                    <div class="row" *ngIf="img.ed_docreq_id === item.docreq_id">
+                                        <div class="col-lg-12">
+                                            <div *ngIf="img.ed_docreq_id === item.docreq_id" style="float:right;">
+                                                <br>
+                                                <button *ngIf="!viewOnly" mat-button style="border-radius:50% !important; margin-right:30px"
+                                                    (click)="deleteFile(img.imgName,img.ed_docreq_id)"><i class="fas fa-times document-btn__purplecolor"></i></button>
+                                            </div>
+                                            <br>
+                                            <div *ngIf="img.ed_docreq_id ===  item.docreq_id">
+                                                <img style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%"
+                                                    [src]="img.imgName" (click)="previewImage(img)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </td>
+                        <td><button mat-stroked-button class="document-btn__purplecolor document-col-button" (click)="viewDocumentUploaded(item.docreq_id, item.docreq_name)"
+                                *ngIf="editFlag" [disabled]="viewOnly">View<i class="fas fa-eye"></i></button></td>
+                        <td><button mat-stroked-button class="document-btn__redcolor" *ngIf="editFlag" [disabled]="viewOnly"
+                                (click)="deleteComplete(item.docreq_id, item.docreq_name)">Delete <i class="far fa-trash-alt"></i></button></td>
+                    </tr>
+                </table> -->
+                <div class="row">
+                    <div class="col-12">
+                        <mat-card class="document-main-card" *ngFor="let item of documentsArray;let i =index">
+                            <div class="row margin-bottom-10">
+                                <div class="col-8">
+                                    <span class="document-title"><b>{{item.docreq_name}}</b></span>
+                                </div>
+                                <div class="col-4">
+                                    <div class="float-right">
+                                        <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
+                                            multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
+                                            style="display: none !important">
+                                        <button mat-raised-button class="btn-neutral">
+                                            <mat-icon class="btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
+                                                class="btn-document-label" [for]="item.docreq_id">Choose
+                                                File</label>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <ng-container *ngFor="let img of this.imageArray;let i = index">
+                                <div class="col-1 col-doc-img-3 custom-col-15" *ngIf="img.ed_docreq_id === item.docreq_id">
+                                    <div class="remove-col-padding" >
+                                        <div>
+                                            <div>
+                                                <div>
+                                                    <div *ngIf="img.ed_docreq_id === item.docreq_id" style="float:right;">
+                                                        <button *ngIf="!viewOnly" mat-button class="upload-document-delete-btn"
+                                                            (click)="deleteFile(img.imgName,img.ed_docreq_id)"><mat-icon class="btn-upload-icon">delete</mat-icon></button>
+                                                    </div>
+                                                    <div *ngIf="img.ed_docreq_id ===  item.docreq_id">
+                                                            <img *ngIf= "checkThumbnail(img.imgName)" class="btn-doc-upload-preview" [src]="img.imgName"  (click)="previewImage(imageArray, i)">
+                                                            <img *ngIf= "!checkThumbnail(img.imgName)" class="btn-doc-upload-preview"
+                                                            src="https://icons-for-free.com/free-icons/png/512/2109135.png" 
+                                                             (click)="previewImage(imageArray, i)"><br>
+                                                    </div>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            </div>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="container-outline__black">
+                    <h6 class="text-uppercase"><b>Final Remark</b></h6>
+                    <br>
+                    <span><b>Upload Instruction</b></span>
+                    <br>
+                    <ol>
+                        <li>You can upload multiple file</li>
+                        <li>Try selecting more than one file when browsing for file in particular section.</li>
+                        <li>Please compress your file to 154kb before uploading.</li>
+                        <li>Uploading file format can be of following instruction jpeg, jpg, pdf, doc.</li>
+                    </ol>
+                </div>
+                <br>
+                <br>
+                <div class="container-outline__black">
+                    <h6 class="text-uppercase"><b>List of Document Required for Admission</b></h6>
+                    <br>
+                    <ol *ngFor="let item of documentsArray;let i =index">
+                        <mat-checkbox [disabled]="viewOnly" class="inline-form-doc-checkbox" [checked]="checkVerifiedStatus(item.docreq_id)"
+                            [value]="item.docreq_id" (change)="insertVerifyId($event)">
+                        </mat-checkbox>{{item.docreq_name}}
+                    </ol>
+                    <div class="text-center">
+                        <button mat-raised-button class="btn-green" [disabled]="viewOnly" (click)="verifyDocument()">Verify</button>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="text-center">
+            <button mat-raised-button class="btn-success" *ngIf="addOnly" (click)="insertDocuments()">Save & Continue</button>
+            <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateDocuments(true)">Submit</button>
+            <button  mat-raised-button class="btn-success btn-spacer" *ngIf="saveFlag" (click)="updateDocuments(false)">Update
+                & Continue</button>
+            <button  *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+        </div>
+        <br>
+        <br>
+    </form>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>

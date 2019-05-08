@@ -1,0 +1,256 @@
+<div class="container-box__grey">
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="card-content__container">
+                <mat-card-title>
+                    <div class="row">
+                        <div class="col-8">
+                            <h1>Fee Projection</h1>
+                        </div>
+                        <div class="col-4 text-right">
+                            <div class="dropdown">
+                                <button class="month-selector" mat-button>Sept 2019</button>
+
+                                <div class="dropdown-content">
+                                    <button mat-menu-item>Oct 2019</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 margin-top-20">
+                            <mat-tab-group animationDuration="2000ms">
+                                <mat-tab label="Month Wise" (click)="tabClick()">
+
+                                    <ng-template matTabContent>
+                                        <div class="margin-top-20">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="padding-15" id="containerone"></div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-green display-inline">
+                                                            </div><span
+                                                                class="font-size-14 middle-align">&nbsp;Projected</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;35,86,200</b></h2>
+
+                                                        </div>
+                                                        <div class="col-6 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-silver display-inline">
+                                                            </div><span
+                                                                class="font-size-14 middle-align">&nbsp;Recieved</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;35,86,200</b></h2>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-6">
+                                                    <div>
+                                                        <div class="row">
+                                                            <div class="col-6 padding-left-150 padding-left-100">
+                                                                <div class="legend-box legend-cheque display-inline">
+                                                                </div><span
+                                                                    class="font-size-14 middle-align">&nbsp;Cheque</span>
+                                                                <h2 class="margin-top-10 font-medium"><i
+                                                                        class="fas fa-rupee-sign font-size-24"></i>
+                                                                    <b>&nbsp;35,86,200</b></h2>
+
+                                                            </div>
+                                                            <div class="col-6  padding-left-340 padding-left-222">
+                                                                <div class="legend-box legend-cash display-inline">
+                                                                </div><span
+                                                                    class="font-size-14 middle-align">&nbsp;Cash</span>
+                                                                <h2 class="margin-top-10 font-medium"><i
+                                                                        class="fas fa-rupee-sign font-size-24"></i>
+                                                                    <b>&nbsp;35,86,200</b></h2>
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="padding-15" id="containertwo"></div>
+                                                            
+                                                            <div class="top-pie-middle-text">
+                                                                <h2><i class="fas fa-rupee-sign font-size-24"></i>
+                                                                    <b>&nbsp;35,86,200</b></h2>
+                                                                <h4 class="pie-text">Total Reciept</h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-4 padding-left-150 padding-left-100">
+                                                            <div
+                                                                class="legend-box legend-paymentgateway display-inline">
+                                                            </div><span class="font-size-14 middle-align">&nbsp;Payment
+                                                                Gateway</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;35,86,200</b></h2>
+
+                                                        </div>
+                                                        <div class="col-4 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-netbanking display-inline">
+                                                            </div><span class="font-size-14 middle-align">&nbsp;Net
+                                                                Banking</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;35,86,200</b></h2>
+
+                                                        </div>
+                                                        <div class="col-4 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-others display-inline">
+                                                            </div><span
+                                                                class="font-size-14 middle-align">&nbsp;Other</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;35,86,200</b></h2>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </ng-template>
+                                </mat-tab>
+                                <mat-tab label="Year Wise" (click)="tabClick()">
+
+                                    <ng-template matTabContent>
+                                        Content 2 - Loaded:
+                                    </ng-template>
+                                </mat-tab>
+
+                            </mat-tab-group>
+                        </div>
+                    </div>
+
+                </mat-card-title>
+                <mat-card-content>
+
+                </mat-card-content>
+            </mat-card>
+            <div class="margin-top-25"></div>
+            <mat-card class="card-content__container">
+                <mat-card-title>
+                    <div class="row">
+                        <div class="col-8">
+                            <h1>Fee Outstanding</h1>
+                        </div>
+                        <div class="col-4 text-right">
+                            <h1 class="remove-margin-bottom"><i class="fas fa-rupee-sign font-size-24"></i>
+                                <b>&nbsp;35,86,200</b></h1>
+                            <span class="font-size-16">As on 20 Sep, 2019</span>
+                        </div>
+                        <!-- <div class="col-4 text-right">
+                                <div class="dropdown">
+                                        <button class="month-selector" mat-button >Sept 2019</button>
+                                
+                                <div class="dropdown-content">
+                                        <button  mat-menu-item >Oct 2019</button>
+                                </div>
+                            </div>
+                                
+                            </div> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-12 margin-top-20">
+
+
+                            <div class="margin-top-20">
+                                <div class="row">
+
+                                    <div class="col-6">
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="padding-15" id="containerthree"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4 padding-left-150 padding-left-80">
+                                                <div class="legend-box legend-month display-inline">
+                                                </div><span class="font-size-14 middle-align">&nbsp;Less Than
+                                                    Month</span>
+                                                <h2 class="margin-top-10 font-medium"><i
+                                                        class="fas fa-rupee-sign font-size-24"></i>
+                                                    <b>&nbsp;35,86,200</b></h2>
+
+                                            </div>
+                                            <div class="col-4 padding-left-150 padding-left-80">
+                                                <div class="legend-box legend-onemonth display-inline">
+                                                </div><span class="font-size-14 middle-align">&nbsp;1 - 3 Month</span>
+                                                <h2 class="margin-top-10 font-medium"><i
+                                                        class="fas fa-rupee-sign font-size-24"></i>
+                                                    <b>&nbsp;35,86,200</b></h2>
+
+                                            </div>
+                                            <div class="col-4 padding-left-150 padding-left-80">
+                                                <div class="legend-box legend-moremonth display-inline">
+                                                </div><span class="font-size-14 middle-align">&nbsp;More Than 3
+                                                    Month</span>
+                                                <h2 class="margin-top-10 font-medium"><i
+                                                        class="fas fa-rupee-sign font-size-24"></i>
+                                                    <b>&nbsp;35,86,200</b></h2>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="padding-15" id="containerfour"></div>
+                                                <div class="pie-middle-text">
+                                                    <h2><i class="fas fa-rupee-sign font-size-24"></i>
+                                                        <b>&nbsp;35,86,200</b></h2>
+                                                    <h4 class="pie-text">Total Outstanding</h4>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="row">
+                                                                            <div class="col-6 padding-left-150">
+                                                                                <div class="legend-box legend-blue display-inline">
+                                                                                </div><span class="font-size-14 middle-align">&nbsp;Projected</span>
+                                                                                <h2 class="margin-top-10 font-medium"><i class="fas fa-rupee-sign font-size-24"></i> <b>&nbsp;35,86,200</b></h2>
+                                                                                
+                                                                            </div>
+                                                                            <div class="col-6 padding-left-340">
+                                                                                    <div class="legend-box legend-blue display-inline">
+                                                                                    </div><span class="font-size-14 middle-align">&nbsp;Recieved</span>
+                                                                                    <h2 class="margin-top-10 font-medium"><i class="fas fa-rupee-sign font-size-24"></i> <b>&nbsp;35,86,200</b></h2>
+                                                                                    
+                                                                                </div>
+                                                                        </div> -->
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </mat-card-title>
+                <mat-card-content>
+
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

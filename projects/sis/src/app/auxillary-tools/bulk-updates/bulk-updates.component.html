@@ -1,0 +1,43 @@
+<div class="container-box__grey">
+  <div class="container-box__white">
+    <div class="row">
+
+      <div class="col-12 text-center">
+        <h4 class="text-center"><b>Bulk Updates</b></h4>
+      </div>
+
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-12">
+        <!-- <div class="text-center">
+          <label for="bulkupdate">
+            <i class="fas fa-cloud-upload-alt fa-3x icon-green"></i><br>
+            <span>Drag and Drop File</span>
+          </label>
+          <input style="display:none;" type="file" name="file" id="bulkupdate" (change)="bulkupdate($event)">
+        </div> -->
+
+
+        <div class="container-box__uploadbox">
+          <div class="bulk-upload-main-content">
+            <label class="upload-box" for="bulkupdate">
+            <div class="bulk-upload-content" > 
+              <div class="bulk-upload-sub-content">
+                <i class="material-icons bulk-upload-icon">
+                  save_alt
+                </i><br>
+                <span><b>Choose a file</b> or drag it here !</span>
+                <input style="display:none;" #inputFile type="file" name="file" id="bulkupdate" (change)="bulkupdate($event)">
+              </div>
+            </div>
+          </label>
+          </div>
+        </div>
+        <br>
+        <br>
+      </div>
+    </div>
+    <br>
+  </div>
+</div>

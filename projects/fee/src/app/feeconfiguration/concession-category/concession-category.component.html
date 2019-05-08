@@ -1,0 +1,163 @@
+<div class="container-box__grey">
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-content__container margin-bottom-140">
+        <mat-card-title>
+          
+          <div class="row">
+            <div class="col-6">
+              <h1>Concession Categories</h1>
+            </div>
+            <div class="col-6 text-right">
+              <div class="inline-flex"><h3>School</h3> <mat-slide-toggle  class="btn-spacer" [ngModel]="fcc_is_hostel_fee == '1' ? 'checked' : ''"
+                (change)="changeIsHostelFee($event)"></mat-slide-toggle><h3 class="btn-spacer">Hostel</h3></div>
+              
+            </div>
+          </div>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-4 custom-col-27">
+                <form [formGroup]="conccesionCategoryForm">
+              <div class="row">
+                <div class="col-12 margin-top-25">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Concession Name</mat-label>
+                    <input matInput placeholder="Concession Name" formControlName="fcc_name" required
+                    [errorStateMatcher]="confirmValidParentMatcher">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Fee Head</mat-label>
+                    <mat-select placeholder="Fee Head" formControlName="fcc_fh_id" required
+                    [errorStateMatcher]="confirmValidParentMatcher" (selectionChange)="getClass()">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option *ngFor="let item of feeheadArray" [value]="item.fh_id">{{item.fh_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Class</mat-label>
+                    <mat-select placeholder="Class" formControlName="fcc_class_id" multiple required
+                    [errorStateMatcher]="confirmValidParentMatcher">
+                      <mat-option *ngFor="let item of classDataArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Concession Rule Type</mat-label>
+                    <mat-select placeholder="Concession Rule Type" formControlName="fcc_fcrt_id" required
+                    [errorStateMatcher]="confirmValidParentMatcher">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option *ngFor="let item of ruleArray" [value]="item.fcrt_id">{{item.fcrt_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Concession</mat-label>
+                    <input type="number" matInput placeholder="Concession" formControlName="fcc_amount" required
+                    [errorStateMatcher]="confirmValidParentMatcher">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 text-center margin-top-25">
+                  <div class="inline-flex">
+                <button *ngIf="!editFlag" mat-raised-button class="btn-primary btn-custom btn-success" (click)="submit()">Submit</button>
+                <button *ngIf="editFlag" mat-raised-button class="btn-primary btn-custom btn-success" (click)="update()">Update</button>
+                <button mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer" (click)="reset()">Reset</button>
+              </div>
+                </div>
+              </div>
+            </form>
+            </div>
+            <div class="col-1 custom-col-2">
+              <div class="vertical-line"></div>
+            </div>
+            <div class="col-7 custom-col-69">
+              <div class="row">
+                <div class="col-12 remove-col-padding">
+                  <div class="table-container">
+                    <mat-form-field [hidden]="!(CONCESSION_ELEMENT_DATA.length > 0)">
+                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      <i class="fas fa-filter table-filter" matPrefix></i>
+
+                    </mat-form-field>
+                    <table class="table-100 text-center " mat-table [dataSource]="dataSource" matSort>
+
+                      <ng-container matColumnDef="position">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> S.No </th>
+                        <td mat-cell *matCellDef="let item"> {{item.position}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="category">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Concession Category </th>
+                        <td mat-cell *matCellDef="let item"> {{item.category}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="head">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Head </th>
+                        <td mat-cell *matCellDef="let item">{{getFeeHeadName(item.head) | capitalize}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="class">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Class </th>
+                        <td mat-cell *matCellDef="let item"> {{getClassName(item.class)}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Concession Type </th>
+                        <td mat-cell *matCellDef="let item"> {{getRuleName(item.type)}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef> Concession Amount </th>
+                        <td mat-cell *matCellDef="let item"> <i class="fas fa-rupee-sign"></i> {{item.amount | number}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                        <td mat-cell *matCellDef="let item">
+                          <mat-slide-toggle [checked]="item.status === '1' ? true : false"
+                          (change)="changeStatus($event, item.action)"></mat-slide-toggle> </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Action </th>
+                        <td mat-cell *matCellDef="let item" class="inline-flex margin-top-10"> <i class="material-icons icon-edit" (click)="patchValue(item.action)">
+                            create
+                            </i> <i class="material-icons icon-danger icon-spacer" (click)="openDeleteDialog(item.action)">
+                                delete 
+                                </i> </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+                    </table>
+                    <table class="table-100 text-center" style="margin-top:5px;">
+                        <tr *ngIf="CONCESSION_ELEMENT_DATA.length == 0">
+                          <td colspan="12">No Record Found</td>
+                        </tr>
+                      </table>
+                    <mat-paginator [hidden]="!(CONCESSION_ELEMENT_DATA.length > 0)" #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                    </mat-paginator>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)"></app-delete-modal>

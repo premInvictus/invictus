@@ -1,0 +1,41 @@
+<div class="container-box__grey">
+  <div class="container-box__white ">
+      <div class="row">
+          <div class="col-4 text-center">
+             <div class="line-divider"></div>
+          </div>
+          <div class="col-4 text-center">
+             <h6 class="text-uppercase text-center"><b>Configure your template</b></h6>
+          </div>
+          <div class="col-4 text-center">
+             <div class="line-divider"></div>
+          </div>
+       </div>
+       <br>
+<div>
+  <form [formGroup]="templateForm">
+     <div class="row">
+        <div class="col-3"></div>
+        <div class="col-lg-6">
+          <div style="width:auto;text-align: center">
+           <ckeditor [config]="ckeConfig" formControlName="usts_template"></ckeditor>
+           </div>
+        </div>
+        <div class="col-3"></div>
+     </div>
+  </form>
+</div>
+<br>
+<div class="row">
+  <div class="col-4"></div>
+  <div class="col-4">
+    <div class="text-center">
+     <button class="btn-success" mat-raised-button (click)="insertTemplate()">Submit</button>
+     </div>
+  </div>
+  <div class="col-4"></div>
+</div>
+<br>
+<br>
+</div>
+</div>

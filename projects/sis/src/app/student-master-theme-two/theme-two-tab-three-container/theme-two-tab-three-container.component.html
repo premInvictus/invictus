@@ -1,0 +1,51 @@
+<div>
+        <div class="container-box__white">
+            <div class="row">
+                <div class="col-12">
+                    <mat-accordion  multi="true" class="theme-accordion">
+                        <mat-expansion-panel [expanded]="'true'" *ngIf="commonAPIService.isExistUserAccessMenuByLabel(parentId, 'General Remarks')">
+                            <mat-expansion-panel-header class="exp-header-new-stu-detail">
+                                <mat-panel-title>
+                                    <span class="text-uppercase">General Remarks</span>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <app-general-remarks-theme-two #general_remark [addOnly]="addOnly" [editOnly]="editOnly" 
+                            [viewOnly]="viewOnly" [formData]="generalRemarkData" [configSetting]="settingsArray"></app-general-remarks-theme-two>
+                        </mat-expansion-panel>
+                        <mat-expansion-panel class="margin-top-10" [expanded]="'true'" *ngIf="commonAPIService.isExistUserAccessMenuByLabel(parentId, 'Management Remarks')">
+                            <mat-expansion-panel-header class="exp-header-new-stu-detail">
+                                <mat-panel-title>
+                                    <span class="text-uppercase">Management Remarks</span>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <app-management-remarks-theme-two #management_remark [addOnly]="addOnly" [editOnly]="editOnly" [viewOnly]="viewOnly" 
+                            [formData]="managementRemarkData" [configSetting]="settingsArray"></app-management-remarks-theme-two>
+                        </mat-expansion-panel>
+                        <mat-expansion-panel class="margin-top-10" [expanded]="'true'" *ngIf="commonAPIService.isExistUserAccessMenuByLabel(parentId, 'Admission Remarks')">
+                            <mat-expansion-panel-header class="exp-header-new-stu-detail">
+                                <mat-panel-title>
+                                    <span class="text-uppercase">Admission Remarks</span>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <app-admission-remarks-theme-two #admission_remark [addOnly]="addOnly" [editOnly]="editOnly" [viewOnly]="viewOnly" 
+                            [formData]="admissionRemarkData" [configSetting]="settingsArray"></app-admission-remarks-theme-two>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="row" *ngIf="!viewOnly">
+                <div class="col-12 text-center margin-bottom-65">
+                    <form>
+                        <button *ngIf="editOnly" class="btn-success" mat-raised-button (click)="saveForm()">Submit</button>
+                        <button class="btn-success btn-spacer" mat-raised-button (click)="remainOnSame()"><span *ngIf="addOnly">Save</span> <span *ngIf="editOnly">Update</span> & Continue</button>
+                        <button class="btn-danger  btn-spacer" mat-raised-button (click)="cancelForm()">Cancel</button>
+                    </form>
+                </div>
+    
+            </div>
+            <br>
+            <br>
+        </div>
+    </div>

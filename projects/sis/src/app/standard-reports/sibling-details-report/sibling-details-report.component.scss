@@ -1,0 +1,40 @@
+// td.mat-cell {
+//     text-align: center !important;
+// }
+
+// .th.mat-header-cell {
+//     padding: 0 15px !important;
+// }
+
+//  th.mat-header-cell {
+//     padding: 0 15px !important;
+// }
+
+// td.mat-cell {
+//     padding:  0 15px !important;
+// }
+
+.mat-sno-sibling {
+    width: 5%;
+    flex: 0 0 5%;
+}
+
+.mat-section-sibling {
+    width: 5%;
+    flex: 0 0 5%;
+}
+
+.mat-gender-sibling {
+    width: 5%;
+    flex: 0 0 5%;
+} 
+
+
+
+.mat-cell span {
+    word-break: break-all !important;
+}
+
+mat-cell:first-of-type {
+    padding-left: 0px;
+}

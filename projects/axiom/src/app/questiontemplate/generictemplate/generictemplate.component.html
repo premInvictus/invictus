@@ -1,0 +1,331 @@
+<div class="breadcrumb-section">
+   <div class="row">
+      <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+         <a [routerLink]="[homeUrl]">
+            <i class="breadcrumb-icon fas fa-home"></i>
+         </a>
+      </div>
+      <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+         <div class="vertical-line"></div>
+      </div>
+      <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+         <div class="first-breadcrumb-title">
+            <span class="bread-title">
+               <a routerLink="../question_template">Question Paper</a>
+            </span>
+            <span class="bread-divider">-</span>
+            <span class="bread-link">Generic Template</span>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="add-question-content">
+   <div class="row">
+      <div class="col-lg-12 col-mobile-view-add-ques">
+         <div class="white-box">
+            <div class="white-box-content">
+               <div class="row">
+                  <div class="col-lg-12 col-mobile-view-add-ques">
+                     <div class="white-box-content-title">
+                        <span>{{title}}</span>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div
+                     class="col-lg-2 col-tab-25 col-apple-2 apple-screen-paramter-content-div col-mobile-view-add-ques">
+                     <div class="left-parameter-content">
+                        <div class="left-side-box">
+                           <div class="left-side-box-content">
+                              <span class="left-side-box-content-title">Question Entry Option</span>
+                              <hr class="left-side-box-content-title-divider">
+                              <form [formGroup]="templatesform1" novalidate>
+                                 <mat-form-field class="form-field">
+                                    <input matInput placeholder="Enter Template Name" formControlName="tp_name"
+                                       (blur)="getQuestionTypeData()" required>
+                                 </mat-form-field>
+                                 <mat-form-field class="form-field">
+                                    <mat-select formControlName="tp_marks" required placeholder="Total Marks">
+                                       <mat-option *ngFor="let item of papermarksArray" [value]="item">
+                                          {{item}}
+                                       </mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                                 <mat-form-field class="form-field">
+                                    <mat-select formControlName="tp_time_alloted" required placeholder="Time Alloted">
+                                       <mat-option *ngFor="let item of papertimeArray" [value]="item">
+                                          {{item}}
+                                       </mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                                 <mat-checkbox formControlName="tp_exclusive">Exclusive</mat-checkbox>
+                              </form>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-10 col-tab-75 col-apple-10 col-mobile-view-add-ques">
+                     <div class="top-right-parameter">
+                        <div class="top-right-box">
+                           <div class="top-right-box-content">
+                              <div class="top-right-box-content-title">
+                                 <div class="row">
+                                    <div class="col-lg-12 col-mobile-view-add-ques">
+                                       <span>Select Parameters</span>
+                                    </div>
+                                 </div>
+                                 <hr class=hide-for-small-screen>
+                                 <br class="show-in-mobile-screen">
+                                 <div class="row">
+                                    <div class="col-lg-12 col-mobile-view-add-ques">
+                                       <form [formGroup]="templatesform2" novalidate>
+                                          <div class="row">
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="tf_qt_id"
+                                                      (selectionChange)="getQuestionSubtypeDataByQuestiontype()" required
+                                                      placeholder="Question Type">
+                                                      <mat-option *ngFor="let item of questionTypeArray"
+                                                         [value]="item.qt_id">
+                                                         {{item.qt_name}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="tf_qst_id" required
+                                                      placeholder="Question Sub Type">
+                                                      <mat-option *ngFor="let item of questionSubtypeArray"
+                                                         [value]="item.qst_id">
+                                                         {{item.qst_name}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="tf_skill_id" required
+                                                      placeholder="Skill">
+                                                      <mat-option *ngFor="let item of skillTypeArray"
+                                                         [value]="item.skill_id">
+                                                         {{item.skill_name}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="tf_qcount"
+                                                      placeholder="No. of Question">
+                                                      <mat-option *ngFor="let item of questionstypeArray"
+                                                         [value]="item">
+                                                         {{item}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="tf_weightage" placeholder="Weightage">
+                                                      <mat-option *ngFor="let item of weightageArray" [value]="item">
+                                                         {{item}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="tf_negative_marks"
+                                                      placeholder="Negative marks">
+                                                      <mat-option *ngFor="let negativemarksvalue of negativemarksArray"
+                                                         [value]="negativemarksvalue">
+                                                         {{negativemarksvalue}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                          </div>
+                                          <div class="row">
+
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                                <div class="button-content">
+                                                   <button mat-raised-button class="add-to-list-button"
+                                                      (click)="addQuestionList()">Add to List</button>
+                                                </div>
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-tab-7 col-mobile-view-add-ques">
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-tab-25  col-mobile-view-add-ques">
+                                                <div class="button-content mob-screen-marks-left-template">
+                                                   <mat-chip-list>
+                                                      <mat-chip class="marks-left">
+                                                         <span class="chip-content-one">
+                                                            <span class="marks-title">Marks</span>
+                                                            <span class="left-title">Left :</span>
+                                                         </span>
+                                                         <i
+                                                            class="fas fa-circle chip-content-two marks-left-circle"></i>
+                                                         <span class="marks-left-value">{{leftmarks}}</span>
+                                                      </mat-chip>
+                                                   </mat-chip-list>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <div class="col-lg-12 col-mobile-view-add-ques">
+                                       <div class="detail-question">
+                                          <div class="detail-question-box template-detail-box">
+                                             <div class="detail-question-box-content template-list-box-content">
+                                                <div class="detail-question-box-content-title">
+                                                   <div class="row">
+                                                      <div
+                                                         class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                                                         <div>
+                                                            <div class="row">
+                                                               <div class="col-lg-12 col-remove-padding">
+                                                                  <div
+                                                                     class="create-template-table normal-table-responsive">
+                                                                     <table class="dialog-table-review table">
+                                                                        <thead>
+                                                                           <tr class="dialog-table-review-header">
+                                                                              <td>S.No</td>
+                                                                              <td>Q. Sub-Type</td>
+                                                                              <td>No. of Question</td>
+                                                                              <td>Marks</td>
+                                                                              <!-- <td >LOD</td> -->
+                                                                              <td>Skill Type</td>
+                                                                              <td>Modify</td>
+                                                                           </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                           <tr class="table-dialog-review-row"
+                                                                              *ngFor="let template of templates; let i=index">
+                                                                              <th scope="row"> {{i+1}}</th>
+                                                                              <td>{{template.qst_name}} </td>
+                                                                              <td>{{template.tf_qcount }} </td>
+                                                                              <td>
+                                                                                 {{template.tf_qcount * template.tf_weightage}}
+                                                                              </td>
+                                                                              <!-- <td>{{getNameById(lodArray,'dl_id',template.tf_dl_id,'dl_name')}}</td> -->
+                                                                              <td>
+                                                                                 {{getNameById(skillTypeArray,'skill_id',template.tf_skill_id,'skill_name')}}
+                                                                              </td>
+                                                                              <td>
+                                                                                 <i class="far fa-trash-alt table-delete-icon"
+                                                                                    data-toggle="tooltip"
+                                                                                    data-placement="top"
+                                                                                    matTooltip="Delete"
+                                                                                    aria-hidden="true"
+                                                                                    (click)="deleteQuestionList(i)"></i>
+                                                                              </td>
+                                                                           </tr>
+                                                                        </tbody>
+                                                                        <br>
+                                                                     </table>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <br>
+                                                   <div
+                                                      class="row specific-instruct-submit-reset-collection hide-for-small-screen">
+                                                      <div
+                                                         class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                                                         <div class="row">
+                                                            <div
+                                                               class="col-lg-6 instruction-button-content remove-col-modal-padding">
+                                                               <div class="button-content">
+                                                                  <mat-chip-list>
+                                                                     <mat-chip class="instruct-chip"
+                                                                        (click)="addInstructionDialog()">
+                                                                        <i
+                                                                           class="fas fa-plus-circle instruct-add-icon instruct-content-one"></i>
+                                                                        <span
+                                                                           class="instruct-content-two button-instruct-title">Instruction</span>
+                                                                     </mat-chip>
+                                                                  </mat-chip-list>
+                                                               </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                               <div class="add-question-button-collection">
+                                                                  <div class="button-row">
+                                                                     <button mat-raised-button class="submit-button"
+                                                                        *ngIf="!editTemplateFlag"
+                                                                        (click)="addTemplate()"
+                                                                        [disabled]="!templatesform1.valid">Submit</button>
+                                                                     <button mat-raised-button class="submit-button"
+                                                                        *ngIf="editTemplateFlag"
+                                                                        (click)="updateTemplate()">Update</button>
+                                                                     <button mat-raised-button
+                                                                        class="reset-button add-question-reset-btn"
+                                                                        (click)="resetTemplate()">Reset</button>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                         <br>
+                                                      </div>
+                                                   </div>
+                                                   <br>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row hide-for-larger-screen">
+                                    <div class="col-lg-12">
+                                       <div class="row">
+                                          <div class="button-content">
+                                             <mat-chip-list>
+                                                <mat-chip class="instruct-chip" (click)="addInstructionDialog()">
+                                                   <i
+                                                      class="fas fa-plus-circle instruct-add-icon instruct-content-one"></i>
+                                                   <span
+                                                      class="instruct-content-two button-instruct-title">Instruction</span>
+                                                </mat-chip>
+                                             </mat-chip-list>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <div class="col-lg-12">
+                                          <div class="add-question-button-collection">
+                                             <div class="button-row">
+                                                <button mat-raised-button class="submit-button"
+                                                   *ngIf="!editTemplateFlag" (click)="addTemplate()"
+                                                   [disabled]="!templatesform1.valid">Submit</button>
+                                                <button mat-raised-button class="submit-button" *ngIf="editTemplateFlag"
+                                                   (click)="updateTemplate()">Update</button>
+                                                <button mat-raised-button class="reset-button add-question-reset-btn"
+                                                   (click)="resetTemplate()">Reset</button>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <br class="hide-for-larger-screen">
+                                    <br class="hide-for-larger-screen">
+                                    <br class="hide-for-larger-screen">
+                                    <br class="hide-for-larger-screen">
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

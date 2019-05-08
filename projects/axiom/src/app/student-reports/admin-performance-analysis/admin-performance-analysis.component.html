@@ -1,0 +1,125 @@
+<div class="add-question-content">
+  <div class="row row-remove-top-margin">
+     <div class="col-lg-12 col-mobile-view-add-ques">
+        <div class="white-box">
+           <div id="printModal" class="white-box-content">
+              <br>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="float-right">
+                    <form [formGroup]="adminOverallFilter">
+                        <mat-form-field class="form-field">
+                            <mat-select formControlName="sub_id" #inputA (selectionChange)="viewReportQuestionType(inputA.value)" 
+                            [ngModel]="subjectArray[0].sub_id"
+                            placeholder="Select Subject"
+                                required>
+                                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id"> {{item.sub_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="performanceDiv && reportSubtypeArray.length == 0">
+                 <div class="row">
+                    <div class="col-lg-12">
+                       <div class="text-center">
+                          No Records Found
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <div *ngIf="performanceDiv && reportSubtypeArray.length > 0">
+                 <div class="row">
+                    <div class="col-lg-12">
+                       <div class="float-right">
+                          <button class="submit-button" mat-button (click)="printPerformanceAnalysisGraph()"><i class="fas fa-print dialog-table-print-icon"></i> &nbsp;Print</button>
+                       </div>
+                       <h4 class="text-center">Overall</h4>
+                       <div class="row">
+                          <div class="col-lg-12">
+                             <div class="user-table">
+                                <table id ="topicContainer" class="table table-striped" cellspacing="0">
+                                   <tbody>
+                                      <tr class="text-center">
+                                         <td id="tdTopic" class="qstStyle">Topics</td>
+                                         <th [ngStyle]="{'width':topicHeaderStyle}" *ngFor="let topic of topicArray">{{topic.topic_name}}</th>
+                                         <th [ngStyle]="{'width':topicHeaderStyle}">Overall</th>
+                                      </tr>
+                                   </tbody>
+                                </table>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="row">
+                          <div class="col-lg-12">
+                             <div class="user-table">
+                                <table class=" table table-striped" cellspacing="0">
+                                   <tbody>
+                                      <tr class="text-center">
+                                         <td id="tdStudentOverAll" class="qstStyle">Student Overall</td>
+                                         <th [ngStyle]="{'width':studentOverallStyle}" *ngFor="let topic of topicArray">
+                                         <button mat-icon class="btn-emp btn-grade" [ngStyle]="{background:getPercentageColor(getStudentOverall(topic.topic_id))}">{{getStudentOverall(topic.topic_id)}}</button>
+                                         </th>
+                                         <th [ngStyle]="{'width':studentOverallStyle}">
+                                            <button mat-icon class="btn-emp btn-grade" [ngStyle]="{background:getPercentageColor(getOverall())}">{{getOverall()}}</button>
+                                         </th>
+                                      </tr>
+                                   </tbody>
+                                </table>
+                             </div>
+                          </div>
+                       </div>
+                       <hr class="hor">
+                       <h4 class="text-center">Type of Question</h4>
+                       <div class="row">
+                          <div class="col-lg-12">
+                             <div class="user-table">
+                                <table class=" table table-striped" cellspacing="0">
+                                   <tbody>
+                                      <tr class="text-center" *ngFor="let stype of subTypeArray;let i=index">
+                                         <td id="tdSubType" class="qstStyle">{{stype.qst_name}}</td>
+                                         <th [ngStyle]="{'width':qstHeaderStyle}" *ngFor="let topic of topicArray">
+                                         <button mat-icon class="btn-emp btn-grade padding" [ngStyle]="{background:getPercentageColor(getSubTypePercentage(topic.topic_id,stype.qst_id))}">{{getSubTypePercentage(topic.topic_id,stype.qst_id)}}</button>
+                                         </th>
+                                         <th [ngStyle]="{'width':qstHeaderStyle}">
+                                            <button mat-icon class="btn-emp btn-grade padding" [ngStyle]="{background:getPercentageColor(getSubTypeOverallPercentage(stype.qst_id))}">{{getSubTypeOverallPercentage(stype.qst_id)}}</button>
+                                         </th>
+                                      </tr>
+                                   </tbody>
+                                </table>
+                             </div>
+                          </div>
+                       </div>
+                       <hr class="hor">
+                       <h4 class="text-center">Skill Type</h4>
+                       <div class="row">
+                          <div class="col-lg-12">
+                             <div class="user-table">
+                                <table class=" table table-striped" cellspacing="0">
+                                   <tbody>
+                                      <tr class="text-center" *ngFor="let skill of skillArray;let i=index">
+                                         <td id="tdSkill" class="qstStyle">{{skill.skill_name}}</td>
+                                         <th [ngStyle]="{'width':skillHeaderStyle}" *ngFor="let topic of topicArray">
+                                         <button mat-icon class="btn-emp btn-grade" [ngStyle]="{background:getPercentageColor(getSkillPercentage(topic.topic_id,skill.skill_id))}">{{getSkillPercentage(topic.topic_id,skill.skill_id)}}</button>
+                                         </th>
+                                         <th [ngStyle]="{'width':skillHeaderStyle}">
+                                            <button mat-icon class="btn-emp btn-grade" [ngStyle]="{background:getPercentageColor(getSkillOverallPercentage(skill.skill_id))}">{{getSkillOverallPercentage(skill.skill_id)}}</button>
+                                         </th>
+                                      </tr>
+                                   </tbody>
+                                </table>
+                             </div>
+                          </div>
+                       </div>
+                       <hr class="hor">
+                       <br>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>

@@ -1,0 +1,199 @@
+<div class="row">
+  <div class="col-12">
+     <div class="adv-jee-header">
+        <h1 class="adv-jee-top-title">{{examDetail?.tp_name | titlecase}}</h1>
+     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-9  mob-col-100 instruct-container-side height-100vh height-150vh">
+     <div class="row">
+        <div class="col-12 mob-remove-left-padding">
+           <div class="adv-jee-sub-header">
+              <h2 class="adv-jee-sub-title">Instructions</h2>
+           </div>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-12">
+           <div class="adv-jee-instruction-screen apple-adv-jee-instruction-screen padding-all-15">
+             <div class="adv-jee-child-instruction">
+              <div class="row">
+                 <div class="col-12 text-right">
+                    <label class="language-label-black font-size-14">View in :</label>
+                    <select class="adv-jee-language-select btn-spacer">
+                       <option value="volvo">English</option>
+                       <option value="saab">Hindi</option>
+                       <option value="opel">Tamil</option>
+                       <option value="audi">Telgu</option>
+                    </select>
+                 </div>
+              </div>
+              <div class="row">
+                 <div class="col-12 text-center">
+                    <h4 class="instruct-main-title text-uppercase">Read the instruction carefully</h4>
+                 </div>
+              </div>
+              <br>
+              <div class="row">
+                 <div class="col-12">
+                    <h4 class="instruct-main-title text-uppercase">General Instructions</h4>
+                 </div>
+              </div>
+              <div class="row">
+                 <div class="col-12">
+                    <ol>
+                       <li>Total duration of the paper is {{convertFloat(timeDiffer)}} hours ({{examDetail?.tp_time_alloted}} minutes).</li>
+                       <li>The on-screen computer countdown timer on the top right corner of computer screen will display the
+                          remaining time (in minutes) available to you for completing the paper. When the on-screen countdown
+                          timer reaches zero, the paper will end by itself – <b>No input from your side will be accepted after
+                          the timer reaches zero</b> and whatever answers have been saved by you will automatically be
+                          submitted for evaluation.
+                       </li>
+                       <li>The <b>“Submit”</b> button present at the bottom right corner of the screen will remain deactivated
+                          during the entire {{examDetail?.tp_time_alloted}} minutes duration of the paper. Note that the <b>“Submit”</b> button will be
+                          activated only after the timer has reached zero and the saved responses will be automatically
+                          submitted. It is <b>NOT</b> required to click on <b>“Submit”</b> after the timer has reached zero.
+                       </li>
+                       <li>
+                          The Question Palette displayed on the right side of screen will show the status of each question as
+                          per one of the following symbols <em>(the question numbers appear inside the symbols)</em>:
+                          <table class="table-bordered table-70">
+                             <tr>
+                                <td class="text-center">
+                                   <img src="../../assets/default-ques-btn.svg" class="jee-btn-svg">
+                                   <span class="adv-jee-btn-not-onansnum1">1</span>
+                                </td>
+                                <td>
+                                   “Not Visited” - You have not visited the question yet.
+                                </td>
+                             </tr>
+                             <tr>
+                                <td class="text-center">
+                                   <img src="../../assets/notanswered.svg" class="jee-btn-svg">
+                                   <span class="adv-jee-btn-not-onansnum1">2</span>
+                                </td>
+                                <td>
+                                   “Not Answered” - You have not answered the question yet.
+                                </td>
+                             </tr>
+                             <tr>
+                                <td class="text-center">
+                                   <img src="../../assets/answered.svg" class="jee-btn-svg">
+                                   <span class="adv-jee-btn-not-onansnum1">3</span>
+                                </td>
+                                <td>
+                                   “Answered” - You have answered the question. All these questions will be evaluated.
+                                </td>
+                             </tr>
+                             <tr>
+                                <td class="text-center">
+                                   <img src="../../assets/saveforreview.svg" class="jee-btn-svg">
+                                   <span class="adv-jee-btn-not-onansnum1">4</span>
+                                </td>
+                                <td>
+                                   “Marked for Review” - You have NOT answered the question but have ONLY marked the question for
+                                   review.
+                                </td>
+                             </tr>
+                             <tr>
+                                <td class="text-center">
+                                   <img src="../../assets/ansmarkreview.svg" class="jee-btn-svg">
+                                   <span class="adv-jee-btn-not-onansnum1">5</span>
+                                </td>
+                                <td>
+                                   “Answered and Marked for Review” - You have answered the question and have also marked it for
+                                   review. All these questions will be evaluated.
+                                </td>
+                             </tr>
+                          </table>
+                       </li>
+                       <li>The “Marked for Review” status for a question indicates you would like to look at that question
+                          again.
+                       </li>
+                       <li>You can click on the ">" arrow symbol, which appears to the left of question palette, to collapse
+                          the question palette thereby maximizing the question window. To view the question palette again, you
+                          can click on "<" symbol which appears on the right side of question window.
+                       </li>
+                       <li>Before you start
+                          the paper, select your default language (either ENGLISH or HINDI) for viewing the questions by
+                          selecting your preferred language from the drop down menu under “Choose your default language”
+                          located below the “Instructions to Candidates” section.
+                       </li>
+                       <li>Anytime during the paper, you can change the question viewing language of the displayed question. To
+                          change the question viewing language (either ENGLISH or HINDI) of the displayed question, select the
+                          preferred language from the drop down menu under “View in” located in the upper right side of the
+                          question viewing window.
+                       </li>
+                       <li>Anytime during the paper, you can change the default question viewing language of the question
+                          paper. You can click on “Profile” image on top right corner of computer screen to change the default
+                          language (either ENGLISH or HINDI) of the entire question paper during the exam. On clicking of
+                          Profile image, you will get an option to change the default question viewing language.
+                       </li>
+                       <li>You can click on <i class="fas fa-arrow-circle-down font-size-30 font-color-blue align-middle"></i>
+                          to navigate to the bottom and <i
+                             class="fas fa-arrow-circle-up font-size-30 font-color-blue  align-middle"></i> to navigate to top of
+                          the question are, without scrolling.
+                       </li>
+                       <li>You can also use the computer mouse to scroll up/down the question viewing area to view complete
+                          contents of the question viewing area.
+                       </li>
+                       <li>At the end of this “Instructions to Candidates” section, you must click on the checkbox beside the
+                          “I have read all the instructions and shall abide by them” and then only you will be able to proceed
+                          to view and answer the questions at the start of the paper. Your on-screen clock will start at the
+                          designated time of the start of the paper.
+                       </li>
+                       <li>The full question paper can be viewed anytime during the paper by clicking the “Question Paper”
+                          button on the top right corner of the computer screen.
+                       </li>
+                       <li>These instructions can be viewed anytime during the paper by clicking “Instructions” button located
+                          at the top right corner of the computer screen.
+                       </li>
+                    </ol>
+                 </div>
+              </div>
+              <br>
+              <div class="row">
+                 <div class="col-12">
+                    <div class="hor-line-divider"></div>
+                 </div>
+              </div>
+              <br>
+              </div>
+           </div>
+           <div class="row margin-top-15 ">
+               <div class="col-12 text-right">
+                 <a [routerLink]="['/test/jee-advanced-other-instruction',es_id]">
+                  <button mat-button class="btn-clear-res btn-without-radius">Next <i
+                     class="fas fa-angle-right"></i></button>
+                     </a>
+               </div>
+            </div>
+            <footer>
+                  <div class="row margin-top-2">
+                     <div class="col-12 text-center">
+                        <div class="footer-container footer-background">
+                           <div class="text-center">
+                              <span style="color: black"> &#169; 2018 - Invictus DigiSoft Pvt Ltd.</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                </footer>
+        </div>
+     </div>
+  </div>
+  <div class="col-3 mob-col-100 height-100vh height-150vh">
+     <div class="row">
+        <div class="col-12 text-center">
+          <img  style="height:100%"
+          [src]="userDetails.au_profileimage ? userDetails.au_profileimage : 'https://g21.digialm.com//OnlineAssessment/images/NewCandidateImage.jpg'">
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-12 text-center">
+           <h5 class="adv-jee-stu-name"><b>{{userDetails?.au_full_name}}</b></h5>
+        </div>
+     </div>
+  </div>
+</div>

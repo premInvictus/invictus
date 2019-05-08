@@ -1,0 +1,93 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="close-button-content">
+      <button mat-icon-button class="close-button" (click)="closeDialog()"><img
+          src="../../../../../assets/images/clear-button.svg"></button>
+    </div>
+  </div>
+</div>
+<div id="printModal2">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="information-bar">
+        <div class="information-bar-content">
+          <div class="row">
+            <div class="col-lg-12">
+              <span class="info-template-name"><b>Template Name:</b> {{printTemplate.tp_name}}</span>
+            </div>
+          </div>
+          <br>
+          <div class="row row-remove-top-margin">
+            <div class="col-lg-12 remove-col-modal-padding">
+              <div class="row row-remove-top-margin">
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-first-circle"></i> <span><b>Class:</b>
+                    {{currSelectedTemplateClass}}</span>
+                </div>
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-second-circle"></i> <span><b>Section:</b>
+                    {{currSelectedTemplateSection}}</span>
+                </div>
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-third-circle"></i> <span><b>Subject:</b>
+                    {{currSelectedTemplateSubject}}</span>
+                </div>
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-four-circle"></i> <span><b>Marks:</b> {{printTemplate.tp_marks}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="table-box">
+        <div class="row">
+          <div class="col-lg-12 col-remove-padding">
+            <div class="dialog-table-review-main normal-table-responsive">
+              <table class="dialog-table-review table">
+                <thead>
+                  <tr class="dialog-table-review-header">
+                    <td style="width:2rem;">S.No.</td>
+                    <td style="width:15rem;">Question Sub-Type</td>
+                    <td class="text-center" style="width:3rem;">Questions</td>
+                    <td style="width:10rem;" class="text-center">Total Marks</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-dialog-review-row" *ngFor="let filter of printTemplate.filters;let i=index ">
+                    <td>{{i+1}}</td>
+                    <td>{{filter.qst_name}}</td>
+                    <td class="text-center">{{filter.tf_qcount}}</td>
+                    <td class="text-center">{{getTotal(filter.tf_qcount,filter.tf_weightage)}}</td>
+                  </tr>
+                  <tr>
+
+                    <td></td>
+                    <td></td>
+                    <td style="width:7rem;"><b>Total Marks: </b></td>
+                    <td class="text-center">{{printTemplate.tp_marks}}</td>
+                  </tr>
+                </tbody>
+                <br>
+                <!-- <div class="row">
+              <div class="col-lg-12">
+                Total : {{printTemplate.tp_marks}}
+              </div>
+            </div>
+            <br> -->
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

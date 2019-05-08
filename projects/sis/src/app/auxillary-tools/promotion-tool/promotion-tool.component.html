@@ -1,0 +1,323 @@
+<div class="container-box__grey">
+    <div class="row">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-6 remove-col-padding-right">
+            <div class="container-box__white">
+              <div class="row">
+                <!-- <div class="col-3 custom-col-10 text-center">
+                  <div class="line-divider"></div>
+                </div> -->
+                <div class="col-12 text-center">
+                  <h4 class="text-uppercase ">
+                    <b>Strength of {{sessionPromote}}: {{currentSessionStudentCount}}</b>
+                  </h4>
+                </div>
+                <!-- <div class="col-3 custom-col-10 text-center">
+                  <div class="line-divider"></div>
+                </div> -->
+              </div>
+              <form [formGroup]="promoteForm">
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field class="form-field">
+                    <mat-select placeholder="Enrollment type" formControlName="enrollment_type" 
+                    [errorStateMatcher]="confirmValidParentMatcher" required>
+                    <mat-option value="">Please Select</mat-option>  
+                    <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">{{item.au_process_name}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select enrollment type
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field class="form-field">
+                    <mat-select placeholder="Current Class" #promoClass_id formControlName="class_id"
+                    (selectionChange)="getSectionByClassForPromotion(promoClass_id.value)" 
+                    [errorStateMatcher]="confirmValidParentMatcher" required>
+                    <mat-option value="">Please Select</mat-option>  
+                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select previous class
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field class="form-field">
+                    <mat-select placeholder="Section" formControlName="sec_id">
+                        <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of promotionSectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field class="form-field">
+                      <mat-select  placeholder="New Class" required formControlName="new_class_id" 
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>    
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select new class
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field class="form-field">
+                    <mat-select placeholder="Sorted by" formControlName="order_by" >
+                        <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of orderByArray" [value]="item.order_by">{{item.order_by_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <button mat-raised-button class="btn-success" (click)="getPromotionList()">Generate</button>
+                </div>
+              </div>
+            </form>
+            <div class="row">
+                <div class="col-12">
+                  <div *ngIf="promoteFlag">
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field class="form-feild">
+                          <input
+                            matInput
+                            (keyup)="applyFilterPromote($event.target.value)"
+                            placeholder="Filter"
+                            />
+                        </mat-form-field>
+                        <mat-table #table [dataSource]="promotedataSource" matSort class="table-100 mat-elevation-z1">
+                        <!-- Checkbox Column -->
+                        <ng-container matColumnDef="select">
+                          <mat-header-cell *matHeaderCellDef>
+                            <span class="text-center"><mat-checkbox (change)="checkAllPromotionList($event)"></mat-checkbox></span>
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            <span class="text-center"><mat-checkbox [value]="item.no" 
+                              (change)="insertIntoToBePromotedList($event,item.action)" [checked]="promotionListAllFlag"></mat-checkbox></span>
+                          </mat-cell>
+                        </ng-container>
+                        <!-- Admission Column -->
+                        <ng-container matColumnDef="no">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{promoteForm.value.enrollment_type === '4' ? 'Admission No.': 
+                          'Provisional No.'}}
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            <span class="text-center">{{ item.em_admission_no }}</span>
+                          </mat-cell>
+                        </ng-container>
+                        <!-- Student Column -->
+                        <ng-container matColumnDef="name">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Student Name
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            <span class="text-center text-capitalize">{{ item.name }}</span>
+                          </mat-cell>
+                        </ng-container>
+                        <!-- Class Column -->
+                        <ng-container matColumnDef="class">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Class
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            <span class="text-center">{{ item.class }}</span>
+                          </mat-cell>
+                        </ng-container>
+                        <!-- Section Column -->
+                        <ng-container matColumnDef="section">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Section
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            <span class="text-center">{{ item.section }}</span>  
+                          </mat-cell>
+                          >
+                        </ng-container>
+                        <!-- Promote Column -->
+                        <ng-container matColumnDef="action">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Promote
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            <span class="text-center"><i *ngIf="item.action.pmap_status !== '0' " class="fas fa-thumbs-up icon-success" 
+                              (click)="promoteStudent(item)"></i></span>
+                            <span style="color:#04a20d" class="text-center" [hidden]="!(item.action.pmap_status === '0') "><b>Promoted</b></span>
+                          </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        </mat-table>
+                      </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="text-center">
+                      <button mat-raised-button class="btn-success" (click)="promoteStudentInBulk()">Promote</button>
+                    </div>
+                    <br />
+                    <br />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <div class="col-6 col-padding-left-eight">
+            <div class="container-box__white">
+              <div class="row">
+                <!-- <div class="col-3 custom-col-10 text-center">
+                  <div class="line-divider"></div>
+                </div> -->
+                <div class="col-12 text-center">
+                  <h4 class="text-uppercase">
+                    <b>Promoted Strength of {{sessionDemote}}: {{nextSessionStudentCount}}</b>
+                  </h4>
+                </div>
+                <!-- <div class="col-3 custom-col-10 text-center">
+                  <div class="line-divider"></div>
+                </div> -->
+              </div>
+              <form [formGroup]="demoteForm">
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field class="form-field">
+                      <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>    
+                      <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">{{item.au_process_name}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select enrollment type
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field class="form-field">
+                      <mat-select placeholder="Promoted Class" #demoClass_id formControlName="class_id"
+                      (selectionChange)="getSectionByClassForDemotion(demoClass_id.value)" 
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>    
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                        </mat-select>
+                        <mat-error>
+                          Please current select class
+                        </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row margin-bottom-65 ">
+                <div class="col-6">
+                  <mat-form-field class="form-field">
+                    <mat-select placeholder="Promoted Section" formControlName="sec_id">
+                        <mat-option value="">Please Select</mat-option>  
+                      <mat-option *ngFor="let item of demotionSectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-6 ">
+                  <button mat-raised-button class="btn-success" (click)="getDemotionList()">Generate</button>
+                </div>
+              </div>
+            </form>
+            <div class="row">
+                <div class="col-12">
+                  <div *ngIf="demoteFlag">
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field class="form-feild">
+                          <input
+                            matInput
+                            (keyup)="applyFilterDemote($event.target.value)"
+                            placeholder="Filter"
+                            />
+                        </mat-form-field>
+                        <mat-table #table [dataSource]="demotedataSource" matSort class="table-100 mat-elevation-z1">
+                        <!-- Checkbox Column -->
+                        <ng-container matColumnDef="select">
+                          <mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox (change)="checkAllDemotionList($event)"></mat-checkbox>
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            <mat-checkbox [value]="item.no"  (change)="insertIntoToBeDemotedList($event,item.action)" 
+                            [checked]="demotionListAllFlag"></mat-checkbox>
+                          </mat-cell>
+                        </ng-container>
+                        <!-- Admission Column -->
+                        <ng-container matColumnDef="no">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Admission No.
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            {{ item.em_admission_no }}
+                          </mat-cell>
+                        </ng-container>
+                        <!-- Student Column -->
+                        <ng-container matColumnDef="name">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Student Name
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                           <span class="text-capitalize"> {{ item.name }} </span>
+                          </mat-cell>
+                        </ng-container>
+                        <!-- Class Column -->
+                        <ng-container matColumnDef="class">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Class
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            {{ item.class }}
+                          </mat-cell>
+                        </ng-container>
+                        <!-- Section Column -->
+                        <ng-container matColumnDef="section">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Section
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            {{ item.section }}
+                          </mat-cell>
+                          >
+                        </ng-container>
+                        <!-- Promote Column -->
+                        <ng-container matColumnDef="action">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Demote
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            <i class="fas fa-thumbs-down icon-danger" (click)="demoteStudent(item)"></i>
+                          </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        >
+                        </mat-table>
+                      </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="text-center">
+                      <button mat-raised-button class="btn-danger" (click)="demoteStudentInBulk()">Demote</button>
+                    </div>
+                    <br />
+                    <br />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+  </div>

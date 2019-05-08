@@ -1,0 +1,485 @@
+<div class="container-box__grey">
+    <div class="container-box__white">
+        <br>
+        <div class="row">
+            <!-- <div class="col-4 text-center">
+                <div class="line-divider"></div>
+            </div> -->
+            <div class="col-12 text-center">
+                <h4 class="text-uppercase text-center"><b>SMS Scheduler</b></h4>
+            </div>
+            <!-- <div class="col-4 text-center">
+                <div class="line-divider"></div>
+            </div> -->
+        </div>
+        <br>
+        <div>
+            <form [formGroup]="smsTemplateForm">
+                <div class="row">
+                    <div class="col-6">
+                        <mat-form-field class="form-field">
+                            <mat-select placeholder="Select Template" formControlName="tpl_id" (selectionChange)="editTemplate($event)" [disabled]="viewMode">
+                                <mat-option value="Select" *ngFor="let item of templateDataArr" value="{{item?.tpl_id}}">{{item?.tpl_title}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field class="form-field">
+                            <input matInput placeholder="Title" formControlName="tpl_title" required [readonly]="viewMode">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12" *ngIf="!viewMode">
+                        <h6>Mail Body</h6>
+                        <ckeditor [config]="ckeConfig" formControlName="tpl_body"></ckeditor>
+                    </div>
+                    <div class="col-12" *ngIf="viewMode">
+                        <b>Message</b> <br><br><br>
+                        <p [innerHTML]="smsTemplateForm.value.tpl_body"></p>
+                    </div>
+                </div>
+                <div class="row" *ngIf="!viewMode">
+                    <div class="notification-aatachment-btn">
+                        <div class="col-12" *ngIf="editFlag">
+                            <mat-checkbox (change)="updateTemplate()">update as template</mat-checkbox>
+                        </div>
+                        <div class="col-12" *ngIf="!editFlag">
+                            <mat-checkbox (change)="saveTemplate()">save as template</mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <br>
+        <div>
+            <form [formGroup]="smsScheduleForm">
+                <div class="row">
+                    <div class="col-12">
+                        <label><b>Recievers</b></label>
+                        <mat-radio-group formControlName="recievers">
+                            <mat-radio-button *ngIf="isExistUserAccessMenu('294')" class="inline-form-radio-spacing" value="1" #radioOne (change)="getUser($event)" [disabled]="viewMode">Students</mat-radio-button>
+                            <mat-radio-button *ngIf="isExistUserAccessMenu('295')" class="inline-form-radio-spacing" value="2" #radioTwo (change)="getUser($event)" [disabled]="viewMode">Parents</mat-radio-button>
+                            <mat-radio-button *ngIf="isExistUserAccessMenu('296')" class="inline-form-radio-spacing" value="3" #radioThree (change)="getUser($event)" [disabled]="viewMode">Teachers</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <br>
+                <div class="divider__grey"></div>
+                <div>
+                    <!-- For Student-->
+                    <div class="row">
+                        <div class="col-12">
+                            <br>
+                            <div class="row">
+                                <!-- <div class="col-4 text-center">
+                                    <div class="line-divider"></div>
+                                </div> -->
+                                <div class="col-12 text-center">
+                                    <h4 class="text-uppercase text-center"><b>{{currentReceivers}}</b></h4>
+                                </div>
+                                <!-- <div class="col-4 text-center">
+                                    <div class="line-divider"></div>
+                                </div> -->
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <mat-form-field class="form-field">
+                                <mat-select placeholder="Class" formControlName="class_id" (selectionChange)="getSectionByClass($event)" required [disabled]="viewMode">
+                                    <mat-option value="Select" *ngFor="let item of classDataArr" value="{{item?.class_id}}">{{item?.class_name}}</mat-option>
+                                    <mat-option value="all">ALL</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-4">
+                            <mat-form-field class="form-field" *ngIf="showSection">
+                                <mat-select placeholder="Section" formControlName="sec_id" [disabled]="viewMode">
+                                    <mat-option value="Select" *ngFor="let item of sectionDataArr" value="{{item?.sec_id}}">{{item?.sec_name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-4 margin-top-10">
+                            <button mat-raised-button class="btn-success" (click)="generateStudentList($event)">Generate</button>
+                        </div>
+                    </div>
+                    <!-- <div class="row" *ngIf="!viewMode">
+                        <div class="col-12 text-center">
+                            <button mat-raised-button class="btn-deeppurple" (click)="generateStudentList($event)">Generate</button>
+                        </div>
+                    </div> -->
+                </div>
+            </form>
+        </div>
+        <div>
+            <form [formGroup]="sendSMSForm">
+                <div class="row">
+                    <div class="col-12" *ngIf="initTable">
+                        <mat-form-field class="form-feild">
+                            <input matInput (keyup)="applyFilterSMS($event.target.value)" placeholder="Filter" />
+                        </mat-form-field>
+                        <mat-table #table [dataSource]="userDataSource" matSort class="table-100 mat-elevation-z1">
+                            <!-- Checkbox Column -->
+                            <ng-container matColumnDef="select">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-checkbox (change)="checkAllUserList($event)" [disabled]="viewMode"></mat-checkbox>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    <mat-checkbox [value]="element.select" [checked]="element.checked ? element.checked : allUserSelectFlag" (change)="prepareSelectedRowData($event, element)" [disabled]="viewMode"></mat-checkbox>
+                                </mat-cell>
+                            </ng-container>
+                            <!-- Student Column -->
+                            <ng-container matColumnDef="user">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    User Name
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    {{ element.user }}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="parent" *ngIf="currentReceivers == 'Parent'">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Active Parent
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    {{ element.parent }}
+                                </mat-cell>
+                            </ng-container>
+                            <!-- Class Column -->
+                            <ng-container matColumnDef="class" *ngIf="currentReceivers == 'Student' || currentReceivers == 'Parent' ">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Class
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    {{ element.class }}
+                                </mat-cell>
+                            </ng-container>
+                            <!-- Section Column -->
+                            <ng-container matColumnDef="section" *ngIf="currentReceivers == 'Student' || currentReceivers == 'Parent' ">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Section
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    {{ element.section }}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="sub" *ngIf="currentReceivers == 'Teacher'">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Class / Section / Subject
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    <!-- <span *ngFor="let item of element.sub">
+                              <li>Class: {{item?.class_name}}</li>
+                              <li>Section: {{item?.sec_name}}</li>
+                              <li>Subject: {{item?.sub_name}}</li>
+                            </span> -->
+                                    <table>
+                                        <tbody>
+                                            <tr *ngFor="let item of element.sub">
+                                                <td>{{item?.class_name}}&nbsp;&nbsp; - &nbsp;&nbsp;</td>
+                                                <td>{{item?.sec_name}}&nbsp;&nbsp; - &nbsp;&nbsp;</td>
+                                                <td>{{item?.sub_name}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </mat-cell>
+                            </ng-container>
+                            <!-- Promote Column -->
+                            <ng-container matColumnDef="mobile">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Mobile
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    {{element.mobile}}
+                                </mat-cell>
+                            </ng-container>
+                            <!-- <tr mat-header-row *matHeaderRowDef="displayedColumnsTwo"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsTwo"></tr> -->
+                            <ng-container *ngIf="currentReceivers == 'Student'">
+                                <mat-header-row *matHeaderRowDef="displayedColumnsTwo"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumnsTwo"></mat-row>
+                            </ng-container>
+                            <ng-container *ngIf="currentReceivers == 'Teacher'">
+                                <mat-header-row *matHeaderRowDef="displayedColumnsThree"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumnsThree"></mat-row>
+                            </ng-container>
+                            <ng-container *ngIf="currentReceivers == 'Parent'">
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                            </ng-container>
+                        </mat-table>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-6 margin-top-10">
+                        <mat-radio-group class="example-radio-group" formControlName="check_schedule_status">
+                            <mat-radio-button *ngIf="showSendNow" value="sendNow" (change)="showScheduleBox=false" [disabled]="viewMode"> Send Now </mat-radio-button>
+                            <mat-radio-button value="Schedule" class="inline-form-radio-spacing" (change)="showScheduleBox=true" [disabled]="viewMode"> Schedule For Later </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <br>
+                <div>
+                    <div class="row" *ngIf="showScheduleBox">
+                        <div class="col-6 margin-top-10">
+                            <mat-form-field class="form-field">
+                                <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="schedule_date" (dateInput)="scheduleDate('input', $event)" required readonly="viewMode">
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-6 margin-top-10">
+                            <mat-form-field class="form-field">
+                                <input matInput type="time" placeholder="Time" formControlName="schedule_time" readonly="viewMode" required>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-center" *ngIf="!viewMode">
+                            <button *ngIf="!showScheduleBox && !editMode" mat-raised-button class="btn-success" (click)="sendSMSSchedule()">Send SMS</button>
+                            <button *ngIf="showScheduleBox && !editMode" mat-raised-button class="btn-success" (click)="generateSMSSchedule()">Schedule SMS</button>
+                            <button *ngIf="!showScheduleBox && editMode" mat-raised-button class="btn-success" (click)="sendSMSSchedule()">Update Send SMS</button>
+                            <button *ngIf="showScheduleBox && editMode" mat-raised-button class="btn-success" (click)="generateSMSSchedule()">Update Schedule SMS</button>
+                            <button mat-raised-button class="btn-danger btn-spacer" (click)="cancel()">Cancel</button>
+                        </div>
+                        <!-- <div class="col-6" style="text-align: center;">
+                        <button mat-raised-button class="btn-danger" class="btn-spacer" (click)="cancel()">Cancel</button>
+                    </div> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-center" *ngIf="viewMode">
+                            <button mat-raised-button class="btn-danger" (click)="backToSMSList()">Back</button>
+                        </div>
+                    </div>
+                    <!--  <div class="col-12 text-center">
+                        <button *ngIf="!showScheduleBox" mat-raised-button class="btn-green" (click)="sendSMSSchedule()">Send SMS</button>
+                        <button *ngIf="showScheduleBox" mat-raised-button class="btn-green" (click)="generateSMSSchedule()">Schedule SMS</button>
+                    </div> -->
+                </div>
+                <br>
+                <br>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- <div *ngIf="radioTwo.checked">
+        <div class="row">
+            <div class="col-12">
+                <br>
+                <div class="row">
+                    <div class="col-4 text-center">
+                        <div class="line-divider"></div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <h6 class="text-uppercase text-center"><b>Parents</b></h6>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="line-divider"></div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <mat-form-field class="form-field">
+                    <mat-select placeholder="Class">
+                        <mat-option value="Select">NA</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field class="form-field">
+                    <mat-select placeholder="Section">
+                        <mat-option value="Select">NA</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field class="form-field">
+                    <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field class="form-field">
+                    <input matInput type="time" placeholder="Time">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button mat-raised-button class="btn-deeppurple">Generate</button>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-12">
+                <table mat-table [dataSource]="dataSource" matSort class="table-100 mat-elevation-z1">
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            <mat-checkbox></mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-checkbox [value]="element.select"></mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="parent">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Active Parent
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.parent }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="student">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Student's Name
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.student }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="class">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Class
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.class }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="section">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Section
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.section }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Email
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.email}}
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button mat-raised-button class="btn-green">Send Mail</button>
+            </div>
+        </div>
+        <br>
+        <br>
+    </div>
+    <div *ngIf="radioThree.checked">
+        <div class="row">
+            <div class="col-12">
+                <br>
+                <div class="row">
+                    <div class="col-4 text-center">
+                        <div class="line-divider"></div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <h6 class="text-uppercase text-center"><b>Teachers</b></h6>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="line-divider"></div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <mat-form-field class="form-field">
+                    <mat-select placeholder="Class">
+                        <mat-option value="Select">NA</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field class="form-field">
+                    <mat-select placeholder="Section">
+                        <mat-option value="Select">NA</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field class="form-field">
+                    <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field class="form-field">
+                    <input matInput type="time" placeholder="Time">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button mat-raised-button class="btn-deeppurple">Generate</button>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-12">
+                <table mat-table [dataSource]="dataSourceThree" matSort class="table-100 mat-elevation-z1">
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            <mat-checkbox></mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-checkbox [value]="element.select"></mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="teacher">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Teacher's Name
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.teacher }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="sub">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Subject
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.sub }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Email
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.email}}
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsThree"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsThree"></tr>
+                </table>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button mat-raised-button class="btn-green">Send Mail</button>
+            </div>
+        </div>
+        <br>
+        <br>
+    </div> -->

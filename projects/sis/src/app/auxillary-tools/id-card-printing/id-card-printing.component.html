@@ -1,0 +1,296 @@
+<div class="container-box__grey">
+  <div class="container-box__white">
+    <div class="row">
+      <!-- <div class="col-4 text-center">
+            <div class="line-divider"></div>
+          </div> -->
+      <div class="col-12 text-center">
+        <h4 class="text-uppercase text-center"><b>ID Card Printing</b></h4>
+      </div>
+      <!-- <div class="col-4 text-center">
+            <div class="line-divider"></div>
+          </div> -->
+    </div>
+
+  </div>
+  <div class="margin-bottom-10"></div>
+  <div class="row">
+    <div class="col-6 remove-col-padding-right">
+      <div class="container-box__white">
+
+        <form [formGroup]="individualPrintForm">
+          <div class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field">
+                <mat-select placeholder="Enrollment Type" (selectionChange)="enableRadio($event)" formControlName="enrollment_type">
+                    <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">{{item.au_process_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label></label><br>
+              <mat-radio-group (change)="checkEventChange($event)" [disabled]="disabled" (click)="radioEnableEvent()" formControlName="print_option">
+                <mat-radio-button name="option" value="1" #radioOne>Individual Print</mat-radio-button>
+                <mat-radio-button name="option" class="inline-form-radio-spacing" value="2" #radioTwo>Bulk Print</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <br>
+          <div *ngIf="radioOne.checked && isExistUserAccessMenu('259')">
+            <span><b>Individual Print</b></span>
+            <div class="row">
+              <div class="col-6">
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input #adm_no matInput placeholder="Admission No." (blur)="getUserDetails($event, adm_no.value)"
+                        formControlName="au_admission_no">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input matInput placeholder="Student Name" class="text-capitalize" formControlName="au_full_name">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input matInput placeholder="Class" formControlName="class_name">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input matInput placeholder="Section" formControlName="sec_name">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input matInput placeholder="House" formControlName="hou_house_name">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input matInput placeholder="Father's Name" class="text-capitalize" formControlName="father_name">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input matInput placeholder="Mother's Name" class="text-capitalize" formControlName="mother_name">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input matInput placeholder="Guardian's Name" class="text-capitalize" formControlName="guardian_name">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input matInput placeholder="Pickup & Drop Location" formControlName="au_admission_no">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field">
+                      <input matInput placeholder="Contact No." formControlName="au_mobile">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row" *ngIf="showViewProfile">
+              <div class="col-12 text-center">
+                <button mat-raised-button class="btn-success" (click)="viewStudentProfile()">View Profile</button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="radioTwo.checked && isExistUserAccessMenu('260')">
+            <div class="row">
+              <div class="col-4 text-center">
+                <div class="line-divider"></div>
+              </div>
+              <div class="col-4 text-center">
+                <h6 class="text-uppercase text-center"><b>Bulk Print</b></h6>
+              </div>
+              <div class="col-4 text-center">
+                <div class="line-divider"></div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-12 text-center">
+                <button mat-raised-button class="btn-success">
+                  <mat-icon class="material-icons">
+                    tune
+                  </mat-icon>&nbsp;&nbsp;Filter
+                </button>
+                <button mat-raised-button class="btn-neutral btn-spacer">
+                  <mat-icon class="material-icons">
+                    sort
+                  </mat-icon>&nbsp;&nbsp;Sort
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-6 col-padding-left-eight">
+      <div *ngIf="radioOne.checked" class="container-box__white">
+        <div *ngIf="showIdCard">
+          <div class="row">
+            <div *ngIf="idCardSettings?.ps_card_style == '1'" class="col-12">
+              <app-idcard-style1 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style1>
+            </div>
+            <div *ngIf="idCardSettings?.ps_card_style == '2'" class="col-12">
+              <app-idcard-style2 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style2>
+            </div>
+            <div *ngIf="idCardSettings?.ps_card_style == '3'" class="col-12">
+              <app-idcard-style3 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style3>
+            </div>
+          </div>
+          <div class="row margin-bottom-10">
+            <div class="col-12 text-center">
+              <a><button *ngIf="isExistUserAccessMenu('260')" mat-raised-button class="btn-setting" (click)="showSettings()">Print Setting</button></a>
+              <button *ngIf="isExistUserAccessMenu('261')" mat-raised-button class="btn-success btn-spacer" [disabled]="dontPrintStatus">Print</button>
+              <button mat-raised-button class="btn-danger btn-spacer">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="radioTwo.checked">
+        <div class="row">
+          <div class="col-12">
+            <div class="container-box__white">
+              <div class="row">
+                <div class="col-12">
+                  <div>
+                    <mat-table [dataSource]="dataSource" matSort class="table-100 mat-elevation-z1">
+                      <!-- Checkbox Column -->
+                      <ng-container matColumnDef="select">
+                        <mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="checkAllStudents($event)"></mat-checkbox>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item">
+                          <mat-checkbox [value]="item.no" (change)="getSelectedStudents($event, item.action)" [checked]="checkAllFlag"></mat-checkbox>
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Admission Column -->
+                      <ng-container matColumnDef="no">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          Adm. No.
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item">
+                          {{ item.no }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Student Column -->
+                      <ng-container matColumnDef="name">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          Name
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item">
+                          {{ item.name }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Class Column -->
+                      <ng-container matColumnDef="class">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          Class
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item">
+                          {{ item.class }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Section Column -->
+                      <ng-container matColumnDef="section">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          Section
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item">
+                          {{ item.section }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Section Column -->
+                      <ng-container matColumnDef="contact">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          Contact
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item">
+                          {{ item.contact }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Section Column -->
+                      <ng-container matColumnDef="print">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          Status
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item">
+                          {{ item.print }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Promote Column -->
+                      <ng-container matColumnDef="action">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          Action
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item">
+                          <mat-icon (click)="openIdCard(item.no)" class="material-icons click-icon view-icon">
+                              visibility
+                          </mat-icon>
+                          <mat-icon (click)="printIdCard(item.no)" class="material-icons print-icon click-icon inline-form-radio-spacing-parent">
+                              local_printshop
+                          </mat-icon>
+                          <!-- <i  class="fas fa-print inline-form-radio-spacing-parent remove-spacing"></i> -->
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                    </mat-table>
+                    <br>
+                    <div class="text-center">
+                      <button mat-raised-button *ngIf="checkStudents.length > 1" class="btn-purple" (click)="bulkPrint()">Print</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <br>
+
+</div>

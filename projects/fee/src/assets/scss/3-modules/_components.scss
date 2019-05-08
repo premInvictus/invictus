@@ -1,0 +1,130 @@
+.line-divider {
+    border-bottom: 2px solid #dfdfdf;
+    margin-top: 30px;
+}
+
+.line-divider-modal {
+    border-bottom: 2px solid #dfdfdf;
+    margin-top: 30px;
+    margin-left: -25px;
+    margin-right: -25px;
+}
+
+.vertical-divider-fee-entry {
+    border-left: 2px solid #dee2e6;
+    height: 84px;
+    margin-top: 17px;
+}
+
+.vertical-line-divider {
+    border-left: 2px solid #dee2e6;
+    height: 80%;
+    margin-left: 50%;
+    margin-top: 10px;
+}
+
+.float-left {
+    float: left !important;
+}
+
+.student-pic__circle {
+    border-radius: 100%;
+}
+
+.student-pic__size {
+    margin-top: 15px;
+    width: 220px !important;
+    height: 220px !important;
+    border: 2px solid #dfdfdf;
+}
+
+.student-img {
+    /*padding-top: 105px;*/
+}
+
+.container-studeng-img {
+    height: 303;
+}
+
+.student-pic--parent {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.student-pic--imgone {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.student-pic--imgtwo {
+    position: absolute;
+    top: 70%;
+    left: 70%;
+}
+
+.student-pictwo__size {
+    width: 55px;
+}
+
+.student-pictwo__color {
+    background-color: #ffffff;
+    border-radius: 100%;
+}
+
+.inline-form-radio-spacing {
+    padding-left: 25px;
+}
+
+.inline-form-radio-spacing-parent {
+    padding-left: 10px;
+}
+
+.inline-form-doc-checkbox {
+    padding-right: 25px;
+}
+
+.id-card-col-60 {
+    max-width: 60% !important;
+    flex: 0 0 60% !important;
+}
+
+.id-card-col-14 {
+    max-width: 14% !important;
+    flex: 0 0 14% !important;
+}
+
+.bulk-upload-main-content label {
+    display: inline;
+    margin-bottom: 0rem;
+}
+
+.sis-overflow {
+    overflow-y: auto !important;
+}
+
+.overflow-auto {
+    overflow: auto !important;
+}
+
+.parent-detail-new-theme .mat-radio-label .mat-radio-container .mat-radio-outer-circle {
+    border-radius: 0% !important;
+}
+
+.parent-detail-new-theme .mat-radio-label .mat-radio-container .mat-radio-inner-circle {
+    border-radius: 0% !important;
+}
+
+
+// #cdk-overlay-1, #cdk-overlay-3, #cdk-overlay-5, #cdk-overlay-7, #cdk-overlay-9, #cdk-overlay-11, #cdk-overlay-1 {
+//     bottom: 0px !important;
+//     top: 50px !important;
+//     height: 165px;
+// }
+
+.bounce-modal-close {
+    position: absolute;
+    margin-top: -15px;
+    margin-left: 750px;
+}

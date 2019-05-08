@@ -1,0 +1,198 @@
+<div class="container-box__grey">
+    <form [formGroup]="suspensionForm" autocomplete="off">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="container-box__white">
+                            <div class="row">
+                                <!-- <div class="col-4 text-center">
+                                    <div class="line-divider"></div>
+                                </div> -->
+                                <div class="col-12 text-center">
+                                    <h4 class="text-uppercase text-center"><b>Suspension</b></h4>
+                                </div>
+                                <!-- <div class="col-4 text-center">
+                                    <div class="line-divider"></div>
+                                </div> -->
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <mat-form-field class="form-field" style="display: none;">
+                                                <input matInput placeholder="" formControlName="susp_id">
+                                            </mat-form-field>
+                                            <mat-form-field class="form-field" style="display: none;">
+                                                <input matInput placeholder="" formControlName="au_login_id">
+                                            </mat-form-field>
+                                            <mat-form-field class="form-field">
+                                                <input matInput placeholder="Admission No." formControlName="susp_login_id" required (blur)="getStudentData($event);">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-3">
+                                            <a [disabled]="viewFlag" mat-raised-button class="btn-success margin-top-10" target="_blank" (click)="viewStudentProfile()">View Profile</a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <mat-form-field class="form-field">
+                                                <input class="text-capitalize" matInput placeholder="Student Name" formControlName="au_full_name">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <mat-form-field class="form-field">
+                                                <input matInput placeholder="Class - Section" formControlName="class_section">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <mat-form-field class="form-field">
+                                                <input matInput placeholder="Contact No." formControlName="au_mobile">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <mat-form-field class="form-field">
+                                                <input class="text-capitalize" matInput placeholder="Father's Name" formControlName="au_father_name">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <mat-form-field class="form-field">
+                                                <input class="text-capitalize" matInput placeholder="Mother's Name" formControlName="au_mother_name">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <mat-form-field class="form-field">
+                                                <input class="text-capitalize" matInput placeholder="Guardian's Name" formControlName="au_gurdian_name">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <mat-form-field class="form-field">
+                                                <input matInput placeholder="Email Id" formControlName="au_email">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <!-- <br>
+                                    <div class="row">
+                                        <div class="col-12 text-center">
+                                            <a [disabled]="viewFlag" mat-raised-button class="btn-success" target="_blank" (click)="viewStudentProfile()">View Profile</a>
+                                        </div>
+                                    </div>
+                                    <br> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="margin-bottom-10"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="container-box__white">
+                            <div class="row">
+                                <!-- <div class="col-4 text-center">
+                                    <div class="line-divider"></div>
+                                </div> -->
+                                <div class="col-12 text-center">
+                                    <h4 class="text-uppercase text-center"><b>Suspension Details</b></h4>
+                                </div>
+                                <!-- <div class="col-4 text-center">
+                                    <div class="line-divider"></div>
+                                </div> -->
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-6">
+                                    <mat-form-field class="form-field">
+                                        <input matInput [matDatepicker]="picker1" placeholder="Suspended From" formControlName="susp_from" required>
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-6">
+                                    <mat-form-field class="form-field">
+                                        <input matInput [matDatepicker]="picker" placeholder="Suspended Till" formControlName="susp_to" [required]="susp_to_required">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <mat-form-field class="form-field">
+                                        <mat-select placeholder="Reason of suspension" formControlName="susp_reason" required>
+                                                <mat-option value="">Please Select</mat-option> 
+                                            <mat-option value="Select" *ngFor="let item of reasonDataArray" value="{{item?.reason_id}}">{{item?.reason_title}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-6">
+                                        <mat-form-field class="form-field">
+                                            <mat-select placeholder="Authority" formControlName="susp_aut_id" required>
+                                                    <mat-option value="">Please Select</mat-option> 
+                                                <mat-option value="Select" *ngFor="let item of authorityArray" value="{{item?.aut_id}}">{{item?.aut_name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <mat-form-field class="form-field">
+                                        <textarea rows="3" matInput placeholder="Suspension Remarks" formControlName="susp_remark" required></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <!-- <button mat-stroked-button class="btn-outline-green"> Upload Documents &nbsp; <i class="fas fa-cloud-upload-alt"></i></button> -->
+                                    <input style="display: none;" #inputFile type="file" placeholder="Upload Documents" id="image" (change)="bindImageToForm($event)">
+                                    <a mat-stroked-button class="btn-neutral"><mat-icon class="btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;
+                                    <label class="btn-document-label" for="image">
+                                    Choose File
+                                    </label>
+                                    </a>
+                                    
+                                    <div *ngIf="susp_docs?.length > 0" class="margin-top-15">
+                                        <button mat-button  class="upload-suspension-delete-btn" (click)="deleteFile()"><a href="javascript:void(0)"><mat-icon class="btn-upload-icon">delete</mat-icon></a></button>
+                                        <img class="btn-doc-upload-preview" [src]="susp_docs" (click)="previewImage(susp_docs)">
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-12">
+                                    <mat-checkbox formControlName="susp_intimate_parents">Intimate Parents</mat-checkbox>
+                                    <mat-checkbox class="inline-form-radio-spacing" formControlName="susp_print_status">Print Suspension Letter</mat-checkbox>
+                                    <mat-checkbox class="inline-form-radio-spacing" formControlName="susp_indefinitely" (change)="setSuspendIndefinitely($event)">Suspend Indefinitely</mat-checkbox>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="text-center">
+                                <button mat-raised-button class="btn-success" *ngIf="!showRevoke" (click)="suspendStudent()">Suspend</button>
+                                <button mat-raised-button class="btn-success" *ngIf="showRevoke" (click)="revokeEnrolmentNumber()">Revoke</button>
+                                <button class="btn-danger btn-spacer" mat-raised-button (click)="reset()">Reset</button>
+                            </div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br>
+</div>

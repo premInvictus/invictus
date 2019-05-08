@@ -1,0 +1,97 @@
+<div class="container-box__white">
+  <div>
+
+    <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+              <mat-card class="document-main-card" *ngFor="let item of documentsArray;let i =index">
+                  <div class="row margin-bottom-10">
+                      <div class="col-8">
+                          <span class="document-title"><b>{{item.docreq_name}}</b></span>
+                      </div>
+                      <div class="col-4">
+                          <div class="float-right">
+                              <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
+                                  multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
+                                  style="display: none !important">
+                              <button mat-raised-button class="btn-neutral" *ngIf="!viewOnly">
+                                  <mat-icon class="btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
+                                      class="btn-document-label" [for]="item.docreq_id">Choose
+                                      File</label>
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <ng-container *ngFor="let img of this.imageArray;let i = index">
+                      <div class="col-1 tab-custom-col-20 col-doc-img-3 custom-col-15" *ngIf="img.ed_docreq_id === item.docreq_id">
+                          <div class="remove-col-padding" >
+                              <div>
+                                  <div>
+                                      <div>
+                                          <div *ngIf="img.ed_docreq_id === item.docreq_id" style="float:right;">
+                                              <button *ngIf="!viewOnly" mat-button class="upload-document-delete-btn"
+                                                  (click)="deleteFile(img.imgName,img.ed_docreq_id)"><mat-icon class="btn-upload-icon">delete</mat-icon></button>
+                                          </div>
+                                          <div *ngIf="img.ed_docreq_id ===  item.docreq_id">
+                                                  <img *ngIf= "checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img" [src]="img.imgName"  (click)="previewImage(imageArray, i)">
+                                                  <img *ngIf= "!checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
+                                                  src="https://icons-for-free.com/free-icons/png/512/2109135.png" 
+                                                   (click)="previewImage(imageArray, i)"><br>
+                                          </div>
+                                          <br>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </ng-container>
+                  </div>
+              </mat-card>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <mat-card>
+              <span><b>Instruction for Uploading Instruction</b></span>
+              <br>
+              <br>
+              <ol>
+                <li>You can upload multiple file</li>
+                <li>Try selecting more than one file when browsing for file in particular section.
+                </li>
+                <li>Please compress your file to 154kb before uploading.</li>
+                <li>Uploading file format can be of following instruction jpeg, jpg, pdf, doc.
+                </li>
+              </ol>
+              <br>
+              <br>
+            </mat-card>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-12">
+            <mat-card>
+              <span><b>List of Document Required for Admission</b></span>
+              <br>
+              <br>
+              <ol *ngFor="let item of documentsArray;let i =index">
+                  <mat-checkbox [disabled]="viewOnly || !(fileUploadedStatus(item?.docreq_id))" class="inline-form-doc-checkbox" [checked]="checkVerifiedStatus(item.docreq_id)"
+                      [value]="item.docreq_id" (change)="insertVerifyId($event)">
+                  </mat-checkbox>{{item.docreq_name}}
+              </ol>
+              <br>
+              <div class="text-center">
+                  <button mat-raised-button class="btn-neutral" [disabled]="viewOnly" (click)="verifyDocument()">Verify</button>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

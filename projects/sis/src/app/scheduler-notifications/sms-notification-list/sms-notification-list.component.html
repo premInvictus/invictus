@@ -1,0 +1,143 @@
+<div class="container-box__grey">
+    <div class="container-box__white">
+        <br>
+        <div class="row">
+            <!-- <div class="col-4 text-center">
+                <div class="line-divider"></div>
+            </div> -->
+            <div class="col-10 ">
+                <h4 class="text-uppercase "><b>Scheduled SMS List</b></h4>
+                
+            </div>
+            <div class="col-2" *ngIf="isExistUserAccessMenu('293')">
+                <button style="float: right;" mat-raised-button class="btn-success" (click)="scheduleSMS()"><i class="material-icons">
+                    add
+                </i>&nbsp;&nbsp;Add SMS</button>
+            </div>
+            <!-- <div class="col-4 text-center">
+                <div class="line-divider"></div>
+            </div> -->
+        </div>
+        <br>
+        <div class="row">
+            <!-- <div class="col-12" *ngIf="isExistUserAccessMenu('293')">
+
+                <button style="float: right;" mat-raised-button class="btn-success" (click)="scheduleSMS()"><i class="material-icons">
+                        add
+                    </i>&nbsp;&nbsp;Add SMS</button>
+
+            </div> --> 
+
+            <div class="col-12" *ngIf="USER_ELEMENT_DATA.length > 0">
+                <mat-form-field class="form-feild">
+                    <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
+                </mat-form-field>
+                <mat-table [dataSource]="scheduleSMSDataSource" matSort class="table-100 mat-elevation-z1">
+                    <!-- <ng-container matColumnDef="select">
+                        <mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox (change)="checkAllUserList($event)"></mat-checkbox>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <mat-checkbox [value]="element.select" [checked]="allUserSelectFlag" (change)="prepareSelectedRowData($event, element.au_login_id)"></mat-checkbox>
+                        </mat-cell>
+                    </ng-container> -->
+                    <!-- Checkbox Column -->
+                    <ng-container matColumnDef="no">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            S. No.
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{ element.no }}
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Admission Column -->
+                    <ng-container matColumnDef="subject">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Subject
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <span *ngIf="element.subject">{{ element.subject | titlecase}}</span>
+                            <span *ngIf="!element.subject">N/A</span>
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Student Column -->
+                    <ng-container matColumnDef="class">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Class Section
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{ element.class }}
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Class Column -->
+                    <ng-container matColumnDef="schedule_date">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Scheduled Date
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <span *ngIf="element.schedule_date">{{ element.schedule_date | date: 'dd-MMM-yyyy'}}</span>
+                            <span *ngIf="!element.schedule_date">N/A</span>
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Section Column -->
+                    <ng-container matColumnDef="schedule_time">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Scheduled Time
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <span *ngIf="element.schedule_time">{{element.schedule_time}}</span>
+                            <span *ngIf="!element.schedule_time">N/A</span>
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Section Column -->
+                    <ng-container matColumnDef="user_type">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            User Type
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.user_type | titlecase}}
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Status
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.status}}
+                        </mat-cell>
+                    </ng-container>
+                    <!-- Promote Column -->
+                    <ng-container matColumnDef="action">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Action
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <!-- <button *ngIf="element.status === 'Scheduled'" mat-raised-button class="btn-deeppurple "
+                                (click)="editSMS(element)">Edit</button>&nbsp;<br> -->
+                            <i *ngIf="element.status === 'Scheduled' && isExistUserAccessMenu('291')" class="material-icons modify-icon" style="cursor: pointer" (click)="editSMS(element)">
+                                create
+                            </i>
+                            <i *ngIf="isExistUserAccessMenu('290')" class="material-icons view-icon inline-form-table-icon-spacing" style="cursor: pointer" (click)="viewSMS(element)">
+                                    visibility
+                                </i>
+                                <i *ngIf="element.status === 'Scheduled' && isExistUserAccessMenu('286')" style="cursor: pointer" class="material-icons delete-icon inline-form-table-icon-spacing" (click)="openDeleteDialog(element)">
+                                        delete
+                                    </i>
+                            <!-- <button mat-raised-button class="btn-deeppurple" (click)="viewSMS(element)">View</button>&nbsp;<br> -->
+                            <!-- <button *ngIf="element.status === 'Scheduled'" mat-raised-button class="btn-deeppurple"
+                                (click)="openDeleteDialog(element)">Delete</button>&nbsp;<br> -->
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                </mat-table>
+            </div>
+            <div *ngIf="USER_ELEMENT_DATA.length == 0">
+                No Record Found
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteSMS($event)" (deleteCancel)="deleteCancel()"></app-delete-modal>

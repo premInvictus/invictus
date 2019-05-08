@@ -1,0 +1,196 @@
+<form [formGroup]="studentdetailsform" autocomplete="off" novalidate>
+    <div class="row">
+        <div class="col-2 custom-col-20 tab-custom-col-25 remove-col-padding-right">
+            <div class="container-box__white container-student-img student-img"
+                *ngIf="checkIfFieldExist('au_profileimage')">
+                <div class="student-pic--parent text-center">
+                    <label for="image">
+                        <img class="student-pic--imgone student-pic__circle student-pic__size" [src]="defaultsrc">
+                        <img class="student-pic--imgtwo student-pictwo__size student-pictwo__color"
+                            src="../../../assets/images/twitpic-symbol.svg">
+                    </label>
+                    <input type="file" placeholder="Upload image" id="image" (change)="bindImageToForm($event)"
+                        [disabled]="viewOnly">
+                </div>
+            </div>
+        </div>
+        <div class="col-10 custom-col-80 tab-custom-col-75 col-padding-left-eight">
+            <div class="container-box__white">
+                <div class="row margin-bottom-35">
+                    <div class="col-4">
+                        <h4 class="text-uppercase"><b>Student Details</b></h4>
+                    </div>
+                    <div class="col-8">
+                        <div class="float-right hide-for-tab-screen">
+                            <button mat-raised-button class="btn-success"
+                                *ngIf="addOnly && isExistUserAccessMenu('add')" (click)="addNew()">
+                                <mat-icon class="btn-top-icon">person_add</mat-icon>&nbsp; &nbsp;New Student
+                            </button>
+                            <button mat-raised-button class="btn-spacer btn-neutral"
+                                *ngIf="editOnly && isExistUserAccessMenu('edit')" (click)="editForm()">
+                                <mat-icon class="btn-top-icon">person</mat-icon>&nbsp; &nbsp;Edit Student
+                            </button>
+                            <button mat-raised-button class="btn-spacer btn-danger"
+                                *ngIf="deleteOnly && isExistUserAccessMenu('delete')" (click)="openDeleteDialog()">
+                                <mat-icon class="btn-top-icon">delete</mat-icon>&nbsp; &nbsp;Delete Student
+                            </button>
+                            <button mat-raised-button class="btn-spacer btn-setting" (click)="openConfig()"
+                                *ngIf="isExistUserAccessMenu('config')">
+                                <mat-icon class="btn-top-icon">build</mat-icon>&nbsp; &nbsp;Config. Settings
+                            </button>
+                            <button mat-raised-button class="btn-spacer btn-danger" *ngIf="backOnly" (click)="backTo()">
+                                <mat-icon class="btn-top-icon">keyboard_arrow_left</mat-icon>&nbsp; &nbsp;Back
+                            </button>
+                        </div>
+                        <div class="float-right hide-for-large-screen">
+                            <button mat-raised-button class="btn-success"
+                                *ngIf="addOnly && isExistUserAccessMenu('add')" (click)="addNew()">
+                                <mat-icon class="btn-top-icon">person_add</mat-icon>
+                            </button>
+                            <button mat-raised-button class="btn-spacer btn-neutral"
+                                *ngIf="editOnly && isExistUserAccessMenu('edit')" (click)="editForm()">
+                                <mat-icon class="btn-top-icon">person</mat-icon>
+                            </button>
+                            <button mat-raised-button class="btn-spacer btn-danger"
+                                *ngIf="deleteOnly && isExistUserAccessMenu('delete')" (click)="openDeleteDialog()">
+                                <mat-icon class="btn-top-icon">delete</mat-icon>
+                            </button>
+                            <button mat-raised-button class="btn-spacer btn-setting" (click)="openConfig()"
+                                *ngIf="isExistUserAccessMenu('config')">
+                                <mat-icon class="btn-top-icon">build</mat-icon>
+                            </button>
+                            <button mat-raised-button class="btn-spacer btn-danger" *ngIf="backOnly" (click)="backTo()">
+                                    <mat-icon class="btn-top-icon">keyboard_arrow_left</mat-icon>
+                                </button>
+                        </div>
+                        <!-- <div style="float: right;">
+                            <i style="margin-right: 10px;font-size: 35px; cursor: pointer; color: #43ca4b" *ngIf="addOnly"
+                                (click)="addNew()" class="fas fa-user-plus" matTooltip="Add New"></i>
+                            <i style="margin-right: 10px;font-size: 35px; cursor: pointer; color:#a04c91;" *ngIf="editOnly"
+                                (click)="editForm()" class="fas fa-user-edit " matTooltip="Edit"></i>
+                            <i style="margin-right: 10px;font-size: 35px; cursor: pointer; color: #de6a63" *ngIf="deleteOnly"
+                                (click)="openDeleteDialog()" class="fas fa-user-slash " matTooltip="Delete"></i>
+                            <i style="margin-right: 10px;font-size: 35px; cursor: pointer; color: #2d869c;" class="fas fa-user-cog"
+                                matTooltip="Configuration Settings" (click)="openConfig()"></i>
+
+                        </div> -->
+
+
+
+                    </div>
+                </div>
+                <!-- <div class="row margin-bottom-15">
+                    <div class="col-4 text-center">
+                        <div class="line-divider"></div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <h4 class="text-center text-uppercase"><b>Student Details</b></h4>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="line-divider"></div>
+                    </div>
+                </div> -->
+
+                <div class="row">
+                    <div class="col-1  student-detail-col-1 tab-custom-col-15 remove-col-padding-right custom-col-10">
+
+                        <button mat-flat-button class="btn-nav--size btn-neutral btn-nav-height" [disabled]="firstB"
+                            (click)="firstId(navigation_record.first_record)"><i class="fas fa-angle-double-left"
+                                title="first"></i></button>
+                        <button mat-flat-button class="btn-nav--size btn-navspacer btn-neutral btn-nav-height"
+                            [disabled]="previousB" (click)="previousId(navigation_record.prev_record)"><i
+                                class="fas fa-angle-left" title="previous"></i></button>
+                    </div>
+                    <div class="col-4  custom-col-30 tab-custom-col-20 student-detail-col-3 text-center">
+                        <mat-form-field class="form-field text-center">
+                            <input class="text-center" formControlName="au_enrollment_id" matInput
+                                [placeholder]="enrolmentPlaceholder" [readonly]="!viewOnly"
+                                (keydown.enter)="loadOnEnrollmentId($event)">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1  student-detail-col-1 tab-custom-col-15 custom-col-10 text-right remove-col-padding-left">
+                        <button mat-flat-button class="btn-nav--size btn-neutral btn-nav-height" [disabled]="nextB"
+                            (click)="nextId(navigation_record.next_record)"><i class="fas fa-angle-right"
+                                title="next"></i></button>
+                        <button mat-flat-button class="btn-nav--size btn-navspacer btn-neutral btn-nav-height"
+                            [disabled]="lastB" (click)="lastId(navigation_record.last_record)"><i
+                                class="fas fa-angle-double-right" title="last"></i></button>
+                    </div>
+                    <div class="col-6 custom-col-50"
+                        *ngIf="fieldEnableAtAdmission() && checkIfFieldExist('au_full_name')">
+                        <mat-form-field class="form-field">
+                            <mat-select formControlName="au_hou_id" placeholder="House Name" [disabled]="viewOnly">
+                                <mat-option value="">Please Select</mat-option>
+                                <mat-option *ngFor="let item of houseArray" [value]="item.hou_id">
+                                    {{item.hou_house_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <!-- <div class="col-1 text-center">
+                        <button mat-raised-button class="btn-nav--size" [disabled]="!viewOnly"><i class="fas fa-search icon-green"></i></button>
+                    </div> -->
+                </div>
+                <div class="row">
+                    <div class="col-6" *ngIf="checkIfFieldExist('au_full_name')">
+                        <mat-form-field class="form-field">
+                            <input class="text-capitalize" formControlName="au_full_name" matInput
+                                placeholder="Full Name" required [readonly]="viewOnly">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6" *ngIf="checkIfFieldExist('au_mobile')">
+                        <mat-form-field class="form-field">
+                            <input formControlName="au_mobile" pattern="[0-9]*" minlength="10" maxlength="10" matInput
+                                placeholder="Contact No." required [readonly]="viewOnly">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-6" *ngIf="!fieldEnableAtAdmission() && checkIfFieldExist('au_class_id')">
+                        <mat-form-field class="form-field">
+                            <mat-select formControlName="au_class_id" placeholder="Class Applied For" required
+                                [disabled]="viewOnly">
+                                <mat-option value="">Please Select</mat-option>
+                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                    {{item.class_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3" *ngIf="fieldEnableAtAdmission() && checkIfFieldExist('au_class_id')">
+                        <mat-form-field class="form-field">
+                            <mat-select formControlName="au_class_id" placeholder="Class"
+                                (ngModelChange)="getSectionsByClass()" [disabled]="viewOnly">
+                                <mat-option value="">Please Select</mat-option>
+                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                    {{item.class_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3" *ngIf="fieldEnableAtAdmission() && checkIfFieldExist('au_sec_id')">
+                        <mat-form-field class="form-field">
+                            <mat-select formControlName="au_sec_id" placeholder="Section" [disabled]="viewOnly">
+                                <mat-option value="">Please Select</mat-option>
+                                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                    {{item.sec_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6" *ngIf="checkIfFieldExist('au_email')">
+                        <mat-form-field class="form-field">
+                            <input formControlName="au_email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}$"
+                                type="email" matInput placeholder="Email ID" [readonly]="viewOnly">
+                        </mat-form-field>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<app-imagecrop #cropModal (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)"></app-imagecrop>
+<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteUser()"
+    (deleteCancel)="deleteCancel()"></app-delete-modal>

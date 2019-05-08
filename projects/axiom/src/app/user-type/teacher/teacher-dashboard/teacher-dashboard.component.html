@@ -1,0 +1,320 @@
+<div class="main-dashboard">
+		<div class="row row-remove-top-margin">
+			<div class="col-lg-12 remove-col-modal-padding">
+				<div class="dash-second-white-box">
+					<div class="row row-remove-top-margin">
+						<div class="col-lg-8">
+							<span class="dash-breadcrumb">
+									<i class="fas fa-home"></i>&nbsp;&nbsp; Teacher /
+									<span class="dash-breadcrumb-title">Dashboard</span>
+							</span>
+						</div>
+						<div class="col-lg-4">
+							<div class="float-right">
+								<span class="dash-breadcrumb-support">
+										<img class="dash-breadcrumb-image" src="../../../../assets/images/support.svg">&nbsp;
+										<span>Support</span>
+								</span>
+								<span>
+										<span class="dash-date">Today : </span>
+								<span class="dash-date-value">{{today | date}}</span>
+								</span>
+							</div>
+						</div>
+					</div>
+	
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12 ">
+				<div class="row">
+					<div class="col-lg-3">
+						<mat-card class="score-card-info-card-main-box">
+							<div class="row">
+								<div class="col-lg-8 tab-remove-col-padding mob-top-card-info-title">
+									<span class="dash-info-card-title-value">{{qtptData.qus_count}}</span>
+									<br>
+									<span class="dash-tab-view-info-card-sub-title">Question Added</span>
+	
+								</div>
+								<div class="col-lg-4 mob-top-card-image">
+									<div class="text-right">
+										<img class="dash-info-card-image" src="../../../../assets/images/folder.svg">
+									</div>
+								</div>
+	
+							</div>
+	
+						</mat-card>
+					</div>
+	
+					<div class="col-lg-3">
+						<mat-card class="score-card-info-card-main-box">
+							<div class="row">
+								<div class="col-lg-8 tab-remove-col-padding mob-top-card-info-title">
+									<span class="dash-info-card-title-value">{{qtptData.tp_count}}</span>
+									<br>
+									<span class="dash-tab-view-info-card-sub-title">Template Created</span>
+								</div>
+								<div class="col-lg-4 mob-top-card-image">
+									<div class="text-right">
+										<img class="dash-info-card-image" src="../../../../assets/images/copy-writing.svg">
+									</div>
+								</div>
+							</div>
+	
+						</mat-card>
+					</div>
+					<div class="col-lg-3">
+						<mat-card class="score-card-info-card-main-box">
+							<div class="row">
+								<div class="col-lg-8 tab-remove-col-padding mob-top-card-info-title">
+									<span class="dash-info-card-title-value">{{qtptData.qp_count}}</span>
+									<br>
+									<span class="dash-tab-view-info-card-sub-title">Paper Created</span>
+								</div>
+								<div class="col-lg-4  mob-top-card-image">
+									<div class="text-right">
+										<img class="dash-info-card-image" src="../../../../assets/images/creative.svg">
+									</div>
+								</div>
+	
+							</div>
+	
+						</mat-card>
+					</div>
+					<div class="col-lg-3">
+						<mat-card class="score-card-info-card-main-box">
+							<div class="row">
+								<div class="col-lg-8 tab-remove-col-padding mob-top-card-info-title">
+									<span class="dash-info-card-title-value">{{qtptData.es_count}}</span>
+									<br>
+									<span class="dash-tab-view-info-card-sub-title">Test Conducted</span>
+								</div>
+								<div class="col-lg-4  mob-top-card-image">
+									<div class="text-right">
+										<img class="dash-info-card-image" src="../../../../assets/images/marketing.svg">
+									</div>
+								</div>
+							</div>
+	
+						</mat-card>
+					</div>
+				</div>
+			</div>
+		</div>
+		<section class="dash-second-row">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="row">
+						<div class="col-lg-3 fin-tab-col-3">
+							<mat-card class="dash-card-info-card-main-box dash-second-row-card-height">
+								<mat-tab-group>
+									<mat-tab>
+										<ng-template mat-tab-label>
+											<div class="tab-show-on-click">
+												<span>Highest Scorer</span>
+											</div>
+										</ng-template>
+										<div class="dash-teacher-side-profile">
+											<div class="dash-teacher-side-profile-inner">
+												<div class="row">
+													<div class="col-lg-12 remove-col-modal-padding" *ngFor="let t of topperArray;let i=index">
+														<div class="dash-profile-details-content">
+															<div class="row">
+																<div class="col-lg-3  tab-col-lg-12 col-remove-left-padding">
+																	<img class="dash-profile-img" [src]="studentimagesrc(t.au_profileimage)">
+																</div>
+																<div class="col-lg-6 tab-col-lg-12">
+																	<div class="dash-profile-details">
+																		<span class="dash-profile-teacher-name">{{t.au_full_name}}</span>
+																		<br>
+																		<span class="dash-profile-teacher-designation">{{t.sub_name}}</span>
+																	</div>
+																</div>
+																<div class="col-lg-3 tab-col-lg-12">
+																	<div class="dash-follow-chip tab-probife-button-chip">
+																		<mat-chip-list>
+																			<mat-chip class="dash-follow-btn">{{convertFloat(t.score)}}%</mat-chip>
+																		</mat-chip-list>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<hr>
+													</div>
+												</div>
+											</div>
+										</div>
+									</mat-tab>
+									<mat-tab>
+										<ng-template mat-tab-label>
+											<div class="tab-show-on-click">
+												<span>Top Results</span>
+											</div>
+										</ng-template>
+										<div class="dash-teacher-side-profile">
+											<div class="dash-teacher-side-profile-inner">
+												<div class="row row-remove-top-margin dash-subject-row">
+													<div class="col-lg-12 remove-col-modal-padding" *ngFor="let ct of topperclassArray">
+														<div class="dash-profile-details-content">
+															<div class="row row-remove-top-margin class-result-section">
+																<div class="col-lg-3 tab-col-lg-12 col-remove-left-padding">
+																	<img class="dash-profile-img" [src]="checkImage(ct.sub_name)">
+																</div>
+																<div class="col-lg-6 tab-col-lg-12">
+																	<div class="dash-profile-details">
+	
+																		<span class="dash-profile-teacher-name">Class {{ct.class_name}}</span>
+																		<br>
+																		<span class="dash-profile-teacher-designation">{{ct.sub_name}}</span>
+																	</div>
+																</div>
+																<div class="col-lg-3 tab-col-lg-12">
+																	<div class="dash-top-class-result-value">
+																		<span style="font-size: 13px">{{convertFloat(ct.score)}}%</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<hr>
+													</div>
+												</div>
+											</div>
+										</div>
+									</mat-tab>
+								</mat-tab-group>
+							</mat-card>
+						</div>
+						<div class="col-lg-6" *ngIf="workanalysisdiv">
+							<mat-card class="dash-card-info-card-main-box dash-second-row-card-height">
+								<mat-tab-group>
+									<mat-tab label="Work Analysis">
+										<div class="row">
+											<div class="col-lg-12 dash-test-conducted-report">
+												<app-common-dynamic-chart [options]="threedchart"></app-common-dynamic-chart>
+											</div>
+										</div>
+									</mat-tab>
+								</mat-tab-group>
+							</mat-card>
+						</div>
+						<div class="col-lg-3 fin-tab-col-3 fin-tab-tp-margin-25">
+							<mat-card class="dash-card-info-card-main-box dash-second-row-card-height top-result-card">
+								<mat-tab-group>
+									<mat-tab>
+										<ng-template mat-tab-label>
+											<div class="tab-show-on-click">
+												<span>Upcoming Tests</span>
+											</div>
+										</ng-template>
+										<div class="dash-teacher-side-profile">
+											<div class="dash-teacher-side-profile-inner">
+												<div *ngIf="pastExamArray.length > 0" class="row row-remove-top-margin dash-subject-row">
+													<div class="col-lg-12 remove-col-modal-padding" *ngFor="let come of comingExamArray">
+														<div class="dash-profile-details-content">
+															<div class="row row-remove-top-margin class-result-section">
+																<div class="col-lg-3 tab-col-lg-12 col-remove-left-padding">
+																	<img class="dash-profile-img" src="../../../../assets/images/coming.svg">
+																</div>
+																<div class="col-lg-5">
+																	<div class="dash-profile-details">
+																		<span class="dash-profile-teacher-name">{{come.tp_name| titlecase}}</span>
+																		<br>
+																		<span class="dash-profile-teacher-designation">{{come.sub_name}}</span>
+																		<br>
+																		<span class="dash-profile-teacher-designation">&nbsp;{{come.class_name}} {{come.sec_name}}</span>
+																		<br>
+																		<span *ngIf="come.es_exam_type !== '2'" class="dash-profile-teacher-designation">Class Type</span>
+																		<span *ngIf="come.es_exam_type === '2'" class="dash-profile-teacher-designation">Home Type</span>
+																	</div>
+																</div>
+																<div class="col-lg-4">
+																	<div class="dash-follow-chip">
+																		<span class="dash-profile-teacher-designation">&nbsp;{{come.es_start_date |  date:'dd-MM-yyyy'}}</span>
+																		<br>
+																		<span class="dash-profile-teacher-designation">&nbsp;{{come.es_start_time}}</span>
+																		<br> &nbsp;
+																		<a *ngIf="isExistUserAccessMenu('63') && come.es_exam_type !== '2'" (click)="startTest(come.es_id)">
+																			<i class="fas fa-play start-button-icon" data-toggle="tooltip" data-placement="top" matTooltip="Start Test" aria-hidden="true"></i>
+																		</a>
+																		<a *ngIf="isExistUserAccessMenu('63') && come.es_exam_type == '2'" (click)="endTest(come)">
+																			<i class="fas fa-hourglass-end" data-toggle="tooltip" data-placement="top" matTooltip="End Test" aria-hidden="true"></i>
+																		</a>&nbsp;
+																	</div>
+																</div>
+															</div>
+														</div>
+														<hr>
+													</div>
+												</div>
+												<div *ngIf="comingExamArray.length == 0" class="row row-remove-top-margin dash-subject-row">
+														<div class="col-lg-12 remove-col-modal-padding">
+															<div class="text-center">
+																No Records 
+															</div>
+														</div>
+													</div>
+											</div>
+										</div>
+									</mat-tab>
+									<mat-tab>
+										<ng-template mat-tab-label>
+											<div class="tab-show-on-click">
+												<span>Past Tests</span>
+											</div>
+										</ng-template>
+										<div class="dash-teacher-side-profile">
+											<div class="dash-teacher-side-profile-inner">
+												<div *ngIf="pastExamArray.length > 0" class="row">
+													<div class="col-lg-12 remove-col-modal-padding" *ngFor="let past of pastExamArray;let i=index">
+														<div class="dash-profile-details-content">
+															<div class="row">
+																<div class="col-lg-3 col-remove-left-padding">
+																	<img class="dash-profile-img" src="../../../../assets/images/checklist.svg">
+																</div>
+																<div class="col-lg-5">
+																	<div class="dash-profile-details">
+																		<span class="dash-profile-teacher-name">{{past.tp_name| titlecase}}</span>
+																		<br>
+																		<span class="dash-profile-teacher-designation">{{past.sub_name}}</span>
+																		<br>
+																		<span class="dash-profile-teacher-designation">&nbsp;{{past.class_name}} {{past.sec_name}}</span>
+																		<br>
+																		<span *ngIf="past.es_exam_type !== '2'" class="dash-profile-teacher-designation">Class Type</span>
+																		<span *ngIf="past.es_exam_type === '2'" class="dash-profile-teacher-designation">Home Type</span>
+																	</div>
+																</div>
+																<div class="col-lg-4">
+																	<div class="dash-follow-chip">
+																		<span class="dash-profile-teacher-designation">&nbsp;{{past.es_start_date |  date:'dd-MM-yyyy'}}</span>
+																		<br>
+																		<span class="dash-profile-teacher-designation">&nbsp;{{past.es_start_time}}</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<hr>
+													</div>
+												</div>
+												<div *ngIf="pastExamArray.length == 0" class="row row-remove-top-margin dash-subject-row">
+														<div class="col-lg-12 remove-col-modal-padding">
+															<div class="text-center">
+																No Records 
+															</div>
+														</div>
+													</div>
+											</div>
+										</div>
+									</mat-tab>
+								</mat-tab-group>
+							</mat-card>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<br>
+		<br>
+	</div>

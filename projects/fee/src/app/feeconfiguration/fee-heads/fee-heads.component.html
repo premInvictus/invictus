@@ -1,0 +1,260 @@
+<div class="container-box__grey">
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-content__container margin-bottom-140">
+        <mat-card-title>
+          <div class="row">
+            <div class="col-6">
+                <h1>Fee Heads</h1>
+            </div>
+            <div class="col-6 text-right">
+              <div class="inline-flex"><h3>School</h3> <mat-slide-toggle  class="btn-spacer" [ngModel]="fh_is_hostel_fee == '1' ? 'checked' : ''"
+                (change)="changeIsHostelFee($event)"></mat-slide-toggle><h3 class="btn-spacer">Hostel</h3></div>
+              
+            </div>
+          </div>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-4 custom-col-27">
+              <form [formGroup]="feeheadform" novalidate>
+                <div class="row">
+                  <div class="col-12 margin-top-25">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Fee Head Name</mat-label>
+                      <input matInput formControlName="fh_name" placeholder="Fee Head Name" required>
+                      
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-4">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Fee Type</mat-label>
+                      <mat-select formControlName="fh_ft_id" placeholder="Fee Type" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of feetypeArray" [value]="item.ft_id">{{item.ft_name}}</mat-option>
+                      </mat-select>
+                      
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Fee Period</mat-label>
+                      <mat-select formControlName="fh_fp_id" placeholder="Fee Period" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of feeperiodArray" [value]="item.fp_id">{{item.fp_name}}
+                        </mat-option>
+                      </mat-select>
+                      
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Fee Month</mat-label>
+                      <mat-select multiple formControlName="fh_fm_id" placeholder="Fee Month" required>
+                        <mat-option *ngFor="let item of feemonthArray" [value]="item.fm_id">{{item.fm_name}}
+                        </mat-option>
+                      </mat-select>
+                      
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Class</mat-label>
+                      <mat-select multiple formControlName="fh_class_id" placeholder="Class" required>
+                        
+                        <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                        </mat-option>
+                      </mat-select>
+                      
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Section</mat-label>
+                      <mat-select multiple formControlName="fh_sec_id" placeholder="Section">
+                        
+                        <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Calculation Method</mat-label>
+                      <mat-select formControlName="fh_calm_id" placeholder="Calculation Method" required>
+
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of calculationmethodArray" [value]="item.calm_id">
+                          {{item.calm_name}}</mat-option>
+                      </mat-select>
+                      
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Fee Amount</mat-label>
+                      <input formControlName="fh_amount" type="number" matInput placeholder="Fee Amount" required>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 margin-top-25">
+                    <h4 class="font-medium">Additional Filter</h4>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Gender</mat-label>
+                      <mat-select formControlName="fh_gen_id" placeholder="Gender">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of genderArray" [value]="item.gen_id">{{item.gen_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Others</mat-label>
+                      <mat-select formControlName="fh_fo_id" placeholder="others">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of feeotherArray" [value]="item.fo_id">{{item.fo_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Transport</mat-label>
+                      <mat-select formControlName="fh_transport" placeholder="Transport">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option value="Y">Yes</mat-option>
+                        <mat-option value="N">No</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Hostel</mat-label>
+                      <mat-select formControlName="fh_hostel" placeholder="Hostel">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option value="Y">Yes</mat-option>
+                        <mat-option value="N">No</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Concession Category</mat-label>
+                      <mat-select formControlName="fh_fcc_id" placeholder="Concession Category">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of concessionruleArray" [value]="item.fcc_id">{{item.fcc_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                </div>
+                <div class="text-center margin-top-25">
+                  <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-success"
+                    (click)="saveForm()">Submit</button>
+                  <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-success"
+                    (click)="saveForm()">Update</button>
+                  <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="cancelForm()" >Cancel</button>
+                  <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="resetForm()" >Reset</button>
+                </div>
+              </form>
+            </div>
+            <div class="col-1 custom-col-2">
+              <div class="vertical-line"></div>
+            </div>
+            <div class="col-7 custom-col-69" [hidden]="!(feeheadArray.length > 0)">
+              <div class="row">
+                <div class="col-12 remove-col-padding">
+                  <div class="table-container">
+                    <mat-form-field>
+                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      <i class="fas fa-filter table-filter" matPrefix></i>
+
+                    </mat-form-field>
+                    <table class="table-100 text-center " mat-table [dataSource]="dataSource" matSort>
+                      <ng-container matColumnDef="srno">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="feehead">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Head </th>
+                        <td mat-cell *matCellDef="let element"> {{element.feehead | capitalize}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="feetype">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Type </th>
+                        <td mat-cell *matCellDef="let element"> {{element.feetype}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="class">
+                        <th mat-header-cell *matHeaderCellDef> Class </th>
+                        <td mat-cell *matCellDef="let element"> {{element.class}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="calculate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Calculation Method </th>
+                        <td mat-cell *matCellDef="let element"> {{element.calculate}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+                        <td mat-cell *matCellDef="let element"> <i class="fas fa-rupee-sign"></i> {{element.amount}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="period">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Period </th>
+                        <td mat-cell *matCellDef="let element"> {{element.period}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Entry Date </th>
+                        <td mat-cell *matCellDef="let element"> {{element.date | dateformat:'dd-MMM-yyyy'}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                        <td mat-cell *matCellDef="let element">
+                          <mat-slide-toggle [checked]="element.status" (change)="toggleFeeHeadStatus($event, element.action)" ></mat-slide-toggle>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Action </th>
+                        <td mat-cell *matCellDef="let element" class="inline-flex margin-top-10"> 
+                          <i class="material-icons icon-edit" (click)="editFeehead(element.action)" >create</i> 
+                          <i class="material-icons icon-danger icon-spacer" (click)="openDeleteDialog(element.action)">delete</i> 
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+                    </table>
+                    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"> 
+                    </mat-paginator>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)"></app-delete-modal>

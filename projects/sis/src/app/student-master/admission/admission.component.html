@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-12">
+      <div class="container-box__grey">
+        <app-student-details [belongToForm]="formname" [config]="config"></app-student-details>
+        <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
+          <ng-container *ngFor="let tab of formsTab; let i=index">
+          <mat-tab [disabled]="checkFormEnabled(i)" *ngIf="commonAPIService.isExistUserAccessMenuByLabel('160', tab?.label)">
+            <ng-template mat-tab-label>
+              <div>
+                <span>{{tab.label}}</span>
+              </div>
+            </ng-template>
+            <app-dynamic-content [type]="tab.component" [studentdetails]="studentdetails" [belongToForm]="formname" [config]="config" [currentStudentDataId]="currentStudentDataId"></app-dynamic-content>
+          </mat-tab>
+        </ng-container>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+  

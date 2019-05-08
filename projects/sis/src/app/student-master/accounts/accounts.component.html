@@ -1,0 +1,74 @@
+<div class="container-box__grey">
+<br>
+<div class="row">
+  <div class="col-4 text-center">
+    <div class="line-divider"></div>
+  </div>
+  <div class="col-4 text-center">
+    <h6><b>ACCOUNTS INFORMATION</b></h6>
+  </div>
+  <div class="col-4 text-center">
+    <div class="line-divider"></div>
+  </div>
+</div>
+<br>
+<form [formGroup]="Accounts_Form">
+  <div class="row">
+    <div class="col-4">
+      <mat-form-field class="form-field">
+        <input matInput placeholder="Fee Structure">
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <mat-form-field class="form-field">
+        <mat-select placeholder="Consession Category">
+          <mat-option value="Select">NA</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <mat-form-field class="form-field">
+        <mat-select placeholder="Fee Cycle">
+          <mat-option value="Select">NA</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-4">
+      <mat-form-field class="form-field">
+        <mat-select placeholder="Transport Slab">
+          <mat-option value="Select">NA</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <mat-form-field class="form-field">
+        <input matInput placeholder="Bus Route">
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <mat-form-field class="form-field">
+       <input matInput placeholder="Pickup Point">
+      </mat-form-field>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-4">
+      <mat-form-field class="form-field">
+       <input matInput placeholder="Dropoff Point">
+      </mat-form-field>
+    </div>
+  </div>
+  <br>
+  <br>
+    <div class="text-center">
+      <button mat-raised-button class="btn-green">Save & Continue</button>
+      <!-- <button class="btn-purple btn-spacer" mat-raised-button>Reset</button> -->
+    </div>
+    <br>
+    <br>
+</form>
+</div>

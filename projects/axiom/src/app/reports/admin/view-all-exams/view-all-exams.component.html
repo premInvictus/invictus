@@ -1,0 +1,64 @@
+<!-- Breadcrumb-->
+<div class="breadcrumb-section">
+    <div class="row">
+       <div class="bread-col-1 col-lg-1">
+          <a [routerLink]="[homeUrl]">
+          <i class="breadcrumb-icon fas fa-home"></i>
+          </a>
+       </div>
+       <div class="bread-col-1 col-lg-1">
+          <div class="vertical-line"></div>
+       </div>
+       <div class="col-lg-10 first-breadcrumb-title-col">
+          <div class="first-breadcrumb-title">
+             <span class="bread-title">Report</span>
+             <span class="bread-divider">-</span>
+             <span class="bread-link">All Exams</span>
+          </div>
+       </div>
+    </div>
+ </div>
+ <div class="add-question-content">
+    <div class="row row-remove-top-margin">
+       <div class="col-lg-12 col-mobile-view-add-ques">
+          <div class="white-box">
+             <div class="white-box-content">
+                <div class="row">
+                   <div class="col-lg-12 col-mobile-view-add-ques">
+                      <div class="white-box-content-title">
+                         <span>List of Exams</span>
+                      </div>
+                   </div>
+                </div>
+                <div class="row">
+                   <div class="col-lg-12 col-mobile-view-add-ques">
+                      <mat-tab-group (selectedTabChange)="setFlag($event)">
+                         <mat-tab>
+                            <ng-template mat-tab-label>
+                               <div class="tab-show-on-click">
+                                  <span>Upcoming Exams</span>
+                               </div>
+                            </ng-template>
+                            <br>
+                            <app-table-renderer [comingexamFlag]="comingexamFlag"></app-table-renderer>
+                         </mat-tab>
+                         <mat-tab>
+                            <ng-template mat-tab-label>
+                               <div class="tab-show-on-click">
+                                  <span>Past Exams</span>
+                               </div>
+                            </ng-template>
+                            <br>
+                            <app-table-renderer [pastexamFlag]="pastexamFlag"></app-table-renderer>
+                         </mat-tab>
+                      </mat-tab-group>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete '" (deleteOk)="deleteScheduledExam(currentQues)"
+  (deleteCancel)="deleteComCancel()">
+</app-delete-modal>

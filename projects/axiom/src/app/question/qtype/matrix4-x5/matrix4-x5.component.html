@@ -1,0 +1,494 @@
+<div class="row">
+  <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+    <div class="question-subtype-box">
+      <div class="question-subtype-content">
+        <form [formGroup]="ind_entry_form3" novalidate>
+          <div class="row">
+            <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+              <div class="question-subtype-content-title-question">
+                <span>Type questions</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+              <div class="question-subtype-text-box">
+                <ckeditor ngDefaultControl required name="mcq-quest" id="mcq-quest" class="text-editor" formControlName="qus_name" #question [config]="ckeConfig" debounce="500">
+              </ckeditor>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="option-section">
+            <div class="row">
+              <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                <div class="row">
+                  <div class="col-lg-1 fin-tab-col-10 col-mobile-view-add-ques card-option-div">
+                    <mat-card class="add-option-card">
+                      <div class="add-option-card-title">
+                        <span class="option-title">A</span>
+                      </div>
+                      <hr class="option-title-divider">
+                      <div class="add-option-number">
+                        <span>1</span>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
+                    <div class="question-subtype-text-box mtf-question-subtype-text-box">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input" class="text-editor" formControlName="optiona" #optiona [config]="ckeConfig" debounce="500">
+                      </ckeditor>
+                    </div>
+                  </div>
+                  <div class="col-lg-1 fin-tab-col-10 col-mobile-view-add-ques card-option-div">
+                    <mat-card class="add-option-card">
+                      <div class="add-option-card-title">
+                        <span class="option-title">P</span>
+                      </div>
+                      <hr class="option-title-divider">
+                      <div class="add-option-number">
+                        <span>1</span>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
+                    <div class="question-subtype-text-box mtf-question-subtype-text-box">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf1" class="text-editor" formControlName="optionp" #optionp [config]="ckeConfig" debounce="500">
+                      </ckeditor>
+                    </div>
+                  </div>
+                  <div class="row mtf-option-row">
+                    <div>
+                      <div class="row four-option-collection-mobile matrix-option-collection">
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">P</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="apqrst1" value="P"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">Q</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="apqrst2" value="Q"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view" >
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">R</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="apqrst3" value="R"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">S</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="apqrst4" value="S"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">T</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="apqrst5" value="T"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+          <br>
+          <div class="option-section">
+            <div class="row">
+              <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                <div class="row">
+                  <div class="col-lg-1 fin-tab-col-10 col-mobile-view-add-ques card-option-div">
+                    <mat-card class="add-option-card">
+                      <div class="add-option-card-title">
+                        <span class="option-title">B</span>
+                      </div>
+                      <hr class="option-title-divider">
+                      <div class="add-option-number">
+                        <span>2</span>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
+                    <div class="question-subtype-text-box mtf-question-subtype-text-box">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf2" class="text-editor" formControlName="optionb" #optionb [config]="ckeConfig" debounce="500">
+                      </ckeditor>
+                    </div>
+                  </div>
+                  <div class="col-lg-1 fin-tab-col-10 col-mobile-view-add-ques card-option-div">
+                    <mat-card class="add-option-card">
+                      <div class="add-option-card-title">
+                        <span class="option-title">Q</span>
+                      </div>
+                      <hr class="option-title-divider">
+                      <div class="add-option-number">
+                        <span>2</span>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
+                    <div class="question-subtype-text-box mtf-question-subtype-text-box">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf3" class="text-editor" formControlName="optionq" #optionq [config]="ckeConfig" debounce="500">
+                      </ckeditor>
+                    </div>
+                  </div>
+                  <div class="row mtf-option-row">
+                    <div>
+                      <div class="row four-option-collection-mobile matrix-option-collection">
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title text-center">P</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="bpqrst1" value="P"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title text-center">Q</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="bpqrst2" value="Q"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title text-center">R</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="bpqrst3" value="R"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title text-center">S</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="bpqrst4" value="S"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title text-center">T</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="bpqrst5" value="T"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+          <br>
+          <div class="option-section">
+            <div class="row">
+              <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                <div class="row">
+                  <div class="col-lg-1 fin-tab-col-10 col-mobile-view-add-ques card-option-div">
+                    <mat-card class="add-option-card">
+                      <div class="add-option-card-title">
+                        <span class="option-title">C</span>
+                      </div>
+                      <hr class="option-title-divider">
+                      <div class="add-option-number">
+                        <span>3</span>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
+                    <div class="question-subtype-text-box mtf-question-subtype-text-box">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf4" class="text-editor" formControlName="optionc" #optionc [config]="ckeConfig" debounce="500">
+                      </ckeditor>
+                    </div>
+                  </div>
+                  <div class="col-lg-1 fin-tab-col-10 col-mobile-view-add-ques card-option-div">
+                    <mat-card class="add-option-card">
+                      <div class="add-option-card-title">
+                        <span class="option-title">R</span>
+                      </div>
+                      <hr class="option-title-divider">
+                      <div class="add-option-number">
+                        <span>3</span>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
+                    <div class="question-subtype-text-box mtf-question-subtype-text-box">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf5" class="text-editor" formControlName="optionr" #optionr [config]="ckeConfig" debounce="500">
+                      </ckeditor>
+                    </div>
+                  </div>
+                  <div class="row mtf-option-row">
+                    <div>
+                      <div class="row four-option-collection-mobile matrix-option-collection">
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">P</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="cpqrst1" value="P"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">Q</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="cpqrst2" value="Q"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">R</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="cpqrst3" value="R"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">S</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="cpqrst4" value="S"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">T</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="cpqrst5" value="T"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+          <br>
+          <div class="option-section">
+            <div class="row">
+              <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                <div class="row">
+                  <div class="col-lg-1 fin-tab-col-10 col-mobile-view-add-ques card-option-div">
+                    <mat-card class="add-option-card">
+                      <div class="add-option-card-title">
+                        <span class="option-title">D</span>
+                      </div>
+                      <hr class="option-title-divider">
+                      <div class="add-option-number">
+                        <span>4</span>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
+                    <div class="question-subtype-text-box mtf-question-subtype-text-box">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf6" class="text-editor" formControlName="optiond" #optiond [config]="ckeConfig" debounce="500">
+                      </ckeditor>
+                    </div>
+                  </div>
+                  <div class="col-lg-1 fin-tab-col-10 col-mobile-view-add-ques card-option-div">
+                    <mat-card class="add-option-card">
+                      <div class="add-option-card-title">
+                        <span class="option-title">S</span>
+                      </div>
+                      <hr class="option-title-divider">
+                      <div class="add-option-number">
+                        <span>4</span>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
+                    <div class="question-subtype-text-box mtf-question-subtype-text-box">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf7" class="text-editor" formControlName="optiont" #optiont [config]="ckeConfig" debounce="500">
+                      </ckeditor>
+                    </div>
+                  </div>
+
+                  <div class="row mtf-option-row">
+                    <div>
+                      <div class="row four-option-collection-mobile matrix-option-collection">
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">P</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="dpqrst1" value="P"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">Q</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="dpqrst2" value="Q"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">R</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="dpqrst3" value="R"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">S</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="dpqrst4" value="S"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                          <mat-card class="add-option-card">
+                            <div class="add-option-card-title">
+                              <span class="option-title">T</span>
+                            </div>
+                            <hr class="option-title-divider">
+                            <div class="add-option-radio">
+                              <mat-checkbox formControlName="dpqrst5" value="T"></mat-checkbox>
+                            </div>
+                          </mat-card>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+          <br>
+          <div class="option-section">
+            <div class="row">
+              <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                <div class="row">
+                  <div class="col-lg-1 fin-tab-col-10 col-mobile-view-add-ques card-option-div">
+                  </div>
+                  <div class="col-lg-3 fin-tab-col-20 col-mobile-view-add-ques">
+                  </div>
+                  <div class="col-lg-1 fin-tab-col-10 col-mobile-view-add-ques card-option-div">
+                    <mat-card class="add-option-card">
+                      <div class="add-option-card-title">
+                        <span class="option-title">T</span>
+                      </div>
+                      <hr class="option-title-divider">
+                      <div class="add-option-number">
+                        <span>5</span>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
+                    <div class="question-subtype-text-box mtf-question-subtype-text-box">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf7" class="text-editor" formControlName="optionu" #optionu [config]="ckeConfig" debounce="500">
+                      </ckeditor>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+          <div class="row">
+            <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+              <div class="question-subtype-content-title-expanation">
+                <span>Explanation</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+              <div class="question-subtype-text-box">
+                <ckeditor ngDefaultControl required name="mcq-answer"  class="text-editor" formControlName="qus_explanation" #explanationckeditor [config]="ckeConfig" debounce="500">
+                </ckeditor>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+    </div>
+  </div>
+</div>

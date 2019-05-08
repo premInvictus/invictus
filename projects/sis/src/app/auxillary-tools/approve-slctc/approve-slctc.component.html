@@ -1,0 +1,184 @@
+<div class="container-box__grey">
+  <div class="container-box__white">
+    <div class="row">
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
+      <div class="col-12 text-center">
+        <h5 class="text-uppercase text-center"><b>Approve SLC/ TC Request</b></h5>
+      </div>
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
+    </div>
+    <br>
+    <form [formGroup]="studentdetailsform" novalidate >
+    <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Admission No." formControlName="tc_admission_no" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Student Name" formControlName="au_full_name" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field class="form-field">
+              <mat-select formControlName="class_id" placeholder="Class" (ngModelChange)="getSectionsByClass()" disabled tabindex="-1"> 
+                  <mat-option value="">Please Select</mat-option>
+                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                    {{item.class_name}}
+                </mat-option>
+            </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field class="form-field">
+              <mat-select placeholder="Section" formControlName="sec_id" disabled tabindex="-1">
+                  <mat-option value="">Please Select</mat-option>
+                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                    {{item.sec_name}}
+                </mat-option>
+            </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Email ID" formControlName="au_email" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Father's Name" formControlName="father_name" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Mother's Name" formControlName="mother_name" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Contact No." formControlName="au_mobile" readonly tabindex="-1">
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <br>
+    <div class="divider__grey"></div>
+    <br>
+    <div class="row">
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
+      <div class="col-12 text-center">
+        <h4 class="text-uppercase text-center"><b>Reasons For Change</b></h4>
+      </div>
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <mat-form-field class="form-field">
+          <mat-select placeholder="Reason For Change" formControlName="tc_reason" required disabled>
+              <mat-option value="">Please Select</mat-option>
+            <mat-option value="Select" *ngFor="let item of reasonDataArray" value="{{item.reason_id}}">{{item.reason_title}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <mat-form-field class="form-field">
+          <textarea rows="3" matInput placeholder="Remarks" formControlName="tc_remark" required readonly></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+    
+    <br>
+  </form>
+  <div class="divider__grey"></div>
+  <br>
+    <div class="row">
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
+      <div class="col-12 text-center">
+        <h4 class="text-uppercase text-center approval-checklist" style="cursor: pointer"><b><a (click)="printRequestSlcTc()">Approval CheckList</a></b></h4>
+      </div>
+      <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-6" *ngFor="let item of departmentArray">
+        <div class="row">
+          <div class="col-6">
+            <label><a>{{item.dept_name}}</a></label>
+          </div>
+          <div class="col-6">
+            <mat-checkbox (change)="addDept(item.dept_id)" ></mat-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+   <div class="row ">
+          <div class="col-1 margin-bottom-15" *ngFor="let image of requestDoc;let i = index">
+              <img *ngIf= "checkThumbnail(image.tcd_doc_link)" class="btn-doc-upload-preview" [src]="image.tcd_doc_link" (click)="previewImage(requestDoc, i)">
+              <img *ngIf= "!checkThumbnail(image.tcd_doc_link)" class="btn-doc-upload-preview"
+              src="https://icons-for-free.com/free-icons/png/512/2109135.png" 
+              (click)="previewImage(requestDoc, i)"><br>
+            <button mat-button class="upload-document-delete-btn" (click)="deleteRequestDoc(image)"><mat-icon class="btn-upload-icon">delete</mat-icon></button>       
+          </div>
+        </div>
+    <div class="row margin-bottom-15">  
+      <div class="col-12">
+        <label>Upload Signed Checklist</label>
+        <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="upload_doc" style="display: none !important">          
+        <button mat-stroked-button class="btn-spacer btn-neutral"><mat-icon >cloud_upload</mat-icon>&nbsp; &nbsp;<label class="btn-document-label" for="upload_doc">Upload file</label></button>
+      </div>
+    </div>
+      <div class="row ">
+          <div class="col-1 margin-bottom-15" *ngFor="let image of approvetDoc;let i = index">
+              <img *ngIf= "checkThumbnail(image.file_url)" class="btn-doc-upload-preview" [src]="image.file_url" (click)="previewImage1(approvetDoc, i)">
+              <img *ngIf= "!checkThumbnail(image.file_url)" class="btn-doc-upload-preview"
+              src="https://icons-for-free.com/free-icons/png/512/2109135.png" 
+              (click)="previewImage1(approvetDoc, i)"><br>
+            <button mat-button class="upload-document-delete-btn" (click)="deleteRequestDoc(image)"><mat-icon class="btn-upload-icon">delete</mat-icon></button>       
+          </div>
+        </div>
+    <br>
+    <br>
+    <div class="text-center">
+      <button mat-raised-button class="btn-success" (click)="saveForm()" >Approve</button>
+      <button mat-raised-button class="btn-danger btn-spacer" (click)="backUrl()" >Back</button>
+    </div>
+    <br>
+    <br>
+  </div>
+  <br>
+  <br>
+</div>

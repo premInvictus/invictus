@@ -1,0 +1,314 @@
+<!-- *ngIf="isExistUserAccessMenu('124')" -->
+
+
+<div class="container-box__white">
+  <br>
+  <div class="row">
+    
+    <div class="col-12 ">
+      <h4 class="text-uppercase"><b>Admission Test & Intereviewer's Remarks</b></h4>
+    </div>
+   
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-6">
+      <form [formGroup]="admissionremarkform" novalidate>
+        <div class="container-outline__black">
+          <div class="row">
+            <div class="col-12">
+              <h6 class="text-uppercase text-center"><b>Admission Test</b></h6>
+            </div>
+          </div>
+          <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field">
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type = "number" maxlength = "3" [errorStateMatcher]="confirmValidParentMatcher"
+                formControlName="erm_mark_obtained" matInput placeholder="Mark obtained" [readonly]="viewOnly" >
+               
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="checkIfFieldExist('erm_remark')" class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field">
+                <textarea  formControlName="erm_remark" [errorStateMatcher]="confirmValidParentMatcher" matInput cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="2"
+                cdkAutosizeMaxRows="5" placeholder="Interviewer's Remarks" [readonly]="viewOnly"></textarea>
+              
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-6">
+      <form [formGroup]="studentremarkform" novalidate>
+        <div class="container-outline__black">
+          <div class="row">
+            <div class="col-12">
+              <h6 class="text-uppercase text-center"><b>Student interaction/ Personal Interview</b></h6>
+            </div>
+          </div>
+          <div *ngIf="checkIfFieldExist('erm_mark_obtained')"class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field">
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type = "number" maxlength = "3" [errorStateMatcher]="confirmValidParentMatcher"
+                formControlName="erm_mark_obtained" matInput placeholder="Mark obtained" [readonly]="viewOnly">
+                
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="checkIfFieldExist('erm_remark')" class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field">
+                <textarea  [errorStateMatcher]="confirmValidParentMatcher"
+                formControlName="erm_remark" matInput cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="2"
+                cdkAutosizeMaxRows="5" placeholder="Interviewer's Remarks" [readonly]="viewOnly" ></textarea>
+               
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-6">
+      <form [formGroup]="parentremarkform" novalidate>
+        <div class="container-outline__black">
+          <div class="row">
+            <div class="col-12">
+              <h6 class="text-uppercase text-center"><b>parent interaction/ Personal Interview</b></h6>
+            </div>
+          </div>
+          <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field">
+                <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type = "number" maxlength = "3" [errorStateMatcher]="confirmValidParentMatcher"
+                formControlName="erm_mark_obtained" matInput placeholder="Mark obtained" [readonly]="viewOnly" >
+                
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="checkIfFieldExist('erm_remark')" class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field">
+                <textarea  [errorStateMatcher]="confirmValidParentMatcher"
+                formControlName="erm_remark" matInput cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="2"
+                cdkAutosizeMaxRows="5" placeholder="Interviewer's Remarks" [readonly]="viewOnly" ></textarea>
+                
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-6">
+      <form [formGroup]="finalremarksform" novalidate>
+        <div class="container-outline__black">
+          <div class="row">
+            <div class="col-12">
+              <h6 class="text-uppercase text-center"><b>Final Remarks</b></h6>
+            </div>
+          </div>
+          <div *ngIf="checkIfFieldExist('au_is_eligible_adimission')" class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field">
+                <textarea  [errorStateMatcher]="confirmValidParentMatcher"
+                formControlName="au_final_remark" matInput cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="2"
+                cdkAutosizeMaxRows="5" placeholder="Remarks" [readonly]="viewOnly" ></textarea>
+                
+              </mat-form-field>
+            </div>
+          </div>
+          <div  class="row">
+            <div class="col-6" *ngIf="checkIfFieldExist('au_is_eligible_adimission')">
+              <mat-form-field class="form-field">
+                <mat-select [errorStateMatcher]="confirmValidParentMatcher"
+                formControlName="au_is_eligible_adimission" placeholder="Eligible for Admission ?" [disabled]="viewOnly">
+                <mat-option value="">Please Select</mat-option>  
+                <mat-option value="Y">Yes</mat-option>
+                  <mat-option value="N">No</mat-option>
+                </mat-select>
+               
+              </mat-form-field>
+            </div>
+            <div class="col-6" *ngIf="checkIfFieldExist('au_process_class') && finalremarksform.value.au_is_eligible_adimission == 'Y'">
+                <mat-form-field class="form-field">
+                    <mat-select [errorStateMatcher]="confirmValidParentMatcher"
+                    formControlName="au_process_class" placeholder="Proposed Class" [disabled]="viewOnly" >
+                    <mat-option value="">Please Select</mat-option>    
+                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                            {{item.class_name}}
+                        </mat-option>
+                    </mat-select>
+                    
+                </mat-form-field>
+              </div>
+          </div>
+          
+        </div>
+      </form>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-6">
+      <form [formGroup]="concessionremarksform" novalidate>
+      <div class="container-outline__black">
+        <h6 class="text-uppercase text-center"><b>Admission And Concession Remarks</b></h6>
+        <div *ngIf="checkIfFieldExist('era_doj')" class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input formControlName="era_doj" [min]="minDate" matInput [matDatepicker]="picker" 
+              placeholder="Date" [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
+               (dateChange)="addEvent('change', $event)">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+   
+            </mat-form-field>
+          </div>
+        </div>
+        <div *ngIf="checkIfFieldExist('era_aut_id')" class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <mat-select formControlName="era_aut_id" placeholder="Authority" 
+              [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
+              >
+              <mat-option value="">Please Select</mat-option>    
+              <mat-option *ngFor="let item of authorityArray" [value]="item.aut_id" >
+                      {{item.aut_name}}
+                   </mat-option>
+              </mat-select>
+              
+            </mat-form-field>
+          </div>
+        </div>
+        <div *ngIf="checkIfFieldExist('era_ar_id')"  class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <mat-select formControlName="era_ar_id" [errorStateMatcher]="confirmValidParentMatcher"
+              placeholder="Area" [disabled]="viewOnly">
+              <mat-option value="">Please Select</mat-option>    
+              <mat-option *ngFor="let item of areaArray" [value]="item.ar_id">
+                      {{item.ar_name}}
+                   </mat-option>
+              </mat-select>
+             
+            </mat-form-field>
+          </div>
+        </div>
+        <div *ngIf="checkIfFieldExist('era_teachers_remark')"  class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field">
+              <input  formControlName="era_teachers_remark" [errorStateMatcher]="confirmValidParentMatcher"
+               matInput placeholder="Remarks" [readonly]="viewOnly">
+               
+            </mat-form-field>
+          </div>
+        </div>
+        <br>
+        <div *ngIf="checkIfFieldExist('erd_doc_link')" class="row">
+          <div class="col-12">
+            <div class="text-left">              
+              <button mat-raised-button class="btn-neutral" [disabled]="viewOnly"><mat-icon class="btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label class="btn-document-label" for="documents">Upload File</label></button>
+              <input style="display:none" type="file" id="documents" (change)="bindImageToForm($event)" >
+            </div>
+            <br>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-12">
+            <div class="text-center">
+              <button *ngIf="!editlist" mat-raised-button class="btn-success" (click)="addtolist()" [disabled]="viewOnly">Add to list</button>
+              <button *ngIf="editlist" mat-raised-button class="btn-success" (click)="updatetolist()" >Update to list</button>
+            </div>
+            <br>
+          </div>
+        </div>
+      </div>
+    </form>
+    </div>
+    <div class="col-6">
+      <div class="container-outline__black">
+        <h6 class="text-uppercase text-center"><b>List of Remarks</b></h6>
+        
+        <div class="row">
+          <div class="col-12">
+            <table class="table table-borderd table-stripped custom-table">
+              
+              <thead class="table-skill__head text-center">
+                <tr class="custom-tr">
+                  <th class="custom-th">Sr.No</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('era_aut_id')">Authority</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('era_ar_id')" >Area</th>
+                  <th class="custom-th" *ngIf="checkIfFieldExist('era_teachers_remark')" >Remarks</th>
+                  <!-- <th class="custom-th" *ngIf="checkIfFieldExist('erd_doc_link')">Document</th> -->
+                  <th class="custom-th" >Action</th>
+                </tr>
+              </thead>
+              <tbody class="table-skill__body text-center">
+                <tr class="custom-tr" *ngFor="let item of concessionArray; let i=index">
+                  <td class="custom-td">{{i+1}}.</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('era_aut_id')">{{getAutName(item.era_aut_id)}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('era_ar_id')" >{{getArName(item.era_ar_id)}}</td>
+                  <td class="custom-td" *ngIf="checkIfFieldExist('era_teachers_remark')" >{{item.era_teachers_remark}}</td>
+                  <!-- <td class="custom-td" ></td> -->
+                  <td class="custom-td"><span *ngIf="checkIfFieldExist('erd_doc_link')"><i class="far fa-eye" (click)="viewImage(item.documents)" ></i></span><span *ngIf="!viewOnly">&nbsp;<i class="far fa-edit modify-icon inline-form-table-icon-spacing" (click)="updatelist(i)" ></i>&nbsp;<i class="far fa-trash-alt delete-icon inline-form-table-icon-spacing" (click)="deletelist(i)"></i></span></td>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <br>
+
+
+
+
+
+
+
+
+  <br>
+  <br>
+  <div class="text-center">
+      <!-- <button *ngIf="!editOnly" mat-raised-button class="btn-green" (click)="saveForm()" [disabled]="viewOnly">Save & Continue</button>
+      <button *ngIf="editOnly" mat-raised-button class="btn-green" (click)="updateForm()" [disabled]="viewOnly">Update & Continue</button> -->
+
+      <button mat-raised-button class="btn-success" *ngIf="addOnly" (click)="saveForm()">Save & Continue</button>
+      <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+      <button  mat-raised-button class="btn-success btn-spacer" *ngIf="saveFlag" (click)="updateForm(false)">Update & Continue</button>
+      <button  *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+      
+    <!-- <button class="btn-purple btn-spacer" mat-raised-button>Reset</button> -->
+  </div>
+  <br>
+ <!--  <div class="row">
+    <div class="col-3">
+      <button mat-raised-button class="btn-green" (click)="editForm()" [disabled]="!viewOnly" >Edit</button>
+    </div>
+    <div class="col-3">
+       <button mat-raised-button [disabled]="viewOnly" class="btn-green">Delete</button>
+    </div>
+    <div class="col-3">
+       <button mat-raised-button class="btn-green">Edit Request</button>
+    </div>
+    <div class="col-3">
+       <button mat-raised-button class="btn-green">Config</button>
+    </div>
+ </div> -->
+  <br>
+</div>

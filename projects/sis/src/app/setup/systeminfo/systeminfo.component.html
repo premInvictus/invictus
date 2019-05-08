@@ -1,0 +1,498 @@
+<div class="add-question-content">
+      <div class="row">
+         <div class="col-lg-12 col-mobile-view-add-ques">
+            <div class="white-box">
+               <div class="white-box-content">
+                  <div class="row">
+                     <div class="col-lg-12 col-mobile-view-add-ques">
+                        <div class="white-box-content-title">
+                           <h4 class="text-uppercase">Global Setup Configuration</h4>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-2 col-apple-2 apple-screen-paramter-content-div col-mobile-view-add-ques">
+                        <div class="left-parameter-content">
+                           <div class="left-side-box">
+                              <div class="left-side-box-content">
+                                 <span class="left-side-box-content-title">Select Setup Options</span>
+                                 <hr class="left-side-box-content-title-divider">
+                                 <mat-form-field class="form-field">
+                                    <mat-select (selectionChange)="loadConfiguration($event)" placeholder="Setup Options">
+                                       <mat-option value="1">Blood Group</mat-option>
+                                       <mat-option value="2">Documents Required</mat-option>
+                                       <mat-option value="3">Houses</mat-option>
+                                       <mat-option value="4">Medications</mat-option>
+                                       <mat-option value="5">Religions</mat-option>
+                                       <mat-option value="6">Mother Tongue</mat-option>
+                                       <mat-option value="7">Qualifications</mat-option>
+                                       <mat-option value="8">Occupation Type</mat-option>
+                                       <mat-option value="9">Annual Income</mat-option>
+                                       <mat-option value="10">Vaccination</mat-option>
+                                       <mat-option value="11">Vaccination By Duration</mat-option>
+                                       <mat-option value="12">Activity</mat-option>
+                                       <mat-option value="13">LevelOfInterest</mat-option>
+                                       <mat-option value="14">Event Level</mat-option>
+                                       <mat-option value="15">Activity Club</mat-option>
+                                       <mat-option value="16">Authority</mat-option>
+                                       <mat-option value="17">Area</mat-option>
+                                       <mat-option value="18">Reasons</mat-option>
+                                       <mat-option value="19">Session</mat-option>
+                                       <mat-option value="20">Category</mat-option>
+                                       <mat-option value="21">Nationality</mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                                 <div *ngIf="configValue == 1">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter blood group.." maxlength="3" minlength="1" 
+                                          formControlName="bg_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                             Please enter blood group
+                                          </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter blood group alias..." maxlength="50" minlength="1" formControlName="bg_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 2">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter document name.." maxlength="50" minlength="3" 
+                                          formControlName="docreq_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter document name
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <mat-select placeholder="Is it required?.." formControlName="docreq_is_required"
+                                          [errorStateMatcher]="confirmValidParentMatcher"  required>
+                                             <mat-option *ngFor="let item of requiredArray" 
+                                             [value]="item.docreq_is_required">{{item.docreq_is_required_name}}</mat-option>
+                                          </mat-select>
+                                          <mat-error>
+                                                Please select medical type
+                                             </mat-error>
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 3">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter house name.." maxlength="50" minlength="3" 
+                                          formControlName="hou_house_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter house name
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter house alias..." maxlength="10" minlength="3" formControlName="hou_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 4">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter medicine name.." maxlength="50" minlength="3" 
+                                          formControlName="med_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter medicine name
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <mat-select placeholder="Select type.." formControlName="med_type"
+                                          [errorStateMatcher]="confirmValidParentMatcher"  required>
+                                             <mat-option value="regular">Regular</mat-option>
+                                             <mat-option value="other">Others</mat-option>
+                                          </mat-select>
+                                          <mat-error>
+                                                Please select medical type
+                                             </mat-error>
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 5">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter religion name.." maxlength="50" minlength="3" 
+                                          formControlName="rel_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter religion name
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter religion alias..." maxlength="10" minlength="3" formControlName="rel_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 6">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter mother tongue name.." maxlength="50" minlength="3" 
+                                          formControlName="mt_name" 
+                                          [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please entermother tongue
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter mother tongue alias..." maxlength="10" minlength="3" formControlName="mt_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 7">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter qualification name.." maxlength="50" minlength="3" 
+                                          formControlName="qlf_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter qualification
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter qualification alias..." maxlength="10" minlength="3" 
+                                          formControlName="qlf_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 8">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter occupation name.." maxlength="50" minlength="3" 
+                                          formControlName="ocpt_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter occupation
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter occupation alias..." maxlength="10" minlength="3" formControlName="ocpt_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 9">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Starting Range.." maxlength="50" minlength="3" 
+                                          formControlName="ai_from" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter from 
+                                             </mat-error>
+                                       </mat-form-field>
+                                       TO
+                                       <br>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Ending Range.." maxlength="50" minlength="3" 
+                                          formControlName="ai_to"  [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter to
+                                             </mat-error>
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 10">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter vaccination name.." maxlength="50" minlength="3" 
+                                          formControlName="vac_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter vaccination name
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter vaccination alias..." maxlength="10" minlength="3" formControlName="vac_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 11">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter year/week/month name.." maxlength="50" minlength="3" 
+                                          formControlName="vd_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter week/month name
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <mat-select placeholder="Select Vaccinations.." formControlName="vac_id" multiple>
+                                             <mat-option *ngFor="let item of vaccinationArray" [value]="item.vac_id">{{item.vac_name}}</mat-option>
+                                          </mat-select>
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 12">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter activity name.." maxlength="50" minlength="3" 
+                                          formControlName="act_name"  [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter activity name
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter  alias..." maxlength="10" minlength="3" formControlName="act_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 13">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter level of intrest name.." maxlength="50" minlength="3" 
+                                          formControlName="loi_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter level of interest
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter  alias..." maxlength="10" minlength="3" formControlName="loi_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 14">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter event name.." maxlength="50" minlength="3" 
+                                          formControlName="el_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter event level
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter  alias..." maxlength="10" minlength="3" formControlName="el_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 15">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter activity club name.." maxlength="50" minlength="3" 
+                                          formControlName="acl_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter activity club
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter  alias..." maxlength="10" minlength="3" formControlName="acl_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 16">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter authority name.." maxlength="50" minlength="3" 
+                                          formControlName="aut_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter authority name
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter  alias..." maxlength="10" minlength="3" formControlName="aut_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 17">
+                                    <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter area name.." maxlength="50" minlength="3" 
+                                          formControlName="ar_name" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-error>
+                                                Please enter area
+                                             </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Enter  alias..." maxlength="10" minlength="3" formControlName="ar_alias">
+                                       </mat-form-field>
+                                    </form>
+                                 </div>
+                                 <div *ngIf="configValue == 18">
+                                       <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                             <mat-form-field class="form-field">
+                                                   <mat-select placeholder="Select Type.." formControlName="reason_type" 
+                                                   (selectionChange)="getReasonViaType($event)" required>
+                                                      <mat-option *ngFor="let item of reasonTypeArray" [value]="item.reason_type">{{item.reason_type_desc}}</mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                          <mat-form-field class="form-field">
+                                             <input matInput placeholder="Enter Reason title" maxlength="50" minlength="3" 
+                                             formControlName="reason_title" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                             <mat-error>
+                                                  Please enter reason title
+                                                </mat-error>
+                                          </mat-form-field>
+                                          <mat-form-field class="form-field">
+                                                <input matInput placeholder="Enter Reason Description" maxlength="50" minlength="3" 
+                                                formControlName="reason_desc" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                                <mat-error>
+                                                      Please enter reason description
+                                                   </mat-error>
+                                             </mat-form-field>
+                                       </form>
+                                    </div>
+                                    <div *ngIf="configValue == 19">
+                                       <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                          <mat-form-field class="form-field">
+                                             <input matInput placeholder="Start Session.." maxlength="4" minlength="4" 
+                                             pattern="[0-9]*" 
+                                             formControlName="ses_from" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                             <mat-error>
+                                                Please enter from 
+                                             </mat-error>
+                                          </mat-form-field>
+                                          TO
+                                          <mat-form-field class="form-field">
+                                             <input matInput placeholder="End Session.." maxlength="4" minlength="4" 
+                                             pattern="[0-9]*" 
+                                             formControlName="ses_to" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                             <mat-error>
+                                                Please enter to 
+                                             </mat-error>
+                                          </mat-form-field>
+                                          <mat-form-field class="form-field">
+                                             <input matInput placeholder="Enter session alias..." maxlength="50" minlength="1" 
+                                             formControlName="ses_alias">
+                                          </mat-form-field>
+                                       </form>
+                                    </div>
+                                    <div *ngIf="configValue == 20">
+                                       <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                          <mat-form-field class="form-field">
+                                             <input matInput placeholder="Enter category name.." maxlength="50" minlength="3" 
+                                             formControlName="cat_name"  [errorStateMatcher]="confirmValidParentMatcher" required>
+                                             <mat-error>
+                                                   Please enter category name
+                                                </mat-error>
+                                          </mat-form-field>
+                                          <mat-form-field class="form-field">
+                                             <input matInput placeholder="Enter  alias..." maxlength="10" minlength="3" formControlName="cat_alias">
+                                          </mat-form-field>
+                                       </form>
+                                    </div>
+                                    <div *ngIf="configValue == 21">
+                                       <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                          <mat-form-field class="form-field">
+                                             <input matInput placeholder="Enter nationality name.." maxlength="50" minlength="3" 
+                                             formControlName="nat_name"  [errorStateMatcher]="confirmValidParentMatcher" required>
+                                             <mat-error>
+                                                   Please enter nationality name
+                                                </mat-error>
+                                          </mat-form-field>
+                                          <mat-form-field class="form-field">
+                                             <input matInput placeholder="Enter  alias..." maxlength="10" minlength="3" formControlName="nat_alias">
+                                          </mat-form-field>
+                                       </form>
+                                    </div>
+                                 <div *ngIf="configValue < 22">
+                                 <div class="text-center">
+                                 <button *ngIf="!updateFlag" mat-raised-button class="btn-green" (click)="addConfiguration(configValue)">Add</button>
+                                 </div>
+                                 <br>
+                                 <div *ngIf="updateFlag" class="text-center">
+                                 <button mat-raised-button class="btn-green" (click)="updateConfiguration(configValue)">Update</button>
+                                 </div>
+                                 <br>
+                                 <div class="text-center">
+                                 <button mat-raised-button class="btn-purple" (click)="resetForm(configValue)">Reset</button>
+                                 </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-lg-10 col-apple-10 col-mobile-view-add-ques remove-col-modal-padding">
+                        <div class="top-right-parameter">
+                           <div class="top-right-box">
+                              <div>
+                                 <div class="top-right-box-content-title">
+                                    <div class="row">
+                                       <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                                          <div [hidden]="!configFlag">
+                                             <div class="row">
+                                                <div class="col-lg-12 col-mobile-view-add-ques">
+                                                   <div class="table-box mob-table-box">
+                                                      <div class="example-container table-box-main">
+                                                         <div class="example-header table-filter">
+                                                            <mat-form-field class="form-feild">
+                                                               <input
+                                                                  matInput
+                                                                  (keyup)="applyFilter($event.target.value)"
+                                                                  placeholder="Filter"
+                                                                  />
+                                                         </mat-form-field>
+                                                         </div>
+                                                         <mat-table #table [dataSource]="configDataSource" matSort class="specific-table table-main-structure">
+                                                         <!-- Position Column -->
+                                                         <ng-container matColumnDef="position">
+                                                            <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                               S.No
+                                                            </mat-header-cell>
+                                                            <mat-cell *matCellDef="let item">
+                                                               {{ item.position }}
+                                                            </mat-cell>
+                                                         </ng-container>
+                                                         <!-- Name Column -->
+                                                         <ng-container matColumnDef="name">
+                                                            <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                              {{firstHeaderArray[configValue-1]}}
+                                                            </mat-header-cell>
+                                                            <mat-cell *matCellDef="let item">
+                                                            {{ item.name }}
+                                                            </mat-cell>
+                                                         </ng-container>
+                                                         <!-- Class Column -->
+                                                         <ng-container matColumnDef="alias">
+                                                            <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                             {{secondHeaderArray[configValue-1]}}
+                                                            </mat-header-cell>
+                                                            <mat-cell *matCellDef="let item">
+                                                               {{ item.alias }}
+                                                            </mat-cell>
+                                                         </ng-container>
+                                                         <!-- Section Column -->
+                                                         <ng-container matColumnDef="action">
+                                                            <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                               Action
+                                                            </mat-header-cell>
+                                                            <mat-cell *matCellDef="let item">
+                                                               <mat-slide-toggle class="inline-form-radio-spacing" 
+                                                               [checked]="getActiveStatus(item.action)" 
+                                                               aria-hidden="true" (click)="toggleStatus(item.action)"></mat-slide-toggle>
+                                                            </mat-cell>
+                                                            >
+                                                         </ng-container>
+                                                         <!-- Promote Column -->
+                                                         <ng-container matColumnDef="modify">
+                                                            <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                               Modify
+                                                            </mat-header-cell>
+                                                            <mat-cell *matCellDef="let item">
+                                                               <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                  aria-hidden="true" (click)="formEdit(item.action)"></i>
+                                                               <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                  matTooltip="Delete" aria-hidden="true" (click)="openDeleteDialog({data : item.action, type: configValue})"></i>
+                                                            </mat-cell>
+                                                         </ng-container>
+                                                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                                         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                                                         >
+                                                         </mat-table> 
+                                                      </div>
+                                                      <mat-paginator #paginator [pageSizeOptions]= [5,10,20] [pageSize]="10"></mat-paginator>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <app-delete-modal #deleteModal [deleteMessage]="deleteMessage"
+(deleteOk)="deleteConfirm($event)" (deleteCancel)="deleteCancel()"></app-delete-modal>

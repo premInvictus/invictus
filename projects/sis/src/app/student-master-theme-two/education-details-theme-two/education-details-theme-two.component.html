@@ -1,0 +1,151 @@
+<div class="padding-15">
+  <form [formGroup]="Education_Form">
+  <div class="row" *ngIf="!viewOnly">
+    <div *ngIf="checkIfFieldExist('eed_previous_school_name')" class="col-2">
+        <mat-form-field class="form-field">
+            <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="eed_previous_school_name"  required
+            matInput placeholder="Name of Previous school" [readonly]="viewOnly">
+            <mat-error>
+              This field is required*
+             </mat-error>
+          </mat-form-field>
+    </div>
+    <div *ngIf="checkIfFieldExist('eed_current_class')" class="col-2">
+        <mat-form-field class="form-field">
+            <mat-select formControlName="eed_current_class" required [errorStateMatcher]="confirmValidParentMatcher"
+            placeholder="Present Class" [disabled]="viewOnly">
+            <mat-option>Please Select</mat-option>  
+                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                    {{item.class_name}}
+                </mat-option>
+            </mat-select>
+            <mat-error>
+                This field is required*
+               </mat-error>
+          </mat-form-field>
+    </div>
+    <div class="col-2" *ngIf="checkIfFieldExist('eed_admitted_class')">
+      <mat-form-field class="form-field">
+        <mat-select formControlName="eed_admitted_class" placeholder="Admitted in Class" required
+        [disabled]="viewOnly">
+            <mat-option>Please Select</mat-option>  
+          <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                {{item.class_name}}
+            </mat-option>
+        </mat-select>
+        <mat-error>
+            This field is required*
+           </mat-error>
+      </mat-form-field>
+    </div>
+    <div *ngIf="checkIfFieldExist('eed_reason_of_leaving')" class="col-2">
+        <mat-form-field class="form-field">
+            <mat-select formControlName="eed_reason_of_leaving" [errorStateMatcher]="confirmValidParentMatcher"
+            placeholder="Reason of Leaving" [disabled]="viewOnly">
+            <mat-option>Please Select</mat-option>  
+                <mat-option *ngFor="let item of reasonArray" [value]="item.reason_id">
+                    {{item.reason_title}}
+                </mat-option>
+            </mat-select>
+            <mat-error>
+                This field is required*
+               </mat-error>
+          </mat-form-field>
+    </div>
+    <div class="col-2" *ngIf="checkIfFieldExist('eed_joining_from')">
+        <mat-form-field class="form-field">
+            <input formControlName="eed_joining_from" required [max]="maxDate" [errorStateMatcher]="confirmValidParentMatcher"
+            matInput [matDatepicker]="picker1" 
+            placeholder="Date of Joining" [readonly]="viewOnly">
+            <mat-datepicker-toggle matSuffix [for]="picker1" [disabled]="viewOnly"></mat-datepicker-toggle>
+            <mat-datepicker #picker1 [disabled]="viewOnly"></mat-datepicker>
+            <mat-error>
+                This field is required*
+               </mat-error>
+          </mat-form-field>
+    </div>
+    <div class="col-2" *ngIf="checkIfFieldExist('eed_joining_to')">
+      <mat-form-field class="form-field">
+        <input formControlName="eed_joining_to" [max]="maxDate" matInput [matDatepicker]="picker2" placeholder="Date of Leaving"
+         [readonly]="viewOnly">
+        <mat-datepicker-toggle matSuffix [for]="picker2" [disabled]="viewOnly"></mat-datepicker-toggle>
+        <mat-datepicker #picker2 [disabled]="viewOnly"></mat-datepicker>
+        <mat-error>
+          This field is required*
+         </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-2" *ngIf="checkIfFieldExist('eed_specify_reason')">
+      <mat-form-field class="form-field">
+        <input class="text-capitalize" formControlName="eed_specify_reason"  matInput placeholder="Specify the Reason"
+        required [readonly]="viewOnly">
+        <mat-error>
+          This field is required*
+         </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <button *ngIf="!educationUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral" (click)="addPreviousEducations()">Add To List</button>
+      <button *ngIf="educationUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral" (click)="updatePreviousEducationList()">Update List</button>
+    </div>
+  </div>
+</form>
+<br>
+  <div class="row" *ngIf="previousEducations.length > 0 ">
+    <div class="col-12">
+      <table class="table table-borderd table-stripped custom-table">
+        <thead class="table-skill__head text-center">
+          <tr class="custom-tr">
+            <th class="custom-th">Sr. No.</th>
+              <th  class="custom-th" *ngIf="checkIfFieldExist('eed_previous_school_name')">Name of previous school</th>
+              <th  class="custom-th" *ngIf="checkIfFieldExist('eed_current_class')">Last Class Attended</th>
+              <th  class="custom-th" *ngIf="checkIfFieldExist('eed_admitted_class')">Admitted Class</th>
+              <th  class="custom-th" *ngIf="checkIfFieldExist('eed_reason_of_leaving')">Reason for leaving</th>
+              <th  class="custom-th" *ngIf="checkIfFieldExist('eed_joining_from')">Date of joining</th>
+              <th  class="custom-th" *ngIf="checkIfFieldExist('eed_joining_to')">Date of leaving</th>
+              <th  class="custom-th" *ngIf="checkIfFieldExist('eed_specify_reason')">Specified Reason</th>
+              <th *ngIf="!viewOnly" class="custom-th">Modify</th>
+          </tr>
+        </thead>
+        <tbody class="table-skill__body text-center">
+            <tr class="custom-tr" *ngFor="let item of previousEducations;let i=index">
+                <td>{{i+1}}</td>
+                <td class="custom-td" *ngIf="checkIfFieldExist('eed_previous_school_name')">{{item.eed_previous_school_name | titlecase}}</td>
+                <td class="custom-td" *ngIf="checkIfFieldExist('eed_current_class')">{{getClassName(item.eed_current_class)}}</td>
+                <td class="custom-td" *ngIf="checkIfFieldExist('eed_admitted_class')">{{getClassName(item.eed_admitted_class)}}</td>
+                <td class="custom-td" *ngIf="checkIfFieldExist('eed_reason_of_leaving')">{{getReasonName(item.eed_reason_of_leaving)}}</td>
+                <td class="custom-td" *ngIf="checkIfFieldExist('eed_joining_from')">{{item.eed_joining_from}}</td>
+                <td class="custom-td" *ngIf="checkIfFieldExist('eed_joining_to')">{{item.eed_joining_to}}</td>
+                <td class="custom-td" *ngIf="checkIfFieldExist('eed_specify_reason')">{{item.eed_specify_reason}}</td>
+                <td *ngIf="!viewOnly" class="custom-td"><i class="far fa-edit modify-icon" (click)="editEducationList(i)" style="cursor:pointer" title="Edit"></i>
+                   <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="deleteEducationList(i)" style="cursor:pointer" title="Delete"></i>
+                </td>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row" *ngIf="previousEducations.length === 0 && viewOnly ">
+      <div class="col-12">
+        <table class="table table-borderd table-stripped custom-table">
+          <thead class="table-skill__head text-center">
+            <tr class="custom-tr">
+              <th class="custom-th">Sr. No.</th>
+                <th  class="custom-th" *ngIf="checkIfFieldExist('eed_previous_school_name')">Name of prevous school</th>
+                <th  class="custom-th" *ngIf="checkIfFieldExist('eed_current_class')">Last Class Attended</th>
+                <th  class="custom-th" *ngIf="checkIfFieldExist('eed_admitted_class')">Admitted Class</th>
+                <th  class="custom-th" *ngIf="checkIfFieldExist('eed_reason_of_leaving')">Reason for leaving</th>
+                <th  class="custom-th" *ngIf="checkIfFieldExist('eed_joining_from')">Date of joining</th>
+                <th  class="custom-th" *ngIf="checkIfFieldExist('eed_joining_to')">Date of leaving</th>
+                <th  class="custom-th" *ngIf="checkIfFieldExist('eed_specify_reason')">Specified Reason</th>
+                <th *ngIf="!viewOnly" class="custom-th">Modify</th>
+            </tr>
+          </thead>
+          <tbody class="table-skill__body text-center">
+              <tr class="custom-tr">
+                  <td colspan="8">No records Found</td>
+                  </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+</div>

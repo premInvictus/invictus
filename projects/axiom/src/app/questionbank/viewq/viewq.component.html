@@ -1,0 +1,989 @@
+<div class="breadcrumb-section">
+  <div class="row">
+     <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+        <a [routerLink]="[homeUrl]"><i class="breadcrumb-icon fas fa-home"></i></a>
+     </div>
+     <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+        <div class="vertical-line"></div>
+     </div>
+     <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+        <div class="first-breadcrumb-title">
+           <span class="bread-title">Question Management</span>
+           <span class="bread-divider">-</span>
+           <span class="bread-link">Question bank</span>
+        </div>
+     </div>
+  </div>
+</div>
+<div class="add-question-content">
+  <div class="row row-remove-top-margin">
+     <div class="col-lg-12 col-mobile-view-add-ques">
+        <div class="white-box">
+           <div class="white-box-content tab-ques-bank-white-box-content">
+              <div class="row">
+                 <div class="col-lg-12 col-mobile-view-add-ques">
+                    <div class="white-box-content-title">
+                       <span>Question Bank</span>
+                    </div>
+                 </div>
+              </div>
+              <div class="row row-remove-top-margin">
+                 <div class="col-lg-12 col-mobile-view-add-ques">
+                    <div class="top-right-parameter top-middle-parameter">
+                       <div class="top-right-box top-blue-box">
+                          <div class="top-right-box-content top-middle-box-content">
+                             <div class="top-right-box-content-title">
+                                <div class="row">
+                                   <div class="col-lg-12 col-mobile-view-add-ques">
+                                      <span>Select Parameters</span>
+                                   </div>
+                                </div>
+                                <div class="row">
+                                   <div class="col-lg-12 col-mobile-view-add-ques">
+                                      <form [formGroup]="parameterform" novalidate>
+                                         <div class="row">
+                                            <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="qt_id" (selectionChange)="getQuestionSubtypeDataByQuestiontype()" required placeholder="Select Question Type">
+                                                     <mat-option *ngFor="let item of questionTypeArray" [value]="item.qt_id">
+                                                     {{item.qt_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div *ngIf="!essayFlag" class="col-lg-2 fin-tab-col-16  col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="qst_id" (ngModelChange)="loadListTemp($event)" required placeholder="Select Question Subtype">
+                                                     <mat-option *ngFor="let item of questionSubtypeArray" [value]="item.qst_id">
+                                                     {{item.qst_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-2 fin-tab-col-16  col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="class_id" (selectionChange)="getSubjectsByClass()" required placeholder="Select Class">
+                                                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                     {{item.class_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-2 fin-tab-col-16  col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="sub_id" (selectionChange)="getTopicByClassSubject()" required placeholder="Select Subject">
+                                                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                                     {{item.sub_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="topic_id" (selectionChange)="getSubtopicByTopic()" required placeholder="Select Topic">
+                                                     <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
+                                                     {{item.topic_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="st_id" (selectionChange)="getEssay()" placeholder="Select SubTopic">
+                                                     <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
+                                                     {{item.st_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div *ngIf="essayFlag" class="col-lg-16 fin-tab-col-15 col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="ess_id" placeholder="Select Essay">
+                                                     <mat-option *ngFor="let item of essayArray" [value]="item.ess_id">
+                                                     {{item.ess_title}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                         </div>
+                                      </form>
+                                   </div>
+                                </div>
+                                <div class="row row-remove-top-margin">
+                                   <div class="col-lg-12 col-mobile-view-add-ques">
+                                      <div class="add-question-button-collection">
+                                         <div class="button-row">
+                                            <button mat-raised-button class="submit-button" (click)="getQuestionsReview()">Apply</button>
+                                            <button mat-raised-button class="reset-button" (click)="resetquestion()">Reset</button>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <br>
+              <div class="row" *ngIf="!essayFlag">
+                 <div class="col-lg-12 col-mobile-view-add-ques">
+                    <div class="table-box" *ngIf="tableCollection">
+                       <div *ngIf="tableCollectionMCQ">
+                          <div class="example-container table-box-main" *ngIf="listtemp==1">
+                             <div class="example-header table-filter">
+                                <mat-form-field>
+                                   <input matInput (keyup)="applyFilterMCQ($event.target.value)" placeholder="Filter">
+                                   <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                </mat-form-field>
+                             </div>
+                             <mat-table class="specific-table question-management-table-main-structure" #table [dataSource]="mcqdataSource" matSort>
+                             <!-- Position Column -->
+                             <ng-container matColumnDef="position">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-position">S No. </mat-header-cell>
+                                <mat-cell class="mcq-position" *matCellDef="let item">Q-{{item.position}} </mat-cell>
+                             </ng-container>
+                             <!-- Questions Name Column -->
+                             <ng-container matColumnDef="question">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-question"> Questions</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mcq-question">
+                                   <div class="imgClassExpress" [MathJax]="item.question"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Options Name Column -->
+                             <ng-container matColumnDef="options">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-options">Options</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mcq-options">
+                                   <div class="changeTableMCQ imgClassExpress" [MathJax]="item.options"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Explanation Name Column -->
+                             <ng-container matColumnDef="explanations">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-explanation">Explanations</mat-header-cell>
+                                <mat-cell class="mcq-explanation" *matCellDef="let item" >
+                                   <div [MathJax]="item.explanations"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Class Name Column -->
+                             <ng-container matColumnDef="class">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-class">Class</mat-header-cell>
+                                <mat-cell class="mcq-class" *matCellDef="let item">{{item.class}} </mat-cell>
+                             </ng-container>
+                             <!-- Topic Name Column -->
+                             <ng-container matColumnDef="topic">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-topic">Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mcq-topic">{{item.topic}}</mat-cell>
+                             </ng-container>
+                             <!-- Subtopic Name Column -->
+                             <ng-container matColumnDef="subtopic" class="mcq-subtopic">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>SubTopic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mcq-subtopic">{{item.subtopic}}</mat-cell>
+                             </ng-container>
+                             <!-- Details Name Column -->
+                             <ng-container matColumnDef="details">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-details"> Details</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mcq-details">
+                                   <div [innerHTML]="item.details"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Action Column -->
+                             <ng-container matColumnDef="action">
+                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="padding">
+                                   <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true" (click)="openModal(template);getCurrentUnpublishedQues(item.action)"></i>
+                                </mat-cell>
+                             </ng-container>
+                             <mat-header-row class="top_header" *matHeaderRowDef="mcqdisplayedColumns"></mat-header-row>
+                             <mat-row *matRowDef="let row; columns: mcqdisplayedColumns;"></mat-row>
+                             </mat-table>
+                             <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                          </div>
+                       </div>
+                       <ng-template #template>
+                          <div class="modal-main-box">
+                             <div class="modal-delete-content-box">
+                                <div>
+                                   <div class="row">
+                                      <div class="col-lg-12">
+                                         <div class="close-button-content">
+                                            <button mat-icon-button class="close-button" (click)="modalRef.hide()"><img src="../../../../../assets/images/clear-button.svg"></button>
+                                         </div>
+                                      </div>
+                                   </div>
+                                   <div class="row">
+                                      <div class="col-lg-12">
+                                         <div>
+                                            <h6 class="text-center">Confirmation Message</h6>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                                <div class="text-center">
+                                   <br>
+                                   <span>Do you want to unpublish ?</span>
+                                   <br>
+                                   <br>
+                                   <button mat-button class="submit-button" (click)="openModal2(templateNested);modalRef.hide()">Yes</button>
+                                   <button mat-button class="reset-button" (click)="modalRef.hide()">No</button>
+                                </div>
+                             </div>
+                          </div>
+                       </ng-template>
+                       <ng-template #templateNested>
+                          <div class="modal-main-box">
+                             <div class="modal-delete-content-box">
+                                <div class="row">
+                                   <div class="col-lg-12">
+                                      <div class="close-button-content">
+                                         <button mat-icon-button class="close-button" (click)="modalRef2.hide()"><img src="../../../../../assets/images/clear-button.svg"></button>
+                                      </div>
+                                   </div>
+                                </div>
+                                <div class="row">
+                                   <div class="col-lg-12">
+                                      <div>
+                                         <h6 class="text-center">Reason To Unpublish?</h6>
+                                      </div>
+                                      <div class="row">
+                                         <div class="col-lg-12">
+                                            <form [formGroup]="modalForm" novalidate>
+                                               <div class="row">
+                                                  <div class="col-lg-12">
+                                                     <mat-form-field class="mat-form-field">
+                                                        <mat-select  formControlName="reason_id" placeholder="Reasons..">
+                                                           <mat-option *ngFor="let item of reasonsArray" [value]="item.reason_id">{{item.reason_desc}}</mat-option>
+                                                        </mat-select>
+                                                     </mat-form-field>
+                                                  </div>
+                                               </div>
+                                               <br>
+                                               <div class="row">
+                                                  <div class="col-lg-12">
+                                                     <mat-form-field class="mat-form-field">
+                                                        <label for="exampleFormControlTextarea"></label>
+                                                        <textarea matInput id="exampleFormControlTextarea" rows="3" placeholder="Remarks..." formControlName="qus_unpublish_remark"></textarea>
+                                                     </mat-form-field>
+                                                  </div>
+                                                  <div class="row">
+                                                     <div class="col-lg-12">
+                                                        &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<button mat-button class="submit-button" (click)="unpublishQuestion(currentUnpublishedQues.qus_id)">Submit</button>
+                                                     </div>
+                                                  </div>
+                                               </div>
+                                            </form>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </ng-template>
+                       <div *ngIf="tableCollectionMULTIMCQ">
+                          <div class="example-container table-box-main" *ngIf="listtemp==2">
+                             <div class="example-header table-filter">
+                                <mat-form-field>
+                                   <input matInput (keyup)="applyFilterMultiMCQ($event.target.value)" placeholder="Filter">
+                                   <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                </mat-form-field>
+                             </div>
+                             <mat-table class="specific-table question-management-table-main-structure" #table [dataSource]="multimcqdataSource"
+                             matSort>
+                             <!-- Position Column -->
+                             <ng-container matColumnDef="positionMulti">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-position">S No. </mat-header-cell>
+                                <mat-cell class="multi-mcq-position" *matCellDef="let item">Q-{{item.positionMulti}} </mat-cell>
+                             </ng-container>
+                             <!-- Questions Name Column -->
+                             <ng-container matColumnDef="questionMulti">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-question"> Questions</mat-header-cell>
+                                <mat-cell class="multi-mcq-question" *matCellDef="let item">
+                                   <div class="imgClassExpress" [MathJax]="item.questionMulti"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Options Name Column -->
+                             <ng-container matColumnDef="optionsMulti">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-options">Options</mat-header-cell>
+                                <mat-cell class="multi-mcq-options" *matCellDef="let item">
+                                   <div class="changeTableMultiMCQ imgClassExpress" [MathJax]="item.optionsMulti"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Explanations Name Column -->
+                             <ng-container matColumnDef="explanationsMulti">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-explanation">Explanations</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="multi-mcq-explanation">
+                                   <div [MathJax]="item.explanationsMulti"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <ng-container matColumnDef="classMulti">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-class">Class</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="multi-mcq-class">{{item.classMulti}} </mat-cell>
+                             </ng-container>
+                             <ng-container matColumnDef="topicMulti">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-topic">Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="multi-mcq-topic">{{item.topicMulti}} </mat-cell>
+                             </ng-container>
+                             <ng-container matColumnDef="subtopicMulti">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-subtopic">SubTopic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="multi-mcq-subtopic">{{item.subtopicMulti}} </mat-cell>
+                             </ng-container>
+                             <!-- Details Name Column -->
+                             <ng-container matColumnDef="detailsMulti">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-detials"> Details</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="multi-mcq-detials">
+                                   <div [innerHTML]="item.detailsMulti"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Action Column -->
+                             <ng-container matColumnDef="actionMulti">
+                                <mat-header-cell *matHeaderCellDef class="multi-mcq-detials"> Action </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="multi-mcq-detials">
+                                   <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true" (click)="openModal(template);getCurrentUnpublishedQues(item.actionMulti)"></i>
+                                </mat-cell>
+                             </ng-container>
+                             <mat-header-row class="top_header" *matHeaderRowDef="multimcqdisplayedColumns"></mat-header-row>
+                             <mat-row *matRowDef="let row; columns: multimcqdisplayedColumns;"></mat-row>
+                             </mat-table>
+                             <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                          </div>
+                       </div>
+                       <div *ngIf="tableCollectionTF">
+                          <div class="example-container table-box-main" *ngIf="listtemp==3">
+                             <div class="example-header table-filter">
+                                <mat-form-field>
+                                   <input matInput (keyup)="applyFilterTF($event.target.value)" placeholder="Filter">
+                                   <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                </mat-form-field>
+                             </div>
+                             <mat-table class="specific-table question-management-table-main-structure" #table [dataSource]="tfdataSource" matSort>
+                             <!-- Position Column -->
+                             <ng-container matColumnDef="positionTF">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-position">S No. </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="tf-position">Q-{{item.positionTF}} </mat-cell>
+                             </ng-container>
+                             <!-- Questions Name Column -->
+                             <ng-container matColumnDef="questionTF">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-question"> Questions</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="tf-question">
+                                   <div class="imgClassExpress" [MathJax]="item.questionTF"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Options Name Column -->
+                             <ng-container matColumnDef="optionsTF">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-options">Options</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="tf-options">
+                                   <div class="changeTableTF" [innerHTML]="item.optionsTF"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Options Name Column -->
+                             <ng-container matColumnDef="explanationsTF">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-explanation">Explanations</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="tf-explanation">
+                                   <div [MathJax]="item.explanationsTF"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- class Column -->
+                             <ng-container matColumnDef="classTF">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-class">Class</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="tf-class">{{item.classTF}} </mat-cell>
+                             </ng-container>
+                             <!-- topic Column -->
+                             <ng-container matColumnDef="topicTF">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-topic">Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="tf-topic">{{item.topicTF}} </mat-cell>
+                             </ng-container>
+                             <!-- subtopic Column -->
+                             <ng-container matColumnDef="subtopicTF">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-subtopic">SubTopic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="tf-subtopic">{{item.subtopicTF}} </mat-cell>
+                             </ng-container>
+                             <!-- Details Name Column -->
+                             <ng-container matColumnDef="detailsTF">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-details"> Details</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="tf-details">
+                                   <div [innerHTML]="item.detailsTF"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Action Column -->
+                             <ng-container matColumnDef="actionTF">
+                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                   <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true" (click)="openModal(template);getCurrentUnpublishedQues(item.actionTF)"></i>
+                                </mat-cell>
+                             </ng-container>
+                             <mat-header-row class="top_header" *matHeaderRowDef="tfdisplayedColumns"></mat-header-row>
+                             <mat-row *matRowDef="let row; columns: tfdisplayedColumns;"></mat-row>
+                             </mat-table>
+                             <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                          </div>
+                       </div>
+                       <div *ngIf="tableCollectionMatch">
+                          <div class="example-container table-box-main" *ngIf="listtemp==4">
+                             <div class="example-header table-filter">
+                                <mat-form-field>
+                                   <input matInput (keyup)="applyFilterMatch($event.target.value)" placeholder="Filter">
+                                   <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                </mat-form-field>
+                             </div>
+                             <mat-table class="specific-table question-management-table-main-structure mtf-table-ques-bank-table" #table [dataSource]="matchdataSource"
+                             matSort>
+                             <!-- Position Column -->
+                             <ng-container matColumnDef="positionMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-position">S No. </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mtf-position">Q-{{item.positionMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- Questions Name Column -->
+                             <ng-container matColumnDef="questionMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-question"> Questions</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mtf-question">
+                                   <div class="imgClassExpress" [MathJax]="item.questionMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Options Name Column -->
+                             <ng-container matColumnDef="optionsMatch" >
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-options">Options
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mtf-options">
+                                   <div class="changeTableMatch imgClassExpress" [MathJax]="item.optionsMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Options Name Column -->
+                             <ng-container matColumnDef="explanationsMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-explanation">Explanations</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mtf-explanation">
+                                   <div [MathJax]="item.explanationsMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Class Name Column -->
+                             <ng-container matColumnDef="classMatch" >
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-class">Class</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mtf-class">{{item.classMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- Topic Name Column -->
+                             <ng-container matColumnDef="topicMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-topic">Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mtf-topic">{{item.topicMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- SubTOpic Name Column -->
+                             <ng-container matColumnDef="subtopicMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-subtopic">SubTopic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mtf-subtopic">{{item.subtopicMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- Details Name Column -->
+                             <ng-container matColumnDef="detailsMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-details"> Details</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mtf-details">
+                                   <div [innerHTML]="item.detailsMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Action Column -->
+                             <ng-container matColumnDef="actionMatch">
+                                <mat-header-cell *matHeaderCellDef class="mtf-action"> Action </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="mtf-action">
+                                   <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true" (click)="openModal(template);getCurrentUnpublishedQues(item.actionMatch)"></i>
+                                </mat-cell>
+                             </ng-container>
+                             <mat-header-row class="top_header mtf_top_header" *matHeaderRowDef="matchdisplayedColumns"></mat-header-row>
+                             <mat-row class="mtf_top_header" *matRowDef="let row; columns: matchdisplayedColumns;"></mat-row>
+                             </mat-table>
+                             <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                          </div>
+                       </div>
+                       <div *ngIf="tableCollectionMatrix">
+                          <div class="example-container table-box-main" *ngIf="listtemp==5">
+                             <div class="example-header table-filter">
+                                <mat-form-field>
+                                   <input matInput (keyup)="applyFilterMatrixMatch($event.target.value)" placeholder="Filter">
+                                   <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                </mat-form-field>
+                             </div>
+                             <mat-table class="specific-table question-management-table-main-structure matrix-table-ques-bank-table" #table
+                             [dataSource]="matrixmatchdataSource"
+                             matSort>
+                             <!-- Position Column -->
+                             <ng-container matColumnDef="positionMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-position">S No. </mat-header-cell>
+                                <mat-cell class="matrix-position" *matCellDef="let item">Q-{{item.positionMatrixMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- Questions Name Column -->
+                             <ng-container matColumnDef="questionMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-question"> Questions</mat-header-cell>
+                                <mat-cell *matCellDef="let item"  class="matrix-question">
+                                   <div class="imgClassExpress" [MathJax]="item.questionMatrixMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <ng-container matColumnDef="answerMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-options">Answer
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-options">
+                                   <div class="imgClassExpress" [MathJax]="item.answerMatrixMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Options Name Column -->
+                             <ng-container matColumnDef="explanationsMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-explanation">Explanations</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-explanation">
+                                   <div [MathJax]="item.explanationsMatrixMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Class Column -->
+                             <ng-container matColumnDef="classMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-class">Class</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-class">{{item.classMatrixMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- Topic Column -->
+                             <ng-container matColumnDef="topicMatrixMatch" >
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-topic">Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-topic">{{item.topicMatrixMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- Subtopic Column -->
+                             <ng-container matColumnDef="subtopicMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-subtopic">SubTopic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-subtopic">{{item.subtopicMatrixMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- Details Name Column -->
+                             <ng-container matColumnDef="detailsMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-details"> Details</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-details">
+                                   <div [innerHTML]="item.detailsMatrixMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Action Column -->
+                             <ng-container matColumnDef="actionMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef class="matrix-action">Action </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-action">
+                                   <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true" (click)="openModal(template);getCurrentUnpublishedQues(item.actionMatrixMatch)"></i>
+                                </mat-cell>
+                             </ng-container>
+                             <mat-header-row class="top_header matrix_top_header" *matHeaderRowDef="matrixmatchdisplayedColumns"></mat-header-row>
+                             <mat-row class="matrix_top_header" *matRowDef="let row; columns: matrixmatchdisplayedColumns;"></mat-row>
+                             </mat-table>
+                             <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                          </div>
+                       </div>
+                       <!--Matrix 4* 5-->
+                       <div *ngIf="tableCollectionMatrix45">
+                          <div class="example-container table-box-main" *ngIf="listtemp==13">
+                             <div class="example-header table-filter">
+                                <mat-form-field>
+                                   <input matInput (keyup)="applyFilterMatrixMatch45($event.target.value)" placeholder="Filter">
+                                   <span matPrefix>
+                                   <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                </mat-form-field>
+                             </div>
+                             <mat-table class="specific-table question-management-table-main-structure" #table [dataSource]="matrixmatch45dataSource"
+                             matSort>
+                             <!-- Position Column -->
+                             <ng-container matColumnDef="positionMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-position">S No. </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-position">Q-{{item.positionMatrixMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- Questions Name Column -->
+                             <ng-container matColumnDef="questionMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-question"> Questions</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-question">
+                                   <div class="imgClassExpress questionDiv" [MathJax]="item.questionMatrixMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <ng-container matColumnDef="answerMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-options">Answer </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-options">
+                                   <div [MathJax]="item.answerMatrixMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Explanation Name Column -->
+                             <ng-container matColumnDef="explanationsMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-explanation">Explanations</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-explanation">
+                                   <div [MathJax]="item.explanationsMatrixMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Class Column -->
+                             <ng-container matColumnDef="classMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.classMatrixMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- Topic Column -->
+                             <ng-container matColumnDef="topicMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.topicMatrixMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- SubTOpic Name Column -->
+                             <ng-container matColumnDef="subtopicMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>SubTopic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="padding explanation">{{item.subtopicMatrixMatch}} </mat-cell>
+                             </ng-container>
+                             <!-- Details Name Column -->
+                             <ng-container matColumnDef="detailsMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="details padding"> Details</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="details paddingAction">
+                                   <div [innerHTML]="item.detailsMatrixMatch"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Action Column -->
+                             <ng-container matColumnDef="actionMatrixMatch">
+                                <mat-header-cell *matHeaderCellDef class="matrix-action">Action </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="matrix-action">
+                                   <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true" (click)="openModal(template);getCurrentUnpublishedQues(item.actionMatrixMatch)"></i>
+                                </mat-cell>
+                             </ng-container>
+                             <mat-header-row class="top_header" *matHeaderRowDef="matrixmatch45displayedColumns"></mat-header-row>
+                             <mat-row *matRowDef="let row; columns: matrixmatch45displayedColumns;"></mat-row>
+                             </mat-table>
+                             <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                          </div>
+                       </div>
+                       <!--End-->
+                       <!--Single Integer-->
+                       <div *ngIf="tableCollectionSingleInteger">
+                          <div class="example-container table-box-main" *ngIf="listtemp==14">
+                             <div class="example-header table-filter">
+                                <mat-form-field>
+                                   <input matInput (keyup)=" applyFilterSingleInteger($event.target.value)" placeholder="Filter">
+                                   <span matPrefix>
+                                   <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                </mat-form-field>
+                             </div>
+                             <mat-table class="specific-table question-management-table-main-structure" #table [dataSource]="singleintegerdataSource"
+                             matSort>
+                             <!-- Position Column -->
+                             <ng-container matColumnDef="position">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-position">S No. </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-position">Q-{{item.position}} </mat-cell>
+                             </ng-container>
+                             <!-- Questions Name Column -->
+                             <ng-container matColumnDef="question">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-question"> Questions</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-question">
+                                   <div [MathJax]="item.question" class="imgClassExpress"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Answer Name Column -->
+                             <ng-container matColumnDef="answer">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-answer">Answer</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-answer">
+                                   <button mat-icon style="border-radius: 50% !important;
+                                      border:none !important;color:white !important;
+                                      background-color: #6c65c8 !important;font-weight:bold !important;height:40px !important;width:40px !important">
+                                      <div [MathJax]="item.answer" class="imgClassExpress"></div>
+                                   </button>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Class Name Column -->
+                             <ng-container matColumnDef="class">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.class}}</mat-cell>
+                             </ng-container>
+                             <!-- Topic Name Column -->
+                             <ng-container matColumnDef="topic">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.topic}}</mat-cell>
+                             </ng-container>
+                             <!-- Sub Topic Name Column -->
+                             <ng-container matColumnDef="subtopic">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Sub Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.subtopic}}</mat-cell>
+                             </ng-container>
+                             <!-- Details Name Column -->
+                             <ng-container matColumnDef="details">
+                                <mat-header-cell *matHeaderCellDef> Details</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                   <div [innerHTML]="item.details"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Action Column -->
+                             <ng-container matColumnDef="action">
+                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                   <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true" (click)="openModal(template);getCurrentUnpublishedQues(item.action)"></i>
+                                </mat-cell>
+                             </ng-container>
+                             <mat-header-row class="top_header" *matHeaderRowDef="singleintegerdisplayedColumns"></mat-header-row>
+                             <mat-row *matRowDef="let row; columns: singleintegerdisplayedColumns"></mat-row>
+                             </mat-table>
+                             <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                          </div>
+                       </div>
+                       <!--End-->
+                       <!--Double Integer-->
+                       <div *ngIf="tableCollectionDoubleInteger">
+                          <div class="example-container table-box-main" *ngIf="listtemp==15">
+                             <div class="example-header table-filter">
+                                <mat-form-field>
+                                   <input matInput (keyup)=" applyFilterDoubleInteger($event.target.value)" placeholder="Filter">
+                                   <span matPrefix>
+                                   <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                </mat-form-field>
+                             </div>
+                             <mat-table class="specific-table question-management-table-main-structure" #table [dataSource]="doubleintegerdataSource"
+                             matSort>
+                             <!-- Position Column -->
+                             <ng-container matColumnDef="position">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-position">S No. </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-position">Q-{{item.position}} </mat-cell>
+                             </ng-container>
+                             <!-- Questions Name Column -->
+                             <ng-container matColumnDef="question">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-question"> Questions</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-question">
+                                   <div [MathJax]="item.question" class="imgClassExpress"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Answer Name Column -->
+                             <ng-container matColumnDef="answer">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-answer">Answer</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-answer">
+                                   <button mat-icon style="border-radius: 50% !important;
+                                      border:none !important;color:white !important;
+                                      background-color: #6c65c8 !important;font-weight:bold !important;height:40px !important;width:40px !important">
+                                      <div [MathJax]="item.answer.charAt(0)" class="imgClassExpress"></div>
+                                   </button>
+                                   <button mat-icon style="border-radius: 50% !important;
+                                      border:none !important;color:white !important;
+                                      background-color: #6c65c8 !important;font-weight:bold !important;height:40px !important;width:40px !important">
+                                      <div [MathJax]="item.answer.charAt(1)" class="imgClassExpress"></div>
+                                   </button>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Class Name Column -->
+                             <ng-container matColumnDef="class">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.class}}</mat-cell>
+                             </ng-container>
+                             <!-- Topic Name Column -->
+                             <ng-container matColumnDef="topic">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.topic}}</mat-cell>
+                             </ng-container>
+                             <!-- Sub Topic Name Column -->
+                             <ng-container matColumnDef="subtopic">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Sub Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.subtopic}}</mat-cell>
+                             </ng-container>
+                             <!-- Details Name Column -->
+                             <ng-container matColumnDef="details">
+                                <mat-header-cell *matHeaderCellDef> Details</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                   <div [innerHTML]="item.details"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Action Column -->
+                             <ng-container matColumnDef="action">
+                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                   <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true" (click)="openModal(template);getCurrentUnpublishedQues(item.action)"></i>
+                                </mat-cell>
+                             </ng-container>
+                             <mat-header-row class="top_header" *matHeaderRowDef="doubleintegerdisplayedColumns"></mat-header-row>
+                             <mat-row *matRowDef="let row; columns: doubleintegerdisplayedColumns"></mat-row>
+                             </mat-table>
+                             <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                          </div>
+                       </div>
+                       <!--End-->
+                       <div *ngIf="tableCollectionSub">
+                          <div class="example-container table-box-main" *ngIf="(listtemp == 6 || listtemp == 7 || listtemp == 8 || listtemp == 9 || listtemp == 10 || listtemp == 11 || listtemp == 12)">
+                             <div class="example-header table-filter">
+                                <mat-form-field>
+                                   <input matInput (keyup)=" applyFilterSubjective($event.target.value)" placeholder="Filter">
+                                   <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                </mat-form-field>
+                             </div>
+                             <mat-table class="specific-table question-management-table-main-structure" #table [dataSource]="subjectivedataSource"
+                             matSort>
+                             <!-- Position Column -->
+                             <ng-container matColumnDef="positionSub">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-position">S No. </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-position">Q-{{item.positionSub}} </mat-cell>
+                             </ng-container>
+                             <!-- Questions Name Column -->
+                             <ng-container matColumnDef="questionSub">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-question"> Questions</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-question">
+                                   <div class="imgClassExpress" [MathJax]="item.questionSub"></div>
+                                   <!-- <div class="imgclass" [innerHTML]="item.questionSub"></div> -->
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Answer Name Column -->
+                             <ng-container matColumnDef="answerSub">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-answer">Answer</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-answer">
+                                   <div [MathJax]="item.answerSub" class="imgClassExpress"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Class Name Column -->
+                             <ng-container matColumnDef="classSub">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-class">Class</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-class">{{item.classSub}}</mat-cell>
+                             </ng-container>
+                             <!-- Topic Column -->
+                             <ng-container matColumnDef="topicSub">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-topic">Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-topic">{{item.topicSub}}</mat-cell>
+                             </ng-container>
+                             <!-- Subtopic Column -->
+                             <ng-container matColumnDef="subtopicSub">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-subtopic">SubTopic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-subtopic">{{item.subtopicSub}}</mat-cell>
+                             </ng-container>
+                             <!--Details Name Column -->
+                             <ng-container matColumnDef="detailsSub">
+                                <mat-header-cell *matHeaderCellDef class="sub-details"> Details</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-details">
+                                   <div [innerHTML]="item.detailsSub"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Action Column -->
+                             <ng-container matColumnDef="actionSub">
+                                <mat-header-cell *matHeaderCellDef class="sub-action"> Action </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-action">
+                                   <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true" (click)="openModal(template);getCurrentUnpublishedQues(item.actionSub)"></i>
+                                </mat-cell>
+                             </ng-container>
+                             <mat-header-row class="top_header" *matHeaderRowDef="subjectivedisplayedColumns"></mat-header-row>
+                             <mat-row *matRowDef="let row; columns: subjectivedisplayedColumns"></mat-row>
+                             </mat-table>
+                             <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                          </div>
+                          <!-- Table for All Subjective Ends here -->
+                          <!-- Ends-->
+                          <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to UnPublish '" (deleteOk)="openModal2(templateNested)"
+                          (deleteCancel)="deleteComCancel()">
+                          </app-delete-modal>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <!-- start of essay questions div -->
+              <div class="row" *ngIf="essayFlag && questionlistFlag">
+                 <div class="col-lg-12">
+                    <div class="example-container table-box-main detail-question-box">
+                       <div class="example-header table-filter">
+                          <mat-form-field>
+                             <input matInput (keyup)=" applyFilterEssay($event.target.value)" placeholder="Filter">
+                             <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                          </mat-form-field>
+                       </div>
+                       <mat-table class="specific-table question-management-table-main-structure" #table [dataSource]="reviewdatasource"
+                       matSort (matSortChange)="sortDataEssay($event)">
+                       <ng-container matColumnDef="position">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header="position" class="sub-position">S No. </mat-header-cell>
+                          <mat-cell *matCellDef="let item" class="sub-position">Q-{{item.position}} </mat-cell>
+                       </ng-container>
+                       <!-- Questions Name Column -->
+                       <ng-container matColumnDef="question">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header="question" style="width:16% !important; flex: 0 0 12% !important"> Questions</mat-header-cell>
+                          <mat-cell *matCellDef="let item" style="width:16% !important; flex: 0 0 12% !important">
+                             <div class="imgClassExpress"  [MathJax]="item.question"></div>
+                          </mat-cell>
+                       </ng-container>
+                       <!-- Answer Name Column -->
+                       <ng-container matColumnDef="answer">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header="answer" class="sub-answer">Answer</mat-header-cell>
+                          <mat-cell *matCellDef="let item" class="sub-answer">
+                             <div [id]="item.toolid" matTooltip="{{htmlToText(item.showHover)}}"
+                             class="imgClassExpress"
+                             [MathJax]="item.answer">
+                    </div>
+                    </mat-cell>
+                    </ng-container>
+                    <!-- Class Name Column -->
+                    <ng-container matColumnDef="class">
+                       <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-class">Class</mat-header-cell>
+                       <mat-cell *matCellDef="let item" class="sub-class">{{item.class}}</mat-cell>
+                    </ng-container>
+                    <!-- Explanation Column -->
+                    <ng-container matColumnDef="explanations">
+                       <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-explanation">Explanation</mat-header-cell>
+                       <mat-cell *matCellDef="let item" class="sub-explanation">
+                          <div [MathJax]="item.explanations"></div>
+                       </mat-cell>
+                    </ng-container>
+                    <!-- Topic Column -->
+                    <ng-container matColumnDef="topic">
+                       <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-topic">Topic</mat-header-cell>
+                       <mat-cell *matCellDef="let item" class="sub-topic">{{item.topic}}</mat-cell>
+                    </ng-container>
+                    <!--Sub topic Column -->
+                    <ng-container matColumnDef="subtopic">
+                       <mat-header-cell *matHeaderCellDef class="sub-subtopic">Sutopic</mat-header-cell>
+                       <mat-cell *matCellDef="let item" class="sub-subtopic">{{item.subtopic}}</mat-cell>
+                    </ng-container>
+                    <!--S Column -->
+                    <ng-container matColumnDef="details">
+                       <mat-header-cell *matHeaderCellDef class="sub-details">Details</mat-header-cell>
+                       <mat-cell *matCellDef="let item" class="sub-details">
+                          <div [innerHTML]="item.details"></div>
+                       </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                       <mat-header-cell *matHeaderCellDef class="sub-action"> Action </mat-header-cell>
+                       <mat-cell *matCellDef="let item" class="sub-action">
+                          <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true" (click)="openModal(template);getCurrentUnpublishedQues(item.action)"></i>
+                          <i class="fas fa-eye view-eye-icon" data-toggle="tooltip" data-placement="top" matTooltip="View Essay" aria-hidden="true" (click)="openEssayDetails(item.action)"></i>
+                       </mat-cell>
+                    </ng-container>
+                    <mat-header-row class="top_header" *matHeaderRowDef="reviewdisplayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: reviewdisplayedColumns"></mat-row>
+                    </mat-table>
+                    <mat-paginator  [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                 </div>
+              </div>
+              <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to UnPublish '" (deleteOk)="openModal2(templateNested)"
+              (deleteCancel)="deleteComCancel()">
+              </app-delete-modal>
+              <ng-template #templateNested>
+                 <div class="modal-main-box">
+                    <div class="modal-delete-content-box">
+                       <div class="row">
+                          <div class="col-lg-12">
+                             <div class="close-button-content">
+                                <button mat-icon-button class="close-button" (click)="modalRef2.hide()"><img src="../../../../../assets/images/clear-button.svg"></button>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="row">
+                          <div class="col-lg-12">
+                             <div>
+                                <h6 class="text-center">Reason To Unpublish?</h6>
+                             </div>
+                             <div class="row">
+                                <div class="col-lg-12">
+                                   <form [formGroup]="modalForm" novalidate>
+                                      <div class="row">
+                                         <div class="col-lg-12">
+                                            <mat-form-field class="mat-form-field">
+                                               <mat-select  formControlName="reason_id" placeholder="Reasons..">
+                                                  <mat-option *ngFor="let item of reasonsArray" [value]="item.reason_id">{{item.reason_desc}}</mat-option>
+                                               </mat-select>
+                                            </mat-form-field>
+                                         </div>
+                                      </div>
+                                      <br>
+                                      <div class="row">
+                                         <div class="col-lg-12">
+                                            <mat-form-field class="mat-form-field">
+                                               <label for="exampleFormControlTextarea"></label>
+                                               <textarea matInput id="exampleFormControlTextarea" rows="3" placeholder="Remarks..." formControlName="qus_unpublish_remark"></textarea>
+                                            </mat-form-field>
+                                         </div>
+                                         <div class="row">
+                                            <div class="col-lg-12">
+                                               &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<button mat-button class="submit-button" (click)="unpublishQuestion(currentUnpublishedQues.qus_id)">Submit</button>
+                                            </div>
+                                         </div>
+                                      </div>
+                                   </form>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </ng-template>
+           </div>
+           <!-- end of essay questions div -->
+        </div>
+     </div>
+  </div>
+</div>
+</div>

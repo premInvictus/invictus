@@ -1,0 +1,954 @@
+<div class="breadcrumb-section">
+   <div class="row">
+      <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+         <a [routerLink]="[homeUrl]">
+            <i class="breadcrumb-icon fas fa-home"></i>
+         </a>
+      </div>
+      <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+         <div class="vertical-line"></div>
+      </div>
+      <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+         <div class="first-breadcrumb-title">
+            <span class="bread-title">Question Paper</span>
+            <span class="bread-divider">-</span>
+            <span class="bread-title" routerLink="../question_paper_setup">Question Paper Setup</span>
+            <span class="bread-divider">-</span>
+            <span class="bread-link">Express Paper Setup</span>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <!--Page Title -->
+      <div class="white-box">
+         <div class="white-box-content">
+            <div *ngIf="parameterDiv">
+               <br>
+               <!--Define parameter-->
+               <div class="row row-remove-top-margin ">
+                  <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
+                     <div class="top-right-parameter white-box">
+                        <div class="top-right-box">
+                           <div class="top-right-box-content top-middle-box-content">
+                              <div class="top-right-box-content-title">
+                                 <div class="row text-center">
+                                    <div class="col-lg-12 col-mobile-view-add-ques">
+                                       <span class="question-subtype-content-title-expanation"><b
+                                             class="step-title">Step I</b></span> -
+                                       <span>
+                                          <b>Select Parameters</b>
+                                       </span>
+                                    </div>
+                                 </div>
+                                 <div class="row ">
+                                    <div class="col-lg-12  remove-col-modal-padding col-mobile-view-add-ques">
+                                       <form [formGroup]="express_form_one" novalidate>
+                                          <div class="row express-test-name-margin">
+                                             <div
+                                                class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <input matInput [value]="express_form_one.value.qp_name | titlecase"
+                                                      placeholder="Test Name" id="testname" formControlName="qp_name"
+                                                      required>
+                                                </mat-form-field>
+                                             </div>
+                                             <div
+                                                class="col-lg-1 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="qp_class_id" id="class"
+                                                      (selectionChange)="getSectionsByClass();getSubjectsByClass()"
+                                                      placeholder="Class" required>
+                                                      <mat-option *ngFor="let item of classArray"
+                                                         [value]="item.class_id">
+                                                         {{item.class_name}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                             <div
+                                                class="col-lg-1 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="qp_sec_id" id="section"
+                                                      placeholder="Section" required>
+                                                      <mat-option value="all">All</mat-option>
+                                                      <mat-option *ngFor="let item of sectionArray"
+                                                         [value]="item.sec_id">
+                                                         {{item.sec_name}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select multiple formControlName="qp_sub_id" id="subject"
+                                                      placeholder="Subject" (selectionChange)="setSelectedSubject()" required>
+                                                      <mat-option *ngFor="let item of subjectArray"
+                                                         [value]="item.sub_id">
+                                                         {{item.sub_name}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                             <div class="col-lg-1 fin-tab-col-16 col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="qp_marks" id="marks"
+                                                      placeholder="Total Marks" required>
+                                                      <mat-option *ngFor="let item of papermarksArray" [value]="item">
+                                                         {{item}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                             <!-- </div>
+                                          <div class="row express-total-question-margin"> -->
+                                             <div class="col-lg-1 fin-tab-col-16  col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="qp_qcount" id="totalq"
+                                                      placeholder="Total Question" required>
+                                                      <mat-option *ngFor="let item of noquestion" [value]="item">
+                                                         {{item}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field">
+                                                   <mat-select formControlName="qp_time_alloted" id="timea"
+                                                      placeholder="Time Alloted (in Mins)" required>
+                                                      <mat-option *ngFor="let item of papertimeArray" [value]="item">
+                                                         {{item}}
+                                                      </mat-option>
+                                                   </mat-select>
+                                                </mat-form-field>
+                                             </div>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!--Define parameter end-->
+               <br>
+               <form [formGroup]="express_form_two">
+                  <div class="row">
+                     <div class="col-lg-2 fin-tab-col-16 col-apple-2 col-tab-25 remove-col-modal-padding">
+                        <div class="left-side-box">
+                           <div class="left-side-box-content text-center">
+                              <span class="question-subtype-content-title-expanation"><b class="step-title">Step II
+                                    -</b></span>
+                              <span>
+                                 <b>Select Topic/SubTopic </b>
+                              </span>
+                              <br>
+                              <br>
+                              <div class="col-lg-12 col-mobile-view-add-ques">
+                                 <mat-form-field class="form-field">
+                                    <mat-select formControlName="qp_ssub_id" id="ssubject"
+                                       placeholder="Selected Subject" (selectionChange)="getTopicByClassSubject()">
+                                       <mat-option *ngFor="let item of selectedSubArray" [value]="item.sub_id">
+                                          {{item.sub_name}}
+                                       </mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                              </div>
+                              <div class="col-lg-12 col-mobile-view-add-ques">
+                                 <mat-form-field class="form-field">
+                                    <mat-select formControlName="qp_topic_id" id="topic" placeholder="Topic"
+                                       (selectionChange)="getSubtopicByTopic()" required>
+                                       <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
+                                          {{item.topic_name}}
+                                       </mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                              </div>
+                              <div class="col-lg-12 col-mobile-view-add-ques">
+                                 <mat-form-field class="form-field">
+                                    <mat-select multiple formControlName="qp_st_id" id="marks" placeholder="Sub-Topic"
+                                       id="subtopic" (selectionChange)="addQuestionList()" required>
+                                       <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
+                                          {{item.st_name}}
+                                       </mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-lg-10 col-apple-10 col-tab-75">
+                        <div *ngIf="noRecordDiv" [@fadeInOut]>
+                           <div class="express-no-first-table-content">
+                              <img class="no-records-fond-express-img"
+                                 src="../../../../assets/images/no-record-red.png">
+                              <br>
+                              <span class="no-reocrd-text">To Launch
+                                 <span class="red-button-press">Rocket</span>!</span>
+                              <br>
+                              <span>Please select all parameters.</span>
+                           </div>
+                        </div>
+                        <div *ngIf="showTopicSubTopicTable" [@fadeInOut]>
+                           <div class="card-body detail-question-box text-center apple-express-topic-list-box">
+                              <span class="info-template-name">
+                                 <b>Topic/Sub-Topic for generating Question Paper</b>
+                              </span>
+                              <br>
+                              <br>
+                              <!--Pagination Starts Here-->
+                              <div>
+                                 <mat-table class="specific-table express-topic-subtopic-table-structure table-overflow"
+                                    #table [dataSource]="dataSource" matSort>
+                                    <!-- Position Column -->
+                                    <ng-container matColumnDef="position">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header>S No. </mat-header-cell>
+                                       <mat-cell class="postion-topic-sub" *matCellDef="let item">{{item.position}}
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!--Topic Column -->
+                                    <ng-container matColumnDef="topic">
+                                       <mat-header-cell class="text-left" *matHeaderCellDef>Topic</mat-header-cell>
+                                       <mat-cell class="text-left" *matCellDef="let item">{{item.topic}} </mat-cell>
+                                    </ng-container>
+                                    <!--Sub-Topic Column -->
+                                    <ng-container matColumnDef="subtopic">
+                                       <mat-header-cell class="text-left" *matHeaderCellDef>Sub-Topic</mat-header-cell>
+                                       <mat-cell class="text-left" *matCellDef="let item">{{item.subtopic}} </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="action">
+                                       <mat-header-cell class="text-left" *matHeaderCellDef> Action </mat-header-cell>
+                                       <mat-cell class="text-left" *matCellDef="let item">
+                                          <i class="far fa-trash-alt table-delete-icon" data-toggle="mattooltip"
+                                             data-placement="top" title="Delete" aria-hidden="true"
+                                             (click)="deleteQuestionList((item.position)-1)"></i>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <mat-header-row class="top_header express-topic-subtopic-header"
+                                       *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                    <mat-row class="express-topic-subtopic-header"
+                                       *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                 </mat-table>
+                                 <mat-paginator #paginator2 [pageSizeOptions]="[10,20,30]"
+                                    [showFirstLastButtons]="true"></mat-paginator>
+                              </div>
+                              <br>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12 remove-col-modal-padding">
+                                 <div class="row">
+                                    <div
+                                       class="col-lg-6 fin-tab-col-50 instruction-button-content remove-col-modal-padding">
+                                       <div class="button-content">
+                                          <mat-chip-list>
+                                             <mat-chip class="instruct-chip">
+                                                <i
+                                                   class="fas fa-plus-circle instruct-add-icon instruct-content-one"></i>
+                                                <span class="instruct-content-two button-instruct-title"
+                                                   (click)="addInstructionDialog()">Instruction</span>
+                                             </mat-chip>
+                                          </mat-chip-list>
+                                       </div>
+                                    </div>
+                                    <div class="col-lg-6 fin-tab-col-50">
+                                       <div class="button-content float-right">
+                                          <mat-chip-list>
+                                             <mat-chip class="ongoing-test-detail-section generate-button"
+                                                (click)="gotoSelectQuestion()">
+                                                <span class="axiom-icon-button">GENERATE</span>
+                                             </mat-chip>
+                                          </mat-chip-list>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </form>
+            </div>
+            <br>
+            <div *ngIf="selectQuestionDiv">
+               <div class="row row-remove-top-margin">
+                  <div class="col-lg-12 mob-remove-col-padding">
+                     <div class="row row-remove-top-margin">
+                        <div
+                           class="col-lg-12 col-mobile-view-add-ques white-box-content-title detail-question-box-content breadcrumb-section">
+                           <div class="row row-remove-top-margin">
+                              <div class="col-lg-2 fin-tab-col-15">
+                                 <button mat-icon-button class="float-left arrow-button"
+                                    matTooltip="Go to Step I & II - Select Parameter" placement="top"
+                                    (click)="movebackParameter()">
+                                    <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+                                 </button>
+                              </div>
+                              <div class="col-lg-8 fin-tab-col-7 add-option-radio">
+                                 <span class="question-subtype-content-title-expanation"><b class="step-title">STEP III
+                                       - </b></span>
+                                 <span><b>Select Questions</b></span>
+                              </div>
+                              <div class="col-lg-2 fin-tab-col-15">
+                                 <button class="float-right arrow-button" mat-icon-button
+                                    matTooltip="Go to Step IV - Review Question" placement="left"
+                                    (click)="gotoReviewQuestion()">
+                                    <i class="fas fa-angle-double-right" aria-hidden="true"></i>
+                                 </button>
+                              </div>
+                           </div>
+                           <div class="row margin-top-10 row-remove-top-margin">
+                              <div class="col-lg-12  remove-col-modal-padding col-mobile-view-add-ques">
+                                 <form [formGroup]="express_form_one" novalidate>
+                                    <div class="row express-test-name-margin">
+                                       <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                          <mat-form-field class="form-field">
+                                             <input matInput [value]="express_form_one.value.qp_name | titlecase"
+                                                placeholder="Test Name" id="testname" formControlName="qp_name"
+                                                readonly>
+                                          </mat-form-field>
+                                       </div>
+                                       <div class="col-lg-1 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                          <mat-form-field class="form-field">
+                                             <mat-select formControlName="qp_class_id" id="class" placeholder="Class"
+                                                disabled>
+                                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                   {{item.class_name}}
+                                                </mat-option>
+                                             </mat-select>
+                                          </mat-form-field>
+                                       </div>
+                                       <div class="col-lg-1 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                          <mat-form-field class="form-field">
+                                             <mat-select formControlName="qp_sec_id" id="section" placeholder="Section"
+                                                disabled>
+                                                <mat-option value="all">All</mat-option>
+                                                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                                   {{item.sec_name}}
+                                                </mat-option>
+                                             </mat-select>
+                                          </mat-form-field>
+                                       </div>
+                                       <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                          <mat-form-field class="form-field">
+                                             <mat-select multiple formControlName="qp_sub_id" id="subject"
+                                                placeholder="Subject" (selectionChange)="setSelectedSubject()" disabled>
+                                                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                                   {{item.sub_name}}
+                                                </mat-option>
+                                             </mat-select>
+                                          </mat-form-field>
+                                       </div>
+                                       <div class="col-lg-1 fin-tab-col-16 col-mobile-view-add-ques">
+                                          <mat-form-field class="form-field">
+                                             <mat-select formControlName="qp_marks" id="marks" placeholder="Total Marks"
+                                                disabled>
+                                                <mat-option *ngFor="let item of papermarksArray" [value]="item">
+                                                   {{item}}
+                                                </mat-option>
+                                             </mat-select>
+                                          </mat-form-field>
+                                       </div>
+                                       <!-- </div>
+                               <div class="row express-total-question-margin"> -->
+                                       <div class="col-lg-1 fin-tab-col-16  col-mobile-view-add-ques">
+                                          <mat-form-field class="form-field">
+                                             <mat-select formControlName="qp_qcount" id="totalq"
+                                                placeholder="Total Question" disabled>
+                                                <mat-option *ngFor="let item of noquestion" [value]="item">
+                                                   {{item}}
+                                                </mat-option>
+                                             </mat-select>
+                                          </mat-form-field>
+                                       </div>
+                                       <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                          <mat-form-field class="form-field">
+                                             <mat-select formControlName="qp_time_alloted" id="timea"
+                                                placeholder="Time Alloted (in Mins)" disabled>
+                                                <mat-option *ngFor="let item of papertimeArray" [value]="item">
+                                                   {{item}}
+                                                </mat-option>
+                                             </mat-select>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                 </form>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-lg-12 mob-remove-col-padding">
+                           <mat-tab-group>
+                              <mat-tab *ngFor="let sub of selectedSubArray;let subIndex=index">
+                                 <ng-template mat-tab-label>
+                                    <div class="tab-show-on-click" (click)="setSelectedSubTab(sub,subIndex)">
+                                       <span>{{sub.sub_name}}</span>
+                                    </div>
+                                 </ng-template>
+                                 <mat-tab-group #staticTabs>
+                                    <mat-tab *ngFor="let tab of tabs;let i=index">
+                                       <ng-template mat-tab-label>
+                                          <div class="tab-show-on-click" (click)="onTabSelection(i)">
+                                             <span>{{tab.heading}}</span>
+                                          </div>
+                                       </ng-template>
+                                    </mat-tab>
+                                 </mat-tab-group>
+                              </mat-tab>
+                           </mat-tab-group>
+                           <div>
+                              <div class="row">
+                                 <div class="col-lg-3">
+                                    <mat-form-field>
+                                       <input matInput (keyup)="applyFilterQuestion($event.target.value)"
+                                          placeholder="Filter" [(ngModel)]="filterValue">
+                                       <span matPrefix>
+                                          <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-7 fin-tab-col-80">
+                                    <div class="float-right">
+                                       <div class="mat-chip-list-inline"
+                                          *ngFor="let sub of selectedSubArray; let ssaIndex=index">
+                                          <mat-chip-list>
+                                             <mat-chip class="express-select-question-chip marks-left">
+                                                <span class="chip-content-one">
+                                                   <span class="marks-title">{{sub.sub_name}}</span>
+                                                </span>
+                                                <i class="fas fa-circle chip-content-two marks-left-circle"></i>
+                                                <span
+                                                   class="marks-left-value">{{totalSelectedSubQuestion(ssaIndex)}}</span>
+                                             </mat-chip>
+                                          </mat-chip-list>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="col-lg-2 fin-tab-col-15">
+                                    <div class="float-right">
+                                       <mat-chip-list>
+                                          <mat-chip class="express-select-question-chip marks-left">
+                                             <span class="chip-content-one">
+                                                <span class="marks-title">No. of</span>
+                                                <span class="left-title">Ques :</span>
+                                             </span>
+                                             <i class="fas fa-circle chip-content-two marks-left-circle"></i>
+                                             <span class="marks-left-value">{{totalSelectedQuestion}}</span>
+                                          </mat-chip>
+                                       </mat-chip-list>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div [hidden]="!(currentSelectedTab == 'essay')">
+                                 <mat-table
+                                    class="specific-table express-select-question-table table-main-structure table-overflow"
+                                    #table [dataSource]="essayquestionDatasource" matSort>
+                                    <!-- Position Column -->
+                                    <ng-container matColumnDef="position">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header>S No. </mat-header-cell>
+                                       <mat-cell *matCellDef="let item"> Q-{{item.position}} </mat-cell>
+                                    </ng-container>
+                                    <!-- Checkbox Column -->
+                                    <ng-container matColumnDef="select">
+                                       <mat-header-cell *matHeaderCellDef>Select</mat-header-cell>
+                                       <mat-cell *matCellDef="let row">
+                                          <mat-checkbox
+                                             (change)="selectQuestionFromCheckbox(row.select, currentSelectedTab, currentSelectedSubIndex,$event)"
+                                             [value]="row.select"
+                                             [checked]="arrayTabSelectedQuestion[currentSelectedSubIndex][currentSelectedTab].indexOf(row.select) > -1">
+                                          </mat-checkbox>
+                                          <label for="qusIndex{{row.select}}"> </label>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Questions Name Column -->
+                                    <ng-container matColumnDef="question">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> Questions</mat-header-cell>
+                                       <mat-cell *matCellDef="let item">
+                                          <div class="imgClassExpress express-select-question"
+                                             [MathJax]="item.question"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Options Name Column -->
+                                    <ng-container matColumnDef="options">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header>Answer</mat-header-cell>
+                                       <mat-cell *matCellDef="let item">
+                                          <div matTooltip="{{htmlToText(item.showHover)}}"
+                                             class="imgClassExpress express-select-question" [MathJax]="item.options">
+                                          </div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Essay Name Column -->
+                                    <ng-container matColumnDef="essayTitle">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header>Essay Title</mat-header-cell>
+                                       <mat-cell *matCellDef="let item">
+                                          <div [innerHTML]="item.essayTitle"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Explanations Name Column -->
+                                    <ng-container matColumnDef="explanations">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header>Explanations</mat-header-cell>
+                                       <mat-cell *matCellDef="let item" class="padding">
+                                          <div [MathJax]="item.explanations"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Skill Type Name Column -->
+                                    <ng-container matColumnDef="skillType">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> SkillType</mat-header-cell>
+                                       <mat-cell *matCellDef="let item">
+                                          <div [innerHTML]="item.skillType"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Topic Name Column -->
+                                    <ng-container matColumnDef="topic">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> Topic</mat-header-cell>
+                                       <mat-cell *matCellDef="let item">
+                                          <div [innerHTML]="item.topic"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Sub Topic Name Column -->
+                                    <ng-container matColumnDef="subtopic">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> Sub-Topic</mat-header-cell>
+                                       <mat-cell *matCellDef="let item" class="padding">
+                                          <div [innerHTML]="item.subtopic"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Suggested Marks  Column -->
+                                    <ng-container matColumnDef="suggestedMarks">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> Suggested Marks
+                                       </mat-header-cell>
+                                       <mat-cell *matCellDef="let item" class="padding">
+                                          <div [innerHTML]="item.suggestedMarks"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!--Reference  Column -->
+                                    <ng-container matColumnDef="reference">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> Reference</mat-header-cell>
+                                       <mat-cell *matCellDef="let item" class="padding">
+                                          <div [innerHTML]="item.reference"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <mat-header-row class="top_header" *matHeaderRowDef="essaydisplayedColumns">
+                                    </mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: essaydisplayedColumns;"></mat-row>
+                                 </mat-table>
+                                 <mat-paginator #paginator3 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                                 </mat-paginator>
+                              </div>
+                              <div [hidden]="(currentSelectedTab == 'essay')">
+                                 <mat-table class="specific-table express-select-question-table table-overflow" #table
+                                    [dataSource]="questionDatasource" matSort>
+                                    <!-- Position Column -->
+                                    <ng-container matColumnDef="position">
+                                       <mat-header-cell class="express-sq-position" *matHeaderCellDef mat-sort-header>S
+                                          No. </mat-header-cell>
+                                       <mat-cell class="express-sq-position" *matCellDef="let item"> Q-{{item.position}}
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Checkbox Column -->
+                                    <ng-container matColumnDef="select">
+                                       <mat-header-cell *matHeaderCellDef class="express-sq-select">Select
+                                       </mat-header-cell>
+                                       <mat-cell class="express-sq-select" *matCellDef="let row">
+                                          <mat-checkbox
+                                             (change)="selectQuestionFromCheckbox(row.select, currentSelectedTab, currentSelectedSubIndex,$event)"
+                                             [value]="row.select"
+                                             [checked]="arrayTabSelectedQuestion[currentSelectedSubIndex][currentSelectedTab].indexOf(row.select) > -1">
+                                          </mat-checkbox>
+                                          <label for="qusIndex{{row.select}}"></label>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Questions Name Column -->
+                                    <ng-container matColumnDef="question">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header class="express-sq-question">
+                                          Questions</mat-header-cell>
+                                       <mat-cell class="express-sq-question" *matCellDef="let item">
+                                          <div class="imgClassExpress express-select-question"
+                                             [MathJax]="item.question"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Options Name Column -->
+                                    <ng-container matColumnDef="options">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header class="express-sq-answer">
+                                          Answer</mat-header-cell>
+                                       <mat-cell *matCellDef="let item" class="express-sq-answer">
+                                          <div matTooltip="{{htmlToText(item.showHover)}}"
+                                             class="imgClassExpress express-select-question" [MathJax]="item.options">
+                                          </div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Explanations Name Column -->
+                                    <ng-container matColumnDef="explanations">
+                                       <mat-header-cell class="express-sq-expl" *matHeaderCellDef mat-sort-header>
+                                          Explanations</mat-header-cell>
+                                       <mat-cell class="express-sq-expl" *matCellDef="let item">
+                                          <div [MathJax]="item.explanations"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Skill Type Name Column -->
+                                    <ng-container matColumnDef="skillType">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> SkillType</mat-header-cell>
+                                       <mat-cell *matCellDef="let item">
+                                          <div [innerHTML]="item.skillType"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Topic Name Column -->
+                                    <ng-container matColumnDef="topic">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> Topic</mat-header-cell>
+                                       <mat-cell *matCellDef="let item">
+                                          <div [innerHTML]="item.topic"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Sub Topic Name Column -->
+                                    <ng-container matColumnDef="subtopic">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> Sub-Topic</mat-header-cell>
+                                       <mat-cell *matCellDef="let item" class="padding">
+                                          <div [innerHTML]="item.subtopic"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!-- Suggested Marks  Column -->
+                                    <ng-container matColumnDef="suggestedMarks">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> Suggested Marks
+                                       </mat-header-cell>
+                                       <mat-cell *matCellDef="let item" class="padding">
+                                          <div [innerHTML]="item.suggestedMarks"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <!--Reference  Column -->
+                                    <ng-container matColumnDef="reference">
+                                       <mat-header-cell *matHeaderCellDef mat-sort-header> Reference</mat-header-cell>
+                                       <mat-cell *matCellDef="let item" class="padding">
+                                          <div [innerHTML]="item.reference"></div>
+                                       </mat-cell>
+                                    </ng-container>
+                                    <mat-header-row class="top_header" *matHeaderRowDef="mcqdisplayedColumns">
+                                    </mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: mcqdisplayedColumns;"></mat-row>
+                                 </mat-table>
+                                 <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                                 </mat-paginator>
+                              </div>
+                           </div>
+                           <br>
+                           <div class="float-right">
+                              <button mat-raised-button class="submit-button"
+                                 matTooltip="Review Question Paper after Question Selection" placement="top"
+                                 (click)="gotoReviewQuestion()">
+                                 Review Paper
+                              </button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <br>
+            </div>
+            <div *ngIf="questionReviewDiv">
+               <div class="row row-remove-top-margin">
+                  <div class="col-lg-12 col-mobile-view-add-ques white-box-content-title breadcrumb-section">
+                     <div class="row">
+                        <div class="col-lg-2 fin-tab-col-15">
+                           <button mat-icon-button class="float-left arrow-button"
+                              matTooltip="Go to Step I & II - Select Parameter" placement="bottom"
+                              (click)="movebackParameter()">
+                              <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+                           </button>
+                           <button mat-icon-button class="arrow-button" matTooltip="Go to Step III - Select Question"
+                              placement="left" (click)="movebackSelectQuestion()">
+                              <i class="fas fa-angle-left"></i>
+                           </button>
+                        </div>
+                        <div class="col-lg-8 fin-tab-col-7">
+                           <span class="question-subtype-content-title-expanation"><b class="step-title">Step IV -
+                              </b></span>
+                           <span><b>Review Selection</b></span>
+                        </div>
+                        <div class="col-lg-2 fin-tab-col-15">
+                        </div>
+                     </div>
+                     <div class="row margin-top-10 row-remove-top-margin">
+                        <div class="col-lg-12  remove-col-modal-padding col-mobile-view-add-ques">
+                           <form [formGroup]="express_form_one" novalidate>
+                              <div class="row express-test-name-margin">
+                                 <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field">
+                                       <input matInput [value]="express_form_one.value.qp_name | titlecase"
+                                          placeholder="Test Name" id="testname" formControlName="qp_name" readonly>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-1 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field">
+                                       <mat-select formControlName="qp_class_id" id="class" placeholder="Class"
+                                          disabled>
+                                          <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                             {{item.class_name}}
+                                          </mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-1 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field">
+                                       <mat-select formControlName="qp_sec_id" id="section" placeholder="Section"
+                                          disabled>
+                                          <mat-option value="all">All</mat-option>
+                                          <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                             {{item.sec_name}}
+                                          </mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field">
+                                       <mat-select multiple formControlName="qp_sub_id" id="subject"
+                                          placeholder="Subject" (selectionChange)="setSelectedSubject()" disabled>
+                                          <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                             {{item.sub_name}}
+                                          </mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-1 fin-tab-col-16 col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field">
+                                       <mat-select formControlName="qp_marks" id="marks" placeholder="Total Marks"
+                                          disabled>
+                                          <mat-option *ngFor="let item of papermarksArray" [value]="item">
+                                             {{item}}
+                                          </mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                                 <!-- </div>
+                         <div class="row express-total-question-margin"> -->
+                                 <div class="col-lg-1 fin-tab-col-16  col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field">
+                                       <mat-select formControlName="qp_qcount" id="totalq" placeholder="Total Question"
+                                          disabled>
+                                          <mat-option *ngFor="let item of noquestion" [value]="item">
+                                             {{item}}
+                                          </mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field">
+                                       <mat-select formControlName="qp_time_alloted" id="timea"
+                                          placeholder="Time Alloted (in Mins)" disabled>
+                                          <mat-option *ngFor="let item of papertimeArray" [value]="item">
+                                             {{item}}
+                                          </mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-1 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field">
+                                       <input type="number" (change)="setMarks($event)" matInput placeholder="Marks"
+                                          formControlName="qp_smarks">
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-1 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field">
+                                       <input type="number" (change)="setNmarks($event)" matInput
+                                          placeholder="Negative Marks" formControlName="qp_snegative_marks">
+                                    </mat-form-field>
+                                 </div>
+                              </div>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="row row-remove-top-margin">
+                  <div class="col-lg-12 remove-col-modal-padding">
+                     <div class="white-box">
+                        <div class="white-box-content mob-remove-col-padding">
+                           <div class="">
+                              <div>
+                                 <mat-form-field>
+                                    <input matInput (keyup)="applyFilterReview($event.target.value)"
+                                       placeholder="Filter">
+                                    <span matPrefix>
+                                       <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp;
+                                    </span>
+                                 </mat-form-field>
+                              </div>
+                              <mat-table class="specific-table express-review-question-table table-overflow" #table
+                                 [dataSource]="reviewdatasource" matSort>
+                                 <!-- Position Column -->
+                                 <ng-container matColumnDef="position">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>S No. </mat-header-cell>
+                                    <mat-cell *matCellDef="let item">{{item.position}} </mat-cell>
+                                 </ng-container>
+                                 <!-- Questions Name Column -->
+                                 <ng-container matColumnDef="question">
+                                    <mat-header-cell *matHeaderCellDef> Questions</mat-header-cell>
+                                    <mat-cell *matCellDef="let item">
+                                       <div class="imgClassExpress express-select-question" [MathJax]="item.question">
+                                       </div>
+                                    </mat-cell>
+                                 </ng-container>
+                                 <!-- Options Name Column -->
+                                 <ng-container matColumnDef="answer">
+                                    <mat-header-cell *matHeaderCellDef>Answer</mat-header-cell>
+                                    <mat-cell *matCellDef="let item">
+                                       <div class="changeTableMCQ imgClassExpress express-select-question"
+                                          [MathJax]="item.answer"></div>
+                                    </mat-cell>
+                                 </ng-container>
+                                 <!-- Info Name Column -->
+                                 <!-- Details Name Column -->
+                                 <ng-container matColumnDef="skill">
+                                    <mat-header-cell *matHeaderCellDef>Skill</mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="padding">
+                                       <div [innerHTML]="item.skill"></div>
+                                    </mat-cell>
+                                 </ng-container>
+                                 <!-- Marks Column -->
+                                 <ng-container matColumnDef="marks">
+                                    <mat-header-cell *matHeaderCellDef>Marks</mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="padding">
+                                       <input type="number" (change)="changeMarks($event,item.position)"
+                                          class="form-control form-control-sm question-paper-marks"
+                                          [value]="item.marks">
+                                    </mat-cell>
+                                 </ng-container>
+                                 <!-- Negative Marks Column -->
+                                 <ng-container matColumnDef="negativemarks">
+                                    <mat-header-cell *matHeaderCellDef>Negative Marks</mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="padding">
+                                       <input type="number" (change)="changeNmarks($event,item.position)"
+                                          class="form-control form-control-sm question-paper-marks"
+                                          [value]="item.negativeMarks">
+                                       <!-- <div [innerHTML]="item.negativeMarks"></div> -->
+                                    </mat-cell>
+                                 </ng-container>
+                                 <!-- Action Column -->
+                                 <ng-container matColumnDef="action">
+                                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="padding">
+                                       <i class="far fa-trash-alt table-delete-icon" data-toggle="mattooltip"
+                                          data-placement="top" title="Delete" aria-hidden="true"
+                                          (click)="deleteQuestionList((item.position)-1)"></i>
+                                    </mat-cell>
+                                 </ng-container>
+                                 <mat-header-row class="top_header" *matHeaderRowDef="reviewdisplayedColumns">
+                                 </mat-header-row>
+                                 <mat-row *matRowDef="let row; columns: reviewdisplayedColumns;"></mat-row>
+                              </mat-table>
+                              <div class="col-lg-12 axiom-component-viewer-sidenav-content">
+                                 <div class="row">
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-3">TOTAL MARKS</div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div class="col-lg-1 bread-link">
+                                       <textarea class="form-control form-control-sm text-primary question-paper-marks"
+                                          [value]="total" disabled="disabled"></textarea>
+                                    </div>
+                                 </div>
+                              </div>
+                              <mat-paginator #paginator4 [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true">
+                              </mat-paginator>
+                              <br>
+                              <div class="text-right">
+                                 <button mat-raised-button class="submit-button" matTooltip="Build Question paper"
+                                    placement="bottom" (click)="addExpressQuestionPaper()">Submit</button>
+                                 <button mat-raised-button class="reset-button"
+                                    matTooltip="Are you sure you want to reset?" placement="top"
+                                    (click)="reset()">Reset</button>
+                              </div>
+                              <br>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <br>
+      <br>
+   </div>
+</div>
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 id="dialog-sizes-name1" class="modal-title pull-left">Add Instruction</h4>
+            <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="row">
+               <div class="col-lg-6">
+                  <div class="user-table">
+                     <table class="table table-hover">
+                        <thead>
+                           <tr class="text-center">
+                              <th style="width:2rem;">#</th>
+                              <th style="width:2rem;">S.No.</th>
+                              <th style="width:10rem;">Instruction</th>
+                              <th style="width:5rem;">Modify</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr *ngFor="let item of instructionArray; let i=index;">
+                              <td>
+                                 <input type="radio" name="ti_id"
+                                    (click)="getInstructionId(item.ti_id);editInstructionForm(item)" />
+                              </td>
+                              <td>{{i+1}}</td>
+                              <td>{{item.ti_instruction}}</td>
+                              <td class="text-center">
+                                 <i class="fa fa-pencil-square-o fa-edit fa-lg" data-toggle="mattooltip"
+                                    data-placement="top" title="Delete" aria-hidden="true"
+                                    (click)="editInstructionForm(item)"></i>
+                                 <i class="fa fa-trash fa-delete fa-lg" data-toggle="mattooltip" data-placement="top"
+                                    title="Delete" aria-hidden="true" (click)="deleteInstruction(item.ti_id)"></i>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="col-lg-6">
+                  <form [formGroup]="instruction_form">
+                     <div class="form-group">
+                        <label for="recipient-name" class="form-control-label">Instruction:</label>
+                        <input type="text" class="form-control form-control-sm" id="recipient-name"
+                           formControlName="ti_instruction" placeholder="Add Instruction Title : General Instruction">
+                     </div>
+                     <div class="form-group">
+                        <label for="message-tags" class="form-control-label">Tags:</label>
+                        <input type="text" class="form-control form-control-sm" id="message-tag"
+                           formControlName="ti_tags" placeholder="Add tags">
+                     </div>
+                     <div class="form-group">
+                        <label for="message-text" class="form-control-label">Description:</label>
+                        <textarea class="form-control form-control-sm" id="message-text"
+                           formControlName="ti_description" rows="7" placeholder="Write a Description"></textarea>
+                     </div>
+                  </form>
+                  <div class="row">
+                     <div class="col-lg-12">
+                        <button *ngIf="!editInstructionFlag" type="button" class="btn btn-secondary btn-sm"
+                           (click)="insertInstruction()">Add</button>
+                        <button type="button" class="btn btn-secondary btn-sm"
+                           (click)="resetInstruction()">Reset</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button *ngIf="editInstructionFlag" type="button" class="btn btn-secondary btn-sm"
+               (click)="updateInstruction()">Update</button>
+            <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal"
+               (click)="lgModal.hide()">Submit</button>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,305 @@
+//
+//  MEDIA QUERIES
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+// A map of breakpoints.
+$breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400px, aelg:1500px, xl: 1900px, xxl: 2400px);
+//
+//  RESPOND ABOVE
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+// @include respond-above(sm) {}
+@mixin respond-above($breakpoint) {
+    // If the breakpoint exists in the map.
+    @if map-has-key($breakpoints, $breakpoint) {
+        // Get the breakpoint value.
+        $breakpoint-value: map-get($breakpoints, $breakpoint); // Write the media query.
+        @media (min-width: $breakpoint-value) {
+            @content;
+        } // If the breakpoint doesn't exist in the map.
+    }
+    @else {
+        // Log a warning.
+        @warn 'Invalid breakpoint: #{$breakpoint}.';
+    }
+}
+
+//
+//  RESPOND BELOW
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+// @include respond-below(sm) {}
+@mixin respond-below($breakpoint) {
+    // If the breakpoint exists in the map.
+    @if map-has-key($breakpoints, $breakpoint) {
+        // Get the breakpoint value.
+        $breakpoint-value: map-get($breakpoints, $breakpoint); // Write the media query.
+        @media (max-width: ($breakpoint-value - 1)) {
+            @content;
+        } // If the breakpoint doesn't exist in the map.
+    }
+    @else {
+        // Log a warning.
+        @warn 'Invalid breakpoint: #{$breakpoint}.';
+    }
+}
+
+//
+//  RESPOND BETWEEN
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+// @include respond-between(sm, md) {}
+@mixin respond-between($lower, $upper) {
+    // If both the lower and upper breakpoints exist in the map.
+    @if map-has-key($breakpoints, $lower) and map-has-key($breakpoints, $upper) {
+        // Get the lower and upper breakpoints.
+        $lower-breakpoint: map-get($breakpoints, $lower);
+        $upper-breakpoint: map-get($breakpoints, $upper); // Write the media query.
+        @media (min-width: $lower-breakpoint) and (max-width: ($upper-breakpoint - 1)) {
+            @content;
+        } // If one or both of the breakpoints don't exist.
+    }
+    @else {
+        // If lower breakpoint is invalid.
+        @if (map-has-key($breakpoints, $lower)==false) {
+            // Log a warning.
+            @warn 'Your lower breakpoint was invalid: #{$lower}.';
+        } // If upper breakpoint is invalid.
+        @if (map-has-key($breakpoints, $upper)==false) {
+            // Log a warning.
+            @warn 'Your upper breakpoint was invalid: #{$upper}.';
+        }
+    }
+}
+
+@include respond-between(xl, xxl) {
+    .hide-for-large-screen {
+        display: none !important;
+    }
+}
+
+@include respond-between(lg, xl) {
+    .custom-col-10 {
+        max-width: 10%;
+        flex: 0 0 10%;
+    }
+    .custom-col-15 {
+        max-width: 15% !important;
+        flex: 0 0 15% !important;
+    }
+    .custom-col-20 {
+        max-width: 20% !important;
+        flex: 0 0 20% !important;
+    }
+    .custom-col-26 {
+        max-width: 26% !important;
+        flex: 0 0 26% !important;
+    }
+    .custom-col-40 {
+        max-width: 40% !important;
+        flex: 0 0 40% !important;
+    }
+    .custom-col-50 {
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+    .custom-col-60 {
+        max-width: 60% !important;
+        flex: 0 0 60% !important;
+    }
+
+    .custom-col-70 {
+        max-width: 70% !important;
+        flex: 0 0 70% !important;
+    }
+    .custom-col-80 {
+        max-width: 80%;
+        flex: 0 0 80%;
+    }
+    .inline-form-radio-spacing {
+        padding-left: 15px;
+    }
+    .remove-spacing {
+        padding-left: 0px !important;
+    }
+    .mat-cell {
+        font-size: 12px !important;
+    }
+    .container-studeng-img {
+        height: 303px !important;
+    }
+    .custom-margin-25 {
+        margin-top: 25px;
+        margin-bottom: 25px;
+    }
+    .student-pic__size {
+        width: 225px !important;
+        margin-top: 15px;
+    }
+    .custom-med-margin-bottom-22{
+        margin-bottom: 22px;
+    }
+    .hide-for-large-screen {
+        display: none !important;
+    }
+    .remove-padding {
+        padding: 0px;
+    }
+    .functional-button-five {
+        z-index: 11111;
+        position: fixed;
+        top: 50% !important;
+        right: 20px;
+    }
+    .student-img__container {
+        height: 325.0px !important;
+    }
+    
+    
+    // .cdk-overlay-container .cdk-overlay-connected-position-bounding-box .cdk-overlay-pane {
+    //     top: 45.7617px;
+    // left: 1530.52px;
+    // height: 722.238px;
+    // align-items: flex-start;
+    // justify-content: flex-start;
+    // }
+}
+
+
+@include respond-between(aslg, aelg) {
+    // .cdk-overlay-container .cdk-overlay-connected-position-bounding-box .cdk-overlay-pane {
+    //     top: 45.7617px;
+    // left: 1610.52px;
+    // height: 722.238px;
+    // align-items: flex-start;
+    // justify-content: flex-start;
+    // }
+}
+
+
+@include respond-between(sm, lg)  {
+    .custom-col-10 {
+        max-width: 10%;
+        flex: 0 0 10%;
+    }
+    .tab-custom-col-15 {
+        max-width: 15% !important;
+        flex: 0 0 15% !important;
+    }
+    .tab-custom-col-20 {
+        max-width: 20% !important;
+        flex: 0 0 20% !important;
+    }
+    .tab-custom-col-25 {
+        max-width: 25% !important;
+        flex: 0 0 25% !important;
+    }
+    .tab-custom-col-28 {
+        max-width: 28% !important;
+        flex: 0 0 28% !important;
+    }
+    .tab-custom-med-col-30 {
+        max-width: 30% !important;
+        flex: 0 0 25% !important;
+    }
+    .tab-custom-col-33 {
+        max-width: 33% !important;
+        flex: 0 0 33% !important;
+    }
+    .tab-custom-col-40 {
+        max-width: 40% !important;
+        flex: 0 0 40% !important;
+    }
+    
+    .custom-col-50 {
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+    .tab-custom-col-45 {
+        max-width: 45% !important;
+        flex: 0 0 45% !important;
+    }
+    .tab-custom-col-50 {
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+    .tab-custom-col-60 {
+        max-width: 60% !important;
+        flex: 0 0 60% !important;
+    }
+    .tab-custom-col-70 {
+        max-width: 70% !important;
+        flex: 0 0 70% !important;
+    }
+    .tab-custom-col-75 {
+        max-width: 75% !important;
+        flex: 0 0 75% !important;
+    }
+    .tab-custom-col-80 {
+        max-width: 80% !important;
+        flex: 0 0 80% !important;
+    }
+    .tab-custom-col-85 {
+        max-width: 85% !important;
+        flex: 0 0 85% !important;
+    }
+    .tab-margin-button-bottom {
+        margin-bottom: 50px !important;
+    }
+    .tab-btn-spacer {
+        margin-left: 10px !important;
+    }
+    .hide-for-tab-screen {
+        display: none !important;
+    }
+    .tab-btn-spacer {
+        margin-left: 10px;
+    }
+    .sidenav-footer {
+        display: none !important;
+    }
+    .mat-sidenav-fixed {
+        position: absolute !important;
+    }
+    .hide-for-small-screen {
+        display: none !important;
+    }
+    .tab-remove-left-right-padding {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    .tab-remove-left-padding {
+        padding-left: 0px !important;
+    }
+    .tab-remove-right-padding {
+        padding-right: 0px !important;
+    }
+    .functional-button-five {
+       
+        top: 60% !important;
+    }
+    .livadm-text {
+        font-size: 14px !important;
+    }
+    .student-pic__size {
+        
+        width: 150px !important;
+        height: 150px !important;
+        
+    }
+
+    .blue_back_title {
+        padding: 5px !important;
+        margin-top: 10px;
+    }
+    .student-img {
+        margin-top: 35px !important;
+    }
+    .tab-table-180 {
+        width: 180% !important;
+
+    }
+
+    .tab-table-overflow {
+        overflow-x: scroll;
+    }
+
+    
+}
+

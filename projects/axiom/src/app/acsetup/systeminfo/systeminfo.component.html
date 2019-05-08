@@ -1,0 +1,918 @@
+
+<app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete '" (deleteOk)="deleteComOk($event)"
+    (deleteCancel)="deleteComCancel()">
+</app-delete-modal>
+
+
+<div class="breadcrumb-section">
+    <div class="row">
+        <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+            <a [routerLink]="[homeUrl]">
+                <i class="breadcrumb-icon fas fa-home"></i>
+            </a>
+        </div>
+        <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+            <div class="vertical-line"></div>
+        </div>
+        <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+            <div class="first-breadcrumb-title">
+                <span class="bread-title">Setup</span>
+                <span class="bread-divider">-</span>
+                <span class="bread-link">System Info</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="add-question-content">
+    <div class="row">
+        <div class="col-lg-12 col-mobile-view-add-ques">
+            <div class="white-box">
+                <div class="white-box-content">
+                    <div class="row">
+                        <div class="col-lg-12 col-mobile-view-add-ques">
+                            <div class="white-box-content-title">
+                                <span>System Info</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-apple-2 apple-screen-paramter-content-div col-mobile-view-add-ques">
+                            <div class="left-parameter-content">
+                                <div class="left-side-box">
+                                    <div class="left-side-box-content">
+                                        <span class="left-side-box-content-title">Select Setup Options</span>
+                                        <hr class="left-side-box-content-title-divider">
+                                        <form>
+                                            <mat-form-field class="form-field">
+                                                <mat-select #input (selectionChange)="loadSystemInfo(input.value)" placeholder="Setup Options">
+                                                    <mat-option value="1">Board</mat-option>
+                                                    <mat-option value="2">Section</mat-option>
+                                                    <mat-option value="3">Subject</mat-option>
+                                                    <mat-option value="4">Class</mat-option>
+                                                    <mat-option value="5">Topic</mat-option>
+                                                    <mat-option value="6">Sub-Topic</mat-option>
+                                                    <mat-option value="7">Question Sub-Type</mat-option>
+                                                    <mat-option value="8">Question Type</mat-option>
+                                                    <mat-option value="9">Skill type</mat-option>
+                                                    <mat-option value="10">Level of Difficulty</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </form>
+                                        <div *ngIf="valueSystemInfo == 1">
+                                            <form [formGroup]="formBoard" novalidate>
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="board_name" placeholder="Add Board Name" maxlength="255"
+                                                        required>
+                                                </mat-form-field>
+                                                <br>
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="board_alias" placeholder=" Board Name Alias" maxlength="255"
+                                                        required>
+                                                </mat-form-field>
+                                            </form>
+                                            <br>
+                                            <div class="system-info-button-collection">
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('76')" class="submit-button system-info-button" (click)="addBoard()">Add</button>
+                                            <button mat-raised-button *ngIf="editFlag === false" class="reset-button system-info-button" (click)="formBoard.reset()">Reset</button>
+                                            <button mat-raised-button *ngIf="editFlag === true" class="submit-button system-info-button" (click)="editBoard(formBoard.value)">Save</button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="valueSystemInfo == 2">
+                                            <form [formGroup]="formSection">
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="sec_name" placeholder="eg. A" maxlength="255"
+                                                        required>
+                                                </mat-form-field>
+                                                <br>
+                                            </form>
+                                            <br>
+                                            <div class="system-info-button-collection">
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('80')" class="submit-button system-info-button" (click)="addSection()">Add</button>
+                                            <button mat-raised-button *ngIf="editFlag === false" class="reset-button system-info-button" (click)="formSection.reset()">Reset</button>
+                                            <button mat-raised-button *ngIf="editFlag === true" class="submit-button system-info-button" (click)="editSection(formSection.value)">Save</button>
+                                        </div>
+                                        </div>
+                                        <div *ngIf="valueSystemInfo == 3">
+                                            <form [formGroup]="formSubject">
+                                                <ng-container *ngIf="currentUser.role_id === '1'">
+                                                <mat-form-field class="form-field">
+                                                    <mat-select placeholder="Select Board" formControlName="board_id" required>
+                                                        <mat-option *ngFor="let item of arrayBoard" [value]="item.board_id">{{item.board_name}} ({{item.board_alias}}) </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                                </ng-container>
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="sub_name" placeholder="eg. Computer" maxlength="255"
+                                                        required>
+                                                </mat-form-field>
+                                            </form>
+                                            <br>
+                                            <div class="system-info-button-collection">
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('84')" class="submit-button system-info-button" (click)="addSubject()">Add</button>
+                                            <button mat-raised-button *ngIf="editFlag === false" class="reset-button system-info-button" (click)="formSubject.reset()">Reset</button>
+                                            <button mat-raised-button *ngIf="editFlag === true" class="submit-button system-info-button" (click)="editSubject(formSubject.value)">Save</button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="valueSystemInfo == 4">
+                                            <form [formGroup]="formClass">
+
+                                                <ng-container *ngIf="currentUser.role_id === '1'">
+                                                    <mat-form-field class="form-field">
+                                                        <mat-select placeholder="Select Board" formControlName="board_id" required>
+                                                            <mat-option *ngFor="let item of arrayBoard" [value]="item.board_id">{{item.board_name}} ({{item.board_alias}}) </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                    </ng-container>
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="class_name" placeholder="eg. Class" maxlength="255" required>
+                                                </mat-form-field>
+
+
+
+                                                <mat-form-field *ngIf="currentUser.role_id == '2'" class="form-field">
+                                                    <mat-select multiple formControlName="sec_id" placeholder="Select Section" required>
+                                                        <mat-option *ngFor="let section of arraySection" [value]="section.sec_id">{{section.sec_name}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+
+
+
+                                                <mat-form-field class="form-field">
+                                                    <mat-select multiple placeholder="Select Subject" formControlName="sub_id" required>
+                                                        <mat-option *ngFor="let subject of arraySubject" [value]="subject.sub_id">{{subject.sub_name}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+
+                                            </form>
+                                            <br>
+                                            <div class="system-info-button-collection">
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('88')" class="submit-button" (click)="addClass()">Add</button>
+                                            <button mat-raised-button *ngIf="editFlag === false" class="reset-button" (click)="formClass.reset()">Reset</button>
+                                            <button mat-raised-button *ngIf="editFlag === true" class="submit-button" (click)="editClass(formClass.value)">Save</button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="valueSystemInfo == 5">
+                                            <form [formGroup]="formTopic">
+
+
+                                                <mat-form-field class="form-field">
+                                                    <mat-select placeholder="Select Board" formControlName="board_id" required>
+
+                                                        <mat-option *ngFor="let item of arrayBoard" [value]="item.board_id">{{item.board_name}} ({{item.board_alias}}) </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+
+
+
+                                                <mat-form-field class="form-field">
+                                                    <mat-select placeholder="Select Class" formControlName="class_id" (selectionChange)="getSubjecstByClass()" required>
+
+                                                        <mat-option *ngFor="let item of arrayClass" [value]="item.class_id">{{item.class_name}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+
+
+
+                                                <mat-form-field class="form-field">
+                                                    <mat-select placeholder="Select Subject" formControlName="sub_id" required>
+
+                                                        <mat-option *ngFor="let item of arraySubject" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+
+
+
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="topic_name" placeholder="eg. Topic" maxlength="255"
+                                                        required>
+                                                </mat-form-field>
+                                                <input class="form-control form-control-sm" type="hidden" formControlName="topic_id">
+
+                                            </form>
+                                            <br>
+                                            <div class="system-info-button-collection">
+                                            <!-- <input type="checkbox" name="topic" checked="{{enable_text(this.checked)}}" (click)="topicdata()" > -->
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('92')" class="submit-button system-info-button" (click)="addTopic()">Add</button>
+                                            <button mat-raised-button *ngIf="editFlag === false" class="reset-button system-info-button" (click)="formTopic.reset()">Reset</button>
+                                            <button mat-raised-button *ngIf="editFlag === true" class="submit-button system-info-button" (click)="editTopic(formTopic.value)">Save</button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="valueSystemInfo == 6">
+                                            <form [formGroup]="formSubtopic">
+
+                                                <mat-form-field class="form-field">
+                                                    <mat-select placeholder="Select Board" formControlName="board_id" required>
+                                                        <mat-option *ngFor="let item of arrayBoard" [value]="item.board_id">{{item.board_name}} ({{item.board_alias}}) </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+
+
+
+
+                                                <mat-form-field class="form-field">
+                                                    <mat-select placeholder="Select Class" formControlName="class_id" (selectionChange)="getSubjecstByClassInSubtopic()" required>
+
+                                                        <mat-option *ngFor="let item of arrayClass" [value]="item.class_id">{{item.class_name}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+
+
+                                                <mat-form-field class="form-field">
+                                                    <mat-select placeholder="Select Subject" formControlName="sub_id" (selectionChange)="getTopicByBoardClassSubject()" required>
+
+                                                        <mat-option *ngFor="let item of arraySubject" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+
+
+                                                <mat-form-field class="form-field">
+                                                    <mat-select placeholder="Select Topic" formControlName="topic_id" required>
+
+                                                        <mat-option *ngFor="let item of arrayTopic" [value]="item.topic_id">{{item.topic_name}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+
+
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="st_name" placeholder="eg. Subtopic" maxlength="255"
+                                                        required>
+                                                </mat-form-field>
+                                                <input class="form-control form-control-sm" type="hidden" formControlName="st_id">
+
+                                            </form>
+                                            <br>
+                                            <div class="system-info-button-collection">
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('96')" class="submit-button system-info-button" (click)="addSubtopic()">Add</button>
+                                            <button mat-raised-button *ngIf="editFlag === false" class="reset-button system-info-button" (click)="formSubtopic.reset()">Reset</button>
+                                            <button mat-raised-button *ngIf="editFlag === true" class="submit-button system-info-button" (click)="editSubtopic(formSubtopic.value)">Save</button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="valueSystemInfo == 7">
+                                            <form [formGroup]="formQsubtype">
+
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="qst_name" placeholder="eg. Subtype" required>
+                                                </mat-form-field>
+                                                <input class="form-control form-control-sm" type="hidden" formControlName="qst_id">
+                                            </form>
+                                            <br>
+                                            <div class="system-info-button-collection">
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('')" class="submit-button system-info-button" (click)="addQsubtype()">Add</button>
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('')" class="reset-button system-info-button" (click)="formQsubtype.reset()">Reset</button>
+                                            <button mat-raised-button *ngIf="editFlag === true" class="submit-button system-info-button" (click)="editQsubtype(formQsubtype.value)">Save</button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="valueSystemInfo == 8">
+                                            <form [formGroup]="formQtype">
+
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="qt_name" placeholder="eg. Subjective/ Objective">
+                                                </mat-form-field>
+                                                <input class="form-control form-control-sm" type="hidden" formControlName="qt_id">
+
+
+
+                                                <mat-form-field class="form-field">
+                                                    <mat-select multiple formControlName="qst_id">
+                                                        <mat-option *ngFor="let item of arrayQsubtype" [value]="item.qst_id">{{item.qst_name}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+
+                                            </form>
+                                            <br>
+                                            <div class="system-info-button-collection">
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('')" class="submit-button system-info-button" (click)="addQtype()">Add</button>
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('')" class="reset-button system-info-button" (click)="formQtype.reset()">Reset</button>
+                                            <button mat-raised-button *ngIf="editFlag === true" class="submit-button system-info-button" (click)="editQtype(formQtype.value)">Save</button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="valueSystemInfo == 9">
+                                            <form [formGroup]="formSkill">
+
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="skill_name" placeholder="eg. SkillType" maxlength="255"
+                                                        required>
+                                                </mat-form-field>
+                                                <input class="form-control form-control-sm" type="hidden" formControlName="skill_id">
+                                            </form>
+                                            <br>
+                                            <div class="system-info-button-collection">
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('100')" class="submit-button system-info-button" (click)="addSkill()">Add</button>
+                                            <button mat-raised-button *ngIf="editFlag === false" class="reset-button system-info-button" (click)="formSkill.reset()">Reset</button>
+                                            <button mat-raised-button *ngIf="editFlag === true" class="submit-button system-info-button" (click)="editSkill(formSkill.value)">Save</button>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="valueSystemInfo == 10">
+                                            <form [formGroup]="formLod">
+                                                <mat-form-field class="form-field">
+                                                    <input matInput formControlName="dl_name" placeholder="eg. Level of Difficulty" maxlength="255"
+                                                        required>
+                                                </mat-form-field>
+                                                <input class="form-control form-control-sm" type="hidden" formControlName="dl_id">
+                                            </form>
+                                            <br>
+                                            <div class="system-info-button-collection">
+                                            <button mat-raised-button *ngIf="editFlag === false && isExistUserAccessMenu('104')" class="submit-button system-info-button" (click)="addLod()">Add</button>
+                                            <button mat-raised-button *ngIf="editFlag === false" class="reset-button system-info-button" (click)="formLod.reset()">Reset</button>
+                                            <button mat-raised-button *ngIf="editFlag === true" class="submit-button system-info-button" (click)="editLod(formLod.value)">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-apple-10 col-mobile-view-add-ques remove-col-modal-padding">
+                            <div class="top-right-parameter">
+                                <div class="top-right-box">
+                                    <div>
+                                        <div class="top-right-box-content-title">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                                                    <div *ngIf="valueSystemInfo == 1">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class="table-box mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <div class="example-header table-filter">
+                                                                            <mat-form-field>
+                                                                                <input matInput (keyup)="applyFilter($event.target.value, 'board')" placeholder="Filter">
+                                                                                <span matPrefix>
+                                                                                    <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <mat-table class="specific-table table-main-structure" #table [dataSource]="boarddataSource" matSort> -->
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <mat-header-cell class="system-info-sno" *matHeaderCellDef mat-sort-header class="system-info-sno"> No. </mat-header-cell>
+                                                                                <mat-cell class="system-info-sno" class="system-info-sno" *matCellDef="let item"> {{item.position}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Board Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Board Name </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Alias Column -->
+                                                                            <ng-container matColumnDef="alias">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Alias </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.alias}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle class="system-info-toggle-btn" *ngIf="isExistUserAccessMenu('79')" checked="{{item.action.board_status == 1}}" aria-hidden="true" (click)="toggleBoardStatus(item.action)"></mat-slide-toggle>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Modify Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <mat-header-cell *matHeaderCellDef> Modify </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <i *ngIf="isExistUserAccessMenu('78')" class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                                        aria-hidden="true" (click)="formeditBoard(item.action)"></i>
+                                                                                    <i *ngIf="isExistUserAccessMenu('77')" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                                        matTooltip="Delete" aria-hidden="true" (click)="openModal({data : item.action, type : 'board'})"></i>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="boarddisplayedColumns"></mat-header-row>
+                                                                            <mat-row class="template-mat-row" *matRowDef="let row; columns: boarddisplayedColumns;"></mat-row>
+                                                                        </mat-table>
+                                                                        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="valueSystemInfo == 2">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class="table-box mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <div class="example-header table-filter">
+                                                                            <mat-form-field>
+                                                                                <input matInput (keyup)="applyFilter($event.target.value, 'section')" placeholder="Filter">
+                                                                                <span matPrefix>
+                                                                                    <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <mat-table class="specific-table table-main-structure" #table [dataSource]="sectiondataSource" matSort>
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <mat-header-cell class="system-info-sno" *matHeaderCellDef mat-sort-header class="system-info-sno"> No. </mat-header-cell>
+                                                                                <mat-cell class="system-info-sno" *matCellDef="let item"> {{item.position}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Section Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Section</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle  class="system-info-toggle-btn" *ngIf="isExistUserAccessMenu('83')" checked="{{item.action.sec_status==1}}" aria-hidden="true" (click)="toggleSectionStatus(item.action)"></mat-slide-toggle>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Modify Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <mat-header-cell *matHeaderCellDef> Modify </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <i *ngIf="isExistUserAccessMenu('81')" class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                                        aria-hidden="true" (click)="formeditSection(item.action)"></i>
+                                                                                    <i *ngIf="isExistUserAccessMenu('82')" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                                    matTooltip="Delete" aria-hidden="true" (click)="openModal({data : item.action, type : 'section'})"></i>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="sectiondisplayedColumns"></mat-header-row>
+                                                                            <mat-row class="template-mat-row" *matRowDef="let row; columns: sectiondisplayedColumns;"></mat-row>
+                                                                        </mat-table>
+                                                                        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="valueSystemInfo == 3">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class="table-box mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <div class="example-header table-filter">
+                                                                            <mat-form-field>
+                                                                                <input matInput (keyup)="applyFilter($event.target.value, 'subject')" placeholder="Filter">
+                                                                                <span matPrefix>
+                                                                                    <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <mat-table class="specific-table table-main-structure" #table [dataSource]="subjectdataSource" matSort> -->
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <mat-header-cell class="system-info-sno" *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
+                                                                                <mat-cell class="system-info-sno" *matCellDef="let item"> {{item.position}} </mat-cell>
+                                                                            </ng-container>
+                                                                           <!-- Board Name Column -->
+                                                                           <ng-container matColumnDef="board">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Board</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.board}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Subject Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Subject</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle class="system-info-toggle-btn" *ngIf="isExistUserAccessMenu('87')" checked="{{item.action.sub_status==1}}" aria-hidden="true" (click)="toggleSubjectStatus(item.action)"></mat-slide-toggle>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Modify Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <mat-header-cell *matHeaderCellDef> Modify </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <i *ngIf="isExistUserAccessMenu('85')" class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                                        aria-hidden="true" (click)="formeditSubject(item.action)"></i>
+                                                                                    <i *ngIf="isExistUserAccessMenu('86')" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                                    matTooltip="Delete" aria-hidden="true" (click)="openModal({data : item.action, type : 'subject'})"></i>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="subjectdisplayedColumns"></mat-header-row>
+                                                                            <mat-row class="template-mat-row" *matRowDef="let row; columns: subjectdisplayedColumns;"></mat-row>
+                                                                        </mat-table>
+                                                                        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="valueSystemInfo == 4">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class="table-box mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <div class="example-header table-filter">
+                                                                            <mat-form-field>
+                                                                                <input matInput (keyup)="applyFilter($event.target.value, 'class')" placeholder="Filter">
+                                                                                <span matPrefix>
+                                                                                    <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <mat-table class="specific-table table-main-structure" #table [dataSource]="classdataSource" matSort> -->
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <mat-header-cell class="system-info-sno" *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
+                                                                                <mat-cell class="system-info-sno" *matCellDef="let item"> {{item.position}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- class Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Section Name Column -->
+                                                                            <ng-container matColumnDef="section">
+                                                                                <mat-header-cell [hidden]="currentUser.role_id == '1'" *matHeaderCellDef mat-sort-header>Section</mat-header-cell>
+                                                                                <mat-cell [hidden]="currentUser.role_id == '1'" *matCellDef="let item"> {{item.section}} </mat-cell>
+                                                                            </ng-container>
+
+                                                                            <ng-container matColumnDef="board">
+                                                                                <mat-header-cell  *matHeaderCellDef mat-sort-header>Board</mat-header-cell>
+                                                                                <mat-cell  *matCellDef="let item"> {{item.board}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Subject Name Column -->
+                                                                            <ng-container matColumnDef="subject">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Subject</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.subject}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle class="system-info-toggle-btn" *ngIf="isExistUserAccessMenu('91')" checked="{{item.action.class_status==1}}" aria-hidden="true" (click)="toggleClassStatus(item.action)"></mat-slide-toggle>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Modify Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <mat-header-cell *matHeaderCellDef> Modify </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <i *ngIf="isExistUserAccessMenu('89')" class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                                        aria-hidden="true" (click)="formeditClass(item.action)"></i>
+                                                                                    <i *ngIf="isExistUserAccessMenu('90')" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                                    matTooltip="Delete" aria-hidden="true" (click)="openModal({data : item.action, type : 'class'})"></i>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="classdisplayedColumns"></mat-header-row>
+                                                                            <mat-row class="template-mat-row" *matRowDef="let row; columns: classdisplayedColumns;"></mat-row>
+                                                                        </mat-table>
+                                                                        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="valueSystemInfo == 5">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class="table-box mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <div class="example-header table-filter">
+                                                                            <mat-form-field>
+                                                                                <input matInput (keyup)="applyFilter($event.target.value, 'topic')" placeholder="Filter">
+                                                                                <span matPrefix>
+                                                                                    <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <mat-table class="specific-table table-main-structure" #table [dataSource]="topicdataSource" matSort> -->
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header class="system-info-sno"> No. </mat-header-cell>
+                                                                                <mat-cell class="system-info-sno" *matCellDef="let item"> {{item.position}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Board Name Column -->
+                                                                            <ng-container matColumnDef="board">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Board</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.board}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Class Name Column -->
+                                                                            <ng-container matColumnDef="class">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.class}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Subject Name Column -->
+                                                                            <ng-container matColumnDef="subject">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Subject</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.subject}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Topic Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle class="system-info-toggle-btn" *ngIf="isExistUserAccessMenu('95')" checked="{{item.action.topic_status==1}}" (click)="toggleTopicStatus(item.action)"></mat-slide-toggle>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Modify Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <mat-header-cell *matHeaderCellDef> Modify </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <i *ngIf="isExistUserAccessMenu('93')" class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                                        aria-hidden="true" (click)="formeditTopic(item.action)"></i>
+                                                                                    <i *ngIf="isExistUserAccessMenu('94')" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                                    matTooltip="Delete" aria-hidden="true" (click)="openModal({data : item.action, type : 'topic'})"></i>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="topicdisplayedColumns"></mat-header-row>
+                                                                            <mat-row class="template-mat-row" *matRowDef="let row; columns: topicdisplayedColumns;"></mat-row>
+                                                                        </mat-table>
+                                                                        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="valueSystemInfo == 6">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class="table-box mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <div class="example-header table-filter">
+                                                                            <mat-form-field>
+                                                                                <input matInput (keyup)="applyFilter($event.target.value, 'subTopic')" placeholder="Filter">
+                                                                                <span matPrefix>
+                                                                                    <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <mat-table class="specific-table table-main-structure" #table [dataSource]="subtopicdataSource" matSort> -->
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <mat-header-cell class="system-info-sno" *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
+                                                                                <mat-cell class="system-info-sno" *matCellDef="let item"> {{item.position}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Board Name Column-->
+                                                                            <ng-container matColumnDef="board">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Board</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.board}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Class Name Column -->
+                                                                            <ng-container matColumnDef="class">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.class}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Subject Name Column -->
+                                                                            <ng-container matColumnDef="subject">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Subject</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.subject}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Topic Name Column -->
+                                                                            <ng-container matColumnDef="topic">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.topic}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Sub-Topic Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Sub-Topic</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle class="system-info-toggle-btn" *ngIf="isExistUserAccessMenu('99')" checked="{{item.action.st_status==1}}" (click)="toggleSubtopicStatus(item.action)"></mat-slide-toggle>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Modify Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <mat-header-cell *matHeaderCellDef> Modify </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <i *ngIf="isExistUserAccessMenu('97')" class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                                        aria-hidden="true" (click)="formeditSubtopic(item.action)"></i>
+                                                                                    <i *ngIf="isExistUserAccessMenu('98')" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                                    matTooltip="Delete" aria-hidden="true" (click)="openModal({data : item.action, type : 'subTopic'})"></i>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="subtopicdisplayedColumns"></mat-header-row>
+                                                                            <mat-row class="template-mat-row" *matRowDef="let row; columns: subtopicdisplayedColumns;"></mat-row>
+                                                                        </mat-table>
+                                                                        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="valueSystemInfo == 7">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class="table-box mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <div class="example-header table-filter">
+                                                                            <mat-form-field>
+                                                                                <input matInput (keyup)="applyFilter($event.target.value, 'questionSubType')" placeholder="Filter">
+                                                                                <span matPrefix>
+                                                                                    <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <mat-table class="specific-table table-main-structure" #table [dataSource]="quessubtypedataSource" matSort> -->
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header class="system-info-sno"> No. </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item" class="system-info-sno"> {{item.position}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Question Subtype Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Question Subtype name</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle class="system-info-toggle-btn" checked="{{item.action.qst_status==1}}" (click)="toggleQsubtypeStatus(item.action)"></mat-slide-toggle>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Modify Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <mat-header-cell *matHeaderCellDef> Modify </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <i *ngIf="isExistUserAccessMenu('')" class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                                        aria-hidden="true" (click)="formeditQsubtype(item.action)"></i>
+                                                                                    <i *ngIf="isExistUserAccessMenu('')" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                                    matTooltip="Delete" aria-hidden="true" (click)="openModal({data : item.action, type : 'questionSubType'})"></i>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="questionsubtypedisplayedColumns"></mat-header-row>
+                                                                            <mat-row class="template-mat-row" *matRowDef="let row; columns: questionsubtypedisplayedColumns;"></mat-row>
+                                                                        </mat-table>
+                                                                        <mat-paginator #paginator [pageSize]="12" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="valueSystemInfo == 8">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class="table-box mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <div class="example-header table-filter">
+                                                                            <mat-form-field>
+                                                                                <input matInput (keyup)="applyFilter($event.target.value, 'questionType')" placeholder="Filter">
+                                                                                <span matPrefix>
+                                                                                    <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <mat-table class="specific-table table-main-structure" #table [dataSource]="questypedataSource" matSort>
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header class="system-info-sno"> No. </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item" class="system-info-sno"> {{item.position}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Question Type Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Question Type name</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Question Sub-Type Name Column -->
+                                                                            <ng-container matColumnDef="quessubtype">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header>Question Subtype name</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.quessubtype}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle class="system-info-toggle-btn" checked="{{item.action.qt_status==1}}" (click)="toggleQtypeStatus(item.action)"></mat-slide-toggle>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Modify Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <mat-header-cell *matHeaderCellDef> Modify </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <i *ngIf="isExistUserAccessMenu('')" class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                                        aria-hidden="true" (click)="formeditQtype(item.action)"></i>
+                                                                                    <i *ngIf="isExistUserAccessMenu('')" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                                    matTooltip="Delete" aria-hidden="true" (click)="openModal({data : item.action, type : 'questionType'})"></i>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="questiontypedisplayedColumns"></mat-header-row>
+                                                                            <mat-row class="template-mat-row" *matRowDef="let row; columns: questiontypedisplayedColumns;"></mat-row>
+                                                                        </mat-table>
+                                                                        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="valueSystemInfo == 9">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class="table-box mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <div class="example-header table-filter">
+                                                                            <mat-form-field>
+                                                                                <input matInput (keyup)="applyFilter($event.target.value, 'skill')" placeholder="Filter">
+                                                                                <span matPrefix>
+                                                                                    <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <mat-table class="specific-table table-main-structure" #table [dataSource]="skilltypedataSource" matSort> -->
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header class="system-info-sno"> No. </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item" class="system-info-sno"> {{item.position}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Skill Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Skill Type Name</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle class="system-info-toggle-btn" *ngIf="isExistUserAccessMenu('101')" checked="{{item.action.skill_status==1}}" aria-hidden="true" (click)="toggleSkillStatus(item.action)"></mat-slide-toggle>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Modify Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <mat-header-cell *matHeaderCellDef> Modify </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <i *ngIf="isExistUserAccessMenu('102')" class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                                        aria-hidden="true" (click)="formeditSkill(item.action)"></i>
+                                                                                    <i *ngIf="isExistUserAccessMenu('103')" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                                    matTooltip="Delete" aria-hidden="true" (click)="openModal({data : item.action, type : 'skill'})"></i>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="skilltypedisplayedColumns"></mat-header-row>
+                                                                            <mat-row class="template-mat-row" *matRowDef="let row; columns: skilltypedisplayedColumns;"></mat-row>
+                                                                        </mat-table>
+                                                                        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="valueSystemInfo == 10">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class="table-box mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <div class="example-header table-filter">
+                                                                            <mat-form-field>
+                                                                                <input matInput (keyup)="applyFilter($event.target.value, 'LOD')" placeholder="Filter">
+                                                                                <span matPrefix>
+                                                                                    <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <mat-table class="specific-table table-main-structure" #table [dataSource]="loddataSource" matSort> -->
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header class="system-info-sno"> No. </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item" class="system-info-sno"> {{item.position}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- LOD Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Level of Difficulty</mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle class="system-info-toggle-btn" *ngIf="isExistUserAccessMenu('106')" checked="{{item.action.dl_status==1}}" (click)="toggleLodStatus(item.action)"></mat-slide-toggle>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <!-- Modify Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <mat-header-cell *matHeaderCellDef> Modify </mat-header-cell>
+                                                                                <mat-cell *matCellDef="let item">
+                                                                                    <i *ngIf="isExistUserAccessMenu('105')" class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                                                                                        aria-hidden="true" (click)="formeditLod(item.action)"></i>
+                                                                                    <i *ngIf="isExistUserAccessMenu('107')" class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                                                                                    matTooltip="Delete" aria-hidden="true" (click)="openModal({data : item.action, type : 'LOD'})"></i>
+                                                                                </mat-cell>
+                                                                            </ng-container>
+                                                                            <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="loddisplayedColumns"></mat-header-row>
+                                                                            <mat-row class="template-mat-row" *matRowDef="let row; columns: loddisplayedColumns;"></mat-row>
+                                                                        </mat-table>
+                                                                        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

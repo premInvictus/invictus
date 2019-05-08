@@ -1,0 +1,78 @@
+<div class="container-box__white">
+    <ng-container>
+    <div class="functional-button-five">
+        <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request') && studentdetails?.editable_status == '1')" (click)="editRequest()"
+        (keydown.enter)="$event.preventDefault()"> <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span></button>
+      </div>
+  <!-- <div class="row">
+    <div class="col-8">
+    </div>
+    <div class="col-4">
+      <div class="float-right">
+        <button *ngIf="(viewOnly && isExistUserAccessMenu('request') && studentdetails?.editable_status == '1')" mat-raised-button class="btn-neutral-dull" (click)="editRequest()"
+          (keydown.enter)="$event.preventDefault()">
+          <mat-icon class="btn-top-icon">create</mat-icon>&nbsp; &nbsp;Edit Request
+        </button>
+      </div>
+    </div>
+  </div>
+  <br> -->
+  <div class="row">
+    <div class="col-12">
+        
+      <mat-accordion multi="true" class="theme-accordion">
+        <mat-expansion-panel [expanded]="'true'"
+          *ngIf="commonAPIService.isExistUserAccessMenuByLabel(parentId, 'Personal Details')">
+          <mat-expansion-panel-header class="exp-header-new-stu-detail">
+            <mat-panel-title>
+              <span class="text-uppercase">Personal details</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-child-details-theme-two [addOnly]="addOnly" [editOnly]="editOnly" [viewOnly]="viewOnly" [configSetting]="settingsArray">
+          </app-child-details-theme-two>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="margin-top-10" [expanded]="'true'"
+          *ngIf="commonAPIService.isExistUserAccessMenuByLabel(parentId,'Parent Details')">
+          <mat-expansion-panel-header class="exp-header-new-stu-detail">
+            <mat-panel-title>
+              <span class="text-uppercase">Parents details</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+         
+          <app-parent-details-theme-two [parentDet]="parentDetails2" [addOnly]="addOnly" [viewOnly]="viewOnly" [configSetting]="settingsArray">
+          </app-parent-details-theme-two>
+        
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="margin-top-10" [expanded]="'true'"
+          *ngIf="commonAPIService.isExistUserAccessMenuByLabel(parentId,'Medical Information')">
+          <mat-expansion-panel-header class="exp-header-new-stu-detail">
+            <mat-panel-title>
+              <span class="text-uppercase">Medical Information</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-medical-information-theme-two [addOnly]="addOnly" [editOnly]="editOnly" [viewOnly]="viewOnly" [configSetting]="settingsArray">
+          </app-medical-information-theme-two>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <br>
+  <br>
+  <div class="row">
+    <div class="col-12 text-center margin-bottom-65">
+      <button *ngIf="addOnly" mat-raised-button class="btn-success" (click)="saveForm()">Save & Continue</button>
+      <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+      <button *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer" (click)="updateForm(false)">Update &
+        Continue</button>
+      <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
+        (click)="checkFormChangedValue()">Edit & Continue</button>
+      <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+    </div>
+  </div>
+  <br>
+  <br>
+  </ng-container>
+</div>
+<app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>

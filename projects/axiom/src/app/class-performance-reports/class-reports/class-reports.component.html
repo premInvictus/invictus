@@ -1,0 +1,136 @@
+<div class="breadcrumb-section">
+      <div class="row">
+         <div class="bread-col-1 col-lg-1">
+            <a [routerLink]="[homeUrl]">
+            <i class="breadcrumb-icon fas fa-home"></i>
+            </a>
+         </div>
+         <div class="bread-col-1 col-lg-1">
+            <div class="vertical-line"></div>
+         </div>
+         <div class="col-lg-10 first-breadcrumb-title-col">
+            <div class="first-breadcrumb-title">
+               <span class="bread-title">Report</span>
+               <span class="bread-divider">-</span>
+               <span class="bread-link">Class Reports</span>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="add-question-content">
+      <div class="row row-remove-top-margin">
+         <div class="col-lg-12 col-mobile-view-add-ques">
+            <div class="white-box">
+               <div id="printModal" class="white-box-content">
+                  <div class="text-center">
+                     <h5>Overall Class  Reports</h5>
+                  </div>
+                  <div class="row row-remove-top-margin">
+                     <div class="col-lg-12 col-mobile-view-add-ques">
+                        <div class="top-right-parameter top-middle-parameter">
+                           <div class="top-right-box top-blue-box">
+                              <div class="top-right-box-content top-middle-box-content">
+                                 <div class="top-right-box-content-title">
+                                    <div class="row">
+                                       <div class="col-lg-12 col-mobile-view-add-ques">
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <div class="col-lg-12 col-mobile-view-add-ques">
+                                          <form [formGroup]="classPerformanceFilter" novalidate>
+                                             <div class="row">
+                                                <div class="col-lg-12">
+                                                   <div class="form-row">
+                                                      <div class="form-group col-lg-4 fin-tab-col-20">
+                                                         <mat-form-field class="form-field">
+                                                            <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass();getSubjectsByClass()" placeholder="Class" required>
+                                                               <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                                                               </mat-option>
+                                                            </mat-select>
+                                                         </mat-form-field>
+                                                      </div>
+                                                      <div class="form-group col-lg-4 fin-tab-col-20">
+                                                         <mat-form-field class="form-field">
+                                                            <mat-select formControlName="sec_id" (selectionChange)="getUser()" placeholder="Section" required>
+                                                               <mat-option *ngFor="let item of sectionsArray" [value]="item.sec_id">{{item.sec_name}}
+                                                               </mat-option>
+                                                            </mat-select>
+                                                         </mat-form-field>
+                                                      </div>
+                                                      <div class="form-group col-lg-4 fin-tab-col-20">
+                                                         <button mat-raised-button class="submit-button" (click)="classPerformance();" [disabled]="!classPerformanceFilter.valid">Generate Report</button>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </form>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <mat-tab-group *ngIf="reportFlag">
+                     <mat-tab>
+                        <ng-template mat-tab-label>
+                           <div class="tab-show-on-click" (click)="setTab3()">
+                              <span>Overall Class Performance</span>
+                           </div>
+                        </ng-template>
+                        <app-admin-overall-class-performance [classPerformanceFilter]="classPerformanceFilter"
+                        [reportFlag]="reportFlag"
+                        [tabFlag3]="tabFlag3"></app-admin-overall-class-performance>
+                     </mat-tab>
+                     <mat-tab>
+                        <ng-template mat-tab-label>
+                           <div class="tab-show-on-click" (click)="setTab2()">
+                              <span>Section Slabwise Performance</span>
+                           </div>
+                        </ng-template>
+                        <app-class-topic-section-slabwise-report [classPerformanceFilter]="classPerformanceFilter"
+                        [sectionsArray]="sectionsArray" 
+                        [reportFlag]="reportFlag"
+                        [subjectArray]="subjectArray"
+                        [tabFlag2]="tabFlag2"></app-class-topic-section-slabwise-report>
+                     </mat-tab>
+                     <mat-tab>
+                        <ng-template mat-tab-label>
+                           <div class="tab-show-on-click" (click)="setTab1()">
+                              <span>Sectionwise Performance</span>
+                           </div>
+                        </ng-template>
+                        <app-class-performance-topicsection-wise [classPerformanceFilter]="classPerformanceFilter"
+                        [subjectArray]="subjectArray"
+                        [sectionsArray]="sectionsArray" 
+                        [reportFlag]="reportFlag"
+                        [tabFlag1]="tabFlag1"></app-class-performance-topicsection-wise>
+                     </mat-tab>
+                     <mat-tab>
+                        <ng-template mat-tab-label>
+                           <div class="tab-show-on-click">
+                              <span>SubjectWise Performance</span>
+                           </div>
+                        </ng-template>
+                        <app-admin-class-performance-topicsubtopicwise-report [classPerformanceFilter]="classPerformanceFilter"
+                        [subjectArray]="subjectArray" 
+                        [reportFlag]="reportFlag"></app-admin-class-performance-topicsubtopicwise-report>
+                     </mat-tab>
+                     <mat-tab>
+                        <ng-template mat-tab-label>
+                           <div class="tab-show-on-click">
+                              <span>Class Performance</span>
+                           </div>
+                        </ng-template>
+                        <app-class-performance-report [classPerformanceFilter]="classPerformanceFilter"
+                        [currentUser]="currentUser" 
+                        [subjectArray]="subjectArray"
+                        [reportFlag]="reportFlag"></app-class-performance-report>
+                     </mat-tab>
+                  </mat-tab-group>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>

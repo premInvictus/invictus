@@ -1,0 +1,6 @@
+@media only screen and (max-width:460px){
+    .mat-table.test-initiation-screen-table-main-structure{
+    overflow-x: scroll !important;
+    overflow-y: scroll !important;
+}
+}

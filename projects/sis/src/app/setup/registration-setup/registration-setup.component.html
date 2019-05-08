@@ -1,0 +1,148 @@
+<div class="container-box__grey">
+    <div class="container-box__white">
+      <br>
+      <div class="row">
+        <!-- <div class="col-4 text-center">
+          <div class="line-divider"></div>
+        </div> -->
+        <div class="col-12 text-center">
+          <h6 class="text-uppercase text-center"><b>Registration Form Configuration</b></h6>
+        </div>
+        <!-- <div class="col-4 text-center">
+          <div class="line-divider"></div>
+        </div> -->
+      </div>
+      <br>
+      <br>
+      <div class="row">
+        <div class="col-lg-12">
+          <mat-accordion>
+            <mat-expansion-panel class="bookmark-expansion-panel bookmark-expansion-panel-decorator" *ngFor="let tab of finalFormTab;let i = index;">
+                <mat-expansion-panel-header class="right-aligned-header bookmark-header-decorator">
+              <mat-panel-title class="side-menu-mat-panel-title">
+                  <div>
+                  <span class="bookmark-serialno">{{i+1}}.</span>
+                  </div>
+                  <div>
+                  <span class="bookmark-subtopic">{{tab.label}}</span>
+                  </div>
+              </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="form-description-div">
+                      <div class="row"> 
+                        <ng-container *ngFor="let field of formFieldArray;">
+                        <ng-container *ngIf="field.ff_tb_id == tab.tab_id && i!== 6">
+                              <div *ngIf="i!==3" class="col-2">
+                                <label><span class="text-uppercase text-center"><b>{{field.ff_label}}</b></span></label>
+                              </div>
+                              <div *ngIf="i!==3" class="col-1 text-center">
+                                <mat-slide-toggle 
+                                (change)="statusChangeEvent($event,field.ff_id,field.ff_tb_id)" 
+                                [checked]="checkFieldsStatus(field.ff_id, field.ff_tb_id)"
+                                class="inline-form-radio-spacing"></mat-slide-toggle>
+                              </div>
+                            <ng-container *ngIf="i==3">
+                              <div class="col-2">
+                                  <label><span class="text-uppercase text-center"><b>{{field.ff_label}}</b></span></label>
+                                </div>
+                                <div class="col-1 text-center">
+                                  <mat-slide-toggle 
+                                  (change)="statusChangeEvent($event,field.ff_id,field.ff_tb_id)" 
+                                  [checked]="checkFieldsStatus(field.ff_id, field.ff_tb_id)"
+                                  class="inline-form-radio-spacing"></mat-slide-toggle>
+                                </div>
+                                </ng-container>
+                              </ng-container>
+                          </ng-container>
+                          </div>
+                          <br>
+                          <div *ngIf="i == 3" class="row">
+                              <div class="col-4 text-center">
+                                  <div class="line-divider"></div>
+                              </div>
+                              <div class="col-4 text-center">
+                                  <h6 class="text-uppercase"><b>Medicines</b></h6>
+                              </div>
+                              <div class="col-4 text-center">
+                                  <div class="line-divider"></div>
+                              </div>
+                          </div>
+                          <br>
+                          <div class="row"> 
+                              <ng-container *ngIf="i == 3">
+                              <ng-container *ngFor="let item of medicineArray">
+                                <div class="col-2">
+                                    <label><span class="text-uppercase text-center"><b>{{item.med_name}}</b></span></label>
+                                </div>
+                                <div class="col-1 text-center">
+                                    <mat-slide-toggle 
+                                    (change)="toggleMedStatus(item)" 
+                                    [checked]="getActiveMedStatus(item)"
+                                    class="inline-form-radio-spacing"></mat-slide-toggle>
+                                  </div>
+                                </ng-container>
+                              </ng-container>
+                              </div>
+                              <br>
+                              <div *ngIf="i == 3" class="row">
+                                  <div class="col-4 text-center">
+                                      <div class="line-divider"></div>
+                                  </div>
+                                  <div class="col-4 text-center">
+                                      <h6 class="text-uppercase"><b>Vaccination Duration</b></h6>
+                                  </div>
+                                  <div class="col-4 text-center">
+                                      <div class="line-divider"></div>
+                                  </div>
+                              </div>
+                              <br>
+                              <div class="row"> 
+                                  <ng-container *ngIf="i == 3">
+                                  <ng-container *ngFor="let item of vaccinationByDuration">
+                                    <div class="col-2">
+                                        <label><span class="text-uppercase text-center"><b>{{item.vd_name}}</b></span></label>
+                                    </div>
+                                    <div class="col-1 text-center">
+                                        <mat-slide-toggle 
+                                        (change)="toggleMedDurationStatus(item)" 
+                                        [checked]="getActiveMedDurationStatus(item)"
+                                        class="inline-form-radio-spacing"></mat-slide-toggle>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                  </div>
+                          <div class="row"> 
+                          <ng-container *ngIf="i == 6">
+                          <ng-container *ngFor="let item of configArray">
+                            <div class="col-2">
+                                <label><span class="text-uppercase text-center"><b>{{item.docreq_name}}</b></span></label>
+                            </div>
+                            <div class="col-1 text-center">
+                                <mat-slide-toggle 
+                                (change)="toggleDocStatus(item)" 
+                                [checked]="getActiveDocStatus(item)"
+                                class="inline-form-radio-spacing"></mat-slide-toggle>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                          </div>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <br>
+      <br>
+      <div class="row margin-bottom-65">
+          <div class="col-12 text-center">
+            <button mat-raised-button class="btn-success " (click)="saveEnquirySettings()">Save Settings</button>
+          </div>
+        </div>
+        <br>
+      <br>
+      </div>
+      </div>

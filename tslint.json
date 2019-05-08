@@ -22,8 +22,9 @@
     ],
     "import-spacing": true,
     "indent": [
-      true,
-      "spaces"
+      true,      
+      "tabs",
+      2
     ],
     "interface-over-type-literal": true,
     "label-position": true,

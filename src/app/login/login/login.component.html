@@ -1,0 +1,325 @@
+﻿<div class="waveWrapper waveAnimation">
+  <div class="waveWrapperInner bgTop">
+    <div class="wave waveTop" style="background-image: url('https://front-end-noobs.com/jecko/img/wave-top.png')"></div>
+  </div>
+  <div class="waveWrapperInner bgMiddle">
+    <div class="wave waveMiddle" style="background-image: url('https://front-end-noobs.com/jecko/img/wave-mid.png')">
+    </div>
+  </div>
+  <div class="waveWrapperInner bgBottom">
+    <div class="wave waveBottom" style="background-image: url('https://front-end-noobs.com/jecko/img/wave-bot.png')">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="row main-login-content-area">
+      <mat-card class="main-login-card" *ngIf="loginCard">
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+            <div class="text-center">
+              <img class="company-logo" src="../../../assets/images/invictus-logo.png" alt="company-logo">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+            <div class="text-center">
+              <span class="card-top-title">Sign In</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+            <div class="text-center">
+              <span class="card-sub-title">with your Invictus Account</span>
+            </div>
+          </div>
+        </div>
+        <br>
+        <form name="form" #f="ngForm" novalidate>
+          <div class="row">
+            <div class="col-lg-12">
+              <div>
+                <mat-form-field class="login-form-feild">
+                  <input id="inputuserid" matInput placeholder="Enter Username" name="username"
+                    [(ngModel)]="model.username" #username="ngModel" required>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="text-center">
+                <mat-form-field class="login-form-feild">
+                  <input type="password" matInput placeholder="Enter your Password" id="exampleInputPassword1"
+                    name="password" [(ngModel)]="model.password" #password="ngModel" required>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="text-left">
+                <span class="card-link" (click)="changepassword()">Forgot Password?</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="text-left">
+                <span class="card-agreement">By logging in you agree to our
+                  <span class="card-link">Terms and Conditions</span>.</span>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="text-right">
+                <button mat-button class="login-button remove-col-modal-padding" (click)="login($event)"
+                  [disabled]="!f.form.valid">Login</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </mat-card>
+
+      <mat-card class="main-login-card" *ngIf="forgotPassword">
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+
+            <div class="text-center">
+              <img class="company-logo" src="../../../assets/images/invictus-logo.png" alt="company-logo">
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+            <div class="text-center">
+              <span class="card-top-title">Account Recovery</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+            <div class="text-center">
+              <span class="card-sub-title">Request for new password. </span>
+            </div>
+          </div>
+        </div>
+        <br>
+        <form name="form" [formGroup]="forgetPasswordForm" novalidate>
+          <div class="row">
+            <div class="col-lg-12">
+              <div>
+                <mat-form-field class="login-form-feild">
+                  <input matInput placeholder="Enter Username" formControlName="username" id="inputusername" required>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="forgotPasswordMobile">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="text-center">
+                  <mat-form-field class="login-form-feild">
+                    <input matInput placeholder="Enter your mobile no." formControlName="mobile" id="mobileno"
+                      [readonly]="otpActive" (click)="otp_active()">
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="forgotPasswordEmail">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="text-center">
+                  <mat-form-field class="login-form-feild">
+                    <input matInput type="email" placeholder="Enter your email." formControlName="email" id="emailid"
+                      [readonly]="emailActive" (click)="email_active()">
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="forgotPasswordMobile">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="text-left">
+                  <span class="card-link" (click)="changeToEmail()">Use email instead?</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="forgotPasswordEmail">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="text-left">
+                  <span class="card-link" (click)="changeToMobile()">Use mobile instead?</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-left">
+                                <span class="card-agreement">By logging in you agree to our
+                                    <span class="card-link">Terms and Conditions</span>.</span>
+                            </div>
+                        </div>
+                    </div> -->
+          <br>
+          <br>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="text-left">
+                <!-- <i class="fas fa-arrow-left" (click)="backtologin()"></i> -->
+                <button mat-flat-button color="warn" class="remove-col-modal-padding"
+                  (click)="backtologin()">BACK</button>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="text-right">
+                <button mat-button class="login-button remove-col-modal-padding" (click)="verifyforgot()"
+                  [disabled]="!forgetPasswordForm.valid">Submit</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </mat-card>
+
+
+      <mat-card class="main-login-card" *ngIf="verifyOtp">
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+            <div class="text-center">
+              <img class="company-logo" src="../../../assets/images/invictus-logo.png" alt="company-logo">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+            <div class="text-center">
+              <span class="card-top-title">Enter One Time Password</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+            <div class="text-center">
+              <span class="card-sub-title">Registered mobile no. verification</span>
+            </div>
+          </div>
+        </div>
+        <br>
+        <form [formGroup]="validateOTPForm" novalidate>
+          <div class="row">
+            <div class="col-lg-12">
+              <div>
+                <mat-form-field class="login-form-feild">
+                  <input matInput placeholder="Enter OTP" id="otp" placeholder="Enter OTP" formControlName="userotp"
+                    required>
+                </mat-form-field>
+                <div class="resend-otp text-right" *ngIf="resendOTPActive">
+                  <span (click)="verifyforgot()">Resend OTP</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="text-center">
+                <button mat-button class="login-button remove-col-modal-padding" (click)="validateotp()">Verify</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </mat-card>
+
+      <mat-card class="main-login-card" *ngIf="newPassword">
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+            <div class="text-center">
+              <img class="company-logo" src="../../../assets/images/invictus-logo.png" alt="company-logo">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 remove-col-modal-padding">
+            <div class="text-center">
+              <span class="card-top-title">Update Password</span>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="row">
+    <div class="col-lg-12 remove-col-modal-padding">
+      <div class="text-center">
+        <span class="card-sub-title">Registered mobile no. verification</span>
+      </div>
+    </div>
+  </div> -->
+        <br>
+        <form [formGroup]="validateNewPasswordForm" novalidate>
+          <div class="row">
+            <div class="col-lg-12">
+              <div>
+                <mat-form-field class="login-form-feild">
+                  <input matInput placeholder="Enter New Password" id="password" type="password"
+                    formControlName="NewPassword" required>
+                </mat-form-field>
+
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div>
+                <mat-form-field class="login-form-feild">
+                  <input matInput placeholder="Confirm New Password" id="Confirmpassword" type="password"
+                    formControlName="ConfirmPassword" required>
+                </mat-form-field>
+
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="text-center">
+                <button mat-button class="login-button remove-col-modal-padding"
+                  (click)="resetPassword()">Submit</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </mat-card>
+
+
+    </div>
+
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="row below-login-content-area remove-row--margin-top">
+      <div class="row remove-row--margin-top">
+        <div class="col-lg-12">
+          <div class="below-button-collection">
+            <span class="below-button">Help&nbsp;&nbsp;</span>
+            <span class="below-button">Privacy&nbsp;&nbsp;</span>
+            <span class="below-button">Terms</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

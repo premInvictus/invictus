@@ -1,0 +1,218 @@
+import { Component, OnInit, OnChanges, Input, EventEmitter, Output } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { SisService, CommonAPIService, ProcesstypeService, FeeService } from '../../_services';
+import { ErrorStateMatcher } from '@angular/material';
+
+@Component({
+	selector: 'app-common-student-profile',
+	templateUrl: './common-student-profile.component.html',
+	styleUrls: ['./common-student-profile.component.scss']
+})
+export class CommonStudentProfileComponent implements OnInit, OnChanges {
+	@Input() loginId: any;
+	@Output() next = new  EventEmitter();
+	@Output() prev = new  EventEmitter();
+	@Output() first = new  EventEmitter();
+	@Output() last = new  EventEmitter();
+	@Output() key = new  EventEmitter();
+	@Output() next2 = new  EventEmitter();
+	@Output() prev2 = new  EventEmitter();
+	@Output() first2 = new  EventEmitter();
+	@Output() last2 = new  EventEmitter();
+	@Output() key2 = new  EventEmitter();
+	studentdetailsform: FormGroup;
+	accountsForm: FormGroup;
+	studentdetails: any = {};
+	lastStudentDetails: any = {};
+	lastrecordFlag = true;
+	navigation_record: any = {};
+	au_profileimage: any;
+	minDate = new Date();
+	maxDate = new Date();
+	login_id;
+	previousB = true;
+	nextB = true;
+	firstB = true;
+	lastB = true;
+	viewOnly = true;
+	deleteOnly = true;
+	editOnly = true;
+	divFlag = false;
+	stopFlag = false;
+	addOnly = true;
+	iddesabled = true;
+	backOnly = false;
+	defaultsrc = '../../../assets/images/student.png';
+	classArray = [];
+	sectionArray = [];
+	houseArray = [];
+	feeOtherCategory: any[] = [];
+	feeStructureArray: any[] = [];
+	conGroupArray: any[] = [];
+	multipleFileArray: any[] = [];
+	savedSettingsArray: any[] = [];
+	settingsArray: any[] = [];
+	enrolmentPlaceholder = 'Enrollment Id';
+	deleteMessage = 'Are you sure, you want to delete ?';
+	studentdetailsflag = false;
+	lastRecordId;
+	nextFlag = false;
+	prevFlag = false;
+	firstFlag = false;
+	lastFlag = false;
+	keyFlag = false;
+	studentLoginId: any;
+
+	constructor(private fbuild: FormBuilder,
+		private feeService: FeeService,
+		private sisService: SisService,
+		private commonAPIService: CommonAPIService,
+		public processtypeService: ProcesstypeService) { }
+
+	ngOnInit() {
+		this.processtypeService.setProcesstype('4');
+		this.buildForm();
+	}
+	ngOnChanges() {
+		if (this.loginId) {
+			this.studentdetailsflag = true;
+		}
+	this.getStudentInformation(this.loginId);
+	}
+	buildForm() {
+		this.studentdetailsform = this.fbuild.group({
+		au_profileimage: '',
+		au_enrollment_id: '',
+		au_login_id: '',
+		au_full_name: '',
+		au_class_id: '',
+		au_mobile: '',
+		au_email: '',
+		au_hou_id: '',
+		au_sec_id: '',
+		epd_parent_name: '',
+		epd_contact_no: '',
+		epd_whatsapp_no: '',
+		mi_emergency_contact_name: '',
+		mi_emergency_contact_no: ''
+		});
+	}
+	getStudentInformation(au_login_id) {
+		this.studentLoginId = '';
+		if (au_login_id && this.studentdetailsflag) {
+		this.studentdetailsflag = false;
+		this.sisService.getStudentInformation({ au_login_id: au_login_id, au_status: '1' }).subscribe((result: any) => {
+		if (result && result.status === 'ok') {
+		this.nextB = true;
+		this.firstB = true;
+		this.lastB = true;
+		this.previousB = true;
+		this.studentdetails = [];
+		this.defaultsrc = '../../../assets/images/student.png';
+		if (result && result.data && result.data[0]) {
+		this.studentdetails = result.data[0];
+		this.studentLoginId = this.studentdetails.au_login_id;
+		if (this.nextFlag) {
+			this.next.emit(this.studentLoginId);
+			this.next2.emit(this.studentdetails.em_admission_no);
+		}
+		if (this.prevFlag) {
+			this.prev.emit(this.studentLoginId);
+			this.prev2.emit(this.studentdetails.em_admission_no);
+		}
+		if (this.firstFlag) {
+			this.first.emit(this.studentLoginId);
+			this.first2.emit(this.studentdetails.em_admission_no);
+		}
+		if (this.lastFlag) {
+			this.last.emit(this.studentLoginId);
+			this.last2.emit(this.studentdetails.em_admission_no);
+		}
+		if (this.keyFlag) {
+			this.key.emit(this.studentLoginId);
+			this.key2.emit(this.studentdetails.em_admission_no);
+		}
+		}
+		if (result && result.data && result.data[0].navigation[0]) {
+		this.navigation_record = result.data[0].navigation[0];
+		}
+		if (this.processtypeService.getProcesstype() === '4') {
+		this.studentdetailsform.patchValue({
+		au_enrollment_id: this.studentdetails.em_admission_no
+		});
+		}
+		this.studentdetailsform.patchValue({
+		au_profileimage: this.studentdetails.au_profileimage ? this.studentdetails.au_profileimage : this.defaultsrc,
+		au_login_id: this.studentdetails.au_login_id,
+		});
+		this.defaultsrc = this.studentdetails.au_profileimage !== '' ? this.studentdetails.au_profileimage : this.defaultsrc;
+		if (this.navigation_record) {
+		this.viewOnly = true;
+		if (this.navigation_record.first_record &&
+		this.navigation_record.first_record !== this.studentdetailsform.value.au_enrollment_id &&
+		this.viewOnly) {
+		this.firstB = false;
+		}
+		if (this.navigation_record.last_record &&
+		this.navigation_record.last_record !== this.studentdetailsform.value.au_enrollment_id &&
+		this.viewOnly) {
+		this.lastB = false;
+		}
+		if (this.navigation_record.next_record && this.viewOnly) {
+		this.nextB = false;
+		}
+		if (this.navigation_record.prev_record && this.viewOnly) {
+		this.previousB = false;
+		}
+		}
+
+		} else {
+		this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+		}
+		});
+		}
+
+		}
+		loadOnEnrollmentId($event) {
+			this.keyFlag = false;
+			this.keyFlag = true;
+			$event.preventDefault();
+			this.getStudentDetailsByAdmno($event.target.value);
+			}
+			getStudentDetailsByAdmno(admno) {
+			this.studentdetailsflag = true;
+			this.getStudentInformation(admno);
+			}
+			nextId(admno) {
+				this.nextFlag = false;
+				this.prevFlag = false;
+				this.firstFlag = false;
+				this.lastFlag = false;
+				this.nextFlag = true;
+			this.getStudentDetailsByAdmno(admno);
+			}
+			prevId(admno) {
+				this.nextFlag = false;
+				this.prevFlag = false;
+				this.firstFlag = false;
+				this.lastFlag = false;
+				this.prevFlag = true;
+			this.getStudentDetailsByAdmno(admno);
+			}
+			firstId(admno) {
+				this.nextFlag = false;
+				this.prevFlag = false;
+				this.firstFlag = false;
+				this.lastFlag = false;
+				this.firstFlag = true;
+			this.getStudentDetailsByAdmno(admno);
+			}
+			lastId(admno) {
+				this.nextFlag = false;
+				this.prevFlag = false;
+				this.firstFlag = false;
+				this.lastFlag = false;
+				this.lastFlag = true;
+			this.getStudentDetailsByAdmno(admno);
+			}
+}

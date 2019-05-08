@@ -1,0 +1,498 @@
+<ng-template #template>
+  <div class="modal-main-box">
+     <div class="modal-delete-content-box">
+        <div>
+           <div class="row">
+              <div class="col-lg-12">
+                 <div class="close-button-content">
+                    <button mat-icon-button class="close-button" (click)="modalRef.hide()"><img
+                       src="../../../../../assets/images/clear-button.svg"></button>
+                 </div>
+              </div>
+           </div>
+           <div class="row">
+              <div class="col-lg-12">
+                 <div>
+                    <h6 class="text-center">Confirmation Message</h6>
+                 </div>
+              </div>
+           </div>
+        </div>
+        <div class="text-center">
+           <br>
+           <span>Do you want to unpublish ?</span>
+           <br>
+           <br>
+           <button mat-button class="submit-button" (click)="openModal2(templateNested);modalRef.hide()">Yes</button>
+           <button mat-button class="reset-button" (click)="modalRef.hide()">No</button>
+        </div>
+     </div>
+  </div>
+</ng-template>
+<ng-template #templateNested>
+  <div class="modal-main-box">
+     <div class="modal-delete-content-box">
+        <div class="row">
+           <div class="col-lg-12">
+              <div class="close-button-content">
+                 <button mat-icon-button class="close-button" (click)="modalRef2.hide()"><img
+                    src="../../../../../assets/images/clear-button.svg"></button>
+              </div>
+           </div>
+        </div>
+        <div class="row">
+           <div class="col-lg-12">
+              <div>
+                 <h6 class="text-center">Reason To Unpublish?</h6>
+              </div>
+              <div class="row">
+                 <div class="col-lg-12">
+                    <form [formGroup]="modalForm" novalidate>
+                       <div class="row">
+                          <div class="col-lg-12">
+                             <mat-form-field class="mat-form-field">
+                                <mat-select formControlName="reason_id" placeholder="Reasons..">
+                                   <mat-option *ngFor="let item of reasonsArray" [value]="item.reason_id">{{item.reason_desc}}
+                                   </mat-option>
+                                </mat-select>
+                             </mat-form-field>
+                          </div>
+                       </div>
+                       <br>
+                       <div class="row">
+                          <div class="col-lg-12">
+                             <mat-form-field class="mat-form-field">
+                                <label for="exampleFormControlTextarea"></label>
+                                <textarea matInput id="exampleFormControlTextarea" rows="3" placeholder="Remarks..."
+                                   formControlName="qp_unpublish_remark"></textarea>
+                             </mat-form-field>
+                          </div>
+                          <div class="row">
+                             <div class="col-lg-12">
+                                &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<button mat-button class="submit-button"
+                                   (click)="unpublishQuestionPaper(currentUnpublishedQues.qp_id)">Submit</button>
+                             </div>
+                          </div>
+                       </div>
+                    </form>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</ng-template>
+<div *ngIf="paperListDiv">
+  <div class="breadcrumb-section">
+     <div class="row">
+        <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+           <a [routerLink]="[homeUrl]">
+           <i class="breadcrumb-icon fas fa-home"></i>
+           </a>
+        </div>
+        <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+           <div class="vertical-line"></div>
+        </div>
+        <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+           <div class="first-breadcrumb-title">
+              <span class="bread-title">Question Paper</span>
+              <span class="bread-divider">-</span>
+              <span class="bread-link">Question Paper List</span>
+           </div>
+        </div>
+     </div>
+  </div>
+  <div class="add-question-content">
+     <div class="row row-remove-top-margin">
+        <div class="col-lg-12 col-mobile-view-add-ques">
+           <div class="white-box">
+              <div class="white-box-content">
+                 <div class="row">
+                    <div class="col-lg-12 col-mobile-view-add-ques">
+                       <div class="white-box-content-title">
+                          <span>Question Paper List</span>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="row row-remove-top-margin">
+                    <div class="col-lg-12 col-mobile-view-add-ques">
+                       <div class="top-right-parameter top-middle-parameter">
+                          <div class="top-right-box top-blue-box">
+                             <div class="top-right-box-content top-middle-box-content">
+                                <div class="top-right-box-content-title">
+                                   <div class="row">
+                                      <div class="col-lg-12  col-mobile-view-add-ques">
+                                         <span>Select Parameters</span>
+                                      </div>
+                                   </div>
+                                   <!-- <hr class=hide-for-small-screen>
+                                      <br class="show-in-mobile-screen"> -->
+                                   <div class="row">
+                                      <div class="col-lg-12  col-mobile-view-add-ques">
+                                         <form [formGroup]="parameterform" novalidate>
+                                            <div class="row">
+                                               <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques">
+                                                  <mat-form-field class="form-field">
+                                                     <mat-select formControlName="qp_class_id"
+                                                        (ngModelChange)="getSubjectsByClass($event)" placeholder="Select Class" required>
+                                                        <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                        {{item.class_name}}
+                                                        </mat-option>
+                                                     </mat-select>
+                                                  </mat-form-field>
+                                               </div>
+                                               <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques">
+                                                  <mat-form-field class="form-field">
+                                                     <mat-select formControlName="qp_sub_id" placeholder="Select Subject" required>
+                                                        <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                                        {{item.sub_name}}
+                                                        </mat-option>
+                                                     </mat-select>
+                                                  </mat-form-field>
+                                               </div>
+                                               <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques">
+                                                  <div class="row row-remove-top-margin">
+                                                     <div class="col-lg-12 col-remove-padding col-mobile-view-add-ques">
+                                                        <div class="add-question-button-collection">
+                                                           <!-- <button class="btn btn-primary" (click)="insertQuestion()" [disabled]="!ind_entry_form1.valid">Submit</button>
+                                                              <button class="btn btn-danger submit-button" (click)="reset()">Reset</button> -->
+                                                           <div class="button-row">
+                                                              <button mat-raised-button class="submit-button"
+                                                                 (click)="getQuestionPaper()">Apply</button>
+                                                              <!-- <button mat-raised-button class="reset-button" (click)="resetquestion()">Reset</button> -->
+                                                           </div>
+                                                        </div>
+                                                     </div>
+                                                  </div>
+                                               </div>
+                                            </div>
+                                         </form>
+                                      </div>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                 <br>
+                 <div class="row">
+                    <div class="col-lg-12 col-mobile-view-add-ques">
+                       <div class="table-box mob-table-box" *ngIf="tableCollection">
+                          <div>
+                             <div class="example-container table-question-paper-review-list table-box-main">
+                                <div class="example-header table-filter">
+                                   <mat-form-field>
+                                      <input matInput (keyup)=" applyFilter($event.target.value)" placeholder="Filter">
+                                      <span matPrefix>
+                                      <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                   </mat-form-field>
+                                </div>
+                                <mat-table class="specific-table table-100" #table [dataSource]="dataSource" matSort>
+                                <ng-container matColumnDef="position">
+                                   <mat-header-cell *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
+                                   <mat-cell *matCellDef="let item"> {{item.position}} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="name">
+                                   <mat-header-cell *matHeaderCellDef mat-sort-header>Test Name </mat-header-cell>
+                                   <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="class">
+                                   <mat-header-cell *matHeaderCellDef mat-sort-header> Class </mat-header-cell>
+                                   <mat-cell *matCellDef="let item">{{item.class}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="subject">
+                                   <mat-header-cell *matHeaderCellDef mat-sort-header>Subject</mat-header-cell>
+                                   <mat-cell *matCellDef="let item"> {{item.subject}} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="topic">
+                                   <mat-header-cell *matHeaderCellDef mat-sort-header> Topic </mat-header-cell>
+                                   <mat-cell *matCellDef="let item">
+                                      <div class="topicShift" [innerHTML]="item.topic"></div>
+                                   </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="marks">
+                                   <mat-header-cell *matHeaderCellDef mat-sort-header>Max.Marks</mat-header-cell>
+                                   <mat-cell *matCellDef="let item"> {{item.marks}} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="time">
+                                   <mat-header-cell *matHeaderCellDef mat-sort-header> Time Alloted</mat-header-cell>
+                                   <mat-cell *matCellDef="let item"> {{item.time}} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="action">
+                                   <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+                                   <mat-cell *matCellDef="let item">
+                                      <i *ngIf="isExistUserAccessMenu('55')" class="far fa-thumbs-down table-unpublish-icon"
+                                      data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true"
+                                      (click)="openModal(template);getCurrentUnpublishedQues(item.action)"></i>
+                                      <i *ngIf="isExistUserAccessMenu('56')" class="fas fa-print table-print-icon"
+                                      data-toggle="tooltip" data-placement="top" matTooltip="print" aria-hidden="true"
+                                      (click)="viewQuestionPaper(item.action)"></i>&nbsp;
+                                   </mat-cell>
+                                </ng-container>
+                                <mat-header-row class="top_header ques-paper-list-header template-mat-header-row"
+                                   *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row class="template-mat-row" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                </mat-table>
+                                <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]"
+                                [showFirstLastButtons]="true"></mat-paginator>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+<br>
+<div *ngIf="viewCurrentQPDiv" class="white-box question-paper-margin-padding question-paper-box-scroll">
+  <div *ngIf="viewCurrentQPDiv">
+     <div id="printModal2">
+        <div class="row">
+           <div class="col-lg-12 text-center">
+              <div class="logo">
+                 <img class="ques-paper-logo" src="{{hosturl+schoolInfo.school_logo}}" alt="">
+              </div>
+              <h6 class=" qst_name">{{schoolInfo.school_name}}, {{schoolInfo.school_city}} </h6>
+              <p class="text-center qst_name qp_name">
+                 <em>{{viewCurrentQP.qp_name}}</em>
+              </p>
+           </div>
+        </div>
+        <div class="row">
+           <div class="col-lg-12">
+              <div class="user-table">
+                 <table class="table ques-paper-table" style="border: none" cellspacing="0">
+                    <tbody>
+                       <tr>
+                          <td class="modifyWidth" style="width: 60%">
+                             <span>Class : {{viewCurrentQP.class_name}}</span>
+                          </td>
+                          <td style="width: 12%">
+                             <span>Maximum Marks : {{viewCurrentQP.tp_marks}}</span>
+                          </td>
+                       </tr>
+                       <tr>
+                          <td class="modifyWidth" style="width: 60%">
+                             <span>Subject : {{viewCurrentQP.sub_name}}</span>
+                          </td>
+                          <td style="width: 12%">
+                             <span>Time Allowed : {{viewCurrentQP.tp_time_alloted }} Minutes</span>
+                          </td>
+                       </tr>
+                    </tbody>
+                 </table>
+              </div>
+           </div>
+        </div>
+        <hr class="top">
+        <div class="row">
+           <div class="col-lg-12">
+              <h6>General Instructions</h6>
+              <ol>
+                 <li class="qp_name">{{viewCurrentQP.ti_instruction}}</li>
+              </ol>
+              <div class="row" *ngFor="let subQuestions of subjectArrayInCurrentPaperDetails">
+                 <div class="col-lg-12 text-center">
+                    <h5>{{subQuestions.sub_name}}</h5>
+                 </div>
+                 <div class="col-sm-12 col-md-12 col-lg-12" *ngFor="let item of subQuestions.filterQuestionList;let j=index">
+                    <div *ngIf="! isEmpty(item.qlist)">
+                       <!-- <h6 class="text-center qst_name">{{item.qst_name}}</h6> -->
+                       <div class="ques-paper-user-table">
+                          <table class=" table question-paper-table" style="border:none" cellspacing="0">
+                             <tbody>
+                                <ng-container *ngFor="let qitem of item.qlist;let i=index">
+                                   <tr *ngIf="belongToSub(qitem.qus_sub_id,subQuestions.sub_id)">
+                                      <th class="qus_position" scope="row" style="width: 1rem;">
+                                         {{getQusPosFromCurrentQP(qitem.qus_id)}}
+                                      </th>
+                                      <td class="ques_name" style="width:30rem;">
+                                         <label class="imgclassQpList" [MathJax]="qitem.qus_name"></label>
+                                         <br>
+                                         <table class="quest-paper-obj"
+                                            *ngIf="(qitem.qus_qst_id == 1) || (qitem.qus_qst_id == 2) || (qitem.qus_qst_id == 3)">
+                                            <tr *ngFor="let option of qitem.options;let i=index">
+                                               <td class="option_width" style="width:5%;">
+                                                  <label [innerHTML]="'('+optionHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label class="imgClassExpress" [MathJax]="option.qopt_options"></label>
+                                               </td>
+                                            </tr>
+                                         </table>
+                                         <table *ngIf="(qitem.qus_qst_id == 4)">
+                                            <tr *ngFor="let option of qitem.options;let i=index">
+                                               <td class="option_width" style="width:5%;">
+                                                  <label [innerHTML]="'('+optionHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label [MathJax]="option.qopt_options"></label>
+                                               </td>
+                                               <td style="width:15%;">
+                                                  <label [innerHTML]="'('+optionmatchHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label [MathJax]="option.qopt_options_match"></label>
+                                               </td>
+                                            </tr>
+                                         </table>
+                                         <table *ngIf="(qitem.qus_qst_id == 5)">
+                                            <tr *ngFor="let option of qitem.options;let i=index">
+                                               <td class="option_width" style="width:5%;">
+                                                  <label [innerHTML]="'('+optionHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label [MathJax]="option.qopt_options"></label>
+                                               </td>
+                                               <td class="option_width" style="width:5%;">
+                                                  <label [innerHTML]="'('+optionmatchHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label [MathJax]="qitem.options_match[i].qopt_options_match"></label>
+                                               </td>
+                                            </tr>
+                                         </table>
+                                         <!--Matrix 4 *5-->
+                                         <table *ngIf="(qitem.qus_qst_id == 13)">
+                                            <tr *ngFor="let option of qitem.options_match;let i=index">
+                                               <td class="option_width" style="width:5%;">
+                                                  <label *ngIf="i!=4" [innerHTML]="'('+optionHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label *ngIf="i!=4" [MathJax]="qitem.options[i].qopt_options"></label>
+                                               </td>
+                                               <td class="option_width" style="width:5%;">
+                                                  <label [innerHTML]="'('+optionmatchHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label [MathJax]="qitem.options_match[i].qopt_options_match"></label>
+                                               </td>
+                                            </tr>
+                                         </table>
+                                         <!---->
+                                      </td>
+                                      <td class="moveTd" style="width: 1rem;">{{qitem.qus_marks}}</td>
+                                   </tr>
+                                </ng-container>
+                             </tbody>
+                          </table>
+                       </div>
+                    </div>
+                 </div>
+                 <!--  div for essay  -->
+                 <div class="col-sm-12 col-md-12 col-lg-12"
+                    *ngFor="let item of subQuestions.essayGroupQuestionArray;let j=index">
+                    <ng-container *ngIf="item.ess_sub_id == subQuestions.sub_id">
+                       <span
+                          style="text-decoration: underline;font-weight: bold;font-size: 16px;text-transform: uppercase">{{item.ess_title}}</span>
+                       <br>
+                       <br>
+                       <h6 class="text-center"
+                          style="font-size:16px !important;font-weight: normal;text-align: left !important;word-break:break-all"
+                          [MathJax]="item.ess_description"></h6>
+                       <div class="ques-paper-user-table">
+                          <table class=" table question-paper-table-essay" style="border:none" cellspacing="0">
+                             <tbody>
+                                <ng-container *ngFor="let qitem of item.essayQuestionList;let i=index">
+                                   <tr *ngIf="belongToSub(qitem.qus_sub_id,subQuestions.sub_id)">
+                                      <th class="qus_position" scope="row" style="width: 1rem;">
+                                         {{getQusPosFromCurrentQP(qitem.qus_id)}}
+                                      </th>
+                                      <td class="ques_name" style="width: 30rem;">
+                                         <label class="imgclassQpList" [MathJax]="qitem.qus_name"></label>
+                                         <br>
+                                         <table
+                                            *ngIf="(qitem.qus_qst_id == 1) || (qitem.qus_qst_id == 2) || (qitem.qus_qst_id == 3)">
+                                            <tr class="essay-question-paper" *ngFor="let option of qitem.options;let i=index">
+                                               <td class="option_width" style="width:5%;">
+                                                  <label [innerHTML]="'('+optionHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label class="imgClassExpress" [MathJax]="option.qopt_options"></label>
+                                               </td>
+                                            </tr>
+                                         </table>
+                                         <table *ngIf="(qitem.qus_qst_id == 4)">
+                                            <tr class="essay-question-paper" *ngFor="let option of qitem.options;let i=index">
+                                               <td class="option_width" tyle="width:5%;">
+                                                  <label [innerHTML]="'('+optionHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label [MathJax]="option.qopt_options"></label>
+                                               </td>
+                                               <td class="option_width" style="width:5%;">
+                                                  <label [innerHTML]="'('+optionmatchHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label [MathJax]="option.qopt_options_match"></label>
+                                               </td>
+                                            </tr>
+                                         </table>
+                                         <table *ngIf="(qitem.qus_qst_id == 5)">
+                                            <tr class="essay-question-paper" *ngFor="let option of qitem.options;let i=index">
+                                               <td class="option_width" style="width:5%;">
+                                                  <label [innerHTML]="'('+optionHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label [MathJax]="option.qopt_options"></label>
+                                               </td>
+                                               <td class="option_width" style="width:5%;">
+                                                  <label [innerHTML]="'('+optionmatchHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label [MathJax]="qitem.options_match[i].qopt_options_match"></label>
+                                               </td>
+                                            </tr>
+                                         </table>
+                                         <!--Matrix 4 *5-->
+                                         <table *ngIf="(qitem.qus_qst_id == 13)">
+                                            <tr *ngFor="let option of qitem.options_match;let i=index">
+                                               <td class="option_width" style="width:5%;">
+                                                  <label *ngIf="i!=4" [innerHTML]="'('+optionHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label *ngIf="i!=4" [MathJax]="qitem.options[i].qopt_options"></label>
+                                               </td>
+                                               <td class="option_width" style="width:5%;">
+                                                  <label [innerHTML]="'('+optionmatchHA[i]+')'"></label>
+                                               </td>
+                                               <td>
+                                                  <label [MathJax]="qitem.options_match[i].qopt_options_match"></label>
+                                               </td>
+                                            </tr>
+                                         </table>
+                                         <!---->
+                                      </td>
+                                      <td class="moveTd" style="width: 1rem;">{{qitem.qus_marks}}</td>
+                                   </tr>
+                                </ng-container>
+                             </tbody>
+                          </table>
+                       </div>
+                    </ng-container>
+                 </div>
+                 <!-- end of div for essay  -->
+              </div>
+           </div>
+        </div>
+        <hr>
+        <div class="row">
+           <div class="col-lg-12 text-center">
+              <button class="submit-button" mat-button (click)="printStudentCopy()"><i
+                 class="fas fa-print dialog-table-print-icon"></i> &nbsp;Print</button>
+              <button mat-raised-button class="submit-button" [routerLink]="['../teacher_copy',viewCurrentQP.qp_id]"><i
+                 class="fas fa-book-open dialog-table-print-icon"></i>&nbsp;&nbsp;Teacher's Copy </button>
+              <button mat-raised-button class="reset-button" (click)="gotoList()"><i
+                 class="fas fa-arrow-left dialog-table-print-icon"></i>&nbsp;&nbsp;&nbsp;Go Back</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+<br>
+<br>
+<br>

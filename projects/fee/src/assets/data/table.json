@@ -1,0 +1,64 @@
+{
+  "express": [{
+    "colName": "Select",
+    "mappingKey": "qus_skill_id",
+    "checkbox": true,
+    "htmlToText": false,
+    "innerLoop": false
+  }, {
+    "colName": "S No",
+    "mappingKey": "",
+    "defaultText": "Q-",
+    "htmlToText": false,
+    "innerLoop": false
+  }, {
+    "colName": "Question Sub-Type",
+    "mappingKey": "qus_st_name",
+    "htmlToText": true,
+    "innerLoop": false
+  },{
+    "colName": "Question",
+    "mappingKey": "qus_name",
+    "htmlToText": true,
+    "innerLoop": false
+  }, {
+    "colName": "Answer",
+    "mappingKey": "options",
+    "tooltip": "showHover",
+    "htmlToText": false,
+    "innerLoop": true,
+    "innerLoopVal": "1",
+    "innerMappingKey": "qopt_options",
+    "innerHtmlToText": true
+  }, {
+    "colName": "Explanations",
+    "mappingKey": "qus_explanation",
+    "htmlToText": true,
+    "innerLoop": false
+  }, {
+    "colName": "Skill Type",
+    "mappingKey": "qus_skill_id",
+    "htmlToText": false,
+    "innerLoop": false
+  }, {
+    "colName": "Topic",
+    "mappingKey": "topic_name",
+    "htmlToText": false,
+    "innerLoop": false
+  },{
+    "colName": "Sub-Topic",
+    "mappingKey": "st_name",
+    "htmlToText": false,
+    "innerLoop": false
+  },{
+    "colName": "Suggested Marks",
+    "mappingKey": "qus_marks",
+    "htmlToText": false,
+    "innerLoop": false
+  },{
+    "colName": "Reference",
+    "mappingKey": "qus_historical_reference",
+    "htmlToText": false,
+    "innerLoop": false
+  }]
+}

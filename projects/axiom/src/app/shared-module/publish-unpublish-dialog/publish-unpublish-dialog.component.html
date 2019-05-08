@@ -1,0 +1,35 @@
+<ng-template #templateNested>
+    <div class="modal-header">
+      <p class="modal-title pull-left">Select Reason to UnPublish</p>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef2.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="modalForm" novalidate>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="form-group form-group-filter">
+              <select formControlName="tp_unpublish_remark" class="form-control form-control-sm">
+                <option value=""> -- Please Select Reason to UnPublish --</option>
+                <option *ngFor="let item of ReasonArray">{{item}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea"></label>
+              <textarea class="form-control" id="exampleFormControlTextarea" rows="3" placeholder="Write your message here." formControlName="tp_unpublish_other"></textarea>
+            </div>
+          </div>
+        </div>
+        <button *ngIf="modalRef" type="button" class="btn btn-danger" (click)="unpublishTemplate(currentUnpublishedQues.tp_id);modalRef2.hide()">Submit</button>
+      </form>
+      <br>
+      <div>
+      </div>
+    </div>
+  </ng-template> 

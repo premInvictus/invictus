@@ -1,0 +1,333 @@
+//
+//  MEDIA QUERIES
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+// A map of breakpoints.
+$breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400px, aelg:1500px, xl: 1900px, xxl: 2400px);
+//
+//  RESPOND ABOVE
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+// @include respond-above(sm) {}
+@mixin respond-above($breakpoint) {
+    // If the breakpoint exists in the map.
+    @if map-has-key($breakpoints, $breakpoint) {
+        // Get the breakpoint value.
+        $breakpoint-value: map-get($breakpoints, $breakpoint); // Write the media query.
+        @media (min-width: $breakpoint-value) {
+            @content;
+        } // If the breakpoint doesn't exist in the map.
+    }
+    @else {
+        // Log a warning.
+        @warn 'Invalid breakpoint: #{$breakpoint}.';
+    }
+}
+
+//
+//  RESPOND BELOW
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+// @include respond-below(sm) {}
+@mixin respond-below($breakpoint) {
+    // If the breakpoint exists in the map.
+    @if map-has-key($breakpoints, $breakpoint) {
+        // Get the breakpoint value.
+        $breakpoint-value: map-get($breakpoints, $breakpoint); // Write the media query.
+        @media (max-width: ($breakpoint-value - 1)) {
+            @content;
+        } // If the breakpoint doesn't exist in the map.
+    }
+    @else {
+        // Log a warning.
+        @warn 'Invalid breakpoint: #{$breakpoint}.';
+    }
+}
+
+//
+//  RESPOND BETWEEN
+//––––––––––––––––––––––––––––––––––––––––––––––––––
+// @include respond-between(sm, md) {}
+@mixin respond-between($lower, $upper) {
+    // If both the lower and upper breakpoints exist in the map.
+    @if map-has-key($breakpoints, $lower) and map-has-key($breakpoints, $upper) {
+        // Get the lower and upper breakpoints.
+        $lower-breakpoint: map-get($breakpoints, $lower);
+        $upper-breakpoint: map-get($breakpoints, $upper); // Write the media query.
+        @media (min-width: $lower-breakpoint) and (max-width: ($upper-breakpoint - 1)) {
+            @content;
+        } // If one or both of the breakpoints don't exist.
+    }
+    @else {
+        // If lower breakpoint is invalid.
+        @if (map-has-key($breakpoints, $lower)==false) {
+            // Log a warning.
+            @warn 'Your lower breakpoint was invalid: #{$lower}.';
+        } // If upper breakpoint is invalid.
+        @if (map-has-key($breakpoints, $upper)==false) {
+            // Log a warning.
+            @warn 'Your upper breakpoint was invalid: #{$upper}.';
+        }
+    }
+}
+
+@include respond-between(xl, xxl) {
+    .hide-for-large-screen {
+        display: none !important;
+    }
+}
+
+@include respond-between(lg, xl) {
+    .custom-col-2 {
+        max-width: 2% !important;
+        flex: 0 0 2% !important;  
+    }
+
+    .custom-col-5 {
+        max-width: 5% !important;
+        flex: 0 0 5% !important;  
+    }
+    .custom-col-10 {
+        max-width: 10%;
+        flex: 0 0 10%;
+    }
+    .custom-col-15 {
+        max-width: 15% !important;
+        flex: 0 0 15% !important;
+    }
+    .custom-col-20 {
+        max-width: 20% !important;
+        flex: 0 0 20% !important;
+    }
+    .custom-col-26 {
+        max-width: 26% !important;
+        flex: 0 0 26% !important;
+    }
+
+    .custom-col-27 {
+        max-width: 27% !important;
+        flex: 0 0 27% !important;
+    }
+
+    .custom-col-30 {
+        max-width: 30% !important;
+        flex: 0 0 30% !important;
+    }
+    .custom-col-35 {
+        max-width: 35% !important;
+        flex: 0 0 35% !important;
+    }
+    .custom-col-40 {
+        max-width: 40% !important;
+        flex: 0 0 40% !important;
+    }
+    .custom-col-50 {
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+    .custom-col-60 {
+        max-width: 60% !important;
+        flex: 0 0 60% !important;
+    }
+
+    .custom-col-64 {
+        max-width: 64% !important;
+        flex: 0 0 64% !important;
+    }
+
+    .custom-col-70 {
+        max-width: 70% !important;
+        flex: 0 0 70% !important;
+    }
+
+    .custom-col-69 {
+        max-width: 69% !important;
+        flex: 0 0 69% !important;
+    }
+    .custom-col-75 {
+        max-width: 75% !important;
+        flex: 0 0 75% !important;
+    }
+    .custom-col-80 {
+        max-width: 80%;
+        flex: 0 0 80%;
+    }
+    .inline-form-radio-spacing {
+        padding-left: 15px;
+    }
+    .inline-checkbox-spacing {
+        padding-left: 80px;
+    }
+    .remove-spacing {
+        padding-left: 0px !important;
+    }
+    .mat-cell {
+        font-size: 12px !important;
+    }
+    .container-studeng-img {
+        height: 303px !important;
+    }
+    .custom-margin-25 {
+        margin-top: 25px;
+        margin-bottom: 25px;
+    }
+    .student-pic__size {
+        width: 225px !important;
+        margin-top: 15px;
+    }
+    .custom-med-margin-bottom-22{
+        margin-bottom: 22px;
+    }
+    .hide-for-large-screen {
+        display: none !important;
+    }
+    .remove-padding {
+        padding: 0px;
+    }
+    .functional-button-five {
+        z-index: 11111;
+        position: fixed;
+        top: 50% !important;
+        right: 20px;
+    }
+    .padding-left-222 {
+        padding-left: 222px !important;
+    }
+    .padding-left-80 {
+        padding-left: 80px !important;
+    }
+    .padding-left-100 {
+        padding-left: 100px !important;
+    }
+    .margin-bottom-115 {
+        margin-bottom: 115px !important;
+    }
+
+    .custom-fee-structure-head {
+        max-width: 30% !important;
+        flex: 0 0 30% !important;
+    }
+
+    .custom-fee-entry-col-14 {
+        max-width: 14% !important;
+        flex: 0 0 14% !important;
+    }
+
+    .custom-fee-entry-col-12 {
+        max-width: 12% !important;
+        flex: 0 0 12% !important;
+    }
+
+    .custom-fee-entry-col-5 {
+        max-width: 4% !important;
+        flex: 0 0 4% !important;
+    }
+
+    .custom-fee-entry-col-8 {
+        max-width: 8% !important;
+        flex: 0 0 8% !important;
+    }
+
+    .lap-custom-fee-entry-col-5 {
+        max-width: 5% !important;
+        flex: 0 0 5% !important;
+    }
+
+    .lap-custom-fee-entry-col-10 {
+        max-width: 10% !important;
+        flex: 0 0 10% !important;
+    }
+    .btn-custom {
+        width: 110px !important;
+    }
+    .custom-student-profile-image{
+        width: 120px !important;
+        height: 120px !important;
+    }
+    .custom-margin-top-10 {
+        margin-top: 10px !important;
+    }
+
+    // .mat-header-cell {
+    //     padding-left: 5px !important;
+    // }
+
+    // th.mat-header-cell:first-of-type {
+    //     padding-left: 10px !important;
+    // }
+    
+    
+    
+    // .cdk-overlay-container .cdk-overlay-connected-position-bounding-box .cdk-overlay-pane {
+    //     top: 45.7617px;
+    // left: 1530.52px;
+    // height: 722.238px;
+    // align-items: flex-start;
+    // justify-content: flex-start;
+    // }
+}
+
+
+@include respond-between(aslg, aelg) {
+    // .cdk-overlay-container .cdk-overlay-connected-position-bounding-box .cdk-overlay-pane {
+    //     top: 45.7617px;
+    // left: 1610.52px;
+    // height: 722.238px;
+    // align-items: flex-start;
+    // justify-content: flex-start;
+    // }
+}
+
+
+@include respond-between(sm, lg)  {
+    .custom-col-10 {
+        max-width: 10%;
+        flex: 0 0 10%;
+    }
+    .tab-custom-col-15 {
+        max-width: 15% !important;
+        flex: 0 0 15% !important;
+    }
+    .tab-custom-col-20 {
+        max-width: 20% !important;
+        flex: 0 0 20% !important;
+    }
+    .tab-custom-col-25 {
+        max-width: 25% !important;
+        flex: 0 0 25% !important;
+    }
+    .tab-custom-med-col-30 {
+        max-width: 30% !important;
+        flex: 0 0 25% !important;
+    }
+    .custom-col-50 {
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+    .tab-custom-col-75 {
+        max-width: 75% !important;
+        flex: 0 0 75% !important;
+    }
+    .tab-margin-button-bottom {
+        margin-bottom: 50px !important;
+    }
+    .tab-btn-spacer {
+        margin-left: 10px !important;
+    }
+    .hide-for-tab-screen {
+        display: none !important;
+    }
+    .tab-btn-spacer {
+        margin-left: 10px;
+    }
+    .sidenav-footer {
+        display: none !important;
+    }
+    .mat-sidenav-fixed {
+        position: absolute !important;
+    }
+    .hide-for-small-screen {
+        display: none !important;
+    }
+    
+
+    
+}
+

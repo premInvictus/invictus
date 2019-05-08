@@ -1,0 +1,55 @@
+<div *ngIf="printmechanism">
+    <div class="container-box__grey">
+       <div class="container-box__white">
+          <div class="row">
+             <div class="col-12 text-center">
+                <h4>Print Mechanism</h4>
+             </div>
+          </div>
+          <br>
+          <div class="row">
+             <div class="col-12">
+                <div class="row " *ngFor="let item of prefetchArray; let i =index">
+                   <div class="col-1 margin-top-25">
+                      <h6><b>{{i+1}}</b></h6>
+                   </div>
+                   <div class="col-7 margin-top-25">
+                      <span>{{item.label}}</span>
+                   </div>
+                   <div class="col-4">
+                      <br>
+                      {{item.value}}
+                   </div>
+                  </div>
+                  <form [formGroup] ="formGroupArray[i]" *ngFor="let item of customArray; let i = index">
+                  <div class="row ">
+                        <div class="col-1 margin-top-25">
+                           <h6><b>{{prefetchArray.length - 1 + i+1}}</b></h6>
+                        </div>
+                        <div class="col-7 margin-top-25">
+                           <span>{{item.label}}</span>
+                        </div>
+                        <div class="col-4">
+                         <mat-form-field class="form-field">
+                            <input matInput formControlName="cust_val" [placeholder]="item.label">
+                         </mat-form-field>
+                        </div>
+                       </div>
+                     </form>
+                <br>
+                <div class="row ">
+                   <div class="col-12 text-center">
+                      <button mat-raised-button class="btn-success" (click)="print()"> Print</button>
+                      <button mat-raised-button class="btn-danger btn-spacer"> Reset</button>
+                      <button mat-raised-button class="btn-setting btn-spacer" (click)="getConfigForm()">Form Configuration</button>
+                      <button mat-raised-button class="btn-neutral btn-spacer" (click)="openDialog()">Preview</button>
+                   </div>
+                </div>
+             </div>
+          </div>
+          <br>
+       </div>
+       <br>
+       <br>
+    </div>
+ </div>
