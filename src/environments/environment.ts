@@ -3,7 +3,7 @@ export const environment = {
 	apiAxiomUrl: 'http://dev-api-axiom.invictusprojects.in',
 	apiSisUrl: 'http://dev-api-sis.invictusprojects.in',
 	apiFeeUrl: 'http://dev-api-fee.invictusprojects.in',
-	logoutUrl: 'http://localhost:4200/login',
+	logoutUrl: 'http://devlogin.invictusprojects.in',
 	socketUrl: 'http://13.234.2.36:8081',
 	testInitiateCode : 'T100',
 	testStartCode : 'T101',

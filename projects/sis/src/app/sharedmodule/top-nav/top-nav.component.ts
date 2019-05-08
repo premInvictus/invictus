@@ -19,7 +19,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild('tooltip') tooltip: MatTooltip;
 
 
-	hosturl = environment.apiUrl;
+	hosturl = environment.apiSisUrl;
 	today = new Date().getFullYear();
 	schooldetailsArray: any[];
 	currentUser: any = {};
