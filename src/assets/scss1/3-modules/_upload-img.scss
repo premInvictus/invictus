@@ -1,0 +1,255 @@
+.school-logo--size {
+    width: 120px;
+}
+
+.image-studentid--size {
+    width: 150px;
+}
+
+.image-studentid--color {
+    border: 2px solid #f9a61a;
+}
+
+.barcode-size {
+    width: 65px;
+    height: 36px;
+}
+
+.student-photo--size {
+    width: 75px;
+    height: 75px;
+    border: 1px solid #000;
+}
+
+.parent-photo--size {
+    width: 65px;
+    height: 65px;
+    border: 1px solid #000;
+}
+
+.principal-sign--size {
+    width: 55px;
+    height: 24px;
+}
+
+.id-card-school-logo {
+    width: 40px;
+    height: 40px;
+    margin-top: 5px;
+}
+
+.landscape .barcode img {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    width: 113px;
+    height: 27px;
+    margin-top: 52px;
+    margin-left: -29px;
+}
+.landscape-style3 .barcode img {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    width: 118px;
+    height: 24px;
+    margin-top: 38px;
+    margin-left: -78px;
+}
+.potrait-bar .barcode img {
+    width: 187px;
+    height: 32px;
+    margin-top: 19px;
+    margin-left: -5px;
+}
+
+.background-portrait-one {
+    width: 203px;
+    height: 324px;
+    border-radius: 15px;
+    z-index: -1;
+    
+    border: 2px solid #013243;
+}
+
+.background-landscape-one {
+    width: 324px;
+    height: 204px;
+    border-radius: 15px;
+    z-index: -1;
+    border: 2px solid #013243;
+}
+
+.student-portrait-photo--size {
+    width: 70px;
+    height: 70px;
+    border: 1px solid #f6bc0a;
+}
+
+.id-card-portriat-school-logo {
+    width: 35px;
+    height: 35px;
+    margin-top: 5px;
+}
+
+.id-card-portriat-school-logo-style2 {
+    width: 25px;
+    height: 25px;
+    margin-top: 12px;
+    margin-left: 18px;
+}
+
+.bar-code-portriat-image {
+    width: 120px;
+   margin-top: 3px;
+}
+
+.parent-portrait-photo--size {
+    width: 55px;
+    height: 55px;
+    border: 1px solid #f6bc0a;
+}
+
+.portriat-principal-sign--size  {
+    margin-top: -45px;
+    margin-left: 60px;
+    width: 55px;
+    height: 24px;
+}
+
+
+.col-padding-school-addr-portrait {
+    padding-left: 10px !important;
+    padding-right: 0px !important;
+}
+
+.id-card-school-logo-style2 {
+    width: 40px;
+    height: 40px;
+    margin-top: 5px;
+}
+
+.student-photo-size--style2 {
+    margin-top: 5px;
+    margin-left: 10px;
+    width: 75px;
+    height: 75px;
+    border: 1px solid #000;
+}
+
+.student-portrait-photo--size__style3 {
+    width: 70px;
+    height: 70px;
+    border: 1px solid #d80e64;
+}
+
+.student-portrait-photo--size__style2 {
+    width: 70px;
+    height: 70px;
+    border: 1px solid #01233e;
+    margin-top: 20px;
+}
+
+.parent-portrait-photo--size__style2 {
+    width: 55px;
+    height: 55px;
+    border: 1px solid #01233e;
+}
+
+.parent-portrait-photo--size__style3 {
+    width: 55px;
+    height: 55px;
+    border: 1px solid #d80e64;
+}
+
+.bar-code-image-style2 {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    width: 120px;
+    margin-top: 45px;
+    margin-left: -50px;
+}
+
+.id-card-school-logo-style-3 {
+    width: 25px;
+    height: 25px;
+    margin-top: 22px;
+    margin-left: 18px;
+}
+
+.student-photo--size--style3 {
+    width: 65px;
+    height: 65px;
+    border: 1px solid #000;
+}
+
+.bar-code-image-style3 {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    width: 120px;
+    margin-top: 30px;
+    margin-left: -68px;
+}
+
+.btn-doc-upload-preview {
+    height:80px;
+    width:80px;
+    border:1px solid #646471;
+    border-radius: 4%; 
+    position: relative
+}
+
+.bulk-upload-icon {
+    font-size: 72px !important;
+    color: #88a3af;
+}
+
+.auth-sign-size {
+    height: 45px;;
+}
+
+.dash-enquiry-img {
+    width: 65px;
+}
+
+.image-upload-btn {
+    display: none;
+}
+
+.parent-pic__size {
+    margin-top: 10px;
+    width: 120px !important;
+    height: 120px !important;
+    border: 2px solid #dfdfdf;
+}
+
+.parent-pictwo__size {
+    width: 37px;
+}
+
+.parent-pic--imgtwo {
+    position: absolute;
+    top: 79%;
+    left: 69%;
+}
+
+.call-field-icon {
+    transform: rotate(90deg);
+}
+
+// [_nghost-c27] .cropper[_ngcontent-c27] {
+//     width: 390px !important;
+//     height: 390px !important;
+// }
+
+.crop-image-previewer {
+    border: 1px solid #bcbcbc;
+    padding: 10px;
+    position: absolute;
+    top: 18%;
+    margin-left: 25px;
+    width: 150px;
+    height: 150px;
+}
+
+.thumbnail-img {
+    object-fit: contain;
+}

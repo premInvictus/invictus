@@ -39,13 +39,13 @@ export class SideNavComponent implements OnInit, OnChanges {
 
 moveToDashboard() {
 	if (this.currentUser.role_id === '1') {
-		this.router.navigateByUrl('admin');
+		this.router.navigateByUrl('axiom/admin');
 	} else if (this.currentUser.role_id === '2') {
-		this.router.navigateByUrl('school');
+		this.router.navigateByUrl('axiom/school');
 	} else if (this.currentUser.role_id === '3') {
-		this.router.navigateByUrl('teacher');
+		this.router.navigateByUrl('axiom/teacher');
 	} else {
-		this.router.navigateByUrl('student');
+		this.router.navigateByUrl('axiom/student');
 	}
 }
 
