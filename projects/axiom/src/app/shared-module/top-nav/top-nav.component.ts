@@ -9,6 +9,7 @@ import { SisService} from 'projects/fee/src/app/_services';
 import {CommonAPIService, NotificationService} from 'projects/axiom/src/app/_services/index';
 import { QelementService } from '../../questionbank/service/qelement.service';
 import { AdminService } from '../../user-type/admin/services/admin.service';
+import {LoaderService} from 'projects/fee/src/app/_services/loader.service';
 
 @Component({
 	selector: 'app-top-nav',
@@ -60,6 +61,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		private adminService: AdminService,
 		private userTypeService: UserTypeService,
 		private notif: NotificationService,
+		private loader: LoaderService,
 		private commonAPIService: CommonAPIService, private _cookieService: CookieService,
 		private route: ActivatedRoute) {
 
@@ -205,7 +207,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		});
 	}
 	goToProject(pro_url, pro_status, pro_id) {
-		console.log(pro_id);
+		this.loader.startLoading();
 		const findex = this.projectsArray.findIndex(f => f.pro_id === pro_id);
 		if (findex !== -1) {
 			this.defaultProject = this.projectsArray[findex].pro_name;
