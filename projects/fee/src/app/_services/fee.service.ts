@@ -114,27 +114,27 @@ export class FeeService {
 
 	getRoutes(value: any) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/transportroutes/getTransportRoutes/', value);
+		return this.http.post(environment.apiFeeUrl + '/transportroutes/getTransportRoutes', value);
 	}
 	getStoppages(value: any) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/transportstoppages/getTransportStoppages/', value);
+		return this.http.post(environment.apiFeeUrl + '/transportstoppages/getTransportStoppages', value);
 	}
 	saveRoute(value: any) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/transportroutes/insertTransportRoutes/', value);
+		return this.http.post(environment.apiFeeUrl + '/transportroutes/insertTransportRoutes', value);
 	}
 	getSlabs(value: any) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/transportslab/getTransportSlab/', value);
+		return this.http.post(environment.apiFeeUrl + '/transportslab/getTransportSlab', value);
 	}
 	saveStoppage(value: any) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/transportstoppages/insertTransportStoppages/', value);
+		return this.http.post(environment.apiFeeUrl + '/transportstoppages/insertTransportStoppages', value);
 	}
 	saveTransportSlab(value: any) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/transportslab/insertTransportSlab/', value);
+		return this.http.post(environment.apiFeeUrl + '/transportslab/insertTransportSlab', value);
 	}
 	insertFeeStructure(value) {
 		this.service.startLoading();
