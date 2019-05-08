@@ -1,7 +1,16 @@
 export const environment = {
 	production: true,
-	apiUrl: 'https://apifee.invictusdigisoft.com',
+	apiAxiomUrl: 'https://apiaxiom.invictusdigisoft.com',
 	apiSisUrl: 'https://apisis.invictusdigisoft.com',
-	singleLogin: 'active',
-	logoutUrl: 'https://login.invictusdigisoft.com'
+	apiFeeUrl: 'https://apifee.invictusdigisoft.com',
+	logoutUrl: 'https://login.invictusdigisoft.com',
+	socketUrl: 'https://sockets.invictusdigisoft.com',
+	testInitiateCode : 'T100',
+	testStartCode : 'T101',
+	testOngoingCode : 'T102',
+	testSubmitCode : 'T103',
+	testInternetErrorCode : 'T104',
+	testSuspiciousErrorCode : 'T105',
+	testExtendCode: 'T106',
+	testEndCode: 'T107'
 };

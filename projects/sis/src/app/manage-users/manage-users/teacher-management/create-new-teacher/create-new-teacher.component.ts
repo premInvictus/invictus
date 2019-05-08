@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonAPIService } from '../../../../_services/index';
 import { ManageUsersService } from '../../../service/manage-users.service';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
-import { environment } from '../../../../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DatePipe } from '@angular/common';
 
@@ -32,7 +32,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	Qualification_Form: FormGroup;
 	Documents_Form: FormGroup;
 	Remark_Form: FormGroup;
-	hosturl = environment.apiUrl;
+	hosturl = environment.apiSisUrl;
 	subjectArray: any[];
 	classArray: any[];
 	sectionArray: any[];

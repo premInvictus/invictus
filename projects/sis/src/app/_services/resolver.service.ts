@@ -27,7 +27,7 @@ export class ResolverService {
 				const validate_token = params.validate_token;
 				const req = new XMLHttpRequest();
 				req.overrideMimeType('application/json');
-				req.open('GET', environment.apiUrl + '/users/authentication?validate_token=' + validate_token, true);
+				req.open('GET', environment.apiSisUrl + '/users/authentication?validate_token=' + validate_token, true);
 				req.onload = () => {
 					const jsonResponse = JSON.parse(req.responseText);
 					// do something with jsonResponse

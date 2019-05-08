@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { CommonAPIService } from '../../../../_services/index';
 import { ManageUsersService } from '../../../service/manage-users.service';
-import { environment } from '../../../../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SearchTeacherComponent } from './search-teacher/search-teacher.component';
 
@@ -24,7 +24,7 @@ export class ViewTeacherProfileComponent implements OnInit {
 	Documents_Form: FormGroup;
 	Remark_Form: FormGroup;
 	schoolinfoArray: any = {};
-	hosturl = environment.apiUrl;
+	hosturl = environment.apiSisUrl;
 	currentTeacherLoginIndex: number;
 	schoolId: number;
 	url: any;

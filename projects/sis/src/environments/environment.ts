@@ -1,21 +1,16 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
 export const environment = {
 	production: false,
-	apiUrl: 'http://dev-api-sis.invictusprojects.in',
+	apiAxiomUrl: 'http://dev-api-axiom.invictusprojects.in',
+	apiSisUrl: 'http://dev-api-sis.invictusprojects.in',
 	apiFeeUrl: 'http://dev-api-fee.invictusprojects.in',
-	singleLogin: 'active',
-	logoutUrl: 'http://devlogin.invictusprojects.in'
-
+	logoutUrl: 'http://devlogin.invictusprojects.in',
+	socketUrl: 'http://13.234.2.36:8081',
+	testInitiateCode : 'T100',
+	testStartCode : 'T101',
+	testOngoingCode : 'T102',
+	testSubmitCode : 'T103',
+	testInternetErrorCode : 'T104',
+	testSuspiciousErrorCode : 'T105',
+	testExtendCode: 'T106',
+	testEndCode: 'T107'
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.

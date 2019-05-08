@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonAPIService } from '../../../../../_services/index';
 import { ManageUsersService } from '../../../../service/manage-users.service';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
-import { environment } from '../../../../../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 
@@ -22,7 +22,7 @@ export class SearchTeacherComponent implements OnInit {
 	Documents_Form: FormGroup;
 	Remark_Form: FormGroup;
 	schoolinfoArray: any = {};
-	hosturl = environment.apiUrl;
+	hosturl = environment.apiSisUrl;
 	currentTeacherLoginIndex: number;
 	teacherinfo = false;
 	schoolId: number;

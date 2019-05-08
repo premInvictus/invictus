@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MatSidenav, MatTooltip } from '@angular/material';
-import { environment } from '../../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { UserTypeService } from '../../usertype/usertype.service';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { Router, CanActivate, ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
@@ -18,7 +18,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild('sidenav') sidenav: MatSidenav;
 	@ViewChild('tooltip') tooltip: MatTooltip;
 
-	hosturl = environment.apiUrl;
+	hosturl = environment.apiFeeUrl;
 	today = new Date().getFullYear();
 	schooldetailsArray: any[];
 	currentUser: any = {};

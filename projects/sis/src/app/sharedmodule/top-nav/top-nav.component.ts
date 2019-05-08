@@ -18,7 +18,8 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild('sidenav') sidenav: MatSidenav;
 	@ViewChild('tooltip') tooltip: MatTooltip;
 
-	hosturl = environment.apiAxiomUrl;
+
+	hosturl = environment.apiSisUrl;
 	today = new Date().getFullYear();
 	schooldetailsArray: any[];
 	currentUser: any = {};
