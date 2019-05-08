@@ -39,6 +39,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
 	feePeriod: any[] = [];
 	classDataArray: any[] = [];
+	pageEvent: PageEvent;
 	feeReportArray: any[] = [
 		{
 			report_id: '1',

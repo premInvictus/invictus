@@ -8,7 +8,7 @@
                 <h1>Fee Heads</h1>
             </div>
             <div class="col-6 text-right">
-              <div class="inline-flex"><h3>School</h3> <mat-slide-toggle  class="btn-spacer" [ngModel]="fh_is_hostel_fee == '1' ? 'checked' : ''"
+              <div class="inline-flex"><h3>School</h3> <mat-slide-toggle  class="btn-spacer" [ngModel]="fh_is_hostel_fee === 1 ? 'checked' : ''"
                 (change)="changeIsHostelFee($event)"></mat-slide-toggle><h3 class="btn-spacer">Hostel</h3></div>
               
             </div>
