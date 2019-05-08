@@ -25,7 +25,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -108,7 +110,9 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -178,7 +182,9 @@
             "styles": [
               "projects/axiom/src/styles.css"
             ],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -261,7 +267,9 @@
             "styles": [
               "projects/axiom/src/styles.css"
             ],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ],
             "assets": [
               "projects/axiom/src/favicon.ico",
               "projects/axiom/src/assets"
@@ -331,7 +339,9 @@
             "styles": [
               "projects/sis/src/styles.scss"
             ],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -484,7 +494,9 @@
             "styles": [
               "projects/fee/src/styles.scss"
             ],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -567,7 +579,9 @@
             "styles": [
               "projects/fee/src/styles.css"
             ],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ],
             "assets": [
               "projects/fee/src/favicon.ico",
               "projects/fee/src/assets"
@@ -608,6 +622,125 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "projects/fee-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "student-app": {
+      "root": "projects/student-app/",
+      "sourceRoot": "projects/student-app/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/student-app",
+            "index": "projects/student-app/src/index.html",
+            "main": "projects/student-app/src/main.ts",
+            "polyfills": "projects/student-app/src/polyfills.ts",
+            "tsConfig": "projects/student-app/tsconfig.app.json",
+            "assets": [
+              "projects/student-app/src/favicon.ico",
+              "projects/student-app/src/assets"
+            ],
+            "styles": [
+              "projects/student-app/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/student-app/src/environments/environment.ts",
+                  "with": "projects/student-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "student-app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "student-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "student-app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/student-app/src/test.ts",
+            "polyfills": "projects/student-app/src/polyfills.ts",
+            "tsConfig": "projects/student-app/tsconfig.spec.json",
+            "karmaConfig": "projects/student-app/karma.conf.js",
+            "styles": [
+              "projects/student-app/src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/student-app/src/favicon.ico",
+              "projects/student-app/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/student-app/tsconfig.app.json",
+              "projects/student-app/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "student-app-e2e": {
+      "root": "projects/student-app-e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/student-app-e2e/protractor.conf.js",
+            "devServerTarget": "student-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "student-app:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/student-app-e2e/tsconfig.e2e.json",
             "exclude": [
               "**/node_modules/**"
             ]

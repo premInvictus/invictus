@@ -1,0 +1,12 @@
+.adv-jee-instruction-screen {
+    height: 600px;
+    overflow: hidden
+}
+.adv-jee-child-instruction{
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+}
+::-webkit-scrollbar {
+    display: none;
+}

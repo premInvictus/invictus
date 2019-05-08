@@ -9,9 +9,12 @@ import { map, catchError, retry } from 'rxjs/operators';
 import { CommonAPIService, ProcesstypeService } from '../_services/index';
 import { environment } from '../../environments/environment';
 import {CookieService} from 'ngx-cookie';
+import {Router} from '@angular/router';
 @Injectable()
 export class SuccessErrorInterceptor implements HttpInterceptor {
-	constructor(private service: CommonAPIService, private processtypeService: ProcesstypeService,
+	constructor(private service: CommonAPIService,
+		private processtypeService: ProcesstypeService,
+		private router: Router,
 		private cookieService: CookieService) { }
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		if (!request.headers.has('Content-Type')) {

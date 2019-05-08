@@ -1,0 +1,43 @@
+input[type=checkbox], input[type=radio]{
+  box-sizing: border-box;
+  height: 20px;
+  transition: border-color ease 280ms;
+  width: 20px;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 50%;
+}
+.bookmark-expansion-panel-decorator {
+  margin-bottom: 10px !important;
+  margin: 5px 10px !important;
+  /* background-color:#f1f1f19e !important;
+  border: 1px solid #6c757dbd !important; */
+  border-radius: 5px !important;
+}
+
+.bookmark-expansion-panel-decorator.mat-expanded {
+  background:white !important;
+  margin-bottom: 10px !important;
+  margin: 5px 10px !important;
+  /* border: 1px solid #6c757dbd !important; */
+  border-radius: 5px !important;
+  height:570px !important;
+}
+
+::ng-deep .bookmark-checkbox .mat-checkbox-frame {
+  border-color: white;
+}
+.mydiv.ng-star-inserted {
+  border: 1px solid #93cfee;
+  padding-top: 5px;
+  margin-bottom:19px;
+  height:100%;
+  /* overflow-y: scroll; */
+}
+
+@media (min-width: 960px) and (max-width: 991px) {
+   .bookmark-expansion-panel-decorator.mat-expanded {
+
+     height: 620px !important;
+   }
+}

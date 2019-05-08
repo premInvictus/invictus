@@ -1,0 +1,326 @@
+<div class="add-question-content">
+  <div class="row">
+    <div class="col-lg-12 col-mobile-view-add-ques">
+      <div class="white-box">
+        <div class="white-box-content">
+          <div class="report-card-container">
+            <div class="row">
+              <div class="col-lg-12">
+
+                <div class="row">
+                  <div class="col-lg-3">
+                    <img class="test-report-icon" src="../../../../assets/images/idea.svg">
+                  </div>
+                  <div class="col-lg-9">
+                    <span class="report-card-title float-right">Progress Report
+                      <br>
+                      <span class="report-card-sub-title float-right">Test Report Summary</span>
+                    </span>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <hr>
+            <br>
+            <div *ngIf="!onlyObjectiveFlag">
+              <div class="row">
+                <div class="col-lg-12">
+                  <span class="congrats-message">Congragulations!
+                    <span>
+                      <img class="congrats-icon" src="../../../../assets/images/congrats.gif">
+                    </span>
+                    <br>
+                    <span>
+                      This question paper contains subjective question which needs to be manually evaluated.<br> Please
+                      review your performance once the results are published.
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getTestSummaryDivStatus()">
+              <div class="row">
+                <div class="col-lg-12">
+                  <span class="congrats-message">Congratulations!
+                    <span>
+                      <img class="congrats-icon" src="../../../../assets/images/congrats.gif">
+                    </span>
+                    <br>
+                    <span>
+                      You have successfully submitted your test.
+                      <br>
+                      {{examDetail.es_message}}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <br>
+              <br>
+              <div class="row">
+                <div class="col-lg-12 remove-col-modal-padding">
+                  <div class="row">
+                    <div class="col-lg-4 fin-tab-col-33">
+                      <mat-card class="score-card-info-card-main-box">
+                        <div class="score-card-info-car-box">
+                          <div class="row row-remove-top-margin">
+                            <div class="col-lg-12 remove-col-modal-padding">
+                              <div class="row">
+
+                                <div class="col-lg-12">
+
+                                  <div class="student-attend-card-info">
+                                    <span class="teacher-score-card-dynamic-value test-report-card-value">
+                                      <b>{{marksDetails.total_mark}}</b><span>/{{examDetail.tp_marks}}</span>
+                                    </span>
+                                    <br>
+                                    <span>Marks Obtained</span>
+                                    <br>
+
+                                  </div>
+                                </div>
+                              </div>
+                              <br>
+                              <div class="row">
+                                <div class="col-lg-12">
+                                  <div class="mob-card-img">
+                                    <div class="gauges-container-test-summary">
+                                      <ngx-gauge [type]="gaugeType"
+                                        [value]="gaugeValueMarkObt(marksDetails.total_mark,examDetail.tp_marks)"
+                                        [label]="gaugeLabel" [append]="gaugeAppendText">
+                                      </ngx-gauge>
+                                      <!-- <app-common-dynamic-chart [options]="gaugeOptions"></app-common-dynamic-chart> -->
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
+                      </mat-card>
+                    </div>
+                    <div class="col-lg-4 fin-tab-col-33">
+                      <mat-card class="score-card-info-card-main-box">
+                        <div class="score-card-info-car-box">
+                          <div class="row row-remove-top-margin">
+                            <div class="col-lg-12 remove-col-modal-padding">
+                              <div class="row">
+
+                                <div class="col-lg-12">
+
+                                  <div class="student-attend-card-info test-invigilation-bottom-card">
+                                    <span class="teacher-score-card-dynamic-value test-report-card-value ">
+                                      <b>{{correctQArray.length+incorrectQArray.length}}</b><span>/{{correctQArray.length+incorrectQArray.length+skipQArray.length}}</span>
+                                    </span>
+                                    <br>
+                                    <span>Question Attempted</span>
+                                    <br>
+
+                                  </div>
+                                </div>
+                              </div>
+                              <br>
+                              <div class="row">
+                                <div class="col-lg-12">
+                                  <div class="mob-card-img">
+                                    <div class="gauges-container-test-summary">
+                                      <ngx-gauge [type]="gaugeType1"
+                                        [value]="gaugeValueQuesAtt((correctQArray.length+incorrectQArray.length),(correctQArray.length+incorrectQArray.length+skipQArray.length))"
+                                        [label]="gaugeLabel1" [append]="gaugeAppendText1">
+                                      </ngx-gauge>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
+                      </mat-card>
+                    </div>
+                    <div class="col-lg-4 fin-tab-col-33">
+                      <mat-card class="score-card-info-card-main-box">
+                        <div class="score-card-info-car-box">
+                          <div class="row row-remove-top-margin">
+                            <div class="col-lg-12 remove-col-modal-padding">
+                              <div class="row">
+
+                                <div class="col-lg-12">
+
+                                  <div class="student-attend-card-info test-invigilation-bottom-card">
+                                    <span class="teacher-score-card-dynamic-value test-report-card-value">
+                                      <b>{{timeTakenDetail.time_taken}} Min</b>
+                                    </span>
+                                    <br>
+                                    <span>Time Taken</span>
+                                    <br>
+
+                                  </div>
+                                </div>
+                              </div>
+                              <br>
+                              <div class="row">
+                                <div class="col-lg-12">
+                                  <div class="mob-card-img">
+                                    <div class="gauges-container-test-summary">
+                                      <ngx-gauge [type]="gaugeType2"
+                                        [value]="(timeTakenDetail.time_taken/examDetail.tp_time_alloted)*100"
+                                        [label]="gaugeLabel2" [append]="gaugeAppendText2">
+                                      </ngx-gauge>
+                                      <!-- <app-common-dynamic-chart [options]="gaugeOptions3"></app-common-dynamic-chart> -->
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
+                      </mat-card>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="row">
+                    <div class="col-lg-6 fin-tab-col-50">
+                      <div class="row">
+                        <div class="col-lg-12 remove-col-modal-padding">
+                          <span class="float-left report-rest-title">Question Analysis</span>
+                        </div>
+                      </div>
+                      <hr>
+                      <table class="text-left table table-bordered">
+                        <tr>
+                          <td style="width: 70%">
+                            Analysis
+                          </td>
+                          <td>
+                            Value
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Total Question
+                          </td>
+                          <td>{{correctQArray.length+incorrectQArray.length+skipQArray.length}}</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Total Attempted
+                          </td>
+                          <td>
+                            {{correctQArray.length+incorrectQArray.length}}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Correct Question
+                          </td>
+                          <td>{{this.correctQArray.length}}</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Incorrect Question
+                          </td>
+                          <td>
+                            {{incorrectQArray.length}}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Skipped Question
+                          </td>
+                          <td>
+                            {{skipQArray.length}}
+                          </td>
+                        </tr>
+
+                      </table>
+
+                    </div>
+                    <div class="col-lg-6 fin-tab-col-50">
+                      <div class="row">
+                        <div class="col-lg-12 remove-col-modal-padding">
+                          <span class="float-left report-rest-title">Marks Analysis</span>
+                        </div>
+                      </div>
+                      <hr>
+                      <table class="text-left table table-bordered">
+                        <tr>
+                          <td style="width: 70%">
+                            Analysis
+                          </td>
+                          <td>
+                            Value
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Maximum Marks
+                          </td>
+                          <td>{{examDetail.tp_marks}}</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Marks Scored
+                          </td>
+                          <td>
+                            {{marksDetails.total_mark}}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Negative Marks
+                          </td>
+                          <td>0</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Total Marks
+                          </td>
+                          <td>
+                            {{marksDetails.total_mark}}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Status
+                          </td>
+                          <td>
+                            <div [innerHTML]="getResultStatus(marksDetails.total_mark,examDetail.tp_marks)"></div>
+                          </td>
+                        </tr>
+
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+              <div class="col-lg-12">
+                <button mat-button class="reset-button" (click)="closeResult()"> Close Result</button>
+              </div>
+            </div>
+
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<br>
