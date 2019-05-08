@@ -56,6 +56,7 @@ export class AuthenticationService {
 		}
 
 		getUserProjectDetail(value: any) {
+				this.loaderService.startLoading();
 				const userParam = value.username.split('-');
 				const prefixOptions = {
 						'Prefix': userParam[0]

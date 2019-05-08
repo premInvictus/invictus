@@ -92,9 +92,11 @@ export class LoginComponent implements OnInit {
 		this.forgotPassword = false;
 	}
 
-	login(event: Event) {
-		event.stopPropagation();
-		// this.loading = true;
+	login(event) {
+		if (Number(event.keyCode) === 13) {
+			event.stopPropagation();
+			return false;
+		}
 		this._cookieService.put('username', this.model.username);
 		this._cookieService.put('password', this.model.password);
 		this._cookieService.put('remember', this.model.rememberme);
