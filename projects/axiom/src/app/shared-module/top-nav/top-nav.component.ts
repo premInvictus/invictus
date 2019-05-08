@@ -5,7 +5,10 @@ import { MatSidenav, MatTooltip } from '@angular/material';
 import { CookieService } from 'ngx-cookie';
 import { environment } from 'src/environments/environment';
 import { UserTypeService } from 'projects/fee/src/app/usertype/usertype.service';
-import { SisService, CommonAPIService } from 'projects/fee/src/app/_services';
+import { SisService} from 'projects/fee/src/app/_services';
+import {CommonAPIService, NotificationService} from 'projects/axiom/src/app/_services/index';
+import { QelementService } from '../../questionbank/service/qelement.service';
+import { AdminService } from '../../user-type/admin/services/admin.service';
 
 @Component({
 	selector: 'app-top-nav',
@@ -53,7 +56,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
 		private sisService: SisService,
 		private router: Router,
+		private qelementService: QelementService,
+		private adminService: AdminService,
 		private userTypeService: UserTypeService,
+		private notif: NotificationService,
 		private commonAPIService: CommonAPIService, private _cookieService: CookieService,
 		private route: ActivatedRoute) {
 
@@ -88,6 +94,51 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		wrapperMenu.addEventListener('click', function () {
 			wrapperMenu.classList.toggle('open');
 		});
+		if (!(JSON.parse(localStorage.getItem('qSubType')))) {
+			if (this._cookieService.get('userData')) {
+				this.commonAPIService.getQTypeFromApi().subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.commonAPIService.setQType(result.data);
+						localStorage.setItem('qSubType', JSON.stringify(result.data));
+					}
+				});
+				}
+			} else {
+				this.commonAPIService.setQType(JSON.parse(localStorage.getItem('qSubType')));
+			}
+			this.upperMenu = '<i class=\'fas fa-users\'></i>';
+			this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+			this.session = JSON.parse(localStorage.getItem('session'));
+			if (this.currentUser.role_id === 1) {
+				this.getUserAccessSchool();
+			}
+			if (this.currentUser.full_name) {
+				this.usernane = this.currentUser.full_name.charAt(0).toUpperCase() + this.currentUser.full_name.slice(1);
+			}
+			this.getSchool();
+			this.getSession();
+			this.getProjectList();
+			this.checkUpdateProfile();
+			this.checkViewProfile();
+			const param: any = {};
+			if (this.currentUser.role_id !== '4') {
+				param.login_id = this.currentUser.login_id;
+			}
+			this.getUser();
+	}
+	checkUpdateProfile() {
+		if (this.currentUser.role_id === '4' || this.currentUser.role_id === '3') {
+			this.updateProfileFlag = true;
+		} else {
+			this.updateProfileFlag = false;
+		}
+	}
+	checkViewProfile() {
+		if (this.currentUser.role_id === '4' || this.currentUser.role_id === '3') {
+			this.viewProfileFlag = false;
+		} else {
+			this.viewProfileFlag = true;
+		}
 	}
 
 	ngAfterViewInit() {
@@ -102,6 +153,37 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.getSchool();
 			}
 		});
+	}
+	getUser() {
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		const param: any = {};
+		param.login_id = this.currentUser.login_id;
+		param.role_id = this.currentUser.role_id;
+		this.qelementService.getUser(param).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.getUserDetail = result.data;
+					if (this.getUserDetail[0].au_profileimage && this.getUserDetail[0].au_profileimage.charAt(0) === '.') {
+						this.image = this.getUserDetail[0].au_profileimage.substring(1, this.getUserDetail[0].au_profileimage.length);
+					} else {
+						this.image = this.getUserDetail[0].au_profileimage;
+					}
+					if (this.image) {
+						this.showImage = true;
+					} else {
+						this.showImageBlank = true;
+					}
+				}
+			});
+	}
+
+	getUserAccessSchool() {
+		this.adminService.getUserAccessSchool({ login_id: this.currentUser.login_id }).subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					this.schooldetailsArray = result.data;
+				}
+			});
 	}
 	setSession(ses_id) {
 		localStorage.removeItem('session');
@@ -163,7 +245,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 						this._cookieService.removeAll();
 						this.router.navigate(['/login']);
 					} else {
-						this.commonAPIService.showSuccessErrorMessage('Error While Logout', 'error');
+						this.notif.showSuccessErrorMessage('Error While Logout', 'error');
 					}
 				});
 		}
