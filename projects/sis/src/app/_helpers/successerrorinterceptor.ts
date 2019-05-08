@@ -47,7 +47,7 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 						event.body.data === 'Token Not Matched')) {
 						localStorage.clear();
 						this.cookieService.removeAll();
-						window.location.href = environment.logoutUrl;
+						this.router.navigate(['/login']);
 					}
 
 					this.service.stopLoading();
