@@ -40,6 +40,7 @@ export class StudentTestConfirmationScreenComponent implements OnInit {
 						this.testResultFlag = false;
 						clearInterval(this.xInterval);
 						this.router.navigate(['../../test-summary', this.es_id], {relativeTo: this.route});
+					} else if (Number(this.examDetail.es_exam_type) === 2) {
 						setTimeout(() => {
 							this.testResultFlag = false;
 						}, 3000);

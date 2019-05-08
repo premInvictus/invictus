@@ -49,9 +49,9 @@ export class FilterModalComponent implements OnInit {
 		{ filterId: 'au_enrollment_status', apiName: 'getEnrollmentStatus', fieldId: 'enrol_id', fieldValue: 'enrol_name' },
 		{ filterId: 'upd_gender', apiName: 'getGender', fieldId: 'gen_id', fieldValue: 'gen_name' },
 		{ filterId: 'upd_category', apiName: 'getCategory', fieldId: 'cat_id', fieldValue: 'cat_name' },
-		{ filterId: 'fcc_id', apiName: 'getConcessionCategory', fieldId: 'fcc_id', fieldValue: 'fcc_name' },
-		{ filterId: 'ts_id', apiName: 'getSlabs', fieldId: 'ts_id', fieldValue: 'ts_name' },
-		{ filterId: 'tr_id', apiName: 'getRoutes', fieldId: 'tr_id', fieldValue: 'tr_route_name' }
+		{ filterId: 'accd_fcg_id', apiName: 'getConcessionCategory', fieldId: 'fcc_id', fieldValue: 'fcc_name' },
+		{ filterId: 'accd_ts_id', apiName: 'getSlabs', fieldId: 'ts_id', fieldValue: 'ts_name' },
+		{ filterId: 'accd_tr_id', apiName: 'getRoutes', fieldId: 'tr_id', fieldValue: 'tr_route_name' }
 	];
 	filtertype = null;
 	constructor(
