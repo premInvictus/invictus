@@ -11,7 +11,6 @@ import { TeacherReportQuesReviewComponent } from './teacher-report-ques-review/t
 import { TeacherTestReportComponent } from './teacher-test-report/teacher-test-report.component';
 import { TeacherReportAnalysisComponent } from './teacher-report-analysis/teacher-report-analysis.component';
 import { IndividualStudentReportComponent } from './individual-student-report/individual-student-report.component';
-import { StudentScoreCardComponent } from '../reports/student/student-score-card/student-score-card.component';
 import { SharedModule } from '../shared-module/share-module.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
@@ -39,7 +38,6 @@ import { TooltipModule } from 'ngx-bootstrap';
 		TeacherResponseDistributionComponent, TeacherReportQuesReviewComponent,
 		TeacherTestReportComponent, TeacherReportAnalysisComponent,
 		IndividualStudentReportComponent,
-		StudentScoreCardComponent
 	]
 })
 export class TestReportsModule { }
