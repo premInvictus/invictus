@@ -75,27 +75,27 @@ const routes: Routes = [
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]
 	},
-	{
-		path: 'student',
-		component: StudentComponent,
-		canActivate: [AuthGuard],
-		children: [
-			{ path: '', component: StudentDashboardComponent },
-			{
-				path: 'report',
-				loadChildren: () => ReportsModule
-			},
-			{
-				path: 'eassessment',
-				loadChildren: () => EassessmentModule
-			},
-			{
-				path: 'test-report',
-				loadChildren: () => TestReportsModule
-			},
-			{ path: 'user-credential', component: UserCredentialComponent }
-		]
-	},
+	// {
+	// 	path: 'student',
+	// 	component: StudentComponent,
+	// 	canActivate: [AuthGuard],
+	// 	children: [
+	// 		{ path: '', component: StudentDashboardComponent },
+	// 		{
+	// 			path: 'report',
+	// 			loadChildren: () => ReportsModule
+	// 		},
+	// 		{
+	// 			path: 'eassessment',
+	// 			loadChildren: () => EassessmentModule
+	// 		},
+	// 		{
+	// 			path: 'test-report',
+	// 			loadChildren: () => TestReportsModule
+	// 		},
+	// 		{ path: 'user-credential', component: UserCredentialComponent }
+	// 	]
+	// },
 	{
 		path: 'teacher',
 		component: TeacherComponent,

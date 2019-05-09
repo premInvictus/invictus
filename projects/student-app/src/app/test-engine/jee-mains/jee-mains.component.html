@@ -1,0 +1,681 @@
+<div class="row">
+  <div class="col-12 margin-top-10 mob-remove-padding-right">
+    <div class="row">
+      <div class="col-1 mob-col-20 custom-col-1">
+        <img class="company-logo" src="../../assets/invictus-logo.png">
+      </div>
+      <div class="col-7 mob-col-80">
+        <h1 class="instruction-company-title">Axiom - Assessment Center </h1>
+        <div class="instruction-sub-title">
+          <span>Excellence in Assessment</span>
+        </div>
+      </div>
+      <div class="col-4 mob-col-100">
+        <div class="row">
+          <div class="col-2 mob-col-30">
+            <div class="participant-pic"><img style="height:100%" [src]="userprofileimage"></div>
+          </div>
+          <div class="col-10 student-info-container mob-col-70 text-left margin-top-5">
+            <span>Candidate Name:</span> <span class="title-name"> [{{currentUser.full_name}}]</span><br>
+            <span>Subject Name:</span><span class="title-name"> [{{examDetail.qp_name}}]</span><br>
+            <span>Time remaining:</span>
+            <div class="time-remaining"><span class="font-white font-size-13 time-remain-text"><span>
+                  {{timers}}</span></span></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="container-box__orange">
+          <div class=" padding-10">
+            <div class="row">
+              <div class="col-6 mob-col-100 padding-15 mob-padding-15">
+                <span class="instruction-main-title">JEE MAIN</span>
+                <button [hidden]="!ongoingDiv" *ngFor="let item of examSubArray"
+                  (click)="loadCurrentQ(item.sub_qus_ind)" mat-raised-button
+                  class="subject-btn btn-spacer btn-without-radius">{{item.sub_name}}</button>
+              </div>
+              <div class="col-2 mob-col-100 padding-15 mob-padding-15">
+                <!-- <label class="language-label font-size-14">Download Exam Paper :</label><br> -->
+                <button mat-raised-button class="subject-btn btn-without-radius">Download Paper</button>
+              </div>
+              <div class="col-4 mob-col-100 text-right" [hidden]="!ongoingDiv">
+                <label class="language-label font-size-14">Choose Your Default Language</label><br>
+                <select class="language-select">
+                  <option value="volvo">English</option>
+                  <option value="saab">Hindi</option>
+                  <option value="opel">Tamil</option>
+                  <option value="audi">Telgu</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="ongoingDiv">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-8 mob-col-100 jee-main-col-74 remove-left-padding mob-remove-padding-right"
+            id="left-ques-container">
+            <div class="row">
+              <div class="col-12 remove-padding">
+                <div class="question-container">
+                  <!-- <div class="navigation-arrow-left text-center padding-top-5"><i
+                      class="fas fa-chevron-left font-white"></i></div> -->
+                  <!-- <div class="navigation-arrow-right text-center padding-top-5"><i
+                      class="fas fa-chevron-right font-white"></i></div> -->
+                  <div class="mid-nav-button-jee-mains" id="midnavbutton"
+                    (click)="isCollapsed = !isCollapsed;midButtonClick()" [attr.aria-expanded]="!isCollapsed"
+                    aria-controls="collapseBasic">
+                    <div class="adv-mid-button">
+                      <i class="fas fa-chevron-right" id="midnavarrowbtn"></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <h6>Question {{currentQAIndex+1}}</h6>
+                    </div>
+                    <div class="col-6 text-right">
+                      <i class="fas fa-arrow-circle-down font-size-30 font-color-blue align-middle"></i>
+                    </div>
+                  </div>
+                  <div class="hor-line-divider"></div>
+                  <div class="actual-question-container">
+                    <!-- start essay div -->
+                    <div class="row" *ngIf="currentQAHasEssay">
+                      <div class="col-12">
+                        <div class="question-display-div-content">
+                          <div class="wrap-text">
+                            <span class="imgclassQpList" [MathJax]="currentEssay.ess_description"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- end essay div -->
+                    <!-- start question name div -->
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="question-display-div-content">
+                          <div class="wrap-text">
+                            <span class="test-question" [MathJax]="currentQA.qus_name"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- end question name div -->
+                    <div *ngIf="currentQA.qus_qst_id == 1">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="option-section">
+                            <div class="row row-remove-top-margin" *ngFor="let option of currentQA.options;let i=index">
+                              <div class="col-12 col-mobile-view-add-ques question-subtype-col-div">
+                                <div class="row row-remove-top-margin">
+                                  <div class="col-1 remove-col-modal-padding option-value-input">
+                                    <span>{{optionMCQHA[i]}}.</span>
+                                  </div>
+                                  <div class="col-10 fin-tab-col-80 col-mobile-view-add-ques">
+                                    <div class="question-subtype-option-box">
+                                      <span class="wrap-text imgClassExpress" [MathJax]="option.qopt_options"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <br>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="currentQA.qus_qst_id == 2">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="option-section">
+                            <div class="row row-remove-top-margin" *ngFor="let option of currentQA.options;let i=index">
+                              <div class="col-12 col-mobile-view-add-ques question-subtype-col-div">
+                                <div class="row row-remove-top-margin">
+                                  <div class="col-1 remove-col-modal-padding option-value-input">
+                                    <span>{{optionHA[i]}}.</span>
+                                  </div>
+                                  <div class="col-1 remove-col-modal-padding option-radio-input">
+                                    <span>
+                                      <mat-checkbox (change)="changeOptionsMcqMr($event)" [value]="i"
+                                        *ngIf="!studentMcqMrFlag"></mat-checkbox>
+                                      <mat-checkbox (change)="changeOptionsMcqMr($event)" [value]="i"
+                                        *ngIf="studentMcqMrFlag" [checked]="checkMcqMrAnswerStatus(i)"></mat-checkbox>
+                                    </span>
+                                  </div>
+                                  <div class="col-10 fin-tab-col-80 col-mobile-view-add-ques">
+                                    <div class="question-subtype-option-box">
+                                      <span class="wrap-text imgClassExpress" [MathJax]="option.qopt_options"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <br>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="currentQA.qus_qst_id == 3">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="option-section">
+                            <div class="row row-remove-top-margin" *ngFor="let item of trueFalseArray;let i=index">
+                              <div class="col-12 col-mobile-view-add-ques question-subtype-col-div">
+                                <div class="row row-remove-top-margin">
+                                  <div class="col-1 remove-col-modal-padding option-radio-input ">
+                                    <span class="double-option-radio">
+                                      <mat-radio-button (change)="getTfValue($event)" *ngIf="!tfFlag"
+                                        [value]="item.value" name="tfpanswer1"></mat-radio-button>
+                                      <mat-radio-button (change)="getTfValue($event)" *ngIf="tfFlag"
+                                        [value]="item.value" name="tfpanswer2" [checked]="checkTfStatus(i)">
+                                      </mat-radio-button>
+                                    </span>
+                                  </div>
+                                  <div class="col-6 option-value-input">
+                                    <span>{{item.name}}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <br>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="currentQA.qus_qst_id == 4">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="option-section">
+                            <div class="row row-remove-top-margin" *ngFor="let option of currentQA.options;let i=index">
+                              <div class="col-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                <div class="row row-remove-top-margin">
+                                  <div class="col-1 remove-col-modal-padding option-value-input">
+                                    <span>{{optionHA[i]}}.</span>
+                                  </div>
+                                  <div class="col-11 fin-tab-col-80 col-mobile-view-add-ques">
+                                    <div class="question-subtype-option-box">
+                                      <span class="wrap-text imgClassExpress" [MathJax]="option.qopt_options"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                <div class="row row-remove-top-margin">
+                                  <div class="col-1 remove-col-modal-padding option-value-input">
+                                    <span>{{optionmatchHA[i]}}.</span>
+                                  </div>
+                                  <div class="col-11 fin-tab-col-80 col-mobile-view-add-ques">
+                                    <div class="question-subtype-option-box">
+                                      <span class="wrap-text imgClassExpress"
+                                        [MathJax]="option.qopt_options_match"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <br>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <table>
+                            <tr>
+                            </tr>
+                            <tr *ngFor="let item of matchArray;let i=index">
+                              <td style="width: 5rem" class="text-center">
+                                <b>{{item.name}}</b>
+                              </td>
+                              <td *ngFor="let val of item.value">
+                                <mat-card class="test-objective-option-card">
+                                  <span class="test-option-title">{{val}}</span>
+                                  <br>
+                                  <hr class="test-option-hr">
+                                  <span class="double-option-radio">
+                                    <mat-radio-button [value]="val" *ngIf="!matchFlag" (change)="getMtfChange($event,i)"
+                                      [name]="'matchAnswer1'+i"></mat-radio-button>
+                                    <mat-radio-button [value]="val" *ngIf="matchFlag" (change)="getMtfChange($event,i)"
+                                      [name]="'matchAnswer2'+i" [checked]="checkMtfStatus(val,i)"></mat-radio-button>
+                                  </span>
+                                </mat-card>
+                              </td>
+                            </tr>
+                          </table>
+                          <br>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="currentQA.qus_qst_id == 5">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="option-section">
+                            <div class="row row-remove-top-margin" *ngFor="let option of currentQA.options;let i=index">
+                              <div class="col-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                <div class="row row-remove-top-margin">
+                                  <div class="col-1 remove-col-modal-padding option-value-input">
+                                    <span>{{optionHA[i]}}.</span>
+                                  </div>
+                                  <div class="col-11 fin-tab-col-80 col-mobile-view-add-ques">
+                                    <div class="question-subtype-option-box">
+                                      <span class="wrap-text imgClassExpress" [MathJax]="option.qopt_options"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                <div class="row row-remove-top-margin">
+                                  <div class="col-1 remove-col-modal-padding option-value-input">
+                                    <span>{{optionmatchHA[i]}}.</span>
+                                  </div>
+                                  <div class="col-11 fin-tab-col-80 col-mobile-view-add-ques">
+                                    <div class="question-subtype-option-box">
+                                      <span class="wrap-text imgClassExpress"
+                                        [MathJax]="currentQA.options_match[i].qopt_options_match"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <br>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <table>
+                            <tr>
+                            </tr>
+                            <tr *ngFor="let item of matrixMatchArray;let i=index">
+                              <td style="width: 5rem" class="text-center">
+                                <b>{{item.name}}</b>
+                              </td>
+                              <td *ngFor="let val of item.value">
+                                <mat-card class="test-objective-option-card">
+                                  <span class="test-option-title">{{val.id}}
+                                  </span>
+                                  <br>
+                                  <hr class="test-option-hr">
+                                  <mat-checkbox (change)="getMatrixChange($event,i)" *ngIf="!matrixMatchFlag"
+                                    [value]="val.index"></mat-checkbox>
+                                  <mat-checkbox (change)="getMatrixChange($event,i)" *ngIf="matrixMatchFlag"
+                                    [value]="val.index" [checked]="checkMatrixMatchstatus(val.index)"></mat-checkbox>
+                                </mat-card>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                      <br>
+                    </div>
+                    <!--Matrix 45-->
+                    <div *ngIf="currentQA.qus_qst_id == 13">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="option-section">
+                            <div class="row row-remove-top-margin"
+                              *ngFor="let option of currentQA.options_match;let i=index">
+                              <div class="col-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                <div class="row row-remove-top-margin">
+                                  <div class="col-1 remove-col-modal-padding option-value-input">
+                                    <span *ngIf="i<4">{{optionHA[i]}}.</span>
+                                  </div>
+                                  <div class="col-11 fin-tab-col-80 col-mobile-view-add-ques">
+                                    <div class="question-subtype-option-box">
+                                      <span *ngIf="i <4" class="wrap-text imgClassExpress"
+                                        [MathJax]="currentQA.options[i].qopt_options"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                <div class="row row-remove-top-margin">
+                                  <div class="col-1 remove-col-modal-padding option-value-input">
+                                    <span>{{optionmatchHA[i]}}.</span>
+                                  </div>
+                                  <div class="col-11 fin-tab-col-80 col-mobile-view-add-ques">
+                                    <div class="question-subtype-option-box">
+                                      <span class="wrap-text imgClassExpress"
+                                        [MathJax]="currentQA.options_match[i].qopt_options_match"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <br>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <table>
+                            <tr>
+                            </tr>
+                            <tr *ngFor="let item of matrixMatch45Array;let i=index">
+                              <td style="width: 5rem" class="text-center">
+                                <b>{{item.name}}</b>
+                              </td>
+                              <td *ngFor="let val of item.value">
+                                <mat-card class="test-objective-option-card">
+                                  <span class="test-option-title">{{val.id}}
+                                  </span>
+                                  <br>
+                                  <hr class="test-option-hr">
+                                  <mat-checkbox (change)="getMatrix45Change($event,i)" *ngIf="!matrixMatch45Flag"
+                                    [value]="val.index"></mat-checkbox>
+                                  <mat-checkbox (change)="getMatrix45Change($event,i)" *ngIf="matrixMatch45Flag"
+                                    [value]="val.index" [checked]="checkMatrixMatch45status(val.index)"></mat-checkbox>
+                                </mat-card>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                      <br>
+                    </div>
+                    <!--Single Integer-->
+                    <div *ngIf="currentQA.qus_qst_id ==14">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="option-section">
+                            <br>
+                            <div class="row">
+                              <div class="col-6 single-int-col-lg-8 col-apple-70-per remove-col-modal-padding">
+                                <mat-card>
+                                  <table
+                                    style="border: 1px solid #9c3;border-collapse:collapse !important;width:100% !important">
+                                    <tr class="text-center double-int-tr">
+                                      <th style="border: 1px solid #9c3; padding: 5px;">Integer</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">0</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">1</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">2</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">3</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">4</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">5</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">6</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">7</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">8</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">9</th>
+                                    </tr>
+                                    <tr class="text-center">
+                                      <td style="border: 1px solid #9c3; padding: 5px;">Select</td>
+                                      <td style="border: 1px solid #9c3; padding: 5px;" class="double-option-radio"
+                                        *ngFor="let item of singleIntegerArray; let i = index">
+                                        <mat-radio-button (change)="getValue($event)" *ngIf="!studentSingleFlag"
+                                          name="radio1" [value]="item.id"></mat-radio-button>
+                                        <mat-radio-button (change)="getValue($event)" *ngIf="studentSingleFlag"
+                                          [checked]="checkSingleIntegerStatus(item.id)" name="radio2" [value]="item.id">
+                                        </mat-radio-button>
+                                      </td>
+                                    </tr>
+
+                                  </table>
+                                </mat-card>
+                              </div>
+                              <div class="col-1"></div>
+                              <div class="col-2 single-int-col-lg-2">
+                                <mat-card class="sing-int-card">
+                                  <div class="text-center double-int-answer-title">
+                                    <span class="">Answer</span>
+                                  </div>
+                                  <table
+                                    style="border: 1px solid #9c3;width:100% !important;border-collapse: collapse !important"
+                                    class="double-int-answer">
+                                    <tr class="text-center">
+                                      <th style="border: 1px solid #9c3; padding: 5px;">Integer</th>
+                                      <td style="border: 1px solid #9c3; padding: 5px;">{{digitValue}}</td>
+                                    </tr>
+
+                                  </table>
+                                </mat-card>
+                              </div>
+                            </div>
+                            <br>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--Double Integer-->
+                    <div *ngIf="currentQA.qus_qst_id ==15">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="option-section">
+                            <br>
+                            <div class="row">
+                              <div class="col-6 single-int-col-lg-8 col-apple-70-per remove-col-modal-padding">
+                                <mat-card>
+                                  <table
+                                    style="padding-right: 3px !important;border: 1px solid #9c3;border-collapse:collapse !important;width:100% !important">
+                                    <tr class="text-center double-int-tr">
+                                      <th style="border: 1px solid #9c3; padding: 5px;">Integer</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">0</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">1</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">2</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">3</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">4</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">5</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">6</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">7</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">8</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">9</th>
+                                    </tr>
+                                    <tr class="text-center">
+                                      <td style="border: 1px solid #9c3; padding: 5px;">Integer1</td>
+                                      <td style="border: 1px solid #9c3; padding: 5px;" class="double-option-radio"
+                                        *ngFor="let item of doubleIntegerArray1;let i=index">
+                                        <mat-radio-button [value]="item.id" *ngIf="!upperRowFlag" name="radio1"
+                                          (change)="getUpperRowValue($event)"></mat-radio-button>
+                                        <mat-radio-button [value]="item.id" *ngIf="upperRowFlag" name="radio2"
+                                          (change)="getUpperRowValue($event)" [checked]="checkUpperRowStatus(item.id)">
+                                        </mat-radio-button>
+                                      </td>
+                                    </tr>
+                                    <tr class="text-center">
+                                      <td style="border: 1px solid #9c3; padding: 5px;">Integer2</td>
+                                      <td style="border: 1px solid #9c3; padding: 5px;" class="double-option-radio"
+                                        *ngFor="let item of doubleIntegerArray2;let i=index">
+                                        <mat-radio-button name="radio3" *ngIf="!lowerRowFlag"
+                                          (change)="getLowerRowValue($event)" [value]="item.id"></mat-radio-button>
+                                        <mat-radio-button name="radio4" *ngIf="lowerRowFlag"
+                                          (change)="getLowerRowValue($event)" [value]="item.id"
+                                          [checked]="checkLowerRowStatus(item.id)"></mat-radio-button>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </mat-card>
+                              </div>
+                              <div class="col-1"></div>
+                              <div class="col-2 single-int-col-lg-2">
+                                <mat-card class="sing-int-card">
+                                  <div class="text-center double-int-answer-title">
+                                    <span class="">Answer</span>
+                                  </div>
+                                  <table
+                                    style="border: 1px solid #9c3;border-collapse:collapse !important;width:100% !important"
+                                    class="double-int-answer">
+                                    <tr class="text-center">
+                                      <th style="border: 1px solid #9c3; padding: 5px;">Integer1</th>
+                                      <th style="border: 1px solid #9c3; padding: 5px;">Integer2</th>
+                                    </tr>
+                                    <tr class="text-center">
+                                      <td style="border: 1px solid #9c3; padding: 5px;">{{upperRowValue}}</td>
+                                      <td style="border: 1px solid #9c3; padding: 5px;">{{lowerRowValue}}</td>
+                                    </tr>
+                                  </table>
+                                </mat-card>
+                              </div>
+                            </div>
+                            <br>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="actual-answer-container">
+                    <table class="table-100" *ngIf="currentQA.qus_qst_id == 1">
+                      <tr>
+                        <td *ngFor="let option of currentQA.options;let i=index">{{i+1}}).
+                          <span class="double-option-radio">
+                            <mat-radio-button (change)="getMcqChangeEvent($event)" *ngIf="!studentMcqFlag" [value]="i"
+                              name="radio1"></mat-radio-button>
+                            <mat-radio-button (change)="getMcqChangeEvent($event)" *ngIf="studentMcqFlag" [value]="i"
+                              name="radio2" [checked]="checkMcqAnswerStatus(i)">
+                            </mat-radio-button>
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="button-container">
+              <div class="row">
+                <div class="col-12 remove-padding">
+                  <button mat-raised-button class="btn-save-nxt mob-test-btn btn-without-radius"
+                    (click)="saveAndNext()">Save &
+                    Next</button>
+                  <button mat-raised-button class="btn-spacer mob-test-btn btn-save-review btn-without-radius"
+                    (click)="saveAndNext(true)">Save & Mark For
+                    Review</button>
+                  <button mat-raised-button class="btn-spacer mob-test-btn btn-clear-res btn-without-radius"
+                    (click)="clearResponse()">Clear Response</button>
+                  <button mat-raised-button class="btn-spacer mob-test-btn btn-save-mark-review btn-without-radius"
+                    (click)="saveAndNext(true,false)">Mark For Review
+                    and Next</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 mob-col-70 remove-padding margin-top-10">
+                  <button mat-button class="btn-clear-res btn-without-radius" [disabled]="currentQAIndex == 0"
+                    (click)="loadCurrentQ(currentQAIndex - 1)"><i class="fas fa-angle-double-left"></i>
+                    Back</button>
+                  <button mat-button class="btn-clear-res btn-without-radius btn-spacer"
+                    [disabled]="currentQAIndex == questionsArray.length-1" (click)="loadCurrentQ(currentQAIndex + 1)">
+                    Next <i class="fas fa-angle-double-right"></i></button>
+                </div>
+                <div class="col-6 mob-col-30 remove-padding margin-top-10 text-right">
+                  <button mat-button class="btn-save-nxt btn-without-radius" (click)="testSummary()">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-4 mob-col-100 jee-main-col-26 remove-padding" id="right-ques-container">
+            <div class="row">
+              <div class="col-6">
+                <img src="../../assets/default-ques-btn.svg" class="jee-btn-svg">
+                <span class="adv-jee-btn-ondqb">{{getCount('')}}</span>
+                <span class="font-size-12">Not Visited</span>
+              </div>
+              <div class="col-6">
+                <img src="../../assets/main-orange-btn.svg" class="jee-btn-svg">
+                <span class="main-jee-btn-not-onans">{{getCount('2')}}</span>
+                <span class="font-size-12">Not Answered</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <img src="../../assets/main-green-btn.svg" class="jee-btn-svg">
+                <span class="adv-jee-btn-onans">{{getCount('1')}}</span>
+                <span class="font-size-12">Answered</span>
+              </div>
+              <div class="col-6">
+                <img src="../../assets/saveforreview.svg" class="jee-btn-svg">
+                <span class="main-jee-btn-not-onsfr">{{getCount('0')}}</span>
+                <span class="font-size-12">Marked For Review</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-1">
+                <img src="../../assets/ansmarkreview.svg" class="jee-btn-svg">
+                <span class="adv-jee-btn-onans">{{getCount('3')}}</span>
+              </div>
+              <div class="col-11">
+                <span class="font-size-12">Answered & Marked For Review (will be considered for evaluation)</span>
+              </div>
+
+            </div>
+            <br>
+            <div class="jee-main-no-container">
+              <div class="row">
+                <div class="col-12 ">
+                  <ng-container *ngFor="let item of questionsArray;let i=index">
+                    <div class="margin-left-4 display-inline" (click)="loadCurrentQ(i)">
+                      <img [src]="getQusStatuSrc(item.answerStatus)" class="jee-btn-svg">
+                      <span class="main-side-btn1">{{i+1}}</span>
+                    </div>
+                  </ng-container>
+                </div>
+
+              </div>
+              <div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="testSummaryDiv">
+      <div class="col-12 mob-remove-padding">
+        <div class="main-container">
+          <h4 class=" text-center margin-top-10"><b>Exam Summary</b></h4>
+          <br>
+          <table class="table-100 table-bordered">
+            <tr class="th-text">
+              <th>Section Name</th>
+              <th>No of Questions</th>
+              <th>Answered</th>
+              <th>Not Answered</th>
+
+              <th>Marked for Review</th>
+              <th>Answered & Marked for Review(will be considered for evaluation)</th>
+              <th>Not Visited</th>
+            </tr>
+            <tr>
+              <td>Paper 1</td>
+              <td>{{questionsArray.length}}</td>
+              <td>{{getCount('1')}}</td>
+              <td>{{getCount('2')}}</td>
+              <td>{{getCount('0')}}</td>
+              <td>{{getCount('3')}}</td>
+              <td>{{getCount('')}}</td>
+            </tr>
+          </table>
+          <br>
+          <h6 class=" text-center margin-top-10"><b>Are you sure you want to submit for final marking?<br>
+              No changes will be allowed after submission.</b> </h6>
+          <div class="row">
+            <div class="col-12 margin-top-10 text-center">
+              <button mat-button class="btn-clear-res btn-without-radius" (click)="finalConfirmaiton()">
+                Yes</button>
+              <button mat-button class="btn-clear-res btn-without-radius" (click)="reviewCurrentQ()"> No</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="finalConfirmationDiv">
+      <div class="col-12">
+        <div class="main-container">
+
+          <h6 class=" text-center margin-top-10"><b>Thank You, your responses will be submitted for final marking -
+              click OK to complete final submission.</b> </h6>
+          <div class="row">
+            <div class="col-12 margin-top-10 text-center">
+              <button mat-button class="btn-clear-res btn-without-radius" (click)="studentFinalSubmit()">
+                Ok</button>
+              <button mat-button class="btn-clear-res btn-without-radius" (click)="reviewCurrentQ()">
+                Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

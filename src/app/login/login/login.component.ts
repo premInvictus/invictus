@@ -159,7 +159,7 @@ export class LoginComponent implements OnInit {
 															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
 																this.returnUrl = returnUrl + '/teacher';
 															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '4') {
-																this.returnUrl = returnUrl + '/student';
+																this.returnUrl = '/student';
 															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
 																this.returnUrl = returnUrl + '/parent';
 															}
@@ -175,7 +175,7 @@ export class LoginComponent implements OnInit {
 															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
 																this.returnUrl = returnUrl + '/teacher';
 															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '4') {
-																this.returnUrl = returnUrl + '/student';
+																this.returnUrl = '/student';
 															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
 																this.returnUrl = returnUrl + '/parent';
 															}

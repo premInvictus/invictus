@@ -1,0 +1,650 @@
+<div class="row row-remove-top-margin" *ngIf="questionReviewFlag">
+    <div class="col-lg-12 tab-remove-col-padding col-mobile-view-add-ques">
+       <div class="white-box">
+          <div>
+             <div>
+                <div class="row row-remove-top-margin">
+                   <div class="col-lg-12 mob-remove-col-padding tab-remove-col-padding">
+                      <div class="row row-remove-top-margin">
+                         <div class="col-lg-8 fin-tab-col-7 mob-remove-col-padding tab-remove-col-left-padding col-ongoing-test-question-section">
+                            <div class="test-question-box report-ques-review-box information-bar">
+                               <div class="row">
+                                  <div class="col-lg-4 fin-tab-col-3">
+                                     <div class="float-left ">
+                                        <span>{{examDetail.qp_name}}</span>
+                                     </div>
+                                  </div>
+                                  <div class="col-lg-3 fin-tab-col-25">
+                                     <div>
+                                        <span>Total Marks : {{examDetail.tp_marks}}</span>
+                                     </div>
+                                  </div>
+                                  <div class="col-lg-3 fin-tab-col-25">
+                                     <div>
+                                        <span>Subject : {{questionpaperDetail.sub_name}}</span>
+                                     </div>
+                                  </div>
+                                  <div class="col-lg-2 fin-tab-col-15">
+                                     <div>
+                                        <span>{{examDetail.class_name}}-{{examDetail.sec_name}}</span>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-lg-12 test-button-section-title">
+                                     <div class="question-test-info-bar">
+                                        <div class="float-left">
+                                           <span><i *ngIf="showBookMarkStatus" class="fas fa-flag bookmark-flag-question-review" aria-hidden="true"></i> Question No. : {{currentQAIndex+1}}</span>
+                                        </div>
+                                        <div>
+                                           <span class="float-right">
+                                           <span>Marks : {{currentQA.qus_marks}}</span>
+                                           </span>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="report-ques-review-test-box">
+                                  <div class="row">
+                                     <div class="col-lg-12 ">
+                                        <div class="row" *ngIf="currentQAHasEssay">
+                                           <div class="col-lg-12">
+                                              <div class="question-display-div-content">
+                                                 <div class="wrap-text">
+                                                    <span class="imgclassQpList" [MathJax]="currentEssay.ess_description"></span>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                        <div class="row">
+                                           <div class="col-lg-12">
+                                              <div class="question-display-div-content">
+                                                 <div class="wrap-text">
+                                                    <span class="test-question" [MathJax]="currentQA.qus_name"></span>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                        <div *ngIf="currentQA.qus_qst_id == 1">
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <div class="option-section">
+                                                    <div class="row row-remove-top-margin" *ngFor="let option of currentQA.options;let i=index">
+                                                       <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-1 remove-col-modal-padding option-value-input">
+                                                                <span [ngStyle]="{'color':getColormcqmr(i),'font-weight':getbold(i)}">{{optionHA[i]}}.</span>
+                                                             </div>
+                                                             <div class="col-lg-1 remove-col-modal-padding option-radio-input">
+                                                                <span class="double-option-radio">
+                                                                <mat-radio-button *ngIf="!studentMcqFlag" [value]="i" name="radio1" disabled></mat-radio-button>
+                                                                <mat-radio-button *ngIf="studentMcqFlag" [value]="i"  name="radio2" [checked]="checkMcqAnswerStatus(i)" disabled></mat-radio-button>
+                                                                </span>
+                                                             </div>
+                                                             <div class="col-lg-10 fin-tab-col-7 col-mobile-view-add-ques">
+                                                                <div class="question-subtype-option-box">
+                                                                   <span [ngStyle]="{'color':getColormcqmr(i),'font-weight':getbold(i)}" class="wrap-text imgClassExpress" [MathJax]="option.qopt_options"></span>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                    <br>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                        <div *ngIf="currentQA.qus_qst_id == 2">
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <div class="option-section">
+                                                    <div class="row row-remove-top-margin" *ngFor="let option of currentQA.options;let i=index">
+                                                       <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-1 remove-col-modal-padding option-value-input">
+                                                                <span [ngStyle]="{'color':getColormcqmr(i),'font-weight':getbold(i)}">{{optionHA[i]}}.</span>
+                                                             </div>
+                                                             <div class="col-lg-1 remove-col-modal-padding option-radio-input">
+                                                                <span>
+                                                                <mat-checkbox  [value]="i" *ngIf="!studentMcqMrFlag" disabled></mat-checkbox>
+                                                                <mat-checkbox  [value]="i" *ngIf="studentMcqMrFlag" [checked]="checkMcqMrAnswerStatus(i)" disabled></mat-checkbox>
+                                                                </span>
+                                                             </div>
+                                                             <div class="col-lg-10 fin-tab-col-7 col-mobile-view-add-ques">
+                                                                <div class="question-subtype-option-box">
+                                                                   <span [ngStyle]="{'color':getColormcqmr(i),'font-weight':getbold(i)}" class="wrap-text imgClassExpress" [MathJax]="option.qopt_options"></span>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                    <br>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                        <div *ngIf="currentQA.qus_qst_id == 3">
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <div class="option-section">
+                                                    <div class="row row-remove-top-margin" *ngFor="let item of trueFalseArray;let i=index">
+                                                       <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-1 remove-col-modal-padding option-radio-input ">
+                                                                <span class="double-option-radio">
+                                                                <mat-radio-button  *ngIf="!tfFlag" [value]="item.value" name="tfpanswer1" disabled></mat-radio-button>
+                                                                <mat-radio-button  *ngIf="tfFlag" [value]="item.value" name="tfpanswer2" [checked]="checkTfStatus(i)" disabled></mat-radio-button>
+                                                                </span>
+                                                             </div>
+                                                             <div class="col-lg-6 option-value-input">
+                                                                <span [ngStyle]="{'color':getColormcqmr(i),'font-weight':getbold(i)}">{{item.name}}</span>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                    <br>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                        <div *ngIf="currentQA.qus_qst_id == 4">
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <div class="option-section">
+                                                    <div class="row row-remove-top-margin" *ngFor="let option of currentQA.options;let i=index">
+                                                       <div class="col-lg-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-1 remove-col-modal-padding option-value-input">
+                                                                <span>{{optionHA[i]}}.</span>
+                                                             </div>
+                                                             <div class="col-lg-11 fin-tab-col-7 col-mobile-view-add-ques">
+                                                                <div class="question-subtype-option-box">
+                                                                   <span class="wrap-text imgClassExpress" [MathJax]="option.qopt_options"></span>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                       <div class="col-lg-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-1 remove-col-modal-padding option-value-input">
+                                                                <span>{{optionmatchHA[i]}}.</span>
+                                                             </div>
+                                                             <div class="col-lg-11 fin-tab-col-7 col-mobile-view-add-ques">
+                                                                <div class="question-subtype-option-box">
+                                                                   <span class="wrap-text imgClassExpress" [MathJax]="option.qopt_options_match"></span>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                    <br>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <table>
+                                                    <tr>
+                                                    </tr>
+                                                    <tr *ngFor="let item of matchArray;let i=index">
+                                                       <td style="width: 5rem" class="text-center">
+                                                          <b>{{item.name}}</b>
+                                                       </td>
+                                                       <td *ngFor="let val of item.value">
+                                                          <mat-card  class="test-objective-option-card">
+                                                             <span class="test-option-title" [ngStyle]="{'color':getColorMtf(i,val),'font-weight':getboldMtf(i,val)}">{{val}}</span>
+                                                             <br>
+                                                             <hr class="test-option-hr">
+                                                             <span class="double-option-radio">
+                                                             <mat-radio-button [value]="val" *ngIf="!matchFlag"  [name]="'matchAnswer1'+i" disabled></mat-radio-button>
+                                                             <mat-radio-button [value]="val" *ngIf="matchFlag"   [name]="'matchAnswer2'+i" [checked]="checkMtfStatus(val,i)" disabled></mat-radio-button>
+                                                             </span>
+                                                          </mat-card>
+                                                       </td>
+                                                    </tr>
+                                                 </table>
+                                                 <br>
+                                              </div>
+                                           </div>
+                                        </div>
+                                        <div *ngIf="currentQA.qus_qst_id == 5">
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <div class="option-section">
+                                                    <div class="row row-remove-top-margin" *ngFor="let option of currentQA.options;let i=index">
+                                                       <div class="col-lg-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-1 remove-col-modal-padding option-value-input">
+                                                                <span>{{optionHA[i]}}.</span>
+                                                             </div>
+                                                             <div class="col-lg-11 fin-tab-col-7 col-mobile-view-add-ques">
+                                                                <div class="question-subtype-option-box">
+                                                                   <span class="wrap-text imgClassExpress" [MathJax]="option.qopt_options"></span>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                       <div class="col-lg-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-1 remove-col-modal-padding option-value-input">
+                                                                <span>{{optionmatchHA[i]}}.</span>
+                                                             </div>
+                                                             <div class="col-lg-11 fin-tab-col-7 col-mobile-view-add-ques">
+                                                                <div class="question-subtype-option-box">
+                                                                   <span class="wrap-text imgClassExpress" [MathJax]="currentQA.options_match[i].qopt_options_match"></span>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                    <br>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <table>
+                                                    <tr>
+                                                    </tr>
+                                                    <tr *ngFor="let item of matrixMatchArray;let i=index">
+                                                       <td style="width: 5rem" class="text-center">
+                                                          <b>{{item.name}}</b>
+                                                       </td>
+                                                       <td *ngFor="let val of item.value;let j=index">
+                                                          <mat-card class="test-objective-option-card">
+                                                             <span class="test-option-title" [ngStyle]="{'color':getColorMatrix(i,j),'font-weight':getBoldMatrix(i,j)}">{{val.id}}
+                                                             </span>
+                                                             <br>
+                                                             <hr class="test-option-hr">
+                                                             <mat-checkbox   *ngIf="!matrixMatchFlag" [value]="val.index" disabled></mat-checkbox>
+                                                             <mat-checkbox   *ngIf="matrixMatchFlag" [value]="val.index" [checked]="checkMatrixMatchstatus(val.index)" disabled></mat-checkbox>
+                                                          </mat-card>
+                                                       </td>
+                                                    </tr>
+                                                 </table>
+                                              </div>
+                                           </div>
+                                           <br>
+                                        </div>
+                                        <!--Matrix 45-->
+                                        <div *ngIf="currentQA.qus_qst_id == 13">
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <div class="option-section">
+                                                    <div class="row row-remove-top-margin" *ngFor="let option of currentQA.options_match;let i=index">
+                                                       <div class="col-lg-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-1 remove-col-modal-padding option-value-input">
+                                                                <span *ngIf="i<4">{{optionHA[i]}}.</span>
+                                                             </div>
+                                                             <div class="col-lg-11 fin-tab-col-7 col-mobile-view-add-ques">
+                                                                <div class="question-subtype-option-box">
+                                                                   <span *ngIf="i <4"class="wrap-text imgClassExpress" [MathJax]="currentQA.options[i].qopt_options"></span>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                       <div class="col-lg-6 fin-tab-col-50 col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-1 remove-col-modal-padding option-value-input">
+                                                                <span>{{optionmatchHA[i]}}.</span>
+                                                             </div>
+                                                             <div class="col-lg-11 fin-tab-col-7 col-mobile-view-add-ques">
+                                                                <div class="question-subtype-option-box">
+                                                                   <span class="wrap-text imgClassExpress" [MathJax]="currentQA.options_match[i].qopt_options_match"></span>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                    <br>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <table>
+                                                    <tr>
+                                                    </tr>
+                                                    <tr *ngFor="let item of matrixMatch45Array;let i=index">
+                                                       <td style="width: 5rem" class="text-center">
+                                                          <b>{{item.name}}</b>
+                                                       </td>
+                                                       <td *ngFor="let val of item.value;let j=index">
+                                                          <mat-card class="test-objective-option-card">
+                                                             <span class="test-option-title" [ngStyle]="{'color':getColorMatrix(i,j),'font-weight':getBoldMatrix(i,j)}">{{val.id}}
+                                                             </span>
+                                                             <br>
+                                                             <hr class="test-option-hr">
+                                                             <mat-checkbox *ngIf="!matrixMatch45Flag" [value]="val.index" disabled></mat-checkbox>
+                                                             <mat-checkbox *ngIf="matrixMatch45Flag" [value]="val.index" [checked]="checkMatrixMatch45status(val.index)" disabled></mat-checkbox>
+                                                          </mat-card>
+                                                       </td>
+                                                    </tr>
+                                                 </table>
+                                              </div>
+                                           </div>
+                                           <br>
+                                        </div>
+                                        <div *ngIf="currentQA.qus_qst_id > 5 &&  currentQA.qus_qst_id <13">
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <div class="option-section">
+                                                    <div class="row row-remove-top-margin">
+                                                       <div class="col-lg-12 remove-col-modal-padding  col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
+                                                                <div class="question-subtype-option-box wrap-text">
+                                                                   <mat-form-field *ngIf="subjectiveFlag" class="form-feild quest-sub-text-form">
+                                                                      <textarea matInput #subjectiveInput name="input1" placeholder="Write your answer here." [(ngModel)]="subjectiveAnswer.id" (keyup)="getSubjectiveInputValue(subjectiveInput.value)" readonly></textarea>
+                                                                   </mat-form-field>
+                                                                   <mat-form-field *ngIf="!subjectiveFlag" class="form-feild quest-sub-text-form">
+                                                                      <textarea matInput #subjectiveInput1 name="input1" placeholder="Write your answer here."  [(ngModel)]="subjectiveAnswer.id"   (keyup)="getSubjectiveInputValue(subjectiveInput1.value)" readonly></textarea>
+                                                                   </mat-form-field>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                    <br>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <button mat-stroked-button (click)="viewCorrectAnswer()">Correct Answer</button>
+                                              </div>
+                                           </div>
+                                           <div *ngIf="showCorrect">
+                                              <br>
+                                              <div  id="correct-answer">
+                                                 <div class="row" >
+                                                    <div class="col-lg-12">
+                                                       <div class="option-section">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-12 remove-col-modal-padding  col-mobile-view-add-ques question-subtype-col-div">
+                                                                <div class="row row-remove-top-margin">
+                                                                   <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
+                                                                      <div class="question-subtype-option-box wrap-text question-display-div-content">
+                                                                         <mat-form-field class="form-feild quest-sub-text-form" *ngIf="!currentQA.qopt_answer">
+                                                                            <textarea matInput rows="10" id="answer" name="spanswer"  readonly>No Record</textarea>
+                                                                         </mat-form-field>
+                                                                         <mat-form-field class="form-feild quest-sub-text-form" *ngIf="currentQA.qopt_answer">
+                                                                            <textarea matInput rows="10" id="answer" name="spanswer" readonly>
+                                                                            {{htmlToText(currentQA.qopt_answer)}}
+                                                                            </textarea>
+                                                                         </mat-form-field>
+                                                                      </div>
+                                                                   </div>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                          <br>
+                                                       </div>
+                                                    </div>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                        <!--Single Integer-->
+                                        <div *ngIf="currentQA.qus_qst_id ==14">
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <div class="option-section">
+                                                    <br>
+                                                    <div class="row">
+                                                       <div class="col-lg-6 single-int-col-lg-6 col-apple-70-per remove-col-modal-padding">
+                                                          <mat-card style="margin-right:-47px !important">
+                                                             <table style="border: 1px solid #9c3;border-collapse:collapse !important;width:100% !important">
+                                                                <tr class="text-center double-int-tr">
+                                                                   <th style="border: 1px solid #9c3; padding: 5px;">Integer</th>
+                                                                   <th style="border: 1px solid #9c3; padding: 5px;"
+                                                                   *ngFor="let item of singleIntegerArray;let i=index"
+                                                                   [ngStyle]="{'color':getColorSingle(i),'font-weight':getBoldSingle(i)}">{{item.id}}</th>
+                                                                </tr>
+                                                                <tr class="text-center">
+                                                                   <td style="border: 1px solid #9c3; padding: 5px;">Select</td>
+                                                                   <td style="border: 1px solid #9c3; padding: 5px;" class="double-option-radio" *ngFor="let item of singleIntegerArray; let i = index">
+                                                                      <mat-radio-button *ngIf="!studentSingleFlag"  name="radio1" [value]="item.id" disabled></mat-radio-button>
+                                                                      <mat-radio-button *ngIf="studentSingleFlag" [checked]="checkSingleIntegerStatus(item.id)" name="radio2" [value]="item.id" disabled></mat-radio-button>
+                                                                   </td>
+                                                                </tr>
+                                                             </table>
+                                                          </mat-card>
+                                                       </div>
+                                                       <div class="col-lg-1"></div>
+                                                       <div class="col-lg-2 single-int-col-lg-2">
+                                                          <mat-card class="sing-int-card">
+                                                             <div class="text-center double-int-answer-title">
+                                                                <span class="">Answer</span>
+                                                             </div>
+                                                             <table style="border: 1px solid #9c3;width:100% !important;border-collapse: collapse !important" class="double-int-answer">
+                                                                <tr class="text-center">
+                                                                   <th style="border: 1px solid #9c3; padding: 5px;">Integer</th>
+                                                                   <td style="border: 1px solid #9c3; padding: 5px;">{{digitValue}}</td>
+                                                                </tr>
+                                                             </table>
+                                                          </mat-card>
+                                                       </div>
+                                                    </div>
+                                                    <br>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <span>Correct Answer:</span>
+                                                 <span>
+                                                 <button mat-icon style="border-radius: 50% !important;
+                                                    border:none !important;color:white !important;
+                                                    background-color: #6c65c8 !important;font-weight:bold !important;height:40px !important;width:40px !important">
+                                                 {{currentQA.qopt_answer}}
+                                                 </button>
+                                                 </span>
+                                              </div>
+                                           </div>
+                                        </div>
+                                        <!--End-->
+                                        <!--Double Integer-->
+                                        <div *ngIf="currentQA.qus_qst_id ==15">
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <div class="option-section">
+                                                    <br>
+                                                    <div class="row">
+                                                       <div class="col-lg-6 single-int-col-lg-6 col-apple-70-per remove-col-modal-padding">
+                                                          <mat-card style="margin-right:-47px !important">
+                                                             <table style="padding-right: 3px !important;border: 1px solid #9c3;border-collapse:collapse !important;width:100% !important">
+                                                                <tr class="text-center double-int-tr">
+                                                                   <th style="border: 1px solid #9c3; padding: 5px;">Integer</th>
+                                                                   <th style="border: 1px solid #9c3; padding: 5px;"
+                                                                   *ngFor="let item of doubleIntegerArray1;let i=index"
+                                                                   [ngStyle]="{'color':getColorDouble(i),'font-weight':getBoldDouble(i)}" >{{item.id}}</th>
+                                                                </tr>
+                                                                <tr class="text-center">
+                                                                   <td style="border: 1px solid #9c3; padding: 5px;">Integer1</td>
+                                                                   <td style="border: 1px solid #9c3; padding: 5px;" class="double-option-radio" *ngFor="let item of doubleIntegerArray1;let i=index">
+                                                                      <mat-radio-button [value]="item.id" *ngIf="!upperRowFlag" name="radio1" disabled></mat-radio-button>
+                                                                      <mat-radio-button [value]="item.id" *ngIf="upperRowFlag" name="radio2"  [checked]="checkUpperRowStatus(item.id)" disabled></mat-radio-button>
+                                                                   </td>
+                                                                </tr>
+                                                                <tr class="text-center">
+                                                                   <td style="border: 1px solid #9c3; padding: 5px;">Integer2</td>
+                                                                   <td style="border: 1px solid #9c3; padding: 5px;" class="double-option-radio" *ngFor="let item of doubleIntegerArray2;let i=index">
+                                                                      <mat-radio-button  name="radio3" *ngIf="!lowerRowFlag"  [value]="item.id" disabled></mat-radio-button>
+                                                                      <mat-radio-button  name="radio4" *ngIf="lowerRowFlag"   [value]="item.id"  [checked]="checkLowerRowStatus(item.id)" disabled></mat-radio-button>
+                                                                   </td>
+                                                                </tr>
+                                                             </table>
+                                                          </mat-card>
+                                                       </div>
+                                                       <div class="col-lg-1"></div>
+                                                       <div class="col-lg-2 single-int-col-lg-2">
+                                                          <mat-card class="sing-int-card" style="margin-right:-34%">
+                                                             <div class="text-center double-int-answer-title">
+                                                                <span class="">Answer</span>
+                                                             </div>
+                                                             <table style="border: 1px solid #9c3;border-collapse:collapse !important;width:100% !important" class="double-int-answer">
+                                                                <tr class="text-center">
+                                                                   <th style="border: 1px solid #9c3; padding: 5px;">Integer1</th>
+                                                                   <th style="border: 1px solid #9c3; padding: 5px;">Integer2</th>
+                                                                </tr>
+                                                                <tr class="text-center">
+                                                                   <td style="border: 1px solid #9c3; padding: 5px;">{{upperRowValue}}</td>
+                                                                   <td style="border: 1px solid #9c3; padding: 5px;">{{lowerRowValue}}</td>
+                                                                </tr>
+                                                             </table>
+                                                          </mat-card>
+                                                       </div>
+                                                    </div>
+                                                    <br>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <span>Correct Answer:</span>
+                                                 <span>
+                                                 <button mat-icon style="border-radius: 50% !important;
+                                                    border:none !important;color:white !important;
+                                                    background-color: #6c65c8 !important;font-weight:bold !important;height:40px !important;width:40px !important">
+                                                 {{currentQA.qopt_answer.charAt(0)}}
+                                                 </button>
+                                                 <button mat-icon style="border-radius: 50% !important;
+                                                    border:none !important;color:white !important;
+                                                    background-color: #6c65c8 !important;font-weight:bold !important;height:40px !important;width:40px !important">
+                                                 {{currentQA.qopt_answer.charAt(1)}}
+                                                 </button>
+                                                 </span>
+                                              </div>
+                                           </div>
+                                        </div>
+                                        <!--End-->
+                                        <div>
+                                           <div class="row">
+                                              <div class="col-lg-12">
+                                                 <div class="option-section">
+                                                    <div class="row row-remove-top-margin">
+                                                       <div class="col-lg-12 remove-col-modal-padding  col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="row row-remove-top-margin">
+                                                             <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
+                                                                <div class="question-subtype-option-box wrap-text">
+                                                                    <div class="float-left">
+                                                                        <span><b>Explanation</b></span>
+                                                                     </div><br>
+                                                                       <div [MathJax]="currentQA.qus_explanation"></div>  
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                    <br>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                            <div class="row ">
+                               <div class="col-lg-12 remove-col-modal-padding">
+                                  <div class="row row-remove-top-margin">
+                                     <div class="col-lg-9 fin-tab-col-7 mob-button-nxt-prev col-remove-left-padding">
+                                        <div class="float-left">
+                                           <button mat-button class="previous-button" *ngIf="currentQAIndex > 0" (click)="previousQ()">Previous</button>
+                                           <button mat-button class="save-button" (click)="nextQ()">Next</button>
+                                        </div>
+                                     </div>
+                                     <div class="col-lg-3 fin-tab-col-3 mob-remove-col-padding mob-button-bookm">
+                                        <div class="float-right">
+                                           <button [hidden]="showBookMarkStatus" mat-button class="bookmark-question-review-button" (click)="bookmarkQ()">Bookmark</button>
+                                           <span *ngIf="showBookMarkStatus"><i class="fas fa-flag bookmark-flag-question-review" aria-hidden="true"></i>  Bookmarked</span>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                         <div class="col-lg-4 fin-tab-col-3 mob-remove-col-padding tab-remove-col-right-padding col-ongoing-test-button-section">
+                            <div class="test-question-number-box review-test-ques-number-box table-box">
+                               <div class="row">
+                                  <div class="col-lg-12">
+                                     <div class="test-time-counter">
+                                        <div class="text-center">
+                                           <span>
+                                           <br>
+                                           <span id="examtimer"></span>
+                                           </span>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-lg-12 test-button-section-title">
+                                     <div>
+                                        <div class="text-center">
+                                           <span>Question List</span>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <!--New hanges-->
+                               <div class="question-test-box">
+                                  <div class="row">
+                                     <div class="col-lg-12 remove-col-modal-padding">
+                                        <mat-accordion>
+                                           <mat-expansion-panel [expanded]="currentQAIndex >= 0" class="bookmark-expansion-panel bookmark-expansion-panel-decorator" *ngFor="let sub of subjectArrayOfQP">
+                                           <mat-expansion-panel-header>
+                                              <mat-panel-title>
+                                                 {{sub.subName}}
+                                              </mat-panel-title>
+                                           </mat-expansion-panel-header>
+                                           <div class="row row-margin-button">
+                                              <ng-container *ngFor="let item of questionsArray;let i=index">
+                                                 <div *ngIf="item.qus_sub_id == sub.subId" class="col-lg-2 row-button-margin mob-ques-button" >
+                                                    <mat-card [ngStyle]="{'color':getQusColor(item.answerStatus),'border-color':getQusColor(item.answerStatus)} " class="test-ques-button"
+                                                    (click)="loadCurrentQ(i)">
+                                                    <span class="test-button-value">{{("0" + (i+1)).slice(-2)}}</span>
+                                                    </mat-card>
+                                                 </div>
+                                              </ng-container>
+                                           </div>
+                                           </mat-expansion-panel>
+                                        </mat-accordion>
+                                     </div>
+                                  </div>
+                                  <div class="row">
+                                     <div class="col-lg-12">
+                                        <div class="row">
+                                           <div class="col-lg-12">
+                                              <i class="fas fa-square" style="color:#00b197 !important"></i>&nbsp;&nbsp;
+                                              <span>Correct</span>
+                                           </div>
+                                        </div>
+                                        <div class="row">
+                                           <div class="col-lg-12">
+                                              <i class="fas fa-square skipped-icon"></i>&nbsp;&nbsp;
+                                              <span>Incorrect</span>
+                                           </div>
+                                        </div>
+                                        <div class="row">
+                                           <div class="col-lg-12">
+                                              <i class="fas fa-square bookmark-icon"></i>&nbsp;&nbsp;
+                                              <span>Skipped</span>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <!--End-->
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>

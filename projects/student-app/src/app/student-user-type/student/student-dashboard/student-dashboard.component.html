@@ -1,0 +1,323 @@
+<div class="main-dashboard">
+	<div class="row row-remove-top-margin">
+	   <div class="col-lg-12 remove-col-modal-padding">
+		  <div class="dash-second-white-box">
+			 <div class="row row-remove-top-margin">
+				<div class="col-lg-8 fin-tab-col-7">
+				   <span class="dash-breadcrumb">
+				   <i class="fas fa-home"></i>&nbsp;&nbsp; Student /
+				   <span class="dash-breadcrumb-title">Dashboard</span>
+				   </span>
+				</div>
+				<div class="col-lg-4 fin-tab-col-3">
+				   <div class="float-right">
+					  <span class="dash-breadcrumb-support">
+					  <img class="dash-breadcrumb-image" src="../../../../assets/images/support.svg">&nbsp;
+					  <span>Support</span>
+					  </span>
+					  <span>
+					  <span class="dash-date">Today : </span>
+					  <span class="dash-date-value">{{today | date}}</span>
+					  </span>
+				   </div>
+				</div>
+			 </div>
+		  </div>
+	   </div>
+	</div>
+	<div class="row">
+	   <div class="col-lg-12 ">
+		  <div class="row">
+			 <div class="col-lg-3 fin-tab-col-25">
+				<mat-card class="score-card-info-card-main-box">
+				   <div class="row">
+					  <div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
+						 <span class="dash-info-card-title-value">{{highestMarks}}%</span>
+						 <br>
+						 <span class="dash-tab-view-info-card-sub-title">Highest Marks Scored</span>
+					  </div>
+					  <div class="col-lg-4 fin-tab-col-3 mob-top-card-image">
+						 <div class="text-right">
+							<img class="dash-info-card-image" src="../../../../assets/images/folder.svg">
+						 </div>
+					  </div>
+				   </div>
+				</mat-card>
+			 </div>
+			 <div class="col-lg-3 fin-tab-col-25">
+				<mat-card class="score-card-info-card-main-box">
+				   <div class="row">
+					  <div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
+						 <span class="dash-info-card-title-value">{{totalTest}}</span>
+						 <br>
+						 <span class="dash-tab-view-info-card-sub-title">Total Exams Given</span>
+					  </div>
+					  <div class="col-lg-4 fin-tab-col-3 mob-top-card-image">
+						 <div class="text-right">
+							<img class="dash-info-card-image" src="../../../../assets/images/copy-writing.svg">
+						 </div>
+					  </div>
+				   </div>
+				</mat-card>
+			 </div>
+			 <div class="col-lg-3 fin-tab-col-25">
+				<mat-card class="score-card-info-card-main-box">
+				   <div class="row">
+					  <div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
+						 <span class="dash-info-card-title-value">{{currentRank}}</span>
+						 <br>
+						 <span class="dash-tab-view-info-card-sub-title">Latest Rank</span>
+					  </div>
+					  <div class="col-lg-4 fin-tab-col-3  mob-top-card-image">
+						 <div class="text-right">
+							<img class="dash-info-card-image" src="../../../../assets/images/creative.svg">
+						 </div>
+					  </div>
+				   </div>
+				</mat-card>
+			 </div>
+			 <div class="col-lg-3 fin-tab-col-25">
+				<mat-card class="score-card-info-card-main-box">
+				   <div class="row">
+					  <div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
+						 <span class="dash-info-card-title-value">{{latestMarks}}%</span>
+						 <br>
+						 <span class="dash-tab-view-info-card-sub-title">Lastest Exam Score</span>
+					  </div>
+					  <div class="col-lg-4 fin-tab-col-3 mob-top-card-image">
+						 <div class="text-right">
+							<img class="dash-info-card-image" src="../../../../assets/images/marketing.svg">
+						 </div>
+					  </div>
+				   </div>
+				</mat-card>
+			 </div>
+		  </div>
+	   </div>
+	</div>
+	<section class="dash-second-row">
+	   <div class="row">
+		  <div class="col-lg-12">
+			 <div class="row">
+				<div class="col-lg-3 fin-tab-col-3">
+				   <mat-card class="dash-card-info-card-main-box dash-second-row-card-height">
+					  <!-- <div class="row">
+						 <div class="col-lg-4">
+						 </div>
+						 <div class="col-lg-4">
+							<div class="text-center">
+							   <div class="id-holder">
+							   </div>
+							</div>
+						 </div>
+						 <div class="col-lg-4">
+						 </div>
+					  </div>
+					  <br> -->
+					  <div class="row tab-stud-dash-info-card">
+						 <div class="col-lg-3 col-apple-40-per col-remove-left-padding">
+							<img class="student-id-info-image" [src]="hosturl+image">
+						 </div>
+						 <div class="col-lg-9 col-apple-60-per tab-stud-dash-info-card-details apple-remove-col-padding">
+							<span class="stud-id-first-name">{{usernane}}</span>
+							<br>
+							<span class="stud-id-last-name">{{lastName}}</span>
+							<br>
+							<span class="stud-id-adm-no">Admission No : {{admissionNumber}}</span>
+						 </div>
+					  </div>
+					  <div class="row">
+						 <div class="col-lg-12 remove-col-modal-padding">
+							<div class="id-content-area">
+							   <div class="row">
+								  <div class="col-lg-1 col-remove-left-padding">
+									 <i class="fas fa-chalkboard-teacher hide-icon-stud-info"></i>
+								  </div>
+								  <div class="col-lg-11 col-remove-left-padding">
+									 <span class="stud-id-info-title">Class :</span> {{className}} - {{secName}}
+								  </div>
+							   </div>
+							   <div class="row">
+								  <div class="col-lg-1 col-remove-left-padding">
+									 <i class="far fa-calendar-alt hide-icon-stud-info"></i>
+								  </div>
+								  <div class="col-lg-11 col-remove-left-padding">
+									 <span class="stud-id-info-title">D.O.B :</span> {{dob}}
+								  </div>
+							   </div>
+							   <div class="row">
+								  <div class="col-lg-1 col-remove-left-padding">
+									 <i class="fas fa-tint hide-icon-stud-info"></i>
+								  </div>
+								  <div class="col-lg-11 remove-col-modal-padding">
+									 <span class="stud-id-info-title">Blood Group :</span> NA
+								  </div>
+							   </div>
+							   <div class="row">
+								  <div class="col-lg-1 col-remove-left-padding">
+									 <i class="fas fa-male hide-icon-stud-info"></i>
+								  </div>
+								  <div class="col-lg-11  col-remove-left-padding">
+									 <span class="stud-id-info-title">Father's Name :</span> NA
+								  </div>
+							   </div>
+							   <div class="row">
+								  <div class="col-lg-1 col-remove-left-padding">
+									 <i class="fas fa-map-marker-alt hide-icon-stud-info"></i>
+								  </div>
+								  <div class="col-lg-11 col-remove-left-padding">
+									 <span class="stud-id-info-title">Address :</span> {{address}}
+								  </div>
+							   </div>
+							   <div class="row">
+								  <div class="col-lg-1 col-remove-left-padding">
+									 <i class="fas fa-mobile-alt hide-icon-stud-info"></i>
+								  </div>
+								  <div class="col-lg-11 col-remove-left-padding">
+									 <span class="stud-id-info-title">Phone no. :</span> {{phoneNumber}}
+								  </div>
+							   </div>
+							   <div class="row">
+								  <div class="col-lg-1 col-remove-left-padding">
+									 <i class="far fa-envelope-open hide-icon-stud-info"></i>
+								  </div>
+								  <div class="col-lg-11 col-remove-left-padding">
+									 <span class="stud-id-info-title">Email Id. :</span> {{emailId}}
+								  </div>
+							   </div>
+							   <div class="row">
+								  <div class="col-lg-1 col-remove-left-padding">
+									 <i class="fas fa-school hide-icon-stud-info"></i>&nbsp;&nbsp;
+								  </div>
+								  <div class="col-lg-11 col-remove-left-padding">
+									 <span class="stud-id-info-title">School Name. :</span> NA
+								  </div>
+							   </div>
+							</div>
+						 </div>
+					  </div>
+				   </mat-card>
+				</div>
+				<div class="col-lg-6 fin-tab-col-7">
+				   <mat-card class="dash-card-info-card-main-box dash-second-row-card-height second-card-graph-section">
+					  <mat-tab-group>
+						 <mat-tab label="Overall Performance">
+							<div class="row">
+							   <div *ngIf="overAllFlag" class="col-lg-12 dash-test-conducted-report">
+								  <app-common-dynamic-chart [options]="overAllOptions"></app-common-dynamic-chart>
+							   </div>
+							</div>
+						 </mat-tab>
+					  </mat-tab-group>
+				   </mat-card>
+				</div>
+				<div class="col-lg-3 fin-tab-col-3 fin-tab-tp-margin-25">
+				   <mat-card class="dash-card-info-card-main-box dash-second-row-card-height top-result-card">
+					   	  <mat-tab-group class="school-dash-right-tab">
+						 <mat-tab>
+							<ng-template mat-tab-label>
+							   <div class="tab-show-on-click">
+								  <span>Upcoming Tests</span>
+							   </div>
+							</ng-template>
+							<div class="dash-teacher-side-profile">
+							   <div class="dash-teacher-side-profile-inner">
+								  <div *ngIf="comingExamArray.length > 0" class="row row-remove-top-margin dash-subject-row">
+									 <div class="col-lg-12 remove-col-modal-padding" *ngFor="let come of comingExamArray">
+										<div class="dash-profile-details-content">
+										   <div class="row row-remove-top-margin class-result-section">
+											  <div class="col-lg-5">
+												 <div class="dash-profile-details">
+													<span class="dash-profile-teacher-name">{{come.tp_name| titlecase}}</span>
+													<br>
+													<span class="dash-profile-teacher-designation">{{come.sub_name}}</span>
+													<br>
+													<span *ngIf="come.es_exam_type !== '2'" class="dash-profile-teacher-designation">Class Type</span>
+													<span *ngIf="come.es_exam_type === '2'" class="dash-profile-teacher-designation">Home Type</span>
+												 </div>
+											  </div>
+											  <div class="col-lg-5">
+												 <div class="dash-follow-chip">
+													<span class="dash-profile-teacher-designation">&nbsp;{{come.es_start_date |  date:'dd-MM-yyyy'}}</span>
+													<br>
+													<span class="dash-profile-teacher-designation">&nbsp;{{come.es_start_time}}</span>
+													<br> &nbsp;
+													<!-- <a *ngIf="come.es_exam_type !== '2'" (click)="startTest(come)">
+													<i class="fas fa-play start-button-icon" data-toggle="tooltip" data-placement="top" matTooltip="Start Test" aria-hidden="true"></i>
+													</a> -->
+												 </div>
+											  </div>
+											  <div class="col-2 remove-left-padding">
+													<div class="left-dash-card-play-btn"> <a (click)="startTest(come)">
+															<i class="fas fa-play start-button-icon" data-toggle="tooltip" data-placement="top" matTooltip="Start Test" aria-hidden="true"></i>
+															</a></div>
+											  </div>
+										   </div>
+										</div>
+										<hr>
+									 </div>
+								  </div>
+								  <div *ngIf="comingExamArray.length == 0" class="row row-remove-top-margin dash-subject-row">
+										<div class="col-lg-12 remove-col-modal-padding">
+											<div class="text-center">
+												No Records 
+											</div>
+										</div>
+									</div>
+							   </div>
+							</div>
+						 </mat-tab>
+						 <mat-tab>
+							<ng-template mat-tab-label>
+							   <div class="tab-show-on-click">
+								  <span>Past Tests</span>
+							   </div>
+							</ng-template>
+							<div *ngIf="pastExamArray.length > 0" class="dash-teacher-side-profile">
+							   <div class="dash-teacher-side-profile-inner">
+								  <div class="row">
+									 <div class="col-lg-12 remove-col-modal-padding" *ngFor="let past of pastExamArray;let i=index">
+										<div class="dash-profile-details-content">
+										   <div class="row">
+											  <div class="col-lg-5">
+												 <div class="dash-profile-details">
+													<span class="dash-profile-teacher-name">{{past.tp_name| titlecase}}</span>
+													<br>
+													<span class="dash-profile-teacher-designation">{{past.sub_name}}</span>
+													<br>
+													<span *ngIf="past.es_exam_type !== '2'" class="dash-profile-teacher-designation">Class Type</span>
+													<span *ngIf="past.es_exam_type === '2'" class="dash-profile-teacher-designation">Home Type</span>
+												 </div>
+											  </div>
+											  <div class="col-lg-4">
+												 <div class="dash-follow-chip">
+													<span class="dash-profile-teacher-designation">&nbsp;{{past.es_start_date |  date:'dd-MM-yyyy'}}</span>
+													<br>
+													<span class="dash-profile-teacher-designation">&nbsp;{{past.es_start_time}}</span>
+												 </div>
+											  </div>
+										   </div>
+										</div>
+										<hr>
+									 </div>
+								  </div>
+							   </div>
+							</div>
+							<div *ngIf="pastExamArray.length == 0" class="row row-remove-top-margin dash-subject-row">
+									<div class="col-lg-12 remove-col-modal-padding">
+										<div class="text-center">
+											No Records 
+										</div>
+									</div>
+								</div>
+						 </mat-tab>
+					  </mat-tab-group>
+				   </mat-card>
+				</div>
+			 </div>
+		  </div>
+	   </div>
+	</section>
+	<br>
+	<br>
+ </div>

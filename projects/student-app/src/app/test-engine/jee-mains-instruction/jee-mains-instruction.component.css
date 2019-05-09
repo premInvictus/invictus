@@ -1,0 +1,12 @@
+.question-parent-class{
+    height: 120px;
+    width: 100%;
+    overflow: hidden;
+    margin-left: 1px;
+    margin-right: 1px;
+    }
+    .ques-content-card-parent{
+    width: 100% !important;
+    height: 600px ;
+    overflow-y: scroll;
+    }
