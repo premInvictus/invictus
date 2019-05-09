@@ -1,21 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/index';
-import { AdminComponent } from './admin/admin.component';
-import { TeacherComponent } from './teacher/teacher.component';
-import { StudentComponent } from './student/student.component';
 import { SchoolComponent } from './school/school.component';
-import { UserRedirectComponent } from './user-redirect/user-redirect.component';
-import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
-import { ParentComponent } from './parent/parent.component';
-import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
-import { ParentDashboardComponent } from './parent/parent-dashboard/parent-dashboard.component';
-import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
-// import { StudentMasterModule } from './../student-master/studentmaster.module';
 import { StudentMasterThemeTwoModule } from '../student-master-theme-two/student-master-theme-two.module';
 import { UserCredentialComponent } from './user-credential/user-credential.component';
-import { ResolverService } from '../_services/resolver.service';
 import { AuxillaryToolsModule } from './../auxillary-tools/auxillary-tools.module';
 import { AdmissionToolsModule } from './../admission-tools/admission-tools.module';
 import { StandardReportsModule } from './../standard-reports/standard-reports.module';
@@ -36,14 +25,22 @@ const routes: Routes = [
 	{
 		path: 'school', component: SchoolComponent, children: [
 			{ path: '', component: SchoolDashboardComponent },
-			{ path: 'studentmaster', loadChildren: () => StudentMasterThemeTwoModule},
-			{ path: 'auxilliarytool', loadChildren: () => AuxillaryToolsModule },
-			{ path: 'admissiontool', loadChildren: () => AdmissionToolsModule },
-			{ path: 'standardreports', loadChildren: () => StandardReportsModule  },
-			{ path: 'dynamicreports', loadChildren: () => DynamicReportsModule },
-			{ path: 'setup', loadChildren: () => SetupModule },
-			{ path: 'manage-users', loadChildren: () => ManageUsersModule },
-			{ path: 'notifications', loadChildren: () => SchedulerNotificationsModule },
+			{ path: 'studentmaster',
+			loadChildren: 'projects/sis/src/app/student-master-theme-two/student-master-theme-two.module#StudentMasterThemeTwoModule'},
+			{ path: 'auxilliarytool',
+			loadChildren: 'projects/sis/src/app/auxillary-tools/auxillary-tools.module#AuxillaryToolsModule'},
+			{ path: 'admissiontool',
+			loadChildren: 'projects/sis/src/app/admission-tools/admission-tools.module#AdmissionToolsModule'},
+			{ path: 'standardreports',
+			loadChildren: 'projects/sis/src/app/standard-reports/standard-reports.module#StandardReportsModule'},
+			{ path: 'dynamicreports',
+			loadChildren: 'projects/sis/src/app/dynamic-reports/dynamic-reports.module#DynamicReportsModule'},
+			{ path: 'setup',
+			loadChildren: 'projects/sis/src/app/setup/setup.module#SetupModule'},
+			{ path: 'manage-users',
+			loadChildren: 'projects/sis/src/app/manage-users/manage-users.module#ManageUsersModule'},
+			{ path: 'notifications',
+			loadChildren: 'projects/sis/src/app/scheduler-notifications/scheduler-notifications.module#SchedulerNotificationsModule'},
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]
 	}

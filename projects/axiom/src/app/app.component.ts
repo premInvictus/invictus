@@ -22,8 +22,10 @@ export class AppComponent implements OnInit {
 		lastOnBottom: true
 	};
 	showLoadingFlag = false;
-	constructor(private router: Router,
-		private commonAPIService: CommonAPIService) {
+	constructor(
+		private router: Router,
+		private commonAPIService: CommonAPIService
+	) {
 		this.commonAPIService.showLoading.subscribe((flag: boolean) => {
 			this.showLoadingFlag = flag;
 		});
