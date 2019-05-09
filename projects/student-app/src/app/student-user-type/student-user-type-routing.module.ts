@@ -15,11 +15,11 @@ const routes: Routes = [
 			{ path: '', component: StudentDashboardComponent },
 			{
 				path: 'report',
-				loadChildren: () => ReportsModule
+				loadChildren: '../reports/reports.module#ReportsModule'
 			},
 			{
 				path: 'eassessment',
-				loadChildren: () => EassessmentModule
+				loadChildren: '../eassessment/eassessment.module#EassessmentModule'
 			},
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]
