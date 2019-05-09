@@ -1,0 +1,400 @@
+<div class="row">
+    <div class="col-lg-12">
+       <div class="close-button-content">
+          <button mat-icon-button class="close-button" (click)="closeMainDialog()" matTooltip="Close">
+          <img src="../../../../../assets/images/clear-button.svg">
+          </button>
+       </div>
+    </div>
+ </div>
+ <mat-tab-group>
+    <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="tab-show-on-click">
+            <span>Instructions</span>
+          </div>
+        </ng-template>
+        <div class="row">
+            <div class="col-lg-12">
+               <div class="white-box-content-title">
+                 {{data.examDetail.ti_instruction}}
+               </div>
+            </div>
+         </div>
+         <hr>
+         <div class="row">
+           <div class="col-lg-12">
+             {{data.examDetail.ti_description}}
+           </div>
+         </div>
+    </mat-tab>
+  <mat-tab>
+  <ng-template mat-tab-label>
+    <div class="tab-show-on-click">
+      <span>Hint</span>
+    </div>
+  </ng-template>
+ <!-- <br>
+    <br> -->
+ <div class="row">
+    <div class="col-lg-12">
+       <div class="text-center">
+          <span><b>{{questionSubtypeHeader}}</b></span>
+          <hr>
+       </div>
+    </div>
+ </div>
+ <div class="row">
+    <div class="col-lg-12">
+       <!--MCQ-->
+       <div *ngIf="instructionStatus==1">
+          <span>
+          Each question has 4 choices (A), (B) ,(C) and (D) out of which
+          <b>ONLY ONE</b>
+          is correct
+          The layout
+          will be the one as shown below
+          </span>
+          <br>
+          <div class="row">
+             <div class="col-lg-12">
+                <div class="option-section">
+                   <div class="row row-remove-top-margin" *ngFor="let option of data.item.options;let i=index">
+                      <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                         <div class="row row-remove-top-margin">
+                            <div class="col-lg-1 fin-tab-col-10 remove-col-modal-padding option-value-input">
+                               <span>{{optionHA[i]}}.</span>
+                            </div>
+                            <div class="col-lg-1 fin-tab-col-10 remove-col-modal-padding option-radio-input">
+                               <span class="double-option-radio">
+                                  <mat-radio-button disabled="disabled" checked="checked"></mat-radio-button>
+                               </span>
+                            </div>
+                            <div class="col-lg-10 fin-tab-col-7 col-mobile-view-add-ques">
+                               <div class="question-subtype-option-box">
+                                  <span class="wrap-text imgClassExpress" [MathJax]="'Option'+(i+1)"></span>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <br>
+                </div>
+             </div>
+          </div>
+       </div>
+       <!--End-->
+       <!--Multi MCQ-->
+       <div *ngIf="instructionStatus==2">
+          <span>
+          Each question has 4 choices (A), (B) ,(C) and (D) out of which
+          <b>ONE OR MORE</b>
+          is/are correct.
+          The layout
+          will be the one as shown below
+          </span>
+          <br>
+          <div class="row">
+             <div class="col-lg-12">
+                <div class="option-section">
+                   <div class="row row-remove-top-margin" *ngFor="let option of data.item.options;let i=index">
+                      <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                         <div class="row row-remove-top-margin">
+                            <div class="col-lg-1 fin-tab-col-10 remove-col-modal-padding option-value-input">
+                               <span>{{optionHA[i]}}.</span>
+                            </div>
+                            <div class="col-lg-1 fin-tab-col-10 remove-col-modal-padding option-radio-input">
+                               <span class="double-option-radio">
+                                  <mat-checkbox disabled="disabled" [checked]="i != 2"></mat-checkbox>
+                               </span>
+                            </div>
+                            <div class="col-lg-10 fin-tab-col-7 col-mobile-view-add-ques">
+                               <div class="question-subtype-option-box">
+                                  <span class="wrap-text imgClassExpress" [MathJax]="'Option'+(i+1)"></span>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <br>
+                </div>
+             </div>
+          </div>
+       </div>
+       <!--End-->
+       <!--True/False-->
+       <div *ngIf="instructionStatus==3">
+          <span>
+          Each question has 2 choices True and False out of which
+          <b>ONLY ONE</b>
+          is correct .
+          The layout
+          will be the one as shown below
+          </span>
+          <br>
+          <div class="row">
+             <div class="col-lg-12">
+                <div class="option-section">
+                   <div class="row row-remove-top-margin" *ngFor="let item of trueFalseArray;let i=index">
+                      <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                         <div class="row row-remove-top-margin">
+                            <div class="col-lg-1 remove-col-modal-padding option-radio-input ">
+                               <span class="double-option-radio">
+                                  <mat-radio-button checked="checked" disabled="disabled"></mat-radio-button>
+                               </span>
+                            </div>
+                            <div class="col-lg-6 option-value-input">
+                               <span>{{item.name}}</span>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <br>
+                </div>
+             </div>
+          </div>
+       </div>
+       <!--End-->
+       <!--MTF-->
+       <div *ngIf="instructionStatus==4">
+          <span>
+          Each question conatins 2 columns Column I and Column II,Column I
+          has fourn entries (A), (B), (C) and (D), Column II has four entries
+          (P), (Q), (R), (S). Match the entries in Column I with Column II.
+          one entry in Column I matches with  <b>ONLY ONE ENTRY</b> in Column II.The layout
+          will be the one as shown below
+          </span>
+          <br>
+          <div class="row">
+             <div class="col-lg-12">
+                <table>
+                   <tr>
+                   </tr>
+                   <tr *ngFor="let item of matchArray;let i=index">
+                      <td style="width: 5rem" class="text-center">
+                         <b>{{item.name}}</b>
+                      </td>
+                      <td *ngFor="let val of item.value;let j=index">
+                         <mat-card  class="test-objective-option-card">
+                            <span class="test-option-title">{{val}}</span>
+                            <br>
+                            <hr class="test-option-hr">
+                            <span class="double-option-radio">
+                            <mat-radio-button [name]="'matchAnswer1'+i" disabled="disabled" [checked]="checkMatchStatus(val,i)"></mat-radio-button>
+                            </span>
+                         </mat-card>
+                      </td>
+                   </tr>
+                </table>
+                <br>
+             </div>
+          </div>
+       </div>
+       <!--End-->
+       <!--Matrix 4 X 4-->
+       <div *ngIf="instructionStatus==5">
+          <span>
+          Each question conatins 2 columns Column I and Column II,Column I
+          has fourn entries (A), (B), (C) and (D), Column II has four entries
+          (P), (Q), (R), (S). Match the entries in Column I with Column II.
+          one entry in Column I matches with  <b>ONE OR MORE</b> in Column II.The layout
+          will be the one as shown below
+          </span>
+          <br>
+          <div class="row">
+             <div class="col-lg-12">
+                <table>
+                   <tr>
+                   </tr>
+                   <tr *ngFor="let item of matrixMatchArray;let i=index">
+                      <td style="width: 5rem" class="text-center">
+                         <b>{{item.name}}</b>
+                      </td>
+                      <td *ngFor="let val of item.value">
+                         <mat-card class="test-objective-option-card">
+                            <span class="test-option-title">{{val.id}}
+                            </span>
+                            <br>
+                            <hr class="test-option-hr">
+                            <mat-checkbox disabled="disabled" [checked]="checkMatrixStatus(val.index)"></mat-checkbox>
+                         </mat-card>
+                      </td>
+                   </tr>
+                </table>
+             </div>
+          </div>
+       </div>
+       <!--End-->
+       <!--Matrix 4 X 5-->
+       <div *ngIf="instructionStatus==13">
+          <span>
+          Each question conatins 2 columns Column I and Column II,Column I
+          has fourn entries (A), (B), (C) and (D), Column II has four entries
+          (P), (Q), (R), (S). Match the entries in Column I with Column II.
+          one entry in Column I matches with  <b>ONE OR MORE</b> in Column II.The layout
+          will be the one as shown below
+          </span>
+          <br>
+          <div class="row">
+             <div class="col-lg-12">
+                <table>
+                   <tr>
+                   </tr>
+                   <tr *ngFor="let item of matrixMatch45Array;let i=index">
+                      <td style="width: 5rem" class="text-center">
+                         <b>{{item.name}}</b>
+                      </td>
+                      <td *ngFor="let val of item.value">
+                         <mat-card class="test-objective-option-card">
+                            <span class="test-option-title">{{val.id}}
+                            </span>
+                            <br>
+                            <hr class="test-option-hr">
+                            <mat-checkbox disabled="disabled" [checked]="checkMatrix45Status(val.index)"></mat-checkbox>
+                         </mat-card>
+                      </td>
+                   </tr>
+                </table>
+             </div>
+          </div>
+       </div>
+       <!--End-->
+       <!--Single Integer-->
+       <div *ngIf="instructionStatus==14">
+          <span>
+          The answer to each of the question is a single  digit integer
+          ranging from <b>0 to 9</b>.The appropriate radio button need to be selected
+          to give the answer.
+          The layout
+          will be the one as shown below
+          </span>
+          <br>
+          <div class="row">
+             <div class="col-lg-12">
+                <div class="option-section">
+                   <br>
+                   <div class="row">
+                      <div class="col-lg-12 remove-col-modal-padding">
+                         <mat-card class="sing-int-card">
+                            <table style="border: 1px solid #9c3">
+                               <tr class="text-center double-int-tr">
+                                  <th style="border: 1px solid #9c3; padding: 5px;">Integer</th>
+                                  <th style="border: 1px solid #9c3;">0</th>
+                                  <th style="border: 1px solid #9c3;">1</th>
+                                  <th style="border: 1px solid #9c3;">2</th>
+                                  <th style="border: 1px solid #9c3;">3</th>
+                                  <th style="border: 1px solid #9c3;">4</th>
+                                  <th style="border: 1px solid #9c3;">5</th>
+                                  <th style="border: 1px solid #9c3;">6</th>
+                                  <th style="border: 1px solid #9c3;">7</th>
+                                  <th style="border: 1px solid #9c3;">8</th>
+                                  <th style="border: 1px solid #9c3;">9</th>
+                               </tr>
+                               <tr class="text-center">
+                                  <td style="border: 1px solid #9c3; padding: 5px;">Select</td>
+                                  <td style="border: 1px solid #9c3;" class="double-option-radio" *ngFor="let item of singleIntegerArray; let i = index">
+                                     <mat-radio-button checked="checked" disabled="disabled"></mat-radio-button>
+                                  </td>
+                               </tr>
+                            </table>
+                         </mat-card>
+                      </div>
+                   </div>
+                   <div class="row">
+                      <div class="col-lg-12">
+                         <mat-card class="sing-int-card">
+                            <div class="text-center double-int-answer-title">
+                               <span class="">Answer</span>
+                            </div>
+                            <table style="border: 1px solid #9c3;width:100% !important;border-collapse: collapse !important" class="double-int-answer">
+                               <tr class="text-center">
+                                  <th style="border: 1px solid #9c3; padding: 5px;">Integer</th>
+                                  <td style="border: 1px solid #9c3; padding: 5px;">9</td>
+                               </tr>
+                            </table>
+                         </mat-card>
+                      </div>
+                   </div>
+                   <br>
+                </div>
+             </div>
+          </div>
+       </div>
+       <!--End-->
+       <!--Double Integer-->
+       <div *ngIf="instructionStatus==15">
+          <span>
+          The answer to each of the question is a double digit integer
+          ranging from <b>00 to 99</b>.The appropriate radio buttons need to be selected
+          to give the answer.
+          The layout
+          will be the one as shown below
+          </span>
+          <br>
+          <div class="row">
+             <div class="col-lg-12  remove-col-modal-padding">
+                <mat-card>
+                   <table style="border: 1px solid #9c3;">
+                      <tr class="text-center double-int-tr">
+                         <th style="border: 1px solid #9c3; padding: 5px;">Integer</th>
+                         <th style="border: 1px solid #9c3;">0</th>
+                         <th style="border: 1px solid #9c3;">1</th>
+                         <th style="border: 1px solid #9c3;">2</th>
+                         <th style="border: 1px solid #9c3;">3</th>
+                         <th style="border: 1px solid #9c3;">4</th>
+                         <th style="border: 1px solid #9c3;">5</th>
+                         <th style="border: 1px solid #9c3;">6</th>
+                         <th style="border: 1px solid #9c3;">7</th>
+                         <th style="border: 1px solid #9c3;">8</th>
+                         <th style="border: 1px solid #9c3;">9</th>
+                      </tr>
+                      <tr class="text-center">
+                         <td style="border: 1px solid #9c3; padding: 5px;">Integer1</td>
+                         <td style="border: 1px solid #9c3; padding: 5px;" class="double-option-radio" *ngFor="let item of doubleIntegerArray1;let i=index">
+                            <mat-radio-button disabled="disabled" name="radio1" [checked]="i%2 == 0"></mat-radio-button>
+                         </td>
+                      </tr>
+                      <tr class="text-center">
+                         <td style="border: 1px solid #9c3; padding: 5px;">Integer2</td>
+                         <td style="border: 1px solid #9c3; padding: 5px;" class="double-option-radio" *ngFor="let item of doubleIntegerArray2;let i=index">
+                            <mat-radio-button disabled="disabled" name="radio2"  [checked]="i%3 == 0"></mat-radio-button>
+                         </td>
+                      </tr>
+                   </table>
+                </mat-card>
+             </div>
+          </div>
+          <div class="row">
+             <div class="col-lg-12 ">
+                <mat-card class="sing-int-card">
+                   <div class="text-center double-int-answer-title">
+                      <span class="">Answer</span>
+                   </div>
+                   <table style="border: 1px solid #9c3;border-collapse:collapse !important;width:100% !important" class="double-int-answer">
+                      <tr class="text-center">
+                         <th style="border: 1px solid #9c3; padding: 5px;">Integer1</th>
+                         <th style="border: 1px solid #9c3; padding: 5px;">Integer2</th>
+                      </tr>
+                      <tr class="text-center">
+                         <td style="border: 1px solid #9c3; padding: 5px;">8</td>
+                         <td style="border: 1px solid #9c3; padding: 5px;">9</td>
+                      </tr>
+                   </table>
+                </mat-card>
+             </div>
+          </div>
+       </div>
+       <!--End-->
+       <!--Subjective-->
+       <div *ngIf="instructionStatus >5 && instructionStatus < 13">
+          <span>
+          Please read the question carefully
+          and type your answer in the textarea
+          </span>
+          <br>
+       </div>
+       <!--End-->
+    </div>
+ </div>
+ </mat-tab>
+ </mat-tab-group>

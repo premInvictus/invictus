@@ -10,10 +10,10 @@ const routes: Routes = [
 	{
 		path: 'school', component: SchoolComponent, children: [
 			{ path: '', component: SchoolDashboardComponent },
-			{ path: 'feeconfiguration', loadChildren: 'projects/fee/src/app/feeconfiguration/feeconfiguration.module#FeeconfigurationModule'},
-			{ path: 'feemaster', loadChildren: 'projects/fee/src/app/feemaster/feemaster.module#FeemasterModule'},
+			{ path: 'feeconfiguration', loadChildren: '../feeconfiguration/feeconfiguration.module#FeeconfigurationModule'},
+			{ path: 'feemaster', loadChildren: '../feemaster/feemaster.module#FeemasterModule'},
 			{ path: 'reports', loadChildren: 'projects/fee/src/app/reports/reports.module#ReportsModule'},
-			{ path: 'auxiliary', loadChildren: 'projects/fee/src/app/auxiliary/auxiliary.module#AuxiliaryModule'}
+			{ path: 'auxiliary', loadChildren: '../auxiliary/auxiliary.module#AuxiliaryModule'}
 		]
 	}
 ];

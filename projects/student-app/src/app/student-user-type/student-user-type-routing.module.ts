@@ -21,6 +21,10 @@ const routes: Routes = [
 			},
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]
+	},
+	{
+		path: 'test',
+		loadChildren: '../test-engine/test-engine.module#TestEngineModule'
 	}
 ];
 
