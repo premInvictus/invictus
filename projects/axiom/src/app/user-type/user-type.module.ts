@@ -4,10 +4,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { UserTypeRoutingModule } from './user-type-routing.module';
 import { AdminComponent } from './admin/admin.component';
 import { TeacherComponent } from './teacher/teacher.component';
-import { StudentComponent } from './student/student.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
-import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
 import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
 import { SchoolsetupComponent } from './admin/schoolsetup/schoolsetup.component';
@@ -46,10 +44,8 @@ import { UserCredentialComponent } from './user-credential/user-credential.compo
 	declarations: [
 		AdminComponent,
 		TeacherComponent,
-		StudentComponent,
 		AdminDashboardComponent,
 		TeacherDashboardComponent,
-		StudentDashboardComponent,
 		SchoolComponent,
 		SchoolDashboardComponent,
 		SchoolsetupComponent,
