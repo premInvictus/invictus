@@ -56,6 +56,9 @@ import { QuestionNoOnGoingModalComponent } from '../test-engine/student-ongoing-
 		QuestionNoAdvModalComponent,
 		QuestionNoOnGoingModalComponent
 	],
-	entryComponents: [JeeAdvancedInstructionscreenComponent, QuestionNoModalComponent,QuestionNoAdvModalComponent, QuestionNoOnGoingModalComponent]
+	entryComponents: [JeeAdvancedInstructionscreenComponent,
+		QuestionNoModalComponent,
+		QuestionNoAdvModalComponent,
+		QuestionNoOnGoingModalComponent]
 })
 export class TestEngineModule {}
