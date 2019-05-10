@@ -117,6 +117,12 @@ export class FeeGroupComponent implements OnInit, AfterViewInit {
 					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 					this.dataSource.sort = this.sort;
 				}
+			} else {
+				this.ELEMENT_DATA = [];
+					this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+					this.dataSource.paginator = this.paginator;
+					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+					this.dataSource.sort = this.sort;
 			}
 			this.feegroupform.reset();
 		});
