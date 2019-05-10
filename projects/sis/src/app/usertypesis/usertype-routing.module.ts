@@ -13,7 +13,7 @@ if (theme === '1') {
   loadChildren: './../student-master-theme-two/student-master-theme-two.module#StudentMasterThemeTwoModule'};
 } */
 const routes: Routes = [
-	{path: '', canActivate: [AuthGuard] , redirectTo: 'school', pathMatch: 'full'},
+	{path: 'sis', canActivate: [AuthGuard] , redirectTo: 'sis/school', pathMatch: 'full'},
 	{
 		path: 'school', canActivate: [AuthGuard] , component: SchoolComponent, children: [
 			{ path: '', component: SchoolDashboardComponent },
