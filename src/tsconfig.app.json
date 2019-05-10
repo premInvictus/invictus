@@ -36,6 +36,7 @@
     "../projects/sis/src/app/student-master-theme-two/student-master-theme-two.module.ts",
     "../projects/sis/src/app/auxillary-tools/auxillary-tools.module.ts",
     "../projects/sis/src/app/admission-tools/admission-tools.module.ts",
+    "../projects/sis/src/app/usertypesis/usertypesis.module.ts",
     "../projects/sis/src/app/standard-reports/standard-reports.module.ts",
     "../projects/sis/src/app/dynamic-reports/dynamic-reports.module.ts",
     "../projects/sis/src/app/setup/setup.module.ts",
