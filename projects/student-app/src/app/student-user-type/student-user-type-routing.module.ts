@@ -24,6 +24,7 @@ const routes: Routes = [
 	},
 	{
 		path: 'test',
+		canActivate: [AuthGuard],
 		loadChildren: '../test-engine/test-engine.module#TestEngineModule'
 	}
 ];
