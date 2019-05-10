@@ -7203,3 +7203,23 @@ td.tdTone2 {
 
 }
 
+@media (min-width: 600px) and (max-width: 2500px) {
+    .small-screen {
+        display: none !important;
+    }
+    .big-screen {
+        display: block !important;
+    }
+}
+
+@media (min-width: 300px) and (max-width: 600px) {
+    .big-screen {
+        display: none !important;
+    }
+
+    .small-screen {
+        display: block !important;
+    }
+}
+
+
