@@ -2090,7 +2090,7 @@ mat-table.table-main-structure {
 }
 
 .information-bar {
-    border: 1px solid #9c3 !important;
+    border: 1px solid #9c3;
 }
 
 .report-information-bar {
@@ -4655,7 +4655,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
     }
 
     .test-question-box {
-        height: 600px !important;
+        height: 430px !important;
     }
 
 
@@ -6404,7 +6404,8 @@ td.tdTone2 {
 
 @media (min-height:700px) and (max-height: 800px) {
     .test-question-box {
-        height: 100vh !important;
+        height: 430px !important;
+        overflow-y: auto;
     }
 
     .test-question-number-box {
@@ -7202,4 +7203,24 @@ td.tdTone2 {
 
 
 }
+
+@media (min-width: 600px) and (max-width: 2500px) {
+    .small-screen {
+        display: none !important;
+    }
+    .big-screen {
+        display: block !important;
+    }
+}
+
+@media (min-width: 300px) and (max-width: 600px) {
+    .big-screen {
+        display: none !important;
+    }
+
+    .small-screen {
+        display: block !important;
+    }
+}
+
 

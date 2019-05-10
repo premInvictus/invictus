@@ -1,68 +1,115 @@
-<div class="row">
-  <div class="col-12 margin-top-10 mob-remove-padding-right">
-    <div class="row">
-      <div class="col-1 mob-col-20 custom-col-1">
-        <img class="company-logo" src="../../assets/invictus-logo.png">
-      </div>
-      <div class="col-7 mob-col-80">
-        <h1 class="instruction-company-title">Axiom - Assessment Center </h1>
-        <div class="instruction-sub-title">
-          <span>Excellence in Assessment</span>
+<div class="row row-remove-top-margin">
+  <div class="col-12 margin-top-10 mob-remove-padding">
+    <div class="big-screen">
+      <div class="row">
+        <div class="col-1 mob-col-20 custom-col-1">
+          <img class="company-logo" src="../../assets/invictus-logo.png">
         </div>
-      </div>
-      <div class="col-4 mob-col-100">
-        <div class="row">
-          <div class="col-2 mob-col-30">
-            <div class="participant-pic"><img style="height:100%" [src]="userprofileimage"></div>
+        <div class="col-7 mob-col-80">
+          <h1 class="instruction-company-title">Axiom - Assessment Center </h1>
+          <div class="instruction-sub-title">
+            <span>Excellence in Assessment</span>
           </div>
-          <div class="col-10 student-info-container mob-col-70 text-left margin-top-5">
-            <span>Candidate Name:</span> <span class="title-name"> [{{currentUser.full_name}}]</span><br>
-            <span>Subject Name:</span><span class="title-name"> [{{examDetail.qp_name}}]</span><br>
-            <span>Time remaining:</span>
-            <div class="time-remaining"><span class="font-white font-size-13 time-remain-text"><span>
-                  {{timers}}</span></span></div>
+        </div>
+        <div class="col-4 mob-col-100">
+          <div class="row">
+            <div class="col-2 mob-col-30">
+              <div class="participant-pic"><img style="height:100%" [src]="userprofileimage"></div>
+            </div>
+            <div class="col-10 student-info-container mob-col-70 text-left margin-top-5">
+              <span>Candidate Name:</span> <span class="title-name"> [{{currentUser.full_name}}]</span><br>
+              <span>Subject Name:</span><span class="title-name"> [{{examDetail.qp_name}}]</span><br>
+              <span>Time remaining:</span>
+              <div class="time-remaining"><span class="font-white font-size-13 time-remain-text"><span>
+                    {{timers}}</span></span></div>
 
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="container-box__orange">
-          <div class=" padding-10">
-            <div class="row">
-              <div class="col-6 mob-col-100 padding-15 mob-padding-15">
-                <span class="instruction-main-title">JEE MAIN</span>
-                <button [hidden]="!ongoingDiv" *ngFor="let item of examSubArray"
-                  (click)="loadCurrentQ(item.sub_qus_ind)" mat-raised-button
-                  class="subject-btn btn-spacer btn-without-radius">{{item.sub_name}}</button>
-              </div>
-              <div class="col-2 mob-col-100 padding-15 mob-padding-15">
-                <!-- <label class="language-label font-size-14">Download Exam Paper :</label><br> -->
-                <button mat-raised-button class="subject-btn btn-without-radius">Download Paper</button>
-              </div>
-              <div class="col-4 mob-col-100 text-right" [hidden]="!ongoingDiv">
-                <label class="language-label font-size-14">Choose Your Default Language</label><br>
-                <select class="language-select">
-                  <option value="volvo">English</option>
-                  <option value="saab">Hindi</option>
-                  <option value="opel">Tamil</option>
-                  <option value="audi">Telgu</option>
-                </select>
+
+    <div class="small-screen">
+      <div class="row">
+
+        <div class="col-9 display-inline-mob mob-remove-padding-right">
+          <div>
+            <img class="company-logo-mob" src="../../assets/invictus-logo.png">
+          </div>
+          <div class="mob-margin-left-10 ">
+            <h1 class="padding-top-0 instruction-company-title font-size-14">Axiom - Assessment Center </h1>
+            <div class="instruction-sub-title font-size-8">
+              <span>Excellence in Assessment</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-3 text-center remove-left-padding">
+          <div style="border-radius: 100%"><img style="width: 42px;height:100%; " [src]="userprofileimage"></div>
+        </div>
+      </div>
+    </div>
+    <div class="big-screen">
+      <div class="row">
+        <div class="col-12">
+          <div class="container-box__orange">
+            <div class=" padding-10">
+              <div class="row">
+                <div class="col-6 mob-col-100 padding-15 mob-padding-15">
+                  <span class="instruction-main-title">JEE MAIN</span>
+                  <button [hidden]="!ongoingDiv" *ngFor="let item of examSubArray"
+                    (click)="loadCurrentQ(item.sub_qus_ind)" mat-raised-button
+                    class="subject-btn btn-spacer btn-without-radius">{{item.sub_name}}</button>
+                </div>
+                <div class="col-2 mob-col-100 padding-15 mob-padding-15">
+                  <!-- <label class="language-label font-size-14">Download Exam Paper :</label><br> -->
+                  <button mat-raised-button class="subject-btn btn-without-radius">Download Paper</button>
+                </div>
+                <div class="col-4 mob-col-100 text-right" [hidden]="!ongoingDiv">
+                  <label class="language-label font-size-14">Choose Your Default Language</label><br>
+                  <select class="language-select">
+                    <option value="volvo">English</option>
+                    <option value="saab">Hindi</option>
+                    <option value="opel">Tamil</option>
+                    <option value="audi">Telgu</option>
+                  </select>
+                </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
     </div>
 
-    <div class="row" *ngIf="ongoingDiv">
-      <div class="col-12">
-        <div class="row">
+    <div class="small-screen">
+      <div class="row">
+        <div class="col-12 mob-remove-padding">
+          <div class="container-box__orange__mob padding-10">
+            <div class="row row-remove-top-margin">
+              <div class="col-8 mob-remove-padding-right">
+                  <span class="instruction-main-title">JEE MAIN</span><i class="mob-margin-left-10 font-white fas fa-info-circle" (click)="openDialog()"></i>
+                  <br>
+                  <span class="font-white font-size-10" [hidden]="!ongoingDiv" *ngFor="let item of examSubArray"
+                  (click)="loadCurrentQ(item.sub_qus_ind)">{{item.sub_name}} |</span>
+              </div>
+              <div class="col-4">
+                <span class="font-size-10 font-white">Time Remaining</span><br>
+                <div class="margin-top-5">
+                <span class="font-size- font-white">{{timers}}</span>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row row-remove-top-margin" *ngIf="ongoingDiv">
+      <div class="col-12 mob-remove-padding">
+        <div class="row row-remove-top-margin">
           <div class="col-8 mob-col-100 jee-main-col-74 remove-left-padding mob-remove-padding-right"
             id="left-ques-container">
-            <div class="row">
+            <div class="row row-remove-top-margin">
               <div class="col-12 remove-padding">
                 <div class="question-container">
                   <!-- <div class="navigation-arrow-left text-center padding-top-5"><i
@@ -535,6 +582,7 @@
                 </div>
               </div>
             </div>
+            <div class="big-screen">
             <div class="button-container">
               <div class="row">
                 <div class="col-12 remove-padding">
@@ -565,8 +613,33 @@
                 </div>
               </div>
             </div>
+            
+          </div>
+          <div class="small-screen">
+            <div class="row">
+              <div class="col-12">
+                <button mat-raised-button class="mob-btn-one" [disabled]="currentQAIndex == 0"
+                (click)="loadCurrentQ(currentQAIndex - 1)">Previous</button>
+                <button mat-raised-button class="mob-btn-two mob-btn-spacer " [disabled]="currentQAIndex == questionsArray.length-1" (click)="loadCurrentQ(currentQAIndex + 1)"> Save</button>
+                <button mat-raised-button class="mob-btn-three mob-btn-spacer" (click)="saveAndNext()">Save & Next</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 ">
+                  <button mat-raised-button class="mob-btn-four"  (click)="saveAndNext(true)">Save & Marked For Review</button>
+                  <button mat-raised-button class="mob-btn-five mob-btn-spacer" (click)="clearResponse()">Clear Response</button>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-12 ">
+                    <button mat-raised-button class="mob-btn-six" (click)="saveAndNext(true,false)">Marked For Review & Next</button>
+                    <button mat-raised-button class="mob-btn-seven mob-btn-spacer" (click)="testSummary()">Submit</button>
+                </div>
+              </div>
+          </div>
           </div>
           <div class="col-4 mob-col-100 jee-main-col-26 remove-padding" id="right-ques-container">
+            <div class="big-screen">
             <div class="row">
               <div class="col-6">
                 <img src="../../assets/default-ques-btn.svg" class="jee-btn-svg">
@@ -619,7 +692,7 @@
               </div>
             </div>
           </div>
-
+        </div>
         </div>
       </div>
     </div>

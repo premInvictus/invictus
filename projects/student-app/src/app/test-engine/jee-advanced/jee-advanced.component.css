@@ -1,3 +1,21 @@
+.company-logo-mob {
+    width: 29px;
+    height: 39px;
+}
+
+h1.font-size-13 {
+    font-size: 13px !important;
+    margin-bottom: 0px !important;
+}
+
+.instruction-sub-title.font-size-8 {
+    font-size: 8px !important;
+}
+
+.instruction-sub-title-mob {
+    width: 132px !important; 
+}
+
 .indivi-ques-instruct {
     border: 2px solid #000;
     font-size: 12px;
@@ -49,9 +67,9 @@
 .ques-number-coll {
    margin-top: -6px !important;
 }
-.ongoing-left-container {
+/* .ongoing-left-container {
     padding-right: 10px !important
-}
+} */
 .notpad-numericpad-parent {
     height: 440px;
     width: 100%;

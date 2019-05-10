@@ -1,13 +1,13 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { JeeAdvancedInstructionscreenComponent } from './jee-advanced-instructionscreen/jee-advanced-instructionscreen.component';
-import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
-import { NotificationService, SocketService, HtmlToTextService } from 'projects/axiom/src/app/_services/index';
-import { appConfig } from 'projects/axiom/src/app/app.config';
+import { QelementService } from '../../questionbank/service/qelement.service';
+import { NotificationService, SocketService, HtmlToTextService } from '../../_services/index';
+import { appConfig } from '../../../app/app.config';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NotificationsService } from 'angular2-notifications';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Event } from 'projects/axiom/src/app/_models/event';
+import { Event } from '../../_models/event';
 export class PendingRequest {
 	url: string;
 	data: any;
@@ -171,6 +171,16 @@ export class JeeAdvancedComponent implements OnInit {
 		private dialog: MatDialog,
 		private socketService: SocketService
 	) { }
+
+	openQuesDialog(): void {
+		const dialogRef = this.dialog.open(QuestionNoAdvModalComponent, {
+		  width: '380px',
+		});
+	
+		dialogRef.afterClosed().subscribe(result => {
+		  console.log('The dialog was closed');
+		});
+	  }
 
 	ngOnInit() {
 		document.addEventListener('contextmenu', (e) => {
@@ -1935,3 +1945,18 @@ export class JeeAdvancedComponent implements OnInit {
 		return sum ;
 	}
 }
+
+@Component({
+	selector: 'question-no-adv-modal',
+	templateUrl: 'question-no-adv-modal.html',
+  })
+  export class QuestionNoAdvModalComponent {
+  
+	constructor(
+	  public dialogRef: MatDialogRef<QuestionNoAdvModalComponent>) {}
+  
+	onNoClick(): void {
+	  this.dialogRef.close();
+	}
+  
+  }
