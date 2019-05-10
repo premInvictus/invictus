@@ -11,6 +11,7 @@ import {AppRoutingModule} from './app.routing';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService} from './login/login/authentication.service';
 import {CommonAPIService} from './_services/commonAPI.service';
+import { AuthGuard} from './_guards/index';
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -28,7 +29,7 @@ import {CommonAPIService} from './_services/commonAPI.service';
 
 	],
 	providers: [
-		AuthenticationService, CommonAPIService],
+		AuthenticationService, CommonAPIService, AuthGuard],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

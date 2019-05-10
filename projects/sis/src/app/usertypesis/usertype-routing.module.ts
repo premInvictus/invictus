@@ -3,15 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/index';
 import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
-import { StudentMasterThemeTwoModule } from '../student-master-theme-two/student-master-theme-two.module';
 import { UserCredentialComponent } from './user-credential/user-credential.component';
-import { AuxillaryToolsModule } from './../auxillary-tools/auxillary-tools.module';
-import { AdmissionToolsModule } from './../admission-tools/admission-tools.module';
-import { StandardReportsModule } from './../standard-reports/standard-reports.module';
-import { DynamicReportsModule } from './../dynamic-reports/dynamic-reports.module';
-import { SetupModule } from './../setup/setup.module';
-import { ManageUsersModule } from './../manage-users/manage-users.module';
-import { SchedulerNotificationsModule } from './../scheduler-notifications/scheduler-notifications.module';
 /* import {theme} from '../app.routing';
 let pathJSON = {};
 if (theme === '1') {
@@ -21,9 +13,9 @@ if (theme === '1') {
   loadChildren: './../student-master-theme-two/student-master-theme-two.module#StudentMasterThemeTwoModule'};
 } */
 const routes: Routes = [
-	{path: '', redirectTo: 'school', pathMatch: 'full'},
+	{path: '', canActivate: [AuthGuard] , redirectTo: 'school', pathMatch: 'full'},
 	{
-		path: 'school', component: SchoolComponent, children: [
+		path: 'school', canActivate: [AuthGuard] , component: SchoolComponent, children: [
 			{ path: '', component: SchoolDashboardComponent },
 			{ path: 'studentmaster',
 			loadChildren: '../student-master-theme-two/student-master-theme-two.module#StudentMasterThemeTwoModule'},

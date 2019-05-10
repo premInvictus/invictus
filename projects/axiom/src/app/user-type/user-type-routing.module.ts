@@ -16,6 +16,7 @@ import { UserCredentialComponent } from './user-credential/user-credential.compo
 const routes: Routes = [
 	{
 		path: '',
+		canActivate: [AuthGuard],
 		redirectTo: 'school',
 		pathMatch: 'full'
 	},
@@ -115,6 +116,7 @@ const routes: Routes = [
 	{
 		path: 'school',
 		component: SchoolComponent,
+		canActivate: [AuthGuard],
 		children: [
 			{ path: '', component: SchoolDashboardComponent },
 			{

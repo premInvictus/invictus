@@ -5,10 +5,10 @@ import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
 const routes: Routes = [
 	{
-		path: '', redirectTo: 'school', pathMatch: 'full'
+		path: '', canActivate: [AuthGuard] , redirectTo: 'school', pathMatch: 'full'
 	},
 	{
-		path: 'school', component: SchoolComponent, children: [
+		path: 'school', canActivate: [AuthGuard] , component: SchoolComponent, children: [
 			{ path: '', component: SchoolDashboardComponent },
 			{ path: 'feeconfiguration', loadChildren: '../feeconfiguration/feeconfiguration.module#FeeconfigurationModule'},
 			{ path: 'feemaster', loadChildren: '../feemaster/feemaster.module#FeemasterModule'},
