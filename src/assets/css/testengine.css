@@ -1445,10 +1445,112 @@ a.link {
         font-size: 15px !important;
     }
 
-    .instruction-sub-title {
-        width: 185px !important;
-        font-size: 12px !important;
+    .container-box__orange__mob {
+        background: #f7931e;
+        margin: 10px 0px 0px 0px;
     }
+
+    .container-box__blue__mob {
+        background: #337AB7;
+        margin: 10px 0px 0px 0px;
+    }
+
+    .mob-margin-left-10 {
+        margin-left: 10px;
+    }
+
+    .font-size-10 {
+        font-size: 10px;
+    }
+
+    .font-size-14 {
+        font-size: 14px;
+    }
+
+
+    .font-size-15 {
+        font-size: 15px;
+    }
+
+    .participant-pic {
+        width: 42px;
+        height: 42px;
+        margin: 0px;
+        border-radius: 100%;
+    }
+
+    .mob-btn-spacer {
+        margin-left: 10px !important;
+    }
+
+    .mob-btn-one {
+        background-color: #bababa;
+        color: #ffffff;
+        width: 99px !important;
+        height: 36px !important;
+    }
+
+    .mob-btn-two {
+        background-color: #777777;
+        color: #ffffff;
+        width: 99px !important;
+        height: 36px !important;
+    }
+
+    .mob-btn-three {
+        background-color: #2F2FF2;
+        color: #ffffff;
+        width: 136px !important;
+        height: 36px !important;
+    }
+
+    .mob-btn-four {
+        background-color: #F0AD4E;
+        color: #ffffff;
+        width: 210px !important;
+        height: 36px !important;
+    }
+
+    .mob-btn-five {
+        background-color: #ffffff;
+        color: #000;
+        width: 136px !important;
+        height: 36px !important;
+    }
+
+    .mob-btn-six {
+        background-color: #337AB7;
+        color: #ffffff;
+        width: 210px !important;
+        height: 36px !important;
+    }
+
+    .mob-btn-seven{
+        background-color: #00A651;
+        color: #ffffff;
+        width: 136px !important;
+        height: 36px !important;
+    }
+
+    .question-container {
+        height: 449px;
+        border: none !important;
+        overflow: auto;
+        padding: 15px;
+    }
+
+    .instruction-sub-title {
+        width: 132px !important;
+    }
+
+    .display-inline-mob{
+        display: inline-flex !important;
+    }
+
+    .padding-top-0 {
+        padding-top: 0px !important;
+    }
+
 
     .student-info-container {
         padding: 0 0px;
