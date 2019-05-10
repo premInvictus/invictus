@@ -161,9 +161,9 @@ export class ScheduleexamComponent implements OnInit {
 				} else {
 					let url1 = '';
 					if (this.currentUser.role_id === '2') {
-						url1 = 'school/';
+						url1 = 'axiom/school/';
 					} else if (this.currentUser.role_id === '3') {
-						url1 = 'teacher/';
+						url1 = 'axiom/teacher/';
 					}
 					const url = url1 + 'eassessment/testscreeen/' + examData.action.es_id;
 
