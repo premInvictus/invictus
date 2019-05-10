@@ -21,6 +21,7 @@ import { ModalModule, TimepickerModule } from 'ngx-bootstrap';
 import { TagInputModule } from 'ngx-chips';
 import { KatexModule } from 'ng-katex';
 import { EditorModule } from 'primeng/editor';
+import { QuestionNoModalComponent } from '../test-engine/jee-mains/jee-mains.component'
 
 @NgModule({
 	imports: [
@@ -48,8 +49,9 @@ import { EditorModule } from 'primeng/editor';
 		StudentInstructionScreenComponent,
 		StudentOngoingTestScreenComponent,
 		StudentTestConfirmationScreenComponent,
-		StudentTestSummaryScreenComponent
+		StudentTestSummaryScreenComponent,
+		QuestionNoModalComponent
 	],
-	entryComponents: [JeeAdvancedInstructionscreenComponent]
+	entryComponents: [JeeAdvancedInstructionscreenComponent, QuestionNoModalComponent]
 })
 export class TestEngineModule {}

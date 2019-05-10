@@ -1,0 +1,51 @@
+<div class="row">
+        <div class="col-6">
+          <img src="../../assets/default-ques-btn.svg" class="jee-btn-svg">
+          <span class="adv-jee-btn-ondqb">{{getCount('')}}</span>
+          <span class="font-size-12">Not Visited</span>
+        </div>
+        <div class="col-6">
+          <img src="../../assets/main-orange-btn.svg" class="jee-btn-svg">
+          <span class="main-jee-btn-not-onans">{{getCount('2')}}</span>
+          <span class="font-size-12">Not Answered</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <img src="../../assets/main-green-btn.svg" class="jee-btn-svg">
+          <span class="adv-jee-btn-onans">{{getCount('1')}}</span>
+          <span class="font-size-12">Answered</span>
+        </div>
+        <div class="col-6">
+          <img src="../../assets/saveforreview.svg" class="jee-btn-svg">
+          <span class="main-jee-btn-not-onsfr">{{getCount('0')}}</span>
+          <span class="font-size-12">Marked For Review</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-1">
+          <img src="../../assets/ansmarkreview.svg" class="jee-btn-svg">
+          <span class="adv-jee-btn-onans">{{getCount('3')}}</span>
+        </div>
+        <div class="col-11">
+          <span class="font-size-12">Answered & Marked For Review (will be considered for evaluation)</span>
+        </div>
+
+      </div>
+      <br>
+      <div class="jee-main-no-container">
+        <div class="row">
+          <div class="col-12 ">
+            <ng-container *ngFor="let item of questionsArray;let i=index">
+              <div class="margin-left-4 display-inline" (click)="loadCurrentQ(i)">
+                <img [src]="getQusStatuSrc(item.answerStatus)" class="jee-btn-svg">
+                <span class="main-side-btn1">{{i+1}}</span>
+              </div>
+            </ng-container>
+          </div>
+
+        </div>
+        <div>
+
+        </div>
+      </div>
