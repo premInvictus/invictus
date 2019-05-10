@@ -46,10 +46,14 @@
          <div class="header-menu-divider"></div>
          <div class="dropdown">
           <button class="axiom-icon-button mat-button username" mat-button>
-               <img class="header-avatar-img" src="../../../assets/images/resvgiconsforfeemodule/man.svg"><span class="header-icon-spacer header-profile-name">Hi, John</span></button>
+               <!-- <img class="header-avatar-img" src="../../../assets/images/resvgiconsforfeemodule/man.svg"> -->
+               <img *ngIf="showImage" alt="invictus" class="header-avatar-img" src="{{image}}">
+               <img *ngIf="showImageBlank" class="header-avatar-img"
+               src="../../../assets/images/resvgiconsforfeemodule/man.svg">
+               <span class="header-icon-spacer header-profile-name">Hi, {{usernane}}</span></button>
           <div class="dropdown-content">
              <button mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
-             <button mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i> Update Profile</button>
+             <a routerLink="./user-credential"><button mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i>Change Credential</button></a>
              <a href="javascript:void(0);"><button mat-menu-item class="profile-submenu" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
           </div>
         </div>

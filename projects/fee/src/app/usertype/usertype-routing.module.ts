@@ -3,10 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/index';
 import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
-import { FeemasterModule } from './../feemaster/feemaster.module';
-import { ReportsModule } from '../reports/reports.module';
-import { AuxiliaryModule } from './../auxiliary/auxiliary.module';
-import { FeeconfigurationModule } from './../feeconfiguration/feeconfiguration.module';
 const routes: Routes = [
 	{
 		path: '', redirectTo: 'school', pathMatch: 'full'
@@ -14,10 +10,10 @@ const routes: Routes = [
 	{
 		path: 'school', component: SchoolComponent, children: [
 			{ path: '', component: SchoolDashboardComponent },
-			{ path: 'feeconfiguration', loadChildren: () => FeeconfigurationModule},
-			{ path: 'feemaster', loadChildren: () => FeemasterModule},
-			{ path: 'reports', loadChildren: () => ReportsModule},
-			{ path: 'auxiliary', loadChildren: () => AuxiliaryModule}
+			{ path: 'feeconfiguration', loadChildren: '../feeconfiguration/feeconfiguration.module#FeeconfigurationModule'},
+			{ path: 'feemaster', loadChildren: '../feemaster/feemaster.module#FeemasterModule'},
+			{ path: 'reports', loadChildren: 'projects/fee/src/app/reports/reports.module#ReportsModule'},
+			{ path: 'auxiliary', loadChildren: '../auxiliary/auxiliary.module#AuxiliaryModule'}
 		]
 	}
 ];

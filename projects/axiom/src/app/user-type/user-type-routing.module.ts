@@ -3,10 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard, RouteAccessGuard } from '../_guards/index';
 import { AdminComponent } from './admin/admin.component';
 import { TeacherComponent } from './teacher/teacher.component';
-import { StudentComponent } from './student/student.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
-import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
 import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
 import { SchoolsetupComponent } from './admin/schoolsetup/schoolsetup.component';
@@ -15,20 +13,6 @@ import { CreateNewUserComponent } from './admin/create-new-user/create-new-user.
 import { ManageAccessComponent } from './admin/manage-access/manage-access.component';
 import { CreateNewSchoolComponent } from './admin/create-new-school/create-new-school.component';
 import { UserCredentialComponent } from './user-credential/user-credential.component';
-import { QuestionbankModule } from '../questionbank/questionbank.module';
-import { QuestionModule } from '../question/question.module';
-import { SecondaryreviewModule } from '../secondaryreview/secondaryreview.module';
-import { QuestiontemplateModule } from '../questiontemplate/questiontemplate.module';
-import { QuestionpaperModule } from '../questionpaper/questionpaper.module';
-import { EassessmentModule } from '../eassessment/eassessment.module';
-import { EevaluationModule } from '../eevaluation/eevaluation.module';
-import { QuestionPaperSetupModule } from '../question-paper-setup/question-paper-setup.module';
-import { ReportsModule } from '../reports/reports.module';
-import { ClassPerformanceReportsModule } from '../class-performance-reports/class-performance-reports.module';
-import { StudentReportsModule } from '../student-reports/student-reports.module';
-import { TestReportsModule } from '../test-reports/test-reports.module';
-import { AcsetupModule } from '../acsetup/acsetup.module';
-
 const routes: Routes = [
 	{
 		path: '',
@@ -44,19 +28,19 @@ const routes: Routes = [
 		children: [
 			{
 				path: 'setup',
-				loadChildren: () => AcsetupModule
+				loadChildren: '../acsetup/acsetup.module#AcsetupModule'
 			},
 			{
 				path: 'questionbank',
-				loadChildren: () => QuestionbankModule
+				loadChildren: '../questionbank/questionbank.module#QuestionbankModule'
 			},
 			{
 				path: 'question',
-				loadChildren: () => QuestionModule
+				loadChildren: '../question/question.module#QuestionModule'
 			},
 			{
 				path: 'review',
-				loadChildren: () => SecondaryreviewModule
+				loadChildren: '../secondaryreview/secondaryreview.module#SecondaryreviewModule'
 			},
 			{ path: '', component: AdminDashboardComponent },
 			{
@@ -75,27 +59,6 @@ const routes: Routes = [
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]
 	},
-	// {
-	// 	path: 'student',
-	// 	component: StudentComponent,
-	// 	canActivate: [AuthGuard],
-	// 	children: [
-	// 		{ path: '', component: StudentDashboardComponent },
-	// 		{
-	// 			path: 'report',
-	// 			loadChildren: () => ReportsModule
-	// 		},
-	// 		{
-	// 			path: 'eassessment',
-	// 			loadChildren: () => EassessmentModule
-	// 		},
-	// 		{
-	// 			path: 'test-report',
-	// 			loadChildren: () => TestReportsModule
-	// 		},
-	// 		{ path: 'user-credential', component: UserCredentialComponent }
-	// 	]
-	// },
 	{
 		path: 'teacher',
 		component: TeacherComponent,
@@ -103,48 +66,48 @@ const routes: Routes = [
 		children: [
 			{ path: '', component: TeacherDashboardComponent },
 			{
-				path: 'report',
-				loadChildren: () => ReportsModule
+				path: 'questionbank',
+				loadChildren: '../questionbank/questionbank.module#QuestionbankModule'
 			},
 			{
-				path: 'questionbank',
-				loadChildren: () => QuestionbankModule
+				path: 'question',
+				loadChildren: '../question/question.module#QuestionModule'
 			},
 			{
 				path: 'template',
-				loadChildren: () => QuestiontemplateModule
+				loadChildren: '../questiontemplate/questiontemplate.module#QuestiontemplateModule'
 			},
 			{
 				path: 'questionpaper',
-				loadChildren: () => QuestionpaperModule
+				loadChildren: '../questionpaper/questionpaper.module#QuestionpaperModule'
 			},
 			{
 				path: 'eassessment',
-				loadChildren: () => EassessmentModule
+				loadChildren: 'projects/axiom/src/app/eassessment/eassessment.module#EassessmentModule'
 			},
 			{
 				path: 'eevaluation',
-				loadChildren: () => EevaluationModule
+				loadChildren: '../eevaluation/eevaluation.module#EevaluationModule'
 			},
 			{
 				path: 'question_paper_setup',
-				loadChildren: () => QuestionPaperSetupModule
+				loadChildren: '../question-paper-setup/question-paper-setup.module#QuestionPaperSetupModule'
 			},
 			{
 				path: 'report',
-				loadChildren: () => ReportsModule
+				loadChildren: 'projects/axiom/src/app/reports/reports.module#ReportsModule'
 			},
 			{
 				path: 'class-reports',
-				loadChildren: () => ClassPerformanceReportsModule
+				loadChildren: '../class-performance-reports/class-performance-reports.module#ClassPerformanceReportsModule'
 			},
 			{
 				path: 'student-reports',
-				loadChildren: () => StudentReportsModule
+				loadChildren: '../student-reports/student-reports.module#StudentReportsModule'
 			},
 			{
 				path: 'test-report',
-				loadChildren: () => TestReportsModule
+				loadChildren: '../test-reports/test-reports.module#TestReportsModule'
 			},
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]
@@ -156,55 +119,55 @@ const routes: Routes = [
 			{ path: '', component: SchoolDashboardComponent },
 			{
 				path: 'setup',
-				loadChildren: () => AcsetupModule
+				loadChildren: '../acsetup/acsetup.module#AcsetupModule'
 			},
 			{
 				path: 'questionbank',
-				loadChildren: () => QuestionbankModule
+				loadChildren: '../questionbank/questionbank.module#QuestionbankModule'
 			},
 			{
 				path: 'question',
-				loadChildren: () => QuestionModule
+				loadChildren: '../question/question.module#QuestionModule'
 			},
 			{
 				path: 'review',
-				loadChildren: () => SecondaryreviewModule
+				loadChildren: '../secondaryreview/secondaryreview.module#SecondaryreviewModule'
 			},
 			{
 				path: 'template',
-				loadChildren: () => QuestiontemplateModule
+				loadChildren: '../questiontemplate/questiontemplate.module#QuestiontemplateModule'
 			},
 			{
 				path: 'questionpaper',
-				loadChildren: () => QuestionpaperModule
+				loadChildren: '../questionpaper/questionpaper.module#QuestionpaperModule'
 			},
 			{
 				path: 'eassessment',
-				loadChildren: () => EassessmentModule
+				loadChildren: 'projects/axiom/src/app/eassessment/eassessment.module#EassessmentModule'
 			},
 			{
 				path: 'eevaluation',
-				loadChildren: () => EevaluationModule
+				loadChildren: '../eevaluation/eevaluation.module#EevaluationModule'
 			},
 			{
 				path: 'question_paper_setup',
-				loadChildren: () => QuestionPaperSetupModule
+				loadChildren: '../question-paper-setup/question-paper-setup.module#QuestionPaperSetupModule'
 			},
 			{
 				path: 'report',
-				loadChildren: () => ReportsModule
+				loadChildren: 'projects/axiom/src/app/reports/reports.module#ReportsModule'
 			},
 			{
 				path: 'class-reports',
-				loadChildren: () => ClassPerformanceReportsModule
+				loadChildren: '../class-performance-reports/class-performance-reports.module#ClassPerformanceReportsModule'
 			},
 			{
 				path: 'student-reports',
-				loadChildren: () => StudentReportsModule
+				loadChildren: '../student-reports/student-reports.module#StudentReportsModule'
 			},
 			{
 				path: 'test-report',
-				loadChildren: () => TestReportsModule
+				loadChildren: '../test-reports/test-reports.module#TestReportsModule'
 			},
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]

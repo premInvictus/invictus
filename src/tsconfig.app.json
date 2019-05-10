@@ -4,8 +4,48 @@
     "outDir": "../out-tsc/app",
     "types": ["mathjax"]
   },
+  "include": [
+  "./**/*.ts"
+  ],
   "exclude": [
-    "test.ts",
+    "src/test.ts",
     "**/*.spec.ts"
+  ],
+  "files": [
+    "./app/app.module.ts",
+    "./main.ts",
+    "./polyfills.ts",
+    "../projects/student-app/src/app/eassessment/eassessment.module.ts/",
+    "../projects/student-app/src/app/reports/reports.module.ts",
+    "../projects/student-app/src/app/test-engine/test-engine.module.ts",
+    "../projects/student-app/src/app/student-user-type/student-user-type.module.ts",
+    "../projects/axiom/src/app/questionbank/questionbank.module.ts",
+    "../projects/axiom/src/app/acsetup/acsetup.module.ts",
+    "../projects/axiom/src/app/class-performance-reports/class-performance-reports.module.ts",
+    "../projects/axiom/src/app/eassessment/eassessment.module.ts",
+    "../projects/axiom/src/app/question-paper-setup/question-paper-setup.module.ts",
+    "../projects/axiom/src/app/question/question.module.ts",
+    "../projects/axiom/src/app/questionpaper/questionpaper.module.ts",
+    "../projects/axiom/src/app/questiontemplate/questiontemplate.module.ts",
+    "../projects/axiom/src/app/reports/reports.module.ts",
+    "../projects/axiom/src/app/secondaryreview/secondaryreview.module.ts",
+    "../projects/axiom/src/app/student-reports/student-reports.module.ts",
+    "../projects/axiom/src/app/test-reports/test-reports.module.ts",
+    "../projects/axiom/src/app/user-type/user-type.module.ts",
+    "../projects/axiom/src/app/eevaluation/eevaluation.module.ts",
+    "../projects/sis/src/app/student-master-theme-two/student-master-theme-two.module.ts",
+    "../projects/sis/src/app/auxillary-tools/auxillary-tools.module.ts",
+    "../projects/sis/src/app/admission-tools/admission-tools.module.ts",
+    "../projects/sis/src/app/standard-reports/standard-reports.module.ts",
+    "../projects/sis/src/app/dynamic-reports/dynamic-reports.module.ts",
+    "../projects/sis/src/app/setup/setup.module.ts",
+    "../projects/sis/src/app/manage-users/manage-users.module.ts",
+    "../projects/sis/src/app/scheduler-notifications/scheduler-notifications.module.ts",
+    "../projects/fee/src/app/auxiliary/auxiliary.module.ts",
+    "../projects/fee/src/app/feeconfiguration/feeconfiguration.module.ts",
+    "../projects/fee/src/app/feemaster/feemaster.module.ts",
+    "../projects/fee/src/app/reports/reports.module.ts",
+    "../projects/fee/src/app/usertype/usertype.module.ts"
   ]
 }
+

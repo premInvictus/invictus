@@ -6,23 +6,16 @@
                   <div class="line-menu"></div>
                   <div class="line-menu half end"></div>
                 </div><span class="header-icon-spacer header-font-color margin-top-ve5">Menu</span></div></a>
-         <!-- <a mat-button (click)="sidenavOpen()" class="padding-left-8px"><img class="header-hamburger-icon" src="../../../assets/images/resvgiconsforfeemodule/menu.svg"><span class="header-icon-spacer header-font-color">Menu</span></a> -->
          <a href="http://invictusdigisoft.com/" target="_blank" aria-label="axiom App" class="axiom-navbar-hide-small axiom-button mat-button" mat-button tabindex="0" aria-disabled="false">
          <span class="mat-button-wrapper">
          <img alt="invictus" class="axiom-invictus-logo margin-right-50" src="../../../assets/images/resvgiconsforfeemodule/company_logo.svg">
-         <!-- <span class="axiom-invictus-title"><span class="invictus-title">Invictus</span> <span class="digisoft-title">&nbsp;DigiSoft</span></span> -->
          </span>
          </a>
-         <!-- <a aria-label="axiom App" class="axiom-icon-button mat-button" matTooltip="click icon to open menu" matTooltipPosition="below" #tooltip="matTooltip" mat-button tabindex="0" aria-disabled="false" [ngClass]="{'btn-add': !clicked, 'btn-remove': clicked}" (click)="clicked = !clicked"  (click)="sidenavOpen()">
-         <span class="mat-button-wrapper" >
-         <i class="fas ham-icon hide-for-tab-screen" [ngClass]="{'fa-bars': !clicked, 'fa-times': clicked} "></i>
-         </span>
-         </a> -->
          <button class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="schoolbranch" mat-button>
          <img class="header-school-branch" src="../../../assets/images/resvgiconsforfeemodule/school_branch.svg"><span class="header-icon-spacer">{{schoolInfo.school_name}}</span></button>
-
+ 
          <mat-menu #schoolbranch="matMenu">
-            <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i><span>{{schoolInfo.school_name}}</span> </button>
+            <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i><span>{{schoolInfo?.school_name}}</span> </button>
          </mat-menu>
          <div class="header-menu-divider"></div>
          <button class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="erpmodule" mat-button>
@@ -51,26 +44,16 @@
          </span>
          </a>
          <div class="header-menu-divider"></div>
-         <!-- <a aria-label="axiom App" class="axiom-icon-button top-profile-image" tabindex="0" aria-disabled="false">
-         <span class="mat-button-wrapper">
-         <img *ngIf="showImage" alt="invictus" class="axiom-profile-image" src="{{hosturl+image}}">
-         <img *ngIf="showImageBlank"  class="axiom-profile-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJCq8ocdeBpdZgNebcoY0sM0Fl4T5rs31ughmmkCuVGkJ9lCASlA">
-         
-         </span>
-         </a> -->
-         <!-- <button class="axiom-icon-button mat-button username" [matMenuTriggerFor]="menu" mat-button>
-         Hi, {{usernane}}</button>
-         <mat-menu #menu="matMenu" class="log-menu">
-            <button mat-menu-item class="profile-submenu">View Profile</button>
-            <button mat-menu-item class="profile-submenu">Update Profile</button>
-            <a routerLink="/login"><button mat-menu-item class="profile-submenu">Logout</button></a>
-         </mat-menu> -->
          <div class="dropdown">
           <button class="axiom-icon-button mat-button username" mat-button>
-               <img class="header-avatar-img" src="../../../assets/images/resvgiconsforfeemodule/man.svg"><span class="header-icon-spacer header-profile-name">Hi, John</span></button>
+               <!-- <img class="header-avatar-img" src="../../../assets/images/resvgiconsforfeemodule/man.svg"> -->
+               <img *ngIf="showImage" alt="invictus" class="header-avatar-img" src="{{image}}">
+               <img *ngIf="showImageBlank" class="header-avatar-img"
+               src="../../../assets/images/resvgiconsforfeemodule/man.svg">
+               <span class="header-icon-spacer header-profile-name">Hi, {{usernane}}</span></button>
           <div class="dropdown-content">
              <button mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
-             <button mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i> Update Profile</button>
+             <a routerLink="./user-credential"><button mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i>Change Credential</button></a>
              <a href="javascript:void(0);"><button mat-menu-item class="profile-submenu" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
           </div>
         </div>
@@ -107,10 +90,10 @@
                <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i>{{schoolInfo}}</button>
             </mat-menu>
             <mat-menu #schoolbranch="matMenu" *ngIf="currentUser?.role_id == 1">
-               <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i>{{schoolInfo.school_name}}</button>
+               <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i>{{schoolInfo?.school_name}}</button>
             </mat-menu>
             <span class="mat-button-wrapper">
-            <i class="fas fa-graduation-cap top-nav-icon"></i>{{schoolInfo.school_name}}</span>
+            <i class="fas fa-graduation-cap top-nav-icon"></i>{{schoolInfo?.school_name}}</span>
          </a>
          <a class="axiom-navbar-link mat-button" mat-button tabindex="0" aria-label="false" [matMenuTriggerFor]="erpmodule">
             <mat-menu #erpmodule="matMenu">

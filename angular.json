@@ -172,9 +172,9 @@
           "options": {
             "outputPath": "dist/axiom",
             "index": "projects/axiom/src/index.html",
-            "main": "projects/axiom/src/main.ts",
-            "polyfills": "projects/axiom/src/polyfills.ts",
-            "tsConfig": "projects/axiom/tsconfig.app.json",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "projects/axiom/src/favicon.ico",
               "projects/axiom/src/assets"
@@ -260,10 +260,10 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/axiom/src/test.ts",
-            "polyfills": "projects/axiom/src/polyfills.ts",
-            "tsConfig": "projects/axiom/tsconfig.spec.json",
-            "karmaConfig": "projects/axiom/karma.conf.js",
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
             "styles": [
               "projects/axiom/src/styles.css"
             ],
@@ -280,8 +280,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/axiom/tsconfig.app.json",
-              "projects/axiom/tsconfig.spec.json"
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -329,9 +329,9 @@
           "options": {
             "outputPath": "dist/sis",
             "index": "projects/sis/src/index.html",
-            "main": "projects/sis/src/main.ts",
-            "polyfills": "projects/sis/src/polyfills.ts",
-            "tsConfig": "projects/sis/tsconfig.app.json",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "projects/sis/src/favicon.ico",
               "projects/sis/src/assets"
@@ -417,10 +417,10 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/sis/src/test.ts",
-            "polyfills": "projects/sis/src/polyfills.ts",
-            "tsConfig": "projects/sis/tsconfig.spec.json",
-            "karmaConfig": "projects/sis/karma.conf.js",
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
             "styles": [
               "projects/sis/src/styles.css"
             ],
@@ -435,8 +435,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/sis/tsconfig.app.json",
-              "projects/sis/tsconfig.spec.json"
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -484,9 +484,9 @@
           "options": {
             "outputPath": "dist/fee",
             "index": "projects/fee/src/index.html",
-            "main": "projects/fee/src/main.ts",
-            "polyfills": "projects/fee/src/polyfills.ts",
-            "tsConfig": "projects/fee/tsconfig.app.json",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "projects/fee/src/favicon.ico",
               "projects/fee/src/assets"
@@ -572,10 +572,10 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/fee/src/test.ts",
-            "polyfills": "projects/fee/src/polyfills.ts",
-            "tsConfig": "projects/fee/tsconfig.spec.json",
-            "karmaConfig": "projects/fee/karma.conf.js",
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
             "styles": [
               "projects/fee/src/styles.css"
             ],
@@ -592,8 +592,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/fee/tsconfig.app.json",
-              "projects/fee/tsconfig.spec.json"
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -641,9 +641,9 @@
           "options": {
             "outputPath": "dist/student-app",
             "index": "projects/student-app/src/index.html",
-            "main": "projects/student-app/src/main.ts",
-            "polyfills": "projects/student-app/src/polyfills.ts",
-            "tsConfig": "projects/student-app/tsconfig.app.json",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "projects/student-app/src/favicon.ico",
               "projects/student-app/src/assets"
@@ -693,10 +693,10 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/student-app/src/test.ts",
-            "polyfills": "projects/student-app/src/polyfills.ts",
-            "tsConfig": "projects/student-app/tsconfig.spec.json",
-            "karmaConfig": "projects/student-app/karma.conf.js",
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
             "styles": [
               "projects/student-app/src/styles.css"
             ],
@@ -711,8 +711,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/student-app/tsconfig.app.json",
-              "projects/student-app/tsconfig.spec.json"
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

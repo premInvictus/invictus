@@ -36,6 +36,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
 import { MathJaxDirective } from '../mathjax.directive';
 import { FooterComponent } from './footer/footer.component';
+import { OngoingTestInstructionComponent } from './ongoing-test-instruction/ongoing-test-instruction.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -78,7 +79,8 @@ import { FooterComponent } from './footer/footer.component';
 		SideNavComponent,
 		CommonDynamicChartComponent,
 		FooterComponent,
-		MathJaxDirective
+		MathJaxDirective,
+		OngoingTestInstructionComponent
 	],
 	exports: [
 		TopNavComponent,
@@ -111,7 +113,8 @@ import { FooterComponent } from './footer/footer.component';
 		MatMenuModule,
 		CommonDynamicChartComponent,
 		MathJaxDirective
-	]
+	],
+	entryComponents: [OngoingTestInstructionComponent]
 })
 export class SharedModuleModule {
 	constructor() {
