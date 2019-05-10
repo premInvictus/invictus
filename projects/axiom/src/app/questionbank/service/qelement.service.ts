@@ -552,7 +552,7 @@ export class QelementService {
 	}
 	getSchool() {
 		this.loaderService.startLoading();
-		return this._http.get(environment.apiAxiomUrl + '/dashboard/getSchool');
+		return this._http.get(environment.apiSisUrl + '/dashboard/getSchool');
 	}
 
 	getLabInfo() {
