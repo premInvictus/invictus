@@ -39,7 +39,7 @@ export class SideNavComponent implements OnInit, OnChanges {
 	}
 
 	moveToDashboard() {
-		this.router.navigate(['/school']);
+		this.router.navigate(['/sis/school']);
 	}
 
 	getUserAccessMenu() {

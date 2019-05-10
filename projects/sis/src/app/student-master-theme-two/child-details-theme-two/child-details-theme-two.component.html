@@ -105,7 +105,7 @@
           </div>
           <div class="col-3" *ngIf="checkIfFieldExist('upd_aadhaar_no')">
             <mat-form-field class="form-field">
-              <input formControlName="upd_aadhaar_no" mask="0000 0000 0000 0000" minlength="12" maxlength="14" matInput
+              <input formControlName="upd_aadhaar_no" mask="0000 0000 0000" minlength="12" maxlength="14" matInput
                 placeholder="Aadhaar No." [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
                 This field is required

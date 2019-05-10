@@ -256,7 +256,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				}
 			});
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Please fill all required filed', 'error');
+			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
 		}
 	}
 	resetForm() {
