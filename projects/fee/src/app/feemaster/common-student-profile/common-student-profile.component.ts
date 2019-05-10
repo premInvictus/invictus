@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { SisService, CommonAPIService, ProcesstypeService, FeeService } from '../../_services';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd, RouterStateSnapshot } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material';
 
 @Component({
@@ -79,14 +79,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	ngOnInit() {
 		this.processtypeService.setProcesstype('4');
 		this.buildForm();
-		this.router.events.subscribe(event => {
-			if (event instanceof NavigationEnd) {
-				console.error(event.url);
-				const urlArray = event.url.split('/');
-				console.log(urlArray);
-				console.log(urlArray[urlArray.length - 1]);
-				const currentUrl = (urlArray[urlArray.length - 1] ? urlArray[urlArray.length - 1] : '').toString();
-				console.log('currentUrl', currentUrl);
+				const currentUrl = this.route.snapshot.routeConfig.path;
 				if (currentUrl !== '') {
 					if (currentUrl === 'invoice-creation-individual') {
 						this.invoice_creation_individual_flag = false;
@@ -98,13 +91,6 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						this.fee_transaction_entry_individual_flag = false;
 					}
 				}
-				console.log(this.invoice_creation_individual_flag);
-				console.log(this.student_profile_flag);
-				console.log(this.fee_ledger_flag);
-				console.log(this.fee_transaction_entry_individual_flag);
-
-			}
-		});
 	}
 	goToPage(url) {
 		this.router.navigate([`../${url}`], {relativeTo: this.route});
