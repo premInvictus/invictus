@@ -47,7 +47,7 @@
          <div class="dropdown">
           <button class="axiom-icon-button mat-button username" mat-button>
                <!-- <img class="header-avatar-img" src="../../../assets/images/resvgiconsforfeemodule/man.svg"> -->
-               <img *ngIf="showImage" alt="invictus" class="header-avatar-img" src="{{image}}">
+               <img *ngIf="showImage" alt="invictus" class="header-avatar-img" src="{{image}}" onError="this.src='./assets/images/avatar.svg'">
                <img *ngIf="showImageBlank" class="header-avatar-img"
                src="../../../assets/images/resvgiconsforfeemodule/man.svg">
                <span class="header-icon-spacer header-profile-name">Hi, {{usernane}}</span></button>

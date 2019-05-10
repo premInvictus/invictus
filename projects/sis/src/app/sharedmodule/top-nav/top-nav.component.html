@@ -47,9 +47,9 @@
          <div class="dropdown">
           <button class="axiom-icon-button mat-button username" mat-button>
                <!-- <img class="header-avatar-img" src="../../../assets/images/resvgiconsforfeemodule/man.svg"> -->
-               <img *ngIf="showImage" alt="invictus" class="header-avatar-img" src="{{image}}">
+               <img *ngIf="showImage" alt="invictus" class="header-avatar-img" src="{{image}}" onError="this.src='./assets/images/avatar.svg'">
                <img *ngIf="showImageBlank" class="header-avatar-img"
-               src="../../../assets/images/resvgiconsforfeemodule/man.svg">
+               src="../../../assets/images/resvgiconsforfeemodule/man.svg" onError="this.src='../../../assets/images/resvgiconsforfeemodule/man.svg'">
                <span class="header-icon-spacer header-profile-name">Hi, {{usernane}}</span></button>
           <div class="dropdown-content">
              <button mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
@@ -74,7 +74,7 @@
          </a>
          <a aria-label="axiom App" class="axiom-icon-button top-profile-image" tabindex="0" aria-disabled="false">
             <span class="mat-button-wrapper">
-               <img alt="invictus" class="axiom-profile-image" src="http://via.placeholder.com/35x35" [matMenuTriggerFor]="menu">
+               <img alt="invictus" class="axiom-profile-image" onError="this.src='./assets/images/avatar.svg'" src="http://via.placeholder.com/35x35" [matMenuTriggerFor]="menu">
                <mat-menu #menu="matMenu" class="mat-log-menu">
                   <button  mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
          <a routerLink="./user-credential">  <button  mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i> Change Credential</button></a>
