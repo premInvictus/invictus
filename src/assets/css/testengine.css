@@ -1362,6 +1362,18 @@ a.link {
         overflow: auto !important;
     }
 
+    .mob-remove-card-shadow {
+        box-shadow: none !important;
+    }
+
+    .mob-remove-top-margin {
+        margin-top: 0px !important;
+    }
+
+    .mob-margin-top-4 {
+        margin-top: 4px !important;
+    }
+
     .margin-top-ne5 {
         margin-top: 5px !important;
     }
@@ -1371,9 +1383,13 @@ a.link {
     }
 
     .ques-number-coll {
-        height: 250vh;
+        height: 80vh;
     }
 
+    .information-bar {
+        border: none !important ;
+    }
+    
     .mid-nav-button {
         display: none;
     }
@@ -1384,7 +1400,8 @@ a.link {
     }
 
     .question-parent-class {
-        height: 100% !important;
+        height: 40% !important;
+        overflow: auto !important;
         
     }
 
@@ -1392,6 +1409,15 @@ a.link {
         border: 1px solid;
     margin-top: 15px;
     margin-left: 15px
+    }
+
+    .numper-dialog-container {
+        margin: -10px -20px !important;
+    }
+
+    .adv-jee-mat-tab-ongoing .mat-tab-header .mat-tab-label-container .mat-tab-list .mat-tab-labels .mat-tab-label.mat-tab-label-active {
+        background-color: #ffffff !important;
+        color: #000 !important;
     }
 
     .mob-margin-btm {
@@ -1537,6 +1563,57 @@ a.link {
         border: none !important;
         overflow: auto;
         padding: 15px;
+    }
+
+    .mob-btn-adv-one{
+        background-color: #2F2FF2;
+        color: #ffffff;
+        width: 140px !important;
+        height: 36px !important;
+    }
+
+    .mob-btn-adv-two{
+        background-color: #ffffff;
+        color: #000;
+        width: 140px !important;
+        height: 36px !important;
+    }
+
+    .mob-btn-adv-three{
+        background-color: #337AB7;
+        color: #ffffff;
+        width: 200px !important;
+        height: 36px !important;
+    }
+
+    .mob-btn-adv-four{
+        background-color: #00A651;
+        color: #ffffff;
+        width: 80px !important;
+        height: 36px !important;
+    }
+
+    .mob-btn-adv-five{
+        background-color: #6610F2;
+        color: #ffffff;
+        width: 140px !important;
+        height: 36px !important;
+    }
+
+   .fin-tab-col-80 {
+       max-width: 80%;
+       flex: 0 0 80%;
+   }
+
+    .bookmark-btn {
+        width: 140px;
+    }
+
+    .mob-btn-adv-six{
+        background-color: #00A651;
+        color: #ffffff;
+        width: 140px !important;
+        height: 36px !important;
     }
 
     .instruction-sub-title {

@@ -1,9 +1,9 @@
 <div *ngIf="ongoingDiv">
-  <div class="row">
+  <div class="row mob-remove-top-margin">
     <div class="col-lg-12 col-mobile-view-add-ques">
       <div class="white-box">
         <div>
-
+          <div class="big-screen">
           <div class="row">
             <div class="col-lg-12 " *ngIf="userDetailsFlag">
               <div class="row">
@@ -20,11 +20,56 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-lg-12 fin-remove-left-padding">
-              <div class="row">
-                <div class="col-lg-8 fin-remove-left-padding fin-tab-col-7 col-ongoing-test-question-section">
+          </div>
+
+          <div class="small-screen">
+            <div class="row">
+              <div class="col-9 display-inline-mob mob-remove-padding-right">
+                <div>
+                  <img class="company-logo-mob" src="../../assets/invictus-logo.png">
+                </div>
+                <div class="mob-margin-left-10 ">
+                  <h1 class="padding-top-0 instruction-company-title font-size-14">Axiom - Assessment Center </h1>
+                  <div class="instruction-sub-title font-size-8">
+                    <span>Excellence in Assessment</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-3 text-center remove-left-padding">
+                <div style="border-radius: 100%"><img style="width: 42px;height:100%; " [src]="userprofileimage"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="small-screen">
+            <div class="row">
+              <div class="col-12 mob-remove-padding">
+                <div class="container-box__orange__mob padding-10">
+                  <div class="row row-remove-top-margin">
+                    <div class="col-8 mob-remove-padding-right">
+                        <span class="instruction-main-title">ONGOING TEST</span><i class="mob-margin-left-10 font-white fas fa-info-circle" (click)="openQuesDialog()"></i>
+                        <br>
+                        <span class="font-white font-size-10">Maximum marks:{{examDetail.tp_marks}} | Subject: {{currentQP.sub_name}}</span>
+                    </div>
+                    <div class="col-4">
+                      <span class="font-size-10 font-white">Time Remaining</span><br>
+                      <div class="margin-top-5">
+                      <span class="font-size- font-white">{{timers}}</span>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+          <div class="row mob-remove-top-margin">
+            <div class="col-lg-12 mob-remove-padding fin-remove-left-padding">
+              <div class="row mob-remove-top-margin">
+                <div class="col-lg-8 mob-remove-padding fin-remove-left-padding fin-tab-col-7 col-ongoing-test-question-section">
                   <div class="test-question-box information-bar">
+                    <div class="big-screen">
                     <div class="row">
                       <div class="col-lg-3 fin-tab-col-25">
                         <div class="float-left">
@@ -47,6 +92,7 @@
                         </div>
                       </div>
                     </div>
+                  
                     <div class="row">
                       <div class="col-lg-12 test-button-section-title">
                         <div class="question-test-info-bar">
@@ -65,6 +111,7 @@
                         </div>
                       </div>
                     </div>
+                  </div>
                     <div class="question-test-box">
                       <div class="row">
                         <div class="col-lg-12 ">
@@ -566,6 +613,7 @@
                       </div>
                     </div>
                   </div>
+                  <div class="big-screen">
                   <div class="row">
                     <div class="col-lg-12 remove-col-modal-padding">
                       <div class="row row-remove-top-margin">
@@ -592,7 +640,30 @@
                     </div>
                   </div>
                 </div>
+                <div class="small-screen">
+                  <div class="row">
+                    <div class="col-12 text-center">
+                        <button mat-raised-button class="mob-btn-adv-one" (click)="saveAndNext()">Save & Next</button>
+                        <button mat-raised-button class="mob-btn-adv-two mob-btn-spacer" (click)="clearResponse()">Clear Response</button>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-12 text-center" style="display: inline-flex">
+                          <div class="bookmark-btn" style="margin-left: 30px">
+                              <label class="bookmark-label" for="reviewans">{{bookMarkTitle}}</label>
+                              <mat-checkbox class="bookmark-checkbox" (change)="getBookMark($event)" id="reviewans"
+                                [checked]="bookMarkFlag">
+                              </mat-checkbox>
+                            </div>
+                        <button mat-raised-button class="mob-btn-adv-six mob-btn-spacer" (click)="testSummary()">Test Summary</button>
+                      </div>
+                    </div>
+                </div>
+                </div>
+                
                 <div class="col-lg-4 fin-tab-col-3 fin-remove-col-padding col-ongoing-test-button-section">
+                  <div class="big-screen">
                   <div class="test-question-number-box table-box">
                     <div class="row">
                       <div class="col-lg-12">
@@ -684,6 +755,7 @@
                       <button mat-button class="test-summary-button" (click)="testSummary()">Test Summary</button>
                     </div>
                   </div>
+                </div>
                 </div>
               </div>
 

@@ -3,8 +3,9 @@
     height: 39px;
 }
 
-h1.font-size-14 {
-    font-size: 14px !important;
+h1.font-size-13 {
+    font-size: 13px !important;
+    margin-bottom: 0px !important;
 }
 
 .instruction-sub-title.font-size-8 {
@@ -66,9 +67,9 @@ h1.font-size-14 {
 .ques-number-coll {
    margin-top: -6px !important;
 }
-.ongoing-left-container {
+/* .ongoing-left-container {
     padding-right: 10px !important
-}
+} */
 .notpad-numericpad-parent {
     height: 440px;
     width: 100%;

@@ -1,0 +1,73 @@
+<div class="number-dialog-container">
+        <div >
+           <div class="row">
+              <div class="col-6">
+                 <img src="../../../assets/default-ques-btn.svg" class="jee-btn-svg">
+                 <span class="adv-jee-btn-ondqb">{{getSectionWiseAnswerStatus(sectionDetails,'')}}</span>
+                 <span class="font-size-12">Not Visited</span>
+              </div>
+              <div class="col-6 remove-left-padding">
+                 <img src="../../../assets/notanswered.svg" class="jee-btn-svg">
+                 <span class="adv-jee-btn-not-onans">{{getSectionWiseAnswerStatus(sectionDetails,'2')}}</span>
+                 <span class="font-size-12">Not Answered</span>
+              </div>
+           </div>
+           <div class="row margin-top-5">
+              <div class="col-6">
+                 <img src="../../../assets/answered.svg" class="jee-btn-svg">
+                 <span class="adv-jee-btn-onans">{{getSectionWiseAnswerStatus(sectionDetails,'1')}}</span>
+                 <span class="font-size-12">Answered</span>
+              </div>
+              <div class="col-6 remove-left-padding">
+                 <img src="../../../assets/saveforreview.svg" class="jee-btn-svg">
+                 <span class="adv-jee-btn-not-onsfr">{{getSectionWiseAnswerStatus(sectionDetails,'0')}}</span>
+                 <span class="font-size-12">Marked For Review</span>
+              </div>
+           </div>
+           <div class="row margin-top-5">
+              <div class="col-2">
+                 <img src="../../../assets/ansmarkreview.svg" class="jee-btn-svg">
+                 <span class="adv-jee-btn-onans">{{getSectionWiseAnswerStatus(sectionDetails,'3')}}</span>
+              </div>
+              <div class="col-10">
+                 <span class="font-size-12">Answered & Marked For Review (will be considered for
+                    evaluation)</span>
+              </div>
+           </div>
+        </div>
+        <div class="row">
+           <div class="col-12">
+              <div class="notepad-bar-subject-container">
+                 <span style="color:white; font-weight: bold">
+                    {{sectionDetails.subName.slice(0,3) | uppercase}} SEC {{sectionDetails.index + 1}}
+                 </span>
+              </div>
+           </div>
+        </div>
+        <div class="row">
+           <div class="col-12">
+              <div class="notpad-numericpad-parent">
+                 <div class="notpad-numericpad padding-5">
+                    <br>
+                    <span>Choose a Question</span>
+                    <br>
+                    <ng-container *ngFor="let question of questionListArray;let k=index">
+                       <img [src]="getQusStatuSrc(question.qus_id)" class="jee-btn-svg-numericpad"
+                          (click)="setQuestionId(question.qus_id)">
+                       <span (click)="setQuestionId(question.qus_id)"
+                          class="adv-jee-btn-not-onansnum1">{{k+1}}</span>
+                    </ng-container>
+                 </div>
+              </div>
+           </div>
+        </div>
+        <div class="row">
+           <div class="col-12">
+              <div class="text-center app-margin-top-10 submit-btn-ne9 on-adv-test-margin-top-30 mob-margin-btm">
+                 <button mat-raised-button class="adv-btn-proceed btn-without-radius"
+                    (click)="submit()">Submit</button>
+              </div>
+           </div>
+        </div>
+
+     </div>

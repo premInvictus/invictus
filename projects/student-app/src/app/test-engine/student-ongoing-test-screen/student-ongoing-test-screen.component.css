@@ -35,6 +35,23 @@ input[type=checkbox], input[type=radio]{
   /* overflow-y: scroll; */
 }
 
+.company-logo-mob {
+  width: 29px;
+  height: 39px;
+}
+
+h1.font-size-14 {
+  font-size: 14px !important;
+}
+
+.instruction-sub-title.font-size-8 {
+  font-size: 8px !important;
+}
+
+.instruction-sub-title-mob {
+  width: 132px !important; 
+}
+
 @media (min-width: 960px) and (max-width: 991px) {
    .bookmark-expansion-panel-decorator.mat-expanded {
 
