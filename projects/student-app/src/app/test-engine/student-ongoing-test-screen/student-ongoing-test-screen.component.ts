@@ -1,13 +1,13 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { QelementService } from '../../questionbank/service/qelement.service';
-import { HtmlToTextService } from '../../_services/htmltotext.service';
-import { appConfig } from '../../app.config';
+import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
+import { HtmlToTextService } from 'projects/axiom/src/app/_services/htmltotext.service';
+import { appConfig } from 'projects/axiom/src/app/app.config';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { OngoingTestInstructionComponent } from '../../shared-module/ongoing-test-instruction/ongoing-test-instruction.component';
-import { NotificationService, SocketService } from '../../_services/index';
-import { Event } from './../../_models/event';
+import { NotificationService, SocketService } from 'projects/axiom/src/app/_services/index';
+import { Event } from 'projects/axiom/src/app/_models/event';
 export class PendingRequest {
 	url: string;
 	data: any;
@@ -167,18 +167,18 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 
 	openQuesDialog(): void {
 		const dialogRef = this.dialog.open(QuestionNoOnGoingModalComponent, {
-		  width: '380px',
+			width: '380px',
 		});
-	
+
 		dialogRef.afterClosed().subscribe(result => {
-		  console.log('The dialog was closed');
+			console.log('The dialog was closed');
 		});
-	  }
+	}
 
 	ngOnInit() {
 		document.addEventListener('contextmenu', (e) => {
 			e.preventDefault();
-	}, false);
+		}, false);
 		this.es_id = this.route.snapshot.params['id'];
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.checkConnection();
@@ -1387,7 +1387,7 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 							localStorage.removeItem('currentExamSub');
 							localStorage.removeItem('currentExam');
 							this.sendTestEndConfirmation();
-							this.router.navigate(['../../test-confirmation', this.es_id], {relativeTo: this.route});
+							this.router.navigate(['../../test-confirmation', this.es_id], { relativeTo: this.route });
 						}
 					}
 				);
@@ -1403,9 +1403,9 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 							localStorage.removeItem('currentExam');
 							this.sendTestEndConfirmation();
 							if (endByTeacher) {
-								this.router.navigate(['../../test-summary', this.es_id], {relativeTo: this.route});
+								this.router.navigate(['../../test-summary', this.es_id], { relativeTo: this.route });
 							} else {
-								this.router.navigate(['../../test-confirmation', this.es_id], {relativeTo: this.route});
+								this.router.navigate(['../../test-confirmation', this.es_id], { relativeTo: this.route });
 							}
 						}
 					}
@@ -1666,14 +1666,14 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 @Component({
 	selector: 'question-no-ongoing-modal',
 	templateUrl: 'question-no-ongoing-modal.html',
-  })
-  export class QuestionNoOnGoingModalComponent {
-  
+})
+export class QuestionNoOnGoingModalComponent {
+
 	constructor(
-	  public dialogRef: MatDialogRef<QuestionNoOnGoingModalComponent>) {}
-  
+		public dialogRef: MatDialogRef<QuestionNoOnGoingModalComponent>) { }
+
 	onNoClick(): void {
-	  this.dialogRef.close();
+		this.dialogRef.close();
 	}
-  
-  }
+
+}

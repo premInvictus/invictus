@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
@@ -248,17 +248,17 @@ export class JeeMainsComponent implements OnInit {
 		private http: HttpClient,
 		private socketService: SocketService,
 		public dialog: MatDialog
-	) {}
+	) { }
 
 	openDialog(): void {
 		const dialogRef = this.dialog.open(QuestionNoModalComponent, {
-		  width: '380px',
+			width: '380px',
 		});
-	
+
 		dialogRef.afterClosed().subscribe(result => {
-		  console.log('The dialog was closed');
+			console.log('The dialog was closed');
 		});
-	  }
+	}
 
 	ngOnInit() {
 		/* document.addEventListener('contextmenu', e => {
@@ -606,7 +606,7 @@ export class JeeMainsComponent implements OnInit {
 					this.schoolinfoArray = result.data[0];
 				}
 			},
-			error => {}
+			error => { }
 		);
 	}
 
@@ -1932,7 +1932,7 @@ export class JeeMainsComponent implements OnInit {
 			this.loadCurrentQ(this.currentQAIndex - 1);
 		}
 	}
-	nextQ() {}
+	nextQ() { }
 	saveAndNext(bookmarks = false, save = true) {
 		this.currentQA.answerStatus = '1';
 		if (bookmarks) {
@@ -2404,7 +2404,7 @@ export class JeeMainsComponent implements OnInit {
 		if (
 			this.studentDobleInputAnswer[0].evd_qus_answer &&
 			Number(item) ===
-				Number(this.studentDobleInputAnswer[0].evd_qus_answer.charAt(0))
+			Number(this.studentDobleInputAnswer[0].evd_qus_answer.charAt(0))
 		) {
 			return true;
 		} else {
@@ -2416,7 +2416,7 @@ export class JeeMainsComponent implements OnInit {
 		if (
 			this.studentDobleInputAnswer[0].evd_qus_answer &&
 			Number(item) ===
-				Number(this.studentDobleInputAnswer[0].evd_qus_answer.charAt(1))
+			Number(this.studentDobleInputAnswer[0].evd_qus_answer.charAt(1))
 		) {
 			return true;
 		} else {
@@ -2630,14 +2630,14 @@ export class JeeMainsComponent implements OnInit {
 @Component({
 	selector: 'question-no-modal',
 	templateUrl: 'question-no-modal.html',
-  })
-  export class QuestionNoModalComponent {
-  
+})
+export class QuestionNoModalComponent {
+
 	constructor(
-	  public dialogRef: MatDialogRef<QuestionNoModalComponent>) {}
-  
+		public dialogRef: MatDialogRef<QuestionNoModalComponent>) { }
+
 	onNoClick(): void {
-	  this.dialogRef.close();
+		this.dialogRef.close();
 	}
-  
-  }
+
+}
