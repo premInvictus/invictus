@@ -5190,12 +5190,12 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
         height: 100%;
     }
 
-    .nav-button {
+   /*  .nav-button {
         width: 25px !important;
         height: 25px !important;
         background-color: #9c3 !important;
         color: #fff !important;
-    }
+    } */
 
     .nav-icon {
         margin-bottom: 10px;
@@ -6192,12 +6192,12 @@ td.tdTone2 {
     }
 
 
-    .nav-button {
+    /* .nav-button {
         width: 25px !important;
         height: 25px !important;
         background-color: #9c3 !important;
         color: #fff !important;
-    }
+    } */
 
     .nav-icon {
         margin-bottom: 10px;
@@ -7107,10 +7107,8 @@ td.tdTone2 {
 
 
     .nav-button {
-        width: 25px !important;
-        height: 25px !important;
-        background-color: #9c3 !important;
-        color: #fff !important;
+        width: 25px;
+        height: 25px;
     }
 
     .nav-icon {

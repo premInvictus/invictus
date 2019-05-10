@@ -191,7 +191,7 @@
                   (click)="openRecalculateDialog({})">Recalculate</button>
                 <button *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0" mat-raised-button class=" btn-danger btn-spacer"
                   (click)="openDeleteDialog(fetchInvId())">Delete</button>
-                <button mat-raised-button class=" btn-success btn-spacer" (click)="openDeleteDialog({})">Print</button>
+                <button *ngIf="ELEMENT_DATA.length !== 0" mat-raised-button class=" btn-success btn-spacer">Print</button>
               </div>
             </div>
             <!-- <div class="row">
