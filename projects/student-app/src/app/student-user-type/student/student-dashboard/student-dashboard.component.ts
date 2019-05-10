@@ -500,11 +500,11 @@ export class StudentDashboardComponent implements OnInit {
 
 		let url = '';
 		if (examDetail.es_template_type === '1') {
-			url = '/test/instruction-screen/' + examDetail.es_id;
+			url = '/student/test/instruction-screen/' + examDetail.es_id;
 		} else if (examDetail.es_template_type === '2') {
-			url = '/test/jee-mains-instruction/' + examDetail.es_id;
+			url = 'student/test/jee-mains-instruction/' + examDetail.es_id;
 		} else if (examDetail.es_template_type === '3') {
-			url = '/test/jee-advanced-instruction/' + examDetail.es_id;
+			url = 'student/test/jee-advanced-instruction/' + examDetail.es_id;
 		}
 		const param = 'width=' + screen.width + ',height=' + screen.height + ',toolbar=0,location=0,menubar=0,status=0,resizable=0';
 		window.open(url, '_blank', param);
