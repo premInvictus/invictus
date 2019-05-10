@@ -118,7 +118,6 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.usernane = this.currentUser.full_name.charAt(0).toUpperCase() + this.currentUser.full_name.slice(1);
 			}
 			this.getSchool();
-			this.getSession();
 			this.getProjectList();
 			this.checkUpdateProfile();
 			this.checkViewProfile();

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { LoaderService, NotificationService } from '../../_services/index';
+import { environment } from 'src/environments/environment';
 @Injectable()
 export class QbankService {
 	constructor(private _http: HttpClient,
@@ -8,10 +9,10 @@ export class QbankService {
 	) { }
 
 	public insertQuestion(value: any) {
-		return this._http.post('/question/addQuestion', value);
+		return this._http.post(environment.apiAxiomUrl + '/question/addQuestion', value);
 	}
 	public updateQuestion(value: any) {
-		return this._http.put(`/question/updateQuestion/${value.qus_id}`, value);
+		return this._http.put(environment.apiAxiomUrl + `/question/updateQuestion/${value.qus_id}`, value);
 	}
 
 	public uploadExcelFile(uploadedFile) {
@@ -20,7 +21,7 @@ export class QbankService {
 				const file: File = fileList[0];
 				const formData: FormData = new FormData();
 				formData.append('uploadFile', file, file.name);
-				return this._http.post('/question/uploadExcelFile', formData)
+				return this._http.post(environment.apiAxiomUrl + '/question/uploadExcelFile', formData)
 	;
 		}
 
@@ -28,11 +29,11 @@ export class QbankService {
 
 	public insertInstruction(value: any) {
 		this.loaderService.startLoading();
-		return this._http.post('/questiontemplate/templateInstruction', value);
+		return this._http.post(environment.apiAxiomUrl + '/questiontemplate/templateInstruction', value);
 	}
 	public getInstruction() {
 		this.loaderService.startLoading();
-		return this._http.get('/questiontemplate/templateInstruction');
+		return this._http.get(environment.apiAxiomUrl + '/questiontemplate/templateInstruction');
 	}
 	public deleteInstruction(ti_id) {
 		this.loaderService.startLoading();
@@ -40,7 +41,7 @@ export class QbankService {
 	}
 	public updateInstruction(value: any) {
 		this.loaderService.startLoading();
-		return this._http.put('/questiontemplate/templateInstruction', value);
+		return this._http.put(environment.apiAxiomUrl + '/questiontemplate/templateInstruction', value);
 	}
 
 }

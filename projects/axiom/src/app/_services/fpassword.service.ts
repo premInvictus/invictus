@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Http, Response, Headers} from '@angular/http';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { appConfig } from '../app.config';
+import {environment} from 'src/environments/environment';
 
 @Injectable()
 export class FpasswordService {
@@ -16,7 +15,7 @@ export class FpasswordService {
 								'Prefix': userParam[0]
 				};
 				const headers = new HttpHeaders(prefixOptions);
-				return this.http.post(appConfig.apiUrl + '/users/authenticate', value, { headers: headers });
+				return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
 }
 
 sendMail(value: any) {
@@ -25,7 +24,7 @@ sendMail(value: any) {
 								'Prefix': userParam[0]
 				};
 				const headers = new HttpHeaders(prefixOptions);
-				return this.http.post(appConfig.apiUrl + '/users/forgot_password_email', value, { headers: headers });
+				return this.http.post(environment.apiAxiomUrl + '/users/forgot_password_email', value, { headers: headers });
 }
 
 validateOTP(value: any) {
@@ -34,7 +33,7 @@ validateOTP(value: any) {
 								'Prefix': userParam[0]
 				};
 				const headers = new HttpHeaders(prefixOptions);
-				return this.http.post(appConfig.apiUrl + '/users/validate_otp', value, { headers: headers });
+				return this.http.post(environment.apiAxiomUrl + '/users/validate_otp', value, { headers: headers });
 }
 
 resetPassword(value: any) {
@@ -43,7 +42,7 @@ resetPassword(value: any) {
 								'Prefix': userParam[0]
 				};
 				const headers = new HttpHeaders(prefixOptions);
-				return this.http.post(appConfig.apiUrl + '/users/change_password', value, { headers: headers });
+				return this.http.post(environment.apiAxiomUrl + '/users/change_password', value, { headers: headers });
 }
 
 }

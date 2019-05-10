@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import { LoaderService } from './loader.service';
 import { CookieService } from 'ngx-cookie';
 import { Subject, of } from 'rxjs';
-import { appConfig } from '../app.config';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class CommonAPIService {
@@ -39,15 +39,15 @@ export class CommonAPIService {
 		}
 		getSession() {
 				this.loaderService.startLoading();
-				return this.http.get(appConfig.apiSisUrl + '/siSetup/session');
+				return this.http.get(environment.apiSisUrl + '/siSetup/session');
 		}
 		getSchool() {
 				this.loaderService.startLoading();
-				return this.http.get(appConfig.apiSisUrl + '/dashboard/getSchool');
+				return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
 		}
 		logout(value: any) {
 				this.loaderService.startLoading();
-				return this.http.post(appConfig.apiSisUrl + '/users/logout', value);
+				return this.http.post(environment.apiSisUrl + '/users/logout', value);
 		}
 		getCokkieData() {
 				if (this._cookieService && this._cookieService.get('userData')) {
