@@ -55,25 +55,25 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 	}
 	getFeeHeads() {
 		this.feeheadArray = [];
+		this.headgroupArray = [];
 		this.feeService.getFeeHeads({fh_is_hostel_fee: this.fs_is_hostel_fee}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feeheadArray = result.data;
-				this.getFeeGroup();
-			}
-		});
-	}
-	getFeeGroup() {
-		this.headgroupArray = [];
-		this.feegroupArray = [];
-		this.feeService.getFeeGroup({fs_is_hostel_fee: this.fs_is_hostel_fee}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.feegroupArray = result.data;
 				for (const item of this.feeheadArray) {
 					const pushitem: any = {};
 					pushitem.id = 'H-' + item.fh_id;
 					pushitem.name = item.fh_name;
 					this.headgroupArray.push(pushitem);
 				}
+				this.getFeeGroup();
+			}
+		});
+	}
+	getFeeGroup() {
+		this.feegroupArray = [];
+		this.feeService.getFeeGroup({fs_is_hostel_fee: this.fs_is_hostel_fee}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.feegroupArray = result.data;
 				for (const item of this.feegroupArray) {
 					const pushitem: any = {};
 					pushitem.id = 'G-' + item.fs_id;

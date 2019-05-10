@@ -211,9 +211,11 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 					if (result && result.status === 'ok') {
 						this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 						this.reset();
-						this.getInvoice({});
+						this.getInvoice(this.invoiceSearchForm.value);
 					}
 				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please select filter', 'error');
 			}
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');

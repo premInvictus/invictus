@@ -62,11 +62,11 @@
               <div class="col-1 custom-col-2">
                 <div class="vertical-line"></div>
               </div>
-              <div class="col-7 custom-col-69" [hidden]="!(this.feegroupArray.length > 0)" >
+              <div class="col-7 custom-col-69" >
                 <div class="row">
                   <div class="col-12">
                     <div class="table-container">
-                      <mat-form-field>
+                      <mat-form-field [hidden]="ELEMENT_DATA.length < 1">
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                         <i class="fas fa-filter table-filter" matPrefix></i>
   
@@ -121,7 +121,7 @@
                       <div *ngIf="ELEMENT_DATA.length == 0" class="no-records">
                         No records found
                       </div>
-                      <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                      <mat-paginator [hidden]="ELEMENT_DATA.length < 1" #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
                       </mat-paginator>
                     </div>
   
