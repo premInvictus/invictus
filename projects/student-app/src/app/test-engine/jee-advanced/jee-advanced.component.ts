@@ -1,13 +1,13 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { JeeAdvancedInstructionscreenComponent } from './jee-advanced-instructionscreen/jee-advanced-instructionscreen.component';
-import { QelementService } from '../../questionbank/service/qelement.service';
-import { NotificationService, SocketService, HtmlToTextService } from '../../_services/index';
-import { appConfig } from '../../../app/app.config';
+import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
+import { NotificationService, SocketService, HtmlToTextService } from 'projects/axiom/src/app/_services/index';
+import { appConfig } from 'projects/axiom/src/app/../app/app.config';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NotificationsService } from 'angular2-notifications';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Event } from '../../_models/event';
+import { Event } from 'projects/axiom/src/app/_models/event';
 export class PendingRequest {
 	url: string;
 	data: any;
