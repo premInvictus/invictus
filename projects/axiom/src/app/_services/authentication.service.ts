@@ -1,8 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { LoaderService } from './loader.service';
-import { appConfig } from '../app.config';
+import { environment } from 'src/environments/environment';
 @Injectable()
 export class AuthenticationService {
 		constructor(private http: HttpClient, private loaderService: LoaderService) { }
@@ -16,7 +15,7 @@ export class AuthenticationService {
 				const headers = new HttpHeaders(prefixOptions);
 
 				// tslint:disable-next-line:max-line-length
-				return this.http.post(appConfig.apiSisUrl + '/users/authenticate', { username: username, password: password }, { headers: headers });
+				return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password }, { headers: headers });
 }
 
 		logout() {

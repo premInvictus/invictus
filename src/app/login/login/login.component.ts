@@ -62,13 +62,39 @@ export class LoginComponent implements OnInit {
 
 	ngOnInit() {
 		// reset login status
-		this.authenticationService.logout();
+		// this.authenticationService.logout();
 		// get return url from route parameters or default to '/'
 		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login';
 		this.buildForm();
+		this.checkLoginStatus();
 		this.active_resend_otp();
 	}
+	checkLoginStatus() {
+		const cookieData = this.getCookie('userData');
+		if (cookieData) {
+			const userData = JSON.parse(decodeURIComponent(cookieData));
+			if (userData) {
+				if (userData['UR'] === '1') {
+					this.returnUrl = '/axiom/admin';
+				} else if (userData['UR'] === '2') {
+					this.returnUrl = '/axiom/school';
+				} else if (userData['UR'] === '3') {
+					this.returnUrl = '/axiom/teacher';
+				} else if (userData['UR'] === '4') {
+					this.returnUrl = '/student';
+				} else if (userData['UR'] === '5') {
+					this.returnUrl = '/parent';
+				}
+				this.router.navigate([this.returnUrl]);
+			}
+		}
 
+	}
+	private getCookie(name) {
+		const value = '; ' + document.cookie;
+		const parts = value.split('; ' + name + '=');
+		if (parts.length === 2) { return parts.pop().split(';').shift(); }
+	}
 
 	changepassword() {
 		this.loginCard = false;

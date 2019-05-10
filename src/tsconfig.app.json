@@ -13,6 +13,7 @@
   ],
   "files": [
     "./app/app.module.ts",
+    "./app/login/login.module.ts",
     "./main.ts",
     "./polyfills.ts",
     "../projects/student-app/src/app/eassessment/eassessment.module.ts/",

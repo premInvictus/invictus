@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { LoaderService } from '../../../_services/index';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AdminService {
@@ -11,11 +12,11 @@ export class AdminService {
 	) { }
 
 	getSchoolDetails() {
-		return this.http.get('/dashboard/getSchool');
+		return this.http.get(environment.apiAxiomUrl + '/dashboard/getSchool');
 	}
 	getProjectList(value) {
 		const param: any = {};
-		return this.http.post('/dashboard/getProjectList', param);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getProjectList', param);
 	}
 	getModuleList(value) {
 		const param: any = {};
@@ -25,14 +26,14 @@ export class AdminService {
 		if (value.role_id) {
 			param.role_id = value.role_id;
 		}
-		return this.http.post('/dashboard/getModuleList', param);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getModuleList', param);
 	}
 	getUserAccessSchool(value) {
 		const param: any = {};
 		if (value.login_id) {
 			param.login_id = value.login_id;
 		}
-		return this.http.post('/users/getUserAccessSchool', param);
+		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessSchool', param);
 	}
 	getUserAccessProject(value) {
 		const param: any = {};
@@ -42,22 +43,22 @@ export class AdminService {
 		if (value.school_id) {
 			param.si_id = value.school_id;
 		}
-		return this.http.post('/users/getUserAccessProject', param);
+		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessProject', param);
 	}
 	addUserAccessControl(value) {
-		return this.http.post('/users/addUserAccessControl', value);
+		return this.http.post(environment.apiAxiomUrl + '/users/addUserAccessControl', value);
 	}
 	addUserAccessClass(value) {
 		this.loaderService.startLoading();
-		return this.http.post('/users/addUserAccessClass', value);
+		return this.http.post(environment.apiAxiomUrl + '/users/addUserAccessClass', value);
 	}
 	addUserAccessSubject(value) {
 		this.loaderService.startLoading();
-		return this.http.post('/users/addUserAccessSubject', value);
+		return this.http.post(environment.apiAxiomUrl + '/users/addUserAccessSubject', value);
 	}
 	addUserAccessTopic(value) {
 		this.loaderService.startLoading();
-		return this.http.post('/users/addUserAccessTopic', value);
+		return this.http.post(environment.apiAxiomUrl + '/users/addUserAccessTopic', value);
 	}
 	getUserAccessClass(value) {
 		this.loaderService.startLoading();
@@ -65,7 +66,7 @@ export class AdminService {
 		if (value.login_id) {
 			param.login_id = value.login_id;
 		}
-		return this.http.post('/users/getUserAccessClass', param);
+		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessClass', param);
 	}
 	getUserAccessSubject(value) {
 			this.loaderService.startLoading();
@@ -76,7 +77,7 @@ export class AdminService {
 		if (value.class_id) {
 			param.class_id = value.class_id;
 		}
-		return this.http.post('/users/getUserAccessSubject', param);
+		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessSubject', param);
 	}
 	getUserAccessTopic(value) {
 			this.loaderService.startLoading();
@@ -90,30 +91,30 @@ export class AdminService {
 		if (value.sub_id) {
 			param.sub_id = value.sub_id;
 		}
-		return this.http.post('/users/getUserAccessTopic', param);
+		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessTopic', param);
 	}
 	addUserAccessMenu(value) {
-		return this.http.post('/users/addUserAccessMenu', value);
+		return this.http.post(environment.apiAxiomUrl + '/users/addUserAccessMenu', value);
 	}
 	addSchool(value) {
 		this.loaderService.startLoading();
-		return this.http.post('/dashboard/addSchool', value);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/addSchool', value);
 	}
 	importSampleDataForSchool(value) {
 		this.loaderService.startLoading();
-		return this.http.post('/dashboard/importSampleDataForSchool', value);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/importSampleDataForSchool', value);
 	}
 	deleteSchool(value) {
-		return this.http.delete(`/dashboard/activeInactiveSchool/${value.school_id}`);
+		return this.http.delete(environment.apiAxiomUrl + `/dashboard/activeInactiveSchool/${value.school_id}`);
 	}
 	editSchool(value) {
-		return this.http.post('/dashboard/updateSchool', value);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/updateSchool', value);
 	}
 	getAllUsers() {
-		return this.http.get('/dashboard/getAllUsers');
+		return this.http.get(environment.apiAxiomUrl + '/dashboard/getAllUsers');
 	}
 	checkPrefix(value: any) {
-		return this.http.post('/dashboard/checkPrefix', { school_prefix: value });
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/checkPrefix', { school_prefix: value });
 	}
 	getDashboardReport(value) {
 		const param: any = {};
@@ -132,13 +133,13 @@ export class AdminService {
 		if (value.login_id) {
 			param.au_login_id = value.login_id;
 		}
-		return this.http.post('/dashboard/getDashboardReport', param);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getDashboardReport', param);
 	}
 	getClassLeaderBoard() {
-		return this.http.get('/dashboard/getClassLeaderBoard');
+		return this.http.get(environment.apiAxiomUrl + '/dashboard/getClassLeaderBoard');
 	}
 	getStudentLeaderBoard() {
-		return this.http.get('/dashboard/getStudentLeaderBoard');
+		return this.http.get(environment.apiAxiomUrl + '/dashboard/getStudentLeaderBoard');
 	}
 	getExamSetupPerClassPerMonth(value) {
 		const param: any = {};
@@ -148,10 +149,10 @@ export class AdminService {
 		if (value.si_prefix) {
 			param.si_prefix = value.si_prefix;
 		}
-		return this.http.post('/dashboard/getExamSetupPerClassPerMonth', param);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getExamSetupPerClassPerMonth', param);
 	}
 	reset_password(value) {
-		return this.http.post('/users/reset_password', value);
+		return this.http.post(environment.apiAxiomUrl + '/users/reset_password', value);
 	}
 
 	getStudentReportPerSubjectMarks(value) {
@@ -166,7 +167,7 @@ export class AdminService {
 		if (value.section_id) {
 			param.section_id = value.section_id;
 		}
-		return this.http.post('/dashboard/getStudentReportPerSubjectMarks', param);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getStudentReportPerSubjectMarks', param);
 	}
 	getHighestPercentageByStudentInAllExams(value) {
 		const param: any = {};
@@ -176,7 +177,7 @@ export class AdminService {
 		if (value.es_status) {
 			param.es_status = value.es_status;
 		}
-		return this.http.post('/dashboard/getHighestPercentageByStudentInAllExams', param);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getHighestPercentageByStudentInAllExams', param);
 	}
 	getPercentageByStudentInAllExams(value) {
 		const param: any = {};
@@ -186,7 +187,7 @@ export class AdminService {
 		if (value.es_status) {
 			param.es_status = value.es_status;
 		}
-		return this.http.post('/dashboard/getPercentageByStudentInAllExams', param);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getPercentageByStudentInAllExams', param);
 	}
 	getStudentRankInAllExams(value) {
 		const param: any = {};
@@ -196,6 +197,6 @@ export class AdminService {
 		if (value.es_status) {
 			param.es_status = value.es_status;
 		}
-		return this.http.post('/dashboard/getStudentRankInAllExams', param);
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getStudentRankInAllExams', param);
 	}
 }

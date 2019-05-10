@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { LoaderService, NotificationService } from '../../_services/index';
+import { environment } from 'src/environments/environment';
 @Injectable()
 
 export class ReportService {
@@ -22,7 +23,7 @@ export class ReportService {
 						param.eva_id = value.eva_id;
 				}
 				this.loaderService.startLoading();
-				return this._http.post('/report/viewMarkObtained', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/viewMarkObtained', param);
 		}
 		viewReportTimeTaken(value) {
 				const param: any = {};
@@ -36,7 +37,7 @@ export class ReportService {
 						param.eva_id = value.eva_id;
 				}
 				this.loaderService.startLoading();
-				return this._http.post('/report/viewReportTimeTaken', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/viewReportTimeTaken', param);
 		}
 		viewRankObtained(value) {
 				const param: any = {};
@@ -44,14 +45,14 @@ export class ReportService {
 						param.es_id = value.es_id;
 				}
 				this.loaderService.startLoading();
-				return this._http.post('/report/viewRankObtained', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/viewRankObtained', param);
 		}
 		viewReport(value) {
 				const param: any = {};
 				if (value.login_id) {
 						param.login_id = value.login_id;
 				}
-				return this._http.post('/report/viewReport', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/viewReport', param);
 		}
 
 		viewReportTopicSubtopic(value) {
@@ -63,7 +64,7 @@ export class ReportService {
 				if (value.login_id) {
 						param.login_id = value.login_id;
 				}
-				return this._http.post('/report/viewReportTopicSubtopic', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/viewReportTopicSubtopic', param);
 		}
 		viewReportTopic(value) {
 				const param: any = {};
@@ -73,7 +74,7 @@ export class ReportService {
 				if (value.login_id) {
 						param.login_id = value.login_id;
 				}
-				return this._http.post('/report/viewReportTopic', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/viewReportTopic', param);
 		}
 		correctQuestion(value) {
 				const param: any = {};
@@ -83,7 +84,7 @@ export class ReportService {
 				if (value.login_id) {
 						param.login_id = value.login_id;
 				}
-				return this._http.post('/report/correctStudentwise', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/correctStudentwise', param);
 
 		}
 
@@ -96,7 +97,7 @@ export class ReportService {
 				if (value.qp_id) {
 						param.qp_id = value.qp_id;
 				}
-				return this._http.post('/report/correctQuestionwise', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/correctQuestionwise', param);
 
 		}
 
@@ -108,7 +109,7 @@ export class ReportService {
 				if (value.login_id) {
 						param.login_id = value.login_id;
 				}
-				return this._http.post('/report/incorrectStudentwise', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/incorrectStudentwise', param);
 
 		}
 
@@ -118,7 +119,7 @@ export class ReportService {
 				if (value.qus_id) {
 						param.qus_id = value.qus_id;
 				}
-				return this._http.post('/report/incorrectQuestionwise', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/incorrectQuestionwise', param);
 
 		}
 
@@ -130,7 +131,7 @@ export class ReportService {
 				if (value.login_id) {
 						param.login_id = value.login_id;
 				}
-				return this._http.post('/report/skipStudentwise', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/skipStudentwise', param);
 
 		}
 		viewReportDifficultyLevel(value) {
@@ -144,7 +145,7 @@ export class ReportService {
 				if (value.sub_id) {
 						param.sub_id = value.sub_id;
 				}
-				return this._http.post('/report/viewReportDifficultyLevel', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/viewReportDifficultyLevel', param);
 		}
 
 		skipQuestionwise(value) {
@@ -152,7 +153,7 @@ export class ReportService {
 				if (value.qus_id) {
 						param.qus_id = value.qus_id;
 				}
-				return this._http.post('/report/skipQuestionwise', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/skipQuestionwise', param);
 		}
 
 		viewReportSkillType(value) {
@@ -166,7 +167,7 @@ export class ReportService {
 				if (value.sub_id) {
 						param.sub_id = value.sub_id;
 				}
-				return this._http.post('/report/viewReportSkillType', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/viewReportSkillType', param);
 		}
 		viewReportQuestionType(value) {
 				const param: any = {};
@@ -179,7 +180,7 @@ export class ReportService {
 				if (value.sub_id) {
 						param.sub_id = value.sub_id;
 				}
-				return this._http.post('/report/viewReportQuestionType', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/viewReportQuestionType', param);
 		}
 
 		printQuestionPaper(value) {
@@ -191,7 +192,7 @@ export class ReportService {
 				if (value.qp_id) {
 						param.qp_id = value.qp_id;
 				}
-				return this._http.post('/questionpaper/printQuestionPaper', param);
+				return this._http.post(environment.apiAxiomUrl + '/questionpaper/printQuestionPaper', param);
 		}
 
 		studentOveralPerformance(value) {
@@ -210,7 +211,7 @@ export class ReportService {
 				if (value.au_admission_no) {
 						param.au_admission_no = value.au_admission_no;
 				}
-				return this._http.post('/report/studentOveralPerformance', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/studentOveralPerformance', param);
 		}
 
 		testQuestionAnalysis(value) {
@@ -223,7 +224,7 @@ export class ReportService {
 						param.qus_id = value.qus_id;
 				}
 				this.loaderService.startLoading();
-				return this._http.post('/report/testQuestionAnalysis', param)
+				return this._http.post(environment.apiAxiomUrl + '/report/testQuestionAnalysis', param)
 	;
 		}
 		testReportOverview(value) {
@@ -236,7 +237,7 @@ export class ReportService {
 						param.qus_id = value.qus_id;
 				}
 				this.loaderService.startLoading();
-				return this._http.post('/report/testReportOverview', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/testReportOverview', param);
 		}
 		classHighest(value) {
 				const param: any = {};
@@ -245,7 +246,7 @@ export class ReportService {
 						param.es_id = value.es_id;
 				}
 				this.loaderService.startLoading();
-				return this._http.post('/report/classHighest', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/classHighest', param);
 		}
 		classAverage(value) {
 				const param: any = {};
@@ -254,7 +255,7 @@ export class ReportService {
 						param.es_id = value.es_id;
 				}
 				this.loaderService.startLoading();
-				return this._http.post('/report/classAverage', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/classAverage', param);
 		}
 		topicwisePerformanceGraph(value) {
 				const param: any = {};
@@ -274,14 +275,14 @@ export class ReportService {
 						param.sec_id = value.sec_id;
 				}
 				this.loaderService.startLoading();
-				return this._http.post('/report/topicwisePerformanceGraph', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/topicwisePerformanceGraph', param);
 		}
 
 		topicwisePerformanceGraphAvgHighest() {
-				return this._http.get('/report/topicwisePerformanceGraphAvgHighest');
+				return this._http.get(environment.apiAxiomUrl + '/report/topicwisePerformanceGraphAvgHighest');
 		}
 		classOveralPerformance(value) {
-				return this._http.post('/report/classOveralPerformance', value);
+				return this._http.post(environment.apiAxiomUrl + '/report/classOveralPerformance', value);
 		}
 
 		classPerformanceTopicSubtopicwise(value) {
@@ -295,19 +296,19 @@ export class ReportService {
 				if (value.sub_id) {
 						param.sub_id = value.sub_id;
 				}
-				return this._http.post('/report/classPerformanceTopicSubtopicwise', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/classPerformanceTopicSubtopicwise', param);
 		}
 		classPerformanceTopicSubtopicwiseReport(value) {
-				return this._http.post('/report/getClassPerformanceTopicSubtopicWise', value);
+				return this._http.post(environment.apiAxiomUrl + '/report/getClassPerformanceTopicSubtopicWise', value);
 		}
 		classPerformanceSubjectWise(value) {
-				return this._http.post('/report/getClassPerformanceSubjectWise', value);
+				return this._http.post(environment.apiAxiomUrl + '/report/getClassPerformanceSubjectWise', value);
 		}
 		classPerformanceTopicSectionWise(value) {
-				return this._http.post('/report/getClassPerformanceTopicSectionWise', value);
+				return this._http.post(environment.apiAxiomUrl + '/report/getClassPerformanceTopicSectionWise', value);
 		}
 		classPerformanceTopicSectionSlabWise(value) {
-				return this._http.post('/report/getClassPerformanceTopicSectionSlabWise', value);
+				return this._http.post(environment.apiAxiomUrl + '/report/getClassPerformanceTopicSectionSlabWise', value);
 		}
 		insertBookmark(value) {
 				const param: any = {};
@@ -323,13 +324,13 @@ export class ReportService {
 				if (value.sub_id) {
 						param.bm_sub_id = value.sub_id;
 				}
-				return this._http.post('/report/insertBookmark', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/insertBookmark', param);
 		}
 		deleteBookmark(value) {
-				return this._http.delete(`/report/deleteBookmark/${value.bm_id}`);
+				return this._http.delete(environment.apiAxiomUrl + `/report/deleteBookmark/${value.bm_id}`);
 		}
 		getClassByTeacher(value) {
-				return this._http.post('/users/getClassByTeacher/', value);
+				return this._http.post(environment.apiAxiomUrl + '/users/getClassByTeacher/', value);
 		}
 		getBookmark(value) {
 				const param: any = {};
@@ -345,6 +346,6 @@ export class ReportService {
 				if (value.qus_id) {
 						param.bm_qus_id = value.qus_id;
 				}
-				return this._http.post('/report/getBookmark', param);
+				return this._http.post(environment.apiAxiomUrl + '/report/getBookmark', param);
 		}
 }
