@@ -1,9 +1,6 @@
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from './_guards/index';
-import { UsertypeSisModule } from './usertypesis/usertypesis.module';
-
 const appRoutes: Routes = [
-		{ path: 'sis', loadChildren: () => UsertypeSisModule}
+		{ path: 'sis', loadChildren: './usertypesis/usertypesis.module#UsertypeSisModule'}
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);
