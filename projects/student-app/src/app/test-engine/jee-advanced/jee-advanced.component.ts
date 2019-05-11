@@ -1,8 +1,8 @@
-import { Component, OnInit, HostListener, ViewChild, OnDestroy } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { Component, OnInit, HostListener,  Inject } from '@angular/core';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { JeeAdvancedInstructionscreenComponent } from './jee-advanced-instructionscreen/jee-advanced-instructionscreen.component';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
-import { NotificationService, SocketService, HtmlToTextService } from 'projects/axiom/src/app/_services/index';
+import { SocketService, HtmlToTextService } from 'projects/axiom/src/app/_services/index';
 import { appConfig } from 'projects/axiom/src/app/../app/app.config';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NotificationsService } from 'angular2-notifications';
@@ -174,6 +174,9 @@ export class JeeAdvancedComponent implements OnInit {
 
 	openQuesDialog(): void {
 		const dialogRef = this.dialog.open(QuestionNoAdvModalComponent, {
+			data: {
+				subjectArrayOfQP: this.subjectArrayOfQP
+			},
 			width: '380px',
 		});
 
@@ -754,15 +757,15 @@ export class JeeAdvancedComponent implements OnInit {
 		const findex = this.questionsArray.findIndex(f => f.qus_id === qus_id);
 		if (findex !== -1) {
 			if (this.questionsArray[findex].answerStatus === '') {
-				return '../../../assets/default-ques-btn.svg';
+				return '../../../../../../src/assets/default-ques-btn.svg';
 			} else if (this.questionsArray[findex].answerStatus === '2') {
-				return '../../../assets/notanswered.svg';
+				return '../../../../../../src/assets/notanswered.svg';
 			} else if (this.questionsArray[findex].answerStatus === '1') {
-				return '../../../assets/answered.svg';
+				return '../../../../../../src/assets/answered.svg';
 			} else if (this.questionsArray[findex].answerStatus === '0') {
-				return '../../../assets/saveforreview.svg';
+				return '../../../../../../src/assets/saveforreview.svg';
 			} else if (this.questionsArray[findex].answerStatus === '3') {
-				return '../../../assets/ansmarkreview.svg';
+				return '../../../../../../src/assets/ansmarkreview.svg';
 			}
 		}
 	}
@@ -2101,7 +2104,8 @@ export class QuestionNoAdvModalComponent implements OnInit {
 		private notif: NotificationsService,
 		private dialog: MatDialog,
 		private socketService: SocketService,
-		public dialogRef2: MatDialogRef<QuestionNoAdvModalComponent>
+		public dialogRef2: MatDialogRef<QuestionNoAdvModalComponent>,
+		@Inject(MAT_DIALOG_DATA) public data
 	) { }
 	onNoClick(): void {
 		this.dialogRef.close();
@@ -2121,6 +2125,9 @@ export class QuestionNoAdvModalComponent implements OnInit {
 			e.preventDefault();
 		}, false);
 		this.es_id = this.route.snapshot.params['id'];
+		this.localQuestions = [];
+		this.localQuestionStatus = [];
+		this.qAnswerArray = [];
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		if (localStorage.getItem('currentExam')) {
 			this.localQuestions = (JSON.parse(localStorage.getItem('currentExam')).questions);
@@ -2136,270 +2143,7 @@ export class QuestionNoAdvModalComponent implements OnInit {
 		this.getUser();
 		this.getSchool();
 		this.processQueue();
-		this.examQuestionStatusArray = [];
-		this.questionsArrayResult = [];
-		this.qelementService.getExamAttendance({ es_id: this.es_id, login_id: this.currentUser.login_id }).subscribe(
-			(resultExam: any) => {
-				if (resultExam) {
-					this.evalutionDetail = resultExam.data[0];
-					this.eva_id = this.evalutionDetail.eva_id;
-					this.qelementService.examQuestionStatus({ evd_eva_id: this.evalutionDetail.eva_id }).subscribe(
-						(resultQStat: any) => {
-							if (resultQStat) {
-								this.examQuestionStatusArray = resultQStat.data;
-								this.qelementService.getScheduledExam({ es_id: this.es_id }).subscribe(
-									(result: any) => {
-										if (result) {
-											this.examDetail = result.data[0];
-											if ((this.evalutionDetail.time_left * 1000) > 0) {
-												this.ongoingDiv = true;
-												this.sendTestOngoingConfirmation();
-											} else {
-												this.ongoingDiv = false;
-											}
-											this.qelementService.getQuestionPaper({ qp_id: this.examDetail.es_qp_id, qp_status: 1 }).subscribe(
-												(result3: any) => {
-													if (result3) {
-														this.currentQP = result3.data[0];
-														const subIdArray = this.currentQP.qp_sub_id.replace(/\s/g, '').split(',');
-														const subNameArray = this.currentQP.sub_name.replace(/\s/g, '').split(',');
-														if (subIdArray.length === subNameArray.length) {
-															for (let i = 0; i < subIdArray.length; i++) {
-																const subIdName = {
-																	subId: subIdArray[i],
-																	subName: subNameArray[i]
-																};
-																this.subjectArrayOfQP.push(subIdName);
-															}
-														}
-														if (this.localQuestions.length === 0) {
-															this.qelementService.getJeeQuestionPaper({ es_id: this.es_id }).subscribe(
-																(result2: any) => {
-																	if (result2) {
-																		this.questionsArray = [];
-																		this.finalSectionArray = [];
-																		this.questionAnswerArray = [];
-																		this.sectionDetails = {};
-																		this.questionDetail = result2.data[0];
-																		localStorage.setItem('currentExam', JSON.stringify({
-																			eva_id: this.eva_id,
-																			questions: this.questionDetail.Allquestions
-																		}));
-																		let i = 0;
-																		for (const sub of this.subjectArrayOfQP) {
-																			for (const item of this.questionDetail.Allquestions) {
-																				if (sub.subId === item.sub_id) {
-																					let n = 0;
-																					for (let j = 1; j <= 15; j++) {
-																						const sectionArray: any = [];
-																						for (const qus of item.questions) {
-																							qus.answerStatus = '';
-																							qus.timespent = 0;
-																							if (Number(qus.qus_qst_id) === j) {
-																								sectionArray.push(qus);
-																								this.questionsArray.push(qus);
-																								const findex = this.finalSectionArray.findIndex(f => f.sub_id === sub.subId && f.qst_id === j);
-																								if (findex === -1) {
-																									this.finalSectionArray.push({
-																										index: n,
-																										subName: sub.subName,
-																										sub_id: sub.subId,
-																										qst_id: j,
-																										secArray: sectionArray
-																									});
-																									n++;
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																			i++;
-																		}
-																		for (const item of this.examQuestionStatusArray) {
-																			for (const titem of this.questionsArray) {
-																				if (item.evd_qus_id === titem.qus_id) {
-																					titem.answerStatus = item.evd_status;
-																				}
-																			}
-																		}
-																		localStorage.setItem('qStatus', JSON.stringify({
-																			qStatus: this.questionsArray
-																		}));
-																		for (const item of this.questionsArray) {
-																			this.questionAnswerArray.push({
-																				qst_id: item.qus_qst_id,
-																				qus_id: item.qus_id,
-																				answer: [],
-																				qus_submit_flag: ''
-																			});
-																		}
-																		for (const item of this.examQuestionStatusArray) {
-																			for (const titem of this.questionAnswerArray) {
-																				if (item.evd_qus_id === titem.qus_id) {
-																					const answerJSON: any = [];
-																					for (const ans of item.answer) {
-																						answerJSON.push({
-																							evd_qst_id: titem.qst_id,
-																							evd_qus_id: titem.qus_id,
-																							evd_qus_answer: ans.evd_qus_answer
-																						});
-																					}
-																					titem.answer = answerJSON;
-																					titem.qus_submit_flag = true;
-																				}
-																			}
-																		}
-																		localStorage.setItem('qAnswer', JSON.stringify({
-																			qAnswer: this.questionAnswerArray
-																		}));
-																		this.getQuestionArray(this.finalSectionArray[0]);
-																		this.sectionDetails = this.finalSectionArray[0];
-																		this.tabIndex = this.sectionDetails.index;
-																		this.currentQA = this.questionsArray[0];
-																	}
-																}
-															);
-														} else {
-															this.getLocallyStoredQuestions();
-														}
-													}
-												}
-											);
-											this.timer();
-										}
-									}
-								);
-							} else {
-								this.qelementService.getScheduledExam({ es_id: this.es_id }).subscribe(
-									(result: any) => {
-										if (result) {
-											this.examDetail = result.data[0];
-											if ((this.evalutionDetail.time_left * 1000) > 0) {
-												this.ongoingDiv = true;
-												this.sendTestOngoingConfirmation();
-											} else {
-												this.ongoingDiv = false;
-											}
-											this.qelementService.getQuestionPaper({ qp_id: this.examDetail.es_qp_id, qp_status: 1 }).subscribe(
-												(result3: any) => {
-													if (result3) {
-														this.currentQP = result3.data[0];
-														const subIdArray = this.currentQP.qp_sub_id.replace(/\s/g, '').split(',');
-														const subNameArray = this.currentQP.sub_name.replace(/\s/g, '').split(',');
-														if (subIdArray.length === subNameArray.length) {
-															for (let i = 0; i < subIdArray.length; i++) {
-																const subIdName = {
-																	subId: subIdArray[i],
-																	subName: subNameArray[i]
-																};
-																this.subjectArrayOfQP.push(subIdName);
-															}
-														}
-														if (this.localQuestions.length === 0) {
-															this.qelementService.getJeeQuestionPaper({ es_id: this.es_id }).subscribe(
-																(result2: any) => {
-																	if (result2) {
-																		this.questionsArray = [];
-																		this.finalSectionArray = [];
-																		this.questionAnswerArray = [];
-																		this.sectionDetails = {};
-																		this.questionDetail = result2.data[0];
-																		localStorage.setItem('currentExam', JSON.stringify({
-																			eva_id: this.eva_id,
-																			questions: this.questionDetail.Allquestions
-																		}));
-																		let i = 0;
-																		for (const sub of this.subjectArrayOfQP) {
-																			for (const item of this.questionDetail.Allquestions) {
-																				if (sub.subId === item.sub_id) {
-																					let n = 0;
-																					for (let j = 1; j <= 15; j++) {
-																						const sectionArray: any = [];
-																						for (const qus of item.questions) {
-																							qus.answerStatus = '';
-																							qus.timespent = 0;
-																							if (Number(qus.qus_qst_id) === j) {
-																								sectionArray.push(qus);
-																								this.questionsArray.push(qus);
-																								const findex = this.finalSectionArray.findIndex(f => f.sub_id === sub.subId && f.qst_id === j);
-																								if (findex === -1) {
-																									this.finalSectionArray.push({
-																										index: n,
-																										subName: sub.subName,
-																										sub_id: sub.subId,
-																										qst_id: j,
-																										secArray: sectionArray
-																									});
-																									n++;
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																			i++;
-																		}
-																		for (const item of this.examQuestionStatusArray) {
-																			for (const titem of this.questionsArray) {
-																				if (item.evd_qus_id === titem.qus_id) {
-																					titem.answerStatus = item.evd_status;
-																				}
-																			}
-																		}
-																		localStorage.setItem('qStatus', JSON.stringify({
-																			qStatus: this.questionsArray
-																		}));
-																		for (const item of this.questionsArray) {
-																			this.questionAnswerArray.push({
-																				qst_id: item.qus_qst_id,
-																				qus_id: item.qus_id,
-																				answer: [],
-																				qus_submit_flag: ''
-																			});
-																		}
-																		for (const item of this.examQuestionStatusArray) {
-																			for (const titem of this.questionAnswerArray) {
-																				if (item.evd_qus_id === titem.qus_id) {
-																					const answerJSON: any = [];
-																					for (const ans of item.answer) {
-																						answerJSON.push({
-																							evd_qst_id: titem.qst_id,
-																							evd_qus_id: titem.qus_id,
-																							evd_qus_answer: ans.evd_qus_answer
-																						});
-																					}
-																					titem.answer = answerJSON;
-																					titem.qus_submit_flag = true;
-																				}
-																			}
-																		}
-																		localStorage.setItem('qAnswer', JSON.stringify({
-																			qAnswer: this.questionAnswerArray
-																		}));
-																		this.getQuestionArray(this.finalSectionArray[0]);
-																		this.sectionDetails = this.finalSectionArray[0];
-																		this.tabIndex = this.sectionDetails.index;
-																		this.currentQA = this.questionsArray[0];
-																	}
-																}
-															);
-														} else {
-															this.getLocallyStoredQuestions();
-														}
-													}
-												}
-											);
-											this.timer();
-										}
-									}
-								);
-							}
-						}
-					);
-				}
-			}
-		);
+		this.getLocallyStoredQuestions();
 		this.digitValue = '-';
 		this.upperRowValue = '-';
 		this.lowerRowValue = '-';
@@ -2490,7 +2234,7 @@ export class QuestionNoAdvModalComponent implements OnInit {
 			this.questionAnswerArray = this.qAnswerArray;
 		}
 		let i = 0;
-		for (const sub of this.subjectArrayOfQP) {
+		for (const sub of this.data.subjectArrayOfQP) {
 			for (const item of this.localQuestions) {
 				if (sub.subId === item.sub_id) {
 					let n = 0;
@@ -2688,15 +2432,15 @@ export class QuestionNoAdvModalComponent implements OnInit {
 		const findex = this.questionsArray.findIndex(f => f.qus_id === qus_id);
 		if (findex !== -1) {
 			if (this.questionsArray[findex].answerStatus === '') {
-				return '../../../assets/default-ques-btn.svg';
+				return '../../../../../../src/assets/default-ques-btn.svg';
 			} else if (this.questionsArray[findex].answerStatus === '2') {
-				return '../../../assets/notanswered.svg';
+				return '../../../../../../src/assets/notanswered.svg';
 			} else if (this.questionsArray[findex].answerStatus === '1') {
-				return '../../../assets/answered.svg';
+				return '../../../../../../src/assets/answered.svg';
 			} else if (this.questionsArray[findex].answerStatus === '0') {
-				return '../../../assets/saveforreview.svg';
+				return '../../../../../../src/assets/saveforreview.svg';
 			} else if (this.questionsArray[findex].answerStatus === '3') {
-				return '../../../assets/ansmarkreview.svg';
+				return '../../../../../../src/assets/ansmarkreview.svg';
 			}
 		}
 	}
