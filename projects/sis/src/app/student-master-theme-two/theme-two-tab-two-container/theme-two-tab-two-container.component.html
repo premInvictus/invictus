@@ -4,21 +4,20 @@
         mat-raised-button (click)="editRequest()"
         (keydown.enter)="$event.preventDefault()"> <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span></button>
       </div>
-    <!-- <div class="row">
-        <div class="col-8">
-        </div>
-        <div class="col-4">
-          <div class="float-right">
-            <button *ngIf="(viewOnly && isExistUserAccessMenu('request') && editableStatus == '1')"
-            mat-raised-button class="btn-neutral-dull" (click)="editRequest()">
-            <mat-icon class="btn-top-icon">create</mat-icon>&nbsp; &nbsp;Edit Request</button>
-          </div>
-          </div>
-      </div>
-      <br> -->
   <div class="row">
     <div class="col-12">
       <mat-accordion multi="true" class="theme-accordion">
+          <mat-expansion-panel [expanded]="'true'" class="margin-top-10" *ngIf="common.isExistUserAccessMenuByLabel(parentId,'Accounts')">
+              <mat-expansion-panel-header class="exp-header-new-stu-detail">
+                <mat-panel-title>
+                  <span class="text-uppercase">Accounts</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-account-details-theme-two #account
+              [addOnly]="addOnly"
+              [viewOnly]="viewOnly"
+              [feeDet]="accountDetails"></app-account-details-theme-two>
+            </mat-expansion-panel>
         <mat-expansion-panel [expanded]="'true'" *ngIf="common.isExistUserAccessMenuByLabel(parentId,'Education Details')">
           <mat-expansion-panel-header class="exp-header-new-stu-detail">
             <mat-panel-title>

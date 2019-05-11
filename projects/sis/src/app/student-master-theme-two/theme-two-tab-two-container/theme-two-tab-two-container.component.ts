@@ -3,6 +3,7 @@ import { SisService, CommonAPIService, ProcesstypeService } from '../../_service
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DatePipe } from '@angular/common';
 import { FormEnabledService } from '../../sharedmodule/dynamic-content/formEnabled.service';
+import { AccountDetailsThemeTwoComponent } from '../account-details-theme-two/account-details-theme-two.component';
 @Component({
 	selector: 'app-theme-two-tab-two-container',
 	templateUrl: './theme-two-tab-two-container.component.html',
@@ -12,6 +13,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	@ViewChild('edu') edu;
 	@ViewChild('skill') skill;
 	@ViewChild('doc') doc;
+	@ViewChild('account')account: AccountDetailsThemeTwoComponent;
 	addOnly = false;
 	viewOnly = true;
 	editOnly = false;
@@ -33,6 +35,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	params: any[] = [];
 	settingsArray: any[] = [];
 	currentTab: number;
+	accountDetails: any = {};
 	constructor(private sisService: SisService,
 		public common: CommonAPIService,
 		private processtypeService: ProcesstypeService,
@@ -44,12 +47,8 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			this.currentTab = data.currrentTab;
 			if (data && (data.currrentTab === 1)) {
 				this.getAdditionalDetails(this.context.studentdetails.studentdetailsform.value.au_login_id);
-				// this.login_id = data.au_login_id;
-				// this.editableStatus = data.editable_status;
+				this.getFeeAccount(this.context.studentdetails.studentdetailsform.value.au_login_id);
 				const processType = this.processtypeService.getProcesstype();
-				// if (processType === '2' || processType === '3' || processType === '4' || processType === '5') {
-				// 	this.getAdditionalDetails(this.login_id);
-				// }
 				if (processType === '2') {
 					this.parentId = '158';
 				}
@@ -65,30 +64,11 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			}
 		});
 		this.common.studentData.subscribe((data: any) => {
-			// if (data && data.au_login_id) {
-			// 	this.login_id = data.au_login_id;
-			// 	this.editableStatus = data.editable_status;
-			// 	const processType = this.processtypeService.getProcesstype();
-			// 	if (processType === '2' || processType === '3' || processType === '4' || processType === '5') {
-			// 		this.getAdditionalDetails(this.login_id);
-			// 	}
-			// 	if (processType === '2') {
-			// 		this.parentId = '158';
-			// 	}
-			// 	if (processType === '3') {
-			// 		this.parentId = '159';
-			// 	}
-			// 	if (processType === '4') {
-			// 		this.parentId = '160';
-			// 	}
-			// 	if (processType === '5') {
-			// 		this.parentId = '161';
-			// 	}
-			// }
 			this.login_id = data.au_login_id;
 			this.editableStatus = data.editable_status;
 			if (this.currentTab === 1) {
 				this.getAdditionalDetails(data.au_login_id);
+				this.getFeeAccount(data.au_login_id);
 			}
 		});
 		this.common.reRenderForm.subscribe((data: any) => {
@@ -103,6 +83,8 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				this.documentDetails = [];
 				this.awardsDetails = [];
 				this.awardsDetailsNew = [];
+				this.accountDetails = {};
+				this.account.accountsForm.reset();
 			}
 			if (data && data.viewMode) {
 				this.viewOnly = true;
@@ -117,11 +99,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			}
 		});
 	}
-	ngOnChanges() {
-		// if (this.viewOnly) {
-		// 	this.getAdditionalDetails(this.login_id);
-		// }
-	}
+	ngOnChanges() {}
 	saveForm() {
 		for (const item of this.educationDetails) {
 			item.eed_login_id = this.context.studentdetails.studentdetailsform.value.au_login_id;
@@ -134,6 +112,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		};
 		this.sisService.addAdditionalDetails(tabTwoJSON).subscribe((result: any) => {
 			if (result.status === 'ok') {
+				this.account.submit();
 				this.common.showSuccessErrorMessage('Additional Details Added Successfully', 'success');
 				if (this.processtypeService.getProcesstype() === '2' || this.processtypeService.getProcesstype() === '5') {
 					this.common.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
@@ -157,6 +136,14 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			}
 		});
 	}
+	getFeeAccount(au_login_id) {
+		this.accountDetails = {};
+		this.sisService.getFeeAccount({ accd_login_id: au_login_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.accountDetails = result.data[0];
+			}
+		});
+	}
 	isExistUserAccessMenu(actionT) {
 		return this.context.studentdetails.isExistUserAccessMenu(actionT);
 	}
@@ -172,6 +159,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		} else if (this.saveFlag || this.editRequestFlag) {
 			this.common.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 			this.getAdditionalDetails(this.context.studentdetails.studentdetailsform.value.au_login_id);
+			this.getFeeAccount(this.context.studentdetails.studentdetailsform.value.au_login_id);
 		}
 	}
 	updateForm(isview) {
@@ -191,9 +179,11 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		}
 		this.sisService.addAdditionalDetails(tabTwoJSON).subscribe((result1: any) => {
 			if (result1.status === 'ok') {
+				this.account.update();
 				this.common.showSuccessErrorMessage(result1.data, 'success');
 				this.editOnly = false;
 				this.getAdditionalDetails(this.context.studentdetails.studentdetailsform.value.au_login_id);
+				this.getFeeAccount(this.context.studentdetails.studentdetailsform.value.au_login_id);
 				if (isview) {
 					this.common.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 				} else {
