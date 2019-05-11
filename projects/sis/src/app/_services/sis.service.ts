@@ -7,6 +7,18 @@ import { environment } from 'src/environments/environment';
 export class SisService {
 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
+	insertFeeAccount(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/feeAccount/insertFeeAccount', value);
+	}
+	updateFeeAccount(value) {
+		this.service.startLoading();
+		return this.http.put(environment.apiSisUrl + '/feeAccount/updateFeeAccount/' + value.accd_id , value);
+	}
+	getFeeAccount(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/feeAccount/getFeeAccount', value);
+	}
 	getEnrollmentStatus() {
 		return of({
 			status: 'ok', data: [
@@ -15,19 +27,6 @@ export class SisService {
 			]
 		});
 	}
-	/* getGender() {
-		return of({status: 'ok', data: [
-			{gender_id: 'M', gender_name: 'Male'},
-			{gender_id: 'F', gender_name: 'Female'}
-		]});
-	}
-	getCategory() {
-		return of({status: 'ok', data: [
-			{cat_id: 'ST/SC', cat_name: 'ST/SC'},
-			{cat_id: 'OBC', cat_name: 'OBC'},
-			{cat_id: 'GEN', cat_name: 'GEN'}
-		]});
-	} */
 	getClass(value) {
 		const param: any = {};
 		if (value.role_id === '3' || value.role_id === '1') {
