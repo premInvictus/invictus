@@ -28,6 +28,7 @@ export class JeeAdvancedComponent implements OnInit {
 	es_id: number;
 	eva_id: number;
 	examDetail: any = {};
+	userprofileimage;
 	currentQP: any = {};
 	subjectArray: any[] = [];
 	subjectArrayOfQP: any[] = [];
@@ -611,6 +612,7 @@ export class JeeAdvancedComponent implements OnInit {
 			(result: any) => {
 				if (result.data.length > 0) {
 					this.userDetails = result.data[0];
+					this.userprofileimage = this.userDetails.au_profileimage;
 					this.userDetailsFlag = true;
 				}
 			}
