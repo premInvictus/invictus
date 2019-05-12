@@ -1,0 +1,23 @@
+
+  .image-upload > input
+  {
+    display: none;
+  }
+  
+  .image-upload img
+  {
+    cursor: pointer;
+  }
+
+  
+  .user-table {
+    padding-top: 10px;
+    overflow-x: auto;
+    width: 100%;
+}
+
+
+#studentImage{
+  background-image : url("../../../../../../../../src/assets/images/student-profile.png");
+  
+}

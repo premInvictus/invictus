@@ -21,10 +21,10 @@ export class AppComponent implements OnInit {
 		timeOut: 3000,
 		lastOnBottom: true
 	};
-	showLoadingFlag = true;
+	showLoadingFlag = false;
 	constructor(private router: Router, private loaderService: CommonAPIService) {
 		this.loaderService.showLoading.subscribe((flag: boolean) => {
-			setTimeout(() => this.showLoadingFlag = flag, 0);
+			this.showLoadingFlag = flag;
 		});
 		this.router.events.subscribe((event: Event) => {
 			switch (true) {

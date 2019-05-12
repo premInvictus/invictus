@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { QbankService } from './../../../app/questionbank/service/qbank.service';
 import { QelementService } from './../../../app/questionbank/service/qelement.service';
-import { appConfig } from '../../app.config';
+import { environment } from 'src/environments/environment';
 import { BreadCrumbService, NotificationService } from '../../_services/index';
 
 @Component({
@@ -245,7 +245,7 @@ export class SystemInfoUploadComponent implements OnInit {
 
 					if (result && result.status === 'ok') {
 						let url: string = result.data;
-						url = appConfig.apiUrl + url.substring(1);
+						url = environment.apiAxiomUrl + url.substring(1);
 						window.location.href = url;
 					}
 				}
@@ -257,7 +257,7 @@ export class SystemInfoUploadComponent implements OnInit {
 
 					if (result && result.status === 'ok') {
 						let url: string = result.data;
-						url = appConfig.apiUrl + url.substring(1);
+						url = environment.apiAxiomUrl + url.substring(1);
 						window.location.href = url;
 					}
 				}
@@ -269,7 +269,7 @@ export class SystemInfoUploadComponent implements OnInit {
 
 					if (result && result.status === 'ok') {
 						let url: string = result.data;
-						url = appConfig.apiUrl + url.substring(1);
+						url = environment.apiAxiomUrl + url.substring(1);
 						window.location.href = url;
 					}
 				}
@@ -281,7 +281,7 @@ export class SystemInfoUploadComponent implements OnInit {
 
 					if (result && result.status === 'ok') {
 						let url: string = result.data;
-						url = appConfig.apiUrl + url.substring(1);
+						url = environment.apiAxiomUrl + url.substring(1);
 						window.location.href = url;
 					}
 				}
@@ -293,7 +293,7 @@ export class SystemInfoUploadComponent implements OnInit {
 
 					if (result && result.status === 'ok') {
 						let url: string = result.data;
-						url = appConfig.apiUrl + url.substring(1);
+						url = environment.apiAxiomUrl + url.substring(1);
 						window.location.href = url;
 					}
 				}
@@ -312,7 +312,7 @@ export class SystemInfoUploadComponent implements OnInit {
 
 					if (result && result.status === 'ok') {
 						let url: string = result.data;
-						url = appConfig.apiUrl + url.substring(1);
+						url = environment.apiAxiomUrl + url.substring(1);
 						window.location.href = url;
 					}
 				}
@@ -323,7 +323,7 @@ export class SystemInfoUploadComponent implements OnInit {
 
 					if (result && result.status === 'ok') {
 						let url: string = result.data;
-						url = appConfig.apiUrl + url.substring(1);
+						url = environment.apiAxiomUrl + url.substring(1);
 						window.location.href = url;
 					}
 				}
