@@ -1,0 +1,226 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+<simple-notifications></simple-notifications>
+
+<div class="breadcrumb-section">
+  <div class="row">
+    <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+      <a [routerLink]="[homeUrl]">
+        <i class="breadcrumb-icon fas fa-home"></i>
+      </a>
+    </div>
+    <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+      <div class="vertical-line"></div>
+    </div>
+    <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+      <div class="first-breadcrumb-title">
+        <span class="bread-title">Manage Users</span>
+        <span class="bread-divider">-</span>
+        <span class="bread-link">User Management</span>
+        <span class="bread-divider">-</span>
+        <span class="bread-title">Create Users</span>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Form field-->
+<div class="add-question-content">
+  <div class="row">
+    <div class="col-lg-12 col-mobile-view-add-ques">
+      <div class="white-box">
+        <div class="white-box-content">
+          <div class="row">
+            <div class="col-lg-12 col-mobile-view-add-ques">
+              <div class="white-box-content-title">
+                <span>Create User & Assign Privileges</span>
+              </div>
+            </div>
+          </div>
+          <form [formGroup]="Cu_Form" novalidate>
+            <div class="row">
+              <div class="col-lg-6 col-mobile-view-add-ques">
+                <div class="left-parameter-content">
+                  <div class="left-side-box">
+                    <div class="manage-user-box-content">
+                      <span class="bulk-right-side-box-content-title">User Detail</span>
+                      <hr class="left-side-box-content-title-divider">
+                      <div class="row row-remove-top-margin">
+                        <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
+                          <div class="row row-remove-top-margin">
+                            <div class="col-lg-6 col-mobile-view-add-ques">
+                             <div class="row">
+                               <div class="col-lg-12 remove-col-modal-padding">
+                                <mat-form-field class="form-field">
+                                  <input matInput formControlName="au_full_name" placeholder="FullName" required >
+                                  <mat-error *ngIf="au_full_name.hasError('required')">
+                                      Full name is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                               </div>
+                             </div>
+                             <div class="row">
+                              <div class="col-lg-12 remove-col-modal-padding">
+
+                              <mat-form-field class="form-field">
+                                <input matInput formControlName="au_password" placeholder="Password" type="password" required>
+                                <mat-error *ngIf="au_full_name.hasError('required')">
+                                    Password is <strong>required</strong>
+                                  </mat-error>
+                              </mat-form-field>
+                              </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="col-lg-12 remove-col-modal-padding">
+                              <mat-form-field class="form-field">
+                                <input matInput formControlName="au_mobile" placeholder="Mobile Number" required pattern="[0-9]*" maxlength="10">
+                                <mat-error *ngIf="au_mobile.hasError('required')">
+                                    Mobile should be <strong>numbers</strong>
+                                  </mat-error>
+                              </mat-form-field>
+                              </div>
+                              </div>
+                              <br>
+                            </div>
+
+                            <div class="col-lg-6 col-mobile-view-add-ques">
+
+                              <div class="row">
+                                <div class="col-lg-12 remove-col-modal-padding">
+                                  <mat-form-field class="form-field">
+                                    <mat-select placeholder="Access Level"  formControlName="au_role_id" required>
+                                      <mat-option value="1">Admin</mat-option>
+                                      <mat-option *ngFor="let item of userdetailArray" [value]="item.role_id">
+                                        {{item.role_name}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                              </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-lg-12 remove-col-modal-padding">
+                              <mat-form-field class="form-field">
+                                <input matInput [matDatepicker]="scheduleDate" min="{{mintoday}}" placeholder="Date of Birth" required formControlName="au_dob" (dateInput)="addEvent('input', $event)"
+                                  (dateChange)="addEvent('change', $event)">
+                                <mat-datepicker-toggle class="calendar-color" matSuffix [for]="scheduleDate"></mat-datepicker-toggle>
+                                <mat-datepicker #scheduleDate></mat-datepicker>
+                                <mat-error *ngIf="au_dob.hasError('required')">
+                                    DOB is <strong>required</strong>
+                                  </mat-error>
+                              </mat-form-field>
+                              </div>
+                              </div>
+
+                              <div class="row">
+                                  <div class="col-lg-12 remove-col-modal-padding">
+                              <mat-form-field class="form-field">
+                                <input matInput formControlName="au_email" placeholder="Email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+                                  <mat-error *ngIf="au_email.hasError('required')">
+                                    Email is <strong>required</strong>
+                                  </mat-error>
+                              </mat-form-field>
+                              </div>
+                              </div>
+                              <br>
+                            </div>
+                            <!--priveleges-->
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-mobile-view-add-ques">
+                  <div class="left-parameter-content">
+                    <div class="left-side-box">
+                      <div class="manage-user-box-content">
+                        <span class="bulk-right-side-box-content-title">User Priviliges</span>
+                        <hr class="left-side-box-content-title-divider">
+                        <div class="row row-remove-top-margin">
+                          <div class="col-lg-12 col-mobile-view-add-ques">
+                            <div class="row row-remove-top-margin text-left">
+                              <div class="col-lg-6 col-mobile-view-add-ques">
+
+
+                                  <div class="row">
+                                      <div class="col-lg-12 remove-col-modal-padding">
+                          <section class="manage-section">
+                            <mat-checkbox name="sms" formControlName="up_allow_sms">Allow to send SMS </mat-checkbox>
+                          </section>
+                          </div>
+                          </div>
+
+
+                          <div class="row">
+                              <div class="col-lg-12 remove-col-modal-padding">
+                          <section class="manage-section">
+                            <mat-checkbox name="email" formControlName="up_allow_email">Allow to send Email </mat-checkbox>
+                          </section>
+                          </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-lg-12 remove-col-modal-padding">
+
+                          <section class="manage-section">
+                            <mat-checkbox name="change-date" formControlName="up_change_date">Dont Allow to change System Entry Date </mat-checkbox>
+                          </section>
+                          </div>
+                          </div>
+
+                          <div class="row">
+                              <div class="col-lg-12 remove-col-modal-padding">
+
+                          <section class="manage-section">
+                            <mat-checkbox name="switch" formControlName="up_switch_tp">Allow Switch to Teacher-Parent Dashboard </mat-checkbox>
+                          </section>
+                          </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-lg-12 remove-col-modal-padding">
+                          <section class="manage-section">
+                            <mat-checkbox name="read-only" formControlName="up_read_only">Read Only </mat-checkbox>
+                          </section>
+                          </div>
+                          </div>
+                          <br>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </form>
+
+              <div class="row">
+                <div class="col-lg-12  add-question-button-collection">
+
+                  <button mat-raised-button class="submit-button examSetupBtn" *ngIf="!updateFlag" (click)="addUser()" [disabled]="!Cu_Form.valid">Submit</button>
+
+                    <button mat-raised-button class="submit-button examSetupBtn" *ngIf="updateFlag"  (click)="updateUser()">Update</button>
+
+                  <button mat-raised-button class="reset-button examSetupBtn" matTooltip="Are you sure want to reset?" (click)="saveief()">Reset</button>
+
+                  <a  [routerLink]="['../manage-access/',userIdManageAccess]">
+                      <button mat-raised-button  class="submit-button examSetupBtn" [disabled]="manageAccessFlag" >Manage Access</button>
+                    </a>
+                  </div>
+
+
+              </div>
+              <br>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+

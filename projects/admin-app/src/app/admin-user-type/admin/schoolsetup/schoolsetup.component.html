@@ -1,0 +1,469 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+<simple-notifications></simple-notifications>
+<div *ngIf="schoolSetupDiv">
+   <div class="breadcrumb-section">
+      <div class="row">
+         <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+            <a [routerLink]="[homeUrl]">
+            <i class="breadcrumb-icon fas fa-home"></i>
+            </a>
+         </div>
+         <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+            <div class="vertical-line"></div>
+         </div>
+         <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+            <div class="first-breadcrumb-title">
+               <span class="bread-title">Manage School</span>
+               <span class="bread-divider">-</span>
+               <span class="bread-title">School Management</span>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="add-question-content">
+      <div class="row row-remove-top-margin">
+         <div class="col-lg-12 col-mobile-view-add-ques">
+            <div class="white-box">
+               <div class="white-box-content">
+                  <div class="row row-remove-top-margin">
+                     <div class="col-lg-12 col-mobile-view-add-ques">
+                        <div class="white-box-content-title">
+                           <span>School Management</span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row row-remove-top-margin">
+                     <div class="col-lg-12  col-mobile-view-add-ques">
+                        <div class="top-right-parameter top-middle-parameter">
+                           <div class="top-right-box top-blue-box">
+                              <div class="top-right-box-content top-middle-box-content">
+                                 <div class="top-right-box-content-title">
+                                    <div class="row">
+                                       <div class="col-lg-12 col-mobile-view-add-ques">
+                                          <span>Select Parameters</span>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
+                                          <form [formGroup]="school_manage_form" novalidate>
+                                             <div class="row">
+                                                <div class="col-lg-2  col-mobile-view-add-ques">
+                                                   <mat-form-field class="form-field">
+                                                      <mat-select disabled="disabled" formControlName="select_region" placeholder="Select Region">
+                                                         <mat-option *ngFor="let region of regions" [value]="region">
+                                                         {{region}}
+                                                         </mat-option>
+                                                      </mat-select>
+                                                   </mat-form-field>
+                                                </div>
+                                                <div class="col-lg-2  col-mobile-view-add-ques">
+                                                   <mat-form-field class="form-field">
+                                                      <mat-select disabled="disabled" id="school-board" placeholder="Select Board">
+                                                         <mat-option *ngFor="let board of boards" [value]="board">
+                                                         {{board}}
+                                                         </mat-option>
+                                                      </mat-select>
+                                                   </mat-form-field>
+                                                </div>
+                                                <div class="col-lg-2  col-mobile-view-add-ques">
+                                                   <mat-form-field class="form-field">
+                                                      <mat-select  disabled="disabled" id="school-name" placeholder="Select School">
+                                                         <mat-option *ngFor="let school of schools" [value]="school">
+                                                         {{school}}
+                                                         </mat-option>
+                                                      </mat-select>
+                                                   </mat-form-field>
+                                                </div>
+                                                <div class="col-lg-2 col-remove-right-padding col-mobile-view-add-ques">
+                                                   <div class="row row-remove-top-margin">
+                                                      <div class="col-lg-12 col-remove-padding col-mobile-view-add-ques">
+                                                         <div class="add-question-button-collection">
+                                                            <div class="button-row">
+                                                               <button disabled="disabled" mat-raised-button class="submit-button float-left">Apply</button>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div class="col-lg-2 col-remove-right-padding col-mobile-view-add-ques">
+                                                </div>
+                                                <div class="col-lg-2 col-remove-right-padding col-mobile-view-add-ques">
+                                                   <div class="row row-remove-top-margin">
+                                                      <div class="col-lg-12 col-remove-padding col-mobile-view-add-ques">
+                                                         <div class="add-question-button-collection">
+                                                            <div class="button-row">
+                                                               <button mat-raised-button class="submit-button float-left" (click)="openCreateNewSchoolDiv()">Add
+                                                               School
+                                                               </button>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </form>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                     <div class="col-lg-12 col-mobile-view-add-ques">
+                        <div class="table-box school-table-box">
+                           <div class="example-container table-box-main">
+                              <div class="example-header table-filter">
+                                 <mat-form-field>
+                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                                    <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                 </mat-form-field>
+                              </div>
+                              <mat-table class="specific-table school-manage-table-main-structure" #table [dataSource]="dataSource" matSort>
+                              <!-- Position Column -->
+                              <ng-container matColumnDef="position">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
+                                 <mat-cell *matCellDef="let item"> {{item.position}} </mat-cell>
+                              </ng-container>
+                              <!-- Template Name Column -->
+                              <ng-container matColumnDef="logo">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header> Logo</mat-header-cell>
+                                 <mat-cell *matCellDef="let item"><img src="{{hosturl+item.logo}}" alt="" style="width: 32px; height: 32px;"></mat-cell>
+                              </ng-container>
+                              <!-- Teacher Column -->
+                              <ng-container matColumnDef="schoolname">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header>School Name </mat-header-cell>
+                                 <mat-cell *matCellDef="let item"> {{item.schoolname}} </mat-cell>
+                              </ng-container>
+                              <!-- designation Column -->
+                              <ng-container matColumnDef="schoolprefix">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header> Prefix </mat-header-cell>
+                                 <mat-cell *matCellDef="let item"> {{item.schoolprefix}}</mat-cell>
+                              </ng-container>
+                              <!--Mobile Column -->
+                              <ng-container matColumnDef="board">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Board</mat-header-cell>
+                                 <mat-cell *matCellDef="let item"> {{item.board}} </mat-cell>
+                              </ng-container>
+                              <!-- Email Column -->
+                              <ng-container matColumnDef="affiliation">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Affiliation</mat-header-cell>
+                                 <mat-cell *matCellDef="let item"> {{item.affiliation}} </mat-cell>
+                              </ng-container>
+                              <!--status-->
+                              <ng-container matColumnDef="address">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
+                                 <mat-cell *matCellDef="let item"> {{item.address}} </mat-cell>
+                              </ng-container>
+                              <ng-container matColumnDef="contact">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Contact</mat-header-cell>
+                                 <mat-cell *matCellDef="let item"> {{item.contact}} </mat-cell>
+                              </ng-container>
+                              <ng-container matColumnDef="city">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header>City</mat-header-cell>
+                                 <mat-cell *matCellDef="let item"> {{item.city}} </mat-cell>
+                              </ng-container>
+                              <ng-container matColumnDef="email">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+                                 <mat-cell *matCellDef="let item"> {{item.email}} </mat-cell>
+                              </ng-container>
+                              <ng-container matColumnDef="manager">
+                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Manager</mat-header-cell>
+                                 <mat-cell *matCellDef="let item"> {{item.manager}} </mat-cell>
+                              </ng-container>
+                              <!-- Action Column -->
+                              <ng-container matColumnDef="action">
+                                 <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                 <mat-cell *matCellDef="let item">
+                                    <a><i class="fa fa-pencil-square-o fa-edit fa-lg" aria-hidden="true" (click)="editNewSchoolForm(item.action)"></i></a>&nbsp;<a><i
+                                       class="fa fa-trash fa-delete fa-lg" aria-hidden="true" (click)="deleteNewSchool(item.action.school_id)"></i></a>
+                                 </mat-cell>
+                              </ng-container>
+                              <mat-header-row class="top_header" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                              </mat-table>
+                              <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true">
+                              </mat-paginator>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div *ngIf="createNewSchoolDiv">
+   <div class="breadcrumb-section">
+      <div class="row">
+         <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+            <a [routerLink]="[homeUrl]">
+            <i class="breadcrumb-icon fas fa-home"></i>
+            </a>
+         </div>
+         <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+            <div class="vertical-line"></div>
+         </div>
+         <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+            <div class="first-breadcrumb-title">
+               <span class="bread-title">School Setup</span>
+               <span class="bread-divider">-</span>
+               <span class="bread-title">Add New School</span>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="add-question-content">
+      <div class="row row-remove-top-margin">
+         <div class="col-lg-12 col-mobile-view-add-ques">
+            <div class="white-box">
+               <div class="white-box-content">
+                  <div class="row row-remove-top-margin">
+                     <div class="col-lg-12 col-mobile-view-add-ques">
+                        <div class="white-box-content-title">
+                           <span>Add New School</span>
+                        </div>
+                     </div>
+                  </div>
+                  <br>
+                  <form [formGroup]="newSchoolForm" enctype="multipart/form-data" novalidate>
+                     <div class="row row-remove-top-margin">
+                        <div class="col-lg-6 col-mobile-view-add-ques">
+                           <div class="row">
+                              <div class="col-lg-2">
+                                 <div class="image-upload">
+                                    <label for="file-input">
+                                    <img class="img-fluid school-img" [src]="url" style="margin-top: 30px;
+                                       width: 110px;
+                                       height: 150px" />
+                                    </label>
+                                    <input id="file-input" formControlName="school_logo" name="file-input" type="file" (change)="readUrl($event);uploadSchoolLogo($event)"
+                                       />
+                                 </div>
+                              </div>
+                              <div class="col-lg-10">
+                                 <div class="row">
+                                    <div class="col-lg-12">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="School Name*" name="schoolname" formControlName="school_name" maxlength="86">
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <div class="col-lg-12">
+                                       <mat-form-field class="form-field">
+                                          <mat-select id="exampleSelect1" formControlName="school_board" placeholder="Select Board">
+                                             <mat-option *ngFor="let item of arrayBoard" [value]="item.board_id">
+                                             {{item.board_name}}({{item.board_alias}})
+                                             </mat-option>
+                                          </mat-select>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <div class="col-lg-4">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Affiliation No." name="afflication" formControlName="school_afflication_no" maxlength="50" required>
+                                       </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <mat-form-field class="form-field">
+                                          <input matInput placeholder="Branch" name="schoolbranch" formControlName="school_branch" maxlength="50">
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <input matInput placeholder="Address" name="schooladdress" formControlName="school_address" maxlength="255" required>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <mat-select id="schoolcity" formControlName="school_city" required placeholder="City">
+                                       <mat-option *ngFor="let item of arrayCity" [value]="item.cit_id">
+                                       {{item.cit_name}}
+                                       </mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <mat-select id="schoolstate" formControlName="school_state" required placeholder="State">
+                                       <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
+                                       {{item.sta_name}}
+                                       </mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <mat-select id="schoolcountry" formControlName="school_country" required placeholder="Country">
+                                       <mat-option *ngFor="let item of arrayCountry" [value]="item.cou_id">
+                                       {{item.cou_name}}
+                                       </mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <input matInput placeholder="Contact No." name="schoolno" formControlName="school_phone" maxlength="10" minlength="10" pattern=[0-9]* required>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                  <mat-form-field class="form-field">
+                                      <mat-select  formControlName="school_theme" required placeholder="Select Theme">
+                                         <mat-option *ngFor="let item of themeArray" [value]="item.school_theme">
+                                         {{item.school_theme_name}}
+                                         </mat-option>
+                                      </mat-select>
+                                   </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                  <mat-form-field class="form-field">
+                                      <mat-select  formControlName="school_fee_period" required placeholder="Fee Period">
+                                         <mat-option *ngFor="let item of feePeriodArray" [value]="item.fp_id">
+                                         {{item.fp_name}}
+                                         </mat-option>
+                                      </mat-select>
+                                   </mat-form-field>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-lg-6 col-mobile-view-add-ques">
+                           <div class="row">
+                              <div class="col-lg-1">
+                                 <div class="image-upload">
+                                    <label for="file-input2">
+                                    <img class="img-fluid school-img" [src]="furl" style="margin-top:20px;width: 32px; height: 32px;" />
+                                    </label>
+                                    <input id="file-input2" formControlName="school_favicon" name="file-input2" type="file" (change)="readfUrl($event);uploadSchoolFavicon($event)"
+                                       />
+                                 </div>
+                              </div>
+                              <div class="col-lg-11">
+                                 <div class="row" style="margin-top:20px;">
+                                    <div class="col-lg-12">
+                                       <span >*Upload school favion</span>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <input matInput placeholder="School Website" formControlName="school_website" maxlength="50" required>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <input matInput placeholder="SMS Id" formControlName="school_smsid" maxlength="50" required>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <input matInput placeholder="Email Id" name="schoolemail" formControlName="school_email" maxlength="50" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                                       required>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <mat-select formControlName="school_hindi_font" placeholder="Hindi Font">
+                                       <mat-option [value]="1">Kruti Dev 011</mat-option>
+                                       <mat-option [value]="2">Mangal</mat-option>
+                                       <mat-option [value]="3">Krishna 015</mat-option>
+                                       <mat-option [value]="4">Kruti</mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <input matInput placeholder="Assigned Prefix" minlength="3" maxlength="6" formControlName="school_prefix" (keyup)="checkPrefix()" [readonly]="editNewSchoolActive"
+                                    required>
+                                 </mat-form-field>
+                                 <span style="float:left"><i [class]="prefixStatusicon"></i> {{prefixStatus}}</span>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <input matInput placeholder="No. of Student" formControlName="school_total_students" type="number">
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                 <mat-form-field class="form-field">
+                                    <mat-select placeholder="Coordinator" formControlName="school_manager" disabled>
+                                       <mat-option>Manager 1</mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                  <mat-form-field class="form-field">
+                                      <mat-select  formControlName="school_session_start_month" required placeholder="School Start Month">
+                                         <mat-option *ngFor="let item of startMonthArray" [value]="item.school_session_start_month">
+                                         {{item.school_session_start_month_name}}
+                                         </mat-option>
+                                      </mat-select>
+                                   </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-12">
+                                  <mat-form-field class="form-field">
+                                      <mat-select  formControlName="school_session_end_month" required placeholder="School End Month">
+                                         <mat-option *ngFor="let item of endMonthArray" [value]="item.school_session_end_month">
+                                         {{item.school_session_end_month_name}}
+                                         </mat-option>
+                                      </mat-select>
+                                   </mat-form-field>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <div class="row">
+                              <div class="col-lg-6">
+                                 <button mat-button *ngIf="editNewSchoolActive == false" class="submit-button" (click)="addNewSchool()">Submit</button>
+                                 <button mat-button *ngIf="editNewSchoolActive == true" class="submit" (click)="editNewSchool()">Update</button>
+                                 <button mat-button class="reset-button" (click)="resetNewSchoolForm()">Reset</button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

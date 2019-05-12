@@ -1,0 +1,65 @@
+/* .user-table {
+    padding-top: 10px;
+    overflow-x: auto;
+    width: 100%;
+}
+
+tr, th, td {
+    padding: 5px;
+}
+
+
+
+table{
+    font-size: 14px;
+}
+
+
+fa-active {
+    color: #28a745;
+  }
+  
+  .fa-edit {
+    color: #0069d9;
+  }
+  
+  .fa-delete {
+    color: #dc3545;
+  }
+
+
+  .example-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+  }
+  
+  .example-header {
+    min-height: 64px;
+    padding: 8px 24px 0;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 20%;
+  }
+  
+  .mat-table {
+    overflow: auto;
+    max-height: 550px;
+  }
+  
+  .top_header {
+    background-color: #e6e5df;
+  }
+  
+  
+  .mat-header-cell {
+    color: #343a40;
+    font-weight: 500;
+  }
+   */
+   .create-new-user {
+    float: right;
+    margin-right: 10px;
+}
