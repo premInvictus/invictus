@@ -57,8 +57,8 @@
       <div class="row margin-top-8">
         <div class="col-12 text-left">
           <span class="font-size-13 font-light">Outstanding Fee</span><br>
-          <span class="font-size-14 font-medium">{{studentdetails.ead_fees_structure ? 
-              (studentdetails.ead_fees_structure | capitalize): 'NA'}}</span>
+          <span class="font-size-14 font-medium">{{studentdetails.fee_outstanding ? 
+              (studentdetails.fee_outstanding | number): 'NA'}}</span>
         </div>
       </div>
       <div class="row margin-top-10">
@@ -100,7 +100,7 @@
       <div class="row margin-top-10">
         <div class="col-12 text-left">
           <span class="font-size-13 font-light">Contact No</span><br>
-          <span class="font-size-14 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
+          <span class="font-size-14 font-medium">{{studentdetails?.parentinfo[0].epd_contact_no ? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
         </div>
       </div>
     </div>
