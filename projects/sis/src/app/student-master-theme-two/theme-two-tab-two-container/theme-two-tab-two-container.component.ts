@@ -4,6 +4,7 @@ import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DatePipe } from '@angular/common';
 import { FormEnabledService } from '../../sharedmodule/dynamic-content/formEnabled.service';
 import { AccountDetailsThemeTwoComponent } from '../account-details-theme-two/account-details-theme-two.component';
+import { FormControl } from '@angular/forms';
 @Component({
 	selector: 'app-theme-two-tab-two-container',
 	templateUrl: './theme-two-tab-two-container.component.html',
@@ -29,6 +30,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	reqObj: any = {};
 	finalSibReqArray: any[];
 	finalSibReqArray2: any[];
+	finalSibReqArray3: any[] = [];
 	finalArray: any[];
 	parentId;
 	editableStatus = '0';
@@ -199,6 +201,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		this.educationDetailsNew = [];
 		this.finalSibReqArray = [];
 		this.finalSibReqArray2 = [];
+		this.finalSibReqArray3 = [];
 		this.finalArray = [];
 		let param: any = {};
 		this.sisService.getAdditionalDetails({
@@ -237,8 +240,8 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 							if (key !== 'eed_id' && key !== 'eed_login_id'
 								&& key !== 'eed_status') {
 								if (key === 'eed_joining_from' || key === 'eed_joining_to') {
-									this.educationDetailsNew[i][key] = this.dateConversion(this.educationDetailsNew[i][key], 'd-MMM-y');
-									this.educationDetailsNew[i][key] = this.dateConversion(this.educationDetailsNew[i][key], 'd-MMM-y');
+									this.educationDetailsNew[i][key] = this.dateConversion(this.educationDetailsNew[i][key], 'yyyy-MM-dd');
+									this.edu.previousEducations[i][key] = this.dateConversion(this.edu.previousEducations[i][key], 'yyyy-MM-dd');
 								}
 								if (this.edu.previousEducations[i][key] !== this.educationDetailsNew[i][key]) {
 									sibReqArray.push({
@@ -255,12 +258,13 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 					}
 					i++;
 				}
+				console.log(this.finalSibReqArray);
 				for (const sib of this.finalSibReqArray) {
 					for (const titem of sib.item) {
 						this.finalArray.push(titem);
 					}
 				}
-				if (this.finalSibReqArray.length > 0) {
+				if (this.finalSibReqArray.length > 0 && this.finalArray.length > 0) {
 					param.req_login_id = this.login_id;
 					param.req_process_type = this.context.processType;
 					param.req_tab_id = '5';
@@ -335,6 +339,60 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				} else {
 					param2 = {};
 				}
+				let param3: any = {};
+				const sibReqArray3: any[] = [];
+		Object.keys(this.account.accountsForm.value).forEach((key: any) => {
+			const formControl = <FormControl>this.account.accountsForm.controls[key];
+			if (formControl.dirty) {
+				if (key === 'accd_transport_from' || key === 'accd_transport_to'
+					|| key === 'accd_hostel_to' || key === 'accd_hostel_from') {
+					sibReqArray3.push({
+						rff_where_id: 'accd_id',
+						rff_where_value: this.accountDetails['accd_id'],
+						rff_field_name: key,
+						rff_new_field_value: new DatePipe('en-in').transform(formControl.value, 'yyyy-MM-dd'),
+						rff_old_field_value: this.accountDetails[key],
+					});
+				}
+				if (key === 'accd_is_terminate' || key === 'accd_is_transport'
+				|| key === 'accd_is_hostel' || key === 'accd_is_hostel_terminate') {
+				sibReqArray3.push({
+					rff_where_id: 'accd_id',
+					rff_where_value: this.accountDetails['accd_id'],
+					rff_field_name: key,
+					rff_new_field_value: formControl.value ? 'Y' : 'N',
+					rff_old_field_value: this.accountDetails[key],
+				});
+			} else {
+					sibReqArray3.push({
+						rff_where_id: 'accd_id',
+						rff_where_value: this.accountDetails['accd_id'],
+						rff_field_name: key,
+						rff_new_field_value: formControl.value,
+						rff_old_field_value: this.accountDetails[key],
+					});
+				}
+			}
+		});
+		this.finalSibReqArray3.push({ item: sibReqArray3 });
+		for (const sib of this.finalSibReqArray3) {
+			for (const titem of sib.item) {
+				this.finalArray.push(titem);
+			}
+		}
+		if (this.finalSibReqArray3.length > 0) {
+			param3.req_login_id = this.login_id;
+			param3.req_process_type = this.context.processType;
+			param3.req_tab_id = '4';
+			param3.req_priority = '';
+			param3.req_remarks = '';
+			param3.req_reason = '';
+			param3.req_date = datepipe.transform(new Date, 'yyyy-MM-dd');
+			param3.req_param = [];
+			this.params.push(param3);
+		} else {
+			param3 = {};
+		}
 			}
 		});
 	}

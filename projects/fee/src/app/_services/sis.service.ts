@@ -340,7 +340,7 @@ export class SisService {
 	}
 	getReason(value) {
 		this.service.startLoading();
-		return this.http.post('/setup/getReason', value);
+		return this.http.post(environment.apiSisUrl + '/setup/getReason', value);
 	}
 	insertReason(value) {
 		this.service.startLoading();

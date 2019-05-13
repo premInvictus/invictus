@@ -27,8 +27,8 @@ export class EditRequestsComponent implements OnInit {
 	viewRequestFlag = false;
 	changedFormArray: any[] = [];
 	finalChangedFormArray: any[] = [];
-	formFields:  any[] = [] ;
-	requestFields: any [] = [] ;
+	formFields: any[] = [];
+	requestFields: any[] = [];
 	editArray: any[] = [];
 	counter = 0;
 	getValuePosition: any = '';
@@ -36,7 +36,7 @@ export class EditRequestsComponent implements OnInit {
 	showTable = false;
 	datePipe = new DatePipe('en-in');
 	@ViewChild(MatSort) sort: MatSort;
-	@ViewChild('deleteModal')deleteModal;
+	@ViewChild('deleteModal') deleteModal;
 	reqPriority: any;
 	reqReason: any;
 	reqRemarks: any;
@@ -94,7 +94,7 @@ export class EditRequestsComponent implements OnInit {
 			}
 		});
 	}
-	getTabName(tab_id: any , array: any[]) {
+	getTabName(tab_id: any, array: any[]) {
 		const findex = array.findIndex(f => f.tb_id === tab_id);
 		if (findex !== -1) {
 			return array[findex]['tb_name'];
@@ -104,90 +104,94 @@ export class EditRequestsComponent implements OnInit {
 		this.getValuePosition = index;
 		this.sisService.getFormFields({
 			ff_tb_id: value.req_tab_id
-		}).subscribe((result:  any) => {
+		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.formFields = [];
 				this.formFields = result.data;
 				this.reqPriority = value.req_priority;
-		this.reqReason = value.req_reason;
-		this.reqRemarks = value.req_remarks;
+				this.reqReason = value.req_reason;
+				this.reqRemarks = value.req_remarks;
 				this.counter = 0;
 				this.req_remarks = '';
 				this.changedFormArray = [];
 				this.requestFields = [];
 				this.finalChangedFormArray = [];
 				this.viewRequestFlag = false;
-		this.changedFormArray = value.reqField;
-		if (this.changedFormArray.length > 0) {
-		for (const item of this.changedFormArray) {
-			if (item.rff_field_name.charAt(0) === '[') {
-				if (Number(item.rff_status) === 1) {
-					this.counter++;
-					this.requestFields.push({
-						rff_id: item.rff_id,
-						rff_req_id: item.rff_req_id
-					});
+				this.changedFormArray = value.reqField;
+				if (this.changedFormArray.length > 0) {
+					for (const item of this.changedFormArray) {
+						if (item.rff_field_name.charAt(0) === '[') {
+							if (Number(item.rff_status) === 1) {
+								this.counter++;
+								this.requestFields.push({
+									rff_id: item.rff_id,
+									rff_req_id: item.rff_req_id,
+									rff_status: item.rff_status
+								});
+							}
+							this.finalChangedFormArray.push({
+								ff_custom_status: item.ff_custom_status,
+								ff_field_name: item.ff_field_name,
+								rff_custom_data: item.rff_custom_data ? item.rff_custom_data : null,
+								ff_field_type: item.ff_field_type,
+								ff_field_type_value: item.ff_field_type_value,
+								ff_id: item.ff_id,
+								ff_label: item.ff_label,
+								ff_tb_id: item.ff_tb_id,
+								rff_field_name: JSON.parse(item.rff_field_name),
+								rff_id: item.rff_id,
+								rff_new_field_value: JSON.parse(item.rff_new_field_value),
+								rff_old_field_value: JSON.parse(item.rff_old_field_value),
+								rff_new_value: item.rff_new_value,
+								rff_old_value: item.rff_old_value,
+								rff_req_id: item.rff_req_id,
+								rff_status: item.rff_status,
+								rff_where_id: item.rff_where_id,
+								rff_where_value: item.rff_where_value
+							});
+						} else {
+							if (Number(item.rff_status) === 1) {
+								this.counter++;
+								this.requestFields.push({
+									rff_id: item.rff_id,
+									rff_req_id: item.rff_req_id,
+									rff_status: item.rff_status
+								});
+							}
+							this.finalChangedFormArray.push({
+								ff_custom_status: item.ff_custom_status,
+								ff_field_name: item.ff_field_name,
+								rff_custom_data: item.rff_custom_data ? item.rff_custom_data : null,
+								ff_field_type: item.ff_field_type,
+								ff_field_type_value: item.ff_field_type_value,
+								ff_id: item.ff_id,
+								ff_label: item.ff_label,
+								ff_tb_id: item.ff_tb_id,
+								rff_field_name: item.rff_field_name,
+								rff_id: item.rff_id,
+								rff_new_field_value: item.rff_new_field_value,
+								rff_old_field_value: item.rff_old_field_value,
+								rff_new_value: item.rff_new_value,
+								rff_old_value: item.rff_old_value,
+								rff_req_id: item.rff_req_id,
+								rff_status: item.rff_status,
+								rff_where_id: item.rff_where_id,
+								rff_where_value: item.rff_where_value
+							});
+						}
+					}
+					this.viewRequestFlag = true;
+				} else {
+					this.commonService.showSuccessErrorMessage('Sorry no request found', 'error');
+					this.viewRequestFlag = false;
 				}
-				this.finalChangedFormArray.push({
-					ff_custom_status: item.ff_custom_status,
-					ff_field_name: item.ff_field_name,
-					ff_field_type: item.ff_field_type,
-					ff_field_type_value: item.ff_field_type_value,
-					ff_id: item.ff_id,
-					ff_label: item.ff_label,
-					ff_tb_id: item.ff_tb_id,
-					rff_field_name: JSON.parse(item.rff_field_name),
-					rff_id: item.rff_id,
-					rff_new_field_value: JSON.parse(item.rff_new_field_value),
-					rff_old_field_value: JSON.parse(item.rff_old_field_value),
-					rff_new_value: item.rff_new_value,
-					rff_old_value: item.rff_old_value,
-					rff_req_id: item.rff_req_id,
-					rff_status: item.rff_status,
-					rff_where_id: item.rff_where_id,
-					rff_where_value: item.rff_where_value
-				});
-			} else {
-				if (Number(item.rff_status) === 1) {
-					this.counter++;
-					this.requestFields.push({
-						rff_id: item.rff_id,
-						rff_req_id: item.rff_req_id
-					});
-				}
-				this.finalChangedFormArray.push({
-					ff_custom_status: item.ff_custom_status,
-					ff_field_name: item.ff_field_name,
-					ff_field_type: item.ff_field_type,
-					ff_field_type_value: item.ff_field_type_value,
-					ff_id: item.ff_id,
-					ff_label: item.ff_label,
-					ff_tb_id: item.ff_tb_id,
-					rff_field_name: item.rff_field_name,
-					rff_id: item.rff_id,
-					rff_new_field_value: item.rff_new_field_value,
-					rff_old_field_value: item.rff_old_field_value,
-					rff_new_value: item.rff_new_value,
-					rff_old_value: item.rff_old_value,
-					rff_req_id: item.rff_req_id,
-					rff_status: item.rff_status,
-					rff_where_id: item.rff_where_id,
-					rff_where_value: item.rff_where_value
-				});
-			}
-		}
-		this.viewRequestFlag = true;
-	} else {
-		this.commonService.showSuccessErrorMessage('Sorry no request found', 'error');
-		this.viewRequestFlag = false;
-	}
 			}
 		});
 	}
 	getFieldName(field_name) {
 		const findex = this.formFields.findIndex(f => f.ff_field_name === field_name);
 		if (findex !== -1) {
-				return this.formFields[findex]['ff_label'];
+			return this.formFields[findex]['ff_label'];
 		}
 	}
 	isArray(obj) {
@@ -195,39 +199,44 @@ export class EditRequestsComponent implements OnInit {
 	}
 	getRequestedId($event, req_id) {
 		const findex = this.requestFields.findIndex(f => f.rff_id === $event.source.value);
-		if (findex === -1 ) {
-			this.requestFields.push({rff_id: $event.source.value, rff_req_id: req_id});
+		if (findex === -1) {
+			this.requestFields.push({ rff_id: $event.source.value, rff_req_id: req_id });
 			this.counter++;
 		} else {
 			this.requestFields.splice(findex, 1);
-			this.counter --;
+			this.counter--;
 		}
 	}
 	approveRequest(event) {
-		const rff_id: any [] = [] ;
+		const rff_id: any[] = [];
 		for (const item of event.data) {
-			rff_id.push(item.rff_id);
+			if (!item.rff_status) {
+				rff_id.push(item.rff_id);
+			}
 		}
 		if (event.data.length > 0) {
-		const param: any = {};
-		if (this.counter === this.finalChangedFormArray.length) {
-			param.rff_req_id = event.data[0].rff_req_id;
-			param.rff_id = rff_id;
-			param.req_id = event.data[0].rff_req_id;
-		} else {
-			param.rff_req_id = event.data[0].rff_req_id;
-			param.rff_id = rff_id;
-			param.req_id = '';
-		}
-		this.sisService.updateEditRequest(param).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.commonService.showSuccessErrorMessage('Approved', 'success');
-					this.getTabs();
+			const param: any = {};
+			if (this.counter === this.finalChangedFormArray.length) {
+				param.rff_req_id = event.data[0].rff_req_id;
+				param.rff_id = rff_id;
+				param.req_id = event.data[0].rff_req_id;
+			} else {
+				param.rff_req_id = event.data[0].rff_req_id;
+				param.rff_id = rff_id;
+				param.req_id = '';
 			}
-		});
-	} else {
-		this.commonService.showSuccessErrorMessage('Please check a form field value ', 'error');
-	}
+			if (event.status === 'decline') {
+				param.status = '5';
+			}
+			this.sisService.updateEditRequest(param).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.commonService.showSuccessErrorMessage(result.data, 'success');
+					this.getTabs();
+				}
+			});
+		} else {
+			this.commonService.showSuccessErrorMessage('Please check a form field value ', 'error');
+		}
 	}
 	returnParseValue(value: any) {
 		return JSON.parse(value);

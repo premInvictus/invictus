@@ -30,6 +30,7 @@ export class EditRequestModalComponent implements OnInit {
 	}
 
 	openModal(data) {
+		console.log(data);
 		this.buildForm();
 		this.getReasons();
 		this.inputData = data;

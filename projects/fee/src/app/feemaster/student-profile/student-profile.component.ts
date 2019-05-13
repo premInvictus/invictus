@@ -11,7 +11,9 @@ export class StudentProfileComponent implements OnInit {
 	lastRecordId;
 	loginId: any;
 	editFlag: any;
+	editRequestFlag: any;
 	permissionFlag: any;
+	viewOnly = true;
 	@ViewChild(StudentAccountComponent) stuAcc: StudentAccountComponent;
 	constructor(
 		private sisService: SisService,
@@ -21,11 +23,10 @@ export class StudentProfileComponent implements OnInit {
 
 	ngOnInit() {
 		if (this.commmon.isExistUserAccessMenu('350')) {
-			this.editFlag = false;
-			this.permissionFlag = true;
-		} else {
 			this.editFlag = true;
-			this.permissionFlag = false;
+		}
+		if (this.commmon.isExistUserAccessMenu('374')) {
+			this.editRequestFlag = true;
 		}
 		this.processtypeService.setProcesstype('4');
 		this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
@@ -56,9 +57,20 @@ export class StudentProfileComponent implements OnInit {
 		this.stuAcc.getFeeAccount(this.loginId);
 	}
 	enableEdit() {
-		this.editFlag = true;
+		this.viewOnly = false;
+		this.editFlag = false;
+	}
+	enableEditRequest() {
+		this.viewOnly = false;
+		this.editRequestFlag = false;
 	}
 	editChange(flag) {
-		this.editFlag = flag;
+		this.viewOnly = flag;
+		if (this.viewOnly && this.commmon.isExistUserAccessMenu('350')) {
+			this.editFlag = true;
+		}
+		if (this.viewOnly && this.commmon.isExistUserAccessMenu('374')) {
+			this.editRequestFlag = true;
+		}
 	}
 }

@@ -39,6 +39,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	@Input() permissionFlag = false;
 	@Input() feeLoginId: any;
 	validateFlag = false;
+	slabModel: any = '';
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -122,6 +123,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				} else {
 					this.hostelFlag = false;
 				}
+				this.slabModel = this.feeDet.accd_tsp_id;
 				this.accountsForm.patchValue({
 					accd_id: this.feeDet.accd_id,
 					accd_login_id: this.feeDet.accd_login_id,
@@ -403,5 +405,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	}
 	isExist(mod_id) {
 		return this.commonAPIService.isExistUserAccessMenu(mod_id);
+	}
+	getSlab($event) {
+		this.slabModel = $event.value;
 	}
 }
