@@ -128,6 +128,8 @@ export class StopagesComponent implements OnInit, AfterViewInit {
 			if (result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.resetForm();
+				this.stoppageStatus = '';
+				this.current_stop_id = 0;
 				this.getStoppages();
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
@@ -143,10 +145,11 @@ export class StopagesComponent implements OnInit, AfterViewInit {
 				tsp_name: this.transportStopagges.value.transport_stop_name,
 				tsp_distance: this.transportStopagges.value.transport_distance_from_school,
 				tsp_slab_id: this.transportStopagges.value.transport_slab,
-				tsp_status: this.stoppageStatus
+				tsp_status: '1'
 			};
 			if (this.current_stop_id) {
 				inputJson['tsp_id'] = this.current_stop_id;
+				inputJson['tsp_status'] = this.stoppageStatus;
 			}
 			this.callSaveAPI(inputJson);
 		} else {
