@@ -90,7 +90,7 @@
                   <!-- </div> -->
                   <div cdkDropList  class="example-list"
                     (cdkDropListDropped)="drop($event)">
-                    <div class="example-box" *ngFor="let item of selectedStoppageData" cdkDrag>
+                    <div class="example-box" *ngFor="let item of selectedStoppageData; let i=index" cdkDrag>
                       <button mat-raised-button>{{item?.tsp_name}}
                         <a href="javascript:void(0)" (click)="deleteStoppage(i);"><div class="circle-btn"><i class="fas fa-times-circle"></i></div></a>
                         <!-- <a href="javascript:void(0)" (click)="deleteStoppage(i);">X</a> -->
