@@ -10,7 +10,6 @@ import { SystemInfoComponent } from './system-info/system-info.component';
 import { TransportSlabsComponent } from './transport-slabs/transport-slabs.component';
 import { StopagesComponent } from './stopages/stopages.component';
 import { RoutesComponent } from './routes/routes.component';
-import { EditRequestsComponent } from './edit-requests/edit-requests.component';
 
 const routes: Routes = [
 	{ path: 'fee-heads', component: FeeHeadsComponent},
@@ -22,8 +21,7 @@ const routes: Routes = [
 	{ path: 'system-info', component: SystemInfoComponent},
 	{ path: 'transport-slabs', component: TransportSlabsComponent},
 	{ path: 'stopages', component: StopagesComponent},
-	{ path: 'route', component: RoutesComponent},
-	{path: 'edit-requests', component: EditRequestsComponent}
+	{ path: 'route', component: RoutesComponent}
 
 ];
 
