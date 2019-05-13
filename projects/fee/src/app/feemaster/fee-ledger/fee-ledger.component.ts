@@ -57,10 +57,10 @@ export class FeeLedgerComponent implements OnInit {
 						date: new DatePipe('en-in').transform(item.flgr_created_date, 'd-MMM-y'),
 						invoiceno: item.flgr_invoice_receipt_no ? item.flgr_invoice_receipt_no : '-',
 						particular: item.flgr_particulars ? item.flgr_particulars : '-',
-						amount: item.flgr_amount ? item.flgr_amount : '-',
-						concession: item.flgr_concession ? item.flgr_concession : '-',
-						reciept: item.flgr_receipt ? item.flgr_receipt : '-',
-						balance: item.flgr_balance ? item.flgr_balance : '-',
+						amount: item.flgr_amount ? item.flgr_amount : '0',
+						concession: item.flgr_concession ? item.flgr_concession : '0',
+						reciept: item.flgr_receipt ? item.flgr_receipt : '0',
+						balance: item.flgr_balance ? item.flgr_balance : '0',
 						action: item
 					});
 					pos++;
