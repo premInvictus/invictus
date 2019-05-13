@@ -6,6 +6,7 @@ import { MatTableDataSource, MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-fee-transaction-entry',
 	templateUrl: './fee-transaction-entry.component.html',
@@ -47,6 +48,8 @@ export class FeeTransactionEntryComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		this.invoiceArray = [];
+		this.invoice = {};
 		this.getSchool();
 		this.getAllBanks();
 		this.getBanks();
@@ -86,7 +89,8 @@ export class FeeTransactionEntryComponent implements OnInit {
 			'ftr_amount': '',
 			'ftr_remark': '',
 			'is_cheque': '',
-			'ftr_deposit_bnk_id': ''
+			'ftr_deposit_bnk_id': '',
+			'saveAndPrint' : ''
 		});
 	}
 	getSchool() {
@@ -146,7 +150,8 @@ export class FeeTransactionEntryComponent implements OnInit {
 			'ftr_amount': '',
 			'ftr_remark': '',
 			'is_cheque': '',
-			'ftr_deposit_bnk_id': ''
+			'ftr_deposit_bnk_id': '',
+			'saveAndPrint' : ''
 		});
 		this.sisService.getStudentInformation({ au_login_id: login_id, au_status: '1' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -260,7 +265,8 @@ export class FeeTransactionEntryComponent implements OnInit {
 		const datePipe = new DatePipe('en-in');
 		this.feeTransactionForm.patchValue({
 			'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
-			'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd')
+			'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
+			'saveAndPrint' : false
 		});
 		this.feeTransactionForm.value.login_id = this.feeLoginId;
 		this.feeTransactionForm.value.inv_id = [this.invoice.inv_id];
@@ -296,6 +302,47 @@ export class FeeTransactionEntryComponent implements OnInit {
 			});
 		}
 	}
+	saveAndPrint() {
+		const datePipe = new DatePipe('en-in');
+		this.feeTransactionForm.patchValue({
+			'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
+			'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
+			'saveAndPrint' : true
+		});
+		this.feeTransactionForm.value.login_id = this.feeLoginId;
+		this.feeTransactionForm.value.inv_id = [this.invoice.inv_id];
+		this.feeTransactionForm.value.is_cheque = this.feeTransactionForm.value.ftr_pay_id === '3' ? true : false;
+		let validateFlag = true;
+		if (!this.loginId) {
+			this.common.showSuccessErrorMessage('Please select a student', 'error');
+			validateFlag = false;
+		}
+		if (Number(this.invoice.fee_amount) === 0) {
+			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
+			validateFlag = false;
+		}
+		if (this.selectedMode === '1' && this.invoiceArray.length === 0) {
+			validateFlag = false;
+			this.common.showSuccessErrorMessage('Invoice Number cannot be blank for against invoice', 'error');
+		}
+		if (!this.feeTransactionForm.valid) {
+			this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
+			validateFlag = false;
+		}
+		if (validateFlag) {
+			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					const length = result.data.split('/').length;
+					saveAs(result.data, result.data.split('/')[length - 1]);
+					this.reset();
+					this.getStudentInformation(this.loginId);
+				} else {
+					this.reset();
+					this.getStudentInformation(this.loginId);
+				}
+			});
+		}
+	}
 	gotoIndividual($event) {
 		if (!($event.checked)) {
 			this.router.navigate(['../fee-transaction-entry-bulk'], { relativeTo: this.route });
@@ -320,7 +367,8 @@ export class FeeTransactionEntryComponent implements OnInit {
 			'ftr_amount': '',
 			'ftr_remark': '',
 			'is_cheque': '',
-			'ftr_deposit_bnk_id': ''
+			'ftr_deposit_bnk_id': '',
+			'saveAndPrint' : ''
 		});
 	}
 
