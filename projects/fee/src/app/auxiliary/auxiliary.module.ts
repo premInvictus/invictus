@@ -5,6 +5,7 @@ import { ChequeControlToolComponent } from './cheque-control-tool/cheque-control
 import { BouncedChequeModalComponent } from './cheque-control-tool/bounced-cheque-modal/bounced-cheque-modal.component';
 
 import { AuxiliaryRoutingModule } from './auxiliary-routing.module';
+import { EditRequestsComponent } from './edit-requests/edit-requests.component';
 
 @NgModule({
 	imports: [
@@ -17,7 +18,8 @@ import { AuxiliaryRoutingModule } from './auxiliary-routing.module';
 	],
 	declarations: [
 		BouncedChequeModalComponent,
-		ChequeControlToolComponent
+		ChequeControlToolComponent,
+		EditRequestsComponent
 	]
 })
 export class AuxiliaryModule { }

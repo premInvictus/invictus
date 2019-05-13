@@ -212,6 +212,8 @@ export class TransportSlabsComponent implements OnInit, AfterViewInit {
 		this.feeService.saveTransportSlab(inputJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.slabStatus = '';
+				this.current_slab_id = 0;
 				this.resetForm();
 				this.getTransportSlabs();
 			} else {
@@ -236,10 +238,11 @@ export class TransportSlabsComponent implements OnInit, AfterViewInit {
 				ts_others: this.transportSlabs.value.slab_filter_others,
 				ts_csn_cat: this.transportSlabs.value.slab_filter_concession_category,
 				ts_hstl_id: this.transportSlabs.value.slab_filter_hostel,
-				ts_status: this.slabStatus
+				ts_status: 1
 			};
 			if (this.current_slab_id) {
 				inputJson['ts_id'] = this.current_slab_id;
+				inputJson['ts_status'] = this.slabStatus;
 			}
 			this.callSaveAPI(inputJson);
 		} else {

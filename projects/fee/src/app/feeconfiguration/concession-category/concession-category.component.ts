@@ -25,6 +25,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	classArray: any[] = [];
 	classDataArray: any[] = [];
 	editFlag = false;
+	concessionAmountFlag = true;
 	fcc_is_hostel_fee = 0;
 	constructor(private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -91,7 +92,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getFeeHeads() {
-		this.feeService.getFeeHeads({fh_is_hostel_fee: this.fcc_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getFeeHeads({ fh_is_hostel_fee: this.fcc_is_hostel_fee }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.feeheadArray = result.data;
 			}
@@ -102,13 +103,25 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		this.feeService.getConcessionRuleType({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.ruleArray = result.data;
+				console.log(this.ruleArray);
 			}
 		});
+	}
+	disableConcessionAmount(event) {
+		console.log(event.value);
+		if (event.value === '4') {
+			this.concessionAmountFlag = false;
+			this.conccesionCategoryForm.patchValue({
+				fcc_amount: 0
+			});
+		} else {
+			this.concessionAmountFlag = true;
+		}
 	}
 	getConcessionCategory() {
 		this.CONCESSION_ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<ConCatElement>(this.CONCESSION_ELEMENT_DATA);
-		this.feeService.getConcessionCategory({fcc_is_hostel_fee: this.fcc_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getConcessionCategory({ fcc_is_hostel_fee: this.fcc_is_hostel_fee }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				let pos = 1;
 				for (const item of result.data) {

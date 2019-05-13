@@ -13,7 +13,6 @@ import { SystemInfoComponent } from './system-info/system-info.component';
 import { TransportSlabsComponent } from './transport-slabs/transport-slabs.component';
 import { StopagesComponent } from './stopages/stopages.component';
 import { RoutesComponent } from './routes/routes.component';
-import { EditRequestsComponent } from './edit-requests/edit-requests.component';
 import { InvoiceDetailsModalComponent } from '../feemaster/invoice-details-modal/invoice-details-modal.component';
 
 @NgModule({
@@ -25,6 +24,6 @@ import { InvoiceDetailsModalComponent } from '../feemaster/invoice-details-modal
 	entryComponents: [InvoiceDetailsModalComponent],
 	declarations: [
 		FeeHeadsComponent, FeeGroupComponent, FeeStructureComponent, ConcessionCategoryComponent, ConcessionGroupComponent,
-		FinesAndPenalitiesComponent, SystemInfoComponent, TransportSlabsComponent, StopagesComponent, RoutesComponent, EditRequestsComponent]
+		FinesAndPenalitiesComponent, SystemInfoComponent, TransportSlabsComponent, StopagesComponent, RoutesComponent]
 })
 export class FeeconfigurationModule { }
