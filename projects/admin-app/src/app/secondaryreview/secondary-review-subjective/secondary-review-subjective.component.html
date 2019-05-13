@@ -1,0 +1,303 @@
+<div class="breadcrumb-section">
+  <div class="row">
+     <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+        <a [routerLink]="[homeUrl]">
+        <i class="breadcrumb-icon fas fa-home"></i>
+        </a>
+     </div>
+     <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+        <div class="vertical-line"></div>
+     </div>
+     <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+        <div class="first-breadcrumb-title">
+           <span class="bread-title">Question Management</span>
+           <span class="bread-divider">-</span>
+           <span class="bread-title">Secondary Review</span>
+               <span class="bread-divider">-</span>
+               <span class="bread-link">Subjective Question</span>
+        </div>
+     </div>
+  </div>
+</div>
+<div class="add-question-content">
+  <div class="row row-remove-top-margin">
+     <div class="col-lg-12 col-mobile-view-add-ques">
+        <div class="white-box">
+           <div class="white-box-content tab-ques-bank-white-box-content">
+              <div class="row">
+                 <div class="col-lg-12 col-mobile-view-add-ques">
+                    <div class="white-box-content-title">
+                       <span>Question Review</span>
+                    </div>
+                 </div>
+              </div>
+              <div class="row row-remove-top-margin">
+                 <div class="col-lg-12 col-mobile-view-add-ques">
+                    <div class="top-right-parameter top-middle-parameter">
+                       <div class="top-right-box top-blue-box">
+                          <div class="top-right-box-content top-middle-box-content">
+                             <div class="top-right-box-content-title">
+                                <div class="row">
+                                   <div class="col-lg-12  col-mobile-view-add-ques">
+                                      <span>Select Parameters</span>
+                                   </div>
+                                </div>
+                                <div class="row">
+                                   <div class="col-lg-12  col-mobile-view-add-ques">
+                                      <form [formGroup]="parameterform" novalidate>
+                                         <div class="row">
+                                            <div class="col-lg-2  col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="qst_id" (ngModelChange)="loadListTemp($event)" required placeholder="Select Question Subtype">
+                                                     <mat-option *ngFor="let item of questionSubtypeArray" [value]="item.qst_id">
+                                                     {{item.qst_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-2  col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="class_id" (selectionChange)="getUserAccessSubject()" placeholder="Select Class" required>
+                                                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                     {{item.class_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-2  col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="sub_id" (selectionChange)="getUserAccessTopic()" placeholder="Select Subject" required>
+                                                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                                     {{item.sub_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-2  col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="topic_id" (selectionChange)="getSubtopicByTopic()" placeholder="Select Topic" required>
+                                                     <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
+                                                     {{item.topic_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-2 col-mobile-view-add-ques">
+                                               <mat-form-field class="form-field">
+                                                  <mat-select formControlName="st_id" placeholder="Select SubTopic">
+                                                     <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
+                                                     {{item.st_name}}
+                                                     </mat-option>
+                                                  </mat-select>
+                                               </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-2 col-mobile-view-add-ques">
+                                               <div class="row row-remove-top-margin">
+                                                  <div class="col-lg-12 col-remove-padding col-mobile-view-add-ques">
+                                                     <div class="add-question-button-collection">
+                                                        <div class="button-row">
+                                                           <button mat-raised-button class="submit-button" (click)="getQuestionsReview()">Apply</button>
+                                                        </div>
+                                                     </div>
+                                                  </div>
+                                               </div>
+                                            </div>
+                                         </div>
+                                      </form>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <br>
+              <div class="row">
+                 <div class="col-lg-12 col-mobile-view-add-ques">
+                    <div class="table-box" *ngIf="tableCollection">
+                       <div>
+                          <div class="example-container table-box-main">
+                             <div class="example-header table-filter">
+                                <mat-form-field>
+                                   <input matInput (keyup)=" applyFilterSubjective($event.target.value)" placeholder="Filter">
+                                   <span matPrefix>
+                                   <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                </mat-form-field>
+                             </div>
+                             <mat-table class="specific-table question-management-table-main-structure" #table [dataSource]="subjectivedataSource"
+                             matSort>
+                             <!-- Position Column -->
+                             <ng-container matColumnDef="position">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-position">S No. </mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-position">Q-{{item.position}} </mat-cell>
+                             </ng-container>
+                             <!-- Questions Name Column -->
+                             <ng-container matColumnDef="question">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-question"> Questions</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-question">
+                                   <!-- <div class="imgclass" [innerHTML]="item.question"></div> -->
+                                   <!-- <div class="imgclass" [MathJax]="item.question">{{item.question}}</div> -->
+                                   <div [MathJax]="item.question" class="imgClassExpress"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Answer Name Column -->
+                             <ng-container matColumnDef="answer">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-answer">Answer</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="sub-answer">
+                                   <div [MathJax]="item.answer" class="imgClassExpress"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Class Name Column -->
+                             <ng-container matColumnDef="class">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.class}}</mat-cell>
+                             </ng-container>
+                             <!-- Topic Name Column -->
+                             <ng-container matColumnDef="topic">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.topic}}</mat-cell>
+                             </ng-container>
+                              <!--Sub-Topic Column -->
+                              <ng-container matColumnDef="subtopic">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header >Sub - Topic</mat-header-cell>
+                                <mat-cell *matCellDef="let item" >
+                                  <mat-select [(ngModel)]="item.action.qus_st_id"  placeholder="Select Subtopic" (selectionChange)="getMatTooltipData($event,item.action.qus_id)" [matTooltip]="item.tooltip" placeholder="Select Subtopic">
+                                    <mat-option *ngFor="let subtopic of item.subtopic" [value]="subtopic.st_id">
+                                      {{subtopic.st_name}}
+                                    </mat-option>
+                                    </mat-select>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Skill Name Column -->
+                             <ng-container matColumnDef="skill">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Skill</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                <mat-select [(ngModel)]="item.action.qus_skill_id" placeholder="Select Skill" (selectionChange)="getSkill(item.action.qus_id)">
+                                <mat-option *ngFor="let skill of item.skill" [value]="skill.skill_id">
+                                  {{skill.skill_name}}
+                                </mat-option>
+                                </mat-select>
+                                </mat-cell>
+                             </ng-container>
+                             <!-- Reasons Name Column -->
+                             <ng-container matColumnDef="reasons">
+                                <mat-header-cell *matHeaderCellDef>Reason to Unpublish</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                   <div [innerHTML]="item.reasons"></div>
+                                </mat-cell>
+                             </ng-container>
+                             <ng-container matColumnDef="action">
+                                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                    <i *ngIf="isExistUserAccessMenu('186')"
+                                    class="far fa-hand-point-up table-publish-icon" data-toggle="tooltip"
+                                    data-placement="top" matTooltip="Publish to questionbank" aria-hidden="true"
+                                    (click)="updateQuestion(item.action, '1')"></i>&nbsp;
+                                   <i *ngIf="isExistUserAccessMenu('177')" class="far fa-thumbs-up table-publish-icon" data-toggle="tooltip" data-placement="top"
+                                   matTooltip="Publish" aria-hidden="true" (click)="updateExtQuestion(item.action)"></i>
+                                   <i *ngIf="currentUser.role_id == '1'" class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip" data-placement="top"
+                           matTooltip="UnPublish" aria-hidden="true" (click)="openModalUnpublish(template);getCurrentUnpublishedQues(item.action)"></i>
+                                   <a *ngIf="isExistUserAccessMenu('181')" (click)="openDialog(item.action)">
+                                   <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit" aria-hidden="true"></i>
+                                   </a>
+                                   <i *ngIf="isExistUserAccessMenu('179')" class="far fa-trash-alt table-delete-icon" data-placement="top" matTooltip="Delete" aria-hidden="true"
+                                   (click)="openModal(template);deleteQus(item.action.qus_id)"></i>
+                                </mat-cell>
+                             </ng-container>
+                             <mat-header-row class="top_header" *matHeaderRowDef="subjectivedisplayedColumns"></mat-header-row>
+                             <mat-row *matRowDef="let row; columns: subjectivedisplayedColumns"></mat-row>
+                             </mat-table>
+                             <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+<ng-template #template>
+  <div class="modal-main-box">
+      <div class="modal-delete-content-box">
+      <div>
+          <div class="row">
+              <div class="col-lg-12">
+                      <div class="close-button-content">
+                              <button mat-icon-button class="close-button" (click)="modalRef.hide()"><img src="../../../../../assets/images/clear-button.svg"></button>
+                          </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-12">
+                      <div>
+                              <h6 class="text-center">Confirmation Message</h6>
+                      </div>
+              </div>
+          </div>
+
+
+
+      </div>
+      <div class="text-center">
+          <br>
+          <span>Do you want to unpublish ?</span>
+          <br>
+          <br>
+          <button mat-button class="submit-button" (click)="openModal2(templateNested);modalRef.hide()">Yes</button>
+          <button mat-button class="reset-button" (click)="modalRef.hide()">No</button>
+      </div>
+  </div>
+  </div>
+</ng-template>
+<ng-template #templateNested>
+<div class="modal-main-box">
+  <div class="modal-delete-content-box">
+  <div class="row">
+      <div class="col-lg-12">
+              <div class="close-button-content">
+                      <button mat-icon-button class="close-button" (click)="modalRef2.hide()"><img src="../../../../../assets/images/clear-button.svg"></button>
+                  </div>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-lg-12">
+              <div>
+                      <h6 class="text-center">Reason To Unpublish?</h6>
+              </div>
+              <div class="row">
+                  <div class="col-lg-12">
+              <form [formGroup]="modalForm" novalidate>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <mat-form-field class="mat-form-field">
+                      <mat-select  formControlName="reason_id" placeholder="Reasons..">
+                        <mat-option *ngFor="let item of reasonsArray" [value]="item.reason_id">{{item.reason_desc}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <mat-form-field class="mat-form-field">
+                      <label for="exampleFormControlTextarea"></label>
+                      <textarea matInput id="exampleFormControlTextarea" rows="3" placeholder="Remarks..." formControlName="qus_unpublish_remark"></textarea>
+                    </mat-form-field>
+                  </div>
+                  <div class="row">
+                  <div class="col-lg-12">
+                  &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<button mat-button class="submit-button" (click)="unpublishQuestion(currentUnpublishedQues.qus_id)">Submit</button>
+                  </div>
+                  </div>
+                </div>
+              </form>
+              </div>
+            </div>
+      </div>
+  </div>
+</div>
+</div>
+</ng-template>

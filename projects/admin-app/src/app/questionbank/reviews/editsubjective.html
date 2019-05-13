@@ -1,0 +1,257 @@
+<mat-dialog-content class="main-dialog-content">
+  <div class="add-question-content">
+    <div class="row">
+      <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+        <div class="white-box">
+          <div class="white-box-content remove-white-box-padding">
+              <div class="close-button-content">
+                  <button mat-icon-button class="close-button" (click)="closeDialog()"><img src="../../../../../assets/images/clear-button.svg"></button>
+                </div>
+            <div class="row">
+              <div class="col-lg-12 col-mobile-view-add-ques">
+                <div class="white-box-content-title">
+                  <span>Update Question</span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-2 col-apple-2 apple-screen-paramter-content-div col-mobile-view-add-ques">
+                <div class="left-parameter-content">
+                  <div class="left-side-box">
+                    <div class="left-side-box-content">
+                      <span class="left-side-box-content-title">Question Entry Option</span>
+                      <hr class="left-side-box-content-title-divider">
+                        <form [formGroup]="ind_entry_form1" novalidate>
+                            <mat-form-field class="form-field">
+                              <mat-select formControlName="qus_board_id" required placeholder="Select Board">
+                                <mat-option [value]="schoolinfoArray.school_board_id">
+                                  {{schoolinfoArray.school_board}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="form-field">
+                              <mat-select formControlName="qus_class_id" (selectionChange)="getSubjectsByClass()" required placeholder="Select Class">
+                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                   {{item.class_name}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="form-field">
+                              <mat-select formControlName="qus_sub_id" (selectionChange)="getTopicByClassSubject()" required placeholder="Select Subject">
+                                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                   {{item.sub_name}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="form-field">
+                              <mat-select formControlName="qus_topic_id" (selectionChange)="getSubtopicByTopic()" required placeholder="Select Topic">
+                                <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
+                                  {{item.topic_name}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="form-field">
+                              <mat-select formControlName="qus_st_id" required placeholder="Select Sub-Topic">
+                                <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
+                                   {{item.st_name}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-10 col-apple-10 col-mobile-view-add-ques">
+                <div class="top-right-parameter">
+                  <div class="top-right-box ">
+                    <div class="top-right-box-content">
+                      <div class="top-right-box-content-title">
+                        <div class="row">
+                          <div class="col-lg-12 col-mobile-view-add-ques">
+                            <span>Select Parameters</span>
+                          </div>
+                        </div>
+                        <hr class=hide-for-small-screen>
+                        <br class="show-in-mobile-screen">
+                        <div class="row">
+                          <div class="col-lg-12 col-mobile-view-add-ques">
+                            <form [formGroup]="ind_entry_form2" novalidate>
+                              <div class="row">
+                                <div class="col-lg-2 col-mobile-view-add-ques">
+                                  <mat-form-field class="form-field">
+                                    <mat-select formControlName="qus_qt_id" (selectionChange)="getQuestionSubtypeDataByQuestiontype()" required placeholder="Select Question Type">
+                                      <mat-option *ngFor="let item of questionTypeArray" [value]="item.qt_id">
+                                         {{item.qt_name}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-lg-2 col-mobile-view-add-ques">
+                                  <mat-form-field class="form-field">
+                                    <mat-select formControlName="qus_qst_id" (ngModelChange)="loadQsubtype($event)" required placeholder="Select Question Subtype">
+                                      <mat-option *ngFor="let item of questionSubtypeArray" [value]="item.qst_id">
+                                         {{item.qst_name}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-lg-2 col-mobile-view-add-ques">
+                                  <mat-form-field class="form-field">
+                                    <mat-select formControlName="qus_skill_id" required placeholder="Select Skill">
+                                      <mat-option *ngFor="let item of skillTypeArray" [value]="item.skill_id">
+                                         {{item.skill_name}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-lg-2 col-mobile-view-add-ques">
+                                  <mat-form-field class="form-field">
+                                    <mat-select formControlName="qus_dl_id" placeholder="Select Difficulty Level">
+                                      <mat-option *ngFor="let item of lodArray" [value]="item.dl_id">
+                                        {{item.dl_name}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-lg-2 col-mobile-view-add-ques">
+                                  <mat-form-field class="form-field">
+                                    <mat-select formControlName="qus_marks" required placeholder="Select Question Marks">
+                                      <mat-option *ngFor="let marksvalue of marksArray" [value]="marksvalue">
+                                         {{marksvalue}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-lg-2 col-mobile-view-add-ques">
+                                  <mat-form-field class="form-field">
+                                    <mat-select formControlName="qus_negative_marks" placeholder="Select Negative Marks">
+                                      <mat-option *ngFor="let negativemarksvalue of negativemarksArray" [value]="negativemarksvalue">
+                                         {{negativemarksvalue}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-lg-2 col-mobile-view-add-ques">
+                                  <mat-form-field class="form-field">
+                                    <mat-select formControlName="qus_time_alloted" placeholder="Select Time Alloted">
+                                      <mat-option *ngFor="let timealloted of timeallotedArray" [value]="timealloted">
+                                         {{timealloted}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-lg-2 col-mobile-view-add-ques">
+                                  <mat-form-field class="form-field">
+                                    <input matInput placeholder="Reference" formControlName="qus_historical_reference">
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-lg-12 col-mobile-view-add-ques">
+                            <div class="detail-question">
+                              <div class="detail-question-box">
+                                <div class="detail-question-box-content">
+                                  <div class="detail-question-box-content-title">
+                                    <div class="row">
+                                      <div class="col-lg-12 col-mobile-view-add-ques">
+                                        <span>Question Details</span>
+                                      </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                      <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                                        
+                                                <form [formGroup]="sub_entry_form3" novalidate>
+                                                    <div class="question-subtype-box">
+                                                        <div class="question-subtype-content">
+                                                  <div class="row">
+                                                    <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                                                        <div class="question-subtype-content-title-question">
+                                                            <span>Type questions</span>
+                                                          </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="row">
+                                                    <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                                                        <div class="question-subtype-text-box">
+                                                     <ckeditor ngDefaultControl required name="mcq-quest" id="mcq-quest" class="text-editor" formControlName="qus_name" #question [config]="ckeConfig" debounce="500">
+                                                    </ckeditor>   
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <br>
+                                                  <div class="row">
+                                                    <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                                                        <div class="question-subtype-content-title-answer">
+                                                            <button class="btn question-subtype-answer-button">Answer*</button>
+                                                          </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="row">
+                                                    <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                                                      <div class="question-subtype-text-box">
+                                                     <ckeditor ngDefaultControl required name="mcq-answer" id="mcq-answer" class="text-editor" formControlName="qopt_answer" #answerckeditor [config]="ckeConfig" debounce="500">
+                </ckeditor>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="row">
+                                                      <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                                                          <div class="question-subtype-content-title-expanation">
+                                                            <span>Explanation</span>
+                                                          </div>
+                                                        </div>
+                                                  </div>
+                                                  <div class="row">
+                                                    <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
+                                                        <div class="question-subtype-text-box">
+                                                        <ckeditor ngDefaultControl required name="mcq-explanation" id="mcq-explanation" class="text-editor" formControlName="qus_explanation" #explanationckeditor [config]="ckeConfig" debounce="500">
+                                  </ckeditor>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+
+                                                </div>
+                                              </div>
+
+                                                </form>
+                                              
+                                          
+                                      </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                      <div class="col-lg-12 col-mobile-view-add-ques">
+                                        <div class="add-question-button-collection">
+                                          <div class="button-row">
+                                              <button mat-raised-button class="submit-button" (click)="updateQuestionEditDialog();onNoClick();">Update</button>
+                                            </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <br>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>

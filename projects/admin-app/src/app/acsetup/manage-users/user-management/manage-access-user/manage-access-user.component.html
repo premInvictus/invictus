@@ -1,0 +1,256 @@
+<simple-notifications></simple-notifications>
+<div class="breadcrumb-section">
+   <div class="row">
+      <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+         <a [routerLink]="[homeUrl]">
+         <i class="breadcrumb-icon fas fa-home"></i>
+         </a>
+      </div>
+      <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+         <div class="vertical-line"></div>
+      </div>
+      <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+         <div class="first-breadcrumb-title">
+            <span class="bread-title">Manage Users</span>
+            <span class="bread-divider">-</span>
+            <span class="bread-link">Users Management</span>
+            <span class="bread-divider">-</span>
+            <span class="bread-link">Create Users</span>
+            <span class="bread-divider">-</span>
+            <span class="bread-title">Manage Access</span>
+         </div>
+      </div>
+   </div>
+</div>
+<!--breadcrumbs-->
+<!--Breadcrumbs end-->
+<!--White Space-->
+<div class="add-question-content">
+   <div class="row row-remove-top-margin">
+      <div class="col-lg-12 col-mobile-view-add-ques">
+         <div class="white-box">
+            <div class="white-box-content">
+               <div class="row">
+                  <div class="col-lg-12 col-mobile-view-add-ques">
+                     <div class="white-box-content-title">
+                        <span>Manage Access</span>
+                     </div>
+                  </div>
+               </div>
+               <!--white space-->
+               <div class="row row-remove-top-margin">
+                  <div class="col-lg-12 col-mobile-view-add-ques">
+                     <div class="top-right-parameter top-middle-parameter">
+                        <div class="top-right-box top-blue-box">
+                           <div class="top-right-box-content top-middle-box-content">
+                              <div class="top-right-box-content-title">
+                                 <div class="row ">
+                                    <div class=" col-lg-12 col-remove-padding col-mobile-view-add-ques">
+                                       <span>User Access Management</span>
+                                    </div>
+                                 </div>
+                                 <hr>
+                                 <!-- Tab panes -->
+                                 <mat-tab-group>
+                                    <mat-tab>
+                                       <ng-template mat-tab-label>
+                                          <div>
+                                             <span>Manage Forms & Events</span>
+                                          </div>
+                                       </ng-template>
+                                       <div  *ngIf="isExistUserAccessMenu('73')">
+                                          <div class="row">
+                                             <div class="col-lg-12 col-apple-10">
+                                                <br>
+                                                <h6 class="text-center">Manage Different Forms & Events</h6>
+                                                <br>
+                                             </div>
+                                             <div class="col-lg-12  col-remove-padding col-mobile-view-add-ques">
+                                                <form [formGroup]="ModuleForm" novalidate>
+                                                   <div class="row" *ngIf="manageAccessDiv">
+                                                      <div class="col-lg-2 fin-tab-col-25 col-remove-left-padding  col-mobile-view-add-ques">
+                                                         <mat-form-field class="form-field">
+                                                            <input matInput formControlName="login_id" placeholder="User" value="{{userDetails.au_full_name}}" readonly>
+                                                         </mat-form-field>
+                                                      </div>
+                                                      <div class="col-lg-2 fin-tab-col-25 col-remove-left-padding  col-mobile-view-add-ques">
+                                                         <mat-form-field class="form-field">
+                                                            <input matInput formControlName="si_id" placeholder="Branch" readonly>
+                                                         </mat-form-field>
+                                                      </div>
+                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                         <mat-form-field class="form-field">
+                                                            <mat-select formControlName="pro_id"  placeholder="Project" (ngModelChange)="getModuleList($event)">
+                                                               <mat-option value="">Select Project</mat-option>
+                                                               <mat-option *ngFor="let item of projectsArray" [value]="item.pro_id">
+                                                               {{item.pro_name}}
+                                                               </mat-option>
+                                                            </mat-select>
+                                                         </mat-form-field>
+                                                      </div>
+                                                   </div>
+                                                   <div class="row">
+                                                      <div class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
+                                                         <div>
+                                                            <div>
+                                                               <div class="col-apple-10">
+                                                                  <div class="module-list">
+                                                                     <ngx-treeview [config]="config" [items]="moduleItems" (selectedChange)="moduleValues = $event">
+                                                                     </ngx-treeview>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </form>
+                                             </div>
+                                          </div>
+                                          <br>
+                                          <div class="row">
+                                             <div class="col-lg-12">
+                                                <button mat-raised-button class="submit-button" (click)="submitModule()">Submit</button>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </mat-tab>
+                                    <mat-tab>
+                                       <ng-template mat-tab-label>
+                                          <div>
+                                             <span>Manage Classes</span>
+                                          </div>
+                                       </ng-template>
+                                       <div *ngIf="isExistUserAccessMenu('74')">
+                                          <div class="row">
+                                             <div class="col-lg-12 col-apple-10">
+                                                <br>
+                                                <h6 class="text-center ">Manage Classes of Result Co-Ordinator</h6>
+                                                <br>
+                                             </div>
+                                             <div class="col-lg-12">
+                                                <form [formGroup]="ClassModuleForm" novalidate>
+                                                   <div class="row">
+                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                         <mat-form-field class="form-field">
+                                                            <input matInput formControlName="login_id" placeholder="User" value="{{userDetails.au_full_name}}" readonly>
+                                                         </mat-form-field>
+                                                      </div>
+                                                      <div class="col-lg-2 fin-tab-col-25  col-mobile-view-add-ques">
+                                                         <mat-form-field class="form-field">
+                                                            <mat-select id="exampleSelect1" placeholder="Branch">
+                                                               <mat-option>DPS School, Ranchi</mat-option>
+                                                               <mat-option>St. Xavier's School, Ranchi</mat-option>
+                                                               <mat-option>Loyala School, Ranchi</mat-option>
+                                                               <mat-option>St. Micheal School, Ranchi</mat-option>
+                                                            </mat-select>
+                                                         </mat-form-field>
+                                                      </div>
+                                                   </div>
+                                                   <br>
+                                                   <div class="row">
+                                                      <div class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
+                                                         <div>
+                                                            <div>
+                                                               <div>
+                                                                  <div class="col-apple-10">
+                                                                     <div class="module-list">
+                                                                        <ngx-treeview [config]="config" [items]="classItems" (selectedChange)="classValues = $event">
+                                                                        </ngx-treeview>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </form>
+                                             </div>
+                                          </div>
+                                          <br>
+                                          <div class="row">
+                                             <div class="col-lg-12">
+                                                <button mat-raised-button class="submit-button" (click)="addUserAccessClass()">Submit</button>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </mat-tab>
+                                    <mat-tab>
+                                       <ng-template mat-tab-label>
+                                          <div>
+                                             <span>Manage Assessment Years</span>
+                                          </div>
+                                       </ng-template>
+                                       <div *ngIf="isExistUserAccessMenu('75')">
+                                          <div class="row">
+                                             <div class="col-lg-12">
+                                                <br>
+                                                <h6 class="text-center">Manage Project Wise Academic Sessions</h6>
+                                                <br>
+                                             </div>
+                                             <div class="col-lg-12">
+                                                <form>
+                                                   <div class="row">
+                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                         <mat-form-field class="form-field">
+                                                            <input matInput placeholder="User" value="USER" readonly>
+                                                         </mat-form-field>
+                                                      </div>
+                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                         <mat-form-field class="form-field">
+                                                            <mat-select id="exampleSelect1" placeholder="Branch">
+                                                               <mat-option>DPS School, Ranchi</mat-option>
+                                                               <mat-option>St. Xavier's School, Ranchi</mat-option>
+                                                               <mat-option>Loyala School, Ranchi</mat-option>
+                                                               <mat-option>St. Micheal School, Ranchi</mat-option>
+                                                            </mat-select>
+                                                         </mat-form-field>
+                                                      </div>
+                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                         <mat-form-field class="form-field">
+                                                            <mat-select formControlName="pro_id" id="exampleSelect1" placeholder="Project">
+                                                               <mat-option [value]="">Select Project</mat-option>
+                                                               <mat-option>S.M.A.R.T</mat-option>
+                                                               <mat-option>AXIOM</mat-option>
+                                                               <mat-option>Website Management</mat-option>
+                                                               <mat-option>School ERP</mat-option>
+                                                            </mat-select>
+                                                         </mat-form-field>
+                                                      </div>
+                                                   </div>
+                                                   <br>
+                                                   <div class="row">
+                                                      <div class="col-lg-12">
+                                                         <section class="example-section">
+                                                            <mat-checkbox name="switch" id="my1">2018-19</mat-checkbox>
+                                                         </section>
+                                                         <section class="example-section">
+                                                            <mat-checkbox name="switch" id="my2">2019-20</mat-checkbox>
+                                                         </section>
+                                                      </div>
+                                                   </div>
+                                                </form>
+                                             </div>
+                                          </div>
+                                          <br>
+                                          <div class="row">
+                                             <div class="col-lg-12">
+                                                <a [routerLink]="['../../user-management']">
+                                                <button mat-raised-button class="submit-button">Submit</button>
+                                                </a>
+                                                <button mat-raised-button class="reset-button">Reset</button>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </mat-tab>
+                                 </mat-tab-group>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

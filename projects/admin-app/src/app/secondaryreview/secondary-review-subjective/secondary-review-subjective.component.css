@@ -1,0 +1,8 @@
+.mat-cell {
+  word-break: break-word !important;
+}
+@-moz-document url-prefix() {
+  .mat-cell {
+      word-break: break-all !important;
+    }
+}

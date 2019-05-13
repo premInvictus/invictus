@@ -71,6 +71,7 @@ import { AdmissionRemarksThemeTwoComponent } from '../student-master-theme-two/a
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 import { CapitalizePipe } from '../_pipes';
 import { SafePipe } from '../_pipes/safe.pipe';
+import { AccountDetailsThemeTwoComponent } from '../student-master-theme-two/account-details-theme-two/account-details-theme-two.component';
 
 const moment = _moment;
 
@@ -129,7 +130,7 @@ export const MY_FORMATS = {
 		ImagecropComponent,
 		EditRequestModalComponent, ViewDocumentsComponent, PreviewDocumentComponent, DynamicContentThemeTwoComponent,
 		StudentDetailsThemeTwoComponent, ChildDetailsThemeTwoComponent, ParentDetailsThemeTwoComponent,
-		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent,
+		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent, AccountDetailsThemeTwoComponent,
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
 		ManagementRemarksThemeTwoComponent, AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent],
 	exports: [FormsModule, ReactiveFormsModule, TopNavComponent,
@@ -170,7 +171,8 @@ export const MY_FORMATS = {
 		StudentDetailsThemeTwoComponent, ChildDetailsThemeTwoComponent, ParentDetailsThemeTwoComponent,
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent,
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
-		ManagementRemarksThemeTwoComponent, AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent
+		ManagementRemarksThemeTwoComponent,
+		AccountDetailsThemeTwoComponent, AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent
 	],
 	entryComponents: [ChildDetailsComponent, ParentDetailsComponent, EducationDetailsComponent, AccountsComponent,
 		MedicalInformationComponent, SkillsAwardsComponent, DocumentsComponent, ParentGeneralRemarksComponent,
@@ -181,7 +183,8 @@ export const MY_FORMATS = {
 		StudentDetailsThemeTwoComponent, ChildDetailsThemeTwoComponent, ParentDetailsThemeTwoComponent,
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent,
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
-		ManagementRemarksThemeTwoComponent, AdmissionRemarksThemeTwoComponent, ImageViewerComponent],
+		ManagementRemarksThemeTwoComponent, AccountDetailsThemeTwoComponent,
+		AdmissionRemarksThemeTwoComponent, ImageViewerComponent],
 	providers: [StudentFormConfigService, FormEnabledService, StudentFormConfigTwoService, FormEnabledTwoService, ManageUsersService,
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 

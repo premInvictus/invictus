@@ -22,44 +22,44 @@ const routes: Routes = [
 	},
 
 
-	{
-		path: 'admin',
-		component: AdminComponent,
-		canActivate: [AuthGuard],
-		children: [
-			{
-				path: 'setup',
-				loadChildren: '../acsetup/acsetup.module#AcsetupModule'
-			},
-			{
-				path: 'questionbank',
-				loadChildren: '../questionbank/questionbank.module#QuestionbankModule'
-			},
-			{
-				path: 'question',
-				loadChildren: '../question/question.module#QuestionModule'
-			},
-			{
-				path: 'review',
-				loadChildren: '../secondaryreview/secondaryreview.module#SecondaryreviewModule'
-			},
-			{ path: '', component: AdminDashboardComponent },
-			{
-				path: 'schoolsetup',
-				component: SchoolsetupComponent,
-				canActivate: [RouteAccessGuard]
-			},
-			{
-				path: 'accesscontrol',
-				component: AccesscontrolComponent,
-				canActivate: [RouteAccessGuard]
-			},
-			{ path: 'create_new_user', component: CreateNewUserComponent },
-			{ path: 'manage-access/:id', component: ManageAccessComponent },
-			{ path: 'create-new-school', component: CreateNewSchoolComponent },
-			{ path: 'user-credential', component: UserCredentialComponent }
-		]
-	},
+	// {
+	// 	path: 'admin',
+	// 	component: AdminComponent,
+	// 	canActivate: [AuthGuard],
+	// 	children: [
+	// 		{
+	// 			path: 'setup',
+	// 			loadChildren: '../acsetup/acsetup.module#AcsetupModule'
+	// 		},
+	// 		{
+	// 			path: 'questionbank',
+	// 			loadChildren: '../questionbank/questionbank.module#QuestionbankModule'
+	// 		},
+	// 		{
+	// 			path: 'question',
+	// 			loadChildren: '../question/question.module#QuestionModule'
+	// 		},
+	// 		{
+	// 			path: 'review',
+	// 			loadChildren: '../secondaryreview/secondaryreview.module#SecondaryreviewModule'
+	// 		},
+	// 		{ path: '', component: AdminDashboardComponent },
+	// 		{
+	// 			path: 'schoolsetup',
+	// 			component: SchoolsetupComponent,
+	// 			canActivate: [RouteAccessGuard]
+	// 		},
+	// 		{
+	// 			path: 'accesscontrol',
+	// 			component: AccesscontrolComponent,
+	// 			canActivate: [RouteAccessGuard]
+	// 		},
+	// 		{ path: 'create_new_user', component: CreateNewUserComponent },
+	// 		{ path: 'manage-access/:id', component: ManageAccessComponent },
+	// 		{ path: 'create-new-school', component: CreateNewSchoolComponent },
+	// 		{ path: 'user-credential', component: UserCredentialComponent }
+	// 	]
+	// },
 	{
 		path: 'teacher',
 		component: TeacherComponent,

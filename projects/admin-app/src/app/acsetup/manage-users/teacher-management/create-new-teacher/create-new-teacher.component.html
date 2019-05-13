@@ -1,0 +1,299 @@
+<simple-notifications></simple-notifications>
+<div class="breadcrumb-section">
+   <div class="row">
+      <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+         <a [routerLink]="[homeUrl]">
+         <i class="breadcrumb-icon fas fa-home"></i>
+         </a>
+      </div>
+      <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+         <div class="vertical-line"></div>
+      </div>
+      <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+         <div class="first-breadcrumb-title">
+            <span class="bread-title">Manage Users</span>
+            <span class="bread-divider">-</span>
+            <span class="bread-link"> Teacher Management</span>
+            <span class="bread-divider">-</span>
+            <span class="bread-title">Create Teacher</span>
+         </div>
+      </div>
+   </div>
+</div>
+<!--breadcrumbs -->
+<!--Teachers details-->
+<div class="add-question-content">
+<div class="row row-remove-top-margin">
+   <div class="col-lg-12 col-mobile-view-add-ques">
+      <div class="white-box">
+         <div class="white-box-content">
+            <div class="row">
+               <div class="col-lg-12 col-mobile-view-add-ques">
+                  <div class="white-box-content-title">
+                     <span>Fill Teacher Details</span>
+                  </div>
+               </div>
+            </div>
+            <!--white space-->
+            <!--Teacher form-->
+            <div class="row">
+               <div class="col-lg-12 col-remove-padding col-mobile-view-add-ques detail-question-box-blue">
+                  <form [formGroup]="Teacher_Form" novalidate>
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <div class="row">
+                              <div class="col-lg-2 fin-tab-col-20 ">
+                                 <div class="form-group row">
+                                    <div class="image-upload">
+                                       <label for="file-input">
+                                       <img class="img-fluid teacher-img" id="teacherImage" [src]="url" style="width: 109px; height: 145px; border:1px solid #9591d8" matTooltip="upload-image 109px*145px"/>
+                                       </label>
+                                       <input id="file-input" formControlName="au_profileimage" name="file-input" type="file" (change)="readUrl($event);uploadTeacherImage($event)"/>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-lg-10 fin-tab-col-80">
+                                 <div class="row form-group">
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                       <mat-form-field class="form-field">
+                                          <input matInput formControlName="au_login_id" readonly placeholder="Teacher Id">
+                                       </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                       <mat-form-field class="form-field">
+                                          <input matInput formControlName="au_full_name" required placeholder="Full Name">
+                                          <mat-error *ngIf="au_full_name.hasError('required')">
+                                             Full name is <strong>required</strong>
+                                          </mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row form-group">
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                       <mat-form-field class="form-field">
+                                          <input matInput formControlName="au_mobile" required placeholder="Contact No." maxlength="10" pattern="[0-9]*">
+                                          <mat-error *ngIf="au_mobile.hasError('required')">
+                                             Mobile should be <strong>numbers</strong>
+                                          </mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                       <mat-form-field class="form-field">
+                                          <input matInput [value]="schoolinfoArray.school_prefix" readonly placeholder="School Code">
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row form-group">
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                       <mat-form-field class="form-field">
+                                          <input matInput name="schoolname" [value]="schoolinfoArray.school_name" readonly placeholder="School Name">
+                                       </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                       <mat-form-field class="form-field">
+                                          <input matInput name="email" formControlName="au_email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                                             placeholder="Email ID">
+                                          <mat-error *ngIf="au_email.hasError('required')">
+                                             Email is <strong>required</strong>
+                                          </mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </form>
+               </div>
+            </div>
+            <br>
+            <mat-tab-group>
+               <mat-tab>
+                  <ng-template mat-tab-label>
+                     <div>
+                        <span>Class Subject Relation</span>
+                     </div>
+                  </ng-template>
+                  <div *ngIf="isExistUserAccessMenu('109')" id="teacher-csr">
+                     <br>
+                     <div class="detail-question-box-blue">
+                        <mat-card>
+                           <mat-card-content>
+                              <br>
+                              <div class="row">
+                                 <div class="col-lg-12 white-box-content-title">
+                                    <div class="text-center tab-title">
+                                       <h6>
+                                          Class Subject Relation
+                                       </h6>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="row col-mobile-view-add-ques white-box-content">
+                                 <div class="col-lg-12">
+                                    <form [formGroup]="Cs_relation_Form" novalidate>
+                                       <div class="row">
+                                          <div class="col-md-2 col-lg-2 col-remove-left-padding  col-mobile-view-add-ques">
+                                             <mat-form-field class="form-field">
+                                                <input matInput name="user" placeholder="Designation" formControlName="uc_designation" [value]="designation">
+                                             </mat-form-field>
+                                          </div>
+                                          <div class="col-md-2 col-lg-2  col-mobile-view-add-ques">
+                                             <mat-form-field class="form-field">
+                                                <input matInput placeholder="Department" formControlName="uc_department" [value]="department">
+                                             </mat-form-field>
+                                          </div>
+                                          <div class="col-md-2 col-lg-2  col-mobile-view-add-ques">
+                                             <mat-form-field class="form-field">
+                                                <mat-select formControlName="uc_class_id" #inputclass (selectionChange)="getSectionsByClass();getSubjectsByClass();setCurrentClass(inputclass.value)" placeholder="Class"
+                                                required>
+                                                <mat-option [value]="">Select Class</mat-option>
+                                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                {{item.class_name}}
+                                                </mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
+                                          </div>
+                                          <div class="col-md-2 col-lg-2 col-mobile-view-add-ques">
+                                             <mat-form-field class="form-field">
+                                                <mat-select formControlName="uc_sec_id" #inputsec (selectionChange)="getSubjectsByClass();setCurrentSection(inputsec.value)" placeholder="Section" required>
+                                                <mat-option [value]="">Select Section</mat-option>
+                                                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                                {{item.sec_name}}
+                                                </mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
+                                          </div>
+                                          <div class="col-md-2 col-lg-2 col-mobile-view-add-ques">
+                                             <mat-form-field class="form-field">
+                                                <mat-select formControlName="uc_sub_id" #inputsub  (selectionChange)="setCurrentSubject(inputsub.value)" placeholder="Subject" required>
+                                                <mat-option [value]="">Select Subject</mat-option>
+                                                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                                {{item.sub_name}}
+                                                </mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
+                                          </div>
+                                          <div class="col-md-2 col-lg-2">
+                                             <button mat-raised-button class="submit-button" type="submit" (click)="addCSToTeacher()">Add</button>
+                                          </div>
+                                       </div>
+                                    </form>
+                                 </div>
+                              </div>
+                              <div class="row" *ngIf="insertdata">
+                                 <div class="col-lg-12">
+                                    <div class="table-box">
+                                       <div class="row">
+                                          <div class="col-sm-12 col-md-12 col-lg-12 col-remove-padding">
+                                             <div class="add-scroll dialog-table-review-main normal-table-responsive">
+                                                <table class=" dialog-table-review table">
+                                                   <thead>
+                                                      <tr class="dialog-table-review-header">
+                                                         <th>Teacher Name</th>
+                                                         <th>Class</th>
+                                                         <th>Section</th>
+                                                         <th>Subject</th>
+                                                         <th class="text-center">Modify</th>
+                                                      </tr>
+                                                   </thead>
+                                                   <tbody>
+                                                      <tr *ngFor="let item of cs_relationArray; let i=index">
+                                                         <td>{{Teacher_Form.value.au_full_name}}</td>
+                                                         <td>{{item.class_name}}</td>
+                                                         <td>{{item.sec_name}}</td>
+                                                         <td>{{item.sub_name}}</td>
+                                                         <td class="text-center">
+                                                            <a>
+                                                            <i class="far fa-trash-alt table-delete-icon" aria-hidden="true" title="Delete" (click)="deleteCSRelation(i)"></i>
+                                                            </a>
+                                                         </td>
+                                                      </tr>
+                                                   </tbody>
+                                                </table>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <br>
+                              <div class="col-lg-6">
+                                 <button mat-raised-button class="submit-button" *ngIf="!updateFlag" (click)="addUser()" [disabled]="!Cs_relation_Form.valid">Submit</button>
+                                 <a [routerLink]="['../teacher-management']">
+                                 <button mat-raised-button class="submit-button" matTooltip="Update Teacher" *ngIf="updateFlag" (click)="updateUser()">Update</button>
+                                 </a>
+                                 <button mat-raised-button class="reset-button" matTooltip="Are you sure you want to reset?" (click)="saveief()">Reset</button>
+                              </div>
+                           </mat-card-content>
+                        </mat-card>
+                     </div>
+                  </div>
+               </mat-tab>
+               <mat-tab>
+                  <br>
+                  <ng-template mat-tab-label>
+                     <div>
+                        <span>Control Dashboard</span>
+                     </div>
+                  </ng-template>
+                  <br>
+                  <mat-card class="detail-question-box-blue">
+                     <mat-card-content>
+                        <div role="tabpanel" *ngIf="isExistUserAccessMenu('114')" id="teacher-dashboard">
+                           <form [formGroup]="Remark_Form" novalidate>
+                              <div class="row">
+                                 <div class="col-lg-12 white-box-content-title">
+                                    <h6 class="text-center tab-title">Control Dashboard</h6>
+                                    <br>
+                                 </div>
+                              </div>
+                              <div class="row">
+                                 <div class="col-sm-4 col-md-4 col-lg-4">
+                                    <div class="form-group col-apple-10">
+                                       <div class="col-lg-9">
+                                          <mat-form-field class="form-field">
+                                             <mat-select placeholder="Project" formControlName="pro_id" (ngModelChange)="getModuleList($event)">
+                                                <mat-option value="">
+                                                   Select Project
+                                                </mat-option>
+                                                <mat-option *ngFor="let item of projectsArray" [value]="item.pro_id">
+                                                {{item.pro_name}}
+                                                </mat-option>
+                                             </mat-select>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="row">
+                                 <div class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
+                                    <div>
+                                       <div>
+                                          <div class="col-apple-10">
+                                             <div class="module-list">
+                                                <ngx-treeview [config]="config" [items]="moduleItems" (selectedChange)="moduleValues = $event">
+                                                </ngx-treeview>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <br>
+                              <div class="row">
+                                 <div class="col-lg-1 col-apple-10 ">
+                                    <button mat-raised-button class="submit-button" (click)="submitModule()">Submit</button>
+                                 </div>
+                              </div>
+                           </form>
+                        </div>
+                        <br>
+                     </mat-card-content>
+                  </mat-card>
+               </mat-tab>
+            </mat-tab-group>
+         </div>
+      </div>
+   </div>
+</div>

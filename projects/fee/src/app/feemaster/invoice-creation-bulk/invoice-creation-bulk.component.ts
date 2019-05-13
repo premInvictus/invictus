@@ -156,7 +156,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 				invoiceno: element.inv_invoice_no,
 				inv_id: element.inv_id,
 				feeperiod: element.fp_name,
-				feedue: element.inv_due_date,
+				feedue: element.inv_fee_amount,
 				remark: element.inv_remark,
 				status: element.inv_paid_status,
 				statuscolor: element.inv_paid_status === 'paid' ? 'green' : 'red',

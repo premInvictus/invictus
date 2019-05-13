@@ -179,7 +179,7 @@ export class LoginComponent implements OnInit {
 															// let returnUrl = '/' + result.data[0]['pro_url'];
 															const returnUrl = '/axiom';
 															if (JSON.parse(localStorage.getItem('currentUser')).role_id === '1') {
-																this.returnUrl = returnUrl + '/admin';
+																this.returnUrl = '/admin';
 															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '2') {
 																this.returnUrl = returnUrl + '/school';
 															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
@@ -195,7 +195,7 @@ export class LoginComponent implements OnInit {
 															// window.location.href = environment.apiAxiomUrl + '/authentication?validate_token=' + login_data.clientKey;
 															const returnUrl = '/axiom';
 															if (JSON.parse(localStorage.getItem('currentUser')).role_id === '1') {
-																this.returnUrl = returnUrl + '/admin';
+																this.returnUrl = '/admin';
 															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '2') {
 																this.returnUrl = returnUrl + '/school';
 															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {

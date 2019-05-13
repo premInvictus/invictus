@@ -170,11 +170,12 @@ export class RoutesComponent implements OnInit, AfterViewInit {
 					tr_attndt_name: this.transportRoutes.value.route_attendant_name,
 					tr_attndt_contact_no: this.transportRoutes.value.route_attendant_contact_no,
 					tr_tsp: stoppageArr,
-					tr_status: this.routeStatus
+					tr_status: '1'
 				};
 
 				if (this.current_tr_id) {
 					inputJson['tr_id'] = this.current_tr_id;
+					inputJson['tr_status'] = this.routeStatus;
 				}
 				this.callSaveAPI(inputJson);
 			} else {
@@ -191,6 +192,8 @@ export class RoutesComponent implements OnInit, AfterViewInit {
 			if (result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.resetForm();
+				this.routeStatus = '';
+				this.current_tr_id = 0;
 				this.getRoutes();
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
@@ -248,7 +251,7 @@ export class RoutesComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	deleteStoppage(item, i) {
+	deleteStoppage(i) {
 		this.selectedStoppageData.splice(i, 1);
 	}
 

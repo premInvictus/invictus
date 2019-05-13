@@ -34,19 +34,19 @@
                      <button class="dropbtn section-tab-btn">Sections &nbsp;<i
                            class="fas fa-info-circle section-tab-btn-icon"></i></button>
                      <div class="dropdown-content">
-                        <a href="#"><img src="../../../assets/default-ques-btn.svg" class="jee-btn-svg">
+                        <a href="#"><img src="../../../../../../src/assets/default-ques-btn.svg" class="jee-btn-svg">
                            <span class="adv-jee-btn-dqblink">{{getAnswerStatus('')}}</span>
                            <span class="font-size-12">Not Visited</span></a>
-                        <a href="#"><img src="../../../assets/notanswered.svg" class="jee-btn-svg">
+                        <a href="#"><img src="../../../../../../src/assets/notanswered.svg" class="jee-btn-svg">
                            <span class="adv-jee-btn-nanslink">{{getAnswerStatus('2')}}</span>
                            <span class="font-size-12">Not Answered</span></a>
-                        <a href="#"><img src="../../../assets/answered.svg" class="jee-btn-svg">
+                        <a href="#"><img src="../../../../../../src/assets/answered.svg" class="jee-btn-svg">
                            <span class="adv-jee-btn-anslink">{{getAnswerStatus('1')}}</span>
                            <span class="font-size-12">Answered</span></a>
-                        <a href="#"><img src="../../../assets/saveforreview.svg" class="jee-btn-svg">
+                        <a href="#"><img src="../../../../../../src/assets/saveforreview.svg" class="jee-btn-svg">
                            <span class="adv-jee-btn-srflink">{{getAnswerStatus('0')}}</span>
                            <span class="font-size-12">Marked For Review</span></a>
-                        <a href="#"><img src="../../../assets/ansmarkreview.svg" class="jee-btn-svg">
+                        <a href="#"><img src="../../../../../../src/assets/ansmarkreview.svg" class="jee-btn-svg">
                            <span class="adv-jee-btn-amrlink">{{getAnswerStatus('3')}}</span>
                            <span class="font-size-12">Answered &marked for review</span></a>
                      </div>
@@ -90,7 +90,8 @@
 
          </div>
          <div class="col-3 text-center remove-left-padding">
-            <div style="border-radius: 100%"><img style="width: 42px;height:100%; " [src]="userprofileimage"></div>
+            <div style="border-radius: 100%"><img style="width: 42px;height:100%;"
+               [src]="userDetails.au_profileimage ? userDetails.au_profileimage : 'https://g21.digialm.com//OnlineAssessment/images/NewCandidateImage.jpg'"></div>
          </div>
 
       </div>
@@ -757,31 +758,31 @@
                <div class="padding-8">
                   <div class="row">
                      <div class="col-6">
-                        <img src="../../../assets/default-ques-btn.svg" class="jee-btn-svg">
+                        <img src="../../../../../../src/assets/default-ques-btn.svg" class="jee-btn-svg">
                         <span class="adv-jee-btn-ondqb">{{getSectionWiseAnswerStatus(sectionDetails,'')}}</span>
                         <span class="font-size-12">Not Visited</span>
                      </div>
                      <div class="col-6 remove-left-padding">
-                        <img src="../../../assets/notanswered.svg" class="jee-btn-svg">
+                        <img src="../../../../../../src/assets/notanswered.svg" class="jee-btn-svg">
                         <span class="adv-jee-btn-not-onans">{{getSectionWiseAnswerStatus(sectionDetails,'2')}}</span>
                         <span class="font-size-12">Not Answered</span>
                      </div>
                   </div>
                   <div class="row margin-top-5">
                      <div class="col-6">
-                        <img src="../../../assets/answered.svg" class="jee-btn-svg">
+                        <img src="../../../../../../src/assets/answered.svg" class="jee-btn-svg">
                         <span class="adv-jee-btn-onans">{{getSectionWiseAnswerStatus(sectionDetails,'1')}}</span>
                         <span class="font-size-12">Answered</span>
                      </div>
                      <div class="col-6 remove-left-padding">
-                        <img src="../../../assets/saveforreview.svg" class="jee-btn-svg">
+                        <img src="../../../../../../src/assets/saveforreview.svg" class="jee-btn-svg">
                         <span class="adv-jee-btn-not-onsfr">{{getSectionWiseAnswerStatus(sectionDetails,'0')}}</span>
                         <span class="font-size-12">Marked For Review</span>
                      </div>
                   </div>
                   <div class="row margin-top-5">
                      <div class="col-2">
-                        <img src="../../../assets/ansmarkreview.svg" class="jee-btn-svg">
+                        <img src="../../../../../../src/assets/ansmarkreview.svg" class="jee-btn-svg">
                         <span class="adv-jee-btn-onans">{{getSectionWiseAnswerStatus(sectionDetails,'3')}}</span>
                      </div>
                      <div class="col-10">
