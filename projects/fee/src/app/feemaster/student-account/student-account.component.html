@@ -80,7 +80,7 @@
           <div *ngIf="modeFlag" class="col-3">
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Stoppage</mat-label>
-                <mat-select placeholder="Stoppage" [disabled]="viewOnly"
+                <mat-select placeholder="Stoppage" [disabled]="viewOnly" (selectionChange)="getSlab($event)"
                    [errorStateMatcher]="confirmValidParentMatcher" required formControlName="accd_tsp_id">
                    <mat-option>Please Select</mat-option>
                    <mat-option *ngFor="let item of stoppageArray" [value]="item.tsp_id">{{item.tsp_name}}</mat-option>
@@ -90,7 +90,7 @@
           <div *ngIf="modeFlag" class="col-3">
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Applicable Slab</mat-label>
-                <mat-select placeholder="Applicable Slab" [disabled]="viewOnly"
+                <mat-select placeholder="Applicable Slab" [disabled]="viewOnly" [ngModel]="slabModel"
                    [errorStateMatcher]="confirmValidParentMatcher" formControlName="accd_ts_id" required>
                    <mat-option>Please Select</mat-option>
                    <mat-option *ngFor="let item of slabArray" [value]="item.ts_id">{{item.ts_name}}</mat-option>

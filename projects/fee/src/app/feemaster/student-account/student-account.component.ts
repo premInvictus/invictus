@@ -31,6 +31,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	terminateStatus: any;
 	hostelStatus: any;
 	existFlag = false;
+	slabModel: any = '';
 	hostelTerminateFlag = false;
 	@ViewChild('editModal') editModal;
 	@Input() viewOnly = true;
@@ -128,6 +129,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				} else {
 					this.hostelFlag = false;
 				}
+				this.slabModel = this.accountDetails.accd_tsp_id;
 				this.accountsForm.patchValue({
 					accd_id: this.accountDetails.accd_id,
 					accd_login_id: this.accountDetails.accd_login_id,
@@ -517,5 +519,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		if (this.finalArray.length > 0) {
 			this.editModal.openModal({ data: [this.finalArray], reqParam: [this.reqObj] });
 		}
+	}
+	getSlab($event) {
+		this.slabModel = $event.value;
 	}
 }
