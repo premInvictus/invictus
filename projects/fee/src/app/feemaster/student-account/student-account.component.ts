@@ -477,7 +477,17 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 						rff_new_field_value: new DatePipe('en-in').transform(formControl.value, 'yyyy-MM-dd'),
 						rff_old_field_value: this.accountDetails[key],
 					});
-				} else {
+				}
+				if (key === 'accd_is_terminate' || key === 'accd_is_transport'
+				|| key === 'accd_is_hostel' || key === 'accd_is_hostel_terminate') {
+				sibReqArray.push({
+					rff_where_id: 'accd_id',
+					rff_where_value: this.accountDetails['accd_id'],
+					rff_field_name: key,
+					rff_new_field_value: formControl.value ? 'Y' : 'N',
+					rff_old_field_value: this.accountDetails[key],
+				});
+			} else {
 					sibReqArray.push({
 						rff_where_id: 'accd_id',
 						rff_where_value: this.accountDetails['accd_id'],
