@@ -37,18 +37,16 @@
                     </mat-form-field>
                   </div>
                   
-                </div>
-               
+                </div>              
                 
                 <div class="row">
                   <div class="col-12">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Description</mat-label>
-                      <input matInput placeholder="Description" formControlName="fs_description" required>
+                      <textarea matInput placeholder="Description" formControlName="fs_description" required> {{feestructureform.fs_description}} </textarea>
                     </mat-form-field>
                   </div>
-                </div>
-                
+                </div>                
                 
                 <div class="text-center margin-top-25 ">
                   <div class="inline-flex">
@@ -89,14 +87,14 @@
                         <ng-container matColumnDef="feehead">
                           <th mat-header-cell *matHeaderCellDef> Fee Head </th>
                           <td mat-cell *matCellDef="let element">
-                              <p *ngFor="let item of element.feehead"><b>{{item.name | capitalize}} ( {{item.ft_name}} ) :</b> {{item.amount}} <span *ngIf="item.amount > 0">(</span>{{item.total}}<span *ngIf="item.amount > 0">)</span></p>
+                              <p *ngFor="let item of element.feehead"><b>{{item.name | capitalize}} ( {{item.ft_name}} ) :</b> {{item.amount | number}} <span *ngIf="item.amount > 0">(</span>{{item.total | number}}<span *ngIf="item.amount > 0">)</span></p>
                               <p><b>Total :</b> {{element.action.total}}</p>
                             </td>
                         </ng-container>
   
                         <ng-container matColumnDef="description">
                           <th mat-header-cell *matHeaderCellDef> Description </th>
-                          <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                          <td mat-cell *matCellDef="let element"> {{element.description | capitalize}} </td>
                         </ng-container>
   
                         <ng-container matColumnDef="status">

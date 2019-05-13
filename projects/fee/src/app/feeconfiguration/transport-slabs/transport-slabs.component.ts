@@ -238,7 +238,7 @@ export class TransportSlabsComponent implements OnInit, AfterViewInit {
 				ts_others: this.transportSlabs.value.slab_filter_others,
 				ts_csn_cat: this.transportSlabs.value.slab_filter_concession_category,
 				ts_hstl_id: this.transportSlabs.value.slab_filter_hostel,
-				ts_status: 1
+				ts_status: '1'
 			};
 			if (this.current_slab_id) {
 				inputJson['ts_id'] = this.current_slab_id;

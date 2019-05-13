@@ -23,7 +23,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	@ViewChild('consolidateModal') consolidateModal;
 	ELEMENT_DATA: InvoiceElement[] = [];
 	displayedColumns: string[] =
-		['select', 'srno', 'admno', 'studentname', 'classsection', 'invoiceno', 'feeperiod', 'feedue', 'status', 'action'];
+		['select', 'srno', 'invoiceno', 'feeperiod', 'feedue', 'status', 'action'];
 	dataSource = new MatTableDataSource<InvoiceElement>(this.ELEMENT_DATA);
 	selection = new SelectionModel<InvoiceElement>(true, []);
 	filterResult: any[] = [];
@@ -193,7 +193,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				invoiceno: element.inv_invoice_no,
 				inv_id: element.inv_id,
 				feeperiod: element.fp_name,
-				feedue: element.inv_due_date,
+				feedue: element.inv_fee_amount,
 				remark: element.inv_remark,
 				status: element.inv_paid_status,
 				statuscolor: element.inv_paid_status === 'paid' ? 'green' : 'red',
