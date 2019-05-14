@@ -1,6 +1,6 @@
 <div class="container-box__grey">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container">
         <div class="row">
           <div class="col-6">
@@ -18,7 +18,7 @@
     </div>
   </div>
   <div class="row margin-top-25">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <app-common-student-profile [loginId]="lastRecordAdmno" (next)="next($event)" (prev)="prev($event)"
         (first)="first($event)" (last)="last($event)" (key)="key($event)" (next2)="next2($event)" (prev2)="prev2($event)"
         (first2)="first2($event)" (last2)="last2($event)" (key2)="key2($event)">
@@ -27,10 +27,10 @@
   </div>
   <form [formGroup]="invoiceCreationForm" novalidate>
     <div class="row margin-top-25 ">
-      <div class="col-12">
+      <div class="col-12 remove-col-padding">
         <mat-card class="card-top-title__container">
           <div class="row">
-            <div class="col-3">
+            <div class="col-3 remove-col-padding-left">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Invoice Type</mat-label>
                 <mat-select placeholder="Invoice Type" formControlName="inv_calm_id" required>
@@ -57,7 +57,7 @@
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
             </div>
-            <div class="col-3">
+            <div class="col-3 remove-col-padding-right">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Due Date</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Due Date" formControlName="inv_due_date"
@@ -68,12 +68,12 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-6 margin-top-15">
+            <div class="col-6 remove-col-padding-left">
               <mat-checkbox formControlName="recalculation_flag"><span class="font-size-16 font-medium">Recalulate All
                   Unpaid Invoices</span></mat-checkbox>
             </div>
 
-            <div class="col-6 margin-top-15 text-right">
+            <div class="col-6 remove-col-padding-right text-right">
               <button *ngIf="commonAPIService.isExistUserAccessMenu('359')" mat-raised-button class="btn-primary  btn-width-164 btn-success"
                 (click)="insertInvoice()">Generate Invoice</button>
                 <button mat-raised-button style="margin-left: 10px" class="print-btn" (click)="invoiceCreationForm.reset()">Reset</button>
@@ -84,13 +84,13 @@
     </div>
   </form>
   <div class="row margin-top-25 ">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container margin-bottom-140">
         <div class="row">
           <div class="col-4">
             <mat-form-field>
-              <input matInput placeholder="Filter" (keyup)="applyFilter($event.target.value)">
-              <i class="fas fa-filter table-filter" matPrefix></i>
+              <input class="margin-left-10" matInput placeholder="Filter" (keyup)="applyFilter($event.target.value)">
+              <mat-icon matPrefix>filter_list</mat-icon>
             </mat-form-field>
 
           </div>
@@ -104,7 +104,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12">
+          <div class="col-12 remove-col-padding">
             <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center">
               <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef class="select-checkbox">

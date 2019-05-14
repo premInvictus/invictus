@@ -1,12 +1,12 @@
 <div class="container-box__grey">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container">
         <div class="row">
-          <div class="col-6">
+          <div class="col-6 remove-col-padding-left">
             <h1 class="remove-bottom-margin font-size-24">Fee Modification</h1>
           </div>
-          <div class="col-6 text-right">
+          <div class="col-6 remove-col-padding-right text-right">
             <div class="vertical-align-sub inline-flex">
               <h3 class="font-size-15 margin-top-2 remove-bottom-margin">Bulk</h3>
               <mat-slide-toggle class="btn-spacer"></mat-slide-toggle>
@@ -18,7 +18,7 @@
     </div>
   </div>
   <div class="row margin-top-25">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container ">
         <div class="row">
           <div class="col-2 margin-left-20 custom-fee-entry-col-14">
@@ -159,24 +159,24 @@
   
   
         <div class="row margin-top-25 ">
-            <div class="col-12">
+            <div class="col-12 remove-col-padding">
               <mat-card class="card-top-title__container">
                   <div class="row">
-                      <div class="col-4">
+                      <div class="col-4 remove-col-padding-left">
                         <mat-form-field>
-                            <input matInput placeholder="Filter">
-                            <i class="fas fa-filter table-filter" matPrefix></i>
+                            <input matInput placeholder="Filter" class="margin-left-10">
+                            <mat-icon matPrefix>filter_list</mat-icon>
                         </mat-form-field>
                           
                       </div>
-                      <div class="col-8 text-right">
+                      <div class="col-8 text-right remove-col-padding-right">
                           <button mat-raised-button class="btn-primary btn-consolidate">Consolidate</button>
                           <button mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer">Recalutate</button>
                           <button mat-raised-button class="btn-primary btn-danger btn-spacer">Delete</button>
                         </div>
                     </div>
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 remove-col-padding">
                       <table mat-table [dataSource]="dataSource" class="table-100 text-center">
                           <ng-container matColumnDef="select" >
                               <th mat-header-cell *matHeaderCellDef class="select-checkbox">

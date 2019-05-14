@@ -34,9 +34,10 @@ a:hover {
 }
 
 .mat-drawer-content {
+    position: initial !important;
     overflow-x:  hidden !important;
     overflow-y: auto !important;
-    height: 100vh !important;
+    height: 91vh !important;
 }
 
 .mat-sidenav-content {

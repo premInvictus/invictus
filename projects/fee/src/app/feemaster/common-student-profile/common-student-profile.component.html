@@ -1,55 +1,56 @@
 <mat-card class="card-top-title__container ">
- <form [formGroup]="studentdetailsform">
-  <div class="row">
-    <div class="col-2 margin-left-20 custom-fee-entry-col-14">
-      <div class="row">
-        <div class="col-12 text-center margin-top-20">
-          <span class="font-light font-size-14">Admission No.</span>
+  <form [formGroup]="studentdetailsform">
+    <div class="row remove-top-margin">
+      <div class="col-2 remove-col-padding margin-left-20 custom-fee-entry-col-14">
+        <div class="row">
+          <div class="col-12 text-center">
+            <span class="font-light font-size-14">Admission No.</span>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
-            <button mat-mini-fab class="nav-button" [disabled]="firstB"
-            (click)="firstId(navigation_record.first_record)"><i class="material-icons">
+        <div class="row">
+          <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
+            <button mat-mini-fab class="nav-button1" [disabled]="firstB"
+              (click)="firstId(navigation_record.first_record)"><i class="material-icons">
                 first_page
               </i></button>
-              <button mat-mini-fab class="nav-button" [disabled]="previousB"
-      (click)="prevId(navigation_record.prev_record)"><i class="material-icons">
-          navigate_before
-        </i></button>
-        </div>
-        <div class="col-4 custom-col-30 text-center">
-          <mat-form-field class="form-field text-center">
-            <input matInput class="adm-no-student-30"
-            formControlName="au_enrollment_id"
-        (keydown.enter)="loadOnEnrollmentId($event)">
-          </mat-form-field>
-        </div>
-        <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
-            <button mat-mini-fab class="nav-button" [disabled]="nextB"
-            (click)="nextId(navigation_record.next_record)"><i class="material-icons">
+            <button mat-mini-fab class="nav-button1" [disabled]="previousB"
+              (click)="prevId(navigation_record.prev_record)"><i class="material-icons">
+                navigate_before
+              </i></button>
+          </div>
+          <div class="col-4 custom-col-30 text-center">
+            <mat-form-field class="form-field text-center">
+              <input matInput class="adm-no-student-30" formControlName="au_enrollment_id"
+                (keydown.enter)="loadOnEnrollmentId($event)">
+            </mat-form-field>
+          </div>
+          <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
+            <button mat-mini-fab class="nav-button1" [disabled]="nextB"
+              (click)="nextId(navigation_record.next_record)"><i class="material-icons">
                 navigate_next
               </i></button>
-              <button mat-mini-fab class="nav-button" [disabled]="lastB"
+            <button mat-mini-fab class="nav-button1" [disabled]="lastB"
               (click)="lastId(navigation_record.last_record)"><i class="material-icons">
-                  last_page
-                </i></button>
+                last_page
+              </i></button>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-1 custom-fee-entry-col-8">
-      <div class="row margin-top-20">
-        <div class="col-12 text-center">
-          <img class="student-profile-image-68" [src]="defaultsrc">
+      <div class="col-1 custom-fee-entry-col-8">
+        <div class="row margin-top-20">
+          <div class="col-12 text-center">
+            <img class="student-profile-image-68" [src]="defaultsrc">
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-1 custom-fee-entry-col-12">
-      <div class="row margin-top-35">
-        <div class="col-12 text-left">
-          <span class="font-size-14 font-medium">{{studentdetails.au_full_name ? (studentdetails.au_full_name | capitalize) : 'NA'}}</span><br>
-          <span class="font-size-12">Class : {{studentdetails.class_name ? studentdetails.class_name : 'NA'}} - 
+      <div class="col-1 custom-fee-entry-col-12">
+        <div class="row margin-top-35">
+          <div class="col-12 text-left">
+            <span
+              class="font-size-14 font-medium">{{studentdetails.au_full_name ? (studentdetails.au_full_name | capitalize) : 'NA'}}</span><br>
+            <span class="font-size-12">Class : {{studentdetails.class_name ? studentdetails.class_name : 'NA'}} -
               {{studentdetails.sec_name ? studentdetails.sec_name : 'NA'}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -60,41 +61,44 @@
           <span class="font-size-14 font-medium">{{studentdetails.fee_outstanding ? 
               (studentdetails.fee_outstanding | number): 'NA'}}</span>
         </div>
-      </div>
-      <div class="row margin-top-10">
-        <div class="col-12 text-left">
-          <span class="font-size-13 font-light">Concession</span><br>
-          <span class="font-size-14 font-medium">{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+        <div class="row margin-top-10">
+          <div class="col-12 text-left">
+            <span class="font-size-13 font-light">Concession</span><br>
+            <span
+              class="font-size-14 font-medium">{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-2 custom-fee-entry-col-12">
-      <div class="row margin-top-8">
-        <div class="col-12 text-left">
-          <span class="font-size-13 font-light">Route </span><br>
-          <span class="font-size-14 font-medium">{{studentdetails.ead_bus_route ? (studentdetails.ead_bus_route | capitalize) : 'NA'}}</span>
+      <div class="col-2 custom-fee-entry-col-12">
+        <div class="row margin-top-8">
+          <div class="col-12 text-left">
+            <span class="font-size-13 font-light">Route </span><br>
+            <span
+              class="font-size-14 font-medium">{{studentdetails.ead_bus_route ? (studentdetails.ead_bus_route | capitalize) : 'NA'}}</span>
+          </div>
+        </div>
+        <div class="row margin-top-10">
+          <div class="col-12 text-left">
+            <span class="font-size-13 font-light">Stoppage</span><br>
+            <span
+              class="font-size-14 font-medium">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize) : 'NA'}}</span>
+          </div>
         </div>
       </div>
-      <div class="row margin-top-10">
-        <div class="col-12 text-left">
-          <span class="font-size-13 font-light">Stoppage</span><br>
-          <span class="font-size-14 font-medium">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize) : 'NA'}}</span>
+      <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-5">
+        <div class="row">
+          <div class="col-12 text-center">
+            <div class="vertical-divider-fee-entry"></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-5">
-      <div class="row">
-        <div class="col-12 text-center">
-          <div class="vertical-divider-fee-entry"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-2 custom-fee-entry-col-12">
-      <div class="row margin-top-8">
-        <div class="col-12 text-left">
-          <span class="font-size-13 font-light">Parent Name </span><br>
-          <span class="font-size-14 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
+      <div class="col-2 custom-fee-entry-col-12">
+        <div class="row margin-top-8">
+          <div class="col-12 text-left">
+            <span class="font-size-13 font-light">Parent Name </span><br>
+            <span class="font-size-14 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
               studentdetails.parentinfo[0].epd_parent_name : 'NA'}}</span>
+          </div>
         </div>
       </div>
       <div class="row margin-top-10">
@@ -103,47 +107,50 @@
           <span class="font-size-14 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0]? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
         </div>
       </div>
-    </div>
-    <div class="col-2 custom-fee-entry-col-12">
-      <div class="row margin-top-8">
-        <div class="col-12 text-left">
-          <span class="font-size-13 font-light">Emg Contact Name </span><br>
-          <span class="font-size-14 font-medium">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails.medicalinfo[0].mi_emergency_contact_name : 'NA'}}</span>
+      <div class="col-2 custom-fee-entry-col-12">
+        <div class="row margin-top-8">
+          <div class="col-12 text-left">
+            <span class="font-size-13 font-light">Emg Contact Name </span><br>
+            <span
+              class="font-size-14 font-medium">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails.medicalinfo[0].mi_emergency_contact_name : 'NA'}}</span>
+          </div>
+        </div>
+        <div class="row margin-top-10">
+          <div class="col-12 text-left">
+            <span class="font-size-13 font-light">Emg Contact No</span><br>
+            <span
+              class="font-size-14 font-medium">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails?.medicalinfo[0]?.mi_emergency_contact_no : 'NA'}}</span>
+          </div>
         </div>
       </div>
-      <div class="row margin-top-10">
-        <div class="col-12 text-left">
-          <span class="font-size-13 font-light">Emg Contact No</span><br>
-          <span class="font-size-14 font-medium">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails?.medicalinfo[0]?.mi_emergency_contact_no : 'NA'}}</span>
+      <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-10">
+        <div class="row margin-top-8">
+          <div class="col-6 remove-col-padding-right remove-col-padding-left">
+            <div *ngIf="student_profile_flag" class=" blue-circle-btn"
+              (click)="goToPage('student-profile')" matTooltip="Student Profile">
+              <img style="margin-left: 11px ; margin-top: 10px" src="../../../../../../src/assets/student_profile.svg">
+            </div>
+            <div *ngIf="invoice_creation_individual_flag" class=" blue-circle-btn margin-top-15" matTooltip="Invoice Creation"
+              (click)="goToPage('invoice-creation-individual')">
+              <img style="margin-left: 11px ; margin-top: 10px" src="../../../../../../src/assets/invoice_creation.svg">
+            </div>
+
+          </div>
+          <div class="col-6 remove-col-padding-right remove-col-padding-left">
+            <div *ngIf="fee_transaction_entry_individual_flag" class=" blue-circle-btn"
+              matTooltip="Fee Transaction Entry" (click)="goToPage('fee-transaction-entry-individual')">
+              <img style="margin-left: 11px ; margin-top: 10px"
+                src="../../../../../../src/assets/fee_transaction_entry.svg">
+            </div>
+           
+            <div *ngIf="fee_ledger_flag" class="margin-top-15 blue-circle-btn" (click)="goToPage('fee-ledger')"
+              matTooltip="Fee Ledger">
+              <img style="margin-left: 11px ; margin-top: 10px" src="../../../../../../src/assets/fee_modification.svg">
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-10">
-      <div class="row margin-top-8">
-        <div class="col-6 remove-col-padding-right remove-col-padding-left">
-          <div *ngIf="student_profile_flag" class="margin-top-20 blue-circle-btn" (click)="goToPage('student-profile')" matTooltip="Student Profile" >
-            <img style="margin-left: 11px ; margin-top: 10px"  src="../../../../../../src/assets/student_profile.svg">
-          </div>
-          
-          <div *ngIf="invoice_creation_individual_flag" class="margin-top-20 blue-circle-btn"  matTooltip="Invoice Creation"
-          (click)="goToPage('invoice-creation-individual')">
-            <img style="margin-left: 11px ; margin-top: 10px"  src="../../../../../../src/assets/invoice_creation.svg">
-          </div>
-          
-        </div>
-        <div class="col-6 remove-col-padding-right remove-col-padding-left">
-          <div *ngIf="fee_transaction_entry_individual_flag" class="margin-top-20 blue-circle-btn"  matTooltip="Fee Transaction Entry"
-          (click)="goToPage('fee-transaction-entry-individual')">
-            <img style="margin-left: 11px ; margin-top: 10px"  src="../../../../../../src/assets/fee_transaction_entry.svg">
-          </div>
-          
-          <div *ngIf="fee_ledger_flag" class="margin-top-20 blue-circle-btn" (click)="goToPage('fee-ledger')"  matTooltip="Fee Ledger">
-            <img style="margin-left: 11px ; margin-top: 10px"  src="../../../../../../src/assets/fee_modification.svg">
-          </div>
-          
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
+  </form>
 </mat-card>
