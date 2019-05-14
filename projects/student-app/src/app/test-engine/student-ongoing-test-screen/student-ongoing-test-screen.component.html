@@ -36,7 +36,7 @@
                 </div>
               </div>
               <div class="col-3 text-center remove-left-padding">
-                <div style="border-radius: 100%"><img style="width: 42px;height:100%; " [src]="userprofileimage"></div>
+                <div style="border-radius: 100%"><img style="width: 42px;height:100%; " [src]="userprofileimage" onerror="" ></div>
               </div>
             </div>
           </div>
@@ -49,7 +49,7 @@
                     <div class="col-8 mob-remove-padding-right">
                         <span class="instruction-main-title">ONGOING TEST</span><i class="mob-margin-left-10 font-white fas fa-info-circle" (click)="openQuesDialog()"></i>
                         <br>
-                        <span class="font-white font-size-10">Maximum marks:{{examDetail.tp_marks}} | Subject: {{currentQP.sub_name}}</span>
+                        <span class="font-white font-size-10">Maximum marks:{{examDetail.tp_marks}} | Subject: {{examDetail.sub_name}}</span>
                     </div>
                     <div class="col-4">
                       <span class="font-size-10 font-white">Time Remaining</span><br>
@@ -83,7 +83,7 @@
                       </div>
                       <div class="col-lg-3 fin-tab-col-25">
                         <div class="float-right">
-                          <span>Subject : {{currentQP.sub_name}}</span>
+                          <span>Subject : {{examDetail.sub_name}}</span>
                         </div>
                       </div>
                       <div class="col-lg-3 fin-tab-col-25">
@@ -92,7 +92,7 @@
                         </div>
                       </div>
                     </div>
-                  
+                    </div>
                     <div class="row">
                       <div class="col-lg-12 test-button-section-title">
                         <div class="question-test-info-bar">
@@ -111,7 +111,6 @@
                         </div>
                       </div>
                     </div>
-                  </div>
                     <div class="question-test-box">
                       <div class="row">
                         <div class="col-lg-12 ">
@@ -659,6 +658,9 @@
                         <button mat-raised-button class="mob-btn-adv-six mob-btn-spacer" (click)="testSummary()">Test Summary</button>
                       </div>
                     </div>
+                    <a href="javascript:void(0)" (click)="openQuesDialog()" class="questions-modal-button">
+                      <i class="fas fa-info questions-modal-icon"></i>
+                    </a>
                 </div>
                 </div>
                 
