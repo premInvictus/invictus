@@ -58,3 +58,14 @@ h1.font-size-14 {
      height: 620px !important;
    }
 }
+
+@media (min-width: 300px) and (max-width: 960px) {
+  .big-screen {
+    display: none;
+  }
+}
+@media (min-width: 960px) {
+  .small-screen {
+    display: none;
+  }
+}

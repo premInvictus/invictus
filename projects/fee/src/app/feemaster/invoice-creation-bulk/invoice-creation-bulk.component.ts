@@ -213,6 +213,9 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 						this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 						this.reset();
 						this.getInvoice(this.invoiceSearchForm.value);
+					} else {
+						this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+
 					}
 				});
 			} else {
