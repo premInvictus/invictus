@@ -3,7 +3,7 @@ import { reportTable } from './reports.table';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FeeService, CommonAPIService, SisService } from '../../_services';
 import { MatTableDataSource, MatPaginator, PageEvent, MatDialog, MatPaginatorIntl } from '@angular/material';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { InvoiceDetailsModalComponent } from '../../feemaster/invoice-details-modal/invoice-details-modal.component';
 import * as XLSX from 'xlsx';
 import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
@@ -344,7 +344,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 												(Number(keys) + 1);
 											obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
-											obj[key2 + k] = titem['fh_amt'] ? titem['fh_amt'] : '-';
+											obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '0';
 											obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
 												repoArray[Number(keys)]['invoice_no'] : '-';
 											obj['invoice_id'] = repoArray[Number(keys)]['invoice_id'] ?
@@ -536,13 +536,13 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 					let index = 0;
 					for (const item of repoArray) {
-						const obj: any = {};
+						for (const stu_arr of item.stu_ledger_arr) {
+							const obj: any = {};
 						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
+							(++index);
 						obj['class_name'] = item['flgr_au_class_name'] + '-' +
 							item['flgr_au_sec_name'];
 						obj['au_full_name'] = item['flgr_au_full_name'] ? item.flgr_au_full_name : '-';
-						for (const stu_arr of item.stu_ledger_arr) {
 							obj['au_admission_no'] = stu_arr['flgr_login_id'] ?
 								stu_arr['flgr_login_id'] : '-';
 							obj['au_admission_no'] = stu_arr['flgr_login_id'] ?
@@ -560,18 +560,17 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									stu_arr['flgr_invoice_receipt_no'] : '-');
 							}
 							obj['flgr_amount'] = stu_arr['flgr_amount'] ?
-								stu_arr['flgr_amount'] : '-';
+							new DecimalPipe('en-us').transform(stu_arr['flgr_amount']) : '0';
 							obj['flgr_concession'] = stu_arr['flgr_concession'] ?
-								stu_arr['flgr_concession'] : '-';
+							new DecimalPipe('en-us').transform(stu_arr['flgr_concession']) : '-';
 							obj['flgr_receipt'] = stu_arr['flgr_receipt'] ?
-								stu_arr['flgr_receipt'] : '-';
+								new DecimalPipe('en-us').transform(stu_arr['flgr_receipt']) : '-';
 								obj['receipt_id'] = stu_arr['receipt_id'];
 							obj['flgr_balance'] = stu_arr['flgr_balance'] ?
-								stu_arr['flgr_balance'] : '-';
+							new DecimalPipe('en-us').transform(stu_arr['flgr_balance']) : '-';
+								this.REPORT_ELEMENT_DATA.push(obj);
 						}
-						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
-						index++;
 					}
 					this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
 					this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
