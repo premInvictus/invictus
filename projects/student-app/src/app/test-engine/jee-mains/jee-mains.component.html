@@ -86,16 +86,17 @@
           <div class="container-box__orange__mob padding-10">
             <div class="row row-remove-top-margin">
               <div class="col-8 mob-remove-padding-right">
-                  <span class="instruction-main-title">JEE MAIN</span><i class="mob-margin-left-10 font-white fas fa-info-circle" (click)="openDialog()"></i>
-                  <br>
-                  <span class="font-white font-size-10" [hidden]="!ongoingDiv" *ngFor="let item of examSubArray"
+                <span class="instruction-main-title">JEE MAIN</span><i
+                  class="mob-margin-left-10 font-white fas fa-info-circle" (click)="openDialog()"></i>
+                <br>
+                <span class="font-white font-size-10" [hidden]="!ongoingDiv" *ngFor="let item of examSubArray"
                   (click)="loadCurrentQ(item.sub_qus_ind)">{{item.sub_name}} |</span>
               </div>
               <div class="col-4">
                 <span class="font-size-10 font-white">Time Remaining</span><br>
                 <div class="margin-top-5">
-                <span class="font-size- font-white">{{timers}}</span>
-              </div>
+                  <span class="font-size- font-white">{{timers}}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -583,116 +584,122 @@
               </div>
             </div>
             <div class="big-screen">
-            <div class="button-container">
-              <div class="row">
-                <div class="col-12 remove-padding">
-                  <button mat-raised-button class="btn-save-nxt mob-test-btn btn-without-radius"
-                    (click)="saveAndNext()">Save &
-                    Next</button>
-                  <button mat-raised-button class="btn-spacer mob-test-btn btn-save-review btn-without-radius"
-                    (click)="saveAndNext(true)">Save & Mark For
-                    Review</button>
-                  <button mat-raised-button class="btn-spacer mob-test-btn btn-clear-res btn-without-radius"
-                    (click)="clearResponse()">Clear Response</button>
-                  <button mat-raised-button class="btn-spacer mob-test-btn btn-save-mark-review btn-without-radius"
-                    (click)="saveAndNext(true,false)">Mark For Review
-                    and Next</button>
+              <div class="button-container">
+                <div class="row">
+                  <div class="col-12 remove-padding">
+                    <button mat-raised-button class="btn-save-nxt mob-test-btn btn-without-radius"
+                      (click)="saveAndNext()">Save &
+                      Next</button>
+                    <button mat-raised-button class="btn-spacer mob-test-btn btn-save-review btn-without-radius"
+                      (click)="saveAndNext(true)">Save & Mark For
+                      Review</button>
+                    <button mat-raised-button class="btn-spacer mob-test-btn btn-clear-res btn-without-radius"
+                      (click)="clearResponse()">Clear Response</button>
+                    <button mat-raised-button class="btn-spacer mob-test-btn btn-save-mark-review btn-without-radius"
+                      (click)="saveAndNext(true,false)">Mark For Review
+                      and Next</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6 mob-col-70 remove-padding margin-top-10">
+                    <button mat-button class="btn-clear-res btn-without-radius" [disabled]="currentQAIndex == 0"
+                      (click)="loadCurrentQ(currentQAIndex - 1)"><i class="fas fa-angle-double-left"></i>
+                      Back</button>
+                    <button mat-button class="btn-clear-res btn-without-radius btn-spacer"
+                      [disabled]="currentQAIndex == questionsArray.length-1" (click)="loadCurrentQ(currentQAIndex + 1)">
+                      Next <i class="fas fa-angle-double-right"></i></button>
+                  </div>
+                  <div class="col-6 mob-col-30 remove-padding margin-top-10 text-right">
+                    <button mat-button class="btn-save-nxt btn-without-radius" (click)="testSummary()">Submit</button>
+                  </div>
                 </div>
               </div>
+
+            </div>
+            <div class="small-screen">
               <div class="row">
-                <div class="col-6 mob-col-70 remove-padding margin-top-10">
-                  <button mat-button class="btn-clear-res btn-without-radius" [disabled]="currentQAIndex == 0"
-                    (click)="loadCurrentQ(currentQAIndex - 1)"><i class="fas fa-angle-double-left"></i>
-                    Back</button>
-                  <button mat-button class="btn-clear-res btn-without-radius btn-spacer"
+                <div class="col-12">
+                  <button mat-raised-button class="mob-btn-one" [disabled]="currentQAIndex == 0"
+                    (click)="loadCurrentQ(currentQAIndex - 1)">Previous</button>
+                  <button mat-raised-button class="mob-btn-two mob-btn-spacer "
                     [disabled]="currentQAIndex == questionsArray.length-1" (click)="loadCurrentQ(currentQAIndex + 1)">
-                    Next <i class="fas fa-angle-double-right"></i></button>
+                    Save</button>
+                  <button mat-raised-button class="mob-btn-three mob-btn-spacer" (click)="saveAndNext()">Save &
+                    Next</button>
                 </div>
-                <div class="col-6 mob-col-30 remove-padding margin-top-10 text-right">
-                  <button mat-button class="btn-save-nxt btn-without-radius" (click)="testSummary()">Submit</button>
-                </div>
               </div>
-            </div>
-            
-          </div>
-          <div class="small-screen">
-            <div class="row">
-              <div class="col-12">
-                <button mat-raised-button class="mob-btn-one" [disabled]="currentQAIndex == 0"
-                (click)="loadCurrentQ(currentQAIndex - 1)">Previous</button>
-                <button mat-raised-button class="mob-btn-two mob-btn-spacer " [disabled]="currentQAIndex == questionsArray.length-1" (click)="loadCurrentQ(currentQAIndex + 1)"> Save</button>
-                <button mat-raised-button class="mob-btn-three mob-btn-spacer" (click)="saveAndNext()">Save & Next</button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 ">
-                  <button mat-raised-button class="mob-btn-four"  (click)="saveAndNext(true)">Save & Marked For Review</button>
-                  <button mat-raised-button class="mob-btn-five mob-btn-spacer" (click)="clearResponse()">Clear Response</button>
-              </div>
-            </div>
-            <div class="row">
+              <div class="row">
                 <div class="col-12 ">
-                    <button mat-raised-button class="mob-btn-six" (click)="saveAndNext(true,false)">Marked For Review & Next</button>
-                    <button mat-raised-button class="mob-btn-seven mob-btn-spacer" (click)="testSummary()">Submit</button>
+                  <button mat-raised-button class="mob-btn-four" (click)="saveAndNext(true)">Save & Marked For
+                    Review</button>
+                  <button mat-raised-button class="mob-btn-five mob-btn-spacer" (click)="clearResponse()">Clear
+                    Response</button>
                 </div>
               </div>
-          </div>
+              <div class="row">
+                <div class="col-12 ">
+                  <button mat-raised-button class="mob-btn-six" (click)="saveAndNext(true,false)">Marked For Review &
+                    Next</button>
+                  <button mat-raised-button class="mob-btn-seven mob-btn-spacer" (click)="testSummary()">Submit</button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="col-4 mob-col-100 jee-main-col-26 remove-padding" id="right-ques-container">
             <div class="big-screen">
-            <div class="row">
-              <div class="col-6">
-                <img src="../../../../../../src/assets/default-ques-btn.svg" class="jee-btn-svg">
-                <span class="adv-jee-btn-ondqb">{{getCount('')}}</span>
-                <span class="font-size-12">Not Visited</span>
-              </div>
-              <div class="col-6">
-                <img src="../../../../../../src/assets/main-orange-btn.svg" class="jee-btn-svg">
-                <span class="main-jee-btn-not-onans">{{getCount('2')}}</span>
-                <span class="font-size-12">Not Answered</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <img src="../../../../../../src/assets/main-green-btn.svg" class="jee-btn-svg">
-                <span class="adv-jee-btn-onans">{{getCount('1')}}</span>
-                <span class="font-size-12">Answered</span>
-              </div>
-              <div class="col-6">
-                <img src="../../../../../../src/assets/saveforreview.svg" class="jee-btn-svg">
-                <span class="main-jee-btn-not-onsfr">{{getCount('0')}}</span>
-                <span class="font-size-12">Marked For Review</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-1">
-                <img src="../../../../../../src/assets/ansmarkreview.svg" class="jee-btn-svg">
-                <span class="adv-jee-btn-onans">{{getCount('3')}}</span>
-              </div>
-              <div class="col-11">
-                <span class="font-size-12">Answered & Marked For Review (will be considered for evaluation)</span>
-              </div>
-
-            </div>
-            <br>
-            <div class="jee-main-no-container">
               <div class="row">
-                <div class="col-12 ">
-                  <ng-container *ngFor="let item of questionsArray;let i=index">
-                    <div class="margin-left-4 display-inline" (click)="loadCurrentQ(i)">
-                      <img [src]="getQusStatuSrc(item.answerStatus)" class="jee-btn-svg">
-                      <span class="main-side-btn1">{{i+1}}</span>
-                    </div>
-                  </ng-container>
+                <div class="col-6">
+                  <img src="../../../../../../src/assets/default-ques-btn.svg" class="jee-btn-svg">
+                  <span class="adv-jee-btn-ondqb">{{getCount('')}}</span>
+                  <span class="font-size-12">Not Visited</span>
+                </div>
+                <div class="col-6">
+                  <img src="../../../../../../src/assets/main-orange-btn.svg" class="jee-btn-svg">
+                  <span class="main-jee-btn-not-onans">{{getCount('2')}}</span>
+                  <span class="font-size-12">Not Answered</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <img src="../../../../../../src/assets/main-green-btn.svg" class="jee-btn-svg">
+                  <span class="adv-jee-btn-onans">{{getCount('1')}}</span>
+                  <span class="font-size-12">Answered</span>
+                </div>
+                <div class="col-6">
+                  <img src="../../../../../../src/assets/saveforreview.svg" class="jee-btn-svg">
+                  <span class="main-jee-btn-not-onsfr">{{getCount('0')}}</span>
+                  <span class="font-size-12">Marked For Review</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-1">
+                  <img src="../../../../../../src/assets/ansmarkreview.svg" class="jee-btn-svg">
+                  <span class="adv-jee-btn-onans">{{getCount('3')}}</span>
+                </div>
+                <div class="col-11">
+                  <span class="font-size-12">Answered & Marked For Review (will be considered for evaluation)</span>
                 </div>
 
               </div>
-              <div>
+              <br>
+              <div class="jee-main-no-container">
+                <div class="row">
+                  <div class="col-12 ">
+                    <ng-container *ngFor="let item of questionsArray;let i=index">
+                      <div class="margin-left-4 display-inline" (click)="loadCurrentQ(i)">
+                        <img [src]="getQusStatuSrc(item.answerStatus)" class="jee-btn-svg">
+                        <span class="main-side-btn1">{{i+1}}</span>
+                      </div>
+                    </ng-container>
+                  </div>
 
+                </div>
+                <div>
+
+                </div>
               </div>
             </div>
           </div>
-        </div>
         </div>
       </div>
     </div>

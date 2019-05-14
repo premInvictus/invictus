@@ -14,3 +14,13 @@ h1.font-size-14 {
 .instruction-sub-title-mob {
     width: 132px !important; 
 }
+@media (min-width: 300px) and (max-width: 960px) {
+    .big-screen {
+      display: none;
+    }
+  }
+  @media (min-width: 960px) {
+    .small-screen {
+      display: none;
+    }
+  }
