@@ -6,6 +6,9 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatDialog, MatPaginatorInt
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { InvoiceDetailsModalComponent } from '../../feemaster/invoice-details-modal/invoice-details-modal.component';
 import * as XLSX from 'xlsx';
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
 import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 @Component({
@@ -1079,5 +1082,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	ngOnDestroy() {
 		localStorage.removeItem('invoiceBulkRecords');
+	}
+	exportAsPDF() {
+	const doc = new jsPDF();
+	doc.autoTable({html: '#report_table'});
+	doc.save('table.pdf');
 	}
 }
