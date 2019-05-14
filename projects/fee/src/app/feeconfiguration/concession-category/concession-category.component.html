@@ -1,6 +1,6 @@
 <div class="container-box__grey">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-content__container margin-bottom-140">
         <mat-card-title>
           
@@ -17,7 +17,7 @@
         </mat-card-title>
         <mat-card-content>
           <div class="row">
-            <div class="col-4 custom-col-27">
+            <div class="col-4 remove-col-padding custom-col-27">
                 <form [formGroup]="conccesionCategoryForm">
               <div class="row">
                 <div class="col-12 margin-top-25">
@@ -82,15 +82,15 @@
             </form>
             </div>
             <div class="col-1 custom-col-2">
-              <div class="vertical-line"></div>
+              <div class="vertical-line-divider"></div>
             </div>
             <div class="col-7 custom-col-69">
               <div class="row">
                 <div class="col-12 remove-col-padding">
-                  <div class="table-container">
+                  <div>
                     <mat-form-field [hidden]="!(CONCESSION_ELEMENT_DATA.length > 0)">
-                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                      <i class="fas fa-filter table-filter" matPrefix></i>
+                      <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      <mat-icon  matPrefix>filter_list</mat-icon>
 
                     </mat-form-field>
                     <table class="table-100 text-center " mat-table [dataSource]="dataSource" matSort>
