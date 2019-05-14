@@ -50,6 +50,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 	ngOnInit() {
 		this.invoiceArray = [];
 		this.invoice = {};
+		this.selectedMode = '';
 		this.getSchool();
 		this.getAllBanks();
 		this.getBanks();
@@ -116,6 +117,10 @@ export class FeeTransactionEntryComponent implements OnInit {
 				this.invoice = {};
 				this.invoice = result.data[0];
 				this.invoiceArray = this.invoice.invoice_bifurcation;
+				this.feeTransactionForm.patchValue({
+					'ftr_amount': this.invoice.fee_amount ? this.invoice.fee_amount : 0,
+					'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
+				});
 				let pos = 1;
 				this.invoiceTotal = 0;
 				for (const item of this.invoiceArray) {
@@ -139,7 +144,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 		this.feeTransactionForm.patchValue({
 			'inv_id': [],
 			'login_id': '',
-			'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
+			'ftr_emod_id': '',
 			'ftr_transaction_id': '',
 			'ftr_transaction_date': new Date(),
 			'ftr_pay_id': '1',
@@ -156,8 +161,8 @@ export class FeeTransactionEntryComponent implements OnInit {
 		this.sisService.getStudentInformation({ au_login_id: login_id, au_status: '1' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.studentInfo = result.data[0];
+				this.selectedMode = '1';
 				if (this.studentInfo.last_invoice_number) {
-					this.selectedMode = this.entryModes[0] ? this.entryModes[0].emod_id : '';
 					this.getInvoices(this.studentInfo.last_invoice_number);
 				} else {
 					this.invoiceArray = [];
