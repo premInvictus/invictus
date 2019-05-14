@@ -193,8 +193,9 @@
           <div class="row">
             <div class="col-12">
               <div  *ngIf="fieldEnableAtAdmission() && processtypeService.getProcesstype() !== '5'" class="grey_back_title text-center">
-                <span><b>Fees O/S :</b> {{studentdetails.ead_fees_structure ? studentdetails.ead_fees_structure: '-'}}</span>
-                <span class="btn-spacer"><b>Concession Category :</b> {{studentdetails.ead_concession_category ? studentdetails.ead_concession_category : '-'}}</span>
+                <span><b>Fees O/S :</b> {{studentdetails.fee_outstanding ? 
+                  (studentdetails.fee_outstanding | number): 'NA'}}</span>
+                <span class="btn-spacer"><b>Concession Category :</b> {{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
               </div>
             </div>
           </div>

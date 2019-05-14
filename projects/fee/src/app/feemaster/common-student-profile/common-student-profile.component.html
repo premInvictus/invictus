@@ -53,13 +53,13 @@
           </div>
         </div>
       </div>
-      <div class="col-2 custom-fee-entry-col-12">
-        <div class="row margin-top-8">
-          <div class="col-12 text-left">
-            <span class="font-size-13 font-light">Outstanding Fee</span><br>
-            <span class="font-size-14 font-medium">{{studentdetails.ead_fees_structure ? 
-              (studentdetails.ead_fees_structure | capitalize): 'NA'}}</span>
-          </div>
+    </div>
+    <div class="col-2 custom-fee-entry-col-12">
+      <div class="row margin-top-8">
+        <div class="col-12 text-left">
+          <span class="font-size-13 font-light">Outstanding Fee</span><br>
+          <span class="font-size-14 font-medium">{{studentdetails.fee_outstanding ? 
+              (studentdetails.fee_outstanding | number): 'NA'}}</span>
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left">
@@ -100,12 +100,11 @@
               studentdetails.parentinfo[0].epd_parent_name : 'NA'}}</span>
           </div>
         </div>
-        <div class="row margin-top-10">
-          <div class="col-12 text-left">
-            <span class="font-size-13 font-light">Contact No</span><br>
-            <span
-              class="font-size-14 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
-          </div>
+      </div>
+      <div class="row margin-top-10">
+        <div class="col-12 text-left">
+          <span class="font-size-13 font-light">Contact No</span><br>
+          <span class="font-size-14 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0]? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
         </div>
       </div>
       <div class="col-2 custom-fee-entry-col-12">

@@ -154,4 +154,117 @@ button.number-btn:hover {
             height: 370px !important;
             overflow-y: auto;
         }
+        .small-screen {
+            display: none !important;
+        }
+    }
+    @media screen and (max-width: 2000px) and (min-width: 1500px) { 
+        .small-screen {
+            display: none !important;
+        }
+        .on-adv-test-margin-top-30 {
+            margin-top: 30px;
+        }
+         .custom-col-2 {
+            flex: 0 0 23.666667% !important;
+            max-width: 23.666667% !important;
+        }
+    
+        .remove-right-padding {
+            padding-right: 0px !important;
+        }
+    
+        .custom-col-10 {
+            flex: 0 0 79.333333% !important;
+            max-width: 76.333333% !important;
+        }
+        .ques-number-coll {
+            height: 74vh !important;
+        }
+    
+        .numberpad-adv-container {
+            border: 2px solid #000;
+            height: 74vh;
+        }
+    
+        .mat-tab-body-content {
+            overflow: auto;
+        }
+    
+        .custom-mid-right-ques-container {
+            flex: 0 0 23.666667% !important;
+            max-width: 23.666667% !important;
+            padding-right: 15px;
+        }
+    
+        .custom-mid-left-ques-container {
+            flex: 0 0 76.333333% !important;
+            max-width: 76.333333% !important;
+            padding-left: 20px;
+        }
+    
+      .numberpad-adv-container {
+        border: 2px solid #000;
+        height: 63.45vh;
+      }
+      .remove-right-padding {
+        padding-right: 0px !important;
+    }
+    
+      .submit-btn-ne9 {
+        margin-top: -9px !important;
+    }
+    }
+    @media screen and (max-width: 550px) and (min-width: 300px) {  
+        .big-screen {
+            display: none !important;
+        }
+        .custom-mid-left-ques-container {
+            flex: 0 0 94.333333% !important;
+            max-width: 94.333333% !important;
+            padding-left: 20px;
+        }
+        .question-parent-class[_ngcontent-c4] {
+            height: 30% !important;
+            margin-top: 5px !important;
+        }
+        .question-options-card{
+            width: 100% !important;
+            height: 100% !important;
+            overflow-y: scroll !important;
+        }
+        .ques-content-card-parent{
+            width: 100% !important;
+            height: 100% !important;
+            overflow-y: scroll !important;
+        }
+        .float{
+            position:fixed;
+            width:60px;
+            height:60px;
+            bottom:40px;
+            right:40px;
+            background-color: #3379b7 !important;
+            color:#FFF;
+            border-radius:50px;
+            text-align:center;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 9999 !important;
+            }
+
+            .my-float{
+                margin-top:22px;
+            }
+            ::-webkit-scrollbar {
+                display: none !important
+            }
+            .text-center {
+                text-align: left !important;
+            }
+            .float-div-small{
+                z-index: 3 !important;
+            }
+            footer {
+                z-index: 9999 !important
+            }
     }

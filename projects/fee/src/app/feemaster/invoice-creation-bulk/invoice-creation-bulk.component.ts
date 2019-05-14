@@ -8,13 +8,14 @@ import { FilterModalComponent } from '../../common-filter/filter-modal/filter-mo
 import { FeeService, CommonAPIService, SisService } from '../../_services/index';
 import { InvoiceElement } from './invoice-element.model';
 import { Router, ActivatedRoute } from '@angular/router';
-import {MatPaginatorI18n} from '../../sharedmodule/customPaginatorClass';
+import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-invoice-creation-bulk',
 	templateUrl: './invoice-creation-bulk.component.html',
 	styleUrls: ['./invoice-creation-bulk.component.scss'],
 	providers: [
-		{provide: MatPaginatorIntl, useClass: MatPaginatorI18n}
+		{ provide: MatPaginatorIntl, useClass: MatPaginatorI18n }
 	]
 })
 export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -138,7 +139,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			if (result && result.status === 'ok') {
 				this.invoiceArray = result.data.invoiceData;
 				this.totalRecords = Number(result.data.totalRecords);
-				localStorage.setItem('invoiceBulkRecords', JSON.stringify({records: this.totalRecords}));
+				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				this.invoiceTableData(this.invoiceArray);
 			} else {
 				this.invoiceTableData();
@@ -212,6 +213,9 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 						this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 						this.reset();
 						this.getInvoice(this.invoiceSearchForm.value);
+					} else {
+						this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+
 					}
 				});
 			} else {
@@ -312,7 +316,23 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		});
 
 	}
-
+	printInvoice() {
+		const printParam = {
+			inv_id: this.fetchInvId()
+		};
+		console.log(printParam);
+		if (printParam.inv_id.length > 0) {
+			this.feeService.printInvoice(printParam).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+					const length = result.data.split('/').length;
+					saveAs(result.data, result.data.split('/')[length - 1]);
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		}
+	}
 	navigateIndividual() {
 		this.router.navigate(['../invoice-creation-individual'], { relativeTo: this.route });
 	}

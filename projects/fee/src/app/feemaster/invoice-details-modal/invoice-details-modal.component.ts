@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { InvoiceDetails } from './invoice-details.model';
 import { FeeService, CommonAPIService } from '../../_services/index';
+import { saveAs } from 'file-saver';
 
 @Component({
 	selector: 'app-invoice-details-modal',
@@ -177,7 +178,17 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			}
 		});
 	}
+
 	printInvoice() {
+		this.feeService.printInvoice({ inv_id: [this.invoiceDetails.inv_id] }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
 
 	}
 	editConfirm() { }

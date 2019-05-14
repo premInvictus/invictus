@@ -646,13 +646,16 @@ export class SisService {
 	}
 	insertEditRequest(value) {
 		this.service.startLoading();
+		value.pro_id = '2';
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/insertEditRequest', value);
 	}
 	updateEditRequest(value) {
 		this.service.startLoading();
+		value.pro_id = '2';
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/updateEditRequest', value);
 	}
 	getEditRequest(value) {
+		value.pro_id = '2';
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/getEditRequest', value);
 	}
@@ -767,6 +770,7 @@ export class SisService {
 	}
 	getFormFields(value) {
 		this.service.startLoading();
+		value.ff_project_id = '2';
 		return this.http.post(environment.apiSisUrl + '/configure/getFormFields', value);
 	}
 	getFormFieldsForFilter(value) {

@@ -184,6 +184,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/insertInvoice', value);
 	}
+	printInvoice(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/printInvoice', value);
+	}
 	recalculateInvoice(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/recalculateInvoice', value);
@@ -267,5 +271,9 @@ export class FeeService {
 	getFeeAdjustmentReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeAdjustmentReport', value);
+	}
+	printReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/printReceipt', value);
 	}
 }

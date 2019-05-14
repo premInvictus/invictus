@@ -11,7 +11,7 @@
             <div *ngIf="showTable" class="row">
                <div class="col-12">
                   <div>
-                     <mat-form-field class="form-feild">
+                     <mat-form-field class="form-feild" *ngIf="EDIT_REQUEST_ELEMENT_DATA.length > 0">
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                      </mat-form-field>
                      <mat-table [dataSource]="editRequestDataSource" matSort class="table-100 mat-elevation-z1">
@@ -106,6 +106,11 @@
                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
                      </mat-table>
+                     <table class="table-100 text-center" style="margin-top:5px;">
+                           <tr *ngIf="EDIT_REQUEST_ELEMENT_DATA.length == 0">
+                             <td colspan="12">No Record Found</td>
+                           </tr>
+                         </table>
                   </div>
                </div>
             </div>
