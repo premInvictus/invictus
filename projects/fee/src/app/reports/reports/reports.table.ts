@@ -25,9 +25,9 @@ export const reportTable = {
 			routewise: {
 				tableHeader: 'Routewise Fee Collection Report',
 				columnDef: ['srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'receipt_no',
-					'rpt_amount', 'fp_name', 'pay_name'],
+					'rpt_amount', 'route_name', 'stoppages_name'],
 				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
-					'Reciept Amount', 'Route Name', 'Stoppage'],
+					'Transport Amount', 'Route Name', 'Stoppage'],
 			}
 		}
 	},
@@ -85,10 +85,17 @@ export const reportTable = {
 		report_id: '10',
 		report_name: 'Fee Structure Report',
 		dataReport: {
-			feeStructure: {
+			feestructure: {
 				tableHeader: 'Fee Structure Report',
 				columnDef: ['srno', 'fs_name', 'fs_structure', 'fs_description'],
 				colunmHeader: ['SNo.', 'Fee Structure', 'Fee Head', 'Description'],
+			},
+			feestructurealloted: {
+				tableHeader: 'Fee Structure Alloted Report',
+				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name',
+			'fc_classfication', 'fh_name', 'fh_amount', 'ft_name', 'calm_name'],
+				colunmHeader: ['SNo.', 'Admission Number', 'Student Name', 'Class-Section',
+			'Classification', 'Fee Head', 'Amount' , 'Fee Type', 'Calculation'],
 			}
 		}
 	},
