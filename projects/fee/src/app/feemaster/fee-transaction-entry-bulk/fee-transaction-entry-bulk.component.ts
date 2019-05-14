@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { SisService, ProcesstypeService, FeeService, CommonAPIService } from '../../_services';
 import { BarecodeScannerLivestreamComponent } from 'ngx-barcode-scanner';
 import { DatePipe } from '@angular/common';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-fee-transaction-entry-bulk',
 	templateUrl: './fee-transaction-entry-bulk.component.html',
@@ -59,7 +60,8 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			'ftr_bnk_id': '',
 			'ftr_branch': '',
 			'ftr_amount': '',
-			'ftr_remark': ''
+			'ftr_remark': '',
+			'saveAndPrint': ''
 		});
 
 	}
@@ -130,7 +132,8 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			const datePipe = new DatePipe('en-in');
 			this.feeTransactionForm.patchValue({
 				'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
-				'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd')
+				'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
+				'saveAndPrint': true
 			});
 			this.feeTransactionForm.value.inv_id = this.invoiceArray;
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
@@ -138,6 +141,29 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 					this.common.showSuccessErrorMessage('Fee transaction added', 'success');
 				} else {
 					this.common.showSuccessErrorMessage('Fee transaction not added', 'error');
+				}
+			});
+		} else if (this.invoiceArray.length === 0) {
+			this.common.showSuccessErrorMessage('Please add invoices to continue', 'error');
+		}
+	}
+	saveAndPrint() {
+		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0) {
+			const datePipe = new DatePipe('en-in');
+			this.feeTransactionForm.patchValue({
+				'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
+				'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
+				'saveAndPrint': true
+			});
+			this.feeTransactionForm.value.inv_id = this.invoiceArray;
+			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					const length = result.data.split('/').length;
+					saveAs(result.data, result.data.split('/')[length - 1]);
+				} else {
+					const length = result.data.split('/').length;
+					saveAs(result.data, result.data.split('/')[length - 1]);
+					this.feeTransactionForm.reset();
 				}
 			});
 		} else if (this.invoiceArray.length === 0) {
@@ -158,7 +184,8 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			'ftr_bnk_id': '',
 			'ftr_branch': '',
 			'ftr_amount': '',
-			'ftr_remark': ''
+			'ftr_remark': '',
+			'saveAndPrint' : ''
 		});
 	}
 	ngOnDestroy() {

@@ -49,7 +49,7 @@
               <mat-label>Payment Mode</mat-label>
               <mat-select formControlName="ftr_pay_id"  placeholder="Payment Mode" required>
                   <mat-option value="">Please Select</mat-option>
-                  <mat-option *ngFor="let mode of payModes" [value]="mode.pay_id">{{mode.pay_name}}</mat-option>
+                  <mat-option *ngFor="let mode of payModes" [hidden]="!(mode.pay_id === '2')" [value]="mode.pay_id">{{mode.pay_name}}</mat-option>
                 </mat-select>
             </mat-form-field>
           </div>
@@ -90,7 +90,8 @@
         <div class="row">
           <div class="col-12 text-center">
             <button *ngIf="isExist('369')" mat-button class="btn-success" (click)="submit()">Submit</button>
-            <button *ngIf="isExist('370')" mat-button class="text-uppercase recalulate-invoice-btn btn-spacer">save & print</button>
+            <button *ngIf="isExist('370')" mat-button class="text-uppercase recalulate-invoice-btn btn-spacer"
+            (click)="saveAndPrint()">save & print</button>
             <button mat-button class="btn-spacer btn-danger" (click)="reset()">Cancel</button>
           </div>
         </div>
