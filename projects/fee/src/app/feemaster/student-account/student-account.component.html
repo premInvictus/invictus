@@ -2,7 +2,7 @@
     <form [formGroup]="accountsForm" novalidate>
        <span class="font-size-20 font-medium">Fee Details</span>
        <div class="row margin-top-15">
-          <div class="col-6">
+          <div class="col-6 remove-col-padding-left">
              <mat-form-field appearance="outline" class="form-field" appearance="outline">
                 <mat-label>Other Category</mat-label>
                 <mat-select placeholder="Other Category"  [disabled]="!editFlag"
@@ -12,7 +12,7 @@
                 </mat-select>
              </mat-form-field>
           </div>
-          <div class="col-6">
+          <div class="col-6 remove-col-padding-right">
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Fee Structure</mat-label>
                 <mat-select placeholder="Applicable Fee Structure" [disabled]="!editFlag"
@@ -24,12 +24,12 @@
           </div>
        </div>
        <div class="row">
-          <div class="col-12 margin-top-50">
+          <div class="col-12 remove-col-padding">
              <span class="font-size-20 font-medium">Concession</span>
           </div>
        </div>
        <div class="row margin-top-15">
-          <div class="col-3">
+          <div class="col-3 remove-col-padding-left">
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Concession Group</mat-label>
                 <mat-select placeholder="Concession Group" [disabled]="!editFlag"
@@ -51,12 +51,12 @@
        <div class="row">
        </div>
        <div *ngIf="transportFlag" class="row">
-          <div class="col-12 margin-top-50">
+          <div class="col-12 remove-col-padding">
              <span class="font-size-20 font-medium">Transport Details</span>
           </div>
        </div>
        <div *ngIf="transportFlag" class="row margin-top-15">
-          <div class="col-3">
+          <div class="col-3 remove-col-padding-left">
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Mode</mat-label>
                 <mat-select placeholder="Mode" [disabled]="!editFlag"
@@ -87,7 +87,7 @@
                 </mat-select>
              </mat-form-field>
           </div>
-          <div *ngIf="modeFlag" class="col-3">
+          <div *ngIf="modeFlag" class="col-3 remove-col-padding-right">
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Applicable Slab</mat-label>
                 <mat-select placeholder="Applicable Slab" [disabled]="!editFlag"
@@ -98,8 +98,8 @@
              </mat-form-field>
           </div>
        </div>
-       <div *ngIf="transportFlag" class="row margin-top-15">
-          <div *ngIf="modeFlag" class="col-3">
+       <div *ngIf="transportFlag" class="row">
+          <div *ngIf="modeFlag" class="col-3 remove-col-padding-left">
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Application From</mat-label>
                 <input  matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="!editFlag"
@@ -131,12 +131,12 @@
        <mat-checkbox *ngIf="modeFlag" class="font-size-16" [disabled]="!editFlag"
        (change)="terminate($event)" formControlName="accd_is_terminate">{{terminateStatus}}</mat-checkbox>
        <div *ngIf="hostelFlag" class="row">
-          <div class="col-12 margin-top-50">
+          <div class="col-12 remove-col-padding">
              <span class="font-size-20 font-medium">Hostel Details</span>
           </div>
        </div>
        <div *ngIf="hostelFlag" class="row margin-top-15">
-          <div class="col-3">
+          <div class="col-3 remove-col-padding-left">
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Hostel Fee</mat-label>
                 <mat-select placeholder="Applicable Hostel Fee" [disabled]="!editFlag"
@@ -180,7 +180,7 @@
           </div>
        </div>
        <div class="row">
-          <div class="col-12">
+          <div class="col-12 remove-col-padding ">
              <mat-checkbox *ngIf="modeFlag && hostelFlag" [disabled]="!editFlag"
              class="font-size-16" (change)="hostel($event)" formControlName="accd_is_hostel_terminate">{{hostelStatus}}</mat-checkbox>
           </div>

@@ -1,6 +1,6 @@
 <div class="container-box__grey">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container">
         <div class="row">
           <div class="col-6">
@@ -14,8 +14,8 @@
             </div>
           </div>
         </div>
-      </mat-card><br>
-      <mat-card class="margin-bottom-140">
+      </mat-card>
+      <mat-card class="margin-top-8 margin-bottom-140">
         <div class="row">
           <div class="col-12 text-right">
               <div style="display:inline-flex">
@@ -27,10 +27,10 @@
           </div>
         </div>
         <div class="row margin-top-20">
-          <div class="col-3 custom-col-20">
+          <div class="col-3 remove-col-padding custom-col-20">
             <form [formGroup]="invoiceCreationForm" novalidate>
               <div class="row">
-                <div class="col-12 ">
+                <div class="col-12 remove-col-padding">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Invoice type</mat-label>
                     <mat-select placeholder="Invoice Type" formControlName="inv_calm_id" required>
@@ -42,19 +42,19 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-12">
+                <div class="col-12 remove-col-padding">
                   <div class="text-center">
                     <button mat-raised-button class="print-btn" (click)="openFilterDialog()">Filter</button>
                   </div>
                 </div>
               </div>
               <div class="row">
-                <div class="col-12 margin-top-25">
+                <div class="col-12 remove-col-padding margin-top-25">
                   <h4 class="font-medium">Fee Period</h4>
                 </div>
               </div>
               <div class="row">
-                <div class="col-12">
+                <div class="col-12 remove-col-padding">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Fee Period</mat-label>
                     <mat-select placeholder="Fee Period" multiple formControlName="inv_fm_id" required>
@@ -64,7 +64,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-12">
+                <div class="col-12 remove-col-padding">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Invoice Date</mat-label>
                     <input matInput [matDatepicker]="picker" placeholder="Invoice Date" [min]="minInvoiceDate"
@@ -75,7 +75,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-12">
+                <div class="col-12 remove-col-padding">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Last Date</mat-label>
                     <input matInput [matDatepicker]="picker1" placeholder="Last Date" [min]="minDueDate" formControlName="inv_due_date"
@@ -86,11 +86,11 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-12 margin-top-10">
+                <div class="col-12  remove-col-padding margin-top-10">
                   <mat-checkbox formControlName="recalculation_flag">Recalculate All Unpaid Invoices</mat-checkbox>
                 </div>
               </div>
-              <div class="text-center margin-top-25">
+              <div class="text-center margin-top-25 margin-bottom-140">
                 <button *ngIf="commonAPIService.isExistUserAccessMenu('353')" mat-raised-button class=" btn-generate-invoice" (click)="insertInvoice()">Generate
                   Invoice</button>
                   <button mat-raised-button style="margin-left: 10px" class="custom-margin-top-10 print-btn" (click)="reset()">Reset</button>
@@ -99,9 +99,9 @@
           </div>
 
           <div class="col-1 custom-col-5 ">
-            <div class="vertical-line"></div>
+            <div class="vertical-line-divider"></div>
           </div>
-          <div class="col-8 custom-col-75">
+          <div class="col-8 remove-col-padding custom-col-75">
             <div class="row" *ngIf="advanceSearchFlag">
               <div class="col-12 col-padding-5">
                 <span class="font-size-16 font-medium">Search</span>
@@ -186,7 +186,7 @@
               </div>
             </form>
             <div class="row">
-              <div class="col-12 text-right">
+              <div class="col-12 remove-col-padding text-right ">
                 <button *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0" mat-raised-button class=" recalulate-invoice-btn btn-spacer"
                   (click)="openRecalculateDialog({})">Recalculate</button>
                 <button *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0" mat-raised-button class=" btn-danger btn-spacer"
@@ -217,7 +217,7 @@
                 </div>
               </div> -->
             <div class="row margin-top-20 ">
-              <div class="col-12">
+              <div class="col-12 remove-col-padding">
 
 
                 <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center">

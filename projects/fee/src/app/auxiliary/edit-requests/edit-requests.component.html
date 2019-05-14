@@ -9,7 +9,7 @@
             </div>
             <br>
             <div *ngIf="showTable" class="row">
-               <div class="col-12">
+               <div class="col-12 remove-col-padding">
                   <div>
                      <mat-form-field class="form-feild">
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">

@@ -1,22 +1,22 @@
 <div class="container-box__grey">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container">
         <div class="row">
-          <div class="col-6">
+          <div class="col-6 remove-col-padding-left">
             <h1 class="remove-bottom-margin font-size-24">Cheque Control Tool</h1>
           </div>
         </div>
       </mat-card>
     </div>
   </div>
-  <div class="row margin-top-25 ">
-      <div class="col-12">
+  <div class="row">
+      <div class="col-12 remove-col-padding">
         <mat-card class="card-top-title__container">
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 remove-col-padding">
                 <div class="row">
-                    <div class="col-12 ">
+                    <div class="col-12 remove-col-padding">
                       <div class="float-right">
                       <span class="font-size-16 font-medium">
                           <i class="fas fa-search">&nbsp;Advanced Search</i> 
@@ -27,7 +27,7 @@
                   </div>
                   <form *ngIf="toggleSearch" [formGroup]="filterForm">
                   <div class="row margin-top-5">
-                    <div class="col-2 custom-col-15 ">
+                    <div class="col-2 custom-col-15 remove-col-padding-left">
                       <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Admission</mat-label>
                         <input matInput placeholder="Admission" formControlName="admission_no">
@@ -76,7 +76,7 @@
     
                       </mat-form-field>
                     </div>
-                    <div class="col-1 custom-col-10 ">
+                    <div class="col-1 custom-col-10 remove-col-padding-right ">
                       <button mat-raised-button class="apply-btn margin-top-10" (click)="getFilteredValue()">Apply</button>
                     </div>
                   </div>
@@ -93,7 +93,7 @@
                 </div>
               </div>
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 remove-col-padding">
                 <table mat-table [dataSource]="dataSource" class="table-100 text-center">
                     
                     <ng-container matColumnDef="srno">

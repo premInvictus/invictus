@@ -1,6 +1,6 @@
 <div class="container-box__grey">
     <div class="row margin-top-25">
-        <div class="col-12">
+        <div class="col-12 remove-col-padding">
           <app-common-student-profile [loginId]="lastRecordId"
           (next)="next($event)"
           (prev)="prev($event)"
@@ -10,13 +10,13 @@
         </div>
       </div>
   <div class="row margin-top-25">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container">
         <div class="row margin-bottom-10">
-          <div class="col-6">
+          <div class="col-6 remove-col-padding-left">
             <span class="font-size-24 font-medium">Accounts</span>
           </div>
-          <div class="col-6 text-right">
+          <div class="col-6 remove-col-padding-right text-right">
             <div class="inline-flex">
             <div><img style="cursor: pointer" src="../../../assets/images/xml.svg" (click)="exportAsExcel()"
               matTooltip="Export as excel"></div>
@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12">
+          <div class="col-12 remove-col-padding">
             <div class="table-fee-ledger">
               <div class="table-fee-ledger-child">
             <table id="fee_ledger" #table mat-table [dataSource]="dataSource" class="text-center table-100">

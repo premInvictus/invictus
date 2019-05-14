@@ -1,6 +1,6 @@
 <div class="container-box__grey">
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 remove-col-padding">
            <mat-card class="card-top-title__container">
               <div class="row">
                  <div class="col-6">
@@ -17,13 +17,12 @@
            </mat-card>
         </div>
      </div>
-     <br>
   <form [formGroup]="feeTransactionForm">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container">
         <div class="row">
-          <div class="col-3">
+          <div class="col-3 remove-col-padding-left">
               <span *ngIf="!permission" class="font-size-20 font-regular">{{currentDate | date: 'd-MMMM-y'}}</span>
               <mat-form-field  [hidden]="!permission" appearance="outline" class="form-field">
                  <mat-label>Select Date</mat-label>
@@ -44,7 +43,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-3">
+          <div class="col-3 remove-col-padding-left">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Payment Mode</mat-label>
               <mat-select formControlName="ftr_pay_id"  placeholder="Payment Mode" required>
@@ -79,8 +78,8 @@
             </div>
         </div>
         
-        <div class="row margin-top-20">
-          <div class="col-6">
+        <div class="row">
+          <div class="col-6 remove-col-padding">
               <mat-form-field appearance="outline" class="form-field">
                   <mat-label>Remarks</mat-label>
                   <textarea rows="5" matInput placeholder="Write Remarks" formControlName="ftr_remark"></textarea>
