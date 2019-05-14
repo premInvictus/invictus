@@ -16,7 +16,7 @@
         </mat-card-title>
         <mat-card-content>
           <div class="row">
-            <div class="col-4 custom-col-27">
+            <div class="col-4 remove-col-padding custom-col-27">
               <form [formGroup]="feeheadform" novalidate>
                 <div class="row">
                   <div class="col-12 margin-top-25">
@@ -28,7 +28,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-4">
+                  <div class="col-4 ">
                     <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Fee Type</mat-label>
                       <mat-select formControlName="fh_ft_id" placeholder="Fee Type" required>
@@ -49,7 +49,7 @@
                       
                     </mat-form-field>
                   </div>
-                  <div class="col-4">
+                  <div class="col-4 ">
                     <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Fee Month</mat-label>
                       <mat-select multiple formControlName="fh_fm_id" placeholder="Fee Month" required>
@@ -178,15 +178,15 @@
               </form>
             </div>
             <div class="col-1 custom-col-2">
-              <div class="vertical-line"></div>
+              <div class="vertical-line-divider"></div>
             </div>
-            <div class="col-7 custom-col-69">
+            <div class="col-7 remove-col-padding custom-col-6">
               <div class="row">
                 <div class="col-12 remove-col-padding">
-                  <div class="table-container">
+                  <div>
                     <mat-form-field [hidden]="ELEMENT_DATA.length < 1">
-                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                      <i class="fas fa-filter table-filter" matPrefix></i>
+                      <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      <mat-icon matPrefix>filter_list</mat-icon>
 
                     </mat-form-field>
                     <table class="table-100 text-center " mat-table [dataSource]="dataSource" matSort>
