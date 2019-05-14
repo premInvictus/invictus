@@ -102,8 +102,9 @@
             <div class="container-box__blue__mob padding-10">
                <div class="row mob-remove-top-margin">
                   <div class="col-8 mob-remove-padding-right">
-                     <span class="instruction-main-title">JEE ADVANCE</span><i
-                        class="mob-margin-left-10 font-white fas fa-info-circle" (click)="openQuesDialog()"></i>
+                     <span class="instruction-main-title">JEE ADVANCE</span>
+                     <span class="float" matTooltip="Open Question Palette" (click)="openQuesDialog()"><i
+                        class="font-white fas fa-info my-float"></i></span>
                      <br>
                      <span class="font-white font-size-10">Maximum Marks: </span>
                   </div>
@@ -733,7 +734,7 @@
                      </div>
                   </div>
                   </div>
-                  <div class="small-screen">
+                  <div class="small-screen float-div-small">
                      <div class="row">
                         <div class="col-12 text-center">
                            <button mat-raised-button class="mob-btn-adv-one" (click)="saveAndNext('save')">Save & Next</button>
@@ -945,3 +946,10 @@
       </div>
    </div>
 </div>
+<question-no-adv-modal #questionModal
+[questionsArray]="questionsArray"
+[questionListArray]="questionListArray"
+[sectionDetails]="sectionDetails"
+[finalSectionArray]="finalSectionArray"
+[questionAnswerArray]="questionAnswerArray"
+(loadQ)="setQuestionId($event)"></question-no-adv-modal>
