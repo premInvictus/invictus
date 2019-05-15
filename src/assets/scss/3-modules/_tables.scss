@@ -148,6 +148,10 @@
     width: 100% !important;
 }
 
+.fee-table-100 {
+    width: 100% !important;
+}
+
 tr.mat-header-row {
     background: $table-header;
 }
@@ -302,5 +306,12 @@ td p {
     margin-bottom: 0px !important;
 }
 
+mat-header-row.fee-header-row {
+    width: 100% !important;
+}
+
+mat-row.fee-row {
+    width: 100% !important;
+}
 
 

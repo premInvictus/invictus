@@ -253,7 +253,8 @@ export class EditRequestsComponent implements OnInit {
 	openDialog(req_custom_data): void {
 		if (req_custom_data.belongsTo === 'invoice') {
 			const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-				width: '100%',
+				width: '80%',
+				height: '75%',
 				data: {
 					invoiceNo: req_custom_data.belongsToFieldValue,
 					edit: false

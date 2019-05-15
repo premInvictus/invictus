@@ -72,23 +72,40 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
     .hide-for-large-screen {
         display: none !important;
     }
+    .custom-fee-entry-col-15 {
+        max-width: 15%;
+        flex: 0 0 15%;
+    }
 }
 
 @include respond-between(lg, xl) {
+    mat-sidenav-content.fee-sidenav-content {
+        height: 100% !important;
+    }
     .custom-col-2 {
         max-width: 2% !important;
         flex: 0 0 2% !important;  
+    }
+
+    .fee-custom-col-8 {
+        max-width: 8% !important;
+        flex: 0 0 8% !important;  
+    }
+
+    .fee-custom-col-64 {
+        max-width: 64% !important;
+        flex: 0 0 64% !important;  
     }
 
     .custom-col-5 {
         max-width: 5% !important;
         flex: 0 0 5% !important;  
     }
-    .custom-col-10 {
+    .fee-custom-col-10 {
         max-width: 10%;
         flex: 0 0 10%;
     }
-    .custom-col-15 {
+    .fee-custom-col-15 {
         max-width: 15% !important;
         flex: 0 0 15% !important;
     }
@@ -210,6 +227,11 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         flex: 0 0 14% !important;
     }
 
+    .custom-fee-entry-col-17 {
+        max-width: 17% !important;
+        flex: 0 0 17% !important;
+    }
+
     .custom-fee-entry-col-12 {
         max-width: 12% !important;
         flex: 0 0 12% !important;
@@ -243,6 +265,11 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
     }
     .custom-margin-top-10 {
         margin-top: 10px !important;
+    }
+
+    .floating-button {
+        top: 50px !important;
+        right: 23px !important;
     }
 
     // .mat-header-cell {
