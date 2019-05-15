@@ -1,7 +1,7 @@
 <mat-card class="card-top-title__container ">
   <form [formGroup]="studentdetailsform">
     <div class="row remove-top-margin">
-      <div class="col-2 remove-col-padding margin-left-20 custom-fee-entry-col-14">
+      <div class="col-2 remove-col-padding custom-fee-entry-col-15 custom-fee-entry-col-17">
         <div class="row">
           <div class="col-12 text-center">
             <span class="font-light font-size-14">Admission No.</span>
@@ -44,10 +44,10 @@
         </div>
       </div>
       <div class="col-1 custom-fee-entry-col-12">
-        <div class="row margin-top-35">
+        <div class="row margin-top-30">
           <div class="col-12 text-left">
             <span
-              class="font-size-14 font-medium">{{studentdetails.au_full_name ? (studentdetails.au_full_name | capitalize) : 'NA'}}</span><br>
+              class="font-size-16 font-bold">{{studentdetails.au_full_name ? (studentdetails.au_full_name | capitalize) : 'NA'}}</span><br>
             <span class="font-size-12">Class : {{studentdetails.class_name ? studentdetails.class_name : 'NA'}} -
               {{studentdetails.sec_name ? studentdetails.sec_name : 'NA'}}</span>
           </div>
@@ -57,14 +57,14 @@
       <div class="row margin-top-8">
         <div class="col-12 text-left">
           <span class="font-size-13 font-light">Outstanding Fee</span><br>
-          <span class="font-size-14 font-medium">{{studentdetails.fee_outstanding ? 
+          <span class="font-size-14 font-bold">{{studentdetails.fee_outstanding ? 
               (studentdetails.fee_outstanding | number): 'NA'}}</span>
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left">
             <span class="font-size-13 font-light">Concession</span><br>
             <span
-              class="font-size-14 font-medium">{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+              class="font-size-14 font-bold">{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
           </div>
         </div>
       </div>
@@ -74,14 +74,14 @@
           <div class="col-12 text-left">
             <span class="font-size-13 font-light">Route </span><br>
             <span
-              class="font-size-14 font-medium">{{studentdetails.ead_bus_route ? (studentdetails.ead_bus_route | capitalize) : 'NA'}}</span>
+              class="font-size-14 font-bold">{{studentdetails.ead_bus_route ? (studentdetails.ead_bus_route | capitalize) : 'NA'}}</span>
           </div>
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left">
             <span class="font-size-13 font-light">Stoppage</span><br>
             <span
-              class="font-size-14 font-medium">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize) : 'NA'}}</span>
+              class="font-size-14 font-bold">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize) : 'NA'}}</span>
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@
         <div class="row margin-top-8">
           <div class="col-12 text-left">
             <span class="font-size-13 font-light">Parent Name </span><br>
-            <span class="font-size-14 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
+            <span class="font-size-14 font-bold">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
               studentdetails.parentinfo[0].epd_parent_name : 'NA'}}</span>
           </div>
         </div>
@@ -104,7 +104,7 @@
       <div class="row margin-top-10">
         <div class="col-12 text-left">
           <span class="font-size-13 font-light">Contact No</span><br>
-          <span class="font-size-14 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0]? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
+          <span class="font-size-14 font-bold">{{studentdetails.parentinfo && studentdetails.parentinfo[0]? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
         </div>
       </div>
     </div>
@@ -113,14 +113,14 @@
           <div class="col-12 text-left">
             <span class="font-size-13 font-light">Emg Contact Name </span><br>
             <span
-              class="font-size-14 font-medium">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails.medicalinfo[0].mi_emergency_contact_name : 'NA'}}</span>
+              class="font-size-14 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails.medicalinfo[0].mi_emergency_contact_name : 'NA'}}</span>
           </div>
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left">
             <span class="font-size-13 font-light">Emg Contact No</span><br>
             <span
-              class="font-size-14 font-medium">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails?.medicalinfo[0]?.mi_emergency_contact_no : 'NA'}}</span>
+              class="font-size-14 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails?.medicalinfo[0]?.mi_emergency_contact_no : 'NA'}}</span>
           </div>
         </div>
       </div>

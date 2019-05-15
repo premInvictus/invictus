@@ -1,6 +1,6 @@
 <div class="container-box__grey">
   <div class="row">
-     <div class="col-12">
+     <div class="col-12 remove-col-padding">
         <mat-card class="card-top-title__container">
            <div class="row">
               <div class="col-6">
@@ -18,7 +18,7 @@
      </div>
   </div>
   <div class="row margin-top-25">
-     <div class="col-12">
+     <div class="col-12 remove-col-padding">
         <app-common-student-profile [loginId]="lastRecordId"
         (next2)="next($event)"
         (prev2)="prev($event)"
@@ -33,7 +33,7 @@
      </div>
   </div>
   <div [hidden]="!(invoiceArray.length > 0)" class="row margin-top-25 ">
-     <div class="col-12">
+     <div class="col-12 remove-col-padding">
         <mat-card class="card-top-title__container">
            <div class="row">
               <div class="col-12">
@@ -85,8 +85,8 @@
      </div>
   </div>
   <form [formGroup]="feeTransactionForm">
-  <div class="row margin-top-25 margin-bottom-140">
-     <div class="col-6">
+  <div class="row margin-top-25">
+     <div class="col-6 remove-col-padding-left">
         <mat-card class="card-top-form__container card-height-570">
            <div class="row">
               <div class="col-6">
@@ -178,7 +178,7 @@
            </div>
         </mat-card>
      </div>
-     <div class="col-6">
+     <div class="col-6 remove-col-padding">
         <mat-card class="card-top-form__container card-height-570">
            <div class="row">
               <div class="col-3"></div>

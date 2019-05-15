@@ -109,21 +109,21 @@
             </div>
             <form [formGroup]="invoiceSearchForm" novalidate *ngIf="advanceSearchFlag">
               <div class="row margin-top-5">
-                <div class="col-1 custom-col-10 col-padding-5">
+                <div class="col-1 fee-custom-col-10 col-padding-5">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Admission</mat-label>
                     <input matInput placeholder="Admission" formControlName="admission_no">
 
                   </mat-form-field>
                 </div>
-                <div class="col-1 custom-col-10 col-padding-5">
+                <div class="col-1 fee-custom-col-10 col-padding-5">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Name</mat-label>
                     <input matInput placeholder="Name" formControlName="user_name">
 
                   </mat-form-field>
                 </div>
-                <div class="col-1 custom-col-10 col-padding-5">
+                <div class="col-1 fee-custom-col-10 col-padding-5">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Class</mat-label>
                     <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass()" >
@@ -134,7 +134,7 @@
 
                   </mat-form-field>
                 </div>
-                <div class="col-1 custom-col-10 col-padding-5">
+                <div class="col-1 fee-custom-col-10 col-padding-5">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Section</mat-label>
                     <mat-select formControlName="sec_id">
@@ -144,14 +144,14 @@
 
                   </mat-form-field>
                 </div>
-                <div class="col-1 custom-col-10 col-padding-5">
+                <div class="col-1 fee-custom-col-10 col-padding-5">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Invoice No.</mat-label>
                     <input matInput placeholder="Invoice No." formControlName="invoice_no">
 
                   </mat-form-field>
                 </div>
-                <div class="col-2 custom-col-15 col-padding-5">
+                <div class="col-2 fee-custom-col-15 col-padding-5">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>From</mat-label>
                     <input matInput [matDatepicker]="picker4" placeholder="From" formControlName="from_date">
@@ -160,7 +160,7 @@
 
                   </mat-form-field>
                 </div>
-                <div class="col-2 custom-col-15  col-padding-5">
+                <div class="col-2 fee-custom-col-15  col-padding-5">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>To</mat-label>
                     <input matInput [matDatepicker]="picker5" placeholder="To" formControlName="to_date">
@@ -169,7 +169,7 @@
 
                   </mat-form-field>
                 </div>
-                <div class="col-1 custom-col-10 col-padding-5">
+                <div class="col-1 fee-custom-col-10 col-padding-5">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Status</mat-label>
                     <mat-select formControlName="status">
@@ -180,7 +180,7 @@
 
                   </mat-form-field>
                 </div>
-                <div class="col-1 custom-col-10 col-padding-5">
+                <div class="col-1 fee-custom-col-10 col-padding-5">
                   <button mat-raised-button class="apply-btn margin-top-10" (click)="searchInvoice()">Apply</button>
                 </div>
               </div>

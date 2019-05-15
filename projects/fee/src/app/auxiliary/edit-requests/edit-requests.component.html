@@ -1,6 +1,6 @@
 <div class="container-box__grey">
       <div class="row">
-      <div class="col-7 col-padding-right-eight margin-bottom-35">
+      <div class="col-7 remove-col-padding-left col-padding-right-eight">
          <div class="container-box__white">
             <div class="row">
                <div class="col-12 text-center">
@@ -14,7 +14,7 @@
                      <mat-form-field class="form-feild">
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                      </mat-form-field>
-                     <mat-table [dataSource]="editRequestDataSource" matSort class="table-100 mat-elevation-z1">
+                     <mat-table [dataSource]="editRequestDataSource" matSort class="fee-table-100 mat-elevation-z1" style="overflow: auto">
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="no">
                            <mat-header-cell class="er_sn_no er_sn_no_pad" *matHeaderCellDef mat-sort-header>
@@ -97,8 +97,8 @@
                               <mat-icon *ngIf="item.req_custom_data" class="material-icons icon-pointer view-icon" (click)="openDialog(item.req_custom_data)">info</mat-icon>
                            </mat-cell>
                         </ng-container>
-                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        <mat-header-row class="fee-header-row" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row class="fee-row" *matRowDef="let row; columns: displayedColumns"></mat-row>
                      </mat-table>
                   </div>
                </div>
