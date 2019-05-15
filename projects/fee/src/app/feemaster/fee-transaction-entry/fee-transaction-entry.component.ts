@@ -116,9 +116,12 @@ export class FeeTransactionEntryComponent implements OnInit {
 				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 				this.invoice = {};
 				this.invoice = result.data[0];
+				this.invoice.netPay = this.invoice.late_fine_amt ?
+										Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
+										Number(this.invoice.fee_amount);
 				this.invoiceArray = this.invoice.invoice_bifurcation;
 				this.feeTransactionForm.patchValue({
-					'ftr_amount': this.invoice.fee_amount ? this.invoice.fee_amount : 0,
+					'ftr_amount': this.invoice.netPay,
 					'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
 				});
 				let pos = 1;
