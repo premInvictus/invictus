@@ -1,6 +1,6 @@
 <div class="container-box__grey">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-content__container margin-bottom-140">
         <mat-card-title>
           <h1>Transport Slabs</h1>
@@ -8,10 +8,10 @@
         </mat-card-title>
         <mat-card-content>
           <div class="row">
-            <div class="col-4 custom-col-27">
+            <div class="col-4 remove-col-padding custom-col-27">
               <form [formGroup]="transportSlabs" novalidate>
                 <div class="row">
-                  <div class="col-12 margin-top-25">
+                  <div class="col-12 remove-col-padding margin-top-25">
                     <mat-form-field class="form-field" appearance="outline">
                       <mat-label>Slab name</mat-label>
                       <input matInput placeholder="Slab Name" formControlName="slab_name" required>
@@ -19,7 +19,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-4">
+                  <div class="col-4 remove-col-padding-left">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Fee type</mat-label>
                       <mat-select placeholder="Fee Type" formControlName="slab_fee_type" required>
@@ -38,7 +38,7 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col-4">
+                  <div class="col-4 remove-col-padding-right">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Month</mat-label>
                       <mat-select placeholder="Months" multiple formControlName="slab_months" required>
@@ -49,7 +49,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 remove-col-padding">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Calculation Method</mat-label>
                       <mat-select placeholder="Calculation Method" formControlName="slab_calcualtion_method" required>
@@ -62,7 +62,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 remove-col-padding">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Slab Amount</mat-label>
                       <input matInput placeholder="Slab Amount" formControlName="slab_amount" required maxlength="6">
@@ -70,12 +70,12 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12 margin-top-25">
+                  <div class="col-12  margin-top-25">
                     <h4 class="font-medium">Additional Filter</h4>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-6 remove-col-padding-left">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Gender</mat-label>
                       <mat-select placeholder="Gender" formControlName="slab_filter_gender">
@@ -85,7 +85,7 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col-6">
+                  <div class="col-6 remove-col-padding-right">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Others</mat-label>
                       <mat-select placeholder="others" formControlName="slab_filter_others">
@@ -97,7 +97,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 remove-col-padding">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Hostel</mat-label>
                       <mat-select placeholder="Hostel" formControlName="slab_filter_hostel">
@@ -109,7 +109,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 remove-col-padding">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Concession Category</mat-label>
                       <mat-select placeholder="Concession Category" formControlName="slab_filter_concession_category">
@@ -132,14 +132,14 @@
                 </div>
               </form>
             </div>
-            <div class="col-1 custom-col-2"><div class="vertical-line"></div></div>
+            <div class="col-1 custom-col-2"><div class="vertical-line-divider"></div></div>
             <div class="col-7 custom-col-69">
               <div class="row">
                 <div class="col-12 remove-col-padding">
-                  <div class="table-container">
+                  <div >
                     <mat-form-field>
-                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                      <i class="fas fa-filter table-filter" matPrefix></i>
+                      <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      <mat-icon matPrefix>filter_list</mat-icon>
 
                     </mat-form-field>
 

@@ -1,16 +1,16 @@
 <div class="container-box__grey">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <mat-card class="card-content__container margin-bottom-140">
         <mat-card-title>
           <h1>Stoppages</h1>
         </mat-card-title>
         <mat-card-content>
           <div class="row">
-            <div class="col-4 custom-col-27">
+            <div class="col-4 remove-col-padding custom-col-27">
               <form [formGroup]="transportStopagges" autocomplete="off">
                 <div class="row">
-                  <div class="col-12 margin-top-25">
+                  <div class="col-12 remove-col-padding margin-top-25">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Transport Stop Name</mat-label>
                       <input matInput placeholder="Transport Stop Name" formControlName="transport_stop_name" required>
@@ -18,7 +18,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 remove-col-padding">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Distance From School(in KMs)</mat-label>
                       <input matInput placeholder="Distance From School(in KMs)"
@@ -28,7 +28,7 @@
 
                 </div>
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 remove-col-padding">
                       <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Select Slab</mat-label>
                       <mat-select placeholder="Select Slab" formControlName="transport_slab" required>
@@ -51,15 +51,15 @@
             </div>
 
             <div class="col-1 custom-col-2">
-              <div class="vertical-line"></div>
+              <div class="vertical-line-divider"></div>
             </div>
             <div class="col-7 custom-col-69">
               <div class="row">
                 <div class="col-12 remove-col-padding">
-                  <div class="table-container">
+                  <div >
                     <mat-form-field>
-                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                      <i class="fas fa-filter table-filter" matPrefix></i>
+                      <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      <mat-icon matPrefix>filter_list</mat-icon>
 
                     </mat-form-field>
                     <table class="table-100 text-center " mat-table [dataSource]="stoppageDataSource" matSort>
