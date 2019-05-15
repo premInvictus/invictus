@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { saveAs } from 'file-saver';
+import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 @Component({
 	selector: 'app-fee-transaction-entry',
 	templateUrl: './fee-transaction-entry.component.html',
@@ -44,7 +45,8 @@ export class FeeTransactionEntryComponent implements OnInit {
 		private common: CommonAPIService,
 		private router: Router,
 		private route: ActivatedRoute,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		public studentRouteMoveStoreService: StudentRouteMoveStoreService
 	) { }
 
 	ngOnInit() {
@@ -65,14 +67,24 @@ export class FeeTransactionEntryComponent implements OnInit {
 			this.permission = false;
 		}
 		this.selectedMode = '';
-		this.processtypeService.setProcesstype('4');
-		this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.lastRecordId = result.data[0].last_record;
-				this.loginId = result.data[0].au_login_id;
-				this.feeLoginId = this.loginId;
+		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
+			if (data.adm_no && data.login_id) {
+				this.lastRecordId = data.adm_no;
+				this.loginId = data.adm_no;
+				this.feeLoginId = data.login_id;
 				this.getStudentInformation(this.lastRecordId);
+			} else {
+				this.processtypeService.setProcesstype('4');
+				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.lastRecordId = result.data[0].last_record;
+						this.loginId = result.data[0].au_login_id;
+						this.feeLoginId = this.loginId;
+						this.getStudentInformation(this.lastRecordId);
+					}
+				});
 			}
+
 		});
 	}
 	buildForm() {
@@ -91,7 +103,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 			'ftr_remark': '',
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
-			'saveAndPrint' : ''
+			'saveAndPrint': ''
 		});
 	}
 	getSchool() {
@@ -99,7 +111,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				this.schoolInfo = result.data[0];
 				this.startMonth = Number(this.schoolInfo.session_start_month);
-				this.minDate = new Date(new Date().getFullYear(), this.startMonth - 1 , 1);
+				this.minDate = new Date(new Date().getFullYear(), this.startMonth - 1, 1);
 			}
 		});
 	}
@@ -117,8 +129,8 @@ export class FeeTransactionEntryComponent implements OnInit {
 				this.invoice = {};
 				this.invoice = result.data[0];
 				this.invoice.netPay = this.invoice.late_fine_amt ?
-										Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
-										Number(this.invoice.fee_amount);
+					Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
+					Number(this.invoice.fee_amount);
 				this.invoiceArray = this.invoice.invoice_bifurcation;
 				this.feeTransactionForm.patchValue({
 					'ftr_amount': this.invoice.netPay,
@@ -159,7 +171,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 			'ftr_remark': '',
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
-			'saveAndPrint' : ''
+			'saveAndPrint': ''
 		});
 		this.sisService.getStudentInformation({ au_login_id: login_id, au_status: '1' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -274,7 +286,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 		this.feeTransactionForm.patchValue({
 			'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
 			'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
-			'saveAndPrint' : false
+			'saveAndPrint': false
 		});
 		this.feeTransactionForm.value.login_id = this.feeLoginId;
 		this.feeTransactionForm.value.inv_id = [this.invoice.inv_id];
@@ -315,7 +327,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 		this.feeTransactionForm.patchValue({
 			'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
 			'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
-			'saveAndPrint' : true
+			'saveAndPrint': true
 		});
 		this.feeTransactionForm.value.login_id = this.feeLoginId;
 		this.feeTransactionForm.value.inv_id = [this.invoice.inv_id];
@@ -376,7 +388,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 			'ftr_remark': '',
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
-			'saveAndPrint' : ''
+			'saveAndPrint': ''
 		});
 	}
 
