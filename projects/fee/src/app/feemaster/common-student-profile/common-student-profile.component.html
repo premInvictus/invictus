@@ -53,7 +53,6 @@
           </div>
         </div>
       </div>
-    </div>
     <div class="col-2 custom-fee-entry-col-12">
       <div class="row margin-top-8">
         <div class="col-12 text-left">
@@ -69,6 +68,7 @@
           </div>
         </div>
       </div>
+    </div>
       <div class="col-2 custom-fee-entry-col-12">
         <div class="row margin-top-8">
           <div class="col-12 text-left">
@@ -100,13 +100,14 @@
               studentdetails.parentinfo[0].epd_parent_name : 'NA'}}</span>
           </div>
         </div>
-      </div>
+      
       <div class="row margin-top-10">
         <div class="col-12 text-left">
           <span class="font-size-13 font-light">Contact No</span><br>
           <span class="font-size-14 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0]? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
         </div>
       </div>
+    </div>
       <div class="col-2 custom-fee-entry-col-12">
         <div class="row margin-top-8">
           <div class="col-12 text-left">
@@ -126,24 +127,24 @@
       <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-10">
         <div class="row margin-top-8">
           <div class="col-6 remove-col-padding-right remove-col-padding-left">
-            <div *ngIf="student_profile_flag" class=" blue-circle-btn"
+            <div *ngIf="student_profile_flag" class=" blue-circle-btn margin-top-5"
               (click)="goToPage('student-profile')" matTooltip="Student Profile">
               <img style="margin-left: 11px ; margin-top: 10px" src="../../../../../../src/assets/student_profile.svg">
             </div>
-            <div *ngIf="invoice_creation_individual_flag" class=" blue-circle-btn margin-top-15" matTooltip="Invoice Creation"
+            <div *ngIf="invoice_creation_individual_flag" class=" blue-circle-btn margin-top-5" matTooltip="Invoice Creation"
               (click)="goToPage('invoice-creation-individual')">
               <img style="margin-left: 11px ; margin-top: 10px" src="../../../../../../src/assets/invoice_creation.svg">
             </div>
 
           </div>
           <div class="col-6 remove-col-padding-right remove-col-padding-left">
-            <div *ngIf="fee_transaction_entry_individual_flag" class=" blue-circle-btn"
+            <div *ngIf="fee_transaction_entry_individual_flag" class=" blue-circle-btn margin-top-5"
               matTooltip="Fee Transaction Entry" (click)="goToPage('fee-transaction-entry-individual')">
               <img style="margin-left: 11px ; margin-top: 10px"
                 src="../../../../../../src/assets/fee_transaction_entry.svg">
             </div>
            
-            <div *ngIf="fee_ledger_flag" class="margin-top-15 blue-circle-btn" (click)="goToPage('fee-ledger')"
+            <div *ngIf="fee_ledger_flag" class="margin-top-5 blue-circle-btn" (click)="goToPage('fee-ledger')"
               matTooltip="Fee Ledger">
               <img style="margin-left: 11px ; margin-top: 10px" src="../../../../../../src/assets/fee_modification.svg">
             </div>
