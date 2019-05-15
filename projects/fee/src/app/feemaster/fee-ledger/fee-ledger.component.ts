@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
+import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 export interface PeriodicElement {
 	srno: number;
 	date: string;
@@ -33,16 +34,27 @@ export class FeeLedgerComponent implements OnInit {
 	constructor(private sisService: SisService,
 		private feeService: FeeService,
 		public processtypeService: ProcesstypeService,
-		public dialog: MatDialog) { }
+		public dialog: MatDialog,
+		public studentRouteMoveStoreService: StudentRouteMoveStoreService
+	) { }
 
 	ngOnInit() {
-		this.processtypeService.setProcesstype('4');
-		this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.lastRecordId = result.data[0].last_record;
-				this.loginId = result.data[0].au_login_id;
+		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
+			if (data.adm_no && data.login_id) {
+				this.lastRecordId = data.adm_no;
+				this.loginId = data.login_id;
 				this.getFeeLedger(this.loginId);
+			} else {
+				this.processtypeService.setProcesstype('4');
+				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.lastRecordId = result.data[0].last_record;
+						this.loginId = result.data[0].au_login_id;
+						this.getFeeLedger(this.loginId);
+					}
+				});
 			}
+
 		});
 	}
 	getFeeLedger(login_id) {

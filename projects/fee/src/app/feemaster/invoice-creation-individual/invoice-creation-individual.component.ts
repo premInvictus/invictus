@@ -8,6 +8,8 @@ import { FilterModalComponent } from '../../common-filter/filter-modal/filter-mo
 import { FeeService, CommonAPIService, SisService, ProcesstypeService } from '../../_services/index';
 import { InvoiceElement } from './invoice-element.model';
 import { Router, ActivatedRoute } from '@angular/router';
+import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
+
 
 @Component({
 	selector: 'app-invoice-creation-individual',
@@ -97,7 +99,8 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		public commonAPIService: CommonAPIService,
 		private route: ActivatedRoute,
 		private router: Router,
-		private processtypeService: ProcesstypeService
+		private processtypeService: ProcesstypeService,
+		private studentRouteMoveStoreService: StudentRouteMoveStoreService
 
 	) { }
 
@@ -105,7 +108,17 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.buildForm();
 		this.getCalculationMethods();
 		this.getInvoiceFeeMonths();
-		this.getLastRecordAdmno();
+		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
+			if (data.adm_no && data.login_id) {
+				this.lastRecordAdmno = data.adm_no;
+				this.currentAdmno = data.adm_no;
+				this.currentLoginId = data.login_id;
+				this.getInvoice({ admission_no: this.currentAdmno });
+			} else {
+				this.getLastRecordAdmno();
+			}
+
+		});
 	}
 	getLastRecordAdmno() {
 		this.processtypeService.setProcesstype('4');
@@ -114,7 +127,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				this.lastRecordAdmno = result.data[0].last_record;
 				this.currentAdmno = result.data[0].last_record;
 				this.currentLoginId = result.data[0].au_login_id;
-				this.getInvoice({admission_no: this.currentAdmno});
+				this.getInvoice({ admission_no: this.currentAdmno });
 			}
 		});
 	}
@@ -141,27 +154,27 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	key2(event) {
 		this.currentAdmno = event;
 		console.log(event);
-		this.getInvoice({admission_no: event});
+		this.getInvoice({ admission_no: event });
 	}
 	next2(event) {
 		this.currentAdmno = event;
 		console.log(event);
-		this.getInvoice({admission_no: event});
+		this.getInvoice({ admission_no: event });
 	}
 	prev2(event) {
 		this.currentAdmno = event;
 		console.log(event);
-		this.getInvoice({admission_no: event});
+		this.getInvoice({ admission_no: event });
 	}
 	first2(event) {
 		this.currentAdmno = event;
 		console.log(event);
-		this.getInvoice({admission_no: event});
+		this.getInvoice({ admission_no: event });
 	}
 	last2(event) {
 		this.currentAdmno = event;
 		console.log(event);
-		this.getInvoice({admission_no: event});
+		this.getInvoice({ admission_no: event });
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -241,7 +254,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.invoiceCreationForm.reset();
-					this.getInvoice({admission_no: this.currentAdmno});
+					this.getInvoice({ admission_no: this.currentAdmno });
 				}
 			});
 		} else {
@@ -305,7 +318,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getInvoice({admission_no: this.currentAdmno});
+				this.getInvoice({ admission_no: this.currentAdmno });
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -320,7 +333,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.feeService.recalculateInvoice(this.invoiceCreationForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getInvoice({admission_no: this.currentAdmno});
+				this.getInvoice({ admission_no: this.currentAdmno });
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -329,10 +342,10 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	consolidateConfirm(value) {
 		console.log(value);
-		this.feeService.consolidateInvoice({inv_id: this.fetchInvId()}).subscribe((result: any) => {
+		this.feeService.consolidateInvoice({ inv_id: this.fetchInvId() }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getInvoice({admission_no: this.currentAdmno});
+				this.getInvoice({ admission_no: this.currentAdmno });
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -341,7 +354,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 
 	navigateBulk() {
-		this.router.navigate(['../invoice-creation'], {relativeTo: this.route});
+		this.router.navigate(['../invoice-creation'], { relativeTo: this.route });
 	}
 	applyFilter(filtervalue: string) {
 		this.dataSource.filter = filtervalue.trim().toLowerCase();

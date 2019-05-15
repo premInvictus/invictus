@@ -17,7 +17,7 @@ import { FeeModificationComponent } from './fee-modification/fee-modification.co
 import { InvoiceDetailsModalComponent } from './invoice-details-modal/invoice-details-modal.component';
 import { FeeFilterModalComponent } from './fee-filter-modal/fee-filter-modal.component';
 import { FeeTransactionEntryBulkComponent } from './fee-transaction-entry-bulk/fee-transaction-entry-bulk.component';
-
+import { StudentRouteMoveStoreService } from './student-route-move-store.service';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -39,6 +39,7 @@ import { FeeTransactionEntryBulkComponent } from './fee-transaction-entry-bulk/f
 		FeeModificationComponent,
 		FeeFilterModalComponent,
 		FeeTransactionEntryBulkComponent,
-	]
+	],
+	providers: [StudentRouteMoveStoreService]
 })
 export class FeemasterModule { }
