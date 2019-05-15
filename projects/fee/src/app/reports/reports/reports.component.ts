@@ -807,11 +807,11 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							const obj: any = {};
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(++index);
-							obj['class_name'] = item['flgr_au_class_name'] + '-' +
-								item['flgr_au_sec_name'];
-							obj['au_full_name'] = item['flgr_au_full_name'] ? item.flgr_au_full_name : '-';
-							obj['au_admission_no'] = stu_arr['flgr_login_id'] ?
-								stu_arr['flgr_login_id'] : '-';
+							obj['class_name'] = item['class_name'] + '-' +
+								item['sec_name'];
+							obj['au_full_name'] = item['au_full_name'] ? item['au_full_name'] : '-';
+							obj['au_admission_no'] = item['au_admission_no'] ?
+								item['au_admission_no'] : '-';
 							obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
 								stu_arr['flgr_particulars'] : '-';
 							obj['invoice_id'] = stu_arr['flgr_inv_id'] ?
