@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import {
 	Event,
 	NavigationCancel,
@@ -21,10 +21,15 @@ export class AppComponent implements OnInit {
 		timeOut: 3000,
 		lastOnBottom: true
 	};
-	showLoadingFlag = false;
+	showLoadingFlag;
 	constructor(private router: Router, private loaderService: CommonAPIService) {
+
+	}
+
+	ngOnInit() {
+		this.getCurrentUrl();
 		this.loaderService.showLoading.subscribe((flag: boolean) => {
-			this.showLoadingFlag = flag;
+			setTimeout(() => this.showLoadingFlag = flag, 0);
 		});
 		this.router.events.subscribe((event: Event) => {
 			switch (true) {
@@ -45,11 +50,6 @@ export class AppComponent implements OnInit {
 			}
 		});
 	}
-
-	ngOnInit() {
-		this.getCurrentUrl();
-	}
-
 	getCurrentUrl() {
 		this.router.events.subscribe(event => {
 			if (event instanceof NavigationEnd) {
