@@ -1,206 +1,209 @@
 <div class="container-report-box__grey">
-  <div class="row">
-     <div class="col-12">
-        <mat-accordion>
-           <mat-expansion-panel [expanded]="reportFlag">
-              <mat-expansion-panel-header class="report-panel-header">
-                 <mat-panel-title>
-                    <span class="text-uppercase font-size-16 font-white"
-                       >Reports</span
-                       >
-                 </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div class="report-card__container">
-                 <div class="row margin-top-20">
-                    <div *ngFor="let item of feeReportArray"
-                    class="col-2">
-                       <mat-card class="report-card" (click)="executeReport(item.report_id)">
-                          <div class="report-card-container2">
-                             <div [class]="item.main_text_class">
-                                <img [class]="item.report_main_image_class"
-                                   [src]="item.report_image"
-                                   /><br />
-                                <div class="margin-top-15">
-                                   <span class="font-dark-blue font-size-14 font-medium"
-                                      >{{item.report_name}}</span
-                                      >
-                                </div>
-                             </div>
-                             <div [class]="item.report_middle_class">
-                                <div class="margin-bottom-15"><i [class]="item.report_check_icon_class"></i></div>
-                                <span class="font-white font-size-14 font-medium"
-                                   >{{item.report_name}}</span>
-                             </div>
-                          </div>
-                       </mat-card>
-                    </div>
-                 </div>
-              </div>
-           </mat-expansion-panel>
-        </mat-accordion>
-        <br />
-        <div class="margin-bottom-140">
-           <mat-accordion>
-              <mat-expansion-panel [expanded]="accountFlag">
-                 <mat-expansion-panel-header class="report-panel-header">
-                    <mat-panel-title>
-                       <span class="text-uppercase font-size-16 font-white"
-                          >{{reportHeader | uppercase}}</span
-                          >
-                    </mat-panel-title>
-                 </mat-expansion-panel-header>
-                 <div class="report-card__container">
-                    <form [formGroup]="reportFilterForm">
-                    <div class="row">
-                       <div class="col-3">
-                          <mat-form-field appearance="outline" class="form-field">
-                             <mat-label>Report Type</mat-label>
-                             <mat-select formControlName="report_type" (selectionChange)="changeReportType($event,reportType)">
-                                <mat-option value="">Please Select</mat-option>
-                                <mat-option *ngFor="let item of reportTypeArray"
-                                [value]="item.report_type">{{item.report_name}}</mat-option>
-                             </mat-select>
-                          </mat-form-field>
-                       </div>
-                       <div class="col-3">
-                          <mat-form-field appearance="outline" class="form-field">
-                             <mat-label>{{valueLabel}}</mat-label>
-                             <mat-select formControlName="fee_value"
-                             (selectionChange)="getHiddenFieldValue($event,reportType)">
-                                <mat-option>Please Select</mat-option>
-                                <mat-option *ngFor="let item of valueArray"
-                                [value]="item.id">{{item.name}}</mat-option>
-                             </mat-select>
-                          </mat-form-field>
-                       </div>
-                       <div class="col-3"
-                       *ngIf="reportFilterForm.value.report_type === 'classwise'">
-                        <mat-form-field appearance="outline" class="form-field">
-                           <mat-label>{{hiddenFieldLabel}}</mat-label>
-                           <mat-select formControlName="hidden_value">
-                              <mat-option>Please Select</mat-option>
-                              <mat-option *ngFor="let item of hiddenValueArray"
-                              [value]="item.id">{{item.name}}</mat-option>
-                           </mat-select>
-                        </mat-form-field>
+   <div class="row">
+      <div class="col-12">
+         <mat-accordion>
+            <mat-expansion-panel [expanded]="reportFlag">
+               <mat-expansion-panel-header class="report-panel-header">
+                  <mat-panel-title>
+                     <span class="text-uppercase font-size-16 font-white">Reports</span>
+                  </mat-panel-title>
+               </mat-expansion-panel-header>
+               <div class="report-card__container">
+                  <div class="row margin-top-20">
+                     <div *ngFor="let item of feeReportArray" class="col-2">
+                        <mat-card class="report-card" (click)="executeReport(item.report_id)">
+                           <div class="report-card-container2">
+                              <div [class]="item.main_text_class">
+                                 <img [class]="item.report_main_image_class" [src]="item.report_image" /><br />
+                                 <div class="margin-top-15">
+                                    <span class="font-dark-blue font-size-14 font-medium">{{item.report_name}}</span>
+                                 </div>
+                              </div>
+                              <div [class]="item.report_middle_class">
+                                 <div class="margin-bottom-15"><i [class]="item.report_check_icon_class"></i></div>
+                                 <span class="font-white font-size-14 font-medium">{{item.report_name}}</span>
+                              </div>
+                           </div>
+                        </mat-card>
                      </div>
-                       <div class="col-3">
-                          <mat-form-field appearance="outline" class="form-field">
-                             <mat-label>From Date</mat-label>
-                             <input
-                                matInput
-                                [matDatepicker]="picker"
-                                placeholder="Choose a date" formControlName="from_date"
-                                [max]="currentDate" [min]="minDate"
-                                />
-                             <mat-datepicker-toggle
-                                matSuffix
-                                [for]="picker"
-                                ></mat-datepicker-toggle>
-                             <mat-datepicker #picker></mat-datepicker>
-                          </mat-form-field>
-                       </div>
-                       <div class="col-3">
-                          <mat-form-field appearance="outline" class="form-field">
-                             <mat-label>To Date</mat-label>
-                             <input
-                                matInput
-                                [matDatepicker]="picker1"
-                                placeholder="Choose a date" formControlName="to_date" [max]="currentDate" [min]="minDate"
-                                />
-                             <mat-datepicker-toggle
-                                matSuffix
-                                [for]="picker1"
-                                ></mat-datepicker-toggle>
-                             <mat-datepicker #picker1></mat-datepicker>
-                          </mat-form-field>
-                       </div>
-                    </div>
-                  </form>
-                    <div class="row">
-                       <div class="col-12 text-center">
-                          <button
-                             class="width-140 print-btn text-uppercase"
-                             mat-raised-button (click)="switchReport()">
-                          change report
-                          </button>
-                          <button
-                             class="btn-success text-uppercase btn-spacer"
-                             mat-raised-button (click)="generateReport(reportFilterForm.value)">
-                          generate
-                          </button>
-                       </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                       <div class="col-12 text-right">
-                          <div class="inline-flex">
-                             <div>
-                                <img
-                                   style="cursor: pointer"
-                                   src="../../../assets/images/xml.svg"
-                                   matTooltip="Export as excel" (click)="exportAsExcel()"
-                                   />
-                             </div>
-                             <div class="btn-spacer">
-                                <img
-                                   style="cursor: pointer"
-                                   src="../../../assets/images/pdf.svg"
-                                   matTooltip="Export as PDF"
-                                   (click)="exportAsPDF()"
-                                   />
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                       <div class="col-12">
-                          <table mat-table [hidden]="!tableFlag" id="report_table"
-                          [dataSource]="dataSource"
-                             class="table-100 text-center">
-                             <ng-container *ngFor="let column of finalTable.columnDef;let i = index;">
+                  </div>
+               </div>
+            </mat-expansion-panel>
+         </mat-accordion>
+         <br />
+         <div class="margin-bottom-140">
+            <mat-accordion>
+               <mat-expansion-panel [expanded]="accountFlag">
+                  <mat-expansion-panel-header class="report-panel-header">
+                     <mat-panel-title>
+                        <span class="text-uppercase font-size-16 font-white">{{reportHeader | uppercase}}</span>
+                     </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="report-card__container">
+                     <form [formGroup]="reportFilterForm">
+                        <div class="row">
+                           <div class="col-3" *ngIf="reportType === '1'
+                           || reportType === '8' || reportType === '10'">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Report Type</mat-label>
+                                 <mat-select formControlName="report_type"
+                                    (selectionChange)="changeReportType($event,reportType)">
+                                    <mat-option value="">Please Select</mat-option>
+                                    <mat-option *ngFor="let item of reportTypeArray" [value]="item.report_type">
+                                       {{item.report_name}}</mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                        <div class="row" *ngIf="advSearchFlag">
+                           <div class="col-12">
+                              <div class="float-left">
+                                 <span class="font-size-16 font-medium">
+                                    <i class="fas fa-search">&nbsp;Advanced Search</i>
+                                 </span>&nbsp;
+                                 <span>
+                                    <mat-slide-toggle matTooltip="Click to enable advanced search"
+                                    [checked]="toggleSearch"
+                                       (change)="enableSearch($event)"></mat-slide-toggle>
+                                 </span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row" *ngIf="toggleSearch">
+                           <div class="col-2">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Admission</mat-label>
+                                 <input matInput placeholder="Admission" formControlName="admission_no">
+
+                              </mat-form-field>
+                           </div>
+                           <div class="col-2">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Student Name</mat-label>
+                                 <input matInput placeholder="Student Name" formControlName="au_full_name">
+
+                              </mat-form-field>
+                           </div>
+                           <div class="col-2">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>{{valueLabel}}</mat-label>
+                                 <mat-select formControlName="fee_value"
+                                    (selectionChange)="getHiddenFieldValue($event,reportType)">
+                                    <mat-option>Please Select</mat-option>
+                                    <mat-option *ngFor="let item of valueArray" [value]="item.id">{{item.name}}
+                                    </mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-2" *ngIf="reportFilterForm.value.report_type === 'classwise' ||
+                           reportFilterForm.value.report_type === 'routewise'
+                           || reportFilterForm.value.report_type === 'modewise'">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>{{hiddenFieldLabel}}</mat-label>
+                                 <mat-select formControlName="hidden_value">
+                                    <mat-option>Please Select</mat-option>
+                                    <mat-option *ngFor="let item of hiddenValueArray" [value]="item.id">{{item.name}}
+                                    </mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-2">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>From Date</mat-label>
+                                 <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                                    formControlName="from_date" [max]="currentDate" [min]="minDate" />
+                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                 <mat-datepicker #picker></mat-datepicker>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-2">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>To Date</mat-label>
+                                 <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
+                                    formControlName="to_date" [max]="currentDate" [min]="minDate" />
+                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                 <mat-datepicker #picker1></mat-datepicker>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                     </form>
+                     <br>
+                     <div class="row">
+                        <div class="col-12 text-center">
+                           <button class="width-140 print-btn text-uppercase" mat-raised-button
+                              (click)="switchReport()">
+                              change report
+                           </button>
+                           <button class="btn-success text-uppercase btn-spacer" mat-raised-button
+                              (click)="generateReport(reportFilterForm.value)">
+                              generate
+                           </button>
+                        </div>
+                     </div>
+                     <br />
+                     <div class="row">
+                        <div class="col-12 text-right">
+                           <div class="inline-flex">
+                              <div *ngIf="REPORT_ELEMENT_DATA.length > 0">
+                                 <img style="cursor: pointer" src="../../../assets/images/xml.svg"
+                                    matTooltip="Export as excel" (click)="exportAsExcel()" />
+                              </div>
+                              <div class="btn-spacer" *ngIf="REPORT_ELEMENT_DATA.length > 0">
+                                 <img style="cursor: pointer" src="../../../assets/images/pdf.svg"
+                                    matTooltip="Export as PDF" (click)="exportAsPDF()" />
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <br />
+                     <div class="row">
+                        <div class="col-12">
+                           <table mat-table [hidden]="!tableFlag" id="report_table" [dataSource]="dataSource"
+                              class="table-100 text-center">
+                              <ng-container *ngFor="let column of finalTable.columnDef;let i = index;">
                                  <ng-container [matColumnDef]="column">
-                                 <th mat-header-cell *matHeaderCellDef>{{finalTable.colunmHeader[i]}}</th>
-                                  <td mat-cell *matCellDef="let item">
-                                    <span *ngIf="column !== 'invoice_no' && column !== 'invoice_created_date'
+                                    <th mat-header-cell *matHeaderCellDef>{{finalTable.colunmHeader[i]}}</th>
+                                    <td mat-cell *matCellDef="let item">
+                                       <span *ngIf="column !== 'invoice_no' && column !== 'invoice_created_date'
                                     && column !=='cheque_date' && column !== 'dishonor_date'
                                     && column !== 'flgr_invoice_receipt_no' && column !== 'receipt_no'">
-                                       <div [innerHTML]="item[column]"></div>
-                                    </span>
-                                    <span *ngIf="(column === 'invoice_created_date' || column === 'cheque_date'
-                                    || column === 'dishonor_date')">
-                                          {{item[column] ? (item[column] | date : 'd-MMM-y') : '-'}}
+                                          <div [innerHTML]="item[column]"></div>
                                        </span>
-                                    <span *ngIf="(column === 'invoice_no' || column === 'flgr_invoice_receipt_no')
+                                       <span *ngIf="(column === 'invoice_created_date' || column === 'cheque_date'
+                                    || column === 'dishonor_date')">
+                                          {{item[column] ? (item[column] | date : 'd-MMM-y') : 'NA'}}
+                                       </span>
+                                       <span *ngIf="(column === 'invoice_no' || column === 'flgr_invoice_receipt_no')
                                     && column !== 'invoice_created_date' && column !== 'receipt_no'"
-                                    class="font-bold font-skyblue font-underline">
-                                       <a style="cursor: pointer;" (click)="openDialog(item['invoice_id'], false)">{{item[column]}}</a>
-                                    </span>
-                                    <span *ngIf="column === 'receipt_no'"
-                                    class="font-bold font-skyblue font-underline">
-                                       <a style="cursor: pointer;" (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a>
-                                    </span>
+                                          class="font-bold font-skyblue font-underline">
+                                          <a style="cursor: pointer;"
+                                             (click)="openDialog(item['invoice_id'], false)">{{item[column]}}</a>
+                                       </span>
+                                       <span *ngIf="column === 'receipt_no'"
+                                          class="font-bold font-skyblue font-underline">
+                                          <a style="cursor: pointer;"
+                                             (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a>
+                                       </span>
                                     </td>
                                  </ng-container>
-                                </ng-container>
-                                <tr mat-header-row *matHeaderRowDef="finalTable.columnDef"></tr>
-                                 <tr mat-row *matRowDef="let row; columns: finalTable.columnDef;"></tr>
-                          </table>
-                          <table class="table-100 text-center" style="margin-top:5px;">
-                           <tr *ngIf="REPORT_ELEMENT_DATA.length == 0 && tableFlag">
-                             <td colspan="12">No Record Found</td>
-                           </tr>
-                         </table>
-                          <mat-paginator [hidden]="!tableFlag" #paginator  [pageSize]="reportFilterForm.value.pageSize"
-                          [pageSizeOptions]="[10,25,50,100]" showFirstLastButtons
-                            (page)="pageEvent = fetchData($event)"></mat-paginator>
-                       </div>
-                    </div>
-                 </div>
-              </mat-expansion-panel>
-           </mat-accordion>
-        </div>
-     </div>
-  </div>
+                              </ng-container>
+                              <tr mat-header-row *matHeaderRowDef="finalTable.columnDef"></tr>
+                              <tr mat-row *matRowDef="let row; columns: finalTable.columnDef;"></tr>
+                           </table>
+                           <table class="table-100 text-center" style="margin-top:5px;">
+                              <tr *ngIf="REPORT_ELEMENT_DATA.length == 0 && tableFlag">
+                                 <td colspan="12">No Record Found</td>
+                              </tr>
+                           </table>
+                           <mat-paginator [hidden]="!tableFlag" #paginator [pageSize]="reportFilterForm.value.pageSize"
+                              [pageSizeOptions]="[10,25,50,100]" showFirstLastButtons
+                              (page)="pageEvent = fetchData($event)"></mat-paginator>
+                        </div>
+                     </div>
+                  </div>
+               </mat-expansion-panel>
+            </mat-accordion>
+         </div>
+      </div>
+   </div>
 </div>

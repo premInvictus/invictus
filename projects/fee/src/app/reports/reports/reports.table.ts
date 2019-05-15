@@ -49,7 +49,7 @@ export const reportTable = {
 			chequeControlList: {
 				tableHeader: 'Cheque Clearance Report',
 				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name',
-					'invoice_no', 'receipt_id', 'receipt_amount', 'bank_name', 'cheque_date', 'dishonor_date', 'status', 'fcc_reason_id', 'fcc_remarks'],
+					'invoice_no', 'receipt_no', 'receipt_amount', 'bank_name', 'cheque_date', 'dishonor_date', 'status', 'fcc_reason_id', 'fcc_remarks'],
 				colunmHeader: ['SNo', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Receipt No', 'Amount', 'Bank Name',
 					'Cheque Date', 'Dishonoured Date', 'Status', 'Reason', 'Remarks'],
 			}
@@ -93,9 +93,9 @@ export const reportTable = {
 			feestructurealloted: {
 				tableHeader: 'Fee Structure Alloted Report',
 				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name',
-			'fc_classfication', 'fh_name', 'fh_amount', 'ft_name', 'calm_name'],
+					'fs_name', 'fs_structure'],
 				colunmHeader: ['SNo.', 'Admission Number', 'Student Name', 'Class-Section',
-			'Classification', 'Fee Head', 'Amount' , 'Fee Type', 'Calculation'],
+					'Fee Structure', 'Fee Head'],
 			}
 		}
 	},
@@ -124,11 +124,37 @@ export const reportTable = {
 			feeAdjustment: {
 				tableHeader: 'Fee Adjustment Report',
 				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'invoice_no', 'invoice_created_date',
-			'cheque_date', 'invg_fh_name', 'invg_fh_amount', 'invg_fcc_name', 'invg_adj_amount',
-		'receipt_no', 'dishonor_date', 'inv_remark'],
+					'cheque_date', 'invg_fh_name', 'invg_fh_amount', 'invg_fcc_name', 'invg_adj_amount',
+					'receipt_no', 'dishonor_date', 'inv_remark'],
 				colunmHeader: ['Sno.', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Invoice Date',
-			'Due Date', 'Fee Head', 'Amount', 'Concession', 'Adjustment', 'Reciept No', 'Receipt Date',
-		'Remarks'],
+					'Due Date', 'Fee Head', 'Amount', 'Concession', 'Adjustment', 'Reciept No', 'Receipt Date',
+					'Remarks'],
+			}
+		}
+	},
+	{
+		report_id: '12',
+		report_name: 'Advanced Security Deposit Report',
+		dataReport: {
+			securityDeposit: {
+				tableHeader: 'Advanced Security Deposit Report',
+				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'invoice_no', 'receipt_no', 'invoice_created_date',
+					'fh_amount'],
+				colunmHeader: ['Sno.', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Receipt No.', 'Invoice Date',
+			'Amount'],
+			}
+		}
+	},
+	{
+		report_id: '15',
+		report_name: 'Transport Report',
+		dataReport: {
+			transport: {
+				tableHeader: 'Transport Report',
+				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'route_name', 'slab_name', 'stoppages_name',
+					'invoice_created_date', 'cheque_date'],
+				colunmHeader: ['Sno.', 'Admission No', 'Student Name', 'Class-Section', 'Route', 'Slab', 'Stoppage',
+			'Applicable From', 'Applicable To'],
 			}
 		}
 	}]
