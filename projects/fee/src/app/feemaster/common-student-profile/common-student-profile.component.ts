@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from 
 import { SisService, CommonAPIService, ProcesstypeService, FeeService } from '../../_services';
 import { Router, ActivatedRoute, NavigationEnd, RouterStateSnapshot } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material';
+import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 
 @Component({
 	selector: 'app-common-student-profile',
@@ -74,31 +75,33 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		private router: Router,
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
-		public processtypeService: ProcesstypeService) { }
+		public processtypeService: ProcesstypeService,
+		public studentRouteMoveStoreService: StudentRouteMoveStoreService) { }
 
 	ngOnInit() {
 		this.processtypeService.setProcesstype('4');
 		this.buildForm();
-				const currentUrl = this.route.snapshot.routeConfig.path;
-				if (currentUrl !== '') {
-					if (currentUrl === 'invoice-creation-individual') {
-						this.invoice_creation_individual_flag = false;
-					} else if (currentUrl === 'student-profile') {
-						this.student_profile_flag = false;
-					} else if (currentUrl === 'fee-ledger') {
-						this.fee_ledger_flag = false;
-					} else if (currentUrl === 'fee-transaction-entry-individual') {
-						this.fee_transaction_entry_individual_flag = false;
-					}
-				}
+		const currentUrl = this.route.snapshot.routeConfig.path;
+		if (currentUrl !== '') {
+			if (currentUrl === 'invoice-creation-individual') {
+				this.invoice_creation_individual_flag = false;
+			} else if (currentUrl === 'student-profile') {
+				this.student_profile_flag = false;
+			} else if (currentUrl === 'fee-ledger') {
+				this.fee_ledger_flag = false;
+			} else if (currentUrl === 'fee-transaction-entry-individual') {
+				this.fee_transaction_entry_individual_flag = false;
+			}
+		}
 	}
 	goToPage(url) {
-		this.router.navigate([`../${url}`], {relativeTo: this.route});
+		this.router.navigate([`../${url}`],{ relativeTo: this.route });
 	}
 	ngOnChanges() {
 		if (this.loginId) {
 			this.studentdetailsflag = true;
 		}
+		console.log('loginId', this.loginId);
 		this.getStudentInformation(this.loginId);
 	}
 	buildForm() {
@@ -133,6 +136,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 					this.defaultsrc = '../../../assets/images/student.png';
 					if (result && result.data && result.data[0]) {
 						this.studentdetails = result.data[0];
+						this.studentRouteMoveStoreService.setRouteStore(this.studentdetails.em_admission_no, this.studentdetails.au_login_id);
 						this.studentLoginId = this.studentdetails.au_login_id;
 						if (this.nextFlag) {
 							this.next.emit(this.studentLoginId);
@@ -212,6 +216,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.lastFlag = false;
 		this.nextFlag = true;
 		this.getStudentDetailsByAdmno(admno);
+		// this.studentRouteMoveStoreService.setRouteStore(admno, null);
 	}
 	prevId(admno) {
 		this.nextFlag = false;
@@ -220,6 +225,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.lastFlag = false;
 		this.prevFlag = true;
 		this.getStudentDetailsByAdmno(admno);
+		// this.studentRouteMoveStoreService.setRouteStore(admno, null);
 	}
 	firstId(admno) {
 		this.nextFlag = false;
@@ -228,6 +234,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.lastFlag = false;
 		this.firstFlag = true;
 		this.getStudentDetailsByAdmno(admno);
+		// this.studentRouteMoveStoreService.setRouteStore(admno, null);
 	}
 	lastId(admno) {
 		this.nextFlag = false;
@@ -236,5 +243,6 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.lastFlag = false;
 		this.lastFlag = true;
 		this.getStudentDetailsByAdmno(admno);
+		// this.studentRouteMoveStoreService.setRouteStore(admno, null);
 	}
 }
