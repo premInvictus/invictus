@@ -99,7 +99,8 @@ export class FeeLedgerComponent implements OnInit {
 	}
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
+			height: '75vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
@@ -114,7 +115,8 @@ export class FeeLedgerComponent implements OnInit {
 	}
 	openReceiptDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
+			height: '75vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit

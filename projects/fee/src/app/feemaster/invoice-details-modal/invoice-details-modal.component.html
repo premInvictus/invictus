@@ -1,4 +1,5 @@
-<div class="row">
+<div class="margin-20ne">
+<div class="row" >
   <div class="col-12 text-right">
     <button mat-button (click)="closemodal()">Close <i class="material-icons">
         clear
@@ -13,7 +14,7 @@
     <div class="row">
       <div class="col-4">
         <div class="blue-box">
-          <div>
+          <div class="font-size-14">
             <span>Admission No. : {{invoiceDetails?.au_admission_no}} </span>
           </div>
         </div>
@@ -28,17 +29,17 @@
       <div class="col-4 ">
         <div class="row">
           <div class="col-12">
-              <span class="font-size-28 font-medium">{{invoiceDetails?.au_full_name | titlecase}}, {{invoiceDetails?.class_name}} - {{invoiceDetails?.sec_name}}</span>
+              <span class="font-size-20 font-medium">{{invoiceDetails?.au_full_name | titlecase}}, {{invoiceDetails?.class_name}} - {{invoiceDetails?.sec_name}}</span>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <span class="font-size-20 font-light">Parent Name: </span><span class="font-size-20 font-regular">{{invoiceDetails?.epd_parent_name | titlecase}}</span>
+            <span class="font-size-16 font-light">Parent Name: </span><span class="font-size-20 font-regular">{{invoiceDetails?.epd_parent_name | titlecase}}</span>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <span class="font-size-20 font-light">Mobile No: </span><span class="font-size-20 font-regular">{{invoiceDetails?.epd_contact_no}}</span>
+            <span class="font-size-16 font-light">Mobile No: </span><span class="font-size-20 font-regular">{{invoiceDetails?.epd_contact_no}}</span>
           </div>
         </div>
 
@@ -46,36 +47,36 @@
       <div class="col-4">
         <div class="row">
           <div class="col-12">
-            <span class="font-size-20 font-light">Invoice no: </span><span
-              class="font-size-20 font-regular">{{invoiceDetails?.inv_id}}</span>
+            <span class="font-size-16 font-light">Invoice no: </span><span
+              class="font-size-16 font-regular">{{invoiceDetails?.inv_id}}</span>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <span class="font-size-20 font-light">Invoice Type: </span><span
-              class="font-size-20 font-regular">{{invoiceDetails?.calm_name}}</span>
+            <span class="font-size-16 font-light">Invoice Type: </span><span
+              class="font-size-16 font-regular">{{invoiceDetails?.calm_name}}</span>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <span class="font-size-20 font-light">Fee Period: </span><span class="font-size-20 font-regular">{{invoiceDetails?.fp_name}}</span>
+            <span class="font-size-16 font-light">Fee Period: </span><span class="font-size-16 font-regular">{{invoiceDetails?.fp_name}}</span>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <span class="font-size-20 font-light">Fee Month: </span><span class="font-size-20 font-regular">{{invoiceDetails?.fp_months}}</span>
+            <span class="font-size-16 font-light">Fee Month: </span><span class="font-size-16 font-regular">{{invoiceDetails?.fp_months}}</span>
           </div>
         </div>
       </div>
       <div class="col-4">
         <div class="row">
           <div class="col-12">
-            <span class="font-size-20 font-light">Invoice Date: </span><span class="font-size-20 font-regular">{{invoiceDetails?.inv_invoice_date | date:'dd MMM, yyyy'}}</span>
+            <span class="font-size-16 font-light">Invoice Date: </span><span class="font-size-16 font-regular">{{invoiceDetails?.inv_invoice_date | date:'dd MMM, yyyy'}}</span>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <span class="font-size-20 font-light">Due Date: </span><span class="font-size-20 font-regular">{{invoiceDetails?.inv_due_date | date:'dd MMM, yyyy'}}</span>
+            <span class="font-size-16 font-light">Due Date: </span><span class="font-size-16 font-regular">{{invoiceDetails?.inv_due_date | date:'dd MMM, yyyy'}}</span>
           </div>
         </div>
 
@@ -165,3 +166,4 @@
 <app-delete-modal #recalculateModal [deleteMessage]="'Are you sure want to recalculate'"
   (deleteOk)="recalculateInvoice($event)"></app-delete-modal>
   <app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>
+</div>

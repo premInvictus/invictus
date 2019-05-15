@@ -90,7 +90,7 @@
                   <mat-checkbox formControlName="recalculation_flag">Recalculate All Unpaid Invoices</mat-checkbox>
                 </div>
               </div>
-              <div class="text-center margin-top-25 margin-bottom-140">
+              <div class="text-center margin-top-25 ">
                 <button *ngIf="commonAPIService.isExistUserAccessMenu('353')" mat-raised-button class=" btn-generate-invoice" (click)="insertInvoice()">Generate
                   Invoice</button>
                   <button mat-raised-button style="margin-left: 10px" class="custom-margin-top-10 print-btn" (click)="reset()">Reset</button>
