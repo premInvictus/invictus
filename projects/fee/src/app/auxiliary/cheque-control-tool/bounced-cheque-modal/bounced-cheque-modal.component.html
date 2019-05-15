@@ -77,15 +77,15 @@
   <div class="col-2">
       <mat-form-field appearance="outline" class="form-field">
           <mat-label>Bank Code</mat-label>
-          <input matInput placeholder="Bank Code" formControlName="fcc_bank_code" required>
+          <input matInput placeholder="Bank Code" formControlName="fcc_bank_code" (keyup.enter)="setBouncedReason($event)" (blur)="setBouncedReason($event)" required>
           
         </mat-form-field>
   </div>
   <div class="col-7">
       <mat-form-field appearance="outline" class="form-field">
           <mat-label>Reason</mat-label>
-          <mat-select placeholder="Reason" formControlName="fcc_reason_id" required>
-            <mat-option>Na</mat-option>
+          <mat-select placeholder="Reason" formControlName="fcc_reason_id" (selectionChange)="setBankcode($event)" required>
+            <mat-option *ngFor="let item of reasonArray" [value]="item.reason_desc" >{{item.reason_title}}</mat-option>
           </mat-select>
         </mat-form-field>
   </div>

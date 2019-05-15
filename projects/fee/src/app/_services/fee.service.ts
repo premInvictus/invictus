@@ -276,6 +276,14 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeStructureAllotedReport', value);
 	}
+	getAdvanceSecurityDepositReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getAdvanceSecurityDepositReport', value);
+	}
+	getTransportReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getTransportReport', value);
+	}
 	printReceipt(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/printReceipt', value);

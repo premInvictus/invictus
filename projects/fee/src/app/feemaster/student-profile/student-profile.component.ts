@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SisService, CommonAPIService, ProcesstypeService, FeeService } from '../../_services';
 import { StudentAccountComponent } from '../student-account/student-account.component';
+import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 
 @Component({
 	selector: 'app-student-profile',
@@ -18,7 +19,8 @@ export class StudentProfileComponent implements OnInit {
 	constructor(
 		private sisService: SisService,
 		private commmon: CommonAPIService,
-		public processtypeService: ProcesstypeService
+		public processtypeService: ProcesstypeService,
+		public studentRouteMoveStoreService: StudentRouteMoveStoreService
 	) { }
 
 	ngOnInit() {
@@ -28,12 +30,20 @@ export class StudentProfileComponent implements OnInit {
 		if (this.commmon.isExistUserAccessMenu('374')) {
 			this.editRequestFlag = true;
 		}
-		this.processtypeService.setProcesstype('4');
-		this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.lastRecordId = result.data[0].last_record;
-				this.loginId = result.data[0].au_login_id;
+		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
+			if (data.adm_no && data.login_id) {
+				this.lastRecordId = data.adm_no;
+				this.loginId = data.login_id;
+			} else {
+				this.processtypeService.setProcesstype('4');
+				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.lastRecordId = result.data[0].last_record;
+						this.loginId = result.data[0].au_login_id;
+					}
+				});
 			}
+
 		});
 	}
 	next(admno) {

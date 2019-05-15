@@ -23,7 +23,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 		private common: CommonAPIService,
 		private feeService: FeeService) { }
 	FINEPENALTIES_ELEMENT_DATA: FinePenaltiesElement[] = [];
-	displayedColumns: string[] = ['srno', 'finename', 'finetype', 'fineamount', 'classsection', 'event', 'description', 'status', 'action'];
+	displayedColumns: string[] = ['srno', 'finename', 'finetype', 'fineamount', 'event', 'description', 'status', 'action'];
 	dataSource = new MatTableDataSource<FinePenaltiesElement>(this.FINEPENALTIES_ELEMENT_DATA);
 	fin_is_hostel_fee = 0;
 	@ViewChild('paginator') paginator: MatPaginator;
