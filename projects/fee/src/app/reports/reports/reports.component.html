@@ -43,6 +43,7 @@
                      <form [formGroup]="reportFilterForm">
                         <div class="row">
                            <div class="col-3" *ngIf="reportType === '1'
+                           || reportType === '2'
                            || reportType === '8' || reportType === '10'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Report Type</mat-label>
@@ -96,13 +97,25 @@
                               </mat-form-field>
                            </div>
                            <div class="col-2" *ngIf="reportFilterForm.value.report_type === 'classwise' ||
-                           reportFilterForm.value.report_type === 'routewise'
+                           reportFilterForm.value.report_type === 'routewise'||
+                           reportFilterForm.value.report_type === 'headwise'
                            || reportFilterForm.value.report_type === 'modewise'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>{{hiddenFieldLabel}}</mat-label>
-                                 <mat-select formControlName="hidden_value">
+                                 <mat-select formControlName="hidden_value"
+                                 (selectionChange)="getHiddenFieldValue2($event,reportType)">
                                     <mat-option>Please Select</mat-option>
                                     <mat-option *ngFor="let item of hiddenValueArray" [value]="item.id">{{item.name}}
+                                    </mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-2" *ngIf="!(reportFilterForm.value.report_type === 'classwise')">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>{{hiddenFieldLabel2}}</mat-label>
+                                 <mat-select formControlName="hidden_value2">
+                                    <mat-option>Please Select</mat-option>
+                                    <mat-option *ngFor="let item of hiddenValueArray2" [value]="item.id">{{item.name}}
                                     </mat-option>
                                  </mat-select>
                               </mat-form-field>
@@ -177,7 +190,7 @@
                                     && column !== 'invoice_created_date' && column !== 'receipt_no'"
                                           class="font-bold font-skyblue font-underline">
                                           <a style="cursor: pointer;"
-                                             (click)="openDialog(item['invoice_id'], false)">{{item[column]}}</a>
+                                             (click)="openDialog(item, false)">{{item[column]}}</a>
                                        </span>
                                        <span *ngIf="column === 'receipt_no'"
                                           class="font-bold font-skyblue font-underline">
