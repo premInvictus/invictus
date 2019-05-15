@@ -64,12 +64,26 @@
                        </div>
                        <div class="col-3">
                           <mat-form-field appearance="outline" class="form-field">
-                             <mat-label>Fee Values</mat-label>
-                             <mat-select formControlName="fee_value">
-                                <mat-option>Na</mat-option>
+                             <mat-label>{{valueLabel}}</mat-label>
+                             <mat-select formControlName="fee_value"
+                             (selectionChange)="getHiddenFieldValue($event,reportType)">
+                                <mat-option>Please Select</mat-option>
+                                <mat-option *ngFor="let item of valueArray"
+                                [value]="item.id">{{item.name}}</mat-option>
                              </mat-select>
                           </mat-form-field>
                        </div>
+                       <div class="col-3"
+                       *ngIf="reportFilterForm.value.report_type === 'classwise'">
+                        <mat-form-field appearance="outline" class="form-field">
+                           <mat-label>{{hiddenFieldLabel}}</mat-label>
+                           <mat-select formControlName="hidden_value">
+                              <mat-option>Please Select</mat-option>
+                              <mat-option *ngFor="let item of hiddenValueArray"
+                              [value]="item.id">{{item.name}}</mat-option>
+                           </mat-select>
+                        </mat-form-field>
+                     </div>
                        <div class="col-3">
                           <mat-form-field appearance="outline" class="form-field">
                              <mat-label>From Date</mat-label>
@@ -132,7 +146,8 @@
                                 <img
                                    style="cursor: pointer"
                                    src="../../../assets/images/pdf.svg"
-                                   matTooltip="Export as excel"
+                                   matTooltip="Export as PDF"
+                                   (click)="exportAsPDF()"
                                    />
                              </div>
                           </div>
@@ -141,9 +156,6 @@
                     <br />
                     <div class="row">
                        <div class="col-12">
-                          <div class="text-center" *ngIf="tableFlag">
-                             <h4>{{finalTable.tableHeader | uppercase}}</h4>
-                          </div>
                           <table mat-table [hidden]="!tableFlag" id="report_table"
                           [dataSource]="dataSource"
                              class="table-100 text-center">
