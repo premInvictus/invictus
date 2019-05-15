@@ -86,22 +86,28 @@
               class="font-size-20 font-regular">{{invoiceDetails?.inv_due_date | date:'dd MMM, yyyy'}}</span>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="invoiceDetails?.pay_id === '1' || invoiceDetails?.pay_id === '2'">
+          <div class="col-12">
+            <span class="font-size-20 font-light">Payment Mode: </span><span
+              class="font-size-20 font-regular">{{invoiceDetails?.pay_name}}</span>
+          </div>
+        </div>
+        <div class="row" *ngIf="invoiceDetails?.pay_id === '3'">
           <div class="col-12">
             <span class="font-size-20 font-light">Cheque/Draft No.: </span><span
               class="font-size-20 font-regular">{{invoiceDetails?.ftr_cheque_no}}</span>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="invoiceDetails?.pay_id === '3'">
           <div class="col-12">
             <span class="font-size-20 font-light">Cheque/Draft Date: </span><span
               class="font-size-20 font-regular">{{invoiceDetails?.ftr_cheque_date | date:'dd MMM, yyyy'}}</span>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="invoiceDetails?.pay_id === '3' || invoiceDetails?.pay_id === '2'">
           <div class="col-12">
             <span class="font-size-20 font-light">Bank and Branch Details: </span><span
-              class="font-size-20 font-regular">{{invoiceDetails?.ftr_bnk_name}}</span>
+              class="font-size-20 font-regular">{{invoiceDetails?.ftr_bnk_name}}, {{invoiceDetails?.bnk_branch}}</span>
           </div>
         </div>
 
