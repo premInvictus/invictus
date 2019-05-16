@@ -39,10 +39,10 @@
          <button class="axiom-icon-button mat-button username" mat-button>
               <!-- <img class="header-avatar-img" src="../../../assets/images/resvgiconsforfeemodule/man.svg"> -->
               <img *ngIf="showImage" alt="invictus" class="header-avatar-img" src="{{image}}"
-              onError="this.src='../../../../../../src/assets/images/resvgiconsforfeemodule/man.svg'">
+              onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
               <img *ngIf="showImageBlank" class="header-avatar-img"
-              onError="this.src='../../../../../../src/assets/images/resvgiconsforfeemodule/man.svg'"
-              src="../../../../../../src/assets/images/resvgiconsforfeemodule/man.svg">
+              onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'"
+              src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg">
               <span class="header-icon-spacer header-profile-name">Hi, {{usernane}}</span></button>
          <div class="dropdown-content">
             <button mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
