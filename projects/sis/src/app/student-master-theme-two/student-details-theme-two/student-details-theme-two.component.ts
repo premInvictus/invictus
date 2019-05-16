@@ -42,7 +42,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	addOnly = true;
 	iddesabled = true;
 	backOnly = false;
-	defaultsrc = '../../../assets/images/student.png';
+	defaultsrc = '/assets/images/student.png';
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
@@ -168,7 +168,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			this.viewOnly = false;
 			this.deleteOnly = false;
 			this.studentdetailsform.reset();
-			this.defaultsrc = '../../../assets/images/student.png';
+			this.defaultsrc = '/assets/images/student.png';
 			this.enrolmentPlaceholder = 'New Enrollment Id';
 
 		}
@@ -256,7 +256,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 					this.lastB = true;
 					this.previousB = true;
 					this.studentdetails = [];
-					this.defaultsrc = '../../../assets/images/student.png';
+					this.defaultsrc = '/assets/images/student.png';
 					if (result && result.data && result.data[0]) {
 						this.studentdetails = result.data[0];
 					}

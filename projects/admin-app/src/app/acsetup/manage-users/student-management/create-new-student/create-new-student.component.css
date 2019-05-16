@@ -18,6 +18,6 @@
 
 
 #studentImage{
-  background-image : url("../../../../../../../../src/assets/images/student-profile.png");
+  background-image : url("/assets/images/student-profile.png");
   
 }

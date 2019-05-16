@@ -44,7 +44,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	addOnly = true;
 	iddesabled = true;
 	backOnly = false;
-	defaultsrc = '../../../assets/images/student.png';
+	defaultsrc = '/assets/images/student.png';
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
@@ -133,7 +133,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 					this.lastB = true;
 					this.previousB = true;
 					this.studentdetails = [];
-					this.defaultsrc = '../../../assets/images/student.png';
+					this.defaultsrc = '/assets/images/student.png';
 					if (result && result.data && result.data[0]) {
 						this.studentdetails = result.data[0];
 						this.studentRouteMoveStoreService.setRouteStore(this.studentdetails.em_admission_no, this.studentdetails.au_login_id);

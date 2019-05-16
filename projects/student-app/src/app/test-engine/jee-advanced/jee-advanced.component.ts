@@ -751,15 +751,15 @@ export class JeeAdvancedComponent implements OnInit {
 		const findex = this.questionsArray.findIndex(f => f.qus_id === qus_id);
 		if (findex !== -1) {
 			if (this.questionsArray[findex].answerStatus === '') {
-				return '../../../../../../src/assets/default-ques-btn.svg';
+				return '/assets/default-ques-btn.svg';
 			} else if (this.questionsArray[findex].answerStatus === '2') {
-				return '../../../../../../src/assets/notanswered.svg';
+				return '/assets/notanswered.svg';
 			} else if (this.questionsArray[findex].answerStatus === '1') {
-				return '../../../../../../src/assets/answered.svg';
+				return '/assets/answered.svg';
 			} else if (this.questionsArray[findex].answerStatus === '0') {
-				return '../../../../../../src/assets/saveforreview.svg';
+				return '/assets/saveforreview.svg';
 			} else if (this.questionsArray[findex].answerStatus === '3') {
-				return '../../../../../../src/assets/ansmarkreview.svg';
+				return '/assets/ansmarkreview.svg';
 			}
 		}
 	}
@@ -1975,15 +1975,15 @@ export class QuestionNoAdvModalComponent implements OnInit {
 		const findex = this.questionsArray.findIndex(f => f.qus_id === qus_id);
 		if (findex !== -1) {
 			if (this.questionsArray[findex].answerStatus === '') {
-				return '../../../../../../src/assets/default-ques-btn.svg';
+				return '/assets/default-ques-btn.svg';
 			} else if (this.questionsArray[findex].answerStatus === '2') {
-				return '../../../../../../src/assets/notanswered.svg';
+				return '/assets/notanswered.svg';
 			} else if (this.questionsArray[findex].answerStatus === '1') {
-				return '../../../../../../src/assets/answered.svg';
+				return '/assets/answered.svg';
 			} else if (this.questionsArray[findex].answerStatus === '0') {
-				return '../../../../../../src/assets/saveforreview.svg';
+				return '/assets/saveforreview.svg';
 			} else if (this.questionsArray[findex].answerStatus === '3') {
-				return '../../../../../../src/assets/ansmarkreview.svg';
+				return '/assets/ansmarkreview.svg';
 			}
 		}
 	}

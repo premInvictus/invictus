@@ -120,6 +120,36 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
+                           <div class="col-2" *ngIf="reportType === '15'">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Route</mat-label>
+                                 <mat-select formControlName="hidden_value3">
+                                    <mat-option>Please Select</mat-option>
+                                    <mat-option *ngFor="let item of hiddenValueArray3" [value]="item.id">{{item.name}}
+                                    </mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-2" *ngIf="reportType === '15'">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Slab</mat-label>
+                                 <mat-select formControlName="hidden_value4">
+                                    <mat-option>Please Select</mat-option>
+                                    <mat-option *ngFor="let item of hiddenValueArray4" [value]="item.id">{{item.name}}
+                                    </mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-2" *ngIf="reportType === '15'">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Stoppages</mat-label>
+                                 <mat-select formControlName="hidden_value5">
+                                    <mat-option>Please Select</mat-option>
+                                    <mat-option *ngFor="let item of hiddenValueArray5" [value]="item.id">{{item.name}}
+                                    </mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
                            <div class="col-2">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>From Date</mat-label>
@@ -158,11 +188,11 @@
                         <div class="col-12 text-right">
                            <div class="inline-flex">
                               <div *ngIf="REPORT_ELEMENT_DATA.length > 0">
-                                 <img style="cursor: pointer" src="../../../assets/images/xml.svg"
+                                 <img style="cursor: pointer" src="/assets/images/xml.svg"
                                     matTooltip="Export as excel" (click)="exportAsExcel()" />
                               </div>
                               <div class="btn-spacer" *ngIf="REPORT_ELEMENT_DATA.length > 0">
-                                 <img style="cursor: pointer" src="../../../assets/images/pdf.svg"
+                                 <img style="cursor: pointer" src="/assets/images/pdf.svg"
                                     matTooltip="Export as PDF" (click)="exportAsPDF()" />
                               </div>
                            </div>
@@ -192,10 +222,11 @@
                                           <a style="cursor: pointer;"
                                              (click)="openDialog(item, false)">{{item[column]}}</a>
                                        </span>
-                                       <span *ngIf="column === 'receipt_no'"
-                                          class="font-bold font-skyblue font-underline">
-                                          <a style="cursor: pointer;"
+                                       <span *ngIf="column === 'receipt_no'">
+                                          <a class="font-bold font-skyblue font-underline"
+                                          style="cursor: pointer;" *ngIf="item[column] !== 'NA'"
                                              (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a>
+                                             <p *ngIf="item[column] === 'NA'">{{item[column]}}</p>
                                        </span>
                                     </td>
                                  </ng-container>

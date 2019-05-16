@@ -629,19 +629,19 @@ export class JeeMainsComponent implements OnInit {
 		// console.log(answerStatus);
 		if (answerStatus === '') {
 			// Not Visited
-			return '../../assets/default-ques-btn.svg';
+			return '/assets/default-ques-btn.svg';
 		} else if (answerStatus === '0') {
 			// Marked For Review
-			return '../../assets/saveforreview.svg';
+			return '/assets/saveforreview.svg';
 		} else if (answerStatus === '1') {
 			// Answered
-			return '../../assets/main-green-btn.svg';
+			return '/assets/main-green-btn.svg';
 		} else if (answerStatus === '2') {
 			// Not Answered
-			return '../../assets/main-orange-btn.svg';
+			return '/assets/main-orange-btn.svg';
 		} else if (answerStatus === '3') {
 			// Answered & Marked For Review
-			return '../../assets/ansmarkreview.svg';
+			return '/assets/ansmarkreview.svg';
 		}
 	}
 
@@ -2718,19 +2718,19 @@ export class QuestionNoModalComponent implements OnInit {
 		// console.log(answerStatus);
 		if (answerStatus === '') {
 			// Not Visited
-			return '../../assets/default-ques-btn.svg';
+			return '/assets/default-ques-btn.svg';
 		} else if (answerStatus === '0') {
 			// Marked For Review
-			return '../../assets/saveforreview.svg';
+			return '/assets/saveforreview.svg';
 		} else if (answerStatus === '1') {
 			// Answered
-			return '../../assets/main-green-btn.svg';
+			return '/assets/main-green-btn.svg';
 		} else if (answerStatus === '2') {
 			// Not Answered
-			return '../../assets/main-orange-btn.svg';
+			return '/assets/main-orange-btn.svg';
 		} else if (answerStatus === '3') {
 			// Answered & Marked For Review
-			return '../../assets/ansmarkreview.svg';
+			return '/assets/ansmarkreview.svg';
 		}
 	}
 }

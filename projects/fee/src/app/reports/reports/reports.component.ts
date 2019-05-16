@@ -48,6 +48,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	feePeriod: any[] = [];
 	hiddenValueArray: any[] = [];
 	hiddenValueArray2: any[] = [];
+	hiddenValueArray3: any[] = [];
+	hiddenValueArray4: any[] = [];
+	hiddenValueArray5: any[] = [];
 	hiddenFieldLabel2: any = '';
 	classDataArray: any[] = [];
 	pageEvent: PageEvent;
@@ -55,7 +58,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '1',
 			report_name: 'Collection Report',
-			report_image: '../../../assets/images/Fee Reports/collection_report.svg',
+			report_image: '/assets/images/Fee Reports/collection_report.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -64,7 +67,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '2',
 			report_name: 'Fee Outstanding Report',
-			report_image: '../../../assets/images/Fee Reports/fee_defaulter_list.svg',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -73,7 +76,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '3',
 			report_name: 'Fee Projection Report',
-			report_image: '../../../assets/images/Fee Reports/fee_projection.svg',
+			report_image: '/assets/images/Fee Reports/fee_projection.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -82,7 +85,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '4',
 			report_name: 'Fee Transaction Report',
-			report_image: '../../../assets/images/Fee Reports/fee_transaction.svg',
+			report_image: '/assets/images/Fee Reports/fee_transaction.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -91,7 +94,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '5',
 			report_name: 'Fee Ledger Report',
-			report_image: '../../../assets/images/Fee Reports/fee_ledger.svg',
+			report_image: '/assets/images/Fee Reports/fee_ledger.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -101,7 +104,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '6',
 			report_name: 'Deleted Fee Transactions',
 			report_image:
-				'../../../assets/images/Fee Reports/deleted_fee_transaction.svg',
+				'/assets/images/Fee Reports/deleted_fee_transaction.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -110,7 +113,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '7',
 			report_name: 'Fee Adjustment Report',
-			report_image: '../../../assets/images/Fee Reports/fee_adjustment.svg',
+			report_image: '/assets/images/Fee Reports/fee_adjustment.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -119,7 +122,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '8',
 			report_name: 'Fee Concession Report',
-			report_image: '../../../assets/images/Fee Reports/fee_concession.svg',
+			report_image: '/assets/images/Fee Reports/fee_concession.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -129,7 +132,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '9',
 			report_name: 'Missing Fee Invoice',
 			report_image:
-				'../../../assets/images/Fee Reports/missing_fee_invoice.svg',
+				'/assets/images/Fee Reports/missing_fee_invoice.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -138,7 +141,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '10',
 			report_name: 'Fee Structure Report',
-			report_image: '../../../assets/images/Fee Reports/fee_structure.svg',
+			report_image: '/assets/images/Fee Reports/fee_structure.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -147,7 +150,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '11',
 			report_name: 'Cheque Clearance Report',
-			report_image: '../../../assets/images/Fee Reports/cheque_clearance.svg',
+			report_image: '/assets/images/Fee Reports/cheque_clearance.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -156,7 +159,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '12',
 			report_name: 'Advanced Security Deposit',
-			report_image: '../../../assets/images/Fee Reports/advanced_security.svg',
+			report_image: '/assets/images/Fee Reports/advanced_security.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -165,7 +168,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '13',
 			report_name: 'Online Transaction Details',
-			report_image: '../../../assets/images/Fee Reports/online_transaction.svg',
+			report_image: '/assets/images/Fee Reports/online_transaction.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -174,7 +177,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '14',
 			report_name: 'Dynamic Report',
-			report_image: '../../../assets/images/Fee Reports/dynamics.svg',
+			report_image: '/assets/images/Fee Reports/dynamics.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -183,7 +186,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '15',
 			report_name: 'Transport Report',
-			report_image: '../../../assets/images/Fee Reports/transport_report.svg',
+			report_image: '/assets/images/Fee Reports/transport_report.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -202,6 +205,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.getSchool();
 		this.buildForm();
 		this.getClassData();
+		this.getRoutes2();
+		this.getStoppages();
+		this.getSlabs();
 		this.reportsTable = reportTable;
 	}
 	ngAfterViewInit() {
@@ -215,6 +221,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			'to_date': '',
 			'hidden_value': '',
 			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
 			'filterReportBy': '',
 			'admission_no': '',
 			'au_full_name': '',
@@ -242,6 +251,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			'to_date': '',
 			'hidden_value2': '',
 			'hidden_value': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
 			'pageSize': '10',
 			'pageIndex': '0',
 			'filterReportBy': '',
@@ -415,6 +427,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			'to_date': '',
 			'hidden_value': '',
 			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
 			'filterReportBy': '',
 			'pageSize': '10',
 			'pageIndex': '0',
@@ -429,6 +444,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			'to_date': '',
 			'hidden_value': '',
 			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
 			'filterReportBy': '',
 			'pageSize': '10',
 			'pageIndex': '0',
@@ -610,6 +628,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				'to_date': value.to_date,
 				'pageSize': value.pageSize,
 				'pageIndex': value.pageIndex,
+				'routeId': value.fee_value,
 				'classId': value.hidden_value,
 				'admission_no': value.admission_no,
 				'secId': value.hidden_value2,
@@ -664,7 +683,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
 												repoArray[Number(keys)]['rpt_id'] : '0';
 											obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
-												repoArray[Number(keys)]['receipt_no'] : '-';
+												repoArray[Number(keys)]['receipt_no'] : 'NA';
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
 											obj['stu_full_name'] = repoArray[Number(keys)]['stu_full_name'];
@@ -700,7 +719,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 								repoArray[Number(index)]['invoice_id'] : '0';
 							obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-								repoArray[Number(index)]['receipt_no'] : '-';
+								repoArray[Number(index)]['receipt_no'] : 'NA';
 							obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 								repoArray[Number(index)]['rpt_id'] : '0';
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -730,7 +749,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 								repoArray[Number(index)]['invoice_id'] : '0';
 							obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-								repoArray[Number(index)]['receipt_no'] : '-';
+								repoArray[Number(index)]['receipt_no'] : 'NA';
 							obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 								repoArray[Number(index)]['rpt_id'] : '0';
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -762,7 +781,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 								repoArray[Number(index)]['invoice_id'] : '0';
 							obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-								repoArray[Number(index)]['receipt_no'] : '-';
+								repoArray[Number(index)]['receipt_no'] : 'NA';
 							obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 								repoArray[Number(index)]['rpt_id'] : '0';
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -872,7 +891,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 							repoArray[Number(index)]['invoice_id'] : '-';
 						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-							repoArray[Number(index)]['receipt_no'] : '-';
+							repoArray[Number(index)]['receipt_no'] : 'NA';
 						obj['receipt_id'] = repoArray[Number(index)]['receipt_id'] ?
 							repoArray[Number(index)]['receipt_id'] : '-';
 						obj['receipt_amount'] = repoArray[Number(index)]['receipt_amount'] ?
@@ -1259,7 +1278,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['invg_fcc_name'] = item['invg_fcc_name'] ? item['invg_fcc_name'] : 'NA';
 						obj['invg_adj_amount'] = item['invg_adj_amount'] ?
 							new DecimalPipe('en-us').transform(item['invg_adj_amount']) : 0;
-						obj['receipt_no'] = item['rpt_receipt_no'];
+						obj['receipt_no'] = item['rpt_receipt_no'] ? item['rpt_receipt_no'] : 'NA';
 						obj['receipt_id'] = item['receipt_id'];
 						obj['dishonor_date'] = item['rpt_receipt_date'];
 						obj['inv_remark'] = item['inv_remark'] ? item['inv_remark'] : 'NA';
@@ -1312,7 +1331,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 							repoArray[Number(index)]['invoice_id'] : '0';
 						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-							repoArray[Number(index)]['receipt_no'] : '-';
+							repoArray[Number(index)]['receipt_no'] : 'NA';
 						obj['receipt_id'] = repoArray[Number(index)]['receipt_id'] ?
 							repoArray[Number(index)]['receipt_id'] : '0';
 						obj['fh_amount'] = item['fh_amount'] ?
@@ -1340,6 +1359,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				'pageIndex': value.pageIndex,
 				'classId': value.fee_value,
 				'secId': value.hidden_value2,
+				'routeId': value.hidden_value3,
+				'slabId': value.hidden_value4,
+				'stoppageId': value.hidden_value5,
 				'admission_no': value.admission_no,
 				'studentName': value.au_full_name,
 			};
@@ -1434,6 +1456,45 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				this.schoolInfo = result.data[0];
 				this.startMonth = Number(this.schoolInfo.session_start_month);
 				this.minDate = new Date(new Date().getFullYear(), this.startMonth - 1, 1);
+			}
+		});
+	}
+	getRoutes2() {
+		this.hiddenValueArray3 = [];
+		this.feeService.getRoutes({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				for (const item of result.data) {
+					this.hiddenValueArray3.push({
+						id: item.tr_id,
+						name: item.tr_route_name
+					});
+				}
+			}
+		});
+	}
+	getSlabs() {
+		this.hiddenValueArray4 = [];
+		this.feeService.getSlabs({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				for (const item of result.data) {
+					this.hiddenValueArray4.push({
+						id: item.ts_id,
+						name: item.ts_name
+					});
+				}
+			}
+		});
+	}
+	getStoppages() {
+		this.hiddenValueArray5 = [];
+		this.feeService.getStoppages({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				for (const item of result.data) {
+					this.hiddenValueArray5.push({
+						id: item.tsp_id,
+						name: item.tsp_name
+					});
+				}
 			}
 		});
 	}

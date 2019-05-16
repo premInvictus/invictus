@@ -23,7 +23,7 @@
             <img class="student-pic--imgone student-pic__circle student-pic__size"
             [src]="defaultsrc">
             <img *ngIf="!viewOnly" class="student-pic--imgtwo student-pictwo__size student-pictwo__color"
-              src="../../../assets/images/twitpic-symbol.svg">
+              src="/assets/images/twitpic-symbol.svg">
           </label>
           <input type="file" placeholder="Upload image" id="image" class="image-upload-btn" (change)="bindImageToForm($event)"[disabled]="viewOnly" >
         </div>

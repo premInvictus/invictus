@@ -30,5 +30,5 @@ margin-bottom: 25px;
 }
 
 #teacherImage{
-  background-image : url("../../../../../../../../src/assets/images/teacher-profile.png");
+  background-image : url("/assets/images/teacher-profile.png");
 }

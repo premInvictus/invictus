@@ -91,7 +91,7 @@
                               <img class="parent-pic--imgone parent-pic__circle parent-pic__size"
                                  [src]="profileImageArray[i]">
                               <img *ngIf="!viewOnly" class="parent-pic--imgtwo parent-pictwo__size student-pictwo__color"
-                                 src="../../../assets/images/twitpic-symbol.svg">
+                                 src="/assets/images/twitpic-symbol.svg">
                               </label>
                               <input type="file" placeholder="Upload image" [id]="'image'+i" class="image-upload-btn"
                               (change)="bindImageToForm($event, i)" [disabled]="viewOnly">
