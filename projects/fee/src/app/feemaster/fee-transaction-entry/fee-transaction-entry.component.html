@@ -185,7 +185,7 @@
               <div class="col-6">
                  <mat-form-field appearance="outline" class="form-field ">
                     <mat-label>Payment Mode</mat-label>
-                    <mat-select formControlName="ftr_pay_id"  placeholder="Payment Mode">
+                    <mat-select formControlName="ftr_pay_id"  placeholder="Payment Mode" (selectionChange)="setPayAmount($event)" >
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let mode of payModes" [value]="mode.pay_id">{{mode.pay_name}}</mat-option>
                     </mat-select>

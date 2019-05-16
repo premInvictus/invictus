@@ -410,4 +410,15 @@ export class FeeTransactionEntryComponent implements OnInit {
 	isExist(mod_id) {
 		return this.common.isExistUserAccessMenu(mod_id);
 	}
+	setPayAmount(event) {
+		if (event.value !== '1') {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount': this.invoice.fee_amount
+			});
+		} else {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount': this.invoice.netPay
+			});
+		}
+	}
 }
