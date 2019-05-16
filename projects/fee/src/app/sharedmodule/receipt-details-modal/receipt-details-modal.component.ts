@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ReceiptDetails } from './receipt-details.model';
 import { FeeService, CommonAPIService } from '../../_services/index';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-receipt-details-modal',
 	templateUrl: './receipt-details-modal.component.html',
@@ -175,5 +176,17 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		});
 	}
 	editConfirm() {}
+	printReceipt() {
+		this.feeService.printReceipt({ receipt_id: [this.data.invoiceNo] }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+
+	}
 
 }
