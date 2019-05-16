@@ -32,6 +32,38 @@ export const reportTable = {
 		}
 	},
 	{
+		report_id: '2',
+		report_name: 'Fee Outstanding Report',
+		dataReport: {
+			headwise: {
+				tableHeader: 'Headwise Fee Collection Report',
+				columnDef: [],
+				colunmHeader: [],
+			},
+			classwise: {
+				tableHeader: 'Classwise Fee Collection Report',
+				columnDef: ['srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'receipt_no',
+					'rpt_amount', 'fp_name'],
+				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
+					'Reciept Amount', 'Fee Period'],
+			},
+			modewise: {
+				tableHeader: 'Modewise Fee Collection Report',
+				columnDef: ['srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'receipt_no',
+					'rpt_amount', 'fp_name', 'pay_name'],
+				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
+					'Reciept Amount', 'Fee Period', 'Fee Payment Mode'],
+			},
+			routewise: {
+				tableHeader: 'Routewise Fee Collection Report',
+				columnDef: ['srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'receipt_no',
+					'rpt_amount', 'route_name', 'stoppages_name'],
+				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
+					'Transport Amount', 'Route Name', 'Stoppage'],
+			}
+		}
+	},
+	{
 		report_id: '9',
 		report_name: 'Missing Fee Invoice',
 		dataReport: {
