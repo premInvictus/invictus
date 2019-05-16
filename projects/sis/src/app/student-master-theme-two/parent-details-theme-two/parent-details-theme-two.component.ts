@@ -82,8 +82,8 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
 		this.buildForm();
-		this.profileImageArray = ['../../../assets/images/student.png', '../../../assets/images/student.png',
-			'../../../assets/images/student.png'];
+		this.profileImageArray = ['/assets/images/student.png', '/assets/images/student.png',
+			'/assets/images/student.png'];
 		this.getQualifications();
 		this.getAnnualIncome();
 		this.getOccupationType();
@@ -584,7 +584,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 				} else {
 					this.staffStatus[i] = 'Yes';
 				}
-				this.profileImageArray[i] = value[i].epd_profile_image ? value[i].epd_profile_image : '../../../assets/images/student.png';
+				this.profileImageArray[i] = value[i].epd_profile_image ? value[i].epd_profile_image : '/assets/images/student.png';
 				if (this.picker) {
 					this.picker._dateAdapter.locale = 'en-in';
 				}
@@ -816,8 +816,8 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.addressStatus = ['No', 'No', 'No'];
 			this.aluminiStatusArray = [false, false, false];
 			this.showHideGuardianField = false;
-			this.profileImageArray = ['../../../assets/images/student.png', '../../../assets/images/student.png',
-				'../../../assets/images/student.png'];
+			this.profileImageArray = ['/assets/images/student.png', '/assets/images/student.png',
+				'/assets/images/student.png'];
 		}
 	}
 	getCityPerId(item: any, index) {

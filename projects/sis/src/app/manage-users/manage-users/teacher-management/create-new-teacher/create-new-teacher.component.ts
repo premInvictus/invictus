@@ -25,7 +25,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	) {
 	}
 
-	defaultsrc = '../../../assets/images/avatar-pic.png';
+	defaultsrc = '/assets/images/avatar-pic.png';
 	Teacher_Form: FormGroup;
 	Cs_relation_Form: FormGroup;
 	Personal_Form: FormGroup;

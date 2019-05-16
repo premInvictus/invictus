@@ -10,7 +10,7 @@ import { FeeService, SisService } from '../../../_services';
 })
 export class BouncedChequeModalComponent implements OnInit {
 	studentDetails: any = {};
-	defaultSrc = '../../../../assets/images/student.png';
+	defaultSrc = '/assets/images/student.png';
 	bouncedForm: FormGroup;
 	reasonArray: any[] = [];
 	constructor(
@@ -27,7 +27,7 @@ export class BouncedChequeModalComponent implements OnInit {
 		this.studentDetails = {};
 		this.studentDetails = this.data;
 		console.log(this.studentDetails);
-		this.defaultSrc = this.studentDetails.au_profileimage ? this.studentDetails.au_profileimage : '../../../../assets/images/student.png';
+		this.defaultSrc = this.studentDetails.au_profileimage ? this.studentDetails.au_profileimage : '/assets/images/student.png';
 	}
 	buildForm() {
 		this.bouncedForm = this.fbuild.group({

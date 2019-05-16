@@ -267,91 +267,91 @@ export class SchoolDashboardComponent implements OnInit {
 		checkImage(value) {
 				if (value.toLowerCase().includes('social')) {
 
-						return '../../../../assets/images/subjectwiseimages/socialstudies.svg';
+						return '/assets/images/subjectwiseimages/socialstudies.svg';
 				}
 				if (value.toLowerCase().includes('civ')) {
 
-						return '../../../../assets/images/subjectwiseimages/civics.svg';
+						return '/assets/images/subjectwiseimages/civics.svg';
 				}
 				if (value.toLowerCase().includes('scie')) {
 
-						return '../../../../assets/images/subjectwiseimages/science.svg';
+						return '/assets/images/subjectwiseimages/science.svg';
 				}
 				if (value.toLowerCase().includes('geo')) {
 
-						return '../../../../assets/images/subjectwiseimages/geography.svg';
+						return '/assets/images/subjectwiseimages/geography.svg';
 				}
 				if (value.toLowerCase().includes('physics')) {
 
-						return '../../../../assets/images/subjectwiseimages/physics.svg';
+						return '/assets/images/subjectwiseimages/physics.svg';
 				}
 				if (value.toLowerCase().includes('chemis')) {
 
-						return '../../../../assets/images/subjectwiseimages/chemistry.svg';
+						return '/assets/images/subjectwiseimages/chemistry.svg';
 				}
 				if (value.toLowerCase().includes('physical')) {
 
-						return '../../../../assets/images/subjectwiseimages/physicaleducation.svg';
+						return '/assets/images/subjectwiseimages/physicaleducation.svg';
 				}
 				if (value.toLowerCase().includes('acc')) {
 
-						return '../../../../assets/images/subjectwiseimages/accountancy.svg';
+						return '/assets/images/subjectwiseimages/accountancy.svg';
 				}
 				if (value.toLowerCase().includes('music')) {
 
-						return '../../../../assets/images/subjectwiseimages/music.svg';
+						return '/assets/images/subjectwiseimages/music.svg';
 				}
 				if (value.toLowerCase().includes('eco')) {
 
-						return '../../../../assets/images/subjectwiseimages/economics.svg';
+						return '/assets/images/subjectwiseimages/economics.svg';
 				}
 				if (value.toLowerCase().includes('busi')) {
 
-						return '../../../../assets/images/subjectwiseimages/business.svg';
+						return '/assets/images/subjectwiseimages/business.svg';
 				}
 				if (value.toLowerCase().includes('political')) {
 
-						return '../../../../assets/images/subjectwiseimages/politicalscience.svg';
+						return '/assets/images/subjectwiseimages/politicalscience.svg';
 				}
 				if (value.toLowerCase().includes('draw')) {
 
-						return '../../../../assets/images/subjectwiseimages/drawing.svg';
+						return '/assets/images/subjectwiseimages/drawing.svg';
 				}
 				if (value.toLowerCase().includes('knowledge')) {
 
-						return '../../../../assets/images/subjectwiseimages/generalknowledge.svg';
+						return '/assets/images/subjectwiseimages/generalknowledge.svg';
 				}
 				if (value.toLowerCase().includes('sanskr')) {
 
-						return '../../../../assets/images/subjectwiseimages/sanskrit.svg';
+						return '/assets/images/subjectwiseimages/sanskrit.svg';
 				}
 				if (value.toLowerCase().includes('hind')) {
 
-						return '../../../../assets/images/subjectwiseimages/hindi.svg';
+						return '/assets/images/subjectwiseimages/hindi.svg';
 				}
 				if (value.toLowerCase().includes('engl')) {
 
-						return '../../../../assets/images/subjectwiseimages/english.svg';
+						return '/assets/images/subjectwiseimages/english.svg';
 				}
 				if (value.toLowerCase().includes('biol')) {
 
-						return '../../../../assets/images/subjectwiseimages/biology.svg';
+						return '/assets/images/subjectwiseimages/biology.svg';
 				}
 				if (value.toLowerCase().includes('comp')) {
 
-						return '../../../../assets/images/subjectwiseimages/computer.svg';
+						return '/assets/images/subjectwiseimages/computer.svg';
 				}
 				if (value.toLowerCase().includes('math')) {
 
-						return '../../../../assets/images/subjectwiseimages/maths.svg';
+						return '/assets/images/subjectwiseimages/maths.svg';
 				}
 				if (value.toLowerCase().includes('hist')) {
 
-						return '../../../../assets/images/subjectwiseimages/history.svg';
+						return '/assets/images/subjectwiseimages/history.svg';
 				}
 				if ((value.toLowerCase().includes('evs') || (value.toLowerCase().includes('env')))) {
 
-						return '../../../../assets/images/subjectwiseimages/evs.svg';
+						return '/assets/images/subjectwiseimages/evs.svg';
 				} else {
 						return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvODJt31eGtz7SdvI_VDSfF-0n9VI3OBwBVs9VhAzza0nNiH65';
 				}
