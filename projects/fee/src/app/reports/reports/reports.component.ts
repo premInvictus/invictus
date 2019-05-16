@@ -58,7 +58,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '1',
 			report_name: 'Collection Report',
-			report_image: '../../../assets/images/Fee Reports/collection_report.svg',
+			report_image: '/assets/images/Fee Reports/collection_report.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -67,7 +67,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '2',
 			report_name: 'Fee Outstanding Report',
-			report_image: '../../../assets/images/Fee Reports/fee_defaulter_list.svg',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -76,7 +76,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '3',
 			report_name: 'Fee Projection Report',
-			report_image: '../../../assets/images/Fee Reports/fee_projection.svg',
+			report_image: '/assets/images/Fee Reports/fee_projection.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -85,7 +85,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '4',
 			report_name: 'Fee Transaction Report',
-			report_image: '../../../assets/images/Fee Reports/fee_transaction.svg',
+			report_image: '/assets/images/Fee Reports/fee_transaction.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -94,7 +94,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '5',
 			report_name: 'Fee Ledger Report',
-			report_image: '../../../assets/images/Fee Reports/fee_ledger.svg',
+			report_image: '/assets/images/Fee Reports/fee_ledger.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -104,7 +104,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '6',
 			report_name: 'Deleted Fee Transactions',
 			report_image:
-				'../../../assets/images/Fee Reports/deleted_fee_transaction.svg',
+				'/assets/images/Fee Reports/deleted_fee_transaction.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -113,7 +113,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '7',
 			report_name: 'Fee Adjustment Report',
-			report_image: '../../../assets/images/Fee Reports/fee_adjustment.svg',
+			report_image: '/assets/images/Fee Reports/fee_adjustment.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -122,7 +122,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '8',
 			report_name: 'Fee Concession Report',
-			report_image: '../../../assets/images/Fee Reports/fee_concession.svg',
+			report_image: '/assets/images/Fee Reports/fee_concession.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -132,7 +132,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '9',
 			report_name: 'Missing Fee Invoice',
 			report_image:
-				'../../../assets/images/Fee Reports/missing_fee_invoice.svg',
+				'/assets/images/Fee Reports/missing_fee_invoice.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -141,7 +141,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '10',
 			report_name: 'Fee Structure Report',
-			report_image: '../../../assets/images/Fee Reports/fee_structure.svg',
+			report_image: '/assets/images/Fee Reports/fee_structure.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -150,7 +150,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '11',
 			report_name: 'Cheque Clearance Report',
-			report_image: '../../../assets/images/Fee Reports/cheque_clearance.svg',
+			report_image: '/assets/images/Fee Reports/cheque_clearance.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -159,7 +159,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '12',
 			report_name: 'Advanced Security Deposit',
-			report_image: '../../../assets/images/Fee Reports/advanced_security.svg',
+			report_image: '/assets/images/Fee Reports/advanced_security.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -168,7 +168,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '13',
 			report_name: 'Online Transaction Details',
-			report_image: '../../../assets/images/Fee Reports/online_transaction.svg',
+			report_image: '/assets/images/Fee Reports/online_transaction.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -177,7 +177,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '14',
 			report_name: 'Dynamic Report',
-			report_image: '../../../assets/images/Fee Reports/dynamics.svg',
+			report_image: '/assets/images/Fee Reports/dynamics.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',
@@ -186,7 +186,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '15',
 			report_name: 'Transport Report',
-			report_image: '../../../assets/images/Fee Reports/transport_report.svg',
+			report_image: '/assets/images/Fee Reports/transport_report.svg',
 			main_text_class: 'text-center',
 			report_main_image_class: '',
 			report_middle_class: '',

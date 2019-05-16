@@ -18,7 +18,7 @@
             <div *ngIf="showLandscape" class="col-6 custom-col-50">
                <div class="container-printid-landscape">
                   <div [ngStyle]="{'border':showBorder, 'border-radius': '15px'}">
-                     <img class="background-landscape-one" src="../../../../assets/images/landscape-id-card_bg_three_3.jpg">
+                     <img class="background-landscape-one" src="/assets/images/landscape-id-card_bg_three_3.jpg">
                      <div id="id_card_landscape_body">
                         <div id="id_card_header"
                            [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor}">
@@ -121,7 +121,7 @@
                               class="col-4 text-center remove-col-padding">
                               <span class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>Father's Info</b> </span>
                               <div  style="width: 65px;
-                                 height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" src="../../../../assets/images/id-father_sample_pic.jpg" alt="student photo"></div>
+                                 height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" src="/assets/images/id-father_sample_pic.jpg" alt="student photo"></div>
                               <p *ngIf="showParentName" 
                                  class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>{{studentDetails.father_name}}</b></p>
                               <p *ngIf="showParentMobile" class="id_card_student_contact_info remove-paragraph-bottom-padding">9999955555</p>
@@ -130,7 +130,7 @@
                               class="col-4 text-center remove-col-padding">
                               <span class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>Mother's Info</b> </span>
                               <div style="width: 65px;
-                                 height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" src="../../../../assets/images/id-mother_sample_pic.jpg" alt="student photo"></div>
+                                 height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" src="/assets/images/id-mother_sample_pic.jpg" alt="student photo"></div>
                               <p *ngIf="showParentName"  
                                  class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>{{studentDetails.mother_name}}</b></p>
                               <p *ngIf="showParentMobile" class="id_card_student_contact_info remove-paragraph-bottom-padding">9999955555</p>
@@ -139,7 +139,7 @@
                               class="col-4 text-center remove-col-padding">
                               <span class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>Guardian Info</b> </span>
                               <div  style="width: 65px;
-                                 height: 65px;margin:auto"><img *ngIf="showGuardianPhoto"class="parent-photo--size" src="../../../../assets/images/id-guardian_sample_pic.jpg" alt="student photo"></div>
+                                 height: 65px;margin:auto"><img *ngIf="showGuardianPhoto"class="parent-photo--size" src="/assets/images/id-guardian_sample_pic.jpg" alt="student photo"></div>
                               <p 
                                  class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>{{studentDetails.guardian_name}}</b> </p>
                               <p class="id_card_student_contact_info remove-paragraph-bottom-padding">9999955555</p>
@@ -174,7 +174,7 @@
             <div *ngIf="showPotrait" class="col-6 custom-col-50 custom-margin-25">
                <div class="container-printid-portrait">
                   <div class="container-portrait-box__white">
-                     <img class="background-portrait-one" src="../../../../assets/images/id-card-portait-bg_background_two.jpg">
+                     <img class="background-portrait-one" src="/assets/images/id-card-portait-bg_background_two.jpg">
                      <div id="id_card_portrait_body_style2">
                         <div [ngStyle]="{'border-top-right-radius': '12px'}">
                            <div class="row remove-margin">
@@ -257,13 +257,13 @@
             <div *ngIf="showPotrait && showBackSide" class="col-6 custom-col-50 custom-margin-25">
                <div class="container-printid-portrait">
                   <div class="container-portrait-box__white">
-                     <img class="background-portrait-one" src="../../../../assets/images/id-card-portait-bg_background_white.jpg">
+                     <img class="background-portrait-one" src="/assets/images/id-card-portait-bg_background_white.jpg">
                      <div id="id_card_portrait_body">
                         <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px'}">
                            <div class="row remove-margin">
                               <div style="width: 55px;
                                  height: 55px;margin:auto" class="col-4 remove-col-padding text-center">
-                                 <img *ngIf="showParentPhoto" class="parent-portrait-photo--size" src="../../../../assets/images/id-father_sample_pic.jpg" alt="student photo">
+                                 <img *ngIf="showParentPhoto" class="parent-portrait-photo--size" src="/assets/images/id-father_sample_pic.jpg" alt="student photo">
                               </div>
                               <div [ngStyle]="{'font-weight':allContentBold}" 
                                  class="col-8 col-padding-school-addr-portrait">
@@ -277,7 +277,7 @@
                            <div class="row remove-margin">
                               <div style="width: 55px;
                                  height: 55px;margin:auto" class="col-4 remove-col-padding text-center">
-                                 <img *ngIf="showParentPhoto" class="parent-portrait-photo--size" src="../../../../assets/images/id-mother_sample_pic.jpg" alt="student photo">
+                                 <img *ngIf="showParentPhoto" class="parent-portrait-photo--size" src="/assets/images/id-mother_sample_pic.jpg" alt="student photo">
                               </div>
                               <div [ngStyle]="{'font-weight':allContentBold}"
                                  class="col-8 col-padding-school-addr-portrait">
@@ -291,7 +291,7 @@
                            <div class="row remove-margin">
                               <div style="width: 55px;
                                  height: 55px;margin:auto" class="col-4 remove-col-padding text-center">
-                                 <img *ngIf="showGuardianPhoto" class="parent-portrait-photo--size" src="../../../../assets/images/id-guardian_sample_pic.jpg"
+                                 <img *ngIf="showGuardianPhoto" class="parent-portrait-photo--size" src="/assets/images/id-guardian_sample_pic.jpg"
                                     alt="student photo">
                               </div>
                               <div [ngStyle]="{'font-weight':allContentBold}" 

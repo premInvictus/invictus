@@ -37,7 +37,7 @@ export class StudentDetailsComponent implements OnInit, OnChanges {
 	addOnly = true;
 	iddesabled = true;
 	backOnly = false;
-	defaultsrc = '../../../assets/images/avatar-pic.png';
+	defaultsrc = '/assets/images/avatar-pic.png';
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
@@ -78,7 +78,7 @@ export class StudentDetailsComponent implements OnInit, OnChanges {
 				}
 				this.getStudentDetails(data.last_record);
 			}
-			this.defaultsrc = '../../../assets/images/avatar-pic.png';
+			this.defaultsrc = '/assets/images/avatar-pic.png';
 
 		});
 
@@ -145,7 +145,7 @@ export class StudentDetailsComponent implements OnInit, OnChanges {
 			this.viewOnly = false;
 			this.deleteOnly = false;
 			this.studentdetailsform.reset();
-			this.defaultsrc = '../../../assets/images/avatar-pic.png';
+			this.defaultsrc = '/assets/images/avatar-pic.png';
 			this.enrolmentPlaceholder = 'New Enrollment Id';
 
 		}
@@ -287,7 +287,7 @@ export class StudentDetailsComponent implements OnInit, OnChanges {
 	}
 	patchStudentDetails() {
 		this.studentdetailsform.patchValue({
-			au_profileimage: this.studentdetails.au_profileimage ? this.studentdetails.au_profileimage : '../../../assets/images/avatar-pic.png',
+			au_profileimage: this.studentdetails.au_profileimage ? this.studentdetails.au_profileimage : '/assets/images/avatar-pic.png',
 			au_login_id: this.studentdetails.au_login_id,
 			au_full_name: this.studentdetails.au_full_name,
 			au_class_id: this.studentdetails.au_class_id,
