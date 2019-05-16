@@ -28,7 +28,12 @@ export const reportTable = {
 					'rpt_amount', 'route_name', 'stoppages_name'],
 				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
 					'Transport Amount', 'Route Name', 'Stoppage'],
-			}
+			},
+			mfr: {
+				tableHeader: 'MRF Report',
+				columnDef: [],
+				colunmHeader: [],
+			},
 		}
 	},
 	{

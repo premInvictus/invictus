@@ -11,6 +11,7 @@ const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
+import { reduce } from 'rxjs/operators';
 @Component({
 	selector: 'app-reports',
 	templateUrl: './reports.component.html',
@@ -34,6 +35,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	reportTypeArray: any[] = [];
 	reportFilterForm: FormGroup;
 	REPORT_ELEMENT_DATA: any[] = [];
+	REPORT_ELEMENT_DATA2: any[] = [];
 	valueLabel: any = 'Value';
 	totalRecords: any;
 	currentDate = new Date();
@@ -45,6 +47,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	hiddenFieldLabel: any = '';
 	@ViewChild('paginator') paginator: MatPaginator;
 	dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
+	dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
 	feePeriod: any[] = [];
 	hiddenValueArray: any[] = [];
 	hiddenValueArray2: any[] = [];
@@ -212,6 +215,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
+		this.dataSource2.paginator = this.paginator;
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
@@ -284,8 +288,24 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				this.renderTable = renderingArray[findex2]['dataReport'];
 				this.reportType = report_id;
 			}
-			if (Number(report_id) === 1
-			|| Number(report_id) === 2) {
+			if (Number(report_id) === 1) {
+				this.reportTypeArray.push({
+					report_type: 'headwise', report_name: 'Head Wise'
+				},
+					{
+						report_type: 'classwise', report_name: 'Class Wise'
+					},
+					{
+						report_type: 'modewise', report_name: 'Mode Wise'
+					},
+					{
+						report_type: 'routewise', report_name: 'Route Wise'
+					},
+					{
+						report_type: 'mfr', report_name: 'Monthly Fee'
+					});
+			}
+			if (Number(report_id) === 2) {
 				this.reportTypeArray.push({
 					report_type: 'headwise', report_name: 'Head Wise'
 				},
@@ -366,7 +386,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	getHiddenFieldValue($event, type) {
 		this.hiddenValueArray = [];
-		if (Number(type) === 1 && this.reportFilterForm.value.report_type === 'classwise') {
+		if (Number(type) === 1 && (this.reportFilterForm.value.report_type === 'classwise'
+			|| this.reportFilterForm.value.report_type === 'mfr')) {
 			this.sisService.getSectionsByClass({ class_id: $event.value }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					for (const item of result.data) {
@@ -473,6 +494,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.hiddenFieldLabel2 = 'Section';
 		}
 		if ($event.value === 'classwise') {
+			this.hiddenValueArray = [];
+			this.valueLabel = 'Class';
+			this.hiddenFieldLabel = 'Section';
+			this.getClass();
+		}
+		if ($event.value === 'mfr') {
 			this.hiddenValueArray = [];
 			this.valueLabel = 'Class';
 			this.hiddenFieldLabel = 'Section';
@@ -639,8 +666,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		let repoArray: any[] = [];
 		this.REPORT_ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
-		if ((Number(this.reportType) === 1 || Number(this.reportType) === 2 )
-		&& this.reportFilterForm.value.report_type) {
+		this.REPORT_ELEMENT_DATA2 = [];
+		this.dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
+		if ((Number(this.reportType) === 1 || Number(this.reportType) === 2)
+			&& this.reportFilterForm.value.report_type) {
 			this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					repoArray = result.data.reportData;
@@ -706,8 +735,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						this.tableFlag = true;
 						this.finalTable.columnDef = fee_head_data;
 						this.finalTable.colunmHeader = fee_head_data_name;
-					}
-					if (this.reportFilterForm.value.report_type === 'classwise') {
+					} else if (this.reportFilterForm.value.report_type === 'classwise') {
 						let index = 0;
 						for (const item of repoArray) {
 							const obj: any = {};
@@ -736,8 +764,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							this.tableFlag = true;
 							index++;
 						}
-					}
-					if (this.reportFilterForm.value.report_type === 'modewise') {
+					} else if (this.reportFilterForm.value.report_type === 'modewise') {
 						let index = 0;
 						for (const item of repoArray) {
 							const obj: any = {};
@@ -768,8 +795,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							this.tableFlag = true;
 							index++;
 						}
-					}
-					if (this.reportFilterForm.value.report_type === 'routewise') {
+					} else if (this.reportFilterForm.value.report_type === 'routewise') {
 						let index = 0;
 						for (const item of repoArray) {
 							const obj: any = {};
@@ -810,6 +836,74 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
+			if (this.reportFilterForm.value.report_type === 'mfr') {
+				const columnData: any[] = [];
+				const columnHeaderData: any[] = [];
+				collectionJSON = {
+					'report_type': value.report_type,
+					'from_date': value.from_date,
+					'to_date': value.to_date,
+					'pageSize': value.pageSize,
+					'pageIndex': value.pageIndex,
+					'routeId': value.fee_value,
+					'classId': value.hidden_value,
+					'admission_no': value.admission_no,
+					'secId': value.hidden_value2,
+					'studentName': value.au_full_name,
+					'filterReportBy': 'collection'
+				};
+				this.feeService.getMFRReport(collectionJSON).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						repoArray = result.data.reportData;
+						this.totalRecords = Number(result.data.totalRecords);
+						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+						let index = 0;
+						let qindex = 1;
+						columnData.push('srno', 'au_admission_no', 'au_full_name', 'class_name');
+						columnHeaderData.push('SNo', 'Admission No.', 'Student Name', 'Class');
+						for (const item of repoArray) {
+							const obj: any = {};
+							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+								(index + 1);
+							obj['au_admission_no'] = repoArray[Number(index)]['au_admission_no'] ?
+								repoArray[Number(index)]['au_admission_no'] : '-';
+							obj['au_full_name'] = repoArray[Number(index)]['au_full_name'] ?
+								repoArray[Number(index)]['au_full_name'] : '-';
+							obj['class_name'] = repoArray[Number(index)]['class_name'] + '-' +
+								repoArray[Number(index)]['sec_name'];
+							for (const titem of item['inv_invoice_generated_status']) {
+								Object.keys(titem).forEach((key: any) => {
+									if (key === 'fm_name' && index === 0 &&
+										item.inv_fp_id === '2') {
+										columnData.push('Q' + qindex);
+										columnHeaderData.push(titem[key]);
+									}
+									if (key === 'fm_name') {
+										obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
+										obj['Q2'] = item['inv_invoice_generated_status'][1]['invoice_paid_status'];
+										obj['Q3'] = item['inv_invoice_generated_status'][2]['invoice_paid_status'];
+										obj['Q4'] = item['inv_invoice_generated_status'][3]['invoice_paid_status'];
+									}
+								});
+								qindex++;
+								this.finalTable.columnDef = columnData;
+								this.finalTable.colunmHeader = columnHeaderData;
+							}
+							this.REPORT_ELEMENT_DATA2.push(obj);
+							this.tableFlag = true;
+							index++;
+						}
+						console.log(this.REPORT_ELEMENT_DATA2);
+						this.dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
+						this.dataSource2.paginator.length = this.paginator.length = this.totalRecords;
+						this.dataSource2.paginator = this.paginator;
+					} else {
+						this.REPORT_ELEMENT_DATA2 = [];
+						this.dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
+						this.tableFlag = true;
+					}
+				});
+			}
 		}
 		if (Number(this.reportType) === 9) {
 			const missingInvoiceJSON = {
@@ -1543,6 +1637,32 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.toggleSearch = true;
 		} else {
 			this.toggleSearch = false;
+		}
+	}
+	getColor(status) {
+		if (status === 'unpaid') {
+			return '#261f61';
+		} else if (status === 'paid') {
+			return '#075f62';
+		} else if (status === 'Not Generated') {
+			return '#47a8af';
+		} else {
+			return '';
+		}
+	}
+	checkColumnName(item: any, columnName) {
+		if (columnName === 'srno' || columnName === 'au_full_name' ||
+			columnName === 'au_admission_no' || columnName === 'class_name') {
+			return item;
+		} else {
+			return '';
+		}
+	}
+	getBorder(status) {
+		if (status === 'unpaid' || status === 'paid' || status === 'Not Generated') {
+			return '1px solid';
+		} else {
+			return '';
 		}
 	}
 }

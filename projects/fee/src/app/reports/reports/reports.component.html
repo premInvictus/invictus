@@ -64,8 +64,7 @@
                                  </span>&nbsp;
                                  <span>
                                     <mat-slide-toggle matTooltip="Click to enable advanced search"
-                                    [checked]="toggleSearch"
-                                       (change)="enableSearch($event)"></mat-slide-toggle>
+                                       [checked]="toggleSearch" (change)="enableSearch($event)"></mat-slide-toggle>
                                  </span>
                               </div>
                            </div>
@@ -99,18 +98,20 @@
                            <div class="col-2" *ngIf="reportFilterForm.value.report_type === 'classwise' ||
                            reportFilterForm.value.report_type === 'routewise'||
                            reportFilterForm.value.report_type === 'headwise'
-                           || reportFilterForm.value.report_type === 'modewise'">
+                           || reportFilterForm.value.report_type === 'modewise' ||
+                           reportFilterForm.value.report_type === 'mfr'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>{{hiddenFieldLabel}}</mat-label>
                                  <mat-select formControlName="hidden_value"
-                                 (selectionChange)="getHiddenFieldValue2($event,reportType)">
+                                    (selectionChange)="getHiddenFieldValue2($event,reportType)">
                                     <mat-option>Please Select</mat-option>
                                     <mat-option *ngFor="let item of hiddenValueArray" [value]="item.id">{{item.name}}
                                     </mat-option>
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-2" *ngIf="!(reportFilterForm.value.report_type === 'classwise')">
+                           <div class="col-2" *ngIf="!(reportFilterForm.value.report_type === 'classwise' ||
+                           reportFilterForm.value.report_type === 'mfr')">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>{{hiddenFieldLabel2}}</mat-label>
                                  <mat-select formControlName="hidden_value2">
@@ -188,12 +189,12 @@
                         <div class="col-12 text-right">
                            <div class="inline-flex">
                               <div *ngIf="REPORT_ELEMENT_DATA.length > 0">
-                                 <img style="cursor: pointer" src="/assets/images/xml.svg"
-                                    matTooltip="Export as excel" (click)="exportAsExcel()" />
+                                 <img style="cursor: pointer" src="/assets/images/xml.svg" matTooltip="Export as excel"
+                                    (click)="exportAsExcel()" />
                               </div>
                               <div class="btn-spacer" *ngIf="REPORT_ELEMENT_DATA.length > 0">
-                                 <img style="cursor: pointer" src="/assets/images/pdf.svg"
-                                    matTooltip="Export as PDF" (click)="exportAsPDF()" />
+                                 <img style="cursor: pointer" src="/assets/images/pdf.svg" matTooltip="Export as PDF"
+                                    (click)="exportAsPDF()" />
                               </div>
                            </div>
                         </div>
@@ -201,7 +202,8 @@
                      <br />
                      <div class="row">
                         <div class="col-12">
-                           <table mat-table [hidden]="!tableFlag" id="report_table" [dataSource]="dataSource"
+                           <table mat-table [hidden]="!(tableFlag && 
+                           reportFilterForm.value.report_type !== 'mfr')" id="report_table" [dataSource]="dataSource"
                               class="table-100 text-center">
                               <ng-container *ngFor="let column of finalTable.columnDef;let i = index;">
                                  <ng-container [matColumnDef]="column">
@@ -223,10 +225,10 @@
                                              (click)="openDialog(item, false)">{{item[column]}}</a>
                                        </span>
                                        <span *ngIf="column === 'receipt_no'">
-                                          <a class="font-bold font-skyblue font-underline"
-                                          style="cursor: pointer;" *ngIf="item[column] !== 'NA'"
+                                          <a class="font-bold font-skyblue font-underline" style="cursor: pointer;"
+                                             *ngIf="item[column] !== 'NA'"
                                              (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a>
-                                             <p *ngIf="item[column] === 'NA'">{{item[column]}}</p>
+                                          <p *ngIf="item[column] === 'NA'">{{item[column]}}</p>
                                        </span>
                                     </td>
                                  </ng-container>
@@ -234,8 +236,28 @@
                               <tr mat-header-row *matHeaderRowDef="finalTable.columnDef"></tr>
                               <tr mat-row *matRowDef="let row; columns: finalTable.columnDef;"></tr>
                            </table>
+                           <table mat-table [hidden]="!(tableFlag && 
+                           reportFilterForm.value.report_type === 'mfr')" id="report_table" [dataSource]="dataSource2"
+                              class="table-100 text-center">
+                              <ng-container *ngFor="let column of finalTable.columnDef;let i = index;">
+                                 <ng-container [matColumnDef]="column">
+                                    <th mat-header-cell *matHeaderCellDef>{{finalTable.colunmHeader[i]}}</th>
+                                    <td mat-cell *matCellDef="let item"
+                                    [ngStyle]="{'background-color': getColor(item[column]),'border': getBorder(item[column])}">
+                                    {{checkColumnName(item[column], column)}}
+                                    </td>
+                                 </ng-container>
+                              </ng-container>
+                              <tr mat-header-row *matHeaderRowDef="finalTable.columnDef"></tr>
+                              <tr mat-row *matRowDef="let row; columns: finalTable.columnDef;"></tr>
+                           </table>
                            <table class="table-100 text-center" style="margin-top:5px;">
-                              <tr *ngIf="REPORT_ELEMENT_DATA.length == 0 && tableFlag">
+                              <tr *ngIf="REPORT_ELEMENT_DATA.length == 0 && tableFlag
+                              && reportFilterForm.value.report_type !== 'mfr'">
+                                 <td colspan="12">No Record Found</td>
+                              </tr>
+                              <tr *ngIf="REPORT_ELEMENT_DATA2.length == 0 && tableFlag
+                              && reportFilterForm.value.report_type === 'mfr'">
                                  <td colspan="12">No Record Found</td>
                               </tr>
                            </table>
