@@ -162,14 +162,14 @@
                        </div>
                        <div class="row">
                           <div class="col-12">
-                             <span class="font-size-16 font-regular">Late Fine: </span><span class="font-size-16 font-bold">
+                             <span class="font-size-16 font-regular">Fines: </span><span class="font-size-16 font-bold">
                                 {{invoice.late_fine_amt ? (invoice.late_fine_amt | number): 0}}</span>
                           </div>
                        </div>
                        <div class="row">
                           <div class="col-12">
                              <span class="font-size-16 font-regular">Total Amount: </span><span class="font-size-16 font-bold">
-                               {{invoice.netPay}}</span>
+                               {{invoice.netPay | number}}</span>
                           </div>
                        </div>
                     </div>

@@ -23,13 +23,8 @@ export class AppComponent implements OnInit {
 	};
 	showLoadingFlag;
 	constructor(private router: Router, private loaderService: CommonAPIService) {
-
-	}
-
-	ngOnInit() {
-		this.getCurrentUrl();
 		this.loaderService.showLoading.subscribe((flag: boolean) => {
-			setTimeout(() => this.showLoadingFlag = flag, 0);
+			 this.showLoadingFlag = flag;
 		});
 		this.router.events.subscribe((event: Event) => {
 			switch (true) {
@@ -49,6 +44,10 @@ export class AppComponent implements OnInit {
 				}
 			}
 		});
+	}
+
+	ngOnInit() {
+		this.getCurrentUrl();
 	}
 	getCurrentUrl() {
 		this.router.events.subscribe(event => {

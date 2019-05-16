@@ -20,6 +20,15 @@
           </div>
         </div>
       </div>
+      <div class="col-8">
+        <div class="text-right">
+          <button
+            *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
+            mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
+            (click)="openRecalculateDialog()">Recalulate Invoice</button>
+          <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn" (click)="printReceipt()" >Print Receipt</button>
+        </div>
+      </div>
     </div>
     <!-- <div class="row ">
       <div class="col-12">
@@ -55,12 +64,12 @@
               class="font-size-16 font-regular">{{data.invoiceNo}}</span>
           </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-12">
             <span class="font-size-16 font-light">Invoice Type: </span><span
               class="font-size-16 font-regular">{{invoiceDetails?.calm_name}}</span>
           </div>
-        </div>
+        </div> -->
         <div class="row">
           <div class="col-12">
             <span class="font-size-16 font-light">Fee Period: </span><span
@@ -81,16 +90,16 @@
               class="font-size-16 font-regular">{{invoiceDetails?.receipt_created_date | date:'dd MMM, yyyy'}}</span>
           </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-12">
             <span class="font-size-16 font-light">Due Date: </span><span
               class="font-size-16 font-regular">{{invoiceDetails?.inv_due_date | date:'dd MMM, yyyy'}}</span>
           </div>
-        </div>
+        </div> -->
         <div class="row" *ngIf="invoiceDetails?.pay_id === '1' || invoiceDetails?.pay_id === '2'">
           <div class="col-12">
-            <span class="font-size-20 font-light">Payment Mode: </span><span
-              class="font-size-20 font-regular">{{invoiceDetails?.pay_name}}</span>
+            <span class="font-size-16 font-light">Payment Mode: </span><span
+              class="font-size-16 font-regular">{{invoiceDetails?.pay_name}}</span>
           </div>
         </div>
         <div class="row" *ngIf="invoiceDetails?.pay_id === '3'">
@@ -107,8 +116,8 @@
         </div>
         <div class="row" *ngIf="invoiceDetails?.pay_id === '3' || invoiceDetails?.pay_id === '2'">
           <div class="col-12">
-            <span class="font-size-20 font-light">Bank and Branch Details: </span><span
-              class="font-size-20 font-regular">{{invoiceDetails?.ftr_bnk_name}}, {{invoiceDetails?.bnk_branch}}</span>
+            <span class="font-size-16 font-light">Bank and Branch Details: </span><span
+              class="font-size-16 font-regular">{{invoiceDetails?.ftr_bnk_name}}, {{invoiceDetails?.bnk_branch}}</span>
           </div>
         </div>
 
@@ -116,17 +125,6 @@
       </div>
     </div>
 
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <div class="text-right">
-      <button
-        *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
-        mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
-        (click)="openRecalculateDialog()">Recalulate Invoice</button>
-      <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn">Print Receipt</button>
-    </div>
   </div>
 </div>
 <div class="row margin-top-20">
@@ -142,7 +140,7 @@
         <td mat-cell *matCellDef="let element"> {{element.feehead | titlecase}} </td>
       </ng-container>
       <ng-container matColumnDef="feedue">
-        <th mat-header-cell *matHeaderCellDef> Fee Due </th>
+        <th mat-header-cell *matHeaderCellDef> Fee </th>
         <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
       </ng-container>
       <ng-container matColumnDef="concession">
