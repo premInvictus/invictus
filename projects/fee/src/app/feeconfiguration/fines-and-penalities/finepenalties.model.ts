@@ -5,6 +5,7 @@ export interface FinePenaltiesElement {
 		fineamount: any;
 		classsection: any;
 		event: any;
+		upperLimit: any;
 		description: any;
 		status: any;
 		action: any;
