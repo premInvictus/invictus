@@ -95,7 +95,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		}
 	}
 	goToPage(url) {
-		this.router.navigate([`../${url}`],{ relativeTo: this.route });
+		this.router.navigate([`../${url}`], { relativeTo: this.route });
 	}
 	ngOnChanges() {
 		if (this.loginId) {
