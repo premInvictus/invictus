@@ -41,6 +41,7 @@ import { EssayDialogsComponent } from '../questionbank/essay-dialogs/essay-dialo
 import { EditobjectiveComponent } from '../questionbank/reviewo/editobjective/editobjective.component';
 import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dialog/question-paper-dialog.component';
 import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit-essay.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -74,6 +75,7 @@ import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit
 		LayoutModule,
 		RouterModule,
 		BsDropdownModule,
+		MatAutocompleteModule,
 		AccordionModule.forRoot(),
 		FormsModule,
 		ReactiveFormsModule
@@ -103,6 +105,7 @@ import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit
 		SideNavComponent,
 		MatTableModule,
 		MatPaginatorModule,
+		MatAutocompleteModule,
 		MatSortModule,
 		MatTabsModule,
 		MatProgressSpinnerModule,
