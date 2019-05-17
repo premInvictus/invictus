@@ -1212,8 +1212,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									grandTotal = grandTotal + Number(totalAmount);
 								}
 							}
-							feeStructure = feeStructure + '<b>Total :</b>'
-								+ new DecimalPipe('en-us').transform(grandTotal);
+							feeStructure = feeStructure;
 							obj['fs_structure'] = feeStructure;
 							obj['fs_description'] = item['fs_description'];
 							this.REPORT_ELEMENT_DATA.push(obj);
@@ -1281,9 +1280,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									grandTotal = grandTotal + Number(totalAmount);
 								}
 							}
-							feeStructure = feeStructure + '<b>Total :</b>'
-								+ new DecimalPipe('en-us').transform(grandTotal);
-							obj['fs_structure'] = feeStructure;
+							feeStructure = feeStructure;
 							obj['fs_structure'] = feeStructure;
 							this.REPORT_ELEMENT_DATA.push(obj);
 							this.tableFlag = true;

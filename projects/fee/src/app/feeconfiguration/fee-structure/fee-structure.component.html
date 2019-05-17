@@ -88,7 +88,6 @@
                           <th mat-header-cell *matHeaderCellDef> Fee Head </th>
                           <td mat-cell style="text-align: left !important" *matCellDef="let element">
                               <p *ngFor="let item of element.feehead"><b>{{item.name | capitalize}} ( {{item.ft_name}} ) :</b> {{item.amount | number}} <span *ngIf="item.amount > 0">(</span>{{item.total | number}}<span *ngIf="item.amount > 0">)</span></p>
-                              <p><b>Total :</b> {{element.action.total}}</p>
                             </td>
                         </ng-container>
   

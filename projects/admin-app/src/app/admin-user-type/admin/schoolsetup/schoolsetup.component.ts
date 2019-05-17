@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {AdminService} from '../../admin/services/admin.service';
+import { AdminService } from '../../admin/services/admin.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import {AcsetupService} from '../../../acsetup/service/acsetup.service';
+import { AcsetupService } from '../../../acsetup/service/acsetup.service';
 import { NotificationService } from 'projects/axiom/src/app/_services/notification.service';
-import {appConfig} from 'projects/axiom/src/app/app.config';
+import { appConfig } from 'projects/axiom/src/app/app.config';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { Element } from './school.model';
 import { QelementService } from '../../../questionbank/service/qelement.service';
@@ -37,6 +37,7 @@ export class SchoolsetupComponent implements OnInit {
 	arrayCountry: any[] = [];
 	arrayState: any[] = [];
 	arrayCity: any[] = [];
+	cityCountryArray: any[] = [];
 	url: any;
 	furl: any;
 	hosturl = appConfig.apiUrl;
@@ -52,8 +53,8 @@ export class SchoolsetupComponent implements OnInit {
 	paginator: MatPaginator;
 	@ViewChild(MatSort)
 	sort: MatSort;
-	themeArray: any[] = [{school_theme: '1', school_theme_name : 'Theme 1'},
-												{school_theme: '2', school_theme_name : 'Theme 2'}];
+	themeArray: any[] = [{ school_theme: '1', school_theme_name: 'Theme 1' },
+	{ school_theme: '2', school_theme_name: 'Theme 2' }];
 	startMonthArray: any[] = [];
 	endMonthArray: any[] = [];
 	feePeriodArray: any[] = [];
@@ -72,19 +73,19 @@ export class SchoolsetupComponent implements OnInit {
 		'action'
 	];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-	monthArray: any [] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug' , 'Sept', 'Oct', 'Nov', 'Dec'];
+	monthArray: any[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 	constructor(
 		private adminService: AdminService,
 		private acsetupService: AcsetupService,
 		private fb: FormBuilder,
 		private notif: NotificationService,
 		private qlementService: QelementService
-	) {}
+	) { }
 
 	applyFilter(filterValue: string) {
 		filterValue = filterValue.trim().toLowerCase();
 		this.dataSource.filter = filterValue;
-}
+	}
 
 	ngOnInit() {
 		this.getSchoolDetails(this);
@@ -93,7 +94,6 @@ export class SchoolsetupComponent implements OnInit {
 		this.getBoard();
 		this.getCountry();
 		this.getState();
-		// this.getCity();
 		this.getFeePeriods();
 		for (let i = 0; i < 12; i++) {
 			this.startMonthArray.push({
@@ -156,11 +156,11 @@ export class SchoolsetupComponent implements OnInit {
 						schoolprefix: t.school_prefix,
 						board: t.school_board,
 						affiliation: t.school_afflication_no,
-					address: t.school_address,
-					contact: t.school_phone,
-					city: t.school_city,
-					email: t.school_email,
-					manager: t.school_website,
+						address: t.school_address,
+						contact: t.school_phone,
+						city: t.school_city,
+						email: t.school_email,
+						manager: t.school_website,
 						action: t,
 					});
 					ind++;
@@ -290,6 +290,7 @@ export class SchoolsetupComponent implements OnInit {
 			this.notif.showSuccessErrorMessage('End Month is required', 'error');
 		}
 		if (this.newSchoolForm.valid) {
+			const city = this.getCityId(this.newSchoolForm.value.school_city);
 			const newSchoolFormData = new FormData();
 			newSchoolFormData.append('school_logo', this.file1);
 			newSchoolFormData.append('school_favicon', this.file2);
@@ -323,7 +324,7 @@ export class SchoolsetupComponent implements OnInit {
 			);
 			newSchoolFormData.append(
 				'school_city',
-				this.newSchoolForm.value.school_city
+				city
 			);
 			newSchoolFormData.append(
 				'school_website',
@@ -377,19 +378,18 @@ export class SchoolsetupComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.notif.showSuccessErrorMessage('School Added Successfully', 'success');
-						this.adminService.importSampleDataForSchool({school_prefix: this.newSchoolForm.value.school_prefix.toLowerCase()}).subscribe(
+						this.adminService.importSampleDataForSchool({ school_prefix: this.newSchoolForm.value.school_prefix.toLowerCase() }).subscribe(
 							(result1: any) => {
 								if (result1 && result1.status === 'ok') {
 									this.notif.showSuccessErrorMessage('Data is populated', 'success');
+									this.newSchoolForm.reset();
+									this.createNewSchoolDiv = false;
+									this.schoolSetupDiv = true;
 								}
 							}
 						);
 					}
-				},
-				error => {
-					this.notif.showSuccessErrorMessage('Submission Failed.Please try again', 'error');
-				}
-			);
+				});
 		}
 	}
 
@@ -416,15 +416,6 @@ export class SchoolsetupComponent implements OnInit {
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.arrayState = result.data;
-				}
-			}
-		);
-	}
-	getCity() {
-		this.acsetupService.getCity().subscribe(
-			(result: any) => {
-				if (result && result.status === 'ok') {
-					this.arrayCity = result.data;
 				}
 			}
 		);
@@ -575,6 +566,37 @@ export class SchoolsetupComponent implements OnInit {
 			return 'green';
 		} else {
 			return 'red';
+		}
+	}
+	filterCityStateCountry($event) {
+		if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
+			if ($event.target.value !== '' && $event.target.value.length >= 3) {
+				this.cityCountryArray = [];
+				this.acsetupService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.cityCountryArray = result.data;
+					}
+				});
+			}
+		}
+	}
+	getCityPerId(item: any) {
+		this.newSchoolForm.patchValue({
+			school_city: this.getCityName(item.cit_id),
+			school_state: item.sta_id,
+			school_country: item.cou_id
+		});
+	}
+	getCityName(id) {
+		const findIndex = this.cityCountryArray.findIndex(f => f.cit_id === id);
+		if (findIndex !== -1) {
+			return this.cityCountryArray[findIndex].cit_name;
+		}
+	}
+	getCityId(name) {
+		const findIndex = this.cityCountryArray.findIndex(f => f.cit_name === name);
+		if (findIndex !== -1) {
+			return this.cityCountryArray[findIndex].cit_id;
 		}
 	}
 }
