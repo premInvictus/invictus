@@ -16,9 +16,6 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 		private router: Router,
 		private processtypeService: ProcesstypeService, private cookieService: CookieService) { }
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		if (!request.headers.has('Content-Type')) {
-			request = request.clone({ headers: request.headers.set('Content-Type', 'application/json') });
-		}
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const session = JSON.parse(localStorage.getItem('session'));
 		const cookieData = this.service.getCokkieData();
