@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit {
 	private validateOTPForm: FormGroup;
 	private validateNewPasswordForm: FormGroup;
 	schoolInfo: any = {};
+	userSaveData: any;
 
 	private OTPstatus: any = {};
 
@@ -75,9 +76,11 @@ export class LoginComponent implements OnInit {
 			const userData = JSON.parse(decodeURIComponent(cookieData));
 			if (userData) {
 				if (userData['UR'] === '1') {
-					this.returnUrl = '/axiom/admin';
+					this.returnUrl = '/admin';
 				} else if (userData['UR'] === '2') {
-					this.returnUrl = '/axiom/school';
+					if (localStorage.getItem('project')) {
+						this.returnUrl = '/' + JSON.parse(localStorage.getItem('project')).pro_url + '/school';
+					}
 				} else if (userData['UR'] === '3') {
 					this.returnUrl = '/axiom/teacher';
 				} else if (userData['UR'] === '4') {
@@ -132,6 +135,8 @@ export class LoginComponent implements OnInit {
 					if (result.status === 'ok' && result.data) {
 						this.loaderService.stopLoading();
 						const user = result.data;
+						this.userSaveData = JSON.parse(result.data.userSaveStateData);
+						console.log(this.userSaveData);
 						const tempJson = {
 							CID: user.clientKey,
 							AN: user.token,
@@ -172,42 +177,31 @@ export class LoginComponent implements OnInit {
 													localStorage.setItem('session', JSON.stringify(sessionParam));
 												}
 											}
-											this.authenticationService.getUserProjectDetail(user)
-												.subscribe(
-													(result6: any) => {
-														if (result6.status === 'ok' && result6.data && result6.data[0] && result6.data[0]['pro_url']) {
-															// let returnUrl = '/' + result.data[0]['pro_url'];
-															const returnUrl = '/axiom';
-															if (JSON.parse(localStorage.getItem('currentUser')).role_id === '1') {
-																this.returnUrl = '/admin';
-															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '2') {
-																this.returnUrl = returnUrl + '/school';
-															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
-																this.returnUrl = returnUrl + '/teacher';
-															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '4') {
-																this.returnUrl = '/student';
-															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
-																this.returnUrl = returnUrl + '/parent';
-															}
-															this.router.navigate([this.returnUrl]);
-														} else {
-															// this.notif.showSuccessErrorMessage('Default Url not set, Please set default url', 'error');
-															// window.location.href = environment.apiAxiomUrl + '/authentication?validate_token=' + login_data.clientKey;
-															const returnUrl = '/axiom';
-															if (JSON.parse(localStorage.getItem('currentUser')).role_id === '1') {
-																this.returnUrl = '/admin';
-															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '2') {
-																this.returnUrl = returnUrl + '/school';
-															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
-																this.returnUrl = returnUrl + '/teacher';
-															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '4') {
-																this.returnUrl = '/student';
-															} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
-																this.returnUrl = returnUrl + '/parent';
-															}
-															this.router.navigate([this.returnUrl]);
-														}
-													});
+											let returnUrl: any;
+											if (!(this.userSaveData.pro_url)) {
+												localStorage.setItem('project', JSON.stringify({pro_url: 'axiom'}));
+												returnUrl = '/axiom';
+											} else {
+												returnUrl = this.userSaveData.pro_url;
+												localStorage.setItem('project', JSON.stringify({pro_url: this.userSaveData.pro_url}));
+											}
+											if (this.userSaveData && this.userSaveData.ses_id) {
+												const sessionParam: any = {};
+												sessionParam.ses_id = this.userSaveData.ses_id;
+												localStorage.setItem('session', JSON.stringify(sessionParam));
+											}
+											if (JSON.parse(localStorage.getItem('currentUser')).role_id === '1') {
+												this.returnUrl = '/admin';
+											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '2') {
+												this.returnUrl = returnUrl + '/school';
+											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
+												this.returnUrl = returnUrl + '/teacher';
+											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '4') {
+												this.returnUrl = '/student';
+											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
+												this.returnUrl = returnUrl + '/parent';
+											}
+											this.router.navigate([this.returnUrl]);
 										}
 									});
 								}

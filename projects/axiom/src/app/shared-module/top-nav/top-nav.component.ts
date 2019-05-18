@@ -50,6 +50,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	currentDate = new Date();
 	userData: any;
 	defaultProject;
+	proUrl: any;
 	private _mobileQueryListener: () => void;
 
 
@@ -126,6 +127,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				param.login_id = this.currentUser.login_id;
 			}
 			this.getUser();
+			this.proUrl = JSON.parse(localStorage.getItem('project')).pro_url;
 	}
 	checkUpdateProfile() {
 		if (this.currentUser.role_id === '4' || this.currentUser.role_id === '3') {
@@ -191,7 +193,15 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.session = {};
 		this.session.ses_id = ses_id;
 		localStorage.setItem('session', JSON.stringify(this.session));
+		const saveStateJSON = {
+			pro_url: this.proUrl ? this.proUrl : '',
+			ses_id: ses_id
+		};
+		this.sisService.saveUserLastState({user_default_data : JSON.stringify(saveStateJSON)}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
 		location.reload();
+			}
+		});
 
 	}
 	getSchool() {
@@ -212,14 +222,34 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.defaultProject = this.projectsArray[findex].pro_name;
 		}
 		if (Number(pro_id) === 1) {
-			this.router.navigate(['/axiom']);
+			this.proUrl = 'axiom';
+			localStorage.setItem('project', JSON.stringify({pro_url: 'axiom'}));
 		}
 		if (Number(pro_id) === 2) {
-			this.router.navigate(['/sis']);
-		}
+			this.proUrl = 'sis';
+			localStorage.setItem('project', JSON.stringify({pro_url: 'sis'}));
+			}
 		if (Number(pro_id) === 3) {
-			this.router.navigate(['/fees']);
+			this.proUrl = 'fees';
+			localStorage.setItem('project', JSON.stringify({pro_url: 'fees'}));
 		}
+		const saveStateJSON = {
+			pro_url: this.proUrl,
+			ses_id: JSON.parse(localStorage.getItem('session')).ses_id
+		};
+		this.sisService.saveUserLastState({user_default_data : JSON.stringify(saveStateJSON)}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				if (Number(pro_id) === 1) {
+					this.router.navigate(['/axiom']);
+				}
+				if (Number(pro_id) === 2) {
+					this.router.navigate(['/sis']);
+				}
+				if (Number(pro_id) === 3) {
+					this.router.navigate(['/fees']);
+				}
+			}
+		});
 	}
 	getSessionName(id) {
 		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
@@ -239,7 +269,12 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	logout() {
 		this.userData = JSON.parse(this._cookieService.get('userData'));
 		if (this.userData) {
-			this.sisService.logout({ au_login_id: this.userData['LN'] }).subscribe(
+			const saveStateJSON = {
+				pro_url: this.proUrl ? this.proUrl : '',
+				ses_id: JSON.parse(localStorage.getItem('session')).ses_id
+			};
+			this.sisService.logout({ au_login_id: this.userData['LN'],
+			user_default_data : JSON.stringify(saveStateJSON)}).subscribe(
 				(result: any) => {
 					if (result.status === 'ok') {
 						localStorage.clear();
