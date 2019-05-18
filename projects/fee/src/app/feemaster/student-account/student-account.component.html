@@ -33,7 +33,7 @@
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Concession Group</mat-label>
                 <mat-select placeholder="Concession Group" [disabled]="viewOnly"
-                formControlName="accd_fcg_id" [errorStateMatcher]="confirmValidParentMatcher" required>
+                formControlName="accd_fcg_id" [errorStateMatcher]="confirmValidParentMatcher">
                    <mat-option>Please Select</mat-option>
                    <mat-option *ngFor="let item of conGroupArray" [value]="item.fcg_id">{{item.fcg_name}}</mat-option>
                 </mat-select>

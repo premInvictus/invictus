@@ -155,7 +155,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_status: this.accountDetails.accd_status
 				});
 			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 				this.accountsForm.reset();
 				this.transportFlag = false;
 				this.hostelFlag = false;
@@ -273,13 +272,12 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.get('accd_fo_id').valid &&
-			!this.accountsForm.get('accd_fs_id').valid &&
-			!this.accountsForm.get('accd_fcg_id').valid && !this.modeFlag && !this.transportFlag && !this.hostelFlag
+		if (!this.accountsForm.value.accd_fo_id &&
+			!this.accountsForm.value.accd_fs_id &&
+			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
 			this.accountsForm.get('accd_fs_id').markAsDirty();
-			this.accountsForm.get('accd_fcg_id').markAsDirty();
 			validateFlag = false;
 		}
 		if (this.transportFlag) {
@@ -348,13 +346,12 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.get('accd_fo_id').valid &&
-			!this.accountsForm.get('accd_fs_id').valid &&
-			!this.accountsForm.get('accd_fcg_id').valid && !this.modeFlag && !this.transportFlag && !this.hostelFlag
+		if (!this.accountsForm.value.accd_fo_id &&
+			!this.accountsForm.value.accd_fs_id &&
+			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
 			this.accountsForm.get('accd_fs_id').markAsDirty();
-			this.accountsForm.get('accd_fcg_id').markAsDirty();
 			validateFlag = false;
 		}
 		if (this.transportFlag) {
