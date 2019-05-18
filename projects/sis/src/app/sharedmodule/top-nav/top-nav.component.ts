@@ -5,11 +5,11 @@ import { MatSidenav, MatTooltip } from '@angular/material';
 import { CookieService } from 'ngx-cookie';
 import { environment } from 'src/environments/environment';
 import { UserTypeService } from 'projects/fee/src/app/usertype/usertype.service';
-import { SisService} from 'projects/fee/src/app/_services';
-import {CommonAPIService, NotificationService} from 'projects/axiom/src/app/_services/index';
+import { SisService } from 'projects/fee/src/app/_services';
+import { CommonAPIService, NotificationService } from 'projects/axiom/src/app/_services/index';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
-import {LoaderService} from 'projects/fee/src/app/_services/loader.service';
+import { LoaderService } from 'projects/fee/src/app/_services/loader.service';
 @Component({
 	selector: 'app-top-nav',
 	templateUrl: './top-nav.component.html',
@@ -52,6 +52,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	currentDate = new Date();
 	userData: any;
 	defaultProject;
+	proUrl: any;
 	private _mobileQueryListener: () => void;
 
 
@@ -106,29 +107,29 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 						localStorage.setItem('qSubType', JSON.stringify(result.data));
 					}
 				});
-				}
-			} else {
-				this.commonAPIService.setQType(JSON.parse(localStorage.getItem('qSubType')));
 			}
-			this.upperMenu = '<i class=\'fas fa-users\'></i>';
-			this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-			this.session = JSON.parse(localStorage.getItem('session'));
-			if (this.currentUser.role_id === 1) {
-				this.getUserAccessSchool();
-			}
-			if (this.currentUser.full_name) {
-				this.usernane = this.currentUser.full_name.charAt(0).toUpperCase() + this.currentUser.full_name.slice(1);
-			}
-			this.getSchool();
-			this.getSession();
-			this.getProjectList();
-			this.checkUpdateProfile();
-			this.checkViewProfile();
-			const param: any = {};
-			if (this.currentUser.role_id !== '4') {
-				param.login_id = this.currentUser.login_id;
-			}
-			this.getUser();
+		} else {
+			this.commonAPIService.setQType(JSON.parse(localStorage.getItem('qSubType')));
+		}
+		this.upperMenu = '<i class=\'fas fa-users\'></i>';
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.session = JSON.parse(localStorage.getItem('session'));
+		if (this.currentUser.role_id === 1) {
+			this.getUserAccessSchool();
+		}
+		if (this.currentUser.full_name) {
+			this.usernane = this.currentUser.full_name.charAt(0).toUpperCase() + this.currentUser.full_name.slice(1);
+		}
+		this.getSchool();
+		this.getProjectList();
+		this.checkUpdateProfile();
+		this.checkViewProfile();
+		const param: any = {};
+		if (this.currentUser.role_id !== '4') {
+			param.login_id = this.currentUser.login_id;
+		}
+		this.getUser();
+		this.proUrl = JSON.parse(localStorage.getItem('project')).pro_url;
 	}
 	checkUpdateProfile() {
 		if (this.currentUser.role_id === '4' || this.currentUser.role_id === '3') {
@@ -194,7 +195,15 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.session = {};
 		this.session.ses_id = ses_id;
 		localStorage.setItem('session', JSON.stringify(this.session));
-		location.reload();
+		const saveStateJSON = {
+			pro_url: this.proUrl ? this.proUrl : '',
+			ses_id: ses_id
+		};
+		this.sisService.saveUserLastState({ user_default_data: JSON.stringify(saveStateJSON) }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				location.reload();
+			}
+		});
 
 	}
 	getSchool() {
@@ -215,14 +224,34 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.defaultProject = this.projectsArray[findex].pro_name;
 		}
 		if (Number(pro_id) === 1) {
-			this.router.navigate(['/axiom']);
+			this.proUrl = 'axiom';
+			localStorage.setItem('project', JSON.stringify({ pro_url: 'axiom' }));
 		}
 		if (Number(pro_id) === 2) {
-			this.router.navigate(['/sis']);
+			this.proUrl = 'sis';
+			localStorage.setItem('project', JSON.stringify({ pro_url: 'sis' }));
 		}
 		if (Number(pro_id) === 3) {
-			this.router.navigate(['/fees']);
+			this.proUrl = 'fees';
+			localStorage.setItem('project', JSON.stringify({ pro_url: 'fees' }));
 		}
+		const saveStateJSON = {
+			pro_url: this.proUrl,
+			ses_id: JSON.parse(localStorage.getItem('session')).ses_id
+		};
+		this.sisService.saveUserLastState({ user_default_data: JSON.stringify(saveStateJSON) }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				if (Number(pro_id) === 1) {
+					this.router.navigate(['/axiom']);
+				}
+				if (Number(pro_id) === 2) {
+					this.router.navigate(['/sis']);
+				}
+				if (Number(pro_id) === 3) {
+					this.router.navigate(['/fees']);
+				}
+			}
+		});
 	}
 	getSessionName(id) {
 		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
@@ -242,7 +271,14 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	logout() {
 		this.userData = JSON.parse(this._cookieService.get('userData'));
 		if (this.userData) {
-			this.sisService.logout({ au_login_id: this.userData['LN'] }).subscribe(
+			const saveStateJSON = {
+				pro_url: this.proUrl ? this.proUrl : '',
+				ses_id: JSON.parse(localStorage.getItem('session')).ses_id
+			};
+			this.sisService.logout({
+				au_login_id: this.userData['LN'],
+				user_default_data: JSON.stringify(saveStateJSON)
+			}).subscribe(
 				(result: any) => {
 					if (result.status === 'ok') {
 						localStorage.clear();
@@ -254,6 +290,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				});
 		}
 	}
+
 
 
 }

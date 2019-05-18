@@ -1006,4 +1006,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/logout', value);
 	}
+	saveUserLastState(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/users/saveUserLastState', value);
+	}
 }
