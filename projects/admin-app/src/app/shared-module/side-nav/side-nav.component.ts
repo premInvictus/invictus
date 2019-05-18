@@ -38,7 +38,7 @@ export class SideNavComponent implements OnInit, OnChanges {
 	}
 
 	moveToDashboard() {
-			this.router.navigateByUrl('student');
+			this.router.navigate(['/admin']);
 	}
 
 	getUserAccessMenu() {
