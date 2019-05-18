@@ -98,9 +98,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		});
 		this.barcodeValue = result.codeResult.code;
 		this.feeTransactionForm.value.inv_id = this.barcodeValue;
-		const index = this.invoiceArray.indexOf(Number(this.barcodeValue));
+		const index = this.invoiceArray.indexOf(this.barcodeValue);
 		if (index === -1) {
-			this.invoiceArray.push(Number(this.barcodeValue));
+			this.invoiceArray.push(this.barcodeValue);
 		} else {
 			this.feeTransactionForm.patchValue({
 				inv_id: ''
@@ -109,9 +109,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	}
 	insertInvoice($event) {
 		this.feeTransactionForm.value.inv_id = $event.srcElement.value;
-		const index = this.invoiceArray.indexOf(Number($event.srcElement.value));
+		const index = this.invoiceArray.indexOf($event.srcElement.value);
 		if (index === -1) {
-			this.invoiceArray.push(Number(this.feeTransactionForm.value.inv_id));
+			this.invoiceArray.push(this.feeTransactionForm.value.inv_id);
 			this.feeTransactionForm.patchValue({
 				inv_id: ''
 			});
@@ -122,7 +122,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		}
 	}
 	deleteInvoice(inv_id) {
-		const index = this.invoiceArray.indexOf(Number(inv_id));
+		const index = this.invoiceArray.indexOf(inv_id);
 		if (index !== -1) {
 			this.invoiceArray.splice(index, 1);
 		}
@@ -187,6 +187,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			'ftr_remark': '',
 			'saveAndPrint' : ''
 		});
+		this.invoiceArray = [];
 	}
 	ngOnDestroy() {
 		this.barecodeScanner.stop();

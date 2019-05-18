@@ -302,7 +302,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						report_type: 'routewise', report_name: 'Route Wise'
 					},
 					{
-						report_type: 'mfr', report_name: 'Monthly Fee'
+						report_type: 'mfr', report_name: 'MFR Report'
 					});
 			}
 			if (Number(report_id) === 2) {
