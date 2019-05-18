@@ -112,12 +112,12 @@ export class SecondaryReviewObjectiveComponent implements OnInit {
 	SINGLEINTEGER_ELEMENT_DATA: SingleIntegerElement[] = [];
 	singleintegerdataSource = new MatTableDataSource<SingleIntegerElement>(this.SINGLEINTEGER_ELEMENT_DATA);
 	// tslint:disable-next-line:max-line-length
-	singleintegerdisplayedColumns = ['position', 'question', 'answer', 'class', 'topic', 'subtopic', 'skill', /* 'lod', */ 'reasons', 'action', ];
+	singleintegerdisplayedColumns = ['position', 'question', 'answer', 'explanations', 'class', 'topic', 'subtopic', 'skill', /* 'lod', */ 'reasons', 'action', ];
 
 	DOUBLEINTEGER_ELEMENT_DATA: DoubleIntegerElement[] = [];
 	doubleintegerdataSource = new MatTableDataSource<DoubleIntegerElement>(this.DOUBLEINTEGER_ELEMENT_DATA);
 	// tslint:disable-next-line:max-line-length
-	doubleintegerdisplayedColumns = ['position', 'question', 'answer', 'class', 'topic', 'subtopic', 'skill', /* 'lod', */ 'reasons', 'action', ];
+	doubleintegerdisplayedColumns = ['position', 'question', 'answer', 'explanations', 'class', 'topic', 'subtopic', 'skill', /* 'lod', */ 'reasons', 'action', ];
 	stArrayMcq: any[] = [];
 	stArrayMcqmr: any[] = [];
 	stArrayTF: any[] = [];
@@ -940,6 +940,7 @@ export class SecondaryReviewObjectiveComponent implements OnInit {
 									question: t.qus_name,
 									answer: t.qopt_answer,
 									class: t.class_name,
+									explanations: t.qus_explanation,
 									topic: t.topic_name,
 									subtopic: this.stArraySingle,
 									info: '',
@@ -992,6 +993,7 @@ export class SecondaryReviewObjectiveComponent implements OnInit {
 									question: t.qus_name,
 									answer: t.qopt_answer,
 									class: t.class_name,
+									explanations: t.qus_explanation,
 									topic: t.topic_name,
 									subtopic: this.stArrayDouble,
 									info: '',

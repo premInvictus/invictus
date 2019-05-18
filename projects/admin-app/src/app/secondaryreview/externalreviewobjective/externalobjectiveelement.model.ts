@@ -131,6 +131,7 @@ export interface SingleIntegerElement {
 		details: string;
 		action: any;
 		class: any;
+		explanations: any;
 		topic: any;
 		reasons: any;
 		subtopic: any[];
@@ -152,6 +153,7 @@ export interface SingleIntegerElement {
 		details: string;
 		action: any;
 		class: any;
+		explanations: any;
 		topic: any;
 		reasons: any;
 		subtopic: any[];
