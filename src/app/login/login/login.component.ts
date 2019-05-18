@@ -135,8 +135,9 @@ export class LoginComponent implements OnInit {
 					if (result.status === 'ok' && result.data) {
 						this.loaderService.stopLoading();
 						const user = result.data;
+						if (result.data.userSaveStateData) {
 						this.userSaveData = JSON.parse(result.data.userSaveStateData);
-						console.log(this.userSaveData);
+						}
 						const tempJson = {
 							CID: user.clientKey,
 							AN: user.token,
@@ -178,7 +179,7 @@ export class LoginComponent implements OnInit {
 												}
 											}
 											let returnUrl: any;
-											if (!(this.userSaveData.pro_url)) {
+											if ((this.userSaveData && !this.userSaveData.pro_url) || !this.userSaveData) {
 												localStorage.setItem('project', JSON.stringify({pro_url: 'axiom'}));
 												returnUrl = '/axiom';
 											} else {
