@@ -66,7 +66,7 @@
                   <mat-label>Invoice no.</mat-label>
                   <input matInput placeholder="Placeholder" (keydown.enter)="insertInvoice($event)" formControlName="inv_id">
                   </mat-form-field>
-            <barcode-scanner-livestream type="code_128" (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
+            <barcode-scanner-livestream  (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
           </div>
         </div>
         <div class="row ">
