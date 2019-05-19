@@ -4,6 +4,7 @@ import { AuthGuard } from '../_guards/index';
 import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
 import { UserCredentialComponent } from './user-credential/user-credential.component';
+import { ProjectComponent } from 'src/app/invictus-shared/project/project.component';
 /* import {theme} from '../app.routing';
 let pathJSON = {};
 if (theme === '1') {
@@ -15,7 +16,7 @@ if (theme === '1') {
 const routes: Routes = [
 	{path: 'sis', canActivate: [AuthGuard] , redirectTo: 'sis/school', pathMatch: 'full'},
 	{
-		path: 'school', canActivate: [AuthGuard] , component: SchoolComponent, children: [
+		path: 'school', canActivate: [AuthGuard] , component: ProjectComponent, children: [
 			{ path: '', component: SchoolDashboardComponent },
 			{ path: 'studentmaster',
 			loadChildren: '../student-master-theme-two/student-master-theme-two.module#StudentMasterThemeTwoModule'},

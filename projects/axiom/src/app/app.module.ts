@@ -9,7 +9,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FpasswordComponent } from './fpassword/fpassword.component';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { LoadingModule } from 'ngx-loading';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SimpleNotificationsModule } from 'angular2-notifications';
@@ -19,7 +19,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatRadioModule } from '@angular/material//radio';
 import { MatButtonModule } from '@angular/material/button';
-import { ApiPrefixInterceptor, SuccessErrorInterceptor } from './_helpers';
 import {
 	LoaderService,
 	AuthenticationService, FpasswordService, NotificationService, CommonAPIService,
@@ -33,8 +32,7 @@ import { QelementService } from './questionbank/service/qelement.service';
 import { QbankService } from './questionbank/service/qbank.service';
 import { ReportService } from './reports/service/report.service';
 import { UserRedirectComponent } from './user-type/user-redirect/user-redirect.component';
-const providers = [{ provide: HTTP_INTERCEPTORS, useClass: ApiPrefixInterceptor, multi: true },
-	{ provide: HTTP_INTERCEPTORS, useClass: SuccessErrorInterceptor, multi: true },
+const providers = [
 	AuthGuard,
 	RouteAccessGuard,
 	LoaderService,

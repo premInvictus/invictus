@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TopNavComponent } from './top-nav/top-nav.component';
-import { SideNavComponent } from './side-nav/side-nav.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import {
@@ -15,7 +13,6 @@ import {
 	MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatAutocompleteModule, MatSortModule
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
-import { FooterComponent } from './footer/footer.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
 import { ImageViewerModule } from 'ngx-image-viewer';
@@ -37,6 +34,7 @@ import { EditRequestModalComponent } from './edit-request-modal/edit-request-mod
 import { InvoiceDetailsModalComponent } from '../feemaster/invoice-details-modal/invoice-details-modal.component';
 import { NumberToWordPipe } from '../_pipes/number-to-word.pipe';
 import { ReceiptDetailsModalComponent } from './receipt-details-modal/receipt-details-modal.component';
+import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -87,12 +85,10 @@ export const MY_FORMATS = {
 		NgxBarcodeModule,
 		NgxDocViewerModule,
 		NgxMaskModule.forRoot(),
-		DragDropModule
+		DragDropModule,
+		InvictusSharedModule
 	],
 	declarations: [
-		TopNavComponent,
-		SideNavComponent,
-		FooterComponent,
 		CommonDynamicChartComponent,
 		DeleteModalComponent,
 		ImagecropComponent,
@@ -105,8 +101,7 @@ export const MY_FORMATS = {
 		NumberToWordPipe,
 		ReceiptDetailsModalComponent
 	],
-	exports: [FormsModule, ReactiveFormsModule, TopNavComponent,
-		SideNavComponent,
+	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
 		MatSlideToggleModule,
 		MatButtonModule,
