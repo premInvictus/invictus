@@ -867,6 +867,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						columnHeaderData.push('SNo', 'Admission No.', 'Student Name', 'Class');
 						for (const item of repoArray) {
 							const obj: any = {};
+							obj['fp_id'] = item.inv_fp_id;
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
 							obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -904,6 +905,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 										obj['Q2'] = item['inv_invoice_generated_status'][1]['invoice_paid_status'];
 										obj['Q3'] = item['inv_invoice_generated_status'][2]['invoice_paid_status'];
 										obj['Q4'] = item['inv_invoice_generated_status'][3]['invoice_paid_status'];
+										obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
+										obj['inv_id2'] = item['inv_invoice_generated_status'][1]['invoice_id'];
+										obj['inv_id3'] = item['inv_invoice_generated_status'][2]['invoice_id'];
+										obj['inv_id4'] = item['inv_invoice_generated_status'][3]['invoice_id'];
 									} else if (key === 'fm_name' &&
 										Number(item.inv_fp_id) === 1) {
 										obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
@@ -918,13 +923,28 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 										obj['Q10'] = item['inv_invoice_generated_status'][9]['invoice_paid_status'];
 										obj['Q11'] = item['inv_invoice_generated_status'][10]['invoice_paid_status'];
 										obj['Q12'] = item['inv_invoice_generated_status'][11]['invoice_paid_status'];
+										obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
+										obj['inv_id2'] = item['inv_invoice_generated_status'][1]['invoice_id'];
+										obj['inv_id3'] = item['inv_invoice_generated_status'][2]['invoice_id'];
+										obj['inv_id4'] = item['inv_invoice_generated_status'][3]['invoice_id'];
+										obj['inv_id5'] = item['inv_invoice_generated_status'][4]['invoice_id'];
+										obj['inv_id6'] = item['inv_invoice_generated_status'][5]['invoice_id'];
+										obj['inv_id7'] = item['inv_invoice_generated_status'][6]['invoice_id'];
+										obj['inv_id8'] = item['inv_invoice_generated_status'][7]['invoice_id'];
+										obj['inv_id9'] = item['inv_invoice_generated_status'][8]['invoice_id'];
+										obj['inv_id10'] = item['inv_invoice_generated_status'][9]['invoice_id'];
+										obj['inv_id11'] = item['inv_invoice_generated_status'][10]['invoice_id'];
+										obj['inv_id12'] = item['inv_invoice_generated_status'][11]['invoice_id'];
 									} else if (key === 'fm_name' &&
 										Number(item.inv_fp_id) === 3) {
 										obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
 										obj['Q2'] = item['inv_invoice_generated_status'][1]['invoice_paid_status'];
+										obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
+										obj['inv_id2'] = item['inv_invoice_generated_status'][1]['invoice_id'];
 									} else if (key === 'fm_name' &&
 										Number(item.inv_fp_id) === 4) {
 										obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
+										obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
 									}
 								});
 								this.finalTable.columnDef = columnData;
@@ -1564,6 +1584,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				inv_id = item['invoice_id'];
 				const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 					width: '100%',
+					maxHeight: '90vh',
 					data: {
 						invoiceNo: inv_id,
 						edit: edit
@@ -1575,6 +1596,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			inv_id = item['invoice_id'];
 			const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 				width: '100%',
+				maxHeight: '90vh',
 				data: {
 					invoiceNo: inv_id,
 					edit: edit
@@ -1586,6 +1608,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	openDialogReceipt(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '100%',
+			maxHeight: '90vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
@@ -1715,6 +1738,14 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			return '';
 		}
 	}
+	getColor2(status) {
+		if (status === 'unpaid' || status === 'paid' ||
+			status === 'Not Generated' || status === 'Unpaid with fine') {
+			return '#fff';
+		} else {
+			return '';
+		}
+	}
 	getBorder(status) {
 		if (status === 'unpaid' || status === 'paid' || status === 'Not Generated' ||
 			status === 'Unpaid with fine') {
@@ -1722,5 +1753,220 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		} else {
 			return '';
 		}
+	}
+	getColumn(item, column) {
+		if (Number(item['fp_id']) === 2) {
+			if (column === 'Q1') {
+				return item['inv_id1'];
+			}
+			if (column === 'Q2') {
+				return item['inv_id2'];
+			}
+			if (column === 'Q3') {
+				return item['inv_id3'];
+			}
+			if (column === 'Q4') {
+				return item['inv_id4'];
+			}
+			return item[column];
+		} else if (Number(item['fp_id']) === 1) {
+			if (column === 'Q1') {
+				return item['inv_id1'];
+			}
+			if (column === 'Q2') {
+				return item['inv_id2'];
+			}
+			if (column === 'Q3') {
+				return item['inv_id3'];
+			}
+			if (column === 'Q4') {
+				return item['inv_id4'];
+			}
+			if (column === 'Q5') {
+				return item['inv_id5'];
+			}
+			if (column === 'Q6') {
+				return item['inv_id6'];
+			}
+			if (column === 'Q7') {
+				return item['inv_id7'];
+			}
+			if (column === 'Q8') {
+				return item['inv_id8'];
+			}
+			if (column === 'Q9') {
+				return item['inv_id9'];
+			}
+			if (column === 'Q10') {
+				return item['inv_id10'];
+			}
+			if (column === 'Q11') {
+				return item['inv_id11'];
+			}
+			if (column === 'Q12') {
+				return item['inv_id12'];
+			}
+			return item[column];
+		} else if (Number(item['fp_id']) === 3) {
+			if (column === 'Q1') {
+				return item['inv_id1'];
+			}
+			if (column === 'Q2') {
+				return item['inv_id2'];
+			}
+			return item[column];
+		} else if (Number(item['fp_id']) === 4) {
+			if (column === 'Q1') {
+				return item['inv_id1'];
+			}
+			return item[column];
+		}
+	}
+	checkColumnStatus(item, column) {
+		if (Number(item['fp_id']) === 2) {
+			if (column === 'Q1') {
+				return true;
+			}
+			if (column === 'Q2') {
+				return true;
+			}
+			if (column === 'Q3') {
+				return true;
+			}
+			if (column === 'Q4') {
+				return true;
+			}
+			return false;
+		} else if (Number(item['fp_id']) === 1) {
+			if (column === 'Q1') {
+				return true;
+			}
+			if (column === 'Q2') {
+				return true;
+			}
+			if (column === 'Q3') {
+				return true;
+			}
+			if (column === 'Q4') {
+				return true;
+			}
+			if (column === 'Q5') {
+				return true;
+			}
+			if (column === 'Q6') {
+				return true;
+			}
+			if (column === 'Q7') {
+				return true;
+			}
+			if (column === 'Q8') {
+				return true;
+			}
+			if (column === 'Q9') {
+				return true;
+			}
+			if (column === 'Q10') {
+				return true;
+			}
+			if (column === 'Q11') {
+				return true;
+			}
+			if (column === 'Q12') {
+				return true;
+			}
+			return false;
+		} else if (Number(item['fp_id']) === 3) {
+			if (column === 'Q1') {
+				return true;
+			}
+			if (column === 'Q2') {
+				return true;
+			}
+			return false;
+		} else if (Number(item['fp_id']) === 4) {
+			if (column === 'Q1') {
+				return true;
+			}
+			return false;
+		}
+	}
+	openDialogNew(item, column) {
+		if (Number(item['fp_id']) === 2) {
+			if (column === 'Q1') {
+				this.renderDialog(item['inv_id1'], false);
+			}
+			if (column === 'Q2') {
+				this.renderDialog(item['inv_id2'], false);
+			}
+			if (column === 'Q3') {
+				this.renderDialog(item['inv_id3'], false);
+			}
+			if (column === 'Q4') {
+				this.renderDialog(item['inv_id4'], false);
+			}
+		}
+		if (Number(item['fp_id']) === 3) {
+			if (column === 'Q1') {
+				this.renderDialog(item['inv_id1'], false);
+			}
+			if (column === 'Q2') {
+				this.renderDialog(item['inv_id2'], false);
+			}
+		}
+		if (Number(item['fp_id']) === 4) {
+			if (column === 'Q1') {
+				this.renderDialog(item['inv_id1'], false);
+			}
+		}
+		if (Number(item['fp_id']) === 1) {
+			if (column === 'Q1') {
+				this.renderDialog(item['inv_id1'], false);
+			}
+			if (column === 'Q2') {
+				this.renderDialog(item['inv_id2'], false);
+			}
+			if (column === 'Q3') {
+				this.renderDialog(item['inv_id3'], false);
+			}
+			if (column === 'Q4') {
+				this.renderDialog(item['inv_id4'], false);
+			}
+			if (column === 'Q5') {
+				this.renderDialog(item['inv_id5'], false);
+			}
+			if (column === 'Q6') {
+				this.renderDialog(item['inv_id6'], false);
+			}
+			if (column === 'Q7') {
+				this.renderDialog(item['inv_id7'], false);
+			}
+			if (column === 'Q8') {
+				this.renderDialog(item['inv_id8'], false);
+			}
+			if (column === 'Q9') {
+				this.renderDialog(item['inv_id9'], false);
+			}
+			if (column === 'Q10') {
+				this.renderDialog(item['inv_id10'], false);
+			}
+			if (column === 'Q11') {
+				this.renderDialog(item['inv_id11'], false);
+			}
+			if (column === 'Q12') {
+				this.renderDialog(item['inv_id12'], false);
+			}
+		}
+
+	}
+	renderDialog(inv_id, edit) {
+		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
+			width: '100%',
+			maxHeight: '90vh',
+			data: {
+				invoiceNo: inv_id,
+				edit: edit
+			},
+			hasBackdrop: false
+		});
 	}
 }
