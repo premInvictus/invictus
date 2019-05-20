@@ -24,6 +24,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	ruleArray: any[] = [];
 	classArray: any[] = [];
 	classDataArray: any[] = [];
+	amountPlaceHolder: any = 'Concession';
 	editFlag = false;
 	concessionAmountFlag = true;
 	fcc_is_hostel_fee = 0;
@@ -71,6 +72,8 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 					this.common.showSuccessErrorMessage('Inserted Successfully', 'success');
 					this.getConcessionCategory();
 					this.conccesionCategoryForm.reset();
+					this.concessionAmountFlag = true;
+					this.amountPlaceHolder = 'Concession';
 				} else {
 					this.common.showSuccessErrorMessage(result.data, 'error');
 				}
@@ -103,12 +106,10 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		this.feeService.getConcessionRuleType({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.ruleArray = result.data;
-				console.log(this.ruleArray);
 			}
 		});
 	}
 	disableConcessionAmount(event) {
-		console.log(event.value);
 		if (event.value === '4') {
 			this.concessionAmountFlag = false;
 			this.conccesionCategoryForm.patchValue({
@@ -116,6 +117,11 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 			});
 		} else {
 			this.concessionAmountFlag = true;
+		}
+		if (event.value === '3') {
+			this.amountPlaceHolder = 'Amount Chargeable';
+		} else {
+			this.amountPlaceHolder = 'Concession';
 		}
 	}
 	getConcessionCategory() {
@@ -222,6 +228,9 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 			fcc_fh_id: value.fcc_fh_id
 		});
 		this.getClass();
+		if (value.fcc_fcrt_id === '4') {
+			this.concessionAmountFlag = false;
+		}
 		this.conccesionCategoryForm.patchValue({
 			fcc_id: value.fcc_id,
 			fcc_class_id: value.fcc_class_id,
@@ -244,6 +253,8 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 					this.getConcessionCategory();
 					this.editFlag = false;
 					this.conccesionCategoryForm.reset();
+					this.concessionAmountFlag = true;
+					this.amountPlaceHolder = 'Concession';
 				} else {
 					this.common.showSuccessErrorMessage(result.data, 'error');
 				}

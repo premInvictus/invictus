@@ -93,6 +93,10 @@
                             placeholder="Filter"
                             />
                         </mat-form-field>
+                        <div *ngIf="toBePromotedList.length > 0"class="float-right">
+                          <span><b>Selected Students: </b></span>
+                          <span>{{toBePromotedList.length}}</span>
+                        </div>
                         <mat-table #table [dataSource]="promotedataSource" matSort class="table-100 mat-elevation-z1">
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="select">
@@ -240,6 +244,10 @@
                             placeholder="Filter"
                             />
                         </mat-form-field>
+                        <div *ngIf="toBeDemotedList.length > 0"class="float-right">
+                            <span><b>Selected Students: </b></span>
+                            <span>{{toBeDemotedList.length}}</span>
+                          </div>
                         <mat-table #table [dataSource]="demotedataSource" matSort class="table-100 mat-elevation-z1">
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="select">
