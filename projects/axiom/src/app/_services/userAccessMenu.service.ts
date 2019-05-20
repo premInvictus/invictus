@@ -10,8 +10,6 @@ export class UserAccessMenuService {
 	constructor(
 		private http: HttpClient
 	) {
-		this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
-			(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
 	}
 	getUserAccessMenu(value) {
 		const param: any = {};
@@ -26,29 +24,13 @@ export class UserAccessMenuService {
 		}
 		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessMenu', param);
 	}
-	setUserAccessMenu(value) {
-		this.UserAccessMenu = [];
-		if (this.menus.length === 0) {
-			this.UserAccessMenu = value;
-		} else {
-			this.UserAccessMenu = this.menus;
-		}
-	}
-	returnUserAccessMenu() {
-		return of(this.UserAccessMenu);
-
-	}
 	isExistUserAccessMenu(mod_id) {
 		if (this.menus.length === 0) {
-			for (const mitem of this.UserAccessMenu) {
-				if (mitem.menu_mod_id === mod_id) {
-					return true;
-				}
-			}
-			return false;
+			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
+				(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
 		} else {
 			for (const mitem of this.menus) {
-				if (mitem.menu_mod_id === mod_id) {
+				if (Number(mitem.menu_mod_id) === Number(mod_id)) {
 					return true;
 				}
 			}

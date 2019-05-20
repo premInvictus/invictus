@@ -18,8 +18,6 @@ export class CommonAPIService {
 		private _notificationService: NotificationsService,
 		private loader: LoaderService,
 		private _cookieService: CookieService) {
-		this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
-			(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
 	}
 	UserAccessMenu: any[] = [];
 	showLoading = new Subject();
@@ -60,29 +58,13 @@ export class CommonAPIService {
 		}
 		return this.http.post('/users/getUserAccessMenu', param);
 	}
-	setUserAccessMenu(value) {
-		this.UserAccessMenu = [];
-		if (this.menus.length === 0) {
-			this.UserAccessMenu = value;
-		} else {
-			this.UserAccessMenu = this.menus;
-		}
-	}
-	returnUserAccessMenu() {
-		return of(this.UserAccessMenu);
-
-	}
 	isExistUserAccessMenu(mod_id) {
 		if (this.menus.length === 0) {
-			for (const mitem of this.UserAccessMenu) {
-				if (mitem.menu_mod_id === mod_id) {
-					return true;
-				}
-			}
-			return false;
+			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
+				(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
 		} else {
 			for (const mitem of this.menus) {
-				if (mitem.menu_mod_id === mod_id) {
+				if (Number(mitem.menu_mod_id) === Number(mod_id)) {
 					return true;
 				}
 			}
@@ -206,15 +188,11 @@ export class CommonAPIService {
 
 	isExistUserAccessMenuByLabel(parent_id, mod_name) {
 		if (this.menus.length === 0) {
-			for (const mitem of this.UserAccessMenu) {
-				if ((mitem.mod_parent_id === parent_id) && (mitem.mod_name.toLowerCase() === mod_name.toLowerCase())) {
-					return true;
-				}
-			}
-			return false;
-		} else  {
+			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
+				(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
+		} else {
 			for (const mitem of this.menus) {
-				if ((mitem.mod_parent_id === parent_id) && (mitem.mod_name.toLowerCase() === mod_name.toLowerCase())) {
+				if (mitem.mod_parent_id === parent_id && (mitem.mod_name.toLowerCase() === mod_name.toLowerCase())) {
 					return true;
 				}
 			}

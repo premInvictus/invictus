@@ -33,9 +33,13 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 			}
 			if (this.processtypeService.getProcesstype() &&
 			localStorage.getItem('project') &&
-			(JSON.parse(localStorage.getItem('project')).pro_url === 'sis' ||
-			JSON.parse(localStorage.getItem('project')).pro_url === 'fees')) {
+			(JSON.parse(localStorage.getItem('project')).pro_url === 'sis')) {
 				request = request.clone({ headers: request.headers.set('Processtype', this.processtypeService.getProcesstype()) });
+			}
+			if (
+			localStorage.getItem('project') &&
+			(JSON.parse(localStorage.getItem('project')).pro_url === 'fees')) {
+				request = request.clone({ headers: request.headers.set('Processtype', '4') });
 			}
 		}
 		return next.handle(request).pipe(
