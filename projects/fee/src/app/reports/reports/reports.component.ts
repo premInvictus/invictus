@@ -1572,8 +1572,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			if (item['flgr_invoice_type'] === 'I') {
 				inv_id = item['invoice_id'];
 				const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-					width: '100%',
-					maxHeight: '90vh',
+					width: '80%',
+					height: '80vh',
 					data: {
 						invoiceNo: inv_id,
 						edit: edit
@@ -1584,8 +1584,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		} else {
 			inv_id = item['invoice_id'];
 			const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-				width: '100%',
-				maxHeight: '90vh',
+				width: '80%',
+				height: '80vh',
 				data: {
 					invoiceNo: inv_id,
 					edit: edit
@@ -1596,8 +1596,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	openDialogReceipt(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
-			width: '100%',
-			maxHeight: '90vh',
+			width: '80%',
+			height: '80vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
@@ -1949,8 +1949,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	renderDialog(inv_id, edit) {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-			width: '100%',
-			maxHeight: '90vh',
+			width: '80%',
+			height: '80vh',
 			data: {
 				invoiceNo: inv_id,
 				edit: edit

@@ -223,8 +223,8 @@
                                           <a style="cursor: pointer;"
                                              (click)="openDialog(item, false)">{{item[column]}}</a>
                                        </span>
-                                       <span *ngIf="column === 'receipt_no'">
-                                          <a class="font-bold font-skyblue font-underline" style="cursor: pointer;"
+                                       <span class="font-bold font-skyblue font-underline" *ngIf="column === 'receipt_no'">
+                                          <a style="cursor: pointer;"
                                              *ngIf="item[column] !== 'NA'"
                                              (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a>
                                           <p *ngIf="item[column] === 'NA'">{{item[column]}}</p>
