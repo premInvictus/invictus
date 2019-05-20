@@ -83,13 +83,14 @@
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-            </div>
-            </div>
             <table class="table-100 text-center" style="margin-top:5px;">
-                <tr *ngIf="FEE_LEDGER_ELEMENT.length == 0">
-                  <td colspan="8">No Record Found</td>
-                </tr>
-              </table>
+              <tr *ngIf="FEE_LEDGER_ELEMENT.length == 0">
+                <td colspan="8">No Record Found</td>
+              </tr>
+            </table>
+            </div>
+            </div>
+            
           </div>
         </div>
       </mat-card>

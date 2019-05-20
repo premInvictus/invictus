@@ -148,6 +148,8 @@
     width: 100% !important;
 }
 
+
+
 .fee-table-100 {
     width: 100% !important;
 }
@@ -175,6 +177,10 @@ td.mat-footer-cell,
 th.mat-header-cell {
     border-bottom-width: none !important;
     border-bottom-style: none !important;
+}
+
+td.mat-cell {
+    font-size: 14px !important;
 }
 
 // td.mat-cell {
