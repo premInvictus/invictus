@@ -247,6 +247,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.reportFlag = true;
 		this.advSearchFlag = true;
 		this.accountFlag = false;
+		this.reportType = '';
 		this.tableFlag = false;
 		this.reportFilterForm.patchValue({
 			'report_type': '',
@@ -965,8 +966,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					}
 				});
 			}
-		}
-		if (Number(this.reportType) === 9) {
+		} else if (Number(this.reportType) === 9) {
 			const missingInvoiceJSON = {
 				'from_date': value.from_date,
 				'to_date': value.to_date,
@@ -1011,8 +1011,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 11) {
+		} else if (Number(this.reportType) === 11) {
 			let CheckControlJson = {};
 			CheckControlJson = {
 				'from_date': value.from_date,
@@ -1080,8 +1079,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 5) {
+		} else if (Number(this.reportType) === 5) {
 			let feeLedgerJson = {};
 			feeLedgerJson = {
 				'from_date': value.from_date,
@@ -1145,9 +1143,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-
-		if (Number(this.reportType) === 6) {
+		} else if (Number(this.reportType) === 6) {
 			let deletedFeeTransJson = {};
 			deletedFeeTransJson = {
 				'from_date': value.from_date,
@@ -1196,8 +1192,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 10) {
+		} else if (Number(this.reportType) === 10) {
 			if (this.reportFilterForm.value.report_type === 'feestructure') {
 				this.feeService.getFeeStructureReport(this.reportFilterForm.value).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -1316,8 +1311,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					}
 				});
 			}
-		}
-		if (Number(this.reportType) === 8 && this.reportFilterForm.value.report_type === 'concession') {
+		} else if (Number(this.reportType) === 8 && this.reportFilterForm.value.report_type === 'concession') {
 			const obj2: any = {};
 			obj2['from_date'] = this.reportFilterForm.value.from_date;
 			obj2['to_date'] = this.reportFilterForm.value.to_date;
@@ -1354,8 +1348,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 8 && this.reportFilterForm.value.report_type === 'concessionAlloted') {
+		} else if (Number(this.reportType) === 8 && this.reportFilterForm.value.report_type === 'concessionAlloted') {
 			let conAllotedJson = {};
 			conAllotedJson = {
 				'from_date': value.from_date,
@@ -1401,8 +1394,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 7) {
+		} else if (Number(this.reportType) === 7) {
 			let feeAdjustmentJson = {};
 			feeAdjustmentJson = {
 				'from_date': value.from_date,
@@ -1456,9 +1448,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-
-		if (Number(this.reportType) === 12) {
+		} else if (Number(this.reportType) === 12) {
 			let secureJson = {};
 			secureJson = {
 				'from_date': value.from_date,
@@ -1511,8 +1501,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 15) {
+		} else if (Number(this.reportType) === 15) {
 			let transportJSON = {};
 			transportJSON = {
 				'from_date': value.from_date,
