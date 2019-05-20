@@ -8,7 +8,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DatePipe } from '@angular/common';
 import { CookieService } from 'ngx-cookie';
 import { environment } from 'src/environments/environment';
-import {LoaderService} from './loader.service';
+import { LoaderService } from './loader.service';
 @Injectable()
 export class CommonAPIService {
 
@@ -19,9 +19,9 @@ export class CommonAPIService {
 		private _notificationService: NotificationsService,
 		private _cookieService: CookieService,
 		private loader: LoaderService) {
-			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
+		this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
 			(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
-		 }
+	}
 	UserAccessMenu: any[] = [];
 	showLoading = new Subject();
 	studentData = new Subject();
@@ -75,20 +75,20 @@ export class CommonAPIService {
 	}
 	isExistUserAccessMenu(mod_id) {
 		if (this.menus.length === 0) {
-		for (const mitem of this.UserAccessMenu) {
-			if (Number(mitem.menu_mod_id) === Number(mod_id)) {
-				return true;
+			for (const mitem of this.UserAccessMenu) {
+				if (mitem.menu_mod_id === mod_id) {
+					return true;
+				}
 			}
-		}
-		return false;
-	} else {
-		for (const mitem of this.menus) {
-			if (Number(mitem.menu_mod_id) === Number(mod_id)) {
-				return true;
+			return false;
+		} else {
+			for (const mitem of this.menus) {
+				if (mitem.menu_mod_id === mod_id) {
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
-	}
 	}
 	isExist(arrayhas, field, id) {
 		if (arrayhas.length > 0) {

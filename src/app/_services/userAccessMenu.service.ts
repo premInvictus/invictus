@@ -5,8 +5,8 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class UserAccessMenuService {
-	UserAccessMenu: any[] = [];
 	menus: any[] = [];
+	UserAccessMenu: any[] = [];
 	constructor(
 		private http: HttpClient
 	) {

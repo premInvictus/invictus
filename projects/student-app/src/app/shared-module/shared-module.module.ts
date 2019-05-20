@@ -4,8 +4,6 @@ import { RouterModule } from '@angular/router';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AccordionModule } from 'ngx-bootstrap';
 import { CKEditorModule } from 'ng2-ckeditor';
-import { TopNavComponent } from './top-nav/top-nav.component';
-import { SideNavComponent } from './side-nav/side-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -35,8 +33,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
 import { MathJaxDirective } from '../mathjax.directive';
-import { FooterComponent } from './footer/footer.component';
 import { OngoingTestInstructionComponent } from './ongoing-test-instruction/ongoing-test-instruction.component';
+import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -72,18 +70,15 @@ import { OngoingTestInstructionComponent } from './ongoing-test-instruction/ongo
 		BsDropdownModule,
 		AccordionModule.forRoot(),
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		InvictusSharedModule
 	],
 	declarations: [
-		TopNavComponent,
-		SideNavComponent,
 		CommonDynamicChartComponent,
-		FooterComponent,
 		MathJaxDirective,
 		OngoingTestInstructionComponent
 	],
 	exports: [
-		TopNavComponent,
 		MatProgressBarModule,
 		MatSlideToggleModule,
 		MatDialogModule,
@@ -92,7 +87,6 @@ import { OngoingTestInstructionComponent } from './ongoing-test-instruction/ongo
 		MatRadioModule,
 		MatChipsModule,
 		MatCheckboxModule,
-		SideNavComponent,
 		MatTableModule,
 		MatPaginatorModule,
 		MatSortModule,

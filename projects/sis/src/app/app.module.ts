@@ -2,18 +2,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
-import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http' ;
+import { HttpClientModule} from '@angular/common/http' ;
 import { RouterModule } from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-
 // npm module
 import {LoadingModule} from 'ngx-loading';
 import {SimpleNotificationsModule, NotificationsService} from 'angular2-notifications';
 import { CookieModule } from 'ngx-cookie';
-
-// import interceptor
-import { ApiPrefixInterceptor, SuccessErrorInterceptor } from './_helpers/index';
-
 // import Module
 import { UsertypeSisModule } from './usertypesis/usertypesis.module';
 import { routing } from './app.routing';
@@ -33,9 +28,7 @@ const providers = [CommonAPIService,
 	RoutingStateService,
 	ResolverService,
 	LoaderService,
-	{provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
-	{provide: HTTP_INTERCEPTORS, useClass: ApiPrefixInterceptor, multi: true},
-	{provide: HTTP_INTERCEPTORS, useClass: SuccessErrorInterceptor, multi: true}];
+	{provide: MAT_DATE_LOCALE, useValue: 'en-GB'}];
 @NgModule({
 	declarations: [
 		AppComponent

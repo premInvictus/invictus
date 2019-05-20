@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { Subject } from 'rxjs';
 import { TreeviewItem } from 'ngx-treeview';
 import { NotificationsService } from 'angular2-notifications';
-import {LoaderService} from './loader.service';
+import { LoaderService } from './loader.service';
 import { DatePipe } from '@angular/common';
 import { CookieService } from 'ngx-cookie';
 
@@ -13,10 +13,14 @@ export class CommonAPIService {
 
 	homeUrl: string;
 	userData: any;
+	menus: any[] = [];
 	constructor(private http: HttpClient,
 		private _notificationService: NotificationsService,
 		private loader: LoaderService,
-		private _cookieService: CookieService) { }
+		private _cookieService: CookieService) {
+		this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
+			(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
+	}
 	UserAccessMenu: any[] = [];
 	showLoading = new Subject();
 	studentData = new Subject();
@@ -57,19 +61,33 @@ export class CommonAPIService {
 		return this.http.post('/users/getUserAccessMenu', param);
 	}
 	setUserAccessMenu(value) {
-		this.UserAccessMenu = value;
+		this.UserAccessMenu = [];
+		if (this.menus.length === 0) {
+			this.UserAccessMenu = value;
+		} else {
+			this.UserAccessMenu = this.menus;
+		}
 	}
 	returnUserAccessMenu() {
 		return of(this.UserAccessMenu);
 
 	}
 	isExistUserAccessMenu(mod_id) {
-		for (const mitem of this.UserAccessMenu) {
-			if (mitem.menu_mod_id === mod_id) {
-				return true;
+		if (this.menus.length === 0) {
+			for (const mitem of this.UserAccessMenu) {
+				if (mitem.menu_mod_id === mod_id) {
+					return true;
+				}
 			}
+			return false;
+		} else {
+			for (const mitem of this.menus) {
+				if (mitem.menu_mod_id === mod_id) {
+					return true;
+				}
+			}
+			return false;
 		}
-		return false;
 	}
 	isExist(arrayhas, field, id) {
 		if (arrayhas.length > 0) {
@@ -187,12 +205,21 @@ export class CommonAPIService {
 	}
 
 	isExistUserAccessMenuByLabel(parent_id, mod_name) {
-		for (const mitem of this.UserAccessMenu) {
-			if ((mitem.mod_parent_id === parent_id) && (mitem.mod_name.toLowerCase() === mod_name.toLowerCase())) {
-				return true;
+		if (this.menus.length === 0) {
+			for (const mitem of this.UserAccessMenu) {
+				if ((mitem.mod_parent_id === parent_id) && (mitem.mod_name.toLowerCase() === mod_name.toLowerCase())) {
+					return true;
+				}
 			}
+			return false;
+		} else  {
+			for (const mitem of this.menus) {
+				if ((mitem.mod_parent_id === parent_id) && (mitem.mod_name.toLowerCase() === mod_name.toLowerCase())) {
+					return true;
+				}
+			}
+			return false;
 		}
-		return false;
 	}
 
 }
