@@ -265,10 +265,17 @@
                               class="table-100 text-center">
                               <ng-container *ngFor="let column of finalTable.columnDef;let i = index;">
                                  <ng-container [matColumnDef]="column">
-                                    <th mat-header-cell *matHeaderCellDef>{{finalTable.colunmHeader[i]}}</th>
-                                    <td mat-cell *matCellDef="let item"
+                                    <th style="width:14%"
+                                    mat-header-cell *matHeaderCellDef>{{finalTable.colunmHeader[i]}}</th>
+                                    <td  mat-cell *matCellDef="let item"
                                        [ngStyle]="{'background-color': getColor(item[column]),'border': getBorder(item[column])}">
-                                       <span [ngStyle]="{'color': getColor(item[column])}">{{item[column]}}</span>
+                                       <span [ngStyle]="{'color': getColor2(item[column])}"
+                                       *ngIf="!checkColumnStatus(item,column)">{{getColumn(item, column)}}</span>
+                                       <a (click)="openDialogNew(item, column)"><span style="font-weight: bold;
+                                       cursor:pointer;text-decoration: underline !important"
+                                          [ngStyle]="{'color': getColor2(item[column])}"
+                                       *ngIf="checkColumnStatus(item,column)">{{getColumn(item, column)}}</span>
+                                       </a>
                                     </td>
                                  </ng-container>
                               </ng-container>
