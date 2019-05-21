@@ -123,12 +123,10 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 					this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_dob, 'yyyy-MM-dd');
 				this.taboneform.personalDetails = this.childDetails.baseform.value;
 				this.childDetails.paddressform.patchValue({
-					'ea_city': this.childDetails.getCityId(this.childDetails.paddressform.value.ea_city,
-						this.childDetails.paddressform.value.ea_country)
+					'ea_city': this.childDetails.cityId
 				});
 				this.childDetails.raddressform.patchValue({
-					'ea_city': this.childDetails.getCityId(this.childDetails.raddressform.value.ea_city,
-						this.childDetails.raddressform.value.ea_country)
+					'ea_city': this.childDetails.cityId2
 				});
 				this.childDetails.paddressform.patchValue({
 					'ea_same_residential_address': this.childDetails.paddressform.value.ea_same_residential_address ? 'Y' : 'N'
@@ -213,18 +211,16 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_dob, 'yyyy-MM-dd');
 			this.taboneform.personalDetails = this.childDetails.baseform.value;
 			this.childDetails.paddressform.patchValue({
-				'ea_city': this.childDetails.getCityId(this.childDetails.paddressform.value.ea_city,
-					this.childDetails.paddressform.value.ea_country)
+				'ea_city': this.childDetails.cityId
+			});
+			this.childDetails.raddressform.patchValue({
+				'ea_city': this.childDetails.cityId2
 			});
 			this.childDetails.paddressform.patchValue({
 				'ea_same_residential_address': this.childDetails.paddressform.value.ea_same_residential_address ? 'Y' : 'N'
 			});
 			this.childDetails.raddressform.patchValue({
 				'ea_same_residential_address': this.childDetails.raddressform.value.ea_same_residential_address ? 'Y' : 'N'
-			});
-			this.childDetails.raddressform.patchValue({
-				'ea_city': this.childDetails.getCityId(this.childDetails.raddressform.value.ea_city,
-					this.childDetails.raddressform.value.ea_country)
 			});
 			this.taboneform.personalDetails.addressDetails = [this.childDetails.paddressform.value, this.childDetails.raddressform.value];
 			this.taboneform.personalDetails.siblingDetails = [];
