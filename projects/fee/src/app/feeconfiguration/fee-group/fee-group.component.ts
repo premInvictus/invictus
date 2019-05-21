@@ -110,6 +110,7 @@ export class FeeGroupComponent implements OnInit, AfterViewInit {
 											classAmt = classAmt + 'Class ' +
 											titem.class_name +  ' :' + new DecimalPipe('en-us').transform(titem.head_amt) + ', ' ;
 										}
+										classAmt = classAmt.substring(0, classAmt.length - 2);
 								}
 								feeHead = feeHead + classAmt + '<br>';
 							}
