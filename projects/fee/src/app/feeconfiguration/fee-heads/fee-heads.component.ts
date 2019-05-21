@@ -216,17 +216,19 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 		this.newAmtDetails = [];
 		const classArray: any = [];
 		this.formGroupArray = [];
-		for (const item of value.fh_class_amount_detail) {
-			this.formGroupArray.push({
-				class_id: item.class_id,
-				class_name: item.class_name,
-				formGroup: this.fb.group({
-					'head_amt': item.head_amt
-				})
-			});
-			classArray.push(item.class_id);
+		if (value.fh_class_amount_detail) {
+			for (const item of value.fh_class_amount_detail) {
+				this.formGroupArray.push({
+					class_id: item.class_id,
+					class_name: item.class_name,
+					formGroup: this.fb.group({
+						'head_amt': item.head_amt
+					})
+				});
+				classArray.push(item.class_id);
+			}
+			this.newAmtDetails = value.fh_class_amount_detail;
 		}
-		this.newAmtDetails = value.fh_class_amount_detail;
 		this.feeheadform.patchValue({
 			fh_id: value.fh_id,
 			fh_name: value.fh_name,
