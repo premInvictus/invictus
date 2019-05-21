@@ -45,7 +45,7 @@
                 <td  mat-cell *matCellDef="let item">
                   <span *ngIf="item.action.flgr_invoice_type === 'I'"
                   class="pointer font-bold font-skyblue font-underline">
-                  <a (click)="openDialog(item.action.flgr_id, false)">I-#{{item.invoiceno}}</a>
+                  <a (click)="openDialog(item.action.flgr_inv_id, false)">I-#{{item.invoiceno}}</a>
                 </span>
                 <span *ngIf="item.action.flgr_invoice_type === 'R'"
                 class="pointer font-bold font-skyblue font-underline">
