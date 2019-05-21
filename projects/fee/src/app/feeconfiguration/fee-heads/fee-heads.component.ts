@@ -19,7 +19,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('paginator') paginator: MatPaginator;
 	ELEMENT_DATA: FHModel[] = [];
-	displayedColumns: string[] = ['srno', 'feehead', 'feetype', 'class', 'amount', 'calculate', 'period', 'date', 'status', 'action'];
+	displayedColumns: string[] = ['srno', 'feehead', 'feetype', 'class', 'calculate', 'period', 'date', 'status', 'action'];
 	dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
 	// member declaration
@@ -143,19 +143,18 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 					this.feeheadArray.forEach(item => {
 						const pushitem: any = {};
 						let class_name = '';
-						let amount = '';
 						if (item.fh_class_amount_detail && item.fh_class_amount_detail.length > 0) {
 							for (const cname of item.fh_class_amount_detail) {
-								class_name = class_name + cname.class_name + '<br>';
-								amount = amount + new DecimalPipe('en-us').transform(cname.head_amt) + '<br>';
+								class_name = class_name + 'Class' + cname.class_name + ':' +
+								new DecimalPipe('en-us').transform(cname.head_amt) +  ' ,';
 							}
+							class_name = class_name.substring(0, class_name.length - 2);
 						}
 						pushitem.srno = ++srno;
 						pushitem.feehead = item.fh_name;
 						pushitem.feetype = item.ft_name;
 						pushitem.class = class_name;
 						pushitem.calculate = item.calm_name;
-						pushitem.amount = amount;
 						pushitem.period = item.fp_name;
 						pushitem.date = item.fh_created_date;
 						pushitem.status = item.fh_status === '1' ? true : false;
@@ -315,6 +314,8 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	cancelForm() {
 		this.updateFlag = false;
 		this.resetForm();
+		this.formGroupArray = [];
+		this.amountDetailArray = [];
 	}
 	resetForm() {
 		this.feeheadform.patchValue({
