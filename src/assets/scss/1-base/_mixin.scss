@@ -76,9 +76,88 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         max-width: 15%;
         flex: 0 0 15%;
     }
+
+    .card-height-545{
+       min-height: 545px;
+    }
+
+    .card-height-880{
+        min-height: 880px;
+     }
+
+     .card-height-560 {
+         min-height: 560px;
+     }
+     .card-height-615 {
+        min-height: 615px;
+    }
+    .card-height-540 {
+        min-height: 540px;
+    }
+    .card-height-780 {
+        min-height: 780px;
+    }
+    .card-height-720 {
+        min-height: 720px;
+    }
+    .card-height-730 {
+        min-height: 730px;
+    }
+    .card-height-795 {
+        min-height: 795px;
+    }
+    .card-height-992 {
+        min-height: 992px;
+    }
+    .card-height-950 {
+        min-height: 950px;
+    }
+    .card-height-835 {
+        min-height: 835px;
+    }
+    .mat-drawer-content {
+        height: 91.45vh !important;
+    }
+    .fee-blue-box {
+        background-color: #1E88E5;
+        padding: 8px 8px;
+        width: 222px !important;
+        color: #fff;
+        font-size: 16px;
+        margin-top: 15px;
+    }
 }
 
 @include respond-between(lg, xl) {
+    .card-height-600 {
+        min-height: 600px;
+    }
+    
+    
+    .card-height-605 {
+        min-height: 605px;
+    }
+    
+    .card-height-760 {
+        min-height: 760px;
+    }
+    
+    .card-height-810 {
+        min-height: 810px;
+    }
+    
+    .card-height-830 {
+        min-height: 830px;
+    }
+    
+    .card-height-440 {
+        min-height: 440px;
+    }
+    
+    .card-height-677 {
+        min-height: 677px;
+    }
+
     mat-sidenav-content.fee-sidenav-content {
         height: 100% !important;
     }
@@ -102,7 +181,7 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         flex: 0 0 5% !important;  
     }
     .fee-custom-col-10 {
-        max-width: 10%;
+        max-width: 10% ;
         flex: 0 0 10%;
     }
     .fee-custom-col-15 {
