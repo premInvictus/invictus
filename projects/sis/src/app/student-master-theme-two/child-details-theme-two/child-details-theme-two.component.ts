@@ -64,6 +64,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	siblingStaus = 'No';
 	datePlaceHolder: any;
 	cityCountryArray: any[] = [];
+	cityId: any;
+	cityId2: any;
 	constructor(
 		private formEnabledTwoService: FormEnabledTwoService,
 		private fbuild: FormBuilder,
@@ -594,24 +596,15 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	}
 
 	getCityResId(item: any) {
+		this.cityId2 = item.cit_id;
 		this.raddressform.patchValue({
 			ea_city: this.getCityName(item.cit_id),
 			ea_state: item.sta_id,
 			ea_country: item.cou_id
 		});
 	}
-
-	getCityPerId2($event, item: any) {
-		if (Number($event.keyCode) === 13) {
-			this.paddressform.patchValue({
-				ea_city: this.getCityName(item.cit_id),
-				ea_state: item.sta_id,
-				ea_country: item.cou_id
-			});
-		}
-	}
-
 	getCityPerId(item: any) {
+		this.cityId = item.cit_id;
 		this.paddressform.patchValue({
 			ea_city: this.getCityName(item.cit_id),
 			ea_state: item.sta_id,
@@ -623,13 +616,6 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		const findIndex = this.cityCountryArray.findIndex(f => f.cit_id === id);
 		if (findIndex !== -1) {
 			return this.cityCountryArray[findIndex].cit_name;
-		}
-	}
-
-	getCityId(city_name, cou_id) {
-		const findIndex = this.cityCountryArray.findIndex(f => f.cit_name === city_name && f.cou_id === cou_id);
-		if (findIndex !== -1) {
-			return this.cityCountryArray[findIndex].cit_id;
 		}
 	}
 }

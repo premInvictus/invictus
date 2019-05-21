@@ -145,9 +145,11 @@ export class FeeTransactionEntryComponent implements OnInit {
 						feedue: item.invg_fh_amount,
 						concession: item.invg_fcc_amount,
 						adjustment: item.invg_adj_amount,
-						netpay: Number(item.invg_total_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+// tslint:disable-next-line: max-line-length
+						netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
 					});
-					this.invoiceTotal += Number(item.invg_total_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
+// tslint:disable-next-line: max-line-length
+					this.invoiceTotal += Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
 					pos++;
 				}
 				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);

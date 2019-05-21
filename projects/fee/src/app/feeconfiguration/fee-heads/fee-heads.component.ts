@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { FHModel } from './fee-heads.model';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { FeeService, SisService, CommonAPIService } from '../../_services';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
 	selector: 'app-fee-heads',
@@ -18,7 +19,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('paginator') paginator: MatPaginator;
 	ELEMENT_DATA: FHModel[] = [];
-	displayedColumns: string[] = ['srno', 'feehead', 'feetype', 'class', 'calculate', 'amount', 'period', 'date', 'status', 'action'];
+	displayedColumns: string[] = ['srno', 'feehead', 'feetype', 'class', 'calculate', 'period', 'date', 'status', 'action'];
 	dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
 	// member declaration
@@ -35,7 +36,9 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	genderArray: any[] = [];
 	updateFlag = false;
 	fh_is_hostel_fee = 0;
-
+	amountDetailArray: any[] = [];
+	formGroupArray: any[] = [];
+	newAmtDetails: any[] = [];
 	constructor(
 		private fb: FormBuilder,
 		private feeService: FeeService,
@@ -68,12 +71,12 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			fh_fp_id: '',
 			fh_fm_id: '',
 			fh_class_id: '',
-			fh_sec_id: '',
 			fh_calm_id: '',
 			fh_amount: '',
 			fh_gen_id: '',
 			fh_fo_id: '',
 			fh_transport: '',
+			fh_class_amount_detail: '',
 			fh_hostel: '',
 			fh_fcc_id: '',
 			fh_status: ''
@@ -122,7 +125,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	}
 	getConcessionCategory() {
 		this.concessionruleArray = [];
-		this.feeService.getConcessionCategory({fcc_is_hostel_fee: this.fh_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getConcessionCategory({ fcc_is_hostel_fee: this.fh_is_hostel_fee }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.concessionruleArray = result.data;
 			}
@@ -130,7 +133,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	}
 	getFeeHeads() {
 		this.feeheadArray = [];
-		this.feeService.getFeeHeads({fh_is_hostel_fee: this.fh_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getFeeHeads({ fh_is_hostel_fee: this.fh_is_hostel_fee }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feeheadArray = result.data;
 				this.ELEMENT_DATA = [];
@@ -139,18 +142,19 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 
 					this.feeheadArray.forEach(item => {
 						const pushitem: any = {};
-						const class_name = [];
-						if (item.fh_classes && item.fh_classes.length > 0) {
-							for (const cname of item.fh_classes) {
-								class_name.push(cname.class_name);
+						let class_name = '';
+						if (item.fh_class_amount_detail && item.fh_class_amount_detail.length > 0) {
+							for (const cname of item.fh_class_amount_detail) {
+								class_name = class_name + 'Class' + cname.class_name + ':' +
+								new DecimalPipe('en-us').transform(cname.head_amt) +  ' ,';
 							}
+							class_name = class_name.substring(0, class_name.length - 2);
 						}
 						pushitem.srno = ++srno;
 						pushitem.feehead = item.fh_name;
 						pushitem.feetype = item.ft_name;
 						pushitem.class = class_name;
 						pushitem.calculate = item.calm_name;
-						pushitem.amount = item.fh_amount;
 						pushitem.period = item.fp_name;
 						pushitem.date = item.fh_created_date;
 						pushitem.status = item.fh_status === '1' ? true : false;
@@ -208,14 +212,29 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 		this.setFeehead(value);
 	}
 	setFeehead(value) {
+		this.newAmtDetails = [];
+		const classArray: any = [];
+		this.formGroupArray = [];
+		if (value.fh_class_amount_detail) {
+			for (const item of value.fh_class_amount_detail) {
+				this.formGroupArray.push({
+					class_id: item.class_id,
+					class_name: item.class_name,
+					formGroup: this.fb.group({
+						'head_amt': item.head_amt
+					})
+				});
+				classArray.push(item.class_id);
+			}
+			this.newAmtDetails = value.fh_class_amount_detail;
+		}
 		this.feeheadform.patchValue({
 			fh_id: value.fh_id,
 			fh_name: value.fh_name,
 			fh_ft_id: value.fh_ft_id,
 			fh_fp_id: value.fh_fp_id,
 			fh_fm_id: value.fh_fm_id,
-			fh_class_id: value.fh_class_id,
-			fh_sec_id: value.fh_sec_id,
+			fh_class_id: classArray,
 			fh_calm_id: value.fh_calm_id,
 			fh_amount: value.fh_amount,
 			fh_gen_id: value.fh_gen_id,
@@ -229,7 +248,25 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	}
 
 	saveForm() {
-		if (this.feeheadform.valid) {
+		let validateFlag = true;
+		this.amountDetailArray = [];
+		if (this.formGroupArray.length > 0) {
+			for (const item of this.formGroupArray) {
+				if (item.formGroup.value.head_amt !== '') {
+					validateFlag = true;
+					this.amountDetailArray.push({
+						class_id: item.class_id,
+						class_name: item.class_name,
+						head_amt: item.formGroup.value.head_amt
+					});
+				} else {
+					validateFlag = false;
+					item.formGroup.controls['head_amt'].markAsDirty();
+					break;
+				}
+			}
+		}
+		if (this.feeheadform.valid && validateFlag) {
 			let apiactionname = '';
 			if (this.feeheadform.value.fh_id === '') {
 				apiactionname = 'insertFeeHeads';
@@ -238,10 +275,13 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 				this.updateFlag = false;
 			}
 			this.feeheadform.value['fh_is_hostel_fee'] = this.fh_is_hostel_fee;
+			this.feeheadform.value['fh_class_amount_detail'] = this.amountDetailArray;
 			this.feeService[apiactionname](this.feeheadform.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.getFeeHeads();
 					this.resetForm();
+					this.amountDetailArray = [];
+					this.formGroupArray = [];
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
@@ -252,7 +292,6 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 		}
 	}
 	deleteConfirm(value, status = '5') {
-		// console.log(value,status);
 		if (value) {
 			value.fh_status = status;
 		}
@@ -275,6 +314,8 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	cancelForm() {
 		this.updateFlag = false;
 		this.resetForm();
+		this.formGroupArray = [];
+		this.amountDetailArray = [];
 	}
 	resetForm() {
 		this.feeheadform.patchValue({
@@ -284,12 +325,12 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			fh_fp_id: '',
 			fh_fm_id: '',
 			fh_class_id: '',
-			fh_sec_id: '',
 			fh_calm_id: '',
 			fh_amount: '',
 			fh_gen_id: '',
 			fh_fo_id: '',
 			fh_transport: '',
+			fh_class_amount_detail: '',
 			fh_hostel: '',
 			fh_fcc_id: '',
 			fh_status: ''
@@ -304,6 +345,57 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			this.fh_is_hostel_fee = 0;
 		}
 		this.getFeeHeads();
+	}
+	getClassAmount($event) {
+		let classArray: any[] = [];
+		this.formGroupArray = [];
+		classArray = $event.value;
+		if (this.newAmtDetails.length === 0) {
+			for (const titem of classArray) {
+				const findex = this.formGroupArray.findIndex(f => Number(f.class_id) === Number(titem));
+				if (findex === -1) {
+					this.formGroupArray.push({
+						class_id: titem,
+						class_name: this.getClassName(titem),
+						formGroup: this.fb.group({
+							'head_amt': ''
+						})
+					});
+				}
+			}
+		} else {
+			for (const item of this.newAmtDetails) {
+				for (const titem of classArray) {
+					const findex = this.formGroupArray.findIndex(f => Number(f.class_id) === Number(titem));
+					const findex2 = this.newAmtDetails.findIndex(f => Number(f.class_id) === Number(titem));
+					if (findex === -1 && Number(titem) === Number(item.class_id)
+						&& findex2 !== -1) {
+						this.formGroupArray.push({
+							class_id: titem,
+							class_name: this.getClassName(titem),
+							formGroup: this.fb.group({
+								'head_amt': item.head_amt
+							})
+						});
+					}
+					if (findex === -1 && findex2 === -1) {
+						this.formGroupArray.push({
+							class_id: titem,
+							class_name: this.getClassName(titem),
+							formGroup: this.fb.group({
+								'head_amt': ''
+							})
+						});
+					}
+				}
+			}
+		}
+	}
+	getClassName(class_id) {
+		const findex = this.classArray.findIndex(f => Number(f.class_id) === Number(class_id));
+		if (findex !== -1) {
+			return this.classArray[findex].class_name;
+		}
 	}
 
 }

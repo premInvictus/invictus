@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FSModel } from './fee-structure.model';
-import {MatTableDataSource, MatSort, MatPaginator} from '@angular/material';
+import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { FeeService, SisService, CommonAPIService } from '../../_services';
+import { CapitalizePipe } from '../../_pipes';
+import { DecimalPipe } from '@angular/common';
 @Component({
 	selector: 'app-fee-structure',
 	templateUrl: './fee-structure.component.html',
@@ -56,7 +58,7 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 	getFeeHeads() {
 		this.feeheadArray = [];
 		this.headgroupArray = [];
-		this.feeService.getFeeHeads({fh_is_hostel_fee: this.fs_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getFeeHeads({ fh_is_hostel_fee: this.fs_is_hostel_fee }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feeheadArray = result.data;
 				for (const item of this.feeheadArray) {
@@ -71,7 +73,7 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 	}
 	getFeeGroup() {
 		this.feegroupArray = [];
-		this.feeService.getFeeGroup({fs_is_hostel_fee: this.fs_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getFeeGroup({ fs_is_hostel_fee: this.fs_is_hostel_fee }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feegroupArray = result.data;
 				for (const item of this.feegroupArray) {
@@ -109,53 +111,60 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 	getFeeStructure() {
 		this.feestructureArray = [];
 		this.ELEMENT_DATA = [];
-		this.feeService.getFeeStructure({fs_is_hostel_fee: this.fs_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getFeeStructure({ fs_is_hostel_fee: this.fs_is_hostel_fee }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feestructureArray = result.data;
-				console.log(this.feestructureArray);
 				let srno = 0;
 				if (this.feestructureArray.length > 0) {
 					this.feestructureArray.forEach(item => {
 						const pushitem: any = {};
-						pushitem.feehead = [];
+						let feeHead = '';
+						let feeHead2 = '';
 						const itemhead: any[] = [];
 						if (item.fs_structure && item.fs_structure.length > 0) {
-							let atotal = 0;
 							for (const item1 of item.fs_structure) {
-								const pushitemhead: any = {};
 								if (item1.fc_classfication === 'head') {
-									pushitemhead.name = item1.fh_name;
-									pushitemhead.amount = item1.fh_amount;
-									pushitemhead.total = item1.fh_amount * item1.fh_fm_id.length;
-									pushitemhead.ft_name = item1.ft_name;
+									feeHead = feeHead + '<b><u>' + new CapitalizePipe().transform(item1.fh_name) + '(' + item1.ft_name + ')' + '</u></b><br>';
+									let classAmt = '';
+									if (item1.fh_class_amount_detail &&
+										JSON.parse(item1.fh_class_amount_detail).length > 0) {
+										for (const titem of JSON.parse(item1.fh_class_amount_detail)) {
+											classAmt = classAmt + 'Class ' +
+												titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+												item1.fh_fm_id.length) + ', ';
+										}
+										classAmt = classAmt.substring(0, classAmt.length - 2);
+									}
+									feeHead = feeHead + classAmt + '<br>';
 
 								} else if (item1.fc_classfication === 'group') {
-									pushitemhead.name = item1.fs_name;
-									pushitemhead.amount = '';
 									if (item1.fee_groups && item1.fee_groups.length > 0) {
-										let total = 0;
 										for (const item2 of item1.fee_groups) {
-											total += (item2.fh_amount * item2.fh_fm_id.length);
+											let classAmt  = '';
+											feeHead2 = feeHead2 + '<b><u>' + new CapitalizePipe().transform(item2.fh_name) + '(' + item2.ft_name + ')' + '</u></b><br>';
+											if (item2.fh_class_amount_detail &&
+												JSON.parse(item2.fh_class_amount_detail).length > 0) {
+												for (const titem of JSON.parse(item2.fh_class_amount_detail)) {
+													classAmt = classAmt + 'Class ' +
+														titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+														item2.fh_fm_id.length) + ', ';
+												}
+												classAmt = classAmt.substring(0, classAmt.length - 2);
+											}
+											feeHead2 = feeHead2 + classAmt + '<br>';
 										}
-										pushitemhead.ft_name = item1.fee_groups[0].ft_name;
-										pushitemhead.total = total;
 									}
 								}
-								atotal += pushitemhead.total;
-								itemhead.push(pushitemhead);
 							}
-							pushitem.feehead = itemhead;
-							item.total = atotal;
+							pushitem.feehead = feeHead + feeHead2;
+							pushitem.srno = ++srno;
+							pushitem.feestructurename = item.fs_name;
+							pushitem.description = item.fs_description;
+							pushitem.status = item.fs_status === '1' ? true : false;
+							pushitem.action = item;
+							this.ELEMENT_DATA.push(pushitem);
 						}
-
-						pushitem.srno = ++srno;
-						pushitem.feestructurename = item.fs_name;
-						pushitem.description = item.fs_description;
-						pushitem.status = item.fs_status === '1' ? true : false;
-						pushitem.action = item;
-						this.ELEMENT_DATA.push(pushitem);
-					});
-					console.log(this.ELEMENT_DATA);
+						});
 					this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 					this.dataSource.paginator = this.paginator;
 					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -178,12 +187,10 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 		}
 	}
 	editFeeStructure(value) {
-		console.log(value);
 		this.updateFlag = true;
 		this.setFeeStructure(value);
 	}
 	setFeeStructure(value) {
-		console.log(this.getFeeheadFromGroup(value.fs_groups));
 		this.feestructureform.patchValue({
 			fs_id: value.fs_id,
 			fs_name: value.fs_name,
@@ -194,21 +201,19 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getFeeheadFromGroup(value) {
-		console.log(value);
 		const fs_heads = [];
 		if (value && value.length > 0) {
 			for (const item of value) {
 				if (item.fc_classfication === 'head') {
 					fs_heads.push('H-' + item.fc_fh_fs_id);
 				} else if (item.fc_classfication === 'group') {
-				fs_heads.push('G-' + item.fc_fh_fs_id);
-								}
+					fs_heads.push('G-' + item.fc_fh_fs_id);
+				}
 			}
 		}
 		return fs_heads;
 	}
-	deleteConfirm(value,  status= '5') {
-		// console.log(value,status);
+	deleteConfirm(value, status = '5') {
 		if (value) {
 			value.fs_status = status;
 		}
