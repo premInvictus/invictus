@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FGModel } from './fee-group.model';
-import {MatTableDataSource, MatSort, MatPaginator} from '@angular/material';
+import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { FeeService, SisService, CommonAPIService } from '../../_services';
+import { CapitalizePipe } from '../../_pipes';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
 	selector: 'app-fee-group',
@@ -56,7 +58,7 @@ export class FeeGroupComponent implements OnInit, AfterViewInit {
 	}
 	getFeeHeads() {
 		this.feeheadArray = [];
-		this.feeService.getFeeHeads({fh_is_hostel_fee: this.fs_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getFeeHeads({ fh_is_hostel_fee: this.fs_is_hostel_fee }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feeheadArray = result.data;
 			}
@@ -89,24 +91,32 @@ export class FeeGroupComponent implements OnInit, AfterViewInit {
 
 	getFeeGroup() {
 		this.feegroupArray = [];
-		this.feeService.getFeeGroup({fs_is_hostel_fee: this.fs_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getFeeGroup({ fs_is_hostel_fee: this.fs_is_hostel_fee }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feegroupArray = result.data;
 				this.ELEMENT_DATA = [];
 				let srno = 0;
 				if (this.feegroupArray.length > 0) {
 					this.feegroupArray.forEach(item => {
+						let feeHead = '';
 						const pushitem: any = {};
 						if (item.fs_groups && item.fs_groups.length > 0) {
-							let total = 0;
 							for (const item1 of item.fs_groups) {
-								total += (item1.fh_amount * item1.fh_fm_id.length);
+								feeHead = feeHead +  '<b><u>' + new CapitalizePipe().transform(item1.fh_name) + '(' + item1.ft_name + ')'  + '</u></b><br>';
+								let classAmt = '';
+								if (item1.fh_class_amount_detail &&
+									JSON.parse(item1.fh_class_amount_detail).length > 0) {
+										for (const titem of JSON.parse(item1.fh_class_amount_detail)) {
+											classAmt = classAmt + 'Class ' +
+											titem.class_name +  ' :' + new DecimalPipe('en-us').transform(titem.head_amt) + ', ' ;
+										}
+								}
+								feeHead = feeHead + classAmt + '<br>';
 							}
-							item.total = total;
 						}
 						pushitem.srno = ++srno;
 						pushitem.groupname = item.fs_name;
-						pushitem.feehead = item.fs_groups;
+						pushitem.feehead = feeHead;
 						pushitem.description = item.fs_description;
 						pushitem.status = item.fs_status === '1' ? true : false;
 						pushitem.action = item;
@@ -119,10 +129,10 @@ export class FeeGroupComponent implements OnInit, AfterViewInit {
 				}
 			} else {
 				this.ELEMENT_DATA = [];
-					this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-					this.dataSource.paginator = this.paginator;
-					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-					this.dataSource.sort = this.sort;
+				this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+				this.dataSource.paginator = this.paginator;
+				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+				this.dataSource.sort = this.sort;
 			}
 			this.feegroupform.reset();
 		});
@@ -153,7 +163,7 @@ export class FeeGroupComponent implements OnInit, AfterViewInit {
 			fs_groups: this.getFeeheadFromGroup(value.fs_groups)
 		});
 	}
-	deleteConfirm(value,  status= '5') {
+	deleteConfirm(value, status = '5') {
 		// console.log(value,status);
 		if (value) {
 			value.fs_status = status;
