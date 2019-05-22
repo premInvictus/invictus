@@ -101,9 +101,9 @@
        <div *ngIf="transportFlag" class="row">
           <div *ngIf="modeFlag" class="col-3 remove-col-padding-left">
              <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Application From</mat-label>
+                <mat-label>Applicable From</mat-label>
                 <input  matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
-                placeholder="Application From" formControlName="accd_transport_from" 
+                placeholder="Applicable From" formControlName="accd_transport_from" 
                 [errorStateMatcher]="confirmValidParentMatcher" required
                 />
                 <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker" [disabled]="viewOnly"></mat-datepicker-toggle>
@@ -112,7 +112,7 @@
           </div>
           <div *ngIf="terminationFlag" class="col-3">
              <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Application To</mat-label>
+                <mat-label>Applicable To</mat-label>
                 <input  matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
                 placeholder="Termination Date" formControlName="accd_transport_to" 
                 [errorStateMatcher]="confirmValidParentMatcher" required
