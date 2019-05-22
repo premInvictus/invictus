@@ -12,6 +12,7 @@ import 'jspdf-autotable';
 import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { reduce } from 'rxjs/operators';
+import { CapitalizePipe } from '../../_pipes';
 @Component({
 	selector: 'app-reports',
 	templateUrl: './reports.component.html',
@@ -718,7 +719,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 													repoArray[Number(keys)]['receipt_no'] : 'NA';
 												obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 													repoArray[Number(keys)]['stu_admission_no'] : '-';
-												obj['stu_full_name'] = repoArray[Number(keys)]['stu_full_name'];
+												obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
 													repoArray[Number(keys)]['stu_sec_name'];
 												tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
@@ -755,7 +756,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									repoArray[Number(index)]['rpt_id'] : '0';
 								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 									repoArray[Number(index)]['stu_admission_no'] : '-';
-								obj['stu_full_name'] = repoArray[Number(index)]['stu_full_name'];
+								obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 									repoArray[Number(index)]['stu_sec_name'];
 								obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
@@ -784,7 +785,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									repoArray[Number(index)]['rpt_id'] : '0';
 								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 									repoArray[Number(index)]['stu_admission_no'] : '-';
-								obj['stu_full_name'] = repoArray[Number(index)]['stu_full_name'];
+								obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 									repoArray[Number(index)]['stu_sec_name'];
 								obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
@@ -815,7 +816,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									repoArray[Number(index)]['rpt_id'] : '0';
 								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 									repoArray[Number(index)]['stu_admission_no'] : '-';
-								obj['stu_full_name'] = repoArray[Number(index)]['stu_full_name'];
+								obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 									repoArray[Number(index)]['stu_sec_name'];
 								obj['rpt_amount'] = repoArray[Number(index)]['transport_amount'] ?
@@ -874,7 +875,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
 							obj['au_full_name'] = repoArray[Number(index)]['stu_full_name'] ?
-								repoArray[Number(index)]['stu_full_name'] : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
 							obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 								repoArray[Number(index)]['stu_sec_name'];
 							for (const titem of item['inv_invoice_generated_status']) {
@@ -992,7 +993,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_login_id'] = repoArray[Number(index)]['au_admission_no'] ?
 							repoArray[Number(index)]['au_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['au_full_name'] ?
-							repoArray[Number(index)]['au_full_name'] : '-';
+						new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						let feePeriod: any = '';
 						for (const period of repoArray[Number(index)]['inv_invoice_generated_status']) {
 							feePeriod = feePeriod + period.fm_name + '<br>';
@@ -1039,7 +1040,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_admission_no'] = repoArray[Number(index)]['au_admission_no'] ?
 							repoArray[Number(index)]['au_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['au_full_name'] ?
-							repoArray[Number(index)]['au_full_name'] : '-';
+						new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['class_name'] + '-' +
 							repoArray[Number(index)]['sec_name'];
 						obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
@@ -1105,7 +1106,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								(++index);
 							obj['class_name'] = item['class_name'] + '-' +
 								item['sec_name'];
-							obj['au_full_name'] = item['au_full_name'] ? item['au_full_name'] : '-';
+							obj['au_full_name'] = item['au_full_name'] ?
+							new CapitalizePipe().transform(item['au_full_name']) : '-';
 							obj['au_admission_no'] = item['au_admission_no'] ?
 								item['au_admission_no'] : '-';
 							obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
@@ -1170,7 +1172,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['stu_admission_no'] = repoArray[Number(index)]['au_admission_no'] ?
 							repoArray[Number(index)]['au_admission_no'] : '-';
 						obj['stu_full_name'] = repoArray[Number(index)]['au_full_name'] ?
-							repoArray[Number(index)]['au_full_name'] : '-';
+						new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						obj['stu_class_name'] = repoArray[Number(index)]['class_name'] + '-' +
 							repoArray[Number(index)]['sec_name'];
 						obj['invoice_no'] = repoArray[Number(index)]['inv_invoice_no'] ?
@@ -1205,30 +1207,46 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							const obj: any = {};
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
-							obj['fs_name'] = repoArray[Number(index)]['fs_name'];
-							let feeStructure: any = '';
-							let grandTotal = 0;
-							for (const fee of item['fs_structure']) {
-								if (fee['fc_classfication'] === 'head') {
-									feeStructure = feeStructure + '<b>' + fee['fh_name'] + '(' +
-										fee['ft_name'] + ')</b>: ' +
-										new DecimalPipe('en-us').transform(fee['fh_amount']) + ' (' +
-										new DecimalPipe('en-us').transform((Number(fee['fh_amount']) * fee['fh_fm_id'].length))
-										+ ')' +
-										'<br>';
-									grandTotal = grandTotal + (Number(fee['fh_amount']) * fee['fh_fm_id'].length);
-								} else if (fee['fc_classfication'] === 'group') {
-									let totalAmount = 0;
-									for (const amt of fee['fee_groups']) {
-										totalAmount = totalAmount + Number(amt['fh_amount']);
+							obj['fs_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['fs_name']);
+							let feeHead = '';
+							let feeHead2 = '';
+							if (item.fs_structure && item.fs_structure.length > 0) {
+								for (const item1 of item.fs_structure) {
+									if (item1.fc_classfication === 'head') {
+										feeHead = feeHead + '<b><u>' + new CapitalizePipe().transform(item1.fh_name) + '(' + item1.ft_name + ')' + '</u></b><br>';
+										let classAmt = '';
+										if (item1.fh_class_amount_detail &&
+											JSON.parse(item1.fh_class_amount_detail).length > 0) {
+											for (const titem of JSON.parse(item1.fh_class_amount_detail)) {
+												classAmt = classAmt + 'Class ' +
+													titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+														item1.fh_fm_id.length) + ', ';
+											}
+											classAmt = classAmt.substring(0, classAmt.length - 2);
+										}
+										feeHead = feeHead + classAmt + '<br>';
+
+									} else if (item1.fc_classfication === 'group') {
+										if (item1.fee_groups && item1.fee_groups.length > 0) {
+											for (const item2 of item1.fee_groups) {
+												let classAmt = '';
+												feeHead2 = feeHead2 + '<b><u>' + new CapitalizePipe().transform(item2.fh_name) + '(' + item2.ft_name + ')' + '</u></b><br>';
+												if (item2.fh_class_amount_detail &&
+													JSON.parse(item2.fh_class_amount_detail).length > 0) {
+													for (const titem of JSON.parse(item2.fh_class_amount_detail)) {
+														classAmt = classAmt + 'Class ' +
+															titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+																item2.fh_fm_id.length) + ', ';
+													}
+													classAmt = classAmt.substring(0, classAmt.length - 2);
+												}
+												feeHead2 = feeHead2 + classAmt + '<br>';
+											}
+										}
 									}
-									feeStructure = feeStructure + '<b>' + fee['fs_name'] + ' (' +
-										fee['fee_groups'][0]['ft_name'] + ')</b> : ' + totalAmount + '<br>';
-									grandTotal = grandTotal + Number(totalAmount);
 								}
 							}
-							feeStructure = feeStructure;
-							obj['fs_structure'] = feeStructure;
+							obj['fs_structure'] = feeHead + feeHead2;
 							obj['fs_description'] = item['fs_description'];
 							this.REPORT_ELEMENT_DATA.push(obj);
 							this.tableFlag = true;
@@ -1268,35 +1286,51 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
 							obj['fs_name'] = repoArray[Number(index)]['fs_name'] ?
-								repoArray[Number(index)]['fs_name'] : 'NA';
+							new CapitalizePipe().transform(repoArray[Number(index)]['fs_name']) : 'NA';
 							obj['class_name'] = item['class_name'] + '-' +
 								item['sec_name'];
-							obj['au_full_name'] = item['au_full_name'] ? item['au_full_name'] : '-';
+							obj['au_full_name'] = item['au_full_name'] ? new CapitalizePipe().transform(item['au_full_name']) : '-';
 							obj['au_admission_no'] = item['au_admission_no'] ?
 								item['au_admission_no'] : '-';
-							let feeStructure: any = '';
-							let grandTotal = 0;
-							for (const fee of item['fee_structure_head_group']) {
-								if (fee['fc_classfication'] === 'head') {
-									feeStructure = feeStructure + '<b>' + fee['fh_name'] + '(' +
-										fee['ft_name'] + ')</b>: ' +
-										new DecimalPipe('en-us').transform(fee['fh_amount']) + ' (' +
-										new DecimalPipe('en-us').transform((Number(fee['fh_amount']) * fee['fh_fm_id'].length))
-										+ ')' +
-										'<br>';
-									grandTotal = grandTotal + (Number(fee['fh_amount']) * fee['fh_fm_id'].length);
-								} else if (fee['fc_classfication'] === 'group') {
-									let totalAmount = 0;
-									for (const amt of fee['fee_groups']) {
-										totalAmount = totalAmount + Number(amt['fh_amount']);
+							let feeHead = '';
+							let feeHead2 = '';
+							if (item.fee_structure_head_group && item.fee_structure_head_group.length > 0) {
+								for (const item1 of item.fee_structure_head_group) {
+									if (item1.fc_classfication === 'head') {
+										feeHead = feeHead + '<b><u>' + new CapitalizePipe().transform(item1.fh_name) + '(' + item1.ft_name + ')' + '</u></b><br>';
+										let classAmt = '';
+										if (item1.fh_class_amount_detail &&
+											JSON.parse(item1.fh_class_amount_detail).length > 0) {
+											for (const titem of JSON.parse(item1.fh_class_amount_detail)) {
+												classAmt = classAmt + 'Class ' +
+													titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+														item1.fh_fm_id.length) + ', ';
+											}
+											classAmt = classAmt.substring(0, classAmt.length - 2);
+										}
+										feeHead = feeHead + classAmt + '<br>';
+
+									} else if (item1.fc_classfication === 'group') {
+										if (item1.fee_groups && item1.fee_groups.length > 0) {
+											for (const item2 of item1.fee_groups) {
+												let classAmt = '';
+												feeHead2 = feeHead2 + '<b><u>' + new CapitalizePipe().transform(item2.fh_name) + '(' + item2.ft_name + ')' + '</u></b><br>';
+												if (item2.fh_class_amount_detail &&
+													JSON.parse(item2.fh_class_amount_detail).length > 0) {
+													for (const titem of JSON.parse(item2.fh_class_amount_detail)) {
+														classAmt = classAmt + 'Class ' +
+															titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+																item2.fh_fm_id.length) + ', ';
+													}
+													classAmt = classAmt.substring(0, classAmt.length - 2);
+												}
+												feeHead2 = feeHead2 + classAmt + '<br>';
+											}
+										}
 									}
-									feeStructure = feeStructure + '<b>' + fee['fs_name'] + ' (' +
-										fee['fee_groups'][0]['ft_name'] + ')</b> : ' + totalAmount + '<br>';
-									grandTotal = grandTotal + Number(totalAmount);
 								}
 							}
-							feeStructure = feeStructure;
-							obj['fs_structure'] = feeStructure;
+							obj['fs_structure'] = feeHead + feeHead2;
 							this.REPORT_ELEMENT_DATA.push(obj);
 							this.tableFlag = true;
 							index++;
@@ -1328,8 +1362,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						const obj: any = {};
 						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 							(index + 1);
-						obj['fcc_name'] = repoArray[Number(index)]['fcc_name'];
-						obj['fh_name'] = repoArray[Number(index)]['fh_name'];
+						obj['fcc_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['fcc_name']);
+						obj['fcc_head_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['fcc_head_type']);
+						obj['fh_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['fh_name']);
 						obj['fcc_class_id'] =
 							this.getClassName(repoArray[Number(index)]['fcc_class_id']);
 						obj['fcrt_name'] = repoArray[Number(index)]['fcrt_name'];
@@ -1373,7 +1408,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(++index);
 							obj['stu_admission_no'] = item['stu_admission_no'];
-							obj['stu_full_name'] = item['stu_full_name'];
+							obj['stu_full_name'] = new CapitalizePipe().transform(item['stu_full_name']);
 							obj['stu_class_name'] = item['stu_class_name'] + '-' +
 								item['stu_sec_name'];
 							obj['fee_amount'] = cons['invg_fh_amount'] ?
@@ -1418,7 +1453,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 							(index + 1);
 						obj['au_admission_no'] = item['au_admission_no'] ? item['au_admission_no'] : '-';
-						obj['au_full_name'] = item['au_full_name'];
+						obj['au_full_name'] = new CapitalizePipe().transform(item['au_full_name']);
 						obj['class_name'] = item['class_name'] + '-' +
 							item['sec_name'];
 						obj['invoice_no'] = item['inv_invoice_no'];
@@ -1434,7 +1469,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['receipt_no'] = item['rpt_receipt_no'] ? item['rpt_receipt_no'] : 'NA';
 						obj['receipt_id'] = item['receipt_id'];
 						obj['dishonor_date'] = item['rpt_receipt_date'];
-						obj['inv_remark'] = item['inv_remark'] ? item['inv_remark'] : 'NA';
+						obj['inv_remark'] = item['inv_remark'] ? new CapitalizePipe().transform(item['inv_remark']) : 'NA';
 						index++;
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
@@ -1475,7 +1510,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 							repoArray[Number(index)]['stu_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['stu_full_name'] ?
-							repoArray[Number(index)]['stu_full_name'] : '-';
+						new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 							repoArray[Number(index)]['stu_sec_name'];
 						obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
@@ -1532,7 +1567,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 							repoArray[Number(index)]['stu_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['stu_full_name'] ?
-							repoArray[Number(index)]['stu_full_name'] : '-';
+						new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 							repoArray[Number(index)]['stu_sec_name'];
 						obj['route_name'] = repoArray[Number(index)]['route_name'] ?

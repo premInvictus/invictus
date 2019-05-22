@@ -142,9 +142,9 @@ export const reportTable = {
 		dataReport: {
 			concession: {
 				tableHeader: 'Fee Concession Report',
-				columnDef: ['srno', 'fcc_name', 'fh_name', 'fcc_class_id', 'fcrt_name',
+				columnDef: ['srno', 'fcc_name', 'fcc_head_type' , 'fh_name', 'fcc_class_id', 'fcrt_name',
 					'fcc_amount'],
-				colunmHeader: ['Sno.', 'Concession Category', 'Fee Head', 'Class', 'Concession Type',
+				colunmHeader: ['Sno.', 'Concession Category', 'Type' , 'Fee Head', 'Class', 'Concession Type',
 					'Concession Amount'],
 			},
 			concessionAlloted: {
