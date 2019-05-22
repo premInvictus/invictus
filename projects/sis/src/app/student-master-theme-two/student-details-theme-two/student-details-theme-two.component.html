@@ -116,7 +116,7 @@
           <div class="row" *ngIf="fieldEnableAtAdmission()">
             <div class="col-4">
               <mat-form-field class="form-field" >
-                <mat-select formControlName="au_class_id" placeholder="Class Applied For" required
+                <mat-select formControlName="au_class_id" [placeholder]="classPlaceHolder" required
                     [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">

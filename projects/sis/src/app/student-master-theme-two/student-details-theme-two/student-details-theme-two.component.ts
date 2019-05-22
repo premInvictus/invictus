@@ -3,8 +3,6 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
-
 
 @Component({
 	selector: 'app-student-details-theme-two',
@@ -19,7 +17,6 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	@ViewChild('cropModal') cropModal;
 	@ViewChild('editReference') editReference;
 	nextEvent = new Subject();
-	// @Input taken from form admission
 	@Output() nextUserEvent: EventEmitter<any> = new EventEmitter<any>();
 	studentdetailsform: FormGroup;
 	studentdetails: any = {};
@@ -53,6 +50,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	deleteMessage = 'Are you sure, you want to delete ?';
 	studentdetailsflag = false;
 	lastRecordId;
+	classPlaceHolder: any;
 	@ViewChild('deleteModal') deleteModal;
 	openDeleteDialog = (data) => {
 		this.deleteModal.openModal(data);
@@ -115,6 +113,12 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		if (localStorage.getItem('id_card_view_last_state')) {
 			this.backOnly = true;
 		}
+		if (this.processtypeService.getProcesstype() === '1' ||
+		this.processtypeService.getProcesstype() === '2') {
+			this.classPlaceHolder = 'Class Applied For';
+		} else {
+			this.classPlaceHolder = 'Class';
+		}
 	}
 	ngOnChanges() {
 		if (localStorage.getItem('remark_entry_last_state')) {
@@ -129,26 +133,6 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		localStorage.removeItem('id_card_view_last_state');
 		localStorage.removeItem('remark_entry_last_state');
 	}
-
-	/* getConfigureSetting() {
-		this.sisService.getConfigureSetting({
-			cos_process_type: this.processtypeService.getProcesstype()
-		}).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.savedSettingsArray = result.data;
-				for (const item of this.savedSettingsArray) {
-					if (item.cos_tb_id === '1') {
-						this.settingsArray.push({
-							cos_tb_id: item.cos_tb_id,
-							cos_ff_id: item.cos_ff_id,
-							cos_status: item.cos_status,
-							ff_field_name: item.ff_field_name
-						});
-					}
-				}
-			}
-		});
-	} */
 	checkIfFieldExist(value) {
 		const findex = this.settingsArray.findIndex(f => f.ff_field_name === value);
 		if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'Y') {
