@@ -249,26 +249,25 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.get('accd_fo_id').valid &&
-			!this.accountsForm.get('accd_fs_id').valid &&
-			!this.accountsForm.get('accd_fcg_id').valid && !this.modeFlag && !this.transportFlag && !this.hostelFlag
+		if (!this.accountsForm.value.accd_fo_id ||
+			!this.accountsForm.value.accd_fs_id ||
+			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
 			this.accountsForm.get('accd_fs_id').markAsDirty();
-			this.accountsForm.get('accd_fcg_id').markAsDirty();
 			this.validateFlag = false;
 		}
 		if (this.transportFlag) {
-			if (!this.accountsForm.get('accd_transport_mode').valid) {
+			if (!this.accountsForm.value.accd_transport_mode) {
 				this.accountsForm.get('accd_transport_mode').markAsDirty();
 				this.validateFlag = false;
 			}
 		}
 		if (this.modeFlag && this.transportFlag) {
-			if (!this.accountsForm.get('accd_tr_id').valid &&
-				!this.accountsForm.get('accd_tsp_id').valid &&
-				!this.accountsForm.get('accd_ts_id').valid &&
-				!this.accountsForm.get('accd_transport_from').valid) {
+			if (!this.accountsForm.value.accd_tr_id ||
+				!this.accountsForm.value.accd_tsp_id ||
+				!this.accountsForm.value.accd_ts_id ||
+				!this.accountsForm.value.accd_transport_from) {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
 				this.accountsForm.get('accd_ts_id').markAsDirty();
@@ -277,7 +276,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.terminationFlag) {
-			if (!this.accountsForm.get('accd_transport_to').valid) {
+			if (!this.accountsForm.value.accd_transport_to) {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				this.validateFlag = false;
 			}
@@ -321,26 +320,25 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.get('accd_fo_id').valid &&
-			!this.accountsForm.get('accd_fs_id').valid &&
-			!this.accountsForm.get('accd_fcg_id').valid && !this.modeFlag && !this.transportFlag && !this.hostelFlag
+		if (!this.accountsForm.value.accd_fo_id ||
+			!this.accountsForm.value.accd_fs_id ||
+			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
 			this.accountsForm.get('accd_fs_id').markAsDirty();
-			this.accountsForm.get('accd_fcg_id').markAsDirty();
 			this.validateFlag = false;
 		}
 		if (this.transportFlag) {
-			if (!this.accountsForm.get('accd_transport_mode').valid) {
+			if (!this.accountsForm.value.accd_transport_mode) {
 				this.accountsForm.get('accd_transport_mode').markAsDirty();
 				this.validateFlag = false;
 			}
 		}
 		if (this.modeFlag && this.transportFlag) {
-			if (!this.accountsForm.get('accd_tr_id').valid &&
-				!this.accountsForm.get('accd_tsp_id').valid &&
-				!this.accountsForm.get('accd_ts_id').valid &&
-				!this.accountsForm.get('accd_transport_from').valid) {
+			if (!this.accountsForm.value.accd_tr_id ||
+				!this.accountsForm.value.accd_tsp_id ||
+				!this.accountsForm.value.accd_ts_id ||
+				!this.accountsForm.value.accd_transport_from) {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
 				this.accountsForm.get('accd_ts_id').markAsDirty();
@@ -349,11 +347,11 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.terminationFlag) {
-			if (!this.accountsForm.get('accd_transport_to').valid) {
+			if (!this.accountsForm.value.accd_transport_to) {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				this.validateFlag = false;
 			}
-		} if (this.validateFlag) {
+		}if (this.validateFlag) {
 			const datePipe = new DatePipe('en-in');
 			let accountJSON = {};
 			accountJSON = {
