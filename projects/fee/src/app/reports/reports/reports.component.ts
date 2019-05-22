@@ -875,7 +875,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
 							obj['au_full_name'] = repoArray[Number(index)]['stu_full_name'] ?
-							new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
+								new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
 							obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 								repoArray[Number(index)]['stu_sec_name'];
 							for (const titem of item['inv_invoice_generated_status']) {
@@ -993,7 +993,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_login_id'] = repoArray[Number(index)]['au_admission_no'] ?
 							repoArray[Number(index)]['au_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['au_full_name'] ?
-						new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						let feePeriod: any = '';
 						for (const period of repoArray[Number(index)]['inv_invoice_generated_status']) {
 							feePeriod = feePeriod + period.fm_name + '<br>';
@@ -1040,7 +1040,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_admission_no'] = repoArray[Number(index)]['au_admission_no'] ?
 							repoArray[Number(index)]['au_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['au_full_name'] ?
-						new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['class_name'] + '-' +
 							repoArray[Number(index)]['sec_name'];
 						obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
@@ -1107,11 +1107,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['class_name'] = item['class_name'] + '-' +
 								item['sec_name'];
 							obj['au_full_name'] = item['au_full_name'] ?
-							new CapitalizePipe().transform(item['au_full_name']) : '-';
+								new CapitalizePipe().transform(item['au_full_name']) : '-';
 							obj['au_admission_no'] = item['au_admission_no'] ?
 								item['au_admission_no'] : '-';
 							obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
 								stu_arr['flgr_particulars'] : '-';
+							obj['flgr_created_date'] = new DatePipe('en-us').transform(stu_arr['flgr_created_date'], 'd-MMM-y');
 							obj['invoice_id'] = stu_arr['flgr_inv_id'] ?
 								stu_arr['flgr_inv_id'] : '-';
 							obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
@@ -1172,7 +1173,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['stu_admission_no'] = repoArray[Number(index)]['au_admission_no'] ?
 							repoArray[Number(index)]['au_admission_no'] : '-';
 						obj['stu_full_name'] = repoArray[Number(index)]['au_full_name'] ?
-						new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						obj['stu_class_name'] = repoArray[Number(index)]['class_name'] + '-' +
 							repoArray[Number(index)]['sec_name'];
 						obj['invoice_no'] = repoArray[Number(index)]['inv_invoice_no'] ?
@@ -1286,7 +1287,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
 							obj['fs_name'] = repoArray[Number(index)]['fs_name'] ?
-							new CapitalizePipe().transform(repoArray[Number(index)]['fs_name']) : 'NA';
+								new CapitalizePipe().transform(repoArray[Number(index)]['fs_name']) : 'NA';
 							obj['class_name'] = item['class_name'] + '-' +
 								item['sec_name'];
 							obj['au_full_name'] = item['au_full_name'] ? new CapitalizePipe().transform(item['au_full_name']) : '-';
@@ -1510,7 +1511,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 							repoArray[Number(index)]['stu_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['stu_full_name'] ?
-						new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 							repoArray[Number(index)]['stu_sec_name'];
 						obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
@@ -1567,7 +1568,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 							repoArray[Number(index)]['stu_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['stu_full_name'] ?
-						new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 							repoArray[Number(index)]['stu_sec_name'];
 						obj['route_name'] = repoArray[Number(index)]['route_name'] ?
