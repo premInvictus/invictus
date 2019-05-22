@@ -1,7 +1,7 @@
 <mat-card class="card-top-title__container ">
   <form [formGroup]="studentdetailsform">
     <div class="row remove-top-margin">
-      <div class="col-2 tab-col-18 remove-col-padding custom-fee-entry-col-15 custom-fee-entry-col-17">
+      <div class="col-2 tab-col-18 remove-col-padding custom-fee-entry-col-15 custom-fee-entry-col-18">
         <div class="row">
           <div class="col-12 text-center">
             <span class="font-light font-size-14">Admission No.</span>
@@ -18,9 +18,9 @@
                 navigate_before
               </i></button>
           </div>
-          <div class="col-4 custom-col-30 text-center">
+          <div class="col-4 custom-col-30 text-center remove-col-padding">
             <mat-form-field class="form-field text-center">
-              <input matInput class="adm-no-student-30" formControlName="au_enrollment_id"
+              <input matInput class="adm-no-student-30 font-size-30" formControlName="au_enrollment_id"
                 (keydown.enter)="loadOnEnrollmentId($event)">
             </mat-form-field>
           </div>
@@ -124,7 +124,7 @@
           </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-10 tab-remove-padding">
+      <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-9 tab-remove-padding">
         <div class="row margin-top-8">
           <div class="col-6 remove-col-padding-right remove-col-padding-left">
             <div *ngIf="student_profile_flag" class=" blue-circle-btn margin-top-5"
