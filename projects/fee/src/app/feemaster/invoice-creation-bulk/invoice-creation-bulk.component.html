@@ -271,7 +271,7 @@
                   </ng-container>
                   <ng-container matColumnDef="action">
                     <th mat-header-cell *matHeaderCellDef> Action </th>
-                    <td mat-cell *matCellDef="let element">
+                    <td mat-cell *matCellDef="let element" class="tab-display-flex">
                       <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('356')" class="material-icons icon-edit"
                         (click)="openDialog(element.inv_id, true)">create</i>
                       <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('355')" class="material-icons icon-danger icon-spacer"
