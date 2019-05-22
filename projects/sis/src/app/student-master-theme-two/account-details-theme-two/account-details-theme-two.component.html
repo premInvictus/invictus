@@ -86,7 +86,7 @@
      <div *ngIf="modeFlag" class="col-3">
         <mat-form-field  class="form-field">
            <input  matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
-           placeholder="Application From" formControlName="accd_transport_from" 
+           placeholder="ApplicableFrom" formControlName="accd_transport_from" 
            [errorStateMatcher]="confirmValidParentMatcher" required
            />
            <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker" [disabled]="viewOnly"></mat-datepicker-toggle>
