@@ -311,6 +311,11 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         flex: 0 0 17% !important;
     }
 
+    .custom-fee-entry-col-18 {
+        max-width: 18% !important;
+        flex: 0 0 18% !important;
+    }
+
     .custom-fee-entry-col-12 {
         max-width: 12% !important;
         flex: 0 0 12% !important;
@@ -334,6 +339,11 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
     .lap-custom-fee-entry-col-10 {
         max-width: 10% !important;
         flex: 0 0 10% !important;
+    }
+
+    .lap-custom-fee-entry-col-9 {
+        max-width: 9% !important;
+        flex: 0 0 9% !important;
     }
     .btn-custom {
         width: 110px !important;
@@ -379,6 +389,69 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
     // align-items: flex-start;
     // justify-content: flex-start;
     // }
+}
+
+@include respond-between(md, lg) {
+    .tab-display-none {
+        display: none !important;
+    }
+    .tab-display-flex {
+        display: inline-flex !important;
+    }
+    .tab-flex {
+        display: flex !important;
+    }
+    .tab-display-contents{
+        display: contents !important;
+    }
+    .tab-col-14 {
+        max-width: 14% !important;
+        flex: 0 0 14% !important;
+    }
+    .tab-col-18 {
+        max-width: 18% !important;
+        flex: 0 0 18% !important;
+    }
+    .tab-remove-padding {
+        padding: 0px !important;
+    }
+    .tab-margin-50{
+        margin-top: 50px;
+    }
+    .mat-drawer-content {
+        position: initial !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        height: 116.5vh !important;
+    }
+    .card-height-600 {
+        min-height: 600px;
+    }
+    
+    
+    .card-height-605 {
+        min-height: 605px;
+    }
+    
+    .card-height-760 {
+        min-height: 760px;
+    }
+    
+    .card-height-810 {
+        min-height: 810px;
+    }
+    
+    .card-height-830 {
+        min-height: 830px;
+    }
+    
+    .card-height-440 {
+        min-height: 440px;
+    }
+    
+    .card-height-677 {
+        min-height: 677px;
+    }
 }
 
 
