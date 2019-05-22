@@ -311,6 +311,11 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         flex: 0 0 17% !important;
     }
 
+    .custom-fee-entry-col-18 {
+        max-width: 18% !important;
+        flex: 0 0 18% !important;
+    }
+
     .custom-fee-entry-col-12 {
         max-width: 12% !important;
         flex: 0 0 12% !important;
@@ -334,6 +339,11 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
     .lap-custom-fee-entry-col-10 {
         max-width: 10% !important;
         flex: 0 0 10% !important;
+    }
+
+    .lap-custom-fee-entry-col-9 {
+        max-width: 9% !important;
+        flex: 0 0 9% !important;
     }
     .btn-custom {
         width: 110px !important;
