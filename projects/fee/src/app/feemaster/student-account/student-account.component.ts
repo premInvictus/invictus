@@ -31,7 +31,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	terminateStatus: any;
 	hostelStatus: any;
 	existFlag = false;
-	slabModel: any = '';
 	hostelTerminateFlag = false;
 	@ViewChild('editModal') editModal;
 	@Input() viewOnly = true;
@@ -59,8 +58,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.getHostelFeeStructures();
 		this.getTransportMode();
 		this.getRoutes();
-		this.getStoppages();
-		this.getSlabs();
 	}
 	ngOnChanges() {
 		if (this.feeLoginId) {
@@ -129,7 +126,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				} else {
 					this.hostelFlag = false;
 				}
-				this.slabModel = this.accountDetails.accd_tsp_id;
+				this.getStoppages(this.accountDetails.accd_tr_id);
+				this.getSlab(this.accountDetails.accd_tsp_id);
 				this.accountsForm.patchValue({
 					accd_id: this.accountDetails.accd_id,
 					accd_login_id: this.accountDetails.accd_login_id,
@@ -224,20 +222,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.feeService.getRoutes({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.routeArray = result.data;
-			}
-		});
-	}
-	getStoppages() {
-		this.feeService.getStoppages({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.stoppageArray = result.data;
-			}
-		});
-	}
-	getSlabs() {
-		this.feeService.getSlabs({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.slabArray = result.data;
 			}
 		});
 	}
@@ -517,7 +501,24 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.editModal.openModal({ data: [this.finalArray], reqParam: [this.reqObj] });
 		}
 	}
+	getStoppages($event) {
+		this.accountsForm.patchValue({
+			accd_tsp_id: '',
+			accd_ts_id: ''
+		});
+		this.stoppageArray = [];
+		this.feeService.getStoppagesPerRoute({tr_id : $event.value}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.stoppageArray = result.data;
+			}
+		});
+	}
 	getSlab($event) {
-		this.slabModel = $event.value;
+		this.slabArray = [];
+		this.feeService.getTransportSlabPerStoppages({tsp_id : $event.value}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.slabArray = result.data;
+			}
+		});
 	}
 }
