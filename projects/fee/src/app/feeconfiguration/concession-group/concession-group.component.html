@@ -81,7 +81,10 @@
                       <ng-container matColumnDef="category">
                         <th mat-header-cell *matHeaderCellDef>Concession Category</th>
                         <td mat-cell *matCellDef="let item">
-                          <p *ngFor="let element of item.con_categories"><b>{{element.fh_name | capitalize}} ( {{element.fcrt_alias}} )</b> : {{element.total_concession | number}}</p>
+                          <ng-container *ngFor="let element of item.con_categories"><b>
+                            {{element.fh_name | capitalize}} ( {{element.fcrt_alias}} )</b>
+                            <div [innerHTML]="getTotalConcession(element.total_concession)"></div>
+                          </ng-container>
                         </td>
                       </ng-container>
 
