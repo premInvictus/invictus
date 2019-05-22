@@ -20,7 +20,6 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 	CONCESSION_GROUP_ELEMENT_DATA: ConGroupElement[] = [];
 	dataSource = new MatTableDataSource<ConGroupElement>(this.CONCESSION_GROUP_ELEMENT_DATA);
 	concessionArray: any[] = [];
-	fcg_is_hostel_fee = 0;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('deleteModal') deleteModal;
@@ -54,7 +53,6 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 		} else {
 			this.conccesionCategoryForm.markAsPristine();
 			this.conccesionCategoryForm.updateValueAndValidity();
-			this.conccesionCategoryForm.value['fcg_is_hostel_fee'] = this.fcg_is_hostel_fee;
 			this.feeService.insertConcessionGroup(this.conccesionCategoryForm.value).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Concession Group Inserted Succesfully', 'success');
@@ -76,7 +74,7 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 	getConcessionGroups() {
 		this.CONCESSION_GROUP_ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<ConGroupElement>(this.CONCESSION_GROUP_ELEMENT_DATA);
-		this.feeService.getConcessionGroup({fcg_is_hostel_fee: this.fcg_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getConcessionGroup({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				let pos = 1;
 				for (const item of result.data) {
@@ -99,7 +97,7 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getConcessionCategories() {
-		this.feeService.getConcessionCategory({fcc_is_hostel_fee: this.fcg_is_hostel_fee}).subscribe((result: any) => {
+		this.feeService.getConcessionCategory({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.concessionArray = result.data;
 			}
@@ -167,7 +165,6 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 				fcg_description: value.fcg_description,
 			};
 		}
-		finalJSon['fcg_is_hostel_fee'] = this.fcg_is_hostel_fee;
 		this.feeService.updateConcessionGroup(finalJSon).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Updated Successfully', 'success');
@@ -183,7 +180,6 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 		} else {
 			this.conccesionCategoryForm.markAsPristine();
 			this.conccesionCategoryForm.updateValueAndValidity();
-			this.conccesionCategoryForm.value['fcg_is_hostel_fee'] = this.fcg_is_hostel_fee;
 			this.feeService.updateConcessionGroup(this.conccesionCategoryForm.value).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Concession Group Updated Succesfully', 'success');
@@ -197,16 +193,5 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 				}
 			});
 		}
-	}
-
-	changeIsHostelFee(event) {
-		if (event.checked) {
-			this.fcg_is_hostel_fee = 1;
-		} else {
-			this.fcg_is_hostel_fee = 0;
-		}
-		this.editFlag = false;
-		this.getConcessionCategories();
-		this.getConcessionGroups();
 	}
 }

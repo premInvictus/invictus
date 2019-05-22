@@ -33,16 +33,6 @@ export class SideNavComponent implements OnInit, OnChanges {
 		this.upperMenu = '<i class=\'fas fa-users\'></i>';
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.user_role_id = this.currentUser.role_id;
-		if (localStorage.getItem('project')) {
-			const url = JSON.parse(localStorage.getItem('project')).pro_url;
-			if (url === 'axiom') {
-				this.projectId = '1';
-			} else if (url === 'sis') {
-				this.projectId = '2';
-			} else if (url === 'fees') {
-				this.projectId = '3';
-			}
-		}
 		this.getUserAccessMenu(this.projectId);
 	}
 

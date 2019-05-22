@@ -22,12 +22,14 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	feeheadArray: any[] = [];
 	ruleArray: any[] = [];
-	classArray: any[] = [];
 	classDataArray: any[] = [];
 	amountPlaceHolder: any = 'Concession';
 	editFlag = false;
 	concessionAmountFlag = true;
-	fcc_is_hostel_fee = 0;
+	feeBifurcationArray: any = [{ fcc_head_type: 'fees', name: 'School' },
+	{ fcc_head_type: 'hostel', name: 'Hostel' },
+	{ fcc_head_type: 'transport', name: 'Transport' }];
+	classArray: any[] = [];
 	constructor(private fbuild: FormBuilder,
 		private feeService: FeeService,
 		private sisService: SisService,
@@ -35,10 +37,10 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 
 	ngOnInit() {
 		this.buildForm();
+		this.getClass();
 		this.getFeeHeads();
 		this.getConcessionRules();
 		this.getConcessionCategory();
-		this.getClassData();
 	}
 	ngAfterViewInit() {
 		this.dataSource.sort = this.sort;
@@ -53,6 +55,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 			fcc_id: '',
 			fcc_name: '',
 			fcc_fh_id: '',
+			fcc_head_type: '',
 			fcc_class_id: [],
 			fcc_fcrt_id: '',
 			fcc_amount: '',
@@ -66,12 +69,20 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		} else {
 			this.conccesionCategoryForm.markAsPristine();
 			this.conccesionCategoryForm.updateValueAndValidity();
-			this.conccesionCategoryForm.value['fcc_is_hostel_fee'] = this.fcc_is_hostel_fee;
 			this.feeService.insertConcessionCategory(this.conccesionCategoryForm.value).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Inserted Successfully', 'success');
 					this.getConcessionCategory();
-					this.conccesionCategoryForm.reset();
+					this.conccesionCategoryForm.patchValue({
+						fcc_id: '',
+						fcc_name: '',
+						fcc_fh_id: '',
+						fcc_class_id: [],
+						fcc_head_type: '',
+						fcc_fcrt_id: '',
+						fcc_amount: '',
+						fcc_status: '1'
+					});
 					this.concessionAmountFlag = true;
 					this.amountPlaceHolder = 'Concession';
 				} else {
@@ -81,21 +92,22 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		}
 	}
 	reset() {
-		this.conccesionCategoryForm.reset();
+		this.conccesionCategoryForm.patchValue({
+			fcc_id: '',
+			fcc_name: '',
+			fcc_fh_id: '',
+			fcc_class_id: [],
+			fcc_fcrt_id: '',
+			fcc_head_type: '',
+			fcc_amount: '',
+			fcc_status: '1'
+		});
 		this.conccesionCategoryForm.markAsPristine();
 		this.conccesionCategoryForm.markAsUntouched();
 		this.conccesionCategoryForm.updateValueAndValidity();
 	}
-	getClass() {
-		this.classArray = [];
-		this.sisService.getClass({ fh_id: this.conccesionCategoryForm.value.fcc_fh_id }).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.classArray = result.data[0].fh_classes;
-			}
-		});
-	}
 	getFeeHeads() {
-		this.feeService.getFeeHeads({ fh_is_hostel_fee: this.fcc_is_hostel_fee }).subscribe((result: any) => {
+		this.feeService.getFeeHeads({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.feeheadArray = result.data;
 			}
@@ -127,7 +139,8 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	getConcessionCategory() {
 		this.CONCESSION_ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<ConCatElement>(this.CONCESSION_ELEMENT_DATA);
-		this.feeService.getConcessionCategory({ fcc_is_hostel_fee: this.fcc_is_hostel_fee }).subscribe((result: any) => {
+		this.feeService.getConcessionCategory({
+		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				let pos = 1;
 				for (const item of result.data) {
@@ -148,7 +161,16 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 				this.dataSource.sort = this.sort;
 			}
-			this.conccesionCategoryForm.reset();
+			this.conccesionCategoryForm.patchValue({
+				fcc_id: '',
+				fcc_name: '',
+				fcc_fh_id: '',
+				fcc_class_id: [],
+				fcc_fcrt_id: '',
+				fcc_head_type: '',
+				fcc_amount: '',
+				fcc_status: '1'
+			});
 		});
 	}
 	getFeeHeadName(id) {
@@ -171,24 +193,6 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 			return '-';
 		}
 	}
-	getClassName(classArray) {
-		let className = '';
-		for (const item of classArray) {
-			for (const titem of this.classDataArray) {
-				if (item === titem.class_id) {
-					className = className + titem.class_name + ',';
-				}
-			}
-		}
-		return className;
-	}
-	getClassData() {
-		this.sisService.getClass({}).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.classDataArray = result.data;
-			}
-		});
-	}
 	changeStatus($event, value: any) {
 		let finalJSon = {};
 		if ($event.checked) {
@@ -200,6 +204,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 				fcc_fh_id: value.fcc_fh_id,
 				fcc_name: value.fcc_name,
 				fcc_amount: value.fcc_amount,
+				fcc_head_type: value.fcc_head_type,
 			};
 		} else {
 			finalJSon = {
@@ -210,9 +215,9 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 				fcc_fh_id: value.fcc_fh_id,
 				fcc_name: value.fcc_name,
 				fcc_amount: value.fcc_amount,
+				fcc_head_type: value.fcc_head_type,
 			};
 		}
-		finalJSon['fh_is_hostel_fee'] = this.fcc_is_hostel_fee;
 		this.feeService.updateConcessionCategory(finalJSon).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Updated Successfully', 'success');
@@ -227,7 +232,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		this.conccesionCategoryForm.patchValue({
 			fcc_fh_id: value.fcc_fh_id
 		});
-		this.getClass();
+		this.patchClassBasedOnFeeHead(value.fcc_fh_id);
 		if (value.fcc_fcrt_id === '4') {
 			this.concessionAmountFlag = false;
 		}
@@ -237,6 +242,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 			fcc_fcrt_id: value.fcc_fcrt_id,
 			fcc_name: value.fcc_name,
 			fcc_amount: value.fcc_amount,
+			fcc_head_type: value.fcc_head_type,
 			fcc_status: value.fcc_status
 		});
 	}
@@ -246,13 +252,20 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		} else {
 			this.conccesionCategoryForm.markAsPristine();
 			this.conccesionCategoryForm.updateValueAndValidity();
-			this.conccesionCategoryForm.value['fcc_is_hostel_fee'] = this.fcc_is_hostel_fee;
 			this.feeService.updateConcessionCategory(this.conccesionCategoryForm.value).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Updated Successfully', 'success');
 					this.getConcessionCategory();
 					this.editFlag = false;
-					this.conccesionCategoryForm.reset();
+					this.conccesionCategoryForm.patchValue({
+						fcc_id: '',
+						fcc_name: '',
+						fcc_fh_id: '',
+						fcc_class_id: [],
+						fcc_fcrt_id: '',
+						fcc_amount: '',
+						fcc_status: '1'
+					});
 					this.concessionAmountFlag = true;
 					this.amountPlaceHolder = 'Concession';
 				} else {
@@ -274,14 +287,53 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 				}
 			});
 	}
-
-	changeIsHostelFee(event) {
-		if (event.checked) {
-			this.fcc_is_hostel_fee = 1;
-		} else {
-			this.fcc_is_hostel_fee = 0;
+	changeType($event) {
+		this.conccesionCategoryForm.patchValue({
+			'fcc_head_type': $event.value
+		});
+		this.editFlag = false;
+	}
+	getClassBasedOnFeeHead($event) {
+		this.classDataArray = [];
+		const findex = this.feeheadArray.findIndex(f => Number(f.fh_id) === Number($event.value));
+		if (findex !== -1) {
+			for (const item of this.feeheadArray[findex].fh_class_amount_detail) {
+				this.classDataArray.push({
+					class_name: item.class_name,
+					class_id: item.class_id,
+				});
+			}
 		}
-		this.getFeeHeads();
-		this.getConcessionCategory();
+	}
+	patchClassBasedOnFeeHead(value) {
+		this.classDataArray = [];
+		const findex = this.feeheadArray.findIndex(f => Number(f.fh_id) === Number(value));
+		if (findex !== -1) {
+			for (const item of this.feeheadArray[findex].fh_class_amount_detail) {
+				this.classDataArray.push({
+					class_name: item.class_name,
+					class_id: item.class_id,
+				});
+			}
+		}
+	}
+	getClass() {
+		this.classArray = [];
+		this.sisService.getClass({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.classArray = result.data;
+			}
+		});
+	}
+	getClassName(classArray) {
+		let className = '';
+		for (const item of classArray) {
+			for (const titem of this.classArray) {
+				if (Number(item) === Number(titem.class_id)) {
+					className = className + titem.class_name + ',';
+				}
+			}
+		}
+		return className;
 	}
 }
