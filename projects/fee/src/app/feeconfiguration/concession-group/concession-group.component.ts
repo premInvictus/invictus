@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, FormGroupDirective, NgForm, FormControl } from 
 import { ConGroupElement } from './concession-group.model';
 import { CommonAPIService, FeeService } from '../../_services/index';
 import { ConfirmValidParentMatcher } from '../../_validationclass/confirmValidParentMatcher.class';
+import { DecimalPipe } from '@angular/common';
 @Component({
 	selector: 'app-concession-group',
 	templateUrl: './concession-group.component.html',
@@ -83,7 +84,7 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 						con_categories: item.fcgr_fcc_id,
 						con_des: item.fcg_description,
 						gr_name: item.fcg_name,
-						totalConcession: this.getTotalConcession(item.fcgr_fcc_id),
+						totalConcession: '',
 						action: item
 					});
 					pos++;
@@ -139,13 +140,6 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 		}
 		return conArray;
 	}
-	getTotalConcession(array) {
-		let sum = 0;
-		for (const item of array) {
-			sum = sum + Number(item.total_concession);
-		}
-		return sum;
-	}
 	changeStatus($event, value: any) {
 		let finalJSon = {};
 		if ($event.checked) {
@@ -192,6 +186,16 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 					this.conccesionCategoryForm.reset();
 				}
 			});
+		}
+	}
+	getTotalConcession(totCon) {
+		if (totCon && totCon.length > 0) {
+			let className = '';
+			for (const item of totCon) {
+				className = className + 'Class ' +  item.class_name + ': ' + new DecimalPipe('en-in').transform(item.total_concession) + ' ,';
+			}
+			className = className.substring(0, className.length - 2);
+			return className;
 		}
 	}
 }
