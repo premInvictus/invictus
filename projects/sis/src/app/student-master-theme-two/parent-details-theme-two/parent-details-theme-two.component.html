@@ -139,7 +139,7 @@
                      <div *ngIf="checkIfFieldExist('epd_parent_nationality')" class="col-6">
                         <mat-form-field class="form-field">
                            <mat-select placeholder="Nationality" [disabled]="viewOnly" formControlName="epd_parent_nationality"
-                           [errorStateMatcher]="confirmValidParentMatcher" required>
+                           [errorStateMatcher]="confirmValidParentMatcher">
                            <mat-option value="">Please Select</mat-option>
                            <mat-option value="91">Indian</mat-option>
                            </mat-select>
