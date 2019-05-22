@@ -98,9 +98,10 @@ export const reportTable = {
 		dataReport: {
 			feeLedger: {
 				tableHeader: 'Fee Ledger Report',
-				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'flgr_particulars',
+				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'flgr_created_date' , 'flgr_particulars',
 					'flgr_invoice_receipt_no', 'flgr_amount', 'flgr_concession', 'flgr_receipt', 'flgr_balance'],
-				colunmHeader: ['SNo', 'Admission No', 'Student Name', 'Class-Section', 'Particulars', 'Invoice/Receipt No', 'Amount Due', 'Concession',
+				colunmHeader: ['SNo', 'Admission No', 'Student Name', 'Class-Section', 'Created Date' ,
+				'Particulars', 'Invoice/Receipt No', 'Amount Due', 'Concession',
 					'Reciept', 'Balance'],
 			}
 		}
@@ -142,9 +143,9 @@ export const reportTable = {
 		dataReport: {
 			concession: {
 				tableHeader: 'Fee Concession Report',
-				columnDef: ['srno', 'fcc_name', 'fh_name', 'fcc_class_id', 'fcrt_name',
+				columnDef: ['srno', 'fcc_name', 'fcc_head_type' , 'fh_name', 'fcc_class_id', 'fcrt_name',
 					'fcc_amount'],
-				colunmHeader: ['Sno.', 'Concession Category', 'Fee Head', 'Class', 'Concession Type',
+				colunmHeader: ['Sno.', 'Concession Category', 'Type' , 'Fee Head', 'Class', 'Concession Type',
 					'Concession Amount'],
 			},
 			concessionAlloted: {

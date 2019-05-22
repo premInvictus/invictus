@@ -133,10 +133,13 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			const url = JSON.parse(localStorage.getItem('project')).pro_url;
 			if (url === 'axiom') {
 				this.defaultProject = 'AXIOM';
+				this.projectId = '1';
 			} else if (url === 'sis') {
 				this.defaultProject = 'Student Information System';
+				this.projectId = '2';
 			} else if (url === 'fees') {
 				this.defaultProject = 'Fee Management';
+				this.projectId = '3';
 			}
 		}
 	}
