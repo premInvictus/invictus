@@ -169,14 +169,14 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		});
 	}
 	getFeeStructures() {
-		this.feeService.getFeeStructure({ fs_is_hostel_fee: 0 }).subscribe((result: any) => {
+		this.feeService.getFeeStructure({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feeStructureArray = result.data;
 			}
 		});
 	}
 	getConGroup() {
-		this.feeService.getConcessionGroup({ fcg_is_hostel_fee: 0 }).subscribe((result: any) => {
+		this.feeService.getConcessionGroup({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.conGroupArray = result.data;
 			}
