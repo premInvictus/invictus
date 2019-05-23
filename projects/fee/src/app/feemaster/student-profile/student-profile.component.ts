@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SisService, CommonAPIService, ProcesstypeService, FeeService } from '../../_services';
+import { SisService, CommonAPIService, ProcesstypeFeeService, FeeService } from '../../_services';
 import { StudentAccountComponent } from '../student-account/student-account.component';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 
@@ -19,7 +19,7 @@ export class StudentProfileComponent implements OnInit {
 	constructor(
 		private sisService: SisService,
 		private commmon: CommonAPIService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public studentRouteMoveStoreService: StudentRouteMoveStoreService
 	) { }
 

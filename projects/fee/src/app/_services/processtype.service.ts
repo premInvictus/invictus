@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
 @Injectable()
-export class ProcesstypeService {
+export class ProcesstypeFeeService {
 		private processType;
 		constructor() {
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { SisService, CommonAPIService, ProcesstypeService, FeeService } from '../../_services';
+import { SisService, CommonAPIService, ProcesstypeFeeService, FeeService } from '../../_services';
 import { Router, ActivatedRoute, NavigationEnd, RouterStateSnapshot } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
@@ -75,7 +75,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		private router: Router,
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public studentRouteMoveStoreService: StudentRouteMoveStoreService) { }
 
 	ngOnInit() {
