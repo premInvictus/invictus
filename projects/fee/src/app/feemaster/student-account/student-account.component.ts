@@ -101,7 +101,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				} else {
 					this.transportFlag = false;
 				}
-				if (this.accountDetails.accd_tr_id === '1') {
+				if (this.accountDetails.accd_tr_id === '1' && this.accountDetails.accd_is_transport === 'Y') {
 					this.modeFlag = true;
 				} else {
 					this.modeFlag = false;
@@ -251,28 +251,24 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 	submit() {
 		let validateFlag = true;
-		if (!this.feeLoginId) {
-			validateFlag = false;
-			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
-		}
-		if (!this.accountsForm.value.accd_fo_id ||
-			!this.accountsForm.value.accd_fs_id ||
+		if (!this.accountsForm.value.accd_fo_id &&
+			!this.accountsForm.value.accd_fs_id &&
 			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
 			this.accountsForm.get('accd_fs_id').markAsDirty();
 			validateFlag = false;
 		}
-		if (this.transportFlag) {
+		if (this.transportFlag && !this.modeFlag) {
 			if (!this.accountsForm.value.accd_transport_mode) {
-				this.accountsForm.get('accd_transport_mode').markAsDirty();
 				validateFlag = false;
+				this.accountsForm.get('accd_transport_mode').markAsDirty();
 			}
 		}
-		if (this.modeFlag && this.transportFlag) {
-			if (!this.accountsForm.value.accd_tr_id ||
-				!this.accountsForm.value.accd_tsp_id ||
-				!this.accountsForm.value.accd_ts_id ||
+		if (this.transportFlag && this.modeFlag) {
+			if (!this.accountsForm.value.accd_tr_id &&
+				!this.accountsForm.value.accd_tsp_id &&
+				!this.accountsForm.value.accd_ts_id &&
 				!this.accountsForm.value.accd_transport_from) {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
@@ -331,24 +327,24 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.value.accd_fo_id ||
-			!this.accountsForm.value.accd_fs_id ||
+		if (!this.accountsForm.value.accd_fo_id &&
+			!this.accountsForm.value.accd_fs_id &&
 			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
 			this.accountsForm.get('accd_fs_id').markAsDirty();
 			validateFlag = false;
 		}
-		if (this.transportFlag) {
+		if (this.transportFlag && !this.modeFlag) {
 			if (!this.accountsForm.value.accd_transport_mode) {
-				this.accountsForm.get('accd_transport_mode').markAsDirty();
 				validateFlag = false;
+				this.accountsForm.get('accd_transport_mode').markAsDirty();
 			}
 		}
-		if (this.modeFlag && this.transportFlag) {
-			if (!this.accountsForm.value.accd_tr_id ||
-				!this.accountsForm.value.accd_tsp_id ||
-				!this.accountsForm.value.accd_ts_id ||
+		if (this.transportFlag && this.modeFlag) {
+			if (!this.accountsForm.value.accd_tr_id &&
+				!this.accountsForm.value.accd_tsp_id &&
+				!this.accountsForm.value.accd_ts_id &&
 				!this.accountsForm.value.accd_transport_from) {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
@@ -362,7 +358,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				validateFlag = false;
 			}
-		} if (validateFlag) {
+		}
+		 if (validateFlag) {
 			const datePipe = new DatePipe('en-in');
 			let accountJSON = {};
 			accountJSON = {
