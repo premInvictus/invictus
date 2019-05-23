@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { CommonAPIService, ProcesstypeFeeService, FeeService } from '../../_services';
+import { CommonAPIService , FeeService } from '../../_services';
 import { DatePipe } from '@angular/common';
 import { ConfirmValidParentMatcher } from '../../_validationclass/confirmValidParentMatcher.class';
 
@@ -44,7 +44,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
 		private commonAPIService: CommonAPIService,
-		public processtypeService: ProcesstypeFeeService
 	) { }
 
 	ngOnInit() {

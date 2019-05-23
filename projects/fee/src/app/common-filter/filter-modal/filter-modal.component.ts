@@ -35,6 +35,7 @@ export class FilterModalComponent implements OnInit {
 	currentFilter: any = {};
 	dropdownArray: any[] = [];
 	filtersItemArray: any[] = [];
+	processType: any = '';
 	fieldApiMapping: any = [
 		{ filterId: 'au_class_id', apiName: 'getClass', fieldId: 'class_id', fieldValue: 'class_name' },
 		{ filterId: 'au_sec_id', apiName: 'getSectionAll', fieldId: 'sec_id', fieldValue: 'sec_name' },
@@ -64,14 +65,9 @@ export class FilterModalComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		console.log(this.data);
-		/* this.generateReportForm.patchValue({
-			filters: this.data.filterResult
-		}); */
 		this.filtersItemArray = this.data.filterResult;
-		console.log('in modal', this.filtersItemArray);
+		this.processType = this.data.process_type;
 		this.buildForm();
-		// this.getFormFieldsForFilter('field');
 		this.getFormFieldsForFilter('filter');
 	}
 	closemodal(): void {
@@ -117,8 +113,6 @@ export class FilterModalComponent implements OnInit {
 				event.previousIndex,
 				event.currentIndex);
 		}
-		console.log(this.availableArray);
-		console.log(this.selectedArray);
 	}
 
 	getFilterFromParent(ff_id) {
@@ -155,20 +149,92 @@ export class FilterModalComponent implements OnInit {
 							if (parentfilter) {
 								this.ELEMENT_DATA.push(parentfilter);
 							} else {
-								this.ELEMENT_DATA.push({
-									ff_id: item.ff_id,
-									ff_field_name: item.ff_field_name,
-									ff_field_type: item.ff_field_type,
-									fieldlabel: item.ff_label,
-									fromto: '',
-									fromtovalue: '',
-									from: '',
-									to: '',
-									equalto: '',
-									discrete: '',
-									discretevalue: '',
-									action: item
-								});
+								if (Number(this.processType) === 1 && (item.ff_field_name !== 'em_provisional_admission_no' &&
+								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
+								item.ff_field_name !== 'em_regd_no')) {
+									this.ELEMENT_DATA.push({
+										ff_id: item.ff_id,
+										ff_field_name: item.ff_field_name,
+										ff_field_type: item.ff_field_type,
+										fieldlabel: item.ff_label,
+										fromto: '',
+										fromtovalue: '',
+										from: '',
+										to: '',
+										equalto: '',
+										discrete: '',
+										discretevalue: '',
+										action: item
+									});
+								} else 	if (Number(this.processType) === 2 && (item.ff_field_name !== 'em_provisional_admission_no' &&
+								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
+								item.ff_field_name !== 'em_enq_no')) {
+									this.ELEMENT_DATA.push({
+										ff_id: item.ff_id,
+										ff_field_name: item.ff_field_name,
+										ff_field_type: item.ff_field_type,
+										fieldlabel: item.ff_label,
+										fromto: '',
+										fromtovalue: '',
+										from: '',
+										to: '',
+										equalto: '',
+										discrete: '',
+										discretevalue: '',
+										action: item
+									});
+								} else 	if (Number(this.processType) === 3 && (item.ff_field_name !== 'em_regd_no' &&
+								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
+								item.ff_field_name !== 'em_enq_no')) {
+									this.ELEMENT_DATA.push({
+										ff_id: item.ff_id,
+										ff_field_name: item.ff_field_name,
+										ff_field_type: item.ff_field_type,
+										fieldlabel: item.ff_label,
+										fromto: '',
+										fromtovalue: '',
+										from: '',
+										to: '',
+										equalto: '',
+										discrete: '',
+										discretevalue: '',
+										action: item
+									});
+								} else 	if (Number(this.processType) === 4 && (item.ff_field_name !== 'em_provisional_admission_no' &&
+								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_regd_no' &&
+								item.ff_field_name !== 'em_enq_no')) {
+									this.ELEMENT_DATA.push({
+										ff_id: item.ff_id,
+										ff_field_name: item.ff_field_name,
+										ff_field_type: item.ff_field_type,
+										fieldlabel: item.ff_label,
+										fromto: '',
+										fromtovalue: '',
+										from: '',
+										to: '',
+										equalto: '',
+										discrete: '',
+										discretevalue: '',
+										action: item
+									});
+								} else 	if (Number(this.processType) === 5 && (item.ff_field_name !== 'em_provisional_admission_no' &&
+								item.ff_field_name !== 'em_regd_no' && item.ff_field_name !== 'em_admission_no' &&
+								item.ff_field_name !== 'em_enq_no')) {
+									this.ELEMENT_DATA.push({
+										ff_id: item.ff_id,
+										ff_field_name: item.ff_field_name,
+										ff_field_type: item.ff_field_type,
+										fieldlabel: item.ff_label,
+										fromto: '',
+										fromtovalue: '',
+										from: '',
+										to: '',
+										equalto: '',
+										discrete: '',
+										discretevalue: '',
+										action: item
+									});
+								}
 							}
 						}
 						this.dataSource = new MatTableDataSource<DynamicReport>(this.ELEMENT_DATA);
@@ -180,7 +246,6 @@ export class FilterModalComponent implements OnInit {
 	}
 
 	filterTwo(currentele) {
-		console.log(currentele);
 		this.currentFilter = currentele;
 		this.currentFilterStatus.ff_field_type = currentele.ff_field_type;
 		this.currentFilterStatus.fieldlabel = currentele.fieldlabel;
@@ -200,7 +265,6 @@ export class FilterModalComponent implements OnInit {
 		if (this.currentFilter.equalto) {
 			this.equalto = this.currentFilter.equalto;
 		}
-		console.log('this.currentFilter', this.currentFilter);
 		this.filterdivtwo = true;
 		this.filterone = false;
 	}
@@ -210,10 +274,8 @@ export class FilterModalComponent implements OnInit {
 		this.filterone = true;
 	}
 	getDropdown(ff_field_name) {
-		console.log(ff_field_name);
 		for (const item of this.fieldApiMapping) {
 			if (item.filterId === ff_field_name) {
-				console.log(item.filterId);
 				this.dropdownArray = [];
 				switch (item.apiName) {
 					case 'getClass':
@@ -424,8 +486,8 @@ export class FilterModalComponent implements OnInit {
 							}
 						});
 						break;
-						case 'getConcessionCategory':
-						this.feeService.getConcessionCategory({fcc_is_hostel_fee: '0'}).subscribe((result: any) => {
+					case 'getConcessionCategory':
+						this.feeService.getConcessionCategory({ fcc_is_hostel_fee: '0' }).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								if (result.data.length > 0) {
 									for (const item1 of result.data) {
@@ -440,7 +502,7 @@ export class FilterModalComponent implements OnInit {
 							}
 						});
 						break;
-						case 'getSlabs':
+					case 'getSlabs':
 						this.feeService.getSlabs({}).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								if (result.data.length > 0) {
@@ -456,7 +518,7 @@ export class FilterModalComponent implements OnInit {
 							}
 						});
 						break;
-						case 'getRoutes':
+					case 'getRoutes':
 						this.feeService.getRoutes({}).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								if (result.data.length > 0) {
@@ -482,11 +544,6 @@ export class FilterModalComponent implements OnInit {
 			this.currentFilter.from = event.target.value;
 		}
 	}
-	/*  fromSelectValue(event) {
-     if (event.value) {
-       this.currentFilter.from = event.value;
-     }
-   } */
 	fromDateValue(event, filtertype) {
 		this.filtertype = filtertype;
 		if (event.target.value) {
@@ -508,14 +565,12 @@ export class FilterModalComponent implements OnInit {
 	equaltoTextValue(event, filtertype) {
 		this.filtertype = filtertype;
 		this.currentFilter.equalto = event.target.value;
-		console.log(event.target.value);
 	}
 	discreteTextValue(event, filtertype) {
 		this.currentFilter.discrete = '';
 		this.filtertype = filtertype;
 		this.currentFilter.discretevalue = event.target.value;
 		this.currentFilter.discrete = event.target.value;
-		console.log(event.target.value);
 	}
 	discreteSelectValue(event, filtertype) {
 		this.currentFilter.discrete = [];
@@ -528,18 +583,9 @@ export class FilterModalComponent implements OnInit {
 				}
 			});
 		});
-		console.log(this.currentFilter);
 	}
-	/* toSelectValue(event) {
-    if (event.value) {
-      this.currentFilter.to = event.value;
-    }
-  } */
 	filterok() {
 		const existi = this.filtersItemArray.findIndex(value => value.ff_field_name === this.currentFilter.ff_field_name);
-		console.log(this.filtersItemArray);
-		console.log(this.currentFilter.ff_field_name);
-		console.log(existi);
 		if (existi !== -1) {
 			this.filtersItemArray.splice(existi, 1);
 		}
@@ -570,7 +616,6 @@ export class FilterModalComponent implements OnInit {
 				descrete_value: this.currentFilter.discretevalue
 			});
 		}
-		console.log(this.filtersItemArray);
 		this.filterdivtwo = false;
 		this.filterone = true;
 	}
@@ -580,8 +625,6 @@ export class FilterModalComponent implements OnInit {
 				filters: this.filtersItemArray
 			});
 		}
-		console.error(this.generateReportForm.value);
-		console.log(this.filterArray);
 		this.dialogRef.close();
 		this.dialogRef.afterClosed().subscribe(() => {
 			this.filterResult.emit(this.filtersItemArray);
@@ -608,7 +651,6 @@ export class FilterModalComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					window.open(result.data, 'Report');
 					this.dropdownArray = [];
-					console.log(result.data);
 				}
 			});
 		} else {
@@ -625,7 +667,6 @@ export class FilterModalComponent implements OnInit {
 		eachFilter.discretevalue = [];
 		const ind = this.filtersItemArray.findIndex(element => element.ff_field_name === eachFilter.ff_field_name);
 		this.filtersItemArray.splice(ind, 1);
-		console.log(this.filtersItemArray);
 	}
 	ResetForm() {
 		this.filtersItemArray = [];

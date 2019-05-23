@@ -35,7 +35,6 @@ export class StudentProfileComponent implements OnInit {
 				this.lastRecordId = data.adm_no;
 				this.loginId = data.login_id;
 			} else {
-				this.processtypeService.setProcesstype('4');
 				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 					if (result.status === 'ok') {
 						this.lastRecordId = result.data[0].last_record;
@@ -45,6 +44,18 @@ export class StudentProfileComponent implements OnInit {
 			}
 
 		});
+	}
+	checkEmit(process_type) {
+		if (process_type) {
+			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				if (result.status === 'ok') {
+					if (result.data[0].last_record && result.data[0].au_login_id) {
+					this.lastRecordId = result.data[0].last_record;
+					this.loginId = result.data[0].au_login_id;
+					}
+				}
+			});
+		}
 	}
 	next(admno) {
 		this.loginId = admno;

@@ -22,6 +22,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	@Output() first2 = new EventEmitter();
 	@Output() last2 = new EventEmitter();
 	@Output() key2 = new EventEmitter();
+	@Output() processTypeEmit = new EventEmitter();
 	studentdetailsform: FormGroup;
 	accountsForm: FormGroup;
 	studentdetails: any = {};
@@ -68,7 +69,13 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	student_profile_flag = true;
 	fee_ledger_flag = true;
 	fee_transaction_entry_individual_flag = true;
-
+	processType: any = '4';
+	processTypeArray: any[] = [
+		{ id: '1', name: 'Enquiry No.' },
+		{ id: '2', name: 'Registration No.' },
+		{ id: '3', name: 'Provisional Admission No.' },
+		{ id: '4', name: 'Admission No.' }
+	];
 	constructor(private fbuild: FormBuilder,
 		private feeService: FeeService,
 		private sisService: SisService,
@@ -79,8 +86,9 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		public studentRouteMoveStoreService: StudentRouteMoveStoreService) { }
 
 	ngOnInit() {
-		this.processtypeService.setProcesstype('4');
 		this.buildForm();
+		this.processtypeService.setProcesstype(this.processType);
+		this.processTypeEmit.emit(this.processType);
 		const currentUrl = this.route.snapshot.routeConfig.path;
 		if (currentUrl !== '') {
 			if (currentUrl === 'invoice-creation-individual') {
@@ -100,9 +108,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	ngOnChanges() {
 		if (this.loginId) {
 			this.studentdetailsflag = true;
+			this.getStudentInformation(this.loginId);
 		}
-		console.log('loginId', this.loginId);
-		this.getStudentInformation(this.loginId);
 	}
 	buildForm() {
 		this.studentdetailsform = this.fbuild.group({
@@ -165,6 +172,18 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 					if (this.processtypeService.getProcesstype() === '4') {
 						this.studentdetailsform.patchValue({
 							au_enrollment_id: this.studentdetails.em_admission_no
+						});
+					} else if (this.processtypeService.getProcesstype() === '2') {
+						this.studentdetailsform.patchValue({
+							au_enrollment_id: this.studentdetails.em_regd_no
+						});
+					} else if (this.processtypeService.getProcesstype() === '1') {
+						this.studentdetailsform.patchValue({
+							au_enrollment_id: this.studentdetails.em_enq_no
+						});
+					} else if (this.processtypeService.getProcesstype() === '3') {
+						this.studentdetailsform.patchValue({
+							au_enrollment_id: this.studentdetails.em_provisional_admission_no
 						});
 					}
 					this.studentdetailsform.patchValue({
@@ -244,5 +263,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.lastFlag = true;
 		this.getStudentDetailsByAdmno(admno);
 		// this.studentRouteMoveStoreService.setRouteStore(admno, null);
+	}
+	changeProcessType($event) {
+		this.processType = $event.value;
+		this.processtypeService.setProcesstype(this.processType);
+		this.processTypeEmit.emit(this.processType);
 	}
 }

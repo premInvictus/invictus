@@ -5,7 +5,7 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl 
 import { MatDialog } from '@angular/material';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { FilterModalComponent } from '../../common-filter/filter-modal/filter-modal.component';
-import { FeeService, CommonAPIService, SisService } from '../../_services/index';
+import { FeeService, CommonAPIService, SisService, ProcesstypeFeeService } from '../../_services/index';
 import { InvoiceElement } from './invoice-element.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
@@ -45,6 +45,14 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	minDueDate = new Date();
 	totalRecords: any;
 	pageEvent: PageEvent;
+	processType: any = '4';
+	processTypeArray: any[] = [
+		{ id: '1', name: 'Enquiry No.' },
+		{ id: '2', name: 'Registration No.' },
+		{ id: '3', name: 'Provisional Admission No.' },
+		{ id: '4', name: 'Admission No.' },
+		{ id: '5', name: 'Alumini No.' }
+	];
 	getClass() {
 		this.classArray = [];
 		this.sisService.getClass({}).subscribe((result: any) => {
@@ -116,12 +124,14 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		public commonAPIService: CommonAPIService,
 		private route: ActivatedRoute,
 		private router: Router,
-		private sisService: SisService
+		private sisService: SisService,
+		private processtypeService: ProcesstypeFeeService
 
 	) { }
 
 	ngOnInit() {
 		localStorage.removeItem('invoiceBulkRecords');
+		this.processtypeService.setProcesstype(this.processType);
 		this.buildForm();
 		this.getCalculationMethods();
 		this.getInvoiceFeeMonths();
@@ -226,7 +236,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		}
 	}
 	recalculateInvoice() {
-		console.log(this.invoiceCreationForm.value);
 	}
 	buildForm() {
 		this.invoiceCreationForm = this.fb.group({
@@ -280,7 +289,8 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			height: '80%',
 			data: {
 				filterResult: this.filterResult,
-				pro_id: '3'
+				pro_id: '3',
+				process_type: this.processType
 			}
 		});
 		dialogRefFilter.afterClosed().subscribe(result => {
@@ -320,7 +330,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		const printParam = {
 			inv_id: this.fetchInvId()
 		};
-		console.log(printParam);
 		if (printParam.inv_id.length > 0) {
 			this.feeService.printInvoice(printParam).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -347,6 +356,11 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	}
 	ngOnDestroy() {
 		localStorage.removeItem('invoiceBulkRecords');
+	}
+	changeProcessType($event) {
+		this.processType = $event.value;
+		this.processtypeService.setProcesstype(this.processType);
+		this.getInvoice(this.invoiceSearchForm.value);
 	}
 
 }
