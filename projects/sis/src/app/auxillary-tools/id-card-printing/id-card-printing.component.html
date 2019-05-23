@@ -161,20 +161,25 @@
       <div *ngIf="radioOne.checked" class="container-box__white">
         <div *ngIf="showIdCard">
           <div class="row">
-            <div *ngIf="idCardSettings?.ps_card_style == '1'" class="col-12">
+            <div *ngIf="idCardSettings?.ps_card_style == '1'" class="col-12"
+            id="card1">
               <app-idcard-style1 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style1>
             </div>
-            <div *ngIf="idCardSettings?.ps_card_style == '2'" class="col-12">
+            <div *ngIf="idCardSettings?.ps_card_style == '2'" class="col-12"
+            id="card2">
               <app-idcard-style2 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style2>
             </div>
-            <div *ngIf="idCardSettings?.ps_card_style == '3'" class="col-12">
+            <div *ngIf="idCardSettings?.ps_card_style == '3'" class="col-12"
+            id="card3">
               <app-idcard-style3 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style3>
             </div>
           </div>
           <div class="row margin-bottom-10">
             <div class="col-12 text-center">
               <a><button *ngIf="isExistUserAccessMenu('260')" mat-raised-button class="btn-setting" (click)="showSettings()">Print Setting</button></a>
-              <button *ngIf="isExistUserAccessMenu('261')" mat-raised-button class="btn-success btn-spacer" [disabled]="dontPrintStatus">Print</button>
+              <button *ngIf="isExistUserAccessMenu('261')" mat-raised-button class="btn-success btn-spacer" 
+              [disabled]="dontPrintStatus"
+              (click)="showPrint()">Print</button>
               <button mat-raised-button class="btn-danger btn-spacer">Reset</button>
             </div>
           </div>

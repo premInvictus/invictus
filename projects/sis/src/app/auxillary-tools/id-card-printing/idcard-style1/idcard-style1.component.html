@@ -1,6 +1,5 @@
 <div class="container-box__white">
   <div >
-    
     <div class="row">
       <div class="col-3"></div>
       <div *ngIf="showLandscape" class="col-6 custom-col-50">
@@ -38,12 +37,12 @@
                   class="id_card_student_info remove-paragraph-bottom-padding"><b>Class - Section :
                   </b>{{studentDetails.class_name}} - {{studentDetails.sec_name}}</p>
                   <p [ngStyle]="{'font-weight':allContentBold}" 
-                  class="id_card_student_info remove-paragraph-bottom-padding"><b>Route & Bus Stop :</b> Delhi
-                    -Noida</p>
+                  class="id_card_student_info remove-paragraph-bottom-padding"><b>Route & Bus Stop :</b>
+                  {{studentDetails.route_name}}- {{studentDetails.stoppages_name}}</p>
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_student_info remove-paragraph-bottom-padding"><b>Mobile no. :</b>{{studentDetails.au_mobile}}</p>
                   <p *ngIf="dobFlag" [ngStyle]="{'font-weight':allContentBold}" 
-                  class="id_card_student_info remove-paragraph-bottom-padding"><b>Date of Birth :</b>{{studentDetails.upd_dob}}</p>
+                  class="id_card_student_info remove-paragraph-bottom-padding"><b>Date of Birth :</b>{{studentDetails.upd_dob | date: 'd-MMM-y'}}</p>
 
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_student_info remove-paragraph-bottom-padding"><b>House :</b> {{studentDetails.hou_house_name}}</p>
@@ -129,8 +128,9 @@
             <div class="row remove-margin">
               <div class="col-12">
                 <p [ngStyle]="{'font-weight':allContentBold}" 
-                class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b> Shakuha jungle,
-                  Karnibagh, Deogarh, Jharkhand - 814112</p>
+                class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b>
+                {{studentDetails.address1}}{{studentDetails.address2}}
+                </p>
                 <p [ngStyle]="{'font-weight':allContentBold}" 
                 class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Disclaimer :</b>
                   Id-Card is school's property. Please return if found.</p>
@@ -195,14 +195,13 @@
                   {{studentDetails.class_name}} - {{studentDetails.sec_name}}</p>
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Route & Bus Stop :</b>
-                    Delhi
-                    -Noida</p>
+                  {{studentDetails.route_name}}- {{studentDetails.stoppages_name}}</p>
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Mobile no. :</b> 
                     {{studentDetails.au_mobile}}</p>
                   <p *ngIf="dobFlag" [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Date of Birth :</b>
-                    {{studentDetails.upd_dob}}</p>
+                    {{studentDetails.upd_dob | date: 'd-MMM-y'}}</p>
 
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>House :</b> 
@@ -286,8 +285,9 @@
               <div class="row remove-margin">
                 <div class="col-12 remove-col-padding">
                   <p  [ngStyle]="{'font-weight':allContentBold}"
-                  class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b> Shakuha jungle,
-                    Karnibagh,- 814112</p>
+                  class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b>
+                  {{studentDetails.address1}}{{studentDetails.address2}}
+                   </p>
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Disclaimer :</b>
                     Id-Card is school's property. Please return if found.</p>
