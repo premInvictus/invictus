@@ -38,7 +38,7 @@
                 <div class="col-12 text-center ">
                     <form>
                         <button *ngIf="editOnly" class="btn-success" mat-raised-button (click)="saveForm()">Submit</button>
-                        <button class="btn-success btn-spacer" mat-raised-button (click)="remainOnSame()"><span *ngIf="addOnly">Save</span> <span *ngIf="editOnly">Update</span> & Continue</button>
+                        <button class="btn-success btn-save-continue btn-spacer" mat-raised-button (click)="remainOnSame()"><span *ngIf="addOnly">Save</span> <span *ngIf="editOnly">Update</span> & Continue</button>
                         <button class="btn-danger  btn-spacer" mat-raised-button (click)="cancelForm()">Cancel</button>
                     </form>
                 </div>

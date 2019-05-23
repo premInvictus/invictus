@@ -67,9 +67,9 @@
   <div class="row">
     <div class="col-12">
     <div class="text-center ">
-        <button *ngIf="addOnly" mat-raised-button class="btn-success" (click)="saveForm()">Save & Continue</button>
+        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save & Continue</button>
         <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
-        <button  *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer" (click)="updateForm(false)">Update & Continue</button>
+        <button  *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer btn-save-continue" (click)="updateForm(false)">Update & Continue</button>
         <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag" (click)="checkFormChangedValue();openEditDialog({data: [finalArray] ,reqParam: params})">Edit & Continue</button>
         <button   *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
   </div>
