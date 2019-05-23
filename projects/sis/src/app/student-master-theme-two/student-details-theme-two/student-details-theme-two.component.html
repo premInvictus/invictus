@@ -15,7 +15,7 @@
           <button mat-fab (click)="openConfig()" *ngIf="isExistUserAccessMenu('config')"> <mat-icon class="btn-top-icon" >build</mat-icon><span class="right-btn-text"> Settings</span></button>
         </div> -->
 <div class="row">
-  <div class="col-2 custom-col-20 tab-custom-col-20 remove-col-padding-right">
+  <!-- <div class="col-2 custom-col-20 tab-custom-col-20 remove-col-padding">
     <div class="container-box__white student-img__container">
       <div class=" student-img">
         <div class="student-pic--parent text-center">
@@ -28,14 +28,14 @@
           <input type="file" placeholder="Upload image" id="image" class="image-upload-btn" (change)="bindImageToForm($event)"[disabled]="viewOnly" >
         </div>
       </div>
-      <div *ngIf="divFlag" class="text-center margin-top-15" [ngClass]="studentdetails?.prevStep?.process_name ? 'grey_back_title':'container-box__white'">
+      <div *ngIf="divFlag" class="text-center margin-top-15" [ngClass]="studentdetails?.prevStep?.process_name ? 'sis-grey_back_title':'container-box__white'">
         <span class="regno-title" *ngIf="studentdetails?.prevStep?.process_name">{{studentdetails.prevStep.process_name}} {{studentdetails.prevStep.process_no}}</span>
       </div>
     </div>
-  </div>
-  <div class="col-10 custom-col-80 tab-custom-col-80 col-padding-left-eight">
+  </div> -->
+  <div class="col-12 custom-col-100 tab-custom-col-80 remove-col-padding">
 
-    <div class="container-box__white student-img__container">
+    <div class="container-box__white sis-student-img__container">
       <div class="row">
         <div class="col-4 custom-col-26">
           <h4 class="text-uppercase"><b>{{belongToForm | capitalize }} Details</b></h4>
@@ -61,17 +61,53 @@
         </div> -->
         </div>
       </div>
-      <br>
-      <div class="row">
-        <div class="col-6 tab-custom-col-50">
-          <div class="row">
-            <div class="col-4 tab-remove-right-padding tab-custom-col-20 text-center">
-              <mat-form-field class="form-field text-center">
-                <input class="text-center" formControlName="au_enrollment_id" matInput [placeholder]="(belongToForm | capitalize) + ' No.'"
-                                [readonly]="!viewOnly" (keydown.enter)="loadOnEnrollmentId($event)">
-              </mat-form-field>
+      <div class="row ">
+          <div class="col-2 remove-col-padding tab-custom-col-50">
+              <div class="container-box__white sis-student-img__container">
+                  <div class=" student-img">
+                    <div class="student-pic--parent text-center">
+                      <label for="image" class="main-label-img">
+                        <img class="student-pic--imgone student-pic__circle sis-student-pic__size"
+                        [src]="defaultsrc">
+                        <img *ngIf="!viewOnly" class="student-pic--imgtwo student-pictwo__size student-pictwo__color"
+                          src="/assets/images/twitpic-symbol.svg">
+                      </label>
+                      <input type="file" placeholder="Upload image" id="image" class="image-upload-btn" (change)="bindImageToForm($event)"[disabled]="viewOnly" >
+                    </div>
+                  </div>
+                  <div *ngIf="divFlag" class="text-center margin-top-15" [ngClass]="studentdetails?.prevStep?.process_name ? 'sis-grey_back_title':'container-box__white'">
+                    <span class="regno-title" *ngIf="studentdetails?.prevStep?.process_name">{{studentdetails.prevStep.process_name}} {{studentdetails.prevStep.process_no}}</span>
+                  </div>
+                </div>
+          </div>
+        <div class="col-3 remove-col-padding tab-custom-col-50">
+          <div class="row remove-top-margin">
+            
+            <div class="col-4  tab-remove-right-padding tab-custom-col-20 text-center">
+                <button mat-raised-button class="nav-btn-icon btn-neutral margin-top-10" [disabled]="firstB" (click)="firstId(navigation_record.first_record)">
+                    <mat-icon class="material-icons" title="First">first_page</mat-icon>
+                  </button>
+                  <button mat-raised-button class="nav-btn-icon btn-neutral" [disabled]="previousB"
+                  (click)="previousId(navigation_record.prev_record)">
+                    <mat-icon class="material-icons" title="Previous">chevron_left</mat-icon>
+                  </button>
             </div>
-            <div class="col-4 tab-custom-col-45 tab-remove-left-right-padding margin-top-10 text-center remove-padding">
+            <div class="col-4  tab-remove-right-padding tab-custom-col-20 text-center">
+                <mat-form-field class="form-field text-center" appearance="outline">
+                  <input class="text-center" formControlName="au_enrollment_id" matInput [placeholder]="(belongToForm | capitalize) + ' No.'"
+                                  [readonly]="!viewOnly" (keydown.enter)="loadOnEnrollmentId($event)">
+                </mat-form-field>
+              </div>
+            <div class="col-4  tab-remove-right-padding tab-custom-col-20 text-center">
+                <button mat-raised-button class="nav-btn-icon btn-neutral margin-top-10" [disabled]="nextB" (click)="nextId(navigation_record.next_record)">
+                    <mat-icon class="material-icons" title="Next">chevron_right</mat-icon>
+                  </button>
+                  <button mat-raised-button class="nav-btn-icon btn-neutral" [disabled]="lastB"
+                  (click)="lastId(navigation_record.last_record)">
+                    <mat-icon class="material-icons" title="Last">last_page</mat-icon>
+                  </button>
+              </div>
+            <!-- <div class="col-8 tab-custom-col-45 tab-remove-left-right-padding margin-top-10 text-center remove-padding">
               <button mat-raised-button class="nav-btn-icon btn-neutral" [disabled]="firstB" (click)="firstId(navigation_record.first_record)">
                 <mat-icon class="material-icons" title="First">first_page</mat-icon>
               </button>
@@ -86,23 +122,31 @@
               (click)="lastId(navigation_record.last_record)">
                 <mat-icon class="material-icons" title="Last">last_page</mat-icon>
               </button>
-            </div>
-            <div class="col-4 tab-remove-left-padding tab-custom-col-33">
-              <div class="blue_back_title text-center">
-                <span class="livadm-text">{{getLiveLabel()}} : {{studentdetails.livecount}}</span>
-              </div>
-            </div>
+            </div> -->
+            
           </div>
-          <div class="row">
+          <div class="row remove-top-margin">
             <div class="col-12">
-              <mat-form-field class="form-field" >
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Full Name</mat-label>
                 <input class="text-capitalize" formControlName="au_full_name" matInput placeholder="Full Name" required [readonly]="viewOnly">
             </mat-form-field>
             </div>
           </div>
-          <div class="row" *ngIf="!fieldEnableAtAdmission()">
-            <div class="col-12">
-                <mat-form-field class="form-field" >
+          
+          <div class="row remove-top-margin">
+          <div class="col-12 tab-remove-left-padding tab-custom-col-33">
+              <div class="sis-blue_back_title text-center">
+                <span class="livadm-text font-size-14">{{getLiveLabel()}} : {{studentdetails.livecount}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-3 remove-col-padding tab-custom-col-50">
+            <div class="row remove-top-margin" *ngIf="fieldEnableAtAdmission()">
+                <div class="col-4">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Class Applied For</mat-label>
                     <mat-select formControlName="au_class_id" placeholder="Class Applied For" required
                         [disabled]="viewOnly">
                         <mat-option value="">Please Select</mat-option>
@@ -111,88 +155,97 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div>
-          </div>
-          <div class="row" *ngIf="fieldEnableAtAdmission()">
-            <div class="col-4">
-              <mat-form-field class="form-field" >
-                <mat-select formControlName="au_class_id" [placeholder]="classPlaceHolder" required
-                    [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                        {{item.class_name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            </div>
-            <div class="col-4">
-              <mat-form-field class="form-field" >
-                <mat-select formControlName="au_sec_id" placeholder="Section" [disabled]="viewOnly">
-                        <mat-option value="">Please Select</mat-option>
-                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
-                        {{item.sec_name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            </div>
-            <div class="col-4">
-              <mat-form-field class="form-field" >
-                <mat-select formControlName="au_hou_id" placeholder="House Name" [disabled]="viewOnly">
-                        <mat-option value="">Please Select</mat-option>
-                    <mat-option *ngFor="let item of houseArray" [value]="item.hou_id">
-                        {{item.hou_house_name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            </div>
-          </div>
-          <div class="row" *ngIf="fieldEnableAtAdmission() && processtypeService.getProcesstype() !== '5' && stopFlag">
-            <div class="col-12">
-              <div class="grey_back_title text-center">
-                <span><b>Route :</b> {{studentdetails.ead_bus_route ? studentdetails.ead_bus_route : '-'}}</span>
-                <span class="btn-spacer"><b>Stoppage :</b> {{studentdetails.ead_pickup_point ? studentdetails.ead_pickup_point: '-'}}</span>
+                </div>
+                <div class="col-4">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Section</mat-label>
+                    <mat-select formControlName="au_sec_id" placeholder="Section" [disabled]="viewOnly">
+                            <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                            {{item.sec_name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>House Name</mat-label>
+                    <mat-select formControlName="au_hou_id" placeholder="House Name" [disabled]="viewOnly">
+                            <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of houseArray" [value]="item.hou_id">
+                            {{item.hou_house_name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                </div>
               </div>
-            </div>
-          </div>
+              <div class="row remove-top-margin" *ngIf="!fieldEnableAtAdmission()">
+                  <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Class Applied Forr</mat-label>
+                          <mat-select formControlName="au_class_id" placeholder="Class Applied For" required
+                              [disabled]="viewOnly">
+                              <mat-option value="">Please Select</mat-option>
+                              <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                  {{item.class_name}}
+                              </mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                  </div>
+                </div>
+              <div class="row remove-top-margin">
+                  <div [ngClass]="studentdetailsform.value.epd_parent_name? 'col-12' : 'col-12 blank-space'">
+                    <mat-form-field  appearance="outline" class="form-field" *ngIf="studentdetailsform.value.epd_parent_name">
+                        <mat-label>Activee Parent Name</mat-label>
+                      <input class="text-capitalize" matInput formControlName="epd_parent_name" placeholder="Active Parent Name" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin" *ngIf="fieldEnableAtAdmission() && processtypeService.getProcesstype() !== '5' && stopFlag">
+                    <div class="col-12">
+                      <div class="sis-grey_back_title text-center">
+                        <span><b>Route :</b> {{studentdetails.ead_bus_route ? studentdetails.ead_bus_route : '-'}}</span>
+                        <span class="btn-spacer"><b>Stoppage :</b> {{studentdetails.ead_pickup_point ? studentdetails.ead_pickup_point: '-'}}</span>
+                      </div>
+                    </div>
+                  </div>
         </div>
-        <div class="col-6" *ngIf="viewOnly">
-          <div class="row">
-            <div [ngClass]="studentdetailsform.value.epd_parent_name? 'col-12' : 'col-12 blank-space'">
-              <mat-form-field class="form-field" *ngIf="studentdetailsform.value.epd_parent_name">
-                <input class="text-capitalize" matInput formControlName="epd_parent_name" placeholder="Active Parent Name" readonly>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
+        <div class="col-4 remove-col-padding" *ngIf="viewOnly">
+          
+          <div class="row remove-top-margin">
             <div [ngClass]="studentdetailsform.value.epd_contact_no? 'col-6' : 'col-6 blank-space'">
-              <mat-form-field *ngIf="studentdetailsform.value.epd_contact_no" class="form-field">
+              <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_contact_no" class="form-field">
+                  <mat-label>Contact No.</mat-label>
                 <input class="margin-left-10" formControlName="epd_contact_no" matInput readonly>
                 <i class="fas fa-phone call-field-icon" matPrefix></i>
               </mat-form-field>
             </div>
             <div [ngClass]="studentdetailsform.value.epd_whatsapp_no? 'col-6' : 'col-6 blank-space'">
-              <mat-form-field *ngIf="studentdetailsform.value.epd_whatsapp_no" class="form-field">
+              <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_whatsapp_no" class="form-field">
+                  <mat-label>WhatsApp No.</mat-label>
                 <input class="margin-left-10" formControlName="epd_whatsapp_no" matInput readonly>
                 <i class="fab fa-whatsapp whatsapp-field-icon" matPrefix></i>
               </mat-form-field>
             </div>
           </div>
-          <div class="row">
+          <div class="row remove-top-margin">
             <div [ngClass]="studentdetailsform.value.mi_emergency_contact_name? 'col-6' : 'col-6 blank-space'">
-              <mat-form-field class="form-field" *ngIf="studentdetailsform.value.mi_emergency_contact_name">
+              <mat-form-field appearance="outline" class="form-field" *ngIf="studentdetailsform.value.mi_emergency_contact_name">
+                  <mat-label>Emergency Contact Name</mat-label>
                 <input class="text-capitalize" formControlName="mi_emergency_contact_name" matInput placeholder="Emergency Contact Name" readonly>
               </mat-form-field>
             </div>
             <div [ngClass]="studentdetailsform.value.mi_emergency_contact_no? 'col-6' : 'col-6 blank-space'">
-              <mat-form-field *ngIf="studentdetailsform.value.mi_emergency_contact_no" class="form-field">
+              <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.mi_emergency_contact_no" class="form-field">
+                  <mat-label>Emergency Contact No</mat-label>
                 <input formControlName="mi_emergency_contact_no" matInput placeholder="Emergency Contact No." readonly>
 
               </mat-form-field>
             </div>
           </div>  
-          <div class="row">
+          <div class="row remove-top-margin">
             <div class="col-12">
-              <div  *ngIf="fieldEnableAtAdmission() && processtypeService.getProcesstype() !== '5'" class="grey_back_title text-center">
+              <div  *ngIf="fieldEnableAtAdmission() && processtypeService.getProcesstype() !== '5'" class="sis-grey_back_title text-center">
                 <span><b>Fees O/S :</b> {{studentdetails.fee_outstanding ? 
                   (studentdetails.fee_outstanding | number): 'NA'}}</span>
                 <span class="btn-spacer"><b>Concession Category :</b> {{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>

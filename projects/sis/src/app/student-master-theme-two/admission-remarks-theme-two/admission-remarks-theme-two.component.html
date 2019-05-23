@@ -17,7 +17,8 @@
                                 <p><input type="hidden" formControlName="equs_id"
                                         value="{{item.controls?.equs_id.value}}">
                                     <label><b>Q.{{i+1}}</b> {{item.controls?.equs_name.value}}</label></p>
-                                <mat-form-field class="form-field">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                            <mat-label>Write You Answer</mat-label>
                                     <textarea matInput placeholder="Write Your Answer" formControlName="eqa_answer"
                                         value="{{item.controls?.eqa_answer.value}}" [readonly]="viewOnly"></textarea>
                                 </mat-form-field>
@@ -46,7 +47,8 @@
                             {{item.controls.equs_name?.value}}</mat-checkbox>
                     </div>
                     <div class="col-6">
-                        <mat-form-field class="form-field">
+                            <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>From Whom</mat-label>
                             <input class="text-capitalize" matInput placeholder="From Whom" formControlName="eqa_answer"
                                 value="{{item.controls.eqa_answer?.value}}" [readonly]="viewOnly">
                         </mat-form-field>
