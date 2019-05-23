@@ -18,17 +18,28 @@
       <mat-card class="margin-top-8 card-height-760 card-height-880">
         <div class="row">
           <div class="col-12 text-right">
-              <div style="display:inline-flex">
+            <div style="display:inline-flex">
               <mat-slide-toggle class="btn-spacer" (change)="advanceSearchToggle()"></mat-slide-toggle>
               <h3 class="font-size-15 margin-top-2 remove-bottom-margin btn-spacer">
-                      <i class="fas fa-search">&nbsp;Advanced Search</i> 
+                <i class="fas fa-search">&nbsp;Advanced Search</i>
               </h3>
-              </div>
+            </div>
           </div>
         </div>
         <div class="row margin-top-20">
           <div class="col-3 remove-col-padding custom-col-20">
             <form [formGroup]="invoiceCreationForm" novalidate>
+              <div class="row">
+                <div class="col-12 remove-col-padding">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Process Type</mat-label>
+                    <mat-select placeholder="Process Type"  [(value)]="processType"
+                      (selectionChange)="changeProcessType($event)">
+                      <mat-option *ngFor="let item of processTypeArray" [value]="item.id">{{item.name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-12 remove-col-padding">
                   <mat-form-field appearance="outline" class="form-field">
@@ -78,8 +89,8 @@
                 <div class="col-12 remove-col-padding">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Last Date</mat-label>
-                    <input matInput [matDatepicker]="picker1" placeholder="Last Date" [min]="minDueDate" formControlName="inv_due_date"
-                      required>
+                    <input matInput [matDatepicker]="picker1" placeholder="Last Date" [min]="minDueDate"
+                      formControlName="inv_due_date" required>
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                   </mat-form-field>
@@ -91,9 +102,11 @@
                 </div>
               </div>
               <div class="text-center margin-top-25 ">
-                <button *ngIf="commonAPIService.isExistUserAccessMenu('353')" mat-raised-button class=" btn-generate-invoice" (click)="insertInvoice()">Generate
+                <button *ngIf="commonAPIService.isExistUserAccessMenu('353')" mat-raised-button
+                  class=" btn-generate-invoice" (click)="insertInvoice()">Generate
                   Invoice</button>
-                  <button mat-raised-button style="margin-left: 10px" class="custom-margin-top-10 print-btn" (click)="reset()">Reset</button>
+                <button mat-raised-button style="margin-left: 10px" class="custom-margin-top-10 print-btn"
+                  (click)="reset()">Reset</button>
               </div>
             </form>
           </div>
@@ -126,9 +139,10 @@
                 <div class="col-1 fee-custom-col-10 col-padding-5">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Class</mat-label>
-                    <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass()" >
+                    <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass()">
                       <mat-option>please Select</mat-option>
-                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                      </mat-option>
                     </mat-select>
 
 
@@ -173,8 +187,8 @@
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Status</mat-label>
                     <mat-select formControlName="status">
-                        <mat-option >Please Select</mat-option>
-                      <mat-option value="paid" >Paid</mat-option>
+                      <mat-option>Please Select</mat-option>
+                      <mat-option value="paid">Paid</mat-option>
                       <mat-option value="unpaid">Unpaid</mat-option>
                     </mat-select>
 
@@ -187,11 +201,14 @@
             </form>
             <div class="row">
               <div class="col-12 remove-col-padding text-right ">
-                <button *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0" mat-raised-button class=" recalulate-invoice-btn btn-spacer"
+                <button *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0"
+                  mat-raised-button class=" recalulate-invoice-btn btn-spacer"
                   (click)="openRecalculateDialog({})">Recalculate</button>
-                <button *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0" mat-raised-button class=" btn-danger btn-spacer"
+                <button *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0"
+                  mat-raised-button class=" btn-danger btn-spacer"
                   (click)="openDeleteDialog(fetchInvId())">Delete</button>
-                <button *ngIf="ELEMENT_DATA.length !== 0" mat-raised-button class=" btn-success btn-spacer" (click)="printInvoice()" >Print</button>
+                <button *ngIf="ELEMENT_DATA.length !== 0" mat-raised-button class=" btn-success btn-spacer"
+                  (click)="printInvoice()">Print</button>
               </div>
             </div>
             <!-- <div class="row">
@@ -233,7 +250,7 @@
                         (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
                         [aria-label]="checkboxLabel(row)" [disabled]="row.selectionDisable">
                       </mat-checkbox>
-                    </td>   
+                    </td>
                   </ng-container>
                   <ng-container matColumnDef="srno">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr. No. </th>
@@ -272,11 +289,13 @@
                   <ng-container matColumnDef="action">
                     <th mat-header-cell *matHeaderCellDef> Action </th>
                     <td mat-cell *matCellDef="let element" class="tab-display-flex">
-                      <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('356')" class="material-icons icon-edit"
-                        (click)="openDialog(element.inv_id, true)">create</i>
-                      <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('355')" class="material-icons icon-danger icon-spacer"
+                      <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('356')"
+                        class="material-icons icon-edit" (click)="openDialog(element.inv_id, true)">create</i>
+                      <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('355')"
+                        class="material-icons icon-danger icon-spacer"
                         (click)="openDeleteDialog([element.inv_id])">delete</i>
-                        <i *ngIf="element.remark" class="material-icons icon-spacer" [matTooltip]="element.remark" >bookmark</i>
+                      <i *ngIf="element.remark" class="material-icons icon-spacer"
+                        [matTooltip]="element.remark">bookmark</i>
                     </td>
                   </ng-container>
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -288,9 +307,8 @@
                 </div>
               </div>
             </div>
-            <mat-paginator #paginator  [pageSize]="invoicepagesize"
-            [pageSizeOptions]="invoicepagesizeoptions" showFirstLastButtons
-              (page)="pageEvent = fetchData($event)"></mat-paginator>
+            <mat-paginator #paginator [pageSize]="invoicepagesize" [pageSizeOptions]="invoicepagesizeoptions"
+              showFirstLastButtons (page)="pageEvent = fetchData($event)"></mat-paginator>
           </div>
         </div>
       </mat-card>
