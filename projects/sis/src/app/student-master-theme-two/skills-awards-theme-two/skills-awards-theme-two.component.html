@@ -2,7 +2,8 @@
     <form [formGroup]="awardsform">
   <div class="row" *ngIf="!viewOnly">
       <div class="col-3" *ngIf="checkIfFieldExist('eaw_activity_name')">
-          <mat-form-field class="form-field">
+            <mat-form-field  class="form-field" appearance="outline">
+                  <mat-label>Activity Name</mat-label>
              <mat-select placeholder="Activity Name" [disabled]="viewOnly" formControlName="eaw_activity_name"
                 required [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option>Please Select</mat-option>
@@ -14,7 +15,8 @@
           </mat-form-field>
        </div>
        <div class="col-3" *ngIf="checkIfFieldExist('eaw_level_of_interest')">
-          <mat-form-field class="form-field">
+            <mat-form-field  class="form-field" appearance="outline">
+                  <mat-label>Level of Interest</mat-label>
              <mat-select placeholder="Level of Interest" [disabled]="viewOnly" formControlName="eaw_level_of_interest"
                 required [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option>Please Select</mat-option>
@@ -26,7 +28,8 @@
           </mat-form-field>
        </div>
        <div class="col-3" *ngIf="checkIfFieldExist('eaw_authority')">
-          <mat-form-field class="form-field">
+            <mat-form-field  class="form-field" appearance="outline">
+                  <mat-label>Awarding Authority</mat-label>
              <mat-select placeholder="Awarding Authority" [disabled]="viewOnly" formControlName="eaw_authority"
                 required [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option>Please Select</mat-option>
@@ -38,7 +41,8 @@
           </mat-form-field>
        </div>
        <div class="col-3" *ngIf="checkIfFieldExist('eaw_event_level')">
-          <mat-form-field class="form-field">
+            <mat-form-field  class="form-field" appearance="outline">
+                  <mat-label>Event Level</mat-label>
              <mat-select placeholder="Event Level" formControlName="eaw_event_level" required [disabled]="viewOnly"
                 [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option>Please Select</mat-option>
@@ -52,7 +56,8 @@
   </div>
   <div *ngIf="!viewOnly" class="row">
     <div class="col-9">
-        <mat-form-field class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Remarks</mat-label>
             <input (keyup)="capitalizeRemarks($event)" matInput placeholder="Remarks (eg. Excellent)" [readonly]="viewOnly" formControlName="eaw_teacher_remark"
                required [errorStateMatcher]="confirmValidParentMatcher">
             <mat-error>

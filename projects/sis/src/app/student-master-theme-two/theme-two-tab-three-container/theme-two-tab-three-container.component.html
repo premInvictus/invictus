@@ -34,9 +34,8 @@
                 </div>
             </div>
             <br>
-            <br>
             <div class="row" *ngIf="!viewOnly">
-                <div class="col-12 text-center margin-bottom-65">
+                <div class="col-12 text-center ">
                     <form>
                         <button *ngIf="editOnly" class="btn-success" mat-raised-button (click)="saveForm()">Submit</button>
                         <button class="btn-success btn-spacer" mat-raised-button (click)="remainOnSame()"><span *ngIf="addOnly">Save</span> <span *ngIf="editOnly">Update</span> & Continue</button>
@@ -45,7 +44,5 @@
                 </div>
     
             </div>
-            <br>
-            <br>
         </div>
     </div>

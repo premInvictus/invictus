@@ -1,7 +1,7 @@
-<div class="container-box__grey">
-  <div class="container-box__white">
+<div class="fee-container-box__grey">
+  <div>
     <div class="row">
-      <div class="col-3">
+      <div class="col-3 remove-col-padding">
         <mat-card class="card-zoom">
           <div class="row">
 
@@ -17,7 +17,7 @@
           </div>
         </mat-card>
       </div>
-      <div class="col-3">
+      <div class="col-3 remove-col-padding-right">
         <mat-card class="card-zoom">
           <div class="row">
 
@@ -32,7 +32,7 @@
           </div>
         </mat-card>
       </div>
-      <div class="col-3">
+      <div class="col-3 remove-col-padding-right">
         <mat-card class="card-zoom">
           <div class="row">
 
@@ -49,7 +49,7 @@
           </div>
         </mat-card>
       </div>
-      <div class="col-3">
+      <div class="col-3 remove-col-padding-right">
         <mat-card class="card-zoom">
           <div class="row">
             <div class="col-9 custom-col-70 tab-custom-col-60">
@@ -70,8 +70,8 @@
     </div>
     <br>
     <div class="row">
-      <div class="col-3">
-        <div class="mat-elevation-z8 strength-padding height-100">
+      <div class="col-3 remove-col-padding ">
+        <div class="strength-padding height-100 background-white">
           <div class="row margin-bottom-10 margin-top-10">
             <div class="col-12">
               <h6><b>Total Strength</b></h6>
@@ -153,25 +153,25 @@
           </div>
         </div>
       </div>
-      <div class="col-9">
-        <div class="container-outline__dashyellow graph-container-height">
+      <div class="col-9 remove-col-padding-right">
+        <div class="container-outline__dashyellow background-white graph-container-height">
 
         </div>
         <br>
         <div class="row">
-            <div class="col-6">
-              <div class="mat-elevation-z8 strength-padding notif-container-height table-overflow">
-                <div class="row margin-bottom-10 margin-top-10">
-                  <div class="col-12">
-                    <h6><b>Today's Birthday</b></h6>
-                  </div>
+          <div class="col-6 remove-col-padding">
+            <div class="background-white strength-padding notif-container-height table-overflow">
+              <div class="row margin-bottom-10 margin-top-10">
+                <div class="col-12">
+                  <h6><b>Today's Birthday</b></h6>
                 </div>
-                <div class="row">
-                  <div class="col-12">
-      
-      
-                    <div class="">
-                      <!-- <table mat-table [dataSource]="dataSourceTwo" class="table-100">
+              </div>
+              <div class="row">
+                <div class="col-12">
+
+
+                  <div class="">
+                    <!-- <table mat-table [dataSource]="dataSourceTwo" class="table-100">
       
       
                         <ng-container matColumnDef="birthday">
@@ -205,63 +205,63 @@
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsTwo"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsTwo;"></tr>
                       </table> -->
-                      <table class="table table-borderd table-stripped custom-table">
-                        <thead class="table-skill__head text-center">
-                          <tr class="custom-tr">
-                            <th class="custom-th">Birthday</th>
-                            <th class="custom-th">Student Name</th>
-                            <th class="custom-th">Class</th>
-                            <th class="custom-th">Section</th>
-                          </tr>
-                        </thead>
-                        <tbody class="table-skill__body text-center" *ngIf="studentBirthdayDashboard?.length > 0 ">
-                          <tr class="custom-tr" *ngFor="let item of studentBirthdayDashboard;let i=index">
-                            <td class="custom-td">
-                              <span *ngIf="item?.em_admission_date">{{item?.em_admission_date | date:'d-MMM-y'}}</span>
-                              <span *ngIf="!(item?.em_admission_date)">N/A</span>
-                            </td>
-                            <td class="custom-td">
-                              <span *ngIf="item?.au_full_name">{{item?.au_full_name}}</span>
-                              <span *ngIf="!(item?.au_full_name)">N/A</span>
-                            </td>
-                            <td class="custom-td">
-                              <span *ngIf="item?.class_name">{{item?.class_name}}</span>
-                              <span *ngIf="!(item?.class_name)">N/A</span>
-                            </td>
-                            <td class="custom-td">
-                              <span *ngIf="item?.sec_name">{{item?.sec_name}}</span>
-                              <span *ngIf="!(item?.sec_name)">N/A</span>
-                            </td>
-                          </tr>
-                        </tbody>
-                        <tbody *ngIf="!(studentBirthdayDashboard?.length > 0) ">
-                          <tr>
-                            <td colspan="6" class="text-center">No Record Found</td>
-                          </tr>
-                        </tbody>
-                      </table>
-      
-      
-                    </div>
+                    <table class="table table-borderd table-stripped custom-table">
+                      <thead class="table-skill__head text-center">
+                        <tr class="custom-tr">
+                          <th class="custom-th">Birthday</th>
+                          <th class="custom-th">Student Name</th>
+                          <th class="custom-th">Class</th>
+                          <th class="custom-th">Section</th>
+                        </tr>
+                      </thead>
+                      <tbody class="table-skill__body text-center" *ngIf="studentBirthdayDashboard?.length > 0 ">
+                        <tr class="custom-tr" *ngFor="let item of studentBirthdayDashboard;let i=index">
+                          <td class="custom-td">
+                            <span *ngIf="item?.em_admission_date">{{item?.em_admission_date | date:'d-MMM-y'}}</span>
+                            <span *ngIf="!(item?.em_admission_date)">N/A</span>
+                          </td>
+                          <td class="custom-td">
+                            <span *ngIf="item?.au_full_name">{{item?.au_full_name}}</span>
+                            <span *ngIf="!(item?.au_full_name)">N/A</span>
+                          </td>
+                          <td class="custom-td">
+                            <span *ngIf="item?.class_name">{{item?.class_name}}</span>
+                            <span *ngIf="!(item?.class_name)">N/A</span>
+                          </td>
+                          <td class="custom-td">
+                            <span *ngIf="item?.sec_name">{{item?.sec_name}}</span>
+                            <span *ngIf="!(item?.sec_name)">N/A</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tbody *ngIf="!(studentBirthdayDashboard?.length > 0) ">
+                        <tr>
+                          <td colspan="6" class="text-center">No Record Found</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-6">
-              <div class="">
-                <div class="mat-elevation-z8 strength-padding notif-container-height table-overflow">
-                  <div class="row margin-bottom-10 margin-top-10">
-                    <div class="col-12">
-                      <h6><b>Message Notifications</b></h6>
-                    </div>
+          </div>
+          <div class="col-6">
+            <div class="background-white">
+              <div class="strength-padding notif-container-height table-overflow">
+                <div class="row margin-bottom-10 margin-top-10">
+                  <div class="col-12">
+                    <h6><b>Message Notifications</b></h6>
                   </div>
-                  <div>
-                    <div class="row">
-                      <div class="col-12">
-      
-      
-                        <div>
-                          <!-- <table mat-table [dataSource]="dataSourceThree" class="table-100">
+                </div>
+                <div>
+                  <div class="row">
+                    <div class="col-12">
+
+
+                      <div>
+                        <!-- <table mat-table [dataSource]="dataSourceThree" class="table-100">
       
       
                             <ng-container matColumnDef="srno">
@@ -292,54 +292,54 @@
                             <tr mat-header-row *matHeaderRowDef="displayedColumnsThree"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumnsThree;"></tr>
                           </table> -->
-                          <table class="table table-borderd table-stripped custom-table">
-                            <thead class="table-skill__head text-center">
-                              <tr class="custom-tr">
-                                <th class="custom-th">S.No.</th>
-                                <th class="custom-th">Title</th>
-                                <th class="custom-th">Date</th>
-                                <th class="custom-th">Time</th>
-                              </tr>
-                            </thead>
-                            <tbody class="table-skill__body text-center" *ngIf="notificationsDashboard?.length > 0 ">
-                              <tr class="custom-tr" *ngFor="let item of notificationsDashboard | slice:0:5;let i=index">
-                                <td class="custom-td">{{i+1}}</td>
-                                <td class="custom-td">
-                                  <span *ngIf="item?.ns_title">{{item?.ns_title}}</span>  
-                                  <span *ngIf="!(item?.ns_title)">N/A</span>  
-                                </td>
-                                <td class="custom-td">
-                                  <span *ngIf="item?.ns_schedule_date">{{item?.ns_schedule_date | date: 'd-MMM-y'}}</span>   
-                                  <span *ngIf="!(item?.ns_schedule_date)">N/A</span>
-                                </td>
-                                <td class="custom-td">
-                                  <span *ngIf="item?.ns_schedule_time">{{item?.ns_schedule_time}}</span>   
-                                  <span *ngIf="!(item?.ns_schedule_time)">N/A</span>
-                                </td>
-                              </tr>
-                            </tbody>
-                            <tbody *ngIf="!(notificationsDashboard?.length > 0) ">
-                              <tr>
-                                <td colspan="6" class="text-center">No Record Found</td>
-                              </tr>
-                            </tbody>
-                          </table>
-      
-      
-      
-                        </div>
+                        <table class="table table-borderd table-stripped custom-table">
+                          <thead class="table-skill__head text-center">
+                            <tr class="custom-tr">
+                              <th class="custom-th">S.No.</th>
+                              <th class="custom-th">Title</th>
+                              <th class="custom-th">Date</th>
+                              <th class="custom-th">Time</th>
+                            </tr>
+                          </thead>
+                          <tbody class="table-skill__body text-center" *ngIf="notificationsDashboard?.length > 0 ">
+                            <tr class="custom-tr" *ngFor="let item of notificationsDashboard | slice:0:5;let i=index">
+                              <td class="custom-td">{{i+1}}</td>
+                              <td class="custom-td">
+                                <span *ngIf="item?.ns_title">{{item?.ns_title}}</span>
+                                <span *ngIf="!(item?.ns_title)">N/A</span>
+                              </td>
+                              <td class="custom-td">
+                                <span *ngIf="item?.ns_schedule_date">{{item?.ns_schedule_date | date: 'd-MMM-y'}}</span>
+                                <span *ngIf="!(item?.ns_schedule_date)">N/A</span>
+                              </td>
+                              <td class="custom-td">
+                                <span *ngIf="item?.ns_schedule_time">{{item?.ns_schedule_time}}</span>
+                                <span *ngIf="!(item?.ns_schedule_time)">N/A</span>
+                              </td>
+                            </tr>
+                          </tbody>
+                          <tbody *ngIf="!(notificationsDashboard?.length > 0) ">
+                            <tr>
+                              <td colspan="6" class="text-center">No Record Found</td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+
+
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-      
           </div>
+
+        </div>
       </div>
     </div>
     <br>
-    
+
     <br>
     <br>
 

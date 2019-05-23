@@ -1,10 +1,11 @@
 <div class="padding-15">
   <form [formGroup]="baseform" novalidate>
     <div class="row">
-      <div class="col-12">
-        <div class="row">
+      <div class="col-12 remove-col-padding">
+        <div class="row remove-top-margin">
           <div class="col-3" *ngIf="checkIfFieldExist('upd_dob')">
-            <mat-form-field class="form-field">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Date of Birth</mat-label>
               <input formControlName="upd_dob" [max]="dobDate" matInput [matDatepicker]="picker"
                 placeholder="Date of birth" required [readonly]="viewOnly"
                 [errorStateMatcher]="confirmValidParentMatcher">
@@ -16,7 +17,8 @@
             </mat-form-field>
           </div>
           <div class="col-3" *ngIf="checkIfFieldExist('upd_doj')">
-            <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Date of Joining</mat-label>
               <input formControlName="upd_doj" [max]="maxDate" matInput [matDatepicker]="picker1"
                 [placeholder]="datePlaceHolder" required [readonly]="viewOnly"
                 [errorStateMatcher]="confirmValidParentMatcher">
@@ -28,7 +30,8 @@
             </mat-form-field>
           </div>
           <div class="col-3" *ngIf="checkIfFieldExist('upd_gender')">
-            <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Gender</mat-label>
               <mat-select placeholder="Gender" formControlName="upd_gender" required [disabled]="viewOnly"
                 [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option>Please Select</mat-option>
@@ -42,7 +45,8 @@
             </mat-form-field>
           </div>
           <div class="col-3" *ngIf="checkIfFieldExist('upd_category')">
-            <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Category</mat-label>
               <mat-select placeholder="Category" formControlName="upd_category" required [disabled]="viewOnly"
                 [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option>Please Select</mat-option>
@@ -58,11 +62,12 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="row">
+    <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+        <div class="row remove-top-margin">
           <div class="col-3" *ngIf="checkIfFieldExist('upd_religion_id')">
-            <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Religion</mat-label>
               <mat-select formControlName="upd_religion_id" placeholder="Religion" required [disabled]="viewOnly"
                 [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option>Please Select</mat-option>
@@ -76,7 +81,8 @@
             </mat-form-field>
           </div>
           <div class="col-3" *ngIf="checkIfFieldExist('upd_mt_id')">
-            <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Mother Tongue</mat-label>
               <mat-select formControlName="upd_mt_id" placeholder="Mother Tongue" required [disabled]="viewOnly"
                 [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option>Please Select</mat-option>
@@ -90,7 +96,8 @@
             </mat-form-field>
           </div>
           <div class="col-3" *ngIf="checkIfFieldExist('upd_nationality')">
-            <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Nationality</mat-label>
               <mat-select placeholder="Nationality" formControlName="upd_nationality" required [disabled]="viewOnly"
                 [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option>Please Select</mat-option>
@@ -104,7 +111,8 @@
             </mat-form-field>
           </div>
           <div class="col-3" *ngIf="checkIfFieldExist('upd_aadhaar_no')">
-            <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Aadhar No.</mat-label>
               <input formControlName="upd_aadhaar_no" mask="0000 0000 0000" minlength="12" maxlength="14" matInput
                 placeholder="Aadhaar No." [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
@@ -116,20 +124,20 @@
       </div>
     </div>
   </form>
-  <br>
-  <div class="row">
+  <div class="row remove-top-margin">
     <div class="col-12">
-      <div *ngIf="!(paddressform?.value?.ea_same_residential_address)" class="row">
-        <div class="col-12">
+      <div *ngIf="!(paddressform?.value?.ea_same_residential_address)" class="row remove-top-margin">
+        <div class="col-12 remove-col-padding">
           <form [formGroup]="paddressform" novalidate>
-            <div class="row">
-              <div class="col-12 text-center">
+            <div class="row remove-top-margin">
+              <div class="col-12  text-center">
                 <span class="text-uppercase"><b>Permanent Address</b></span>
               </div>
             </div>
             <div class="row">
-              <div class="col-12" *ngIf="checkIfFieldExist('ea_address1')">
-                <mat-form-field class="form-field ">
+              <div class="col-12 remove-col-padding" *ngIf="checkIfFieldExist('ea_address1')">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Address</mat-label>
                   <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address" required
                     [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
                   <mat-error>
@@ -138,9 +146,10 @@
                 </mat-form-field>
               </div>
             </div>
-            <div class="row">
-              <div class="col-3" *ngIf="checkIfFieldExist('ea_city')">
-                <mat-form-field class="form-field">
+            <div class="row remove-top-margin">
+              <div class="col-3 remove-col-padding-left" *ngIf="checkIfFieldExist('ea_city')">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>City</mat-label>
                   <input type="text" matInput placeholder="City" formControlName="ea_city" required
                     [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
                     (keyup)="filterCityStateCountry($event)">
@@ -157,7 +166,8 @@
                 </mat-form-field>
               </div>
               <div class="col-3" *ngIf="checkIfFieldExist('ea_state')">
-                <mat-form-field class="form-field">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>State</mat-label>
                   <mat-select formControlName="ea_state" placeholder="State" required disabled="true"
                     [errorStateMatcher]="confirmValidParentMatcher">
                     <mat-option value="">Please Select</mat-option>
@@ -171,7 +181,8 @@
                 </mat-form-field>
               </div>
               <div class="col-3" *ngIf="checkIfFieldExist('ea_country')">
-                <mat-form-field class="form-field">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Country</mat-label>
                   <mat-select formControlName="ea_country" placeholder="Country" required disabled="true"
                     [errorStateMatcher]="confirmValidParentMatcher">
                     <mat-option value="">Please Select</mat-option>
@@ -184,8 +195,9 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-3" *ngIf="checkIfFieldExist('ea_pincode')">
-                <mat-form-field class="form-field">
+              <div class="col-3 remove-col-padding-right" *ngIf="checkIfFieldExist('ea_pincode')">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Pin Code</mat-label>
                   <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
                     placeholder="PIN" required [readonly]="viewOnly"
                     [errorStateMatcher]="confirmValidParentMatcher" />
@@ -215,7 +227,7 @@
         </div>
       </div>
       <div *ngIf="paddressform?.value?.ea_same_residential_address" class="row">
-        <div class="col-6 col-custom-49 vertical-line-1">
+        <div class="col-6 remove-col-padding-left col-custom-49 vertical-line-1">
           <form [formGroup]="paddressform" novalidate>
             <div class="row">
               <div class="col-12 text-center">
@@ -223,8 +235,9 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-12" *ngIf="checkIfFieldExist('ea_address1')">
-                <mat-form-field class="form-field ">
+              <div class="col-12 remove-col-padding-left" *ngIf="checkIfFieldExist('ea_address1')">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label><Address></Address></mat-label>
                   <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address" required
                     [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
                   <mat-error>
@@ -232,8 +245,9 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-6" *ngIf="checkIfFieldExist('ea_city')">
-                <mat-form-field class="form-field">
+              <div class="col-6 remove-col-padding-left" *ngIf="checkIfFieldExist('ea_city')">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>City</mat-label>
                   <input type="text" matInput placeholder="City" formControlName="ea_city" required
                     [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
                     (keyup)="filterCityStateCountry($event)">
@@ -248,7 +262,8 @@
                 </mat-form-field>
               </div>
               <div class="col-6" *ngIf="checkIfFieldExist('ea_state')">
-                <mat-form-field class="form-field">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>State</mat-label>
                   <mat-select formControlName="ea_state" placeholder="State" required disabled="true"
                     [errorStateMatcher]="confirmValidParentMatcher">
                     <mat-option>Please Select</mat-option>
@@ -261,8 +276,9 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-6" *ngIf="checkIfFieldExist('ea_country')">
-                <mat-form-field class="form-field">
+              <div class="col-6 remove-col-padding-left" *ngIf="checkIfFieldExist('ea_country')">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Country</mat-label>
                   <mat-select formControlName="ea_country" placeholder="Country" required disabled="true"
                     [errorStateMatcher]="confirmValidParentMatcher">
                     <mat-option>Please Select</mat-option>
@@ -276,7 +292,8 @@
                 </mat-form-field>
               </div>
               <div class="col-6" *ngIf="checkIfFieldExist('ea_pincode')">
-                <mat-form-field class="form-field">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Pin Code</mat-label>
                   <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
                     placeholder="Zip/Pin Code" required [readonly]="viewOnly"
                     [errorStateMatcher]="confirmValidParentMatcher" />
@@ -300,16 +317,17 @@
           </form>
         </div>
         <!-- <div class="vertical-line"></div> -->
-        <div class="col-6 col-custom-49">
+        <div class="col-6 remove-col-padding-right col-custom-49">
           <form [formGroup]="raddressform" novalidate>
             <div class="row">
-              <div class="col-12 text-center">
+              <div class="col-12 remove-col-padding-right text-center">
                 <span class="text-uppercase"><b>Correspondence Address</b></span>
               </div>
             </div>
             <div class="row">
-              <div class="col-12" *ngIf="checkIfFieldExist('ea_address1')">
-                <mat-form-field class="form-field ">
+              <div class="col-12 remove-col-padding-right" *ngIf="checkIfFieldExist('ea_address1')">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Address</mat-label>
                   <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address" required
                     [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
                   <mat-error>
@@ -317,8 +335,9 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-6" *ngIf="checkIfFieldExist('ea_city')">
-                <mat-form-field class="form-field">
+              <div class="col-6 " *ngIf="checkIfFieldExist('ea_city')">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>City</mat-label>
                   <input type="text" matInput placeholder="City" formControlName="ea_city" required
                     [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
                     (keyup)="filterCityStateCountry($event)">
@@ -332,8 +351,9 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-6" *ngIf="checkIfFieldExist('ea_state')">
-                <mat-form-field class="form-field">
+              <div class="col-6 remove-col-padding-right" *ngIf="checkIfFieldExist('ea_state')">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>State</mat-label>
                   <mat-select formControlName="ea_state" placeholder="State" required disabled="true"
                     [errorStateMatcher]="confirmValidParentMatcher">
                     <mat-option value="">Please Select</mat-option>
@@ -347,7 +367,8 @@
                 </mat-form-field>
               </div>
               <div class="col-6" *ngIf="checkIfFieldExist('ea_country')">
-                <mat-form-field class="form-field">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Country</mat-label>
                   <mat-select formControlName="ea_country" placeholder="Country" required disabled="true"
                     [errorStateMatcher]="confirmValidParentMatcher">
                     <mat-option value="">Please Select</mat-option>
@@ -360,8 +381,9 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-6" *ngIf="checkIfFieldExist('ea_pincode')">
-                <mat-form-field class="form-field">
+              <div class="col-6 remove-col-padding-right" *ngIf="checkIfFieldExist('ea_pincode')">
+                  <mat-form-field class="form-field " appearance="outline">
+                      <mat-label>Pin Code</mat-label>
                   <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
                     placeholder="Zip/Pin Code" required [readonly]="viewOnly"
                     [errorStateMatcher]="confirmValidParentMatcher" />
@@ -397,7 +419,8 @@
       <div class="row" *ngIf="!viewOnly">
 
         <div class="col-2" *ngIf="checkIfFieldExist('esd_admission_no')">
-          <mat-form-field class="form-field">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Admission No</mat-label>
             <input class="text-capitalize" #admission_no matInput placeholder="Admission No."
               formControlName="esd_admission_no" (blur)="getSiblingDetails(admission_no.value)" />
             <mat-error>
@@ -406,7 +429,8 @@
           </mat-form-field>
         </div>
         <div class="col-2" *ngIf="checkIfFieldExist('esd_name')">
-          <mat-form-field class="form-field">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Name</mat-label>
             <input class="text-capitalize" matInput placeholder="Name" formControlName="esd_name"
               [errorStateMatcher]="confirmValidParentMatcher" required />
             <mat-error>
@@ -415,7 +439,8 @@
           </mat-form-field>
         </div>
         <div class="col-1" *ngIf="checkIfFieldExist('esd_class')">
-          <mat-form-field class="form-field">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Class</mat-label>
             <mat-select placeholder="Class" [disabled]="checkReadOnlyStatus" (selectionChange)="getSectionsByClass()"
               [errorStateMatcher]="confirmValidParentMatcher" formControlName="esd_class" required>
               <mat-option>Please Select</mat-option>
@@ -428,8 +453,9 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-1" *ngIf="checkIfFieldExist('esd_section')">
-          <mat-form-field class="form-field">
+        <div class="col-2" *ngIf="checkIfFieldExist('esd_section')">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Section</mat-label>
             <mat-select placeholder="Section" [disabled]="checkReadOnlyStatus"
               [errorStateMatcher]="confirmValidParentMatcher" formControlName="esd_section" required>
               <mat-option>Please Select</mat-option>
@@ -441,7 +467,8 @@
           </mat-form-field>
         </div>
         <div class="col-2" *ngIf="checkIfFieldExist('esd_school_name')">
-          <mat-form-field class="form-field">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>School Name</mat-label>
             <input class="text-capitalize" matInput placeholder="School Name"
               [errorStateMatcher]="confirmValidParentMatcher" formControlName="esd_school_name" required />
             <mat-error>
@@ -449,13 +476,14 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-2">
-          <mat-form-field class="form-field">
+        <div class="col-1">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Age</mat-label>
             <input type="number" matInput placeholder="Age (yrs)" formControlName="esd_age">
           </mat-form-field>
         </div>
         <div class="col-2">
-          <button *ngIf="!siblingedit" mat-raised-button class="btn-neutral" (click)="addSiblingDetails()">Add to
+          <button *ngIf="!siblingedit" mat-raised-button class="btn-neutral margin-top-10" (click)="addSiblingDetails()">Add to
             List</button>
           <button *ngIf="siblingedit" mat-raised-button class="btn-neutral" (click)="updateSiblingDetails()">Update to
             List</button>

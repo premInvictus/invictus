@@ -1,7 +1,8 @@
 <form [formGroup]="accountsForm" novalidate>
   <div class="row margin-top-15">
      <div class="col-6">
-        <mat-form-field  class="form-field" >
+        <mat-form-field  class="form-field" appearance="outline">
+           <mat-label>Other Category</mat-label>
            <mat-select placeholder="Other Category"  [disabled]="viewOnly"
            formControlName="accd_fo_id" [errorStateMatcher]="confirmValidParentMatcher" required>
               <mat-option>Please Select</mat-option>
@@ -10,7 +11,8 @@
         </mat-form-field>
      </div>
      <div class="col-6">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Applicable Fee Structure</mat-label>
            <mat-select placeholder="Applicable Fee Structure" [disabled]="viewOnly"
            formControlName="accd_fs_id" [errorStateMatcher]="confirmValidParentMatcher" required>
               <mat-option>Please Select</mat-option>
@@ -21,7 +23,8 @@
   </div>
   <div class="row">
      <div class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Concession Group</mat-label>
            <mat-select placeholder="Concession Group" [disabled]="viewOnly"
            formControlName="accd_fcg_id" [errorStateMatcher]="confirmValidParentMatcher" required>
               <mat-option>Please Select</mat-option>
@@ -45,7 +48,8 @@
   </div>
   <div *ngIf="transportFlag" class="row margin-top-15">
      <div class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Mode</mat-label>
            <mat-select placeholder="Mode" [disabled]="viewOnly"
            (ngModelChange)="enableMode($event)" formControlName="accd_transport_mode" 
            [errorStateMatcher]="confirmValidParentMatcher" required>
@@ -55,7 +59,8 @@
         </mat-form-field>
      </div>
      <div *ngIf="modeFlag" class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Route</mat-label>
            <mat-select placeholder="Route" [disabled]="viewOnly" 
               [errorStateMatcher]="confirmValidParentMatcher" formControlName="accd_tr_id" required>
               <mat-option>Please Select</mat-option>
@@ -64,7 +69,8 @@
         </mat-form-field>
      </div>
      <div *ngIf="modeFlag" class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Stoppage</mat-label>
            <mat-select placeholder="Stoppage" [disabled]="viewOnly" (selectionChange)="getSlab($event)"
               [errorStateMatcher]="confirmValidParentMatcher" required formControlName="accd_tsp_id">
               <mat-option>Please Select</mat-option>
@@ -73,7 +79,8 @@
         </mat-form-field>
      </div>
      <div *ngIf="modeFlag" class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Applicable Slab</mat-label>
            <mat-select placeholder="Applicable Slab" [disabled]="viewOnly" [ngModel]="slabModel"
               [errorStateMatcher]="confirmValidParentMatcher" formControlName="accd_ts_id" required>
               <mat-option>Please Select</mat-option>
@@ -84,7 +91,8 @@
   </div>
   <div *ngIf="transportFlag" class="row margin-top-15">
      <div *ngIf="modeFlag" class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Application Form</mat-label>
            <input  matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
            placeholder="Application From" formControlName="accd_transport_from" 
            [errorStateMatcher]="confirmValidParentMatcher" required
@@ -94,7 +102,8 @@
         </mat-form-field>
      </div>
      <div *ngIf="terminationFlag" class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Termination Date</mat-label>
            <input  matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
            placeholder="Termination Date" formControlName="accd_transport_to" 
            [errorStateMatcher]="confirmValidParentMatcher" required
@@ -104,7 +113,8 @@
         </mat-form-field>
      </div>
      <div *ngIf="modeFlag" class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Remarks</mat-label>
            <input matInput placeholder="Remarks" formControlName="accd_remark" [readonly]="viewOnly">
         </mat-form-field>
      </div>
@@ -122,7 +132,8 @@
   </div>
   <div *ngIf="hostelFlag" class="row margin-top-15">
      <div class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Applicable Hostel Fee</mat-label>
            <mat-select placeholder="Applicable Hostel Fee" [disabled]="viewOnly"
            formControlName="accd_hostel_fs_id">
               <mat-option value="">Please Select</mat-option>
@@ -131,7 +142,8 @@
         </mat-form-field>
      </div>
      <div class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Hostel Concession</mat-label>
            <mat-select placeholder="Hostel Concession" [disabled]="viewOnly"
            formControlName="accd_hostel_fcc_id">
               <mat-option value="">Please Select</mat-option>
@@ -140,7 +152,8 @@
         </mat-form-field>
      </div>
      <div class="col-3">
-        <mat-form-field  class="form-field">
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Applicable From</mat-label>
            <input  matInput [matDatepicker]="picker3" [max]="maxDate" [readonly]="viewOnly"
            placeholder="Application From" formControlName="accd_hostel_from" 
            [errorStateMatcher]="confirmValidParentMatcher" required
@@ -150,8 +163,8 @@
         </mat-form-field>
      </div>
      <div *ngIf="hostelTerminateFlag" class="col-3">
-        <mat-form-field  class="form-field">
-           <mat-label>Application To</mat-label>
+         <mat-form-field  class="form-field" appearance="outline">
+               <mat-label>Application To</mat-label>
            <input  matInput [matDatepicker]="picker4" [max]="maxDate" [readonly]="viewOnly" 
            placeholder="Hostel Termination Date" formControlName="accd_hostel_to" 
            [errorStateMatcher]="confirmValidParentMatcher" required

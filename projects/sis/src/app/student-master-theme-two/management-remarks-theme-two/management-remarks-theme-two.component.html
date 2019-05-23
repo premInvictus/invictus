@@ -18,15 +18,15 @@
                         </mat-form-field>
                     </div> -->
                 </div>
-                <div *ngIf="checkIfFieldExist('erm_remark')" class="row">
-                    <div class="col-12">
-                        <mat-form-field class="form-field">
+                <div *ngIf="checkIfFieldExist('erm_remark')" class="row remove-top-margin">
+                    <div class="col-12 remove-col-padding-left">
+                            <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Admission Test Remarks</mat-label>
                             <textarea formControlName="erm_remark" [errorStateMatcher]="confirmValidParentMatcher"
                                 matInput placeholder="Admission Test Remarks" [readonly]="viewOnly" rows="4"></textarea>
                         </mat-form-field>
                     </div>
                 </div>
-                <br>
             </form>
             <form [formGroup]="studentremarkform" novalidate>
                 <!-- <div class="row" *ngIf="(checkIfFieldExist('erm_mark_obtained') || checkIfFieldExist('erm_remark'))">
@@ -34,7 +34,6 @@
                         <span class="text-uppercase"><b>Student Interaction/ Personal Interview</b></span>
                     </div>
                 </div> -->
-                <br>
                 <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
                     <!-- <div class="col-12">
                         <mat-form-field class="form-field">
@@ -46,16 +45,16 @@
                         </mat-form-field>
                     </div> -->
                 </div>
-                <div *ngIf="checkIfFieldExist('erm_remark')" class="row">
-                    <div class="col-12">
-                        <mat-form-field class="form-field">
+                <div *ngIf="checkIfFieldExist('erm_remark')" class="row remove-top-margin">
+                    <div class="col-12 remove-col-padding-left">
+                            <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Student Interaction/ Persnal Interviewer's Remarks</mat-label>
                             <textarea [errorStateMatcher]="confirmValidParentMatcher" formControlName="erm_remark"
                                 matInput placeholder="Student Interaction/ Personal Interviewer's Remarks"
                                 [readonly]="viewOnly" rows="4"></textarea>
                         </mat-form-field>
                     </div>
                 </div>
-                <br>
             </form>
 
             <form [formGroup]="parentremarkform" novalidate>
@@ -64,7 +63,6 @@
                         <span class="text-uppercase"><b>Parent Interaction/ personal interview</b></span>
                     </div>
                 </div> -->
-                <br>
                 <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
                     <!-- <div class="col-12">
                         <mat-form-field class="form-field">
@@ -76,16 +74,16 @@
                         </mat-form-field>
                     </div> -->
                 </div>
-                <div *ngIf="checkIfFieldExist('erm_remark')" class="row">
-                    <div class="col-12">
-                        <mat-form-field class="form-field">
+                <div *ngIf="checkIfFieldExist('erm_remark')" class="row remove-top-margin">
+                    <div class="col-12 remove-col-padding-left">
+                            <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Parent Interaction/ Personal's Interviewer's</mat-label>
                             <textarea [errorStateMatcher]="confirmValidParentMatcher" formControlName="erm_remark"
                                 matInput placeholder="Parent Interaction/ Personal interviewer's Remarks"
                                 [readonly]="viewOnly" rows="4"></textarea>
                         </mat-form-field>
                     </div>
                 </div>
-                <br>
             </form>
 
 
@@ -123,7 +121,7 @@
         </div> -->
         <div class="col-6 text-center">
 
-            <table class="table table-borderd table-stripped custom-table "
+            <table class="table table-borderd table-stripped custom-table margin-left-15"
                 *ngIf="marksTableJson && marksTableJson[0] && marksTableJson[0]['data']">
                 <thead class="table-skill__head text-center">
                     <tr class="custom-tr">
@@ -148,10 +146,12 @@
                                     <span *ngIf="viewOnly">{{colItem.value["erms_value"]}}</span>
                                     <!-- <span *ngIf="!viewOnly && (j !== 0 && j != (markObjectLength -1))"> -->
                                     <!-- test {{dynamicMarksForm[i]['value']['col'+colItem?.key]['gf_id']}} -->
-                                    <mat-form-field *ngIf="!viewOnly && item['gt_name']!=='Grade'" class="form-field">
+                                    <mat-form-field *ngIf="!viewOnly && item['gt_name']!=='Grade'" class="form-field" >
+                                        
                                         <input type="number" matInput [formControlName]="'col'+colItem?.key">
                                     </mat-form-field>
-                                    <mat-form-field *ngIf="!viewOnly && item['gt_name']==='Grade'" class="form-field">
+                                    <mat-form-field *ngIf="!viewOnly && item['gt_name']==='Grade'" class="form-field" >
+                                        
                                         <input type="text" matInput [formControlName]="'col'+colItem?.key">
                                     </mat-form-field>
                                     <!-- </span> -->
@@ -181,17 +181,20 @@
                             <span class="text-uppercase"><b>Final Remarks</b></span>
                         </div>
                     </div> -->
-                <div *ngIf="checkIfFieldExist('au_is_eligible_adimission')" class="row">
+                    <br>
+                <div *ngIf="checkIfFieldExist('au_is_eligible_adimission')" class="row ">
                     <div class="col-12">
-                        <mat-form-field class="form-field">
+                            <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Final Remarks</mat-label>
                             <textarea [errorStateMatcher]="confirmValidParentMatcher" formControlName="au_final_remark"
                                 matInput placeholder="Final Remarks" [readonly]="viewOnly" rows="3"></textarea>
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row ">
                     <div class="col-6" *ngIf="checkIfFieldExist('au_is_eligible_adimission')">
-                        <mat-form-field class="form-field">
+                            <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Eligible for Admission</mat-label>
                             <mat-select [errorStateMatcher]="confirmValidParentMatcher"
                                 formControlName="au_is_eligible_adimission" placeholder="Eligible for Admission"
                                 [disabled]="viewOnly">
@@ -203,7 +206,8 @@
                     </div>
                     <div class="col-6"
                         *ngIf="checkIfFieldExist('au_process_class') && finalremarksform.value.au_is_eligible_adimission == 'Y'">
-                        <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>Proposed Class</mat-label>
                             <mat-select [errorStateMatcher]="confirmValidParentMatcher"
                                 formControlName="au_process_class" placeholder="Proposed Class" [disabled]="viewOnly">
                                 <mat-option>Please Select</mat-option>
@@ -245,7 +249,8 @@
         <div class="row">
 
             <div class="col-4">
-                <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Date</mat-label>
                     <input formControlName="era_doj" [min]="minDate" matInput [matDatepicker]="picker"
                         placeholder="Date" [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
                         (dateChange)="addEvent('change', $event)">
@@ -254,7 +259,8 @@
                 </mat-form-field>
             </div>
             <div class="col-4" *ngIf="checkIfFieldExist('era_aut_id')">
-                <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Authority</mat-label>
                     <mat-select formControlName="era_aut_id" placeholder="Authority" [disabled]="viewOnly"
                         [errorStateMatcher]="confirmValidParentMatcher">
                         <mat-option>Please Select</mat-option>
@@ -265,7 +271,8 @@
                 </mat-form-field>
             </div>
             <div class="col-4" *ngIf="checkIfFieldExist('era_ar_id')">
-                <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Area</mat-label>
                     <mat-select formControlName="era_ar_id" [errorStateMatcher]="confirmValidParentMatcher"
                         placeholder="Area" [disabled]="viewOnly">
                         <mat-option>Please Select</mat-option>
@@ -278,7 +285,8 @@
         </div>
         <div class="row">
             <div class="col-8" *ngIf="checkIfFieldExist('era_teachers_remark')">
-                <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Remarks</mat-label>
                     <input formControlName="era_teachers_remark" [errorStateMatcher]="confirmValidParentMatcher"
                         matInput placeholder="Remarks" [readonly]="viewOnly">
                 </mat-form-field>
@@ -295,7 +303,7 @@
                     <br>
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col-2 remove-col-padding text-center margin-top-8">
                 <button *ngIf="!editlist" mat-raised-button class="btn-neutral" (click)="addtolist()"
                     [disabled]="viewOnly">Add to list</button>
                 <button *ngIf="editlist" mat-raised-button class="btn-neutral btn-spacer"
