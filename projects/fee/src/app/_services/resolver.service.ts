@@ -9,7 +9,7 @@ import { ActivatedRoute, ActivatedRouteSnapshot, CanActivate, Resolve, Router, R
 
 import { CookieService } from 'ngx-cookie';
 import { environment } from '../../environments/environment';
-import { SisService, CommonAPIService, ProcesstypeService } from '../_services/index';
+import { SisService, CommonAPIService, ProcesstypeFeeService } from '../_services/index';
 @Injectable()
 export class ResolverService {
 	userData = [];

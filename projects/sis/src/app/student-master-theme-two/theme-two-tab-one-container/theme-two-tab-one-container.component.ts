@@ -284,8 +284,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		let checkRequiredFieldCounter = 0, checkAluminiFieldCounter = 0;
 		if (!this.parentDetails.showHideGuardianField) {
 			for (let i = 0; i < 2; i++) {
-				if (!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_name').valid ||
-					!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_nationality').valid) {
+				if (!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_name').valid) {
 					checkRequiredFieldCounter++;
 				} else {
 					continue;
@@ -313,8 +312,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		let checkRequiredFieldCounter2 = 0, checkAluminiFieldCounter2 = 0;
 		if (this.parentDetails.showHideGuardianField) {
 			for (let i = 0; i < 3; i++) {
-				if (!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_name').valid ||
-					!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_nationality').valid) {
+				if (!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_name').valid) {
 					checkRequiredFieldCounter2++;
 				} else {
 					continue;

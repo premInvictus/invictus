@@ -5,7 +5,7 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort } from '@angular/m
 import { MatDialog } from '@angular/material';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { FilterModalComponent } from '../../common-filter/filter-modal/filter-modal.component';
-import { FeeService, CommonAPIService, SisService, ProcesstypeService } from '../../_services/index';
+import { FeeService, CommonAPIService, SisService, ProcesstypeFeeService } from '../../_services/index';
 import { InvoiceElement } from './invoice-element.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
@@ -99,7 +99,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		public commonAPIService: CommonAPIService,
 		private route: ActivatedRoute,
 		private router: Router,
-		private processtypeService: ProcesstypeService,
+		private processtypeService: ProcesstypeFeeService,
 		private studentRouteMoveStoreService: StudentRouteMoveStoreService
 
 	) { }

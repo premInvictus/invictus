@@ -364,6 +364,41 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 	isExistUserAccessMenu(mod_id) {
 		return this.commonApiService.isExistUserAccessMenu(mod_id);
 	}
+	showPrint() {
+		let id: any = '';
+		if (Number(this.idCardSettings.ps_card_style) === 1) {
+			id = 'card1';
+			const printModal2 = document.getElementById(id);
+			const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
+			popupWin.document.open();
+			popupWin.document.write('<html> <link rel="stylesheet"' +
+			'href="../../../../../../assets/css/idcardstyle1.css">' +
+				'<link rel="stylesheet" href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/css/bootstrap.min.css"' +
+				'integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">' +
+				'<body onload="window.print()">' + printModal2.innerHTML + '</html>');
+			popupWin.document.close();
+		} else if (Number(this.idCardSettings.ps_card_style) === 2) {
+			id = 'card2';
+			const printModal2 = document.getElementById(id);
+			const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
+			popupWin.document.open();
+			popupWin.document.write('<html> <link rel="stylesheet" href="../../../../../../assets/css/idcardstyle1.css">' +
+				'<link rel="stylesheet" href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/css/bootstrap.min.css"' +
+				'integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">' +
+				'<body onload="window.print()">' + printModal2.innerHTML + '</html>');
+			popupWin.document.close();
+		} else {
+			id = 'card3';
+			const printModal2 = document.getElementById(id);
+			const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
+			popupWin.document.open();
+			popupWin.document.write('<html> <link rel="stylesheet" href="../../../../../../assets/css/idcardstyle1.css">' +
+				'<link rel="stylesheet" href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/css/bootstrap.min.css"' +
+				'integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">' +
+				'<body onload="window.print()">' + printModal2.innerHTML + '</html>');
+			popupWin.document.close();
+		}
+	}
 }
 export interface PeriodicElement {
 	select: number;

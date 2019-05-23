@@ -292,4 +292,12 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/printReceipt', value);
 	}
+	getStoppagesPerRoute(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transportroutes/getStoppagesPerRoute', value);
+	}
+	getTransportSlabPerStoppages(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transportstoppages/getTransportSlabPerStoppages', value);
+	}
 }

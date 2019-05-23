@@ -2,15 +2,9 @@
   <div class="container-box__white">
     <br>
     <div class="row">
-      <!-- <div class="col-4 text-center">
-        <div class="line-divider"></div>
-      </div> -->
       <div class="col-12 text-center">
         <h4 class="text-uppercase text-center"><b>Remarks Entry</b></h4>
       </div>
-      <!-- <div class="col-4 text-center">
-        <div class="line-divider"></div>
-      </div> -->
     </div>
     <br>
     <form [formGroup]="studentdetailsform">
@@ -19,27 +13,32 @@
           <div class="row">
             <div class="col-10 tab-custom-col-75">
               <mat-form-field class="form-field">
-                <input formControlName="au_login_id" matInput placeholder="Registration No." (blur)="getStudentDetails($event,studentdetailsform.value.au_login_id)" autocomplete="off" >
+                <input formControlName="au_login_id" matInput placeholder="Registration No."
+                (keyup.enter)="getStudentDetails($event,studentdetailsform.value.au_login_id)"
+                  (blur)="getStudentDetails($event,studentdetailsform.value.au_login_id)" autocomplete="off">
               </mat-form-field>
             </div>
             <div class="col-2 tab-custom-col-25 margin-top-10">
-                <div class="text-center">                
-                    <a href="javascript:void(0)" [disabled]="studentdetailsform.value.au_login_id == ''"  mat-raised-button class="btn-success" (click)="viewProfile(studentdetailsform.value.au_login_id)">View
-                      Profile</a>
-                  </div>
+              <div class="text-center">
+                <a href="javascript:void(0)" [disabled]="studentdetailsform.value.au_login_id == ''" mat-raised-button
+                  class="btn-success" (click)="viewProfile(studentdetailsform.value.au_login_id)">View
+                  Profile</a>
+              </div>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
               <mat-form-field class="form-field">
-                <input formControlName="au_full_name" class="text-capitalize" matInput placeholder="Student Name" [readonly]="viewOnlyRemark" tabindex="-1">
+                <input formControlName="au_full_name" class="text-capitalize" matInput placeholder="Student Name"
+                  [readonly]="viewOnlyRemark" tabindex="-1">
               </mat-form-field>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
               <mat-form-field class="form-field">
-                <mat-select formControlName="class_id" placeholder="Applied for Class" [disabled]="viewOnlyRemark" tabindex="-1">
+                <mat-select formControlName="class_id" placeholder="Applied for Class" [disabled]="viewOnlyRemark"
+                  tabindex="-1">
                   <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                     {{item.class_name}}
                   </mat-option>
@@ -50,24 +49,27 @@
           <div class="row">
             <div class="col-12">
               <mat-form-field class="form-field">
-                <input formControlName="father_name" class="text-capitalize" matInput placeholder="Father's Name" [readonly]="viewOnlyRemark" tabindex="-1">
+                <input formControlName="father_name" class="text-capitalize" matInput placeholder="Father's Name"
+                  [readonly]="viewOnlyRemark" tabindex="-1">
               </mat-form-field>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
               <mat-form-field class="form-field">
-                <input formControlName="mother_name" class="text-capitalize" matInput placeholder="Mother's Name" [readonly]="viewOnlyRemark" tabindex="-1">
+                <input formControlName="mother_name" class="text-capitalize" matInput placeholder="Mother's Name"
+                  [readonly]="viewOnlyRemark" tabindex="-1">
               </mat-form-field>
             </div>
           </div>
-          
+
         </div>
         <div class="col-6">
           <div class="row">
             <div class="col-12">
               <mat-form-field class="form-field">
-                <input formControlName="upd_dob"  matInput [matDatepicker]="picker" placeholder="Date of Birth" [readonly]="viewOnlyRemark" tabindex="-1">
+                <input formControlName="upd_dob" matInput [matDatepicker]="picker" placeholder="Date of Birth"
+                  [readonly]="viewOnlyRemark" tabindex="-1">
                 <mat-datepicker-toggle matSuffix [for]="picker" tabindex="-1"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -76,7 +78,8 @@
           <div class="row">
             <div class="col-12">
               <mat-form-field class="form-field">
-                <input formControlName="upd_doj" matInput [matDatepicker]="picker1" placeholder="Date of Registration" [readonly]="viewOnlyRemark" tabindex="-1">
+                <input formControlName="upd_doj" matInput [matDatepicker]="picker1" placeholder="Date of Registration"
+                  [readonly]="viewOnlyRemark" tabindex="-1">
                 <mat-datepicker-toggle matSuffix [for]="picker1" tabindex="-1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
@@ -85,7 +88,8 @@
           <div class="row">
             <div class="col-12">
               <mat-form-field class="form-field">
-                <input formControlName="au_test_date"  [max]="maxDate" matInput [matDatepicker]="picker2" placeholder="Test Date" required>
+                <input formControlName="au_test_date" [max]="maxDate" matInput [matDatepicker]="picker2"
+                  placeholder="Test Date" required>
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
               </mat-form-field>
@@ -94,19 +98,21 @@
           <div class="row">
             <div class="col-12">
               <mat-form-field class="form-field">
-                <input formControlName="au_interview_date" [max]="maxDate" matInput [matDatepicker]="picker3" placeholder="Interview Date" required>
+                <input formControlName="au_interview_date" [max]="maxDate" matInput [matDatepicker]="picker3"
+                  placeholder="Interview Date" required>
                 <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                 <mat-datepicker #picker3></mat-datepicker>
               </mat-form-field>
             </div>
           </div>
           <div class="row">
-              <div class="col-12">
-                <mat-form-field class="form-field">
-                  <input formControlName="au_mobile" matInput placeholder="Contact No." [readonly]="viewOnlyRemark" tabindex="-1">
-                </mat-form-field>
-              </div>
+            <div class="col-12">
+              <mat-form-field class="form-field">
+                <input formControlName="au_mobile" matInput placeholder="Contact No." [readonly]="viewOnlyRemark"
+                  tabindex="-1">
+              </mat-form-field>
             </div>
+          </div>
           <!-- <div class="row">
             <div class="col-12">
               <div class="text-center">                
@@ -124,140 +130,146 @@
 
 
     <ng-container *ngIf="remarkEntryFlag">
-<!--     <br>
+      <!--     <br>
     <div class="divider__grey"></div> -->
-    <br>
-    <div class="row">
-      <!-- <div class="col-4 text-center">
+      <br>
+      <div class="row">
+        <!-- <div class="col-4 text-center">
         <div class="line-divider"></div>
       </div> -->
-      <div class="col-12 text-center">
-        <h4 class="text-uppercase text-center"><b>Remarks</b></h4>
+        <div class="col-12 text-center">
+          <h4 class="text-uppercase text-center"><b>Remarks</b></h4>
+        </div>
+        <!-- <div class="col-4 text-center">
+        <div class="line-divider"></div>
+      </div> -->
       </div>
-      <!-- <div class="col-4 text-center">
-        <div class="line-divider"></div>
-      </div> -->
-    </div>
-    <br>
-    <div class="row">
-      <div class="col-6">
-        <form [formGroup]="admissionremarkform" *ngIf="isExistUserAccessMenu('272')">
-          <div>
+      <br>
+      <div class="row">
+        <div class="col-6">
+          <form [formGroup]="admissionremarkform" *ngIf="isExistUserAccessMenu('272')">
+            <div>
+              <div class="row">
+                <div class="col-12 text-center">
+                  <!-- <label ><b>Admission Test</b></label><br> -->
+                  <!-- <mat-form-field class="form-field">
+                  <input formControlName="erm_mark_obtained" matInput placeholder="Marks Obtained" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type = "number" maxlength = "3">
+                </mat-form-field> -->
+                  <mat-form-field class="form-field">
+                    <textarea (keyup)="capitalizeString($event)" rows="5" formControlName="erm_remark" matInput
+                      placeholder="Admission Test Remarks" [readonly]="viewOnly" required></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </form>
+          <br>
+          <form [formGroup]="studentremarkform" *ngIf="isExistUserAccessMenu('273')">
+            <!-- <div class="row">
+          <div class="col-12 text-center">
+            <label><b>Student Interaction/ Personal Interview</b></label>
+          </div>
+        </div>   -->
             <div class="row">
-              <div class="col-12 text-center">
-                <!-- <label ><b>Admission Test</b></label><br> -->
+              <div class="col-12">
                 <!-- <mat-form-field class="form-field">
                   <input formControlName="erm_mark_obtained" matInput placeholder="Marks Obtained" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type = "number" maxlength = "3">
                 </mat-form-field> -->
                 <mat-form-field class="form-field">
-                  <textarea (keyup)="capitalizeString($event)" rows="5" formControlName="erm_remark" matInput placeholder="Admission Test Remarks" [readonly]="viewOnly" required></textarea>
+                  <textarea (keyup)="capitalizeString($event)" formControlName="erm_remark" rows="5" matInput
+                    placeholder="Student Interaction/ Personal Interviewer's Remarks" required></textarea>
                 </mat-form-field>
               </div>
             </div>
-          </div>
-        </form>
-        <br>
-        <form [formGroup]="studentremarkform" *ngIf="isExistUserAccessMenu('273')">
-        <!-- <div class="row">
-          <div class="col-12 text-center">
-            <label><b>Student Interaction/ Personal Interview</b></label>
-          </div>
-        </div>   -->  
-          <div class="row">
-            <div class="col-12">
-                <!-- <mat-form-field class="form-field">
-                  <input formControlName="erm_mark_obtained" matInput placeholder="Marks Obtained" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type = "number" maxlength = "3">
-                </mat-form-field> -->
-              <mat-form-field class="form-field">
-                <textarea (keyup)="capitalizeString($event)" formControlName="erm_remark" rows="5" matInput placeholder="Student Interaction/ Personal Interviewer's Remarks" required></textarea>
-              </mat-form-field>
-            </div>
-          </div>
-        </form>
-        <br>
-        <form [formGroup]="parentremarkform" *ngIf="isExistUserAccessMenu('274')">
-        <!-- <div class="row">
+          </form>
+          <br>
+          <form [formGroup]="parentremarkform" *ngIf="isExistUserAccessMenu('274')">
+            <!-- <div class="row">
           <div class="col-12 text-center">
             <label><b>Parent Interaction/Parent's Interview</b></label>
           </div>
         </div> -->
-        
-          <div class="row">
-            <div class="col-12">
+
+            <div class="row">
+              <div class="col-12">
                 <!-- <mat-form-field class="form-field">
                     <input formControlName="erm_mark_obtained" matInput placeholder="Marks Obtained" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type = "number" maxlength = "3">
                   </mat-form-field> -->
-              <mat-form-field class="form-field">
-                <textarea (keyup)="capitalizeString($event)" formControlName="erm_remark" rows="5" matInput placeholder="Parent Interaction/Parent's Interviewer's Remarks" required></textarea>
-              </mat-form-field>
+                <mat-form-field class="form-field">
+                  <textarea (keyup)="capitalizeString($event)" formControlName="erm_remark" rows="5" matInput
+                    placeholder="Parent Interaction/Parent's Interviewer's Remarks" required></textarea>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-6" *ngIf="isExistUserAccessMenu('322')">
-        <table class="table table-borderd table-stripped custom-table" *ngIf="marksTableJson && marksTableJson[0] && marksTableJson[0]['data']">
-          <thead class="table-skill__head text-center">
+          </form>
+        </div>
+        <div class="col-6" *ngIf="isExistUserAccessMenu('322')">
+          <table class="table table-borderd table-stripped custom-table"
+            *ngIf="marksTableJson && marksTableJson[0] && marksTableJson[0]['data']">
+            <thead class="table-skill__head text-center">
               <tr class="custom-tr">
-                  <th class="custom-th">&nbsp;</th>
-                  <th class="custom-th" *ngFor="let item of marksTableJson[0]['data'] | keyvalue">
-                      <span *ngIf='item.value["mf_type"]==="subjects"'>{{item.value["sub_name"]}}</span>
-                      <span *ngIf='item.value["mf_type"]==="others"'>{{item.value["mf_value"]}}</span>
-                  </th>
-                  <th *ngIf="viewOnly" class="custom-th">
-                      <span>Total</span>
-                  </th>
+                <th class="custom-th">&nbsp;</th>
+                <th class="custom-th" *ngFor="let item of marksTableJson[0]['data'] | keyvalue">
+                  <span *ngIf='item.value["mf_type"]==="subjects"'>{{item.value["sub_name"]}}</span>
+                  <span *ngIf='item.value["mf_type"]==="others"'>{{item.value["mf_value"]}}</span>
+                </th>
+                <th *ngIf="viewOnly" class="custom-th">
+                  <span>Total</span>
+                </th>
               </tr>
-          </thead>
-          <tbody id="marks_remark" class="table-skill__body text-center">
+            </thead>
+            <tbody id="marks_remark" class="table-skill__body text-center">
               <ng-container>
-              <tr class="custom-tr" *ngFor="let item of marksTableJson;let i=index;">
+                <tr class="custom-tr" *ngFor="let item of marksTableJson;let i=index;">
                   <td class="custom-td">{{item['gt_name']}}</td>
                   <td class="custom-td" *ngFor="let colItem of item['data'] | keyvalue; let j=index">
-                      <!-- [formGroup]="dynamicMarksForm[i]"-->
-                      <form [formGroup]="dynamicMarksForm[i]">
+                    <!-- [formGroup]="dynamicMarksForm[i]"-->
+                    <form [formGroup]="dynamicMarksForm[i]">
 
-                          <span *ngIf="viewOnly">{{colItem.value["erms_value"]}}</span>
-                          <!-- <span *ngIf="!viewOnly && (j !== 0 && j != (markObjectLength -1))"> -->
-                              <!-- test {{dynamicMarksForm[i]['value']['col'+colItem?.key]['gf_id']}} -->
-                              <mat-form-field *ngIf="!viewOnly && item['gt_name']!=='Grade'" class="form-field remark-input-form">
-                                  <input type="number" matInput [formControlName]="'col'+colItem?.key">
-                              </mat-form-field>
-                              <mat-form-field *ngIf="!viewOnly && item['gt_name']==='Grade'" class="form-field remark-input-form">
-                                      <input type="text" matInput [formControlName]="'col'+colItem?.key">
-                              </mat-form-field>
-                          <!-- </span> -->
-                          <!-- <span *ngIf="!viewOnly && j == 0">
+                      <span *ngIf="viewOnly">{{colItem.value["erms_value"]}}</span>
+                      <!-- <span *ngIf="!viewOnly && (j !== 0 && j != (markObjectLength -1))"> -->
+                      <!-- test {{dynamicMarksForm[i]['value']['col'+colItem?.key]['gf_id']}} -->
+                      <mat-form-field *ngIf="!viewOnly && item['gt_name']!=='Grade'"
+                        class="form-field remark-input-form">
+                        <input type="number" matInput [formControlName]="'col'+colItem?.key">
+                      </mat-form-field>
+                      <mat-form-field *ngIf="!viewOnly && item['gt_name']==='Grade'"
+                        class="form-field remark-input-form">
+                        <input type="text" matInput [formControlName]="'col'+colItem?.key">
+                      </mat-form-field>
+                      <!-- </span> -->
+                      <!-- <span *ngIf="!viewOnly && j == 0">
                               {{colItem.value["mf_value"]}}
                           </span>
                           <span *ngIf="!viewOnly && (j == (markObjectLength -1))">
                               {{colItem.value["mf_value"]}}
                           </span> -->
-                      </form>
+                    </form>
                   </td>
                   <td *ngIf="viewOnly" class="custom-td">{{item['total']}}</td>
-              </tr>
-          </ng-container>
-          </tbody>
-          <tbody *ngIf="!(marksTableJson.length > 0)">
+                </tr>
+              </ng-container>
+            </tbody>
+            <tbody *ngIf="!(marksTableJson.length > 0)">
               <tr>
-                  <td colspan="6" class="text-center">No Record Found</td>
+                <td colspan="6" class="text-center">No Record Found</td>
               </tr>
-          </tbody>
-      </table>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-    <ng-container *ngIf="isExistUserAccessMenu('275')">
-    <div class="row">
-      <div class="col-3"></div>
-      <div class="col-6 text-center">
-        <label><b>Document verification</b></label>
-      </div>
-      <div class="col-3"></div>
-    </div>
-    <br>
-    <div class="row">
-      <!-- <div class="col-6">
+      <ng-container *ngIf="isExistUserAccessMenu('275')">
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-6 text-center">
+            <label><b>Document verification</b></label>
+          </div>
+          <div class="col-3"></div>
+        </div>
+        <br>
+        <div class="row">
+          <!-- <div class="col-6">
         <table class="table document-table">
           <tr *ngFor="let item of documentsArray;let i =index">
             <td class="document-table--title">{{item.docreq_name}}</td>
@@ -296,106 +308,111 @@
           </tr>
         </table>
       </div> -->
-      <div class="col-6">
-          <mat-card class="document-main-card" *ngFor="let item of documentsArray;let i =index">
+          <div class="col-6">
+            <mat-card class="document-main-card" *ngFor="let item of documentsArray;let i =index">
               <div class="row margin-bottom-10">
-                  <div class="col-8">
-                      <span class="document-title"><b>{{item.docreq_name}}</b></span>
+                <div class="col-8">
+                  <span class="document-title"><b>{{item.docreq_name}}</b></span>
+                </div>
+                <div class="col-4">
+                  <div class="float-right">
+                    <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top" multiple="true"
+                      (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
+                      style="display: none !important">
+                    <button mat-raised-button class="btn-neutral">
+                      <mat-icon class="btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
+                        class="btn-document-label" [for]="item.docreq_id">Choose
+                        File</label>
+                    </button>
                   </div>
-                  <div class="col-4">
-                      <div class="float-right">
-                          <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
-                              multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
-                              style="display: none !important">
-                          <button mat-raised-button class="btn-neutral">
-                              <mat-icon class="btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
-                                  class="btn-document-label" [for]="item.docreq_id">Choose
-                                  File</label>
-                          </button>
-                      </div>
-                  </div>
+                </div>
               </div>
               <div class="row">
-                  <ng-container *ngFor="let img of this.imageArray;let i = index">
+                <ng-container *ngFor="let img of this.imageArray;let i = index">
                   <div class="col-1 col-doc-img-3 custom-col-15" *ngIf="img.ed_docreq_id === item.docreq_id">
-                      <div class="remove-col-padding" >
+                    <div class="remove-col-padding">
+                      <div>
+                        <div>
                           <div>
-                              <div>
-                                  <div>
-                                      <div *ngIf="img.ed_docreq_id === item.docreq_id" style="float:right;">
-                                          <button *ngIf="!viewOnly" mat-button class="upload-document-delete-btn"
-                                              (click)="deleteFile(img.imgName,img.ed_docreq_id)"><mat-icon class="btn-upload-icon">delete</mat-icon></button>
-                                      </div>
-                                      <div *ngIf="img.ed_docreq_id ===  item.docreq_id">
-                                          <img class="btn-doc-upload-preview"
-                                              [src]="img.imgName" (click)="previewImage(imageArray, i)">
-                                      </div>
-                                  </div>
-                              </div>
+                            <div *ngIf="img.ed_docreq_id === item.docreq_id" style="float:right;">
+                              <button *ngIf="!viewOnly" mat-button class="upload-document-delete-btn"
+                                (click)="deleteFile(img.imgName,img.ed_docreq_id)">
+                                <mat-icon class="btn-upload-icon">delete</mat-icon>
+                              </button>
+                            </div>
+                            <div *ngIf="img.ed_docreq_id ===  item.docreq_id">
+                              <img class="btn-doc-upload-preview" [src]="img.imgName"
+                                (click)="previewImage(imageArray, i)">
+                            </div>
                           </div>
+                        </div>
                       </div>
+                    </div>
                   </div>
-              </ng-container>
+                </ng-container>
               </div>
-          </mat-card>
-      </div>
-      <div class="col-6" *ngIf="documentFlag && isExistUserAccessMenu('276')">
-        <div class="container-outline__white">
-          <h6 class="text-uppercase"><b>List of Document Required for Admission</b></h6>
-          <ol *ngFor="let item of documentsArray;let i =index">
-            <mat-checkbox [disabled]="viewOnly" class="inline-form-doc-checkbox" [checked]="checkVerifiedStatus(item.docreq_id)" 
-            [value]="item.docreq_id" (change)="insertVerifyId($event)">
-            </mat-checkbox>{{item.docreq_name}}
-          </ol>
-          <div class="text-center">
-            <button mat-raised-button class="btn-success" (click)="verifyDocument()">Verify</button>
+            </mat-card>
           </div>
-          <br>
+          <div class="col-6" *ngIf="documentFlag && isExistUserAccessMenu('276')">
+            <div class="container-outline__white">
+              <h6 class="text-uppercase"><b>List of Document Required for Admission</b></h6>
+              <ol *ngFor="let item of documentsArray;let i =index">
+                <mat-checkbox [disabled]="viewOnly" class="inline-form-doc-checkbox"
+                  [checked]="checkVerifiedStatus(item.docreq_id)" [value]="item.docreq_id"
+                  (change)="insertVerifyId($event)">
+                </mat-checkbox>{{item.docreq_name}}
+              </ol>
+              <div class="text-center">
+                <button mat-raised-button class="btn-success" (click)="verifyDocument()">Verify</button>
+              </div>
+              <br>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </ng-container>
+      </ng-container>
 
 
-    <br>
-    <form [formGroup]="finalremarksform" *ngIf="isExistUserAccessMenu('277')">
-   <!--  <div class="row">
+      <br>
+      <form [formGroup]="finalremarksform" *ngIf="isExistUserAccessMenu('277')">
+        <!--  <div class="row">
         <div class="col-3"></div>
       <div class="col-6 text-center">
         <label><b>Final Management Remarks</b></label>
       </div>
       <div class="col-3"></div>
     </div> -->
-    
-      <div class="row">
+
+        <div class="row">
           <div class="col-3"></div>
-        <div class="col-6">
-          <mat-form-field class="form-field">
-            <textarea (keyup)="capitalizeString($event)" formControlName="au_final_remark" rows="5" matInput placeholder="Final Management Remarks"></textarea>
-          </mat-form-field>
-          <mat-checkbox *ngIf="isExistUserAccessMenu('278')" formControlName="au_is_eligible_adimission">Approve Admission</mat-checkbox>
-          <mat-form-field *ngIf="finalremarksform.value.au_is_eligible_adimission == true" class="form-field">
-            <mat-select formControlName="au_process_class" placeholder="Proposed Class" required>
-              <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                {{item.class_name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <div class="col-6">
+            <mat-form-field class="form-field">
+              <textarea (keyup)="capitalizeString($event)" formControlName="au_final_remark" rows="5" matInput
+                placeholder="Final Management Remarks"></textarea>
+            </mat-form-field>
+            <mat-checkbox *ngIf="isExistUserAccessMenu('278')" formControlName="au_is_eligible_adimission">Approve
+              Admission</mat-checkbox>
+            <mat-form-field *ngIf="finalremarksform.value.au_is_eligible_adimission == true" class="form-field">
+              <mat-select formControlName="au_process_class" placeholder="Proposed Class" required>
+                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                  {{item.class_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-3"></div>
         </div>
-        <div class="col-3"></div>
+      </form>
+      <br>
+      <br>
+      <div class="text-center margin-bottom-65">
+        <button mat-raised-button class="btn-success" (click)="updateForm()">Submit</button>
+        <button class="btn-danger btn-spacer" mat-raised-button (click)="resetForm()">Reset</button>
       </div>
-    </form>
-    <br>
-    <br>
-    <div class="text-center margin-bottom-65">
-      <button mat-raised-button class="btn-success" (click)="updateForm()">Submit</button>
-      <button class="btn-danger btn-spacer" mat-raised-button (click)="resetForm()">Reset</button>
-    </div>
     </ng-container>
 
-    
+
   </div>
   <br>
   <br>
-  
+
 </div>
