@@ -1,58 +1,67 @@
 <div class="padding-15">
   <form [formGroup]="medicalform" novalidate>
-  <div class="row">
-    <div class="col-12">
-      <div class="row"> 
-        <div  class="col-4" *ngIf="checkIfFieldExist('mi_blood_group')">
-          <mat-form-field class="form-field">
-            <mat-select placeholder="Blood Group" formControlName="mi_blood_group" [disabled]="viewOnly">
+    <div class="row">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-4" *ngIf="checkIfFieldExist('mi_blood_group')">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Blood Group</mat-label>
+              <mat-select placeholder="Blood Group" formControlName="mi_blood_group" [disabled]="viewOnly">
                 <mat-option value="">Please Select</mat-option>
-              <mat-option *ngFor="let item of bloodGroupArray" [value]="item.bg_id">{{item.bg_name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+                <mat-option *ngFor="let item of bloodGroupArray" [value]="item.bg_id">{{item.bg_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4" *ngIf="checkIfFieldExist('mi_identification_mark')">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Identification Mark</mat-label>
+              <input class="text-capitalize" matInput placeholder="Identification Mark"
+                formControlName="mi_identification_mark" [readonly]="viewOnly">
+            </mat-form-field>
+          </div>
+          <div class="col-4" *ngIf="checkIfFieldExist('upd_special_need')">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Child with Special Needs</mat-label>
+              <mat-select placeholder="Child with special needs?" formControlName="mi_special_need"
+                [disabled]="viewOnly">
+                <mat-option value="">Please Select</mat-option>
+                <mat-option value="Y">Yes</mat-option>
+                <mat-option value="N">No</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
-        <div  class="col-4" *ngIf="checkIfFieldExist('mi_identification_mark')">
-          <mat-form-field class="form-field">
-            <input class="text-capitalize" matInput placeholder="Identification Mark" formControlName="mi_identification_mark" [readonly]="viewOnly">
-          </mat-form-field>
-        </div>
-        <div class="col-4" *ngIf="checkIfFieldExist('upd_special_need')">
-          <mat-form-field class="form-field">
-            <mat-select placeholder="Child with special needs?" formControlName="mi_special_need" [disabled]="viewOnly">
-              <mat-option value="">Please Select</mat-option>
-              <mat-option value="Y">Yes</mat-option>
-              <mat-option value="N">No</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-4" *ngIf="checkIfFieldExist('mi_emergency_contact_name')">
-          <mat-form-field class="form-field">
-            <input class="text-capitalize" matInput placeholder="Emergency Contact Name" formControlName="mi_emergency_contact_name" [readonly]="viewOnly">
-          </mat-form-field>
-        </div>
+        <div class="row">
+          <div class="col-4" *ngIf="checkIfFieldExist('mi_emergency_contact_name')">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Emergency Contact Name.</mat-label>
+              <input class="text-capitalize" matInput placeholder="Emergency Contact Name"
+                formControlName="mi_emergency_contact_name" [readonly]="viewOnly">
+            </mat-form-field>
+          </div>
 
 
-        <div class="col-4" *ngIf="checkIfFieldExist('mi_emergency_contact_no')">
-          <mat-form-field class="form-field">
-            <input oninput="javascript: if(this.value.length > this.maxLength) this.value = this.value.slice(0,this.maxLength);" matInput placeholder="Emergency Contact No." type="number" maxlength="10" formControlName="mi_emergency_contact_no" [readonly]="viewOnly">
-          </mat-form-field>
+          <div class="col-4" *ngIf="checkIfFieldExist('mi_emergency_contact_no')">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Emergency Contact Name</mat-label>
+              <input
+                oninput="javascript: if(this.value.length > this.maxLength) this.value = this.value.slice(0,this.maxLength);"
+                matInput placeholder="Emergency Contact No." type="number" maxlength="10"
+                formControlName="mi_emergency_contact_no" [readonly]="viewOnly">
+            </mat-form-field>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <br>
-    <div class="row"
-    *ngIf="checkIfFieldExist('mi_history_explanation') && checkIfFieldExist('mi_height') &&
+    <br>
+    <div class="row" *ngIf="checkIfFieldExist('mi_history_explanation') && checkIfFieldExist('mi_height') &&
       checkIfFieldExist('mi_weight') && checkIfFieldExist('mi_allergic_others') && checkIfFieldExist('mi_allergic_medication')
       && checkIfFieldExist('mi_student_known') && 
       checkIfFieldExist('mh_vd_id') && 
       checkIfFieldExist('mi_family_info') && 
       checkIfFieldExist('mi_lives_with') && 
       checkIfFieldExist('mi_family_explanation')">
-      <div class="col-6 vertical-line-1"
-      *ngIf="checkIfFieldExist('mi_history_explanation') && checkIfFieldExist('mi_height') &&
+      <div class="col-6 vertical-line-1" *ngIf="checkIfFieldExist('mi_history_explanation') && checkIfFieldExist('mi_height') &&
       checkIfFieldExist('mi_weight') && checkIfFieldExist('mi_allergic_others') && checkIfFieldExist('mi_allergic_medication')
       && checkIfFieldExist('mi_student_known')">
         <h6 class="text-center text-uppercase"><b>Medical History Part-2</b></h6>
@@ -62,7 +71,8 @@
         </p>
         <div *ngIf="checkIfFieldExist('mi_history_explanation')" class="row">
           <div class="col-12">
-            <mat-form-field class="form-field">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Medical History Explanation</mat-label>
               <textarea matInput placeholder="Medical History Explanation" formControlName="mi_history_explanation"
                 [readonly]="viewOnly"></textarea>
             </mat-form-field>
@@ -70,14 +80,17 @@
         </div>
         <div class="row">
           <div *ngIf="checkIfFieldExist('mi_height')" class="col-6">
-            <mat-form-field class="form-field">
-              <input class="text-capitalize" matInput placeholder="Height in centimeter" pattern="[0-9]*" formControlName="mi_height"
-                [readonly]="viewOnly">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Height In Centimeter</mat-label>
+              <input class="text-capitalize" matInput placeholder="Height in centimeter" pattern="[0-9]*"
+                formControlName="mi_height" [readonly]="viewOnly">
             </mat-form-field>
           </div>
           <div *ngIf="checkIfFieldExist('mi_weight')" class="col-6">
-            <mat-form-field class="form-field">
-              <input class="text-capitalize" matInput placeholder="Weight in Kg" formControlName="mi_weight" pattern="[0-9]*" [readonly]="viewOnly">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Weight in Kg</mat-label>
+              <input class="text-capitalize" matInput placeholder="Weight in Kg" formControlName="mi_weight"
+                pattern="[0-9]*" [readonly]="viewOnly">
             </mat-form-field>
           </div>
         </div>
@@ -88,8 +101,9 @@
             <label><b>Medications</b></label><br>
             <div class="row">
               <div class="col-2 tab-custom-col-20" *ngFor="let item of medicineArray;let i=index">
-                <mat-checkbox [disabled]="viewOnly" *ngIf="item.med_type == 'regular'" formControlName="mi_allergic_medication"
-                  [value]="item.med_id" (change)="getMedicineDetail($event)">{{item.med_name}}</mat-checkbox>
+                <mat-checkbox [disabled]="viewOnly" *ngIf="item.med_type == 'regular'"
+                  formControlName="mi_allergic_medication" [value]="item.med_id" (change)="getMedicineDetail($event)">
+                  {{item.med_name}}</mat-checkbox>
                 <mat-checkbox *ngIf="i == medicineArray.length - 1" value="Others" (change)="getOthers($event)"
                   [disabled]="viewOnly">Others</mat-checkbox>
               </div>
@@ -110,69 +124,76 @@
         <br>
         <div *ngIf="checkIfFieldExist('mi_allergic_others_explanation')" class="row">
           <div class="col-12">
-            <mat-form-field class="form-field">
-              <textarea matInput rows="5" placeholder="Food eg. LadyFinger" formControlName="mi_allergic_others_explanation"
-                [readonly]="viewOnly"></textarea>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Food</mat-label>
+              <textarea matInput rows="5" placeholder="Food eg. LadyFinger"
+                formControlName="mi_allergic_others_explanation" [readonly]="viewOnly"></textarea>
             </mat-form-field>
           </div>
         </div>
         <div *ngIf="checkIfFieldExist('mi_student_known')" class="row custom-med-margin-bottom-22 ">
           <div class="col-12">
-            <mat-form-field class="form-field">
-              <textarea matInput rows="7" placeholder="How long have you known the student" formControlName="mi_student_known"
-                [readonly]="viewOnly"></textarea>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>How long have you known the Student</mat-label>
+              <textarea matInput rows="7" placeholder="How long have you known the student"
+                formControlName="mi_student_known" [readonly]="viewOnly"></textarea>
             </mat-form-field>
           </div>
         </div>
-        </div>
+      </div>
       <div class="col-6">
-          <h6 *ngIf="checkIfFieldExist('mh_vd_id')" class="text-center text-uppercase"><b>Vaccination</b></h6>
-          <br>
-          <div class="row" *ngFor="let item of vaccinationByDurationArray;let i=index;">
-            <div *ngIf="checkIfFieldExist('mh_vd_id')" class="col-12">
-              <label><b>{{item.vd_name}}</b></label><br>
-              <div class="row">
-                <div class="col-2 tab-custom-col-25 custom-col-20" *ngFor="let titem of item.vac_id_list">
-                  <mat-checkbox [disabled]="viewOnly" [value]="titem.vac_id" (change)="getVaccinationValue($event,i,item.vd_id)"
-                    [checked]="checkMedicines(i,titem.vac_id)">{{titem.vac_name}}</mat-checkbox>
-                </div>
-              </div>
-            </div>
-            <br>
-          </div>
-          <br>
-          <h6 *ngIf="checkIfFieldExist('mi_lives_with')" class="text-center text-uppercase"><b>Family Information</b></h6>
-          <br>
-          <div *ngIf="checkIfFieldExist('mi_lives_with')" class="row">
-            <div class="col-12">
-              <label><b>Applicant Lives with</b></label><br>
-              <mat-radio-group [disabled]="viewOnly" (change)="getLivesWithValue($event)" formControlName="mi_lives_with">
-                <mat-radio-button name="lives_with" *ngFor="let item of livesWithArray" [value]="item.efi_lives_with">{{item.efi_lives_with_name}}&nbsp;&nbsp;</mat-radio-button>
-              </mat-radio-group>
-            </div>
-          </div>
-          <br>
-          <div *ngIf="checkIfFieldExist('mi_family_info')" class="row">
-            <div class="col-12">
-              <label><b>Family Info</b></label><br>
-              <div class="row">
-                <div class="col-3 tab-custom-med-col-30 " *ngFor="let item of infoArray;let i=index">
-                  <mat-checkbox [disabled]="viewOnly" *ngIf="infoFlagArray[i]" formControlName="mi_family_info" [value]="item.efi_family_info"
-                    (change)="checkFamilyInfo($event)" [checked]="checkFamilyStatus(item.efi_family_info)">{{item.efi_family_info}}&nbsp;</mat-checkbox>
-                </div>
+        <h6 *ngIf="checkIfFieldExist('mh_vd_id')" class="text-center text-uppercase"><b>Vaccination</b></h6>
+        <br>
+        <div class="row" *ngFor="let item of vaccinationByDurationArray;let i=index;">
+          <div *ngIf="checkIfFieldExist('mh_vd_id')" class="col-12">
+            <label><b>{{item.vd_name}}</b></label><br>
+            <div class="row">
+              <div class="col-2 tab-custom-col-25 custom-col-20" *ngFor="let titem of item.vac_id_list">
+                <mat-checkbox [disabled]="viewOnly" [value]="titem.vac_id"
+                  (change)="getVaccinationValue($event,i,item.vd_id)" [checked]="checkMedicines(i,titem.vac_id)">
+                  {{titem.vac_name}}</mat-checkbox>
               </div>
             </div>
           </div>
           <br>
-          <div *ngIf="infoBasedOnSeperated" class="row">
-            <div *ngIf="checkIfFieldExist('mi_family_explanation')" class="col-12">
-              <mat-form-field class="form-field">
-                <input class="text-capitalize" matInput placeholder="If parent are divored/ separated who has a legal custody of the applicant"
-                  formControlName="mi_family_explanation" [readonly]="viewOnly">
-              </mat-form-field>
+        </div>
+        <br>
+        <h6 *ngIf="checkIfFieldExist('mi_lives_with')" class="text-center text-uppercase"><b>Family Information</b></h6>
+        <br>
+        <div *ngIf="checkIfFieldExist('mi_lives_with')" class="row">
+          <div class="col-12">
+            <label><b>Applicant Lives with</b></label><br>
+            <mat-radio-group [disabled]="viewOnly" (change)="getLivesWithValue($event)" formControlName="mi_lives_with">
+              <mat-radio-button name="lives_with" *ngFor="let item of livesWithArray" [value]="item.efi_lives_with">
+                {{item.efi_lives_with_name}}&nbsp;&nbsp;</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <br>
+        <div *ngIf="checkIfFieldExist('mi_family_info')" class="row">
+          <div class="col-12">
+            <label><b>Family Info</b></label><br>
+            <div class="row">
+              <div class="col-3 tab-custom-med-col-30 " *ngFor="let item of infoArray;let i=index">
+                <mat-checkbox [disabled]="viewOnly" *ngIf="infoFlagArray[i]" formControlName="mi_family_info"
+                  [value]="item.efi_family_info" (change)="checkFamilyInfo($event)"
+                  [checked]="checkFamilyStatus(item.efi_family_info)">{{item.efi_family_info}}&nbsp;</mat-checkbox>
+              </div>
             </div>
           </div>
+        </div>
+        <br>
+        <div *ngIf="infoBasedOnSeperated" class="row">
+          <div *ngIf="checkIfFieldExist('mi_family_explanation')" class="col-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>If parent are divored/ separated who has a legal custody of the applicant</mat-label>
+              <input class="text-capitalize" matInput
+                placeholder="If parent are divored/ separated who has a legal custody of the applicant"
+                formControlName="mi_family_explanation" [readonly]="viewOnly">
+            </mat-form-field>
+          </div>
+        </div>
       </div>
     </div>
   </form>
-    </div>
+</div>

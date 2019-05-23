@@ -2,7 +2,8 @@
     <form [formGroup]="generalRemarkForm" *ngIf="!viewOnly">
         <div class="row">
             <div *ngIf="checkIfFieldExist('era_doj')" class="col-4">
-                <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Date</mat-label>
                     <input matInput [errorStateMatcher]="confirmValidParentMatcher" [matDatepicker]="picker"
                         [max]="minDate" placeholder="Date" formControlName="era_doj"
                         (dateChange)="addEvent('change', $event)" [readonly]="viewOnly" required>
@@ -14,7 +15,8 @@
                 </mat-form-field>
             </div>
             <div *ngIf="checkIfFieldExist('era_aut_id')" class="col-4">
-                <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Authority</mat-label>
                     <mat-select placeholder="Authority" [errorStateMatcher]="confirmValidParentMatcher"
                         formControlName="era_aut_id" required [disabled]="viewOnly">
                         <mat-option>Please Select</mat-option>
@@ -27,7 +29,8 @@
                 </mat-form-field>
             </div>
             <div *ngIf="checkIfFieldExist('era_ar_id')" class="col-4">
-                <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Area</mat-label>
                     <mat-select placeholder="Area" [errorStateMatcher]="confirmValidParentMatcher"
                         formControlName="era_ar_id" required [disabled]="viewOnly">
                         <mat-option>Please Select</mat-option>
@@ -41,7 +44,8 @@
         </div>
         <div *ngIf="checkIfFieldExist('era_teachers_remark')" class="row">
             <div class="col-8">
-                <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Remarks</mat-label>
         <input (keyup)="capitalizeRemarks($event)" matInput placeholder="Remarks" [errorStateMatcher]="confirmValidParentMatcher"
                         formControlName="era_teachers_remark" [readOnly]="viewOnly" required>
                     <mat-error>
