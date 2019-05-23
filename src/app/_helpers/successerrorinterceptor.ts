@@ -9,14 +9,15 @@ import { map, catchError, retry } from 'rxjs/operators';
 import { CommonAPIService } from '../_services/index';
 import { CookieService } from 'ngx-cookie';
 import { LoaderService } from 'projects/axiom/src/app/_services/loader.service';
-import { appConfig } from 'projects/axiom/src/app//app.config';
 import { Router } from '@angular/router';
 import { ProcesstypeService } from 'projects/sis/src/app/_services';
+import {ProcesstypeFeeService} from 'projects/fee/src/app/_services';
 @Injectable()
 export class SuccessErrorInterceptor implements HttpInterceptor {
 	constructor(private service: CommonAPIService, private cookieService: CookieService,
 		private router: Router,
 		private processtypeService: ProcesstypeService,
+		private processtypeFeeService: ProcesstypeFeeService,
 		private loaderService: LoaderService) { }
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		const session = JSON.parse(localStorage.getItem('session'));
@@ -36,10 +37,10 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 			(JSON.parse(localStorage.getItem('project')).pro_url === 'sis')) {
 				request = request.clone({ headers: request.headers.set('Processtype', this.processtypeService.getProcesstype()) });
 			}
-			if (
+			if (this.processtypeFeeService.getProcesstype() &&
 			localStorage.getItem('project') &&
 			(JSON.parse(localStorage.getItem('project')).pro_url === 'fees')) {
-				request = request.clone({ headers: request.headers.set('Processtype', '4') });
+				request = request.clone({ headers: request.headers.set('Processtype', this.processtypeFeeService.getProcesstype()) });
 			}
 		}
 		return next.handle(request).pipe(
