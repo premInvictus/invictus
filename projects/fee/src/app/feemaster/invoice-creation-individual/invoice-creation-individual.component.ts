@@ -46,7 +46,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.feeService.getCalculationMethods({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.invoiceType = result.data;
-				console.log(this.invoiceType);
 			}
 		});
 	}
@@ -59,7 +58,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				this.invoiceCreationForm.patchValue({
 					inv_fp_id: result.data.fp_id
 				});
-				console.log(this.feePeriod);
 			}
 		});
 	}
@@ -121,7 +119,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		});
 	}
 	getLastRecordAdmno() {
-		this.processtypeService.setProcesstype('4');
 		this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.lastRecordAdmno = result.data[0].last_record;
@@ -131,49 +128,53 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			}
 		});
 	}
+	checkEmit(process_type) {
+		if (process_type) {
+			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				if (result.status === 'ok') {
+					if (result.data[0].last_record && result.data[0].au_login_id) {
+						this.lastRecordAdmno = result.data[0].last_record;
+						this.currentAdmno = result.data[0].last_record;
+						this.currentLoginId = result.data[0].au_login_id;
+						this.getInvoice({ admission_no: this.currentAdmno });
+					}
+				}
+			});
+		}
+	}
 	key(event) {
 		this.currentLoginId = event;
-		console.log(event);
 	}
 	next(event) {
 		this.currentLoginId = event;
-		console.log(event);
 	}
 	prev(event) {
 		this.currentLoginId = event;
-		console.log(event);
 	}
 	first(event) {
 		this.currentLoginId = event;
-		console.log(event);
 	}
 	last(event) {
 		this.currentLoginId = event;
-		console.log(event);
 	}
 	key2(event) {
 		this.currentAdmno = event;
-		console.log(event);
 		this.getInvoice({ admission_no: event });
 	}
 	next2(event) {
 		this.currentAdmno = event;
-		console.log(event);
 		this.getInvoice({ admission_no: event });
 	}
 	prev2(event) {
 		this.currentAdmno = event;
-		console.log(event);
 		this.getInvoice({ admission_no: event });
 	}
 	first2(event) {
 		this.currentAdmno = event;
-		console.log(event);
 		this.getInvoice({ admission_no: event });
 	}
 	last2(event) {
 		this.currentAdmno = event;
-		console.log(event);
 		this.getInvoice({ admission_no: event });
 	}
 	ngAfterViewInit() {
@@ -187,7 +188,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		value.pageSize = 1000;
 		this.feeService.getInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				console.log(result);
 				this.invoiceArray = result.data.invoiceData;
 				this.invoiceTableData(this.invoiceArray);
 			} else {
@@ -221,11 +221,8 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.dataSource.sort = this.sort;
 	}
 	addTo(row) {
-		console.log(row);
-		console.log(this.selection);
 	}
 	fetchData(event?: PageEvent) {
-		console.log(event);
 		return event;
 	}
 	fetchInvId() {
@@ -248,8 +245,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			const formData: any = await this.insertInvoiceData(Object.assign({}, this.invoiceCreationForm.value));
 			const arrAdmno = [this.currentLoginId];
 			formData.login_id = arrAdmno;
-			console.log('formData', formData);
-			console.log('arrAdmno', arrAdmno);
 			this.feeService.insertInvoice(formData).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -262,7 +257,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		}
 	}
 	recalculateInvoice() {
-		console.log(this.invoiceCreationForm.value);
 	}
 	buildForm() {
 		this.invoiceCreationForm = this.fb.group({
@@ -303,18 +297,15 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			}
 		});
 		dialogRefFilter.afterClosed().subscribe(result => {
-			console.log(result);
 		});
 		dialogRefFilter.componentInstance.filterResult.subscribe((data: any) => {
 			this.filterResult = data;
-			console.log('data in parent', this.filterResult);
 		});
 	}
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
 	openConsolidateDialog = (data) => this.consolidateModal.openModal(data);
 	deleteConfirm(value) {
-		console.log(value);
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -325,7 +316,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		});
 	}
 	recalculateConfirm(value) {
-		console.log(value);
 		this.invoiceCreationForm.patchValue({
 			inv_id: this.fetchInvId(),
 			recalculation_flag: '1'
@@ -341,7 +331,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 
 	}
 	consolidateConfirm(value) {
-		console.log(value);
 		this.feeService.consolidateInvoice({ inv_id: this.fetchInvId() }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -362,7 +351,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	setMinDueDate(event) {
 		const tdate = event.value;
 		tdate.add(1, 'days');
-		console.log(tdate);
 		this.minDueDate = tdate;
 	}
 
