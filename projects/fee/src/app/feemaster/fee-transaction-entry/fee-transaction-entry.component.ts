@@ -396,7 +396,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
