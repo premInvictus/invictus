@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FeeLedgerElement } from './fee-ledger.model';
-import { SisService, ProcesstypeService, FeeService } from '../../_services';
+import { SisService, ProcesstypeFeeService, FeeService } from '../../_services';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
@@ -33,7 +33,7 @@ export class FeeLedgerComponent implements OnInit {
 	@ViewChild('table') table: ElementRef;
 	constructor(private sisService: SisService,
 		private feeService: FeeService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public dialog: MatDialog,
 		public studentRouteMoveStoreService: StudentRouteMoveStoreService
 	) { }

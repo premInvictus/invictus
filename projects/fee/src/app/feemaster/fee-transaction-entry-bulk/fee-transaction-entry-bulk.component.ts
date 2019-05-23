@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { SisService, ProcesstypeService, FeeService, CommonAPIService } from '../../_services';
+import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { BarecodeScannerLivestreamComponent } from 'ngx-barcode-scanner';
 import { DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
@@ -27,7 +27,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	constructor(private router: Router,
 		private route: ActivatedRoute,
 		private sisService: SisService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public feeService: FeeService,
 		private fbuild: FormBuilder,
 		private common: CommonAPIService) { }

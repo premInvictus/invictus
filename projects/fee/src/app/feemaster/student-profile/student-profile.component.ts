@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SisService, CommonAPIService, ProcesstypeService, FeeService } from '../../_services';
+import { SisService, CommonAPIService, ProcesstypeFeeService, FeeService } from '../../_services';
 import { StudentAccountComponent } from '../student-account/student-account.component';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 
@@ -19,7 +19,7 @@ export class StudentProfileComponent implements OnInit {
 	constructor(
 		private sisService: SisService,
 		private commmon: CommonAPIService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public studentRouteMoveStoreService: StudentRouteMoveStoreService
 	) { }
 
@@ -35,7 +35,6 @@ export class StudentProfileComponent implements OnInit {
 				this.lastRecordId = data.adm_no;
 				this.loginId = data.login_id;
 			} else {
-				this.processtypeService.setProcesstype('4');
 				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 					if (result.status === 'ok') {
 						this.lastRecordId = result.data[0].last_record;
@@ -45,6 +44,18 @@ export class StudentProfileComponent implements OnInit {
 			}
 
 		});
+	}
+	checkEmit(process_type) {
+		if (process_type) {
+			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				if (result.status === 'ok') {
+					if (result.data[0].last_record && result.data[0].au_login_id) {
+					this.lastRecordId = result.data[0].last_record;
+					this.loginId = result.data[0].au_login_id;
+					}
+				}
+			});
+		}
 	}
 	next(admno) {
 		this.loginId = admno;

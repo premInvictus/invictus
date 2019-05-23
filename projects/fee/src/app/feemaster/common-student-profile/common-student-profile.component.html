@@ -4,7 +4,14 @@
       <div class="col-2 tab-col-18 remove-col-padding custom-fee-entry-col-15 custom-fee-entry-col-18">
         <div class="row">
           <div class="col-12 text-center">
-            <span class="font-light font-size-14">Admission No.</span>
+              <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Process Type</mat-label>
+                <mat-select placeholder="Process Type" [(value)]="processType"
+                (selectionChange)="changeProcessType($event)">
+                  <mat-option *ngFor="let item of processTypeArray"
+                  [value]="item.id">{{item.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
           </div>
         </div>
         <div class="row">
@@ -53,22 +60,22 @@
           </div>
         </div>
       </div>
-    <div class="col-2 custom-fee-entry-col-12">
-      <div class="row margin-top-8">
-        <div class="col-12 text-left tab-remove-padding">
-          <span class="font-size-14 font-light">Fee Outstanding</span><br>
-          <span class="font-size-16 font-bold">{{studentdetails.fee_outstanding ? 
-              (studentdetails.fee_outstanding | number): 'NA'}}</span>
-        </div>
-        <div class="row margin-top-10">
+      <div class="col-2 custom-fee-entry-col-12">
+        <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Concession</span><br>
-            <span
-              class="font-size-16 font-bold">{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+            <span class="font-size-14 font-light">Fee Outstanding</span><br>
+            <span class="font-size-16 font-bold">{{studentdetails.fee_outstanding ? 
+              (studentdetails.fee_outstanding | number): 'NA'}}</span>
+          </div>
+          <div class="row margin-top-10">
+            <div class="col-12 text-left tab-remove-padding">
+              <span class="font-size-14 font-light">Concession</span><br>
+              <span
+                class="font-size-16 font-bold">{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
       <div class="col-2 custom-fee-entry-col-12">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
@@ -100,14 +107,15 @@
               studentdetails.parentinfo[0].epd_parent_name : 'NA'}}</span>
           </div>
         </div>
-      
-      <div class="row margin-top-10">
-        <div class="col-12 text-left tab-remove-padding">
-          <span class="font-size-14 font-light">Contact No</span><br>
-          <span class="font-size-16 font-bold">{{studentdetails.parentinfo && studentdetails.parentinfo[0]? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
+
+        <div class="row margin-top-10">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Contact No</span><br>
+            <span
+              class="font-size-16 font-bold">{{studentdetails.parentinfo && studentdetails.parentinfo[0]? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
+          </div>
         </div>
       </div>
-    </div>
       <div class="col-2 custom-fee-entry-col-12 tab-col-14">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
@@ -131,8 +139,8 @@
               (click)="goToPage('student-profile')" matTooltip="Student Profile">
               <img style="margin-left: 11px ; margin-top: 10px" src="/assets/student_profile.svg">
             </div>
-            <div *ngIf="invoice_creation_individual_flag" class=" blue-circle-btn margin-top-5" matTooltip="Invoice Creation"
-              (click)="goToPage('invoice-creation-individual')">
+            <div *ngIf="invoice_creation_individual_flag" class=" blue-circle-btn margin-top-5"
+              matTooltip="Invoice Creation" (click)="goToPage('invoice-creation-individual')">
               <img style="margin-left: 11px ; margin-top: 10px" src="/assets/invoice_creation.svg">
             </div>
 
@@ -140,10 +148,9 @@
           <div class="col-6 remove-col-padding-right remove-col-padding-left">
             <div *ngIf="fee_transaction_entry_individual_flag" class=" blue-circle-btn margin-top-5"
               matTooltip="Fee Transaction Entry" (click)="goToPage('fee-transaction-entry-individual')">
-              <img style="margin-left: 11px ; margin-top: 10px"
-                src="/assets/fee_transaction_entry.svg">
+              <img style="margin-left: 11px ; margin-top: 10px" src="/assets/fee_transaction_entry.svg">
             </div>
-           
+
             <div *ngIf="fee_ledger_flag" class="margin-top-5 blue-circle-btn" (click)="goToPage('fee-ledger')"
               matTooltip="Fee Ledger">
               <img style="margin-left: 11px ; margin-top: 10px" src="/assets/fee_modification.svg">

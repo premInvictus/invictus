@@ -23,7 +23,7 @@
      <div class="col-3">
         <mat-form-field  class="form-field">
            <mat-select placeholder="Concession Group" [disabled]="viewOnly"
-           formControlName="accd_fcg_id" [errorStateMatcher]="confirmValidParentMatcher" required>
+           formControlName="accd_fcg_id" [errorStateMatcher]="confirmValidParentMatcher">
               <mat-option>Please Select</mat-option>
               <mat-option *ngFor="let item of conGroupArray" [value]="item.fcg_id">{{item.fcg_name}}</mat-option>
            </mat-select>
@@ -86,7 +86,7 @@
      <div *ngIf="modeFlag" class="col-3">
         <mat-form-field  class="form-field">
            <input  matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
-           placeholder="Application From" formControlName="accd_transport_from" 
+           placeholder="ApplicableFrom" formControlName="accd_transport_from" 
            [errorStateMatcher]="confirmValidParentMatcher" required
            />
            <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker" [disabled]="viewOnly"></mat-datepicker-toggle>

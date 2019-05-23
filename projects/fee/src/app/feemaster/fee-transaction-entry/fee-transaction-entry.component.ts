@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SisService, ProcesstypeService, FeeService, CommonAPIService } from '../../_services';
+import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { InvoiceElement } from './invoiceelement.model';
 import { MatTableDataSource, MatDialog } from '@angular/material';
@@ -39,7 +39,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 	startMonth: any;
 	constructor(
 		private sisService: SisService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public feeService: FeeService,
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,

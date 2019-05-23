@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { CommonAPIService, ProcesstypeService, FeeService } from '../../_services';
+import { CommonAPIService , FeeService } from '../../_services';
 import { DatePipe } from '@angular/common';
 import { ConfirmValidParentMatcher } from '../../_validationclass/confirmValidParentMatcher.class';
 
@@ -44,7 +44,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
 		private commonAPIService: CommonAPIService,
-		public processtypeService: ProcesstypeService
 	) { }
 
 	ngOnInit() {
@@ -256,8 +255,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.value.accd_fo_id &&
-			!this.accountsForm.value.accd_fs_id &&
+		if (!this.accountsForm.value.accd_fo_id ||
+			!this.accountsForm.value.accd_fs_id ||
 			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
@@ -265,16 +264,16 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			validateFlag = false;
 		}
 		if (this.transportFlag) {
-			if (!this.accountsForm.get('accd_transport_mode').valid) {
+			if (!this.accountsForm.value.accd_transport_mode) {
 				this.accountsForm.get('accd_transport_mode').markAsDirty();
 				validateFlag = false;
 			}
 		}
 		if (this.modeFlag && this.transportFlag) {
-			if (!this.accountsForm.get('accd_tr_id').valid &&
-				!this.accountsForm.get('accd_tsp_id').valid &&
-				!this.accountsForm.get('accd_ts_id').valid &&
-				!this.accountsForm.get('accd_transport_from').valid) {
+			if (!this.accountsForm.value.accd_tr_id ||
+				!this.accountsForm.value.accd_tsp_id ||
+				!this.accountsForm.value.accd_ts_id ||
+				!this.accountsForm.value.accd_transport_from) {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
 				this.accountsForm.get('accd_ts_id').markAsDirty();
@@ -283,7 +282,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.terminationFlag) {
-			if (!this.accountsForm.get('accd_transport_to').valid) {
+			if (!this.accountsForm.value.accd_transport_to) {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				validateFlag = false;
 			}
@@ -322,6 +321,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					this.editChange.emit(true);
 				}
 			});
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please select required fields', 'error');
 		}
 	}
 	update() {
@@ -330,8 +331,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.value.accd_fo_id &&
-			!this.accountsForm.value.accd_fs_id &&
+		if (!this.accountsForm.value.accd_fo_id ||
+			!this.accountsForm.value.accd_fs_id ||
 			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
@@ -339,16 +340,16 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			validateFlag = false;
 		}
 		if (this.transportFlag) {
-			if (!this.accountsForm.get('accd_transport_mode').valid) {
+			if (!this.accountsForm.value.accd_transport_mode) {
 				this.accountsForm.get('accd_transport_mode').markAsDirty();
 				validateFlag = false;
 			}
 		}
 		if (this.modeFlag && this.transportFlag) {
-			if (!this.accountsForm.get('accd_tr_id').valid &&
-				!this.accountsForm.get('accd_tsp_id').valid &&
-				!this.accountsForm.get('accd_ts_id').valid &&
-				!this.accountsForm.get('accd_transport_from').valid) {
+			if (!this.accountsForm.value.accd_tr_id ||
+				!this.accountsForm.value.accd_tsp_id ||
+				!this.accountsForm.value.accd_ts_id ||
+				!this.accountsForm.value.accd_transport_from) {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
 				this.accountsForm.get('accd_ts_id').markAsDirty();
@@ -357,7 +358,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.terminationFlag) {
-			if (!this.accountsForm.get('accd_transport_to').valid) {
+			if (!this.accountsForm.value.accd_transport_to) {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				validateFlag = false;
 			}
@@ -401,6 +402,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			if (this.isExist('374')) {
 				this.checkFormChangedValue();
 			}
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please select required fields', 'error');
 		}
 	}
 	next(admno) {
@@ -462,15 +465,15 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					});
 				}
 				if (key === 'accd_is_terminate' || key === 'accd_is_transport'
-				|| key === 'accd_is_hostel' || key === 'accd_is_hostel_terminate') {
-				sibReqArray.push({
-					rff_where_id: 'accd_id',
-					rff_where_value: this.accountDetails['accd_id'],
-					rff_field_name: key,
-					rff_new_field_value: formControl.value ? 'Y' : 'N',
-					rff_old_field_value: this.accountDetails[key],
-				});
-			} else {
+					|| key === 'accd_is_hostel' || key === 'accd_is_hostel_terminate') {
+					sibReqArray.push({
+						rff_where_id: 'accd_id',
+						rff_where_value: this.accountDetails['accd_id'],
+						rff_field_name: key,
+						rff_new_field_value: formControl.value ? 'Y' : 'N',
+						rff_old_field_value: this.accountDetails[key],
+					});
+				} else {
 					sibReqArray.push({
 						rff_where_id: 'accd_id',
 						rff_where_value: this.accountDetails['accd_id'],
@@ -507,7 +510,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_ts_id: ''
 		});
 		this.stoppageArray = [];
-		this.feeService.getStoppagesPerRoute({tr_id : $event.value}).subscribe((result: any) => {
+		this.feeService.getStoppagesPerRoute({ tr_id: $event.value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.stoppageArray = result.data;
 			}
@@ -515,7 +518,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 	getSlab($event) {
 		this.slabArray = [];
-		this.feeService.getTransportSlabPerStoppages({tsp_id : $event.value}).subscribe((result: any) => {
+		this.feeService.getTransportSlabPerStoppages({ tsp_id: $event.value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.slabArray = result.data;
 			}

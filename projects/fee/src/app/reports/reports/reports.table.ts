@@ -98,9 +98,9 @@ export const reportTable = {
 		dataReport: {
 			feeLedger: {
 				tableHeader: 'Fee Ledger Report',
-				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'flgr_created_date' , 'flgr_particulars',
+				columnDef: ['srno', 'flgr_created_date' , 'au_admission_no', 'au_full_name', 'class_name', 'flgr_particulars',
 					'flgr_invoice_receipt_no', 'flgr_amount', 'flgr_concession', 'flgr_receipt', 'flgr_balance'],
-				colunmHeader: ['SNo', 'Admission No', 'Student Name', 'Class-Section', 'Created Date' ,
+				colunmHeader: ['SNo', 'Date', 'Admission No', 'Student Name', 'Class-Section' ,
 				'Particulars', 'Invoice/Receipt No', 'Amount Due', 'Concession',
 					'Reciept', 'Balance'],
 			}
