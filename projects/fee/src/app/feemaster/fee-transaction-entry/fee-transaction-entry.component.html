@@ -29,7 +29,8 @@
         (prev)="prev2($event)"
         (first)="first2($event)"
         (last)="last2($event)"
-        (key)="key2($event)"></app-common-student-profile>
+        (key)="key2($event)"
+        (processTypeEmit)="checkEmit($event)"></app-common-student-profile>
      </div>
   </div>
   <div [hidden]="!(invoiceArray.length > 0)" class="row margin-top-25 ">

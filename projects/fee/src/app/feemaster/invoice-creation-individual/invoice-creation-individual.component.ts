@@ -40,6 +40,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	minInvoiceDate = new Date();
 	minDueDate = new Date();
 	pageEvent: PageEvent;
+	type: any = '';
 
 	getCalculationMethods() {
 		this.invoiceType = [];
@@ -152,6 +153,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	checkEmit(process_type) {
 		if (process_type) {
+			this.type = process_type;
 			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 				if (result.status === 'ok') {
 					if (result.data[0].last_record && result.data[0].au_login_id) {
@@ -217,6 +219,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	getInvoice(value: any) {
 		this.invoiceArray = [];
 		this.selection.clear();
+		value.processType = this.type;
 		value.pageIndex = 0;
 		value.pageSize = 1000;
 		this.feeService.getInvoice(value).subscribe((result: any) => {
@@ -329,7 +332,8 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
+			height: '80vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
