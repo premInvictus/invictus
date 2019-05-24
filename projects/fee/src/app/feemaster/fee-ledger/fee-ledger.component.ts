@@ -45,7 +45,6 @@ export class FeeLedgerComponent implements OnInit {
 				this.loginId = data.login_id;
 				this.getFeeLedger(this.loginId);
 			} else {
-				this.processtypeService.setProcesstype('4');
 				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 					if (result.status === 'ok') {
 						this.lastRecordId = result.data[0].last_record;
@@ -56,6 +55,17 @@ export class FeeLedgerComponent implements OnInit {
 			}
 
 		});
+	}
+	checkEmit(process_type) {
+		if (process_type) {
+			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.lastRecordId = result.data[0].last_record;
+					this.loginId = result.data[0].au_login_id;
+					this.getFeeLedger(this.loginId);
+				}
+			});
+		}
 	}
 	getFeeLedger(login_id) {
 		this.FEE_LEDGER_ELEMENT = [];

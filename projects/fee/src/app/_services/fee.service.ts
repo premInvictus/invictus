@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonAPIService } from '../_services/commonAPI.service';
 import { observable, of } from 'rxjs';
-import {environment} from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
+import { ProcesstypeFeeService } from './index';
 @Injectable()
 export class FeeService {
 
-	constructor(private http: HttpClient, private service: CommonAPIService) { }
+	constructor(private http: HttpClient, private service: CommonAPIService,
+		private processType: ProcesstypeFeeService) { }
 	getFeeTypes(value) {
 		this.service.startLoading();
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeTypes');
@@ -162,7 +164,7 @@ export class FeeService {
 	}
 	updateFeeAccount(value) {
 		this.service.startLoading();
-		return this.http.put(environment.apiSisUrl + '/feeAccount/updateFeeAccount/' + value.accd_id , value);
+		return this.http.put(environment.apiSisUrl + '/feeAccount/updateFeeAccount/' + value.accd_id, value);
 	}
 	getFeeAccount(value) {
 		this.service.startLoading();
@@ -194,7 +196,7 @@ export class FeeService {
 	}
 	deleteInvoice(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/invoice/deleteInvoice', {inv_id: value});
+		return this.http.post(environment.apiFeeUrl + '/invoice/deleteInvoice', { inv_id: value });
 	}
 	consolidateInvoice(value) {
 		this.service.startLoading();
@@ -219,6 +221,9 @@ export class FeeService {
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getPaymentMode');
 	}
 	insertFeeTransaction(value: any) {
+		if (this.processType.getProcesstype()) {
+			value.inv_process_type = this.processType.getProcesstype();
+		}
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/insertFeeTransaction', value);
 	}
 	getBanks(value) {
@@ -234,6 +239,9 @@ export class FeeService {
 		return this.http.post(environment.apiFeeUrl + '/checkControlTool/addCheckControlTool', value);
 	}
 	getFeeLedger(value: any) {
+		if (this.processType.getProcesstype()) {
+			value.inv_process_type = this.processType.getProcesstype();
+		}
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/getFeeLedger/', value);
 	}
 	getHeadWiseCollection(value) {

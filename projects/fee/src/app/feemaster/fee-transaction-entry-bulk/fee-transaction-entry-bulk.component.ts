@@ -24,6 +24,14 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	startMonth: any;
 	minDate: any;
 	schoolInfo: any;
+	processType: any = '4';
+	processTypeArray: any[] = [
+		{ id: '1', name: 'Enquiry No.' },
+		{ id: '2', name: 'Registration No.' },
+		{ id: '3', name: 'Provisional Admission No.' },
+		{ id: '4', name: 'Admission No.' },
+		{ id: '5', name: 'Alumni No.' }
+	];
 	constructor(private router: Router,
 		private route: ActivatedRoute,
 		private sisService: SisService,
@@ -38,6 +46,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		} else {
 			this.permission = false;
 		}
+		this.processtypeService.setProcesstype(this.processType);
 		this.getSchool();
 		this.getBanks();
 		this.getEntryModes();
@@ -128,7 +137,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		}
 	}
 	submit() {
-		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0) {
+		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0 && !this.processType) {
 			const datePipe = new DatePipe('en-in');
 			this.feeTransactionForm.patchValue({
 				'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
@@ -148,7 +157,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		}
 	}
 	saveAndPrint() {
-		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0) {
+		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0 && !this.processType) {
 			const datePipe = new DatePipe('en-in');
 			this.feeTransactionForm.patchValue({
 				'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
@@ -203,5 +212,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				this.minDate = new Date(new Date().getFullYear(), this.startMonth - 1 , 1);
 			}
 		});
+	}
+	changeProcessType($event) {
+		this.processType = $event.value;
+		this.processtypeService.setProcesstype(this.processType);
 	}
 }

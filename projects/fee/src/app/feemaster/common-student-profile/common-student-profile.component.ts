@@ -74,7 +74,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },
 		{ id: '3', name: 'Provisional Admission No.' },
-		{ id: '4', name: 'Admission No.' }
+		{ id: '4', name: 'Admission No.' },
+		{ id: '5', name: 'Alumni No.' }
 	];
 	constructor(private fbuild: FormBuilder,
 		private feeService: FeeService,

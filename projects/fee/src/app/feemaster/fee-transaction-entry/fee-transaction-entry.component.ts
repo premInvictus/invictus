@@ -37,6 +37,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 	minDate: any;
 	schoolInfo: any;
 	startMonth: any;
+	type: any = '';
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -74,7 +75,6 @@ export class FeeTransactionEntryComponent implements OnInit {
 				this.feeLoginId = data.login_id;
 				this.getStudentInformation(this.lastRecordId);
 			} else {
-				this.processtypeService.setProcesstype('4');
 				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 					if (result.status === 'ok') {
 						this.lastRecordId = result.data[0].last_record;
@@ -105,6 +105,19 @@ export class FeeTransactionEntryComponent implements OnInit {
 			'ftr_deposit_bnk_id': '',
 			'saveAndPrint': ''
 		});
+	}
+	checkEmit(process_type) {
+		if (process_type) {
+			this.type = process_type;
+			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.lastRecordId = result.data[0].last_record;
+					this.loginId = result.data[0].au_login_id;
+					this.feeLoginId = this.loginId;
+					this.getStudentInformation(this.lastRecordId);
+				}
+			});
+		}
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((result: any) => {

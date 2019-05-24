@@ -1,226 +1,188 @@
 <div class="margin-20ne overflow-x-hidden">
-<div class="row">
-  <div class="col-12 text-right">
-    <a class="close-btn"  (click)="closemodal()"><i class="material-icons">
-        clear
-      </i></a>
+  <div class="row">
+    <div class="col-12 text-right">
+      <a class="close-btn" (click)="closemodal()"><i class="material-icons">
+          clear
+        </i></a>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-2 text-center">
-    <img class="student-profile-image-popup"
-      [src]="invoiceDetails?.au_profileimage ? invoiceDetails.au_profileimage : '/assets/images/student.png'">
+  <div class="row">
+    <div class="col-2 text-center">
+      <img class="student-profile-image-popup"
+        [src]="invoiceDetails?.au_profileimage ? invoiceDetails.au_profileimage : '/assets/images/student.png'">
       <div class="">
         <div>
-          <span class="font-size-16">Adm No. : {{invoiceDetails?.au_admission_no}} </span>
+          <span class="font-size-16">{{invoiceDetails?.process_name}} : {{invoiceDetails?.au_admission_no}} </span>
         </div>
-      </div>
-  </div>
-  <div class="col-10">
-    <!-- <div class="row">
-      <div class="col-4">
-        <div class="blue-box">
-          <div>
-            <span class="font-size-14">Admission No. : {{invoiceDetails?.au_admission_no}} </span>
-          </div>
-        </div>
-      </div>
-      <div class="col-8">
-        <div class="text-right">
-          <button
-            *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
-            mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
-            (click)="openRecalculateDialog()">Recalulate Invoice</button>
-          <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn" (click)="printReceipt()" >Print Receipt</button>
-        </div>
-      </div>
-    </div> -->
-    <!-- <div class="row ">
-      <div class="col-12">
-        <span class="font-size-28 font-medium">Anita Kumari, 9-A</span>
-      </div>
-    </div> -->
-    <div class="row remove-top-margin">
-      <div class="col-4 ">
-        <div class="row">
-          <div class="col-12">
-            <span class="font-size-16 font-medium">{{invoiceDetails?.au_full_name | titlecase}}, {{invoiceDetails?.class_name}} -
-              {{invoiceDetails?.sec_name}}</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Parent Name: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.epd_parent_name | titlecase}}</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Mobile No: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.epd_contact_no}}</span>
-          </div>
-        </div>
-
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Receipt no: </span><span
-              class="font-size-16 font-regular">{{data.invoiceNo}}</span>
-          </div>
-        </div>
-        <!-- <div class="row">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Invoice Type: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.calm_name}}</span>
-          </div>
-        </div> -->
-        <div class="row">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Fee Period: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.fp_name}}</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Fee Month: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.fp_months}}</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Receipt Date: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.receipt_created_date | date:'dd MMM, yyyy'}}</span>
-          </div>
-        </div>
-        <!-- <div class="row">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Due Date: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.inv_due_date | date:'dd MMM, yyyy'}}</span>
-          </div>
-        </div> -->
-        <div class="row" *ngIf="invoiceDetails?.pay_id === '1' || invoiceDetails?.pay_id === '2'">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Payment Mode: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.pay_name}}</span>
-          </div>
-        </div>
-        <div class="row" *ngIf="invoiceDetails?.pay_id === '3'">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Cheque/Draft No.: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.ftr_cheque_no}}</span>
-          </div>
-        </div>
-        <div class="row" *ngIf="invoiceDetails?.pay_id === '3'">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Cheque/Draft Date: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.ftr_cheque_date | date:'dd MMM, yyyy'}}</span>
-          </div>
-        </div>
-        <div class="row" *ngIf="invoiceDetails?.pay_id === '3' || invoiceDetails?.pay_id === '2'">
-          <div class="col-12">
-            <span class="font-size-16 font-light">Bank and Branch Details: </span><span
-              class="font-size-16 font-regular">{{invoiceDetails?.ftr_bnk_name}}, {{invoiceDetails?.bnk_branch}}</span>
-          </div>
-        </div>
-
-
       </div>
     </div>
-    <div class="row">
+    <div class="col-10">
+      <div class="row remove-top-margin">
+        <div class="col-4 ">
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-16 font-medium">{{invoiceDetails?.au_full_name | titlecase}},
+                {{invoiceDetails?.class_name}} -
+                {{invoiceDetails?.sec_name}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Parent Name: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.epd_parent_name | titlecase}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Mobile No: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.epd_contact_no}}</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Receipt no: </span><span
+                class="font-size-16 font-regular">{{data.invoiceNo}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Fee Month: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.fp_months}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Receipt Date: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.receipt_created_date | date:'dd MMM, yyyy'}}</span>
+            </div>
+          </div>
+          <div class="row" *ngIf="invoiceDetails?.pay_id === '1' || invoiceDetails?.pay_id === '2'">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Payment Mode: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.pay_name}}</span>
+            </div>
+          </div>
+          <div class="row" *ngIf="invoiceDetails?.pay_id === '3'">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Cheque/Draft No.: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.ftr_cheque_no}}</span>
+            </div>
+          </div>
+          <div class="row" *ngIf="invoiceDetails?.pay_id === '3'">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Cheque/Draft Date: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.ftr_cheque_date | date:'dd MMM, yyyy'}}</span>
+            </div>
+          </div>
+          <div class="row" *ngIf="invoiceDetails?.pay_id === '3' || invoiceDetails?.pay_id === '2'">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Bank and Branch Details: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.ftr_bnk_name}},
+                {{invoiceDetails?.bnk_branch}}</span>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="text-right">
+            <button
+              *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
+              mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
+              (click)="openRecalculateDialog()">Recalulate Invoice</button>
+            <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
+              (click)="printReceipt()">Print Receipt</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row margin-top-20">
     <div class="col-12">
-      <div class="text-right">
-        <button
-          *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
-          mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
-          (click)="openRecalculateDialog()">Recalulate Invoice</button>
-        <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn" (click)="printReceipt()" >Print Receipt</button>
+      <table mat-table [dataSource]="dataSource" class="table-100 text-center">
+
+        <ng-container matColumnDef="srno">
+          <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
+          <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+        </ng-container>
+        <ng-container matColumnDef="feehead">
+          <th mat-header-cell *matHeaderCellDef> Fee Head </th>
+          <td mat-cell *matCellDef="let element"> {{element.feehead | titlecase}} </td>
+        </ng-container>
+        <ng-container matColumnDef="feedue">
+          <th mat-header-cell *matHeaderCellDef> Fee </th>
+          <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
+        </ng-container>
+        <ng-container matColumnDef="concession">
+          <th mat-header-cell *matHeaderCellDef> Concession </th>
+          <td mat-cell *matCellDef="let element"> {{element.concession | number}} </td>
+        </ng-container>
+        <ng-container matColumnDef="adjustment">
+          <th mat-header-cell *matHeaderCellDef> Adjustment </th>
+          <td mat-cell *matCellDef="let element">
+            <ng-template [ngIf]="modificationFlag" [ngIfElse]="elseContaint">
+              <mat-form-field class="form-field" style="width:50%">
+                <input matInput type="number" [value]="element.adjustment"
+                  (change)="changeAdjAmt(element.invg_id, $event)">
+              </mat-form-field>
+            </ng-template>
+            <ng-template #elseContaint>
+              {{element.adjustment | number}}
+            </ng-template>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="netpay">
+          <th mat-header-cell *matHeaderCellDef> Net Payable </th>
+          <td mat-cell *matCellDef="let element">{{element.netpay | number}} </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="grey-box ">
+        <div class="margin-right-50"><span class="font-size-16 ">Amount in Words :</span><span
+            class="font-size-20 font-medium"> {{invoiceTotal | numberToWord | titlecase}} </span><span
+            class="float-right"><span class="font-size-16">Grand Total :</span><span
+              class="font-size-20 font-medium">{{invoiceTotal | number}} </span></span></div>
       </div>
     </div>
   </div>
-  </div>
-</div>
-<div class="row margin-top-20">
-  <div class="col-12">
-    <table mat-table [dataSource]="dataSource" class="table-100 text-center">
-
-      <ng-container matColumnDef="srno">
-        <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
-        <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-      </ng-container>
-      <ng-container matColumnDef="feehead">
-        <th mat-header-cell *matHeaderCellDef> Fee Head </th>
-        <td mat-cell *matCellDef="let element"> {{element.feehead | titlecase}} </td>
-      </ng-container>
-      <ng-container matColumnDef="feedue">
-        <th mat-header-cell *matHeaderCellDef> Fee </th>
-        <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
-      </ng-container>
-      <ng-container matColumnDef="concession">
-        <th mat-header-cell *matHeaderCellDef> Concession </th>
-        <td mat-cell *matCellDef="let element"> {{element.concession | number}} </td>
-      </ng-container>
-      <ng-container matColumnDef="adjustment">
-        <th mat-header-cell *matHeaderCellDef> Adjustment </th>
-        <td mat-cell *matCellDef="let element">
-          <ng-template [ngIf]="modificationFlag" [ngIfElse]="elseContaint">
-            <mat-form-field class="form-field" style="width:50%">
-              <input matInput type="number" [value]="element.adjustment"
-                (change)="changeAdjAmt(element.invg_id, $event)">
-            </mat-form-field>
-          </ng-template>
-          <ng-template #elseContaint>
-            {{element.adjustment | number}}
-          </ng-template>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="netpay">
-        <th mat-header-cell *matHeaderCellDef> Net Payable </th>
-        <td mat-cell *matCellDef="let element">{{element.netpay | number}} </td>
-      </ng-container>
-
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-      </tr>
-    </table>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <div class="grey-box ">
-      <div class="margin-right-50"><span class="font-size-16 ">Amount in Words :</span><span
-          class="font-size-20 font-medium"> {{invoiceTotal | numberToWord | titlecase}} </span><span
-          class="float-right"><span class="font-size-16">Grand Total :</span><span
-            class="font-size-20 font-medium">{{invoiceTotal | number}} </span></span></div>
+  <div class="row">
+    <div *ngIf="this.data.edit" class="col-6 margin-top-25">
+      <mat-form-field class="form-field">
+        <input matInput placeholder="Remarks" [(ngModel)]="adjRemark">
+      </mat-form-field>
+    </div>
+    <div class="col-6">
+      <div class="text-right margin-top-25">
+        <button *ngIf="(!modificationFlag) && this.data.edit && commonAPIService.isExistUserAccessMenu('357')"
+          mat-raised-button class="btn-primary btn-180 btn-success" (click)="modifyInvoice()">Modify</button>
+        <button *ngIf="modificationFlag" mat-raised-button class="btn-primary btn-180 btn-success"
+          (click)="updateInvoice()">Update</button>
+        <button *ngIf="modificationFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"
+          (click)="cancelInvoice()">Cancel</button>
+        <button
+          *ngIf="(!modificationFlag) && this.data.edit && (commonAPIService.isExistUserAccessMenu('355') || commonAPIService.isExistUserAccessMenu('362'))"
+          mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()">Delete</button>
+      </div>
     </div>
   </div>
-</div>
-<div class="row">
-  <div *ngIf="this.data.edit" class="col-6 margin-top-25">
-    <mat-form-field class="form-field">
-      <input matInput placeholder="Remarks" [(ngModel)]="adjRemark">
-    </mat-form-field>
-  </div>
-  <div class="col-6">
-    <div class="text-right margin-top-25">
-      <button *ngIf="(!modificationFlag) && this.data.edit && commonAPIService.isExistUserAccessMenu('357')"
-        mat-raised-button class="btn-primary btn-180 btn-success" (click)="modifyInvoice()">Modify</button>
-      <button *ngIf="modificationFlag" mat-raised-button class="btn-primary btn-180 btn-success"
-        (click)="updateInvoice()">Update</button>
-      <button *ngIf="modificationFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"
-        (click)="cancelInvoice()">Cancel</button>
-      <button
-        *ngIf="(!modificationFlag) && this.data.edit && (commonAPIService.isExistUserAccessMenu('355') || commonAPIService.isExistUserAccessMenu('362'))"
-        mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()">Delete</button>
-    </div>
-  </div>
-</div>
-<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteInvoice($event)">
-</app-delete-modal>
-<app-delete-modal #recalculateModal [deleteMessage]="'Are you sure want to recalculate'"
-  (deleteOk)="recalculateInvoice($event)"></app-delete-modal>
-<app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>
+  <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteInvoice($event)">
+  </app-delete-modal>
+  <app-delete-modal #recalculateModal [deleteMessage]="'Are you sure want to recalculate'"
+    (deleteOk)="recalculateInvoice($event)"></app-delete-modal>
+  <app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>
 </div>
