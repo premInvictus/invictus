@@ -1,321 +1,298 @@
 <div class="fee-container-box__grey">
-  <div class="row">
-    <div class="col-12 remove-col-padding">
-      <mat-card class="card-top-title__container">
-        <div class="row">
-          <div class="col-6">
-            <h1 class="remove-bottom-margin font-size-24">Invoice Creation - Bulk</h1>
-          </div>
-          <div class="col-6 text-right">
-            <div class="vertical-align-sub inline-flex">
-              <h3 class="font-size-15 margin-top-2 remove-bottom-margin">Bulk</h3>
-              <mat-slide-toggle class="btn-spacer" (change)="navigateIndividual()"></mat-slide-toggle>
-              <h3 class="font-size-15 margin-top-2 remove-bottom-margin btn-spacer">Individual</h3>
-            </div>
-          </div>
-        </div>
-      </mat-card>
-      <mat-card class="margin-top-8 card-height-760 card-height-880">
-        <div class="row">
-          <div class="col-12 text-right">
-            <div style="display:inline-flex">
-              <mat-slide-toggle class="btn-spacer" (change)="advanceSearchToggle()"></mat-slide-toggle>
-              <h3 class="font-size-15 margin-top-2 remove-bottom-margin btn-spacer">
-                <i class="fas fa-search">&nbsp;Advanced Search</i>
-              </h3>
-            </div>
-          </div>
-        </div>
-        <div class="row margin-top-20">
-          <div class="col-3 remove-col-padding custom-col-20">
-            <form [formGroup]="invoiceCreationForm" novalidate>
-              <div class="row">
-                <div class="col-12 remove-col-padding">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Process Type</mat-label>
-                    <mat-select placeholder="Process Type"  [(value)]="processType"
-                      (selectionChange)="changeProcessType($event)">
-                      <mat-option *ngFor="let item of processTypeArray" [value]="item.id">{{item.name}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12 remove-col-padding">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Invoice type</mat-label>
-                    <mat-select placeholder="Invoice Type" formControlName="inv_calm_id" required>
-                      <mat-option>Please Select</mat-option>
-                      <mat-option *ngFor="let item of invoiceType" [value]="item.calm_id">{{item.calm_name}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12 remove-col-padding">
-                  <div class="text-center">
-                    <button mat-raised-button class="print-btn" (click)="openFilterDialog()">Filter</button>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12 remove-col-padding margin-top-25">
-                  <h4 class="font-medium">Fee Period</h4>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12 remove-col-padding">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Fee Period</mat-label>
-                    <mat-select placeholder="Fee Period" multiple formControlName="inv_fm_id" required>
-                      <mat-option *ngFor="let item of feePeriod" [value]="item.fm_id">{{item.fm_name}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12 remove-col-padding">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Invoice Date</mat-label>
-                    <input matInput [matDatepicker]="picker" placeholder="Invoice Date" [min]="minInvoiceDate"
-                      formControlName="inv_invoice_date" (dateChange)="setMinDueDate($event)" required>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12 remove-col-padding">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Last Date</mat-label>
-                    <input matInput [matDatepicker]="picker1" placeholder="Last Date" [min]="minDueDate"
-                      formControlName="inv_due_date" required>
-                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                    <mat-datepicker #picker1></mat-datepicker>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12  remove-col-padding margin-top-10">
-                  <mat-checkbox formControlName="recalculation_flag">Recalculate All Unpaid Invoices</mat-checkbox>
-                </div>
-              </div>
-              <div class="text-center margin-top-25 ">
-                <button *ngIf="commonAPIService.isExistUserAccessMenu('353')" mat-raised-button
-                  class=" btn-generate-invoice" (click)="insertInvoice()">Generate
-                  Invoice</button>
-                <button mat-raised-button style="margin-left: 10px" class="custom-margin-top-10 print-btn"
-                  (click)="reset()">Reset</button>
-              </div>
-            </form>
-          </div>
-
-          <div class="col-1 custom-col-5 ">
-            <div class="vertical-line-divider"></div>
-          </div>
-          <div class="col-8 remove-col-padding custom-col-75">
-            <div class="row" *ngIf="advanceSearchFlag">
-              <div class="col-12 col-padding-5">
-                <span class="font-size-16 font-medium">Search</span>
-              </div>
-            </div>
-            <form [formGroup]="invoiceSearchForm" novalidate *ngIf="advanceSearchFlag">
-              <div class="row margin-top-5">
-                <div class="col-1 fee-custom-col-10 col-padding-5">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Admission</mat-label>
-                    <input matInput placeholder="Admission" formControlName="admission_no">
-
-                  </mat-form-field>
-                </div>
-                <div class="col-1 fee-custom-col-10 col-padding-5">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Name</mat-label>
-                    <input matInput placeholder="Name" formControlName="user_name">
-
-                  </mat-form-field>
-                </div>
-                <div class="col-1 fee-custom-col-10 col-padding-5">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Class</mat-label>
-                    <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass()">
-                      <mat-option>please Select</mat-option>
-                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
-                      </mat-option>
-                    </mat-select>
-
-
-                  </mat-form-field>
-                </div>
-                <div class="col-1 fee-custom-col-10 col-padding-5">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Section</mat-label>
-                    <mat-select formControlName="sec_id">
-                      <mat-option>please Select</mat-option>
-                      <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
-                    </mat-select>
-
-                  </mat-form-field>
-                </div>
-                <div class="col-1 fee-custom-col-10 col-padding-5">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Invoice No.</mat-label>
-                    <input matInput placeholder="Invoice No." formControlName="invoice_no">
-
-                  </mat-form-field>
-                </div>
-                <div class="col-2 fee-custom-col-15 col-padding-5">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>From</mat-label>
-                    <input matInput [matDatepicker]="picker4" placeholder="From" formControlName="from_date">
-                    <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-                    <mat-datepicker #picker4></mat-datepicker>
-
-                  </mat-form-field>
-                </div>
-                <div class="col-2 fee-custom-col-15  col-padding-5">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>To</mat-label>
-                    <input matInput [matDatepicker]="picker5" placeholder="To" formControlName="to_date">
-                    <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
-                    <mat-datepicker #picker5></mat-datepicker>
-
-                  </mat-form-field>
-                </div>
-                <div class="col-1 fee-custom-col-10 col-padding-5">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Status</mat-label>
-                    <mat-select formControlName="status">
-                      <mat-option>Please Select</mat-option>
-                      <mat-option value="paid">Paid</mat-option>
-                      <mat-option value="unpaid">Unpaid</mat-option>
-                    </mat-select>
-
-                  </mat-form-field>
-                </div>
-                <div class="col-1 fee-custom-col-10 col-padding-5">
-                  <button mat-raised-button class="apply-btn margin-top-10" (click)="searchInvoice()">Apply</button>
-                </div>
-              </div>
-            </form>
-            <div class="row">
-              <div class="col-12 remove-col-padding text-right ">
-                <button *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0"
-                  mat-raised-button class=" recalulate-invoice-btn btn-spacer"
-                  (click)="openRecalculateDialog({})">Recalculate</button>
-                <button *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0"
-                  mat-raised-button class=" btn-danger btn-spacer"
-                  (click)="openDeleteDialog(fetchInvId())">Delete</button>
-                <button *ngIf="ELEMENT_DATA.length !== 0" mat-raised-button class=" btn-success btn-spacer"
-                  (click)="printInvoice()">Print</button>
-              </div>
-            </div>
-            <!-- <div class="row">
+    <div class="row">
+       <div class="col-12 remove-col-padding">
+          <mat-card class="card-top-title__container">
+             <div class="row">
                 <div class="col-6">
+                   <h1 class="remove-bottom-margin font-size-24">Invoice Creation - Bulk</h1>
                 </div>
-                <div class="col-2">
-                  <div class="text-center">
-                    <button mat-raised-button class="btn-primary btn-success"
-                      (click)="openRecalculateDialog({})">Recalculate</button>
-                  </div>
+                <div class="col-6 text-right">
+                   <div class="vertical-align-sub inline-flex">
+                      <h3 class="font-size-15 margin-top-2 remove-bottom-margin">Bulk</h3>
+                      <mat-slide-toggle class="btn-spacer" (change)="navigateIndividual()"></mat-slide-toggle>
+                      <h3 class="font-size-15 margin-top-2 remove-bottom-margin btn-spacer">Individual</h3>
+                   </div>
                 </div>
-                <div class="col-2">
-                  <div class="text-center">
-                    <button mat-raised-button class="btn-primary btn-success"
-                      (click)="openDeleteDialog(fetchInvId())">Delete</button>
-                  </div>
+             </div>
+          </mat-card>
+          <mat-card class="margin-top-8 card-height-760 card-height-880">
+             <div class="row">
+                <div class="col-12 text-right">
+                   <div style="display:inline-flex">
+                      <mat-slide-toggle class="btn-spacer" (change)="advanceSearchToggle()"></mat-slide-toggle>
+                      <h3 class="font-size-15 margin-top-2 remove-bottom-margin btn-spacer">
+                         <i class="fas fa-search">&nbsp;Advanced Search</i>
+                      </h3>
+                   </div>
                 </div>
-                <div class="col-2">
-                  <div class="text-center">
-                    <button mat-raised-button class="btn-primary btn-success"
-                      (click)="openDeleteDialog({})">Print</button>
-                  </div>
+             </div>
+             <div class="row margin-top-20">
+                <div class="col-3 remove-col-padding custom-col-20">
+                   <form [formGroup]="invoiceCreationForm" novalidate>
+                      <div class="row">
+                         <div class="col-12 remove-col-padding">
+                            <mat-form-field appearance="outline" class="form-field">
+                               <mat-label>Process Type</mat-label>
+                               <mat-select placeholder="Process Type" [(value)]="processType" required
+                               (selectionChange)="changeProcessType($event)">
+                               <mat-option value="">Please Select</mat-option>
+                               <mat-option *ngFor="let item of processTypeArray" [value]="item.id">{{item.name}}</mat-option>
+                               </mat-select>
+                            </mat-form-field>
+                         </div>
+                      </div>
+                      <div class="row">
+                         <div class="col-12 remove-col-padding">
+                            <mat-form-field appearance="outline" class="form-field">
+                               <mat-label>Invoice type</mat-label>
+                               <mat-select placeholder="Invoice Type" formControlName="inv_calm_id" required>
+                                  <mat-option>Please Select</mat-option>
+                                  <mat-option *ngFor="let item of invoiceType" [value]="item.calm_id">{{item.calm_name}}
+                                  </mat-option>
+                               </mat-select>
+                            </mat-form-field>
+                         </div>
+                      </div>
+                      <div class="row">
+                         <div class="col-12 remove-col-padding">
+                            <div class="text-center">
+                               <button mat-raised-button class="print-btn" (click)="openFilterDialog()">Filter</button>
+                            </div>
+                         </div>
+                      </div>
+                      <div class="row">
+                         <div class="col-12 remove-col-padding margin-top-25">
+                            <h4 class="font-medium">Fee Period</h4>
+                         </div>
+                      </div>
+                      <div class="row">
+                         <div class="col-12 remove-col-padding">
+                            <mat-form-field appearance="outline" class="form-field">
+                               <mat-label>Fee Period</mat-label>
+                               <mat-select placeholder="Fee Period" multiple formControlName="inv_fm_id" required>
+                                  <mat-option *ngFor="let item of feePeriod" [value]="item.fm_id">{{item.fm_name}}</mat-option>
+                               </mat-select>
+                            </mat-form-field>
+                         </div>
+                      </div>
+                      <div class="row">
+                         <div class="col-12 remove-col-padding">
+                            <mat-form-field appearance="outline" class="form-field">
+                               <mat-label>Invoice Date</mat-label>
+                               <input matInput [matDatepicker]="picker" placeholder="Invoice Date" [min]="minInvoiceDate"
+                               formControlName="inv_invoice_date" (dateChange)="setMinDueDate($event)" required>
+                               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                               <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                         </div>
+                      </div>
+                      <div class="row">
+                         <div class="col-12 remove-col-padding">
+                            <mat-form-field appearance="outline" class="form-field">
+                               <mat-label>Last Date</mat-label>
+                               <input matInput [matDatepicker]="picker1" placeholder="Last Date" [min]="minDueDate"
+                               formControlName="inv_due_date" required>
+                               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                               <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                         </div>
+                      </div>
+                      <div class="row">
+                         <div class="col-12  remove-col-padding margin-top-10">
+                            <mat-checkbox formControlName="recalculation_flag">Recalculate All Unpaid Invoices</mat-checkbox>
+                         </div>
+                      </div>
+                      <div class="text-center margin-top-25 ">
+                         <button *ngIf="commonAPIService.isExistUserAccessMenu('353')" mat-raised-button
+                         class=" btn-generate-invoice" (click)="insertInvoice()">Generate
+                         Invoice</button>
+                         <button mat-raised-button style="margin-left: 10px" class="custom-margin-top-10 print-btn"
+                            (click)="reset()">Reset</button>
+                      </div>
+                   </form>
                 </div>
-              </div> -->
-            <div class="row margin-top-20 ">
-              <div class="col-12 remove-col-padding">
-
-
-                <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center">
-                  <ng-container matColumnDef="select">
-                    <th mat-header-cell *matHeaderCellDef class="select-checkbox">
-                      <mat-checkbox (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-                      </mat-checkbox>
-                    </th>
-                    <td mat-cell *matCellDef="let row" class="select-checkbox">
-                      <mat-checkbox (click)="$event.stopPropagation();addTo(row)"
-                        (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
-                        [aria-label]="checkboxLabel(row)" [disabled]="row.selectionDisable">
-                      </mat-checkbox>
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="srno">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr. No. </th>
-                    <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="admno">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Adm. No. </th>
-                    <td mat-cell *matCellDef="let element"> {{element.admno}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="studentname">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </th>
-                    <td mat-cell *matCellDef="let element"> {{element.studentname | titlecase}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="classsection">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Class Section </th>
-                    <td mat-cell *matCellDef="let element"> {{element.classsection}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="invoiceno">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice No </th>
-                    <td mat-cell *matCellDef="let element"> <a class="font-skyblue text-link font-size-14"
-                        (click)="openDialog(element.inv_id, false)">{{element.invoiceno}}</a> </td>
-                  </ng-container>
-                  <ng-container matColumnDef="feeperiod">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Period </th>
-                    <td mat-cell *matCellDef="let element"> {{element.feeperiod}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="feedue">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Due </th>
-                    <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="status">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                    <td mat-cell *matCellDef="let element" [style.color]="element.statuscolor">
-                      {{element.status | titlecase}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef> Action </th>
-                    <td mat-cell *matCellDef="let element" class="tab-display-flex">
-                      <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('356')"
-                        class="material-icons icon-edit" (click)="openDialog(element.inv_id, true)">create</i>
-                      <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('355')"
-                        class="material-icons icon-danger icon-spacer"
-                        (click)="openDeleteDialog([element.inv_id])">delete</i>
-                      <i *ngIf="element.remark" class="material-icons icon-spacer"
-                        [matTooltip]="element.remark">bookmark</i>
-                    </td>
-                  </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-                  </tr>
-                </table>
-                <div *ngIf="ELEMENT_DATA.length == 0" class="no-records">
-                  No records found
+                <div class="col-1 custom-col-5 ">
+                   <div class="vertical-line-divider"></div>
                 </div>
-              </div>
-            </div>
-            <mat-paginator #paginator [pageSize]="invoicepagesize" [pageSizeOptions]="invoicepagesizeoptions"
-              showFirstLastButtons (page)="pageEvent = fetchData($event)"></mat-paginator>
-          </div>
-        </div>
-      </mat-card>
+                <div class="col-8 remove-col-padding custom-col-75">
+                   <div class="row" *ngIf="advanceSearchFlag">
+                      <div class="col-12 col-padding-5">
+                         <span class="font-size-16 font-medium">Search</span>
+                      </div>
+                   </div>
+                   <form [formGroup]="invoiceSearchForm" novalidate *ngIf="advanceSearchFlag">
+                   <div class="row margin-top-5">
+                      <div class="col-1 fee-custom-col-10 col-padding-5">
+                         <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Process Type</mat-label>
+                            <mat-select placeholder="Process Type" formControlName="processType"
+                               (selectionChange)="changeProcessType2($event)">
+                               <mat-option value="">Please Select</mat-option>
+                               <mat-option *ngFor="let item of processTypeArray" [value]="item.id">{{item.name}}</mat-option>
+                            </mat-select>
+                         </mat-form-field>
+                      </div>
+                      <div class="col-1 fee-custom-col-10 col-padding-5">
+                         <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Admission</mat-label>
+                            <input matInput placeholder="Admission" formControlName="admission_no">
+                         </mat-form-field>
+                      </div>
+                      <div class="col-1 fee-custom-col-10 col-padding-5">
+                         <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Name</mat-label>
+                            <input matInput placeholder="Name" formControlName="user_name">
+                         </mat-form-field>
+                      </div>
+                      <div class="col-1 fee-custom-col-10 col-padding-5">
+                         <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Class</mat-label>
+                            <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass()">
+                               <mat-option>please Select</mat-option>
+                               <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                               </mat-option>
+                            </mat-select>
+                         </mat-form-field>
+                      </div>
+                      <div class="col-1 fee-custom-col-10 col-padding-5">
+                         <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Section</mat-label>
+                            <mat-select formControlName="sec_id">
+                               <mat-option>please Select</mat-option>
+                               <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+                            </mat-select>
+                         </mat-form-field>
+                      </div>
+                      <div class="col-1 fee-custom-col-10 col-padding-5">
+                         <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Invoice No.</mat-label>
+                            <input matInput placeholder="Invoice No." formControlName="invoice_no">
+                         </mat-form-field>
+                      </div>
+                      <div class="col-2 fee-custom-col-15 col-padding-5">
+                         <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>From</mat-label>
+                            <input matInput [matDatepicker]="picker4" placeholder="From" formControlName="from_date">
+                            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                            <mat-datepicker #picker4></mat-datepicker>
+                         </mat-form-field>
+                      </div>
+                      <div class="col-2 fee-custom-col-15  col-padding-5">
+                         <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>To</mat-label>
+                            <input matInput [matDatepicker]="picker5" placeholder="To" formControlName="to_date">
+                            <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                            <mat-datepicker #picker5></mat-datepicker>
+                         </mat-form-field>
+                      </div>
+                      <div class="col-1 fee-custom-col-10 col-padding-5">
+                         <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Status</mat-label>
+                            <mat-select formControlName="status">
+                               <mat-option>Please Select</mat-option>
+                               <mat-option value="paid">Paid</mat-option>
+                               <mat-option value="unpaid">Unpaid</mat-option>
+                            </mat-select>
+                         </mat-form-field>
+                      </div>
+                      <div class="col-1 fee-custom-col-10 col-padding-5">
+                         <button mat-raised-button class="apply-btn margin-top-10" (click)="searchInvoice()">Apply</button>
+                      </div>
+                   </div>
+                   </form>
+                   <div class="row">
+                      <div class="col-12 remove-col-padding text-right ">
+                         <button *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0"
+                         mat-raised-button class=" recalulate-invoice-btn btn-spacer"
+                         (click)="openRecalculateDialog({})">Recalculate</button>
+                         <button *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0"
+                         mat-raised-button class=" btn-danger btn-spacer"
+                         (click)="openDeleteDialog(fetchInvId())">Delete</button>
+                         <button *ngIf="ELEMENT_DATA.length !== 0" mat-raised-button class=" btn-success btn-spacer"
+                         (click)="printInvoice()">Print</button>
+                      </div>
+                   </div>
+                   <div class="row margin-top-20 ">
+                      <div class="col-12 remove-col-padding">
+                         <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center">
+                            <ng-container matColumnDef="select">
+                               <th mat-header-cell *matHeaderCellDef class="select-checkbox">
+                                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                                  [checked]="selection.hasValue() && isAllSelected()"
+                                  [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                                  </mat-checkbox>
+                               </th>
+                               <td mat-cell *matCellDef="let row" class="select-checkbox">
+                                  <mat-checkbox (click)="$event.stopPropagation();addTo(row)"
+                                  (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
+                                  [aria-label]="checkboxLabel(row)" [disabled]="row.selectionDisable">
+                                  </mat-checkbox>
+                               </td>
+                            </ng-container>
+                            <ng-container matColumnDef="srno">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr. No. </th>
+                               <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="admno">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Enrollment No. </th>
+                               <td mat-cell *matCellDef="let element"> {{element.admno}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="studentname">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </th>
+                               <td mat-cell *matCellDef="let element"> {{element.studentname | titlecase}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="classsection">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Class Section </th>
+                               <td mat-cell *matCellDef="let element"> {{element.classsection}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="invoiceno">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice No </th>
+                               <td mat-cell *matCellDef="let element"> <a class="font-skyblue text-link font-size-14"
+                                  (click)="openDialog(element.inv_id, false)">{{element.invoiceno}}</a> </td>
+                            </ng-container>
+                            <ng-container matColumnDef="feeperiod">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Period </th>
+                               <td mat-cell *matCellDef="let element"> {{element.feeperiod}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="feedue">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Due </th>
+                               <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="status">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                               <td mat-cell *matCellDef="let element" [style.color]="element.statuscolor">
+                               {{element.status | titlecase}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="action">
+                               <th mat-header-cell *matHeaderCellDef> Action </th>
+                               <td mat-cell *matCellDef="let element" class="tab-display-flex">
+                                  <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('356')"
+                                  class="material-icons icon-edit" (click)="openDialog(element.inv_id, true)">create</i>
+                                  <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('355')"
+                                  class="material-icons icon-danger icon-spacer"
+                                  (click)="openDeleteDialog([element.inv_id])">delete</i>
+                                  <i *ngIf="element.remark" class="material-icons icon-spacer"
+                                  [matTooltip]="element.remark">bookmark</i>
+                               </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                            </tr>
+                         </table>
+                         <div *ngIf="ELEMENT_DATA.length == 0" class="no-records">
+                            No records found
+                         </div>
+                      </div>
+                   </div>
+                   <mat-paginator #paginator [pageSize]="invoicepagesize" [pageSizeOptions]="invoicepagesizeoptions"
+                   showFirstLastButtons (page)="pageEvent = fetchData($event)"></mat-paginator>
+                </div>
+             </div>
+          </mat-card>
+       </div>
     </div>
-  </div>
-</div>
-<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)">
-</app-delete-modal>
-<app-delete-modal #recalculateModal [deleteMessage]="'Are you sure want to recalculate'"
-  (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
+ </div>
+ <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)">
+ </app-delete-modal>
+ <app-delete-modal #recalculateModal [deleteMessage]="'Are you sure want to recalculate'"
+ (deleteOk)="recalculateConfirm($event)"></app-delete-modal>

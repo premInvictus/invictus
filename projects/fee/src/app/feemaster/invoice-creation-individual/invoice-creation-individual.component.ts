@@ -112,6 +112,17 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				this.currentAdmno = data.adm_no;
 				this.currentLoginId = data.login_id;
 				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			} else {
 				this.getLastRecordAdmno();
 			}
@@ -125,6 +136,17 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				this.currentAdmno = result.data[0].last_record;
 				this.currentLoginId = result.data[0].au_login_id;
 				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			}
 		});
 	}
@@ -137,6 +159,17 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 						this.currentAdmno = result.data[0].last_record;
 						this.currentLoginId = result.data[0].au_login_id;
 						this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+						this.invoiceCreationForm.patchValue({
+							recalculation_flag: '',
+							inv_id: [],
+							inv_title: '',
+							login_id: [],
+							inv_calm_id: '',
+							inv_fm_id: [],
+							inv_invoice_date: '',
+							inv_due_date: '',
+							inv_activity: ''
+						});
 					}
 				}
 			});
@@ -190,6 +223,17 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			if (result && result.status === 'ok') {
 				this.invoiceArray = result.data.invoiceData;
 				this.invoiceTableData(this.invoiceArray);
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			} else {
 				this.invoiceTableData();
 			}
@@ -248,8 +292,18 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			this.feeService.insertInvoice(formData).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-					this.invoiceCreationForm.reset();
 					this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+					this.invoiceCreationForm.patchValue({
+						recalculation_flag: '',
+						inv_id: [],
+						inv_title: '',
+						login_id: [],
+						inv_calm_id: '',
+						inv_fm_id: [],
+						inv_invoice_date: '',
+						inv_due_date: '',
+						inv_activity: ''
+					});
 				}
 			});
 		} else {
@@ -310,6 +364,17 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -324,6 +389,17 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -335,6 +411,17 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
