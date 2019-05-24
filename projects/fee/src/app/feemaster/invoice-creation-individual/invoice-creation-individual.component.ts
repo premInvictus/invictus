@@ -111,7 +111,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				this.lastRecordAdmno = data.adm_no;
 				this.currentAdmno = data.adm_no;
 				this.currentLoginId = data.login_id;
-				this.getInvoice({ admission_no: this.currentAdmno });
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
 			} else {
 				this.getLastRecordAdmno();
 			}
@@ -124,7 +124,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				this.lastRecordAdmno = result.data[0].last_record;
 				this.currentAdmno = result.data[0].last_record;
 				this.currentLoginId = result.data[0].au_login_id;
-				this.getInvoice({ admission_no: this.currentAdmno });
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
 			}
 		});
 	}
@@ -136,7 +136,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 						this.lastRecordAdmno = result.data[0].last_record;
 						this.currentAdmno = result.data[0].last_record;
 						this.currentLoginId = result.data[0].au_login_id;
-						this.getInvoice({ admission_no: this.currentAdmno });
+						this.getInvoice({ inv_process_usr_no: this.currentAdmno });
 					}
 				}
 			});
@@ -159,23 +159,23 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	key2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ admission_no: event });
+		this.getInvoice({ inv_process_usr_no: event });
 	}
 	next2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ admission_no: event });
+		this.getInvoice({ inv_process_usr_no: event });
 	}
 	prev2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ admission_no: event });
+		this.getInvoice({ inv_process_usr_no: event });
 	}
 	first2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ admission_no: event });
+		this.getInvoice({ inv_process_usr_no: event });
 	}
 	last2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ admission_no: event });
+		this.getInvoice({ inv_process_usr_no: event });
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -249,7 +249,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.invoiceCreationForm.reset();
-					this.getInvoice({ admission_no: this.currentAdmno });
+					this.getInvoice({ inv_process_usr_no: this.currentAdmno });
 				}
 			});
 		} else {
@@ -309,7 +309,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getInvoice({ admission_no: this.currentAdmno });
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -323,7 +323,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.feeService.recalculateInvoice(this.invoiceCreationForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getInvoice({ admission_no: this.currentAdmno });
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -334,7 +334,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.feeService.consolidateInvoice({ inv_id: this.fetchInvId() }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getInvoice({ admission_no: this.currentAdmno });
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
