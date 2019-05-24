@@ -96,7 +96,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			} else {
 				this.transportFlag = false;
 			}
-			if (this.feeDet.accd_tr_id === '1') {
+			if (this.feeDet.accd_tr_id === '1' && this.feeDet.accd_is_terminate === 'Y') {
 				this.modeFlag = true;
 			} else {
 				this.modeFlag = false;
@@ -249,24 +249,24 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.value.accd_fo_id ||
-			!this.accountsForm.value.accd_fs_id ||
+		if (!this.accountsForm.value.accd_fo_id &&
+			!this.accountsForm.value.accd_fs_id &&
 			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
 			this.accountsForm.get('accd_fs_id').markAsDirty();
 			this.validateFlag = false;
 		}
-		if (this.transportFlag) {
+		if (this.transportFlag && !this.modeFlag) {
 			if (!this.accountsForm.value.accd_transport_mode) {
-				this.accountsForm.get('accd_transport_mode').markAsDirty();
 				this.validateFlag = false;
+				this.accountsForm.get('accd_transport_mode').markAsDirty();
 			}
 		}
-		if (this.modeFlag && this.transportFlag) {
-			if (!this.accountsForm.value.accd_tr_id ||
-				!this.accountsForm.value.accd_tsp_id ||
-				!this.accountsForm.value.accd_ts_id ||
+		if (this.transportFlag && this.modeFlag) {
+			if (!this.accountsForm.value.accd_tr_id &&
+				!this.accountsForm.value.accd_tsp_id &&
+				!this.accountsForm.value.accd_ts_id &&
 				!this.accountsForm.value.accd_transport_from) {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
@@ -320,24 +320,24 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.value.accd_fo_id ||
-			!this.accountsForm.value.accd_fs_id ||
+		if (!this.accountsForm.value.accd_fo_id &&
+			!this.accountsForm.value.accd_fs_id &&
 			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
 			this.accountsForm.get('accd_fs_id').markAsDirty();
 			this.validateFlag = false;
 		}
-		if (this.transportFlag) {
+		if (this.transportFlag && !this.modeFlag) {
 			if (!this.accountsForm.value.accd_transport_mode) {
-				this.accountsForm.get('accd_transport_mode').markAsDirty();
 				this.validateFlag = false;
+				this.accountsForm.get('accd_transport_mode').markAsDirty();
 			}
 		}
-		if (this.modeFlag && this.transportFlag) {
-			if (!this.accountsForm.value.accd_tr_id ||
-				!this.accountsForm.value.accd_tsp_id ||
-				!this.accountsForm.value.accd_ts_id ||
+		if (this.transportFlag && this.modeFlag) {
+			if (!this.accountsForm.value.accd_tr_id &&
+				!this.accountsForm.value.accd_tsp_id &&
+				!this.accountsForm.value.accd_ts_id &&
 				!this.accountsForm.value.accd_transport_from) {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();

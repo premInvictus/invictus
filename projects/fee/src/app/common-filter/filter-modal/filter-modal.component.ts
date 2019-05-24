@@ -569,7 +569,9 @@ export class FilterModalComponent implements OnInit {
 	discreteTextValue(event, filtertype) {
 		this.currentFilter.discrete = '';
 		this.filtertype = filtertype;
-		this.currentFilter.discretevalue = event.target.value;
+		let disArray: any = [];
+		disArray = event.target.value.replace(/\s/g, '').split(',');
+		this.currentFilter.discretevalue = disArray;
 		this.currentFilter.discrete = event.target.value;
 	}
 	discreteSelectValue(event, filtertype) {

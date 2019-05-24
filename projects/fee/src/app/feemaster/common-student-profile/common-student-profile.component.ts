@@ -145,25 +145,111 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						this.studentdetails = result.data[0];
 						this.studentRouteMoveStoreService.setRouteStore(this.studentdetails.em_admission_no, this.studentdetails.au_login_id);
 						this.studentLoginId = this.studentdetails.au_login_id;
-						if (this.nextFlag) {
-							this.next.emit(this.studentLoginId);
-							this.next2.emit(this.studentdetails.em_admission_no);
-						}
-						if (this.prevFlag) {
-							this.prev.emit(this.studentLoginId);
-							this.prev2.emit(this.studentdetails.em_admission_no);
-						}
-						if (this.firstFlag) {
-							this.first.emit(this.studentLoginId);
-							this.first2.emit(this.studentdetails.em_admission_no);
-						}
-						if (this.lastFlag) {
-							this.last.emit(this.studentLoginId);
-							this.last2.emit(this.studentdetails.em_admission_no);
-						}
-						if (this.keyFlag) {
-							this.key.emit(this.studentLoginId);
-							this.key2.emit(this.studentdetails.em_admission_no);
+						if (Number(this.processType) === 4) {
+							if (this.nextFlag) {
+								this.next.emit(this.studentLoginId);
+								this.next2.emit(this.studentdetails.em_admission_no);
+							}
+							if (this.prevFlag) {
+								this.prev.emit(this.studentLoginId);
+								this.prev2.emit(this.studentdetails.em_admission_no);
+							}
+							if (this.firstFlag) {
+								this.first.emit(this.studentLoginId);
+								this.first2.emit(this.studentdetails.em_admission_no);
+							}
+							if (this.lastFlag) {
+								this.last.emit(this.studentLoginId);
+								this.last2.emit(this.studentdetails.em_admission_no);
+							}
+							if (this.keyFlag) {
+								this.key.emit(this.studentLoginId);
+								this.key2.emit(this.studentdetails.em_admission_no);
+							}
+						} 	else if (Number(this.processType) === 2) {
+							if (this.nextFlag) {
+								this.next.emit(this.studentLoginId);
+								this.next2.emit(this.studentdetails.em_regd_no);
+							}
+							if (this.prevFlag) {
+								this.prev.emit(this.studentLoginId);
+								this.prev2.emit(this.studentdetails.em_regd_no);
+							}
+							if (this.firstFlag) {
+								this.first.emit(this.studentLoginId);
+								this.first2.emit(this.studentdetails.em_regd_no);
+							}
+							if (this.lastFlag) {
+								this.last.emit(this.studentLoginId);
+								this.last2.emit(this.studentdetails.em_regd_no);
+							}
+							if (this.keyFlag) {
+								this.key.emit(this.studentLoginId);
+								this.key2.emit(this.studentdetails.em_regd_no);
+							}
+						} else if (Number(this.processType) === 3) {
+							if (this.nextFlag) {
+								this.next.emit(this.studentLoginId);
+								this.next2.emit(this.studentdetails.em_provisional_admission_no);
+							}
+							if (this.prevFlag) {
+								this.prev.emit(this.studentLoginId);
+								this.prev2.emit(this.studentdetails.em_provisional_admission_no);
+							}
+							if (this.firstFlag) {
+								this.first.emit(this.studentLoginId);
+								this.first2.emit(this.studentdetails.em_provisional_admission_no);
+							}
+							if (this.lastFlag) {
+								this.last.emit(this.studentLoginId);
+								this.last2.emit(this.studentdetails.em_provisional_admission_no);
+							}
+							if (this.keyFlag) {
+								this.key.emit(this.studentLoginId);
+								this.key2.emit(this.studentdetails.em_provisional_admission_no);
+							}
+						} else if (Number(this.processType) === 1) {
+							if (this.nextFlag) {
+								this.next.emit(this.studentLoginId);
+								this.next2.emit(this.studentdetails.em_enq_no);
+							}
+							if (this.prevFlag) {
+								this.prev.emit(this.studentLoginId);
+								this.prev2.emit(this.studentdetails.em_enq_no);
+							}
+							if (this.firstFlag) {
+								this.first.emit(this.studentLoginId);
+								this.first2.emit(this.studentdetails.em_enq_no);
+							}
+							if (this.lastFlag) {
+								this.last.emit(this.studentLoginId);
+								this.last2.emit(this.studentdetails.em_enq_no);
+							}
+							if (this.keyFlag) {
+								this.key.emit(this.studentLoginId);
+								this.key2.emit(this.studentdetails.em_enq_no);
+							}
+						} else if (Number(this.processType) === 5) {
+							if (this.nextFlag) {
+								this.next.emit(this.studentLoginId);
+								this.next2.emit(this.studentdetails.em_alumini_no);
+							}
+							if (this.prevFlag) {
+								this.prev.emit(this.studentLoginId);
+								this.prev2.emit(this.studentdetails.em_alumini_no);
+							}
+							if (this.firstFlag) {
+								this.first.emit(this.studentLoginId);
+								this.first2.emit(this.studentdetails.em_alumini_no);
+							}
+							if (this.lastFlag) {
+								this.last.emit(this.studentLoginId);
+								this.last2.emit(this.studentdetails.em_alumini_no);
+							}
+							if (this.keyFlag) {
+								this.key.emit(this.studentLoginId);
+								this.key2.emit(this.studentdetails.em_alumini_no);
+							}
 						}
 					}
 					if (result && result.data && result.data[0].navigation[0]) {
