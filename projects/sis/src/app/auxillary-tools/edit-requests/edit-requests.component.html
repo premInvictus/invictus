@@ -1,6 +1,6 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey">
       <div class="row">
-      <div class="col-7 col-padding-right-eight margin-bottom-35">
+      <div class="col-7 remove-col-padding-left col-padding-right-eight">
          <div class="container-box__white">
             <div class="row">
                <div class="col-12 text-center">
@@ -103,8 +103,8 @@
                               class="material-icons icon-pointer view-icon" (click)="viewRequest(item.action, item.no)">visibility</mat-icon>
                            </mat-cell>
                         </ng-container>
-                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                      </mat-table>
                      <table class="table-100 text-center" style="margin-top:5px;">
                            <tr *ngIf="EDIT_REQUEST_ELEMENT_DATA.length == 0">

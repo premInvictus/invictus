@@ -129,6 +129,13 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
 }
 
 @include respond-between(lg, xl) {
+    mat-header-row.header-normal {
+        width: 100% !important;
+    }
+
+    mat-row.row-normal {
+        width: 100% !important;
+    }
     .card-height-600 {
         min-height: 600px;
     }
@@ -156,6 +163,22 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
     
     .card-height-677 {
         min-height: 677px;
+    }
+
+    .card-height-745-lp {
+        min-height: 745px
+    }
+
+    .card-height-775-lp {
+        min-height: 775px
+    }
+
+    .card-height-860-lp {
+        min-height: 860px
+    }
+
+    .card-height-470-lp {
+        min-height: 470px
     }
 
     mat-sidenav-content.fee-sidenav-content {

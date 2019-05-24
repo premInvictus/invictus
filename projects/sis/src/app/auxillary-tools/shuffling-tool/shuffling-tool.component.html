@@ -4,8 +4,8 @@
   <div class="row">
     <div class="col-12">
       <div class="row">
-        <div class="col-6 remove-col-padding-right">
-          <div class="container-box__white">
+        <div class="col-6 remove-col-padding-left remove-col-padding-right">
+          <div class="container-box__white card-height-830">
             <div class="row">
               <!-- <div class="col-4 custom-col-10 text-center">
                 <div class="line-divider"></div>
@@ -21,7 +21,8 @@
             <form [formGroup]="shufflesortform" novalidate>
             <div class="row">
               <div class="col-4">
-                <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Current Class</mat-label>
                   <mat-select formControlName="class_id" placeholder="Current Class" (ngModelChange)="getSectionsByClass()" required>
                       <mat-option value="">Please Select</mat-option>  
                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
@@ -31,7 +32,8 @@
                 </mat-form-field>
               </div>
               <div class="col-4">
-                <mat-form-field class="form-field">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Sort Based On</mat-label>
                   <mat-select formControlName="order_by" placeholder="Sort Based On" required>
                     <mat-option value="sec_id">Section</mat-option>
                     <mat-option value="hou_id">House</mat-option>
@@ -100,8 +102,8 @@
           
 
         </div>
-        <div class="col-6 col-padding-left-eight">
-          <div class="container-box__white">
+        <div class="col-6 remove-col-padding-right col-padding-left-eight">
+          <div class="container-box__white card-height-830">
             <div class="row">
               <!-- <div class="col-4 custom-col-10 text-center">
                 <div class="line-divider"></div>
@@ -116,7 +118,8 @@
             <form [formGroup]="shufflebasedform" novalidate>
             <div class="row">
               <div class="col-6">
-                <mat-form-field class="form-field">
+                  <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Shuffle Based On</mat-label>
                   <mat-select formControlName="based_on" placeholder="Shuffle Based On" (ngModelChange)="resetshuffletableflag()" required>
                     <mat-option value="sec_id">Section</mat-option>
                     <mat-option value="hou_id">House</mat-option>
