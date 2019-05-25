@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonAPIService } from '../_services/commonAPI.service';
 import { observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ProcesstypeFeeService } from './index';
+import { ProcesstypeFeeService } from './processtype.service';
 @Injectable()
 export class FeeService {
 
