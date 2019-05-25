@@ -1,4 +1,5 @@
-<div class="container-box__grey">
+<div>
+<div class="fee-container-box__grey ">
   <div class="container-box__white">
     <form [formGroup]="tcform1" novalidate>
     <div class="row">
@@ -16,8 +17,8 @@
     </form>
   </div>
 </div>
-<div class="container-box__grey">
-  <div class="container-box__white">
+<div class="fee-container-box__grey">
+  <div class="container-box__white card-height-745-lp">
     <div>
       <div class="row">
         <div class="col-4 text-center">
@@ -46,14 +47,16 @@
         <div class="col-12" *ngIf="radioOne.checked">
           <div class="row">
             <div class="col-5">
-              <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>From</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="From" formControlName="tc_fromdate">
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
             </div>
             <div class="col-5">
-              <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>To</mat-label>
                 <input matInput [matDatepicker]="picker2" placeholder="To" formControlName="tc_todate">
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
@@ -72,7 +75,8 @@
         <div class="col-12" *ngIf="radioTwo.checked">
           <div class="row">
             <div class="col-10">
-              <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Admission No.</mat-label>
                 <input matInput placeholder="Admission No." formControlName="tc_admission_no">
               </mat-form-field>
             </div>
@@ -89,7 +93,8 @@
         <div class="col-12" *ngIf="radioThree.checked">
           <div class="row">
             <div class="col-5">
-              <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Class</mat-label>
                   <mat-select formControlName="class_id" placeholder="Class" (ngModelChange)="getSectionsByClass()">
                       <mat-option value="">Please Select</mat-option>  
                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
@@ -99,7 +104,8 @@
               </mat-form-field>
             </div>
             <div class="col-5">
-              <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Section</mat-label>
                 <mat-select placeholder="Section" formControlName="sec_id">
                     <mat-option value="">Please Select</mat-option>  
                   <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
@@ -172,4 +178,5 @@
     
   </div>
   </div>
+</div>
 </div>

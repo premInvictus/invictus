@@ -33,7 +33,8 @@
                             <div class="col-6">
                                 <div class="row">
                                     <div class="col-12">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Enrollment Type</mat-label>
                                            <mat-select placeholder="Enrolment Type" formControlName="enrolment_type" required (selectionChange)="setEnrolmentPlaceholder($event)">
                                                 <mat-option value="">Please Select</mat-option>
                                             <mat-option *ngFor="let item of enrollMentTypeArray" value="{{item?.au_process_type}}">{{item?.au_process_name}}</mat-option>
@@ -43,12 +44,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-9">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Enrollment No.</mat-label>
                                             <input matInput placeholder="{{enrolmentPlaceholder}} No." formControlName="enrollment_no" (blur)="getStudentData($event)" required>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-9" style="display: none;">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Login Id</mat-label>
                                             <input matInput placeholder="Login Id" formControlName="login_id">
                                         </mat-form-field>
                                     </div>
@@ -60,7 +63,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Class - Section</mat-label>
                                             <input matInput placeholder="Class - Section" formControlName="class_section">
                                         </mat-form-field>
                                     </div>
@@ -70,14 +74,16 @@
                             <div class="col-6">
                                 <div class="row">
                                     <div class="col-12">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Student Name</mat-label>
                                             <input class="text-capitalize" matInput placeholder="Student Name" formControlName="au_full_name">
                                         </mat-form-field>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Date of Enrollment</mat-label>
                                             <input matInput [matDatepicker]="picker" placeholder="Date of {{enrolmentPlaceholder}}" formControlName="doa" (dateInput)="enrolAdmissionToEvent('input', $event)">
                                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                             <mat-datepicker #picker></mat-datepicker>
@@ -99,15 +105,17 @@
             <div class="margin-bottom-10"></div>
             <div class="row">
                 <div class="col-12">
-                    <div class="container-box__white">
+                    <div class="container-box__white card-height-470-lp">
                         <div class="row">
                             <div class="col-6">
-                                <mat-form-field class="form-field">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                            <mat-label>Change Enrollment No. To</mat-label>
                                     <input matInput placeholder="Change {{enrolmentPlaceholder}} No. To" formControlName="enrolment_to" required>
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
-                                <mat-form-field class="form-field">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                            <mat-label>Reason for change</mat-label>
                                     <mat-select placeholder="Reason for change" formControlName="reason_id" required>
                                             <mat-option value="">Please Select</mat-option>    
                                         <mat-option value="Select" *ngFor="let item of reasonDataArray" value="{{item?.reason_id}}">{{item?.reason_title}}</mat-option>
@@ -117,7 +125,8 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <mat-form-field class="form-field">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                            <mat-label>Remarks</mat-label>
                                     <textarea rows="3" matInput placeholder="Remarks" formControlName="remarks" required></textarea>
                                 </mat-form-field>
                             </div>
