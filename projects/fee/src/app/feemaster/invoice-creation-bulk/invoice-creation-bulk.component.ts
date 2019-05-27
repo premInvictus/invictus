@@ -42,7 +42,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	classArray: any[] = [];
 	sectionArray: any[] = [];
 	minInvoiceDate = new Date();
-	minDueDate = new Date();
 	totalRecords: any;
 	pageEvent: PageEvent;
 	processType: any = '';
@@ -357,11 +356,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			inv_activity: ''
 		});
 		this.filterResult = [];
-	}
-	setMinDueDate(event) {
-		const tdate = event.value;
-		tdate.add(1, 'days');
-		this.minDueDate = tdate;
 	}
 	ngOnDestroy() {
 		localStorage.removeItem('invoiceBulkRecords');

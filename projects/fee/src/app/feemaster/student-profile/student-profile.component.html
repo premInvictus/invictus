@@ -24,13 +24,13 @@
       </div>
    </div>
    <div class="floating-button">
-      <button *ngIf="editFlag" mat-button class="float-edit-button"><i class="material-icons font-white">
+      <button *ngIf="isExist('350')" mat-button class="float-edit-button"><i class="material-icons font-white">
             edit
          </i><span class="margin-top-2 right-text" (click)="enableEdit()"><i class="fas fa-pencil-alt "></i> <span
                class="btn-spacer">Edit</span></span></button>
       <br>
       <br>
-      <button *ngIf="editRequestFlag" mat-button class="float-edit-button" style="background-color: #dc9f36 !important">
+      <button *ngIf="isExist('374')" mat-button class="float-edit-button" style="background-color: #dc9f36 !important">
          <i class="material-icons font-white">
             edit
          </i><span class="margin-top-2 right-text" (click)="enableEditRequest()"><i class="fas fa-pencil-alt "></i>

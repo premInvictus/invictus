@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { CommonAPIService , FeeService } from '../../_services';
+import { CommonAPIService, FeeService } from '../../_services';
 import { DatePipe } from '@angular/common';
 import { ConfirmValidParentMatcher } from '../../_validationclass/confirmValidParentMatcher.class';
 
@@ -39,6 +39,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	finalSibReqArray: any[] = [];
 	finalArray: any[] = [];
 	accountDetails: any = {};
+	slabModel: any = '';
 	reqObj: any = {};
 	constructor(
 		private fbuild: FormBuilder,
@@ -47,8 +48,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
-		this.terminateStatus = 'Transport Facility Available';
-		this.hostelStatus = 'Hostel Facility Available';
+		this.terminateStatus = 'Transport Facility Terminated';
+		this.hostelStatus = 'Hostel Facility Terminated';
 		this.buildForm();
 		this.getFeeOtherCategory();
 		this.getConGroup();
@@ -92,6 +93,13 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		});
 	}
 	getFeeAccount(au_login_id) {
+		this.stoppageArray = [];
+		this.slabArray = [];
+		this.transportFlag = false;
+		this.hostelFlag = false;
+		this.modeFlag = false;
+		this.terminationFlag = false;
+		this.existFlag = false;
 		this.feeService.getFeeAccount({ accd_login_id: au_login_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.existFlag = true;
@@ -106,25 +114,26 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				} else {
 					this.modeFlag = false;
 				}
-				if (this.accountDetails.accd_is_terminate === 'Y') {
+				if (this.accountDetails.accd_is_terminate === 'Y' && this.transportFlag && this.modeFlag) {
 					this.terminationFlag = true;
 					this.terminateStatus = 'Transport Facility Terminated';
 				} else {
 					this.terminationFlag = false;
-					this.terminateStatus = 'Transport Facility Available';
+					this.terminateStatus = 'Transport Facility Terminated';
 				}
 				if (this.accountDetails.accd_is_hostel_terminate === 'Y') {
 					this.hostelTerminateFlag = true;
 					this.hostelStatus = 'Hostel Facility Terminated';
 				} else {
 					this.hostelTerminateFlag = false;
-					this.hostelStatus = 'Hostel Facility Available';
+					this.hostelStatus = 'Hostel Facility Terminated';
 				}
 				if (this.accountDetails.accd_is_hostel === 'Y') {
 					this.hostelFlag = true;
 				} else {
 					this.hostelFlag = false;
 				}
+				this.enableMode(this.accountDetails.accd_transport_mode);
 				this.getStoppages(this.accountDetails.accd_tr_id);
 				this.getSlab(this.accountDetails.accd_tsp_id);
 				this.accountsForm.patchValue({
@@ -141,16 +150,17 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_ts_id: this.accountDetails.accd_ts_id,
 					accd_is_terminate: this.accountDetails.accd_is_terminate === 'N' ? false : true,
 					accd_is_hostel_terminate: this.accountDetails.accd_is_hostel_terminate === 'N' ? false : true,
-					accd_transport_from: this.accountDetails.accd_transport_from,
-					accd_transport_to: this.accountDetails.accd_transport_to,
+					accd_transport_from: this.accountDetails.accd_transport_from.split('-')[0] === '1970' ? '' : this.accountDetails.accd_transport_from,
+					accd_transport_to: this.accountDetails.accd_transport_to.split('-')[0] === '1970' ? '' : this.accountDetails.accd_transport_to,
 					accd_remark: this.accountDetails.accd_remark,
 					accd_hostel_fs_id: this.accountDetails.accd_hostel_fs_id,
 					accd_hostel_fcc_id: this.accountDetails.accd_hostel_fcc_id,
-					accd_hostel_from: this.accountDetails.accd_hostel_from,
-					accd_hostel_to: this.accountDetails.accd_hostel_to,
+					accd_hostel_from: this.accountDetails.accd_hostel_from.split('-')[0] === '1970' ? '' : this.accountDetails.accd_hostel_from,
+					accd_hostel_to: this.accountDetails.accd_hostel_to.split('-')[0] === '1970' ? '' : this.accountDetails.accd_hostel_to,
 					accd_ses_id: this.accountDetails.ses_id,
 					accd_status: this.accountDetails.accd_status
 				});
+				this.slabModel = this.accountDetails.accd_ts_id;
 			} else {
 				this.accountsForm.reset();
 				this.transportFlag = false;
@@ -190,7 +200,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		});
 	}
 	getHostelConGroup() {
-		this.feeService.getConcessionGroup({ fcg_is_hostel_fee: 1 }).subscribe((result: any) => {
+		this.feeService.getConcessionGroup({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.hostelConGroupArray = result.data;
 			}
@@ -200,6 +210,17 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		if ($event.checked) {
 			this.transportFlag = true;
 		} else {
+			this.accountsForm.patchValue({
+				accd_transport_mode: '',
+				accd_tr_id: '',
+				accd_tsp_id: '',
+				accd_ts_id: '',
+				accd_is_terminate: 'N',
+				accd_transport_from: '',
+				accd_transport_to: '',
+			});
+			this.slabArray = [];
+			this.stoppageArray = [];
 			this.transportFlag = false;
 		}
 	}
@@ -207,6 +228,13 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		if ($event.checked) {
 			this.hostelFlag = true;
 		} else {
+			this.accountsForm.patchValue({
+				accd_hostel_fs_id: '',
+				accd_hostel_fcc_id: '',
+				accd_hostel_from: '',
+				accd_hostel_to: '',
+				accd_is_hostel_terminate: 'N',
+			});
 			this.hostelFlag = false;
 		}
 	}
@@ -237,7 +265,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.terminateStatus = 'Transport Facility Terminated';
 		} else {
 			this.terminationFlag = false;
-			this.terminateStatus = 'Transport  Facility Available';
+			this.terminateStatus = 'Transport  Facility Terminated';
 		}
 	}
 	hostel($event) {
@@ -246,7 +274,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.hostelStatus = 'Hostel Facility Terminated';
 		} else {
 			this.hostelTerminateFlag = false;
-			this.hostelStatus = 'Hostel  Facility Available';
+			this.hostelStatus = 'Hostel  Facility Terminated';
 		}
 	}
 	submit() {
@@ -312,9 +340,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage('Inserted SucessFully', 'success');
 					this.getFeeAccount(this.feeLoginId);
-					this.editChange.emit(true);
+					this.editChange.emit(this.feeLoginId);
 				} else {
-					this.editChange.emit(true);
+					this.editChange.emit(this.feeLoginId);
 				}
 			});
 		} else {
@@ -359,7 +387,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
-		 if (validateFlag) {
+		if (validateFlag) {
 			const datePipe = new DatePipe('en-in');
 			let accountJSON = {};
 			accountJSON = {
@@ -390,9 +418,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					if (result && result.status === 'ok') {
 						this.commonAPIService.showSuccessErrorMessage('Updated SucessFully', 'success');
 						this.getFeeAccount(this.feeLoginId);
-						this.editChange.emit(true);
+						this.editChange.emit(this.feeLoginId);
 					} else {
-						this.editChange.emit(true);
+						this.editChange.emit(this.feeLoginId);
 					}
 				});
 			}
@@ -426,7 +454,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	getPreviousData() {
 		this.getFeeAccount(this.feeLoginId);
 		this.viewOnly = true;
-		this.editChange.emit(true);
+		this.editChange.emit(this.feeLoginId);
 	}
 	isExist(mod_id) {
 		return this.commonAPIService.isExistUserAccessMenu(mod_id);
@@ -434,13 +462,13 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	confirmEdit($event) {
 		if ($event) {
 			this.viewOnly = true;
-			this.editChange.emit(true);
+			this.editChange.emit(this.feeLoginId);
 		}
 	}
 	cancelEdit($event) {
 		if ($event) {
 			this.viewOnly = true;
-			this.editChange.emit(true);
+			this.editChange.emit(this.feeLoginId);
 		}
 	}
 	checkFormChangedValue() {
@@ -518,6 +546,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.feeService.getTransportSlabPerStoppages({ tsp_id: $event.value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.slabArray = result.data;
+				this.slabModel = this.slabArray[0].ts_id;
 			}
 		});
 	}
