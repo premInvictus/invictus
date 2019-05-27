@@ -19,12 +19,10 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	barecodeScanner: BarecodeScannerLivestreamComponent;
 	barcodeValue;
 	invoiceArray: any[] = [];
-	permission = false;
 	currentDate = new Date();
 	startMonth: any;
 	minDate: any;
 	schoolInfo: any;
-	processType: any = '4';
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },
@@ -38,15 +36,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		public processtypeService: ProcesstypeFeeService,
 		public feeService: FeeService,
 		private fbuild: FormBuilder,
-		private common: CommonAPIService) { }
+		public common: CommonAPIService) { }
 
 	ngOnInit() {
-		if (this.common.isExistUserAccessMenu('371')) {
-			this.permission = true;
-		} else {
-			this.permission = false;
-		}
-		this.processtypeService.setProcesstype(this.processType);
 		this.getSchool();
 		this.getBanks();
 		this.getEntryModes();
@@ -60,7 +52,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		this.feeTransactionForm = this.fbuild.group({
 			'inv_id': [],
 			'login_id': '',
-			'ftr_emod_id': '',
+			'ftr_emod_id': '1',
 			'ftr_transaction_id': '',
 			'ftr_transaction_date': new Date(),
 			'ftr_pay_id': '',
@@ -137,7 +129,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		}
 	}
 	submit() {
-		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0 && !this.processType) {
+		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0) {
 			const datePipe = new DatePipe('en-in');
 			this.feeTransactionForm.patchValue({
 				'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
@@ -148,8 +140,12 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Fee transaction added', 'success');
+					this.reset();
+					this.invoiceArray = [];
 				} else {
 					this.common.showSuccessErrorMessage('Fee transaction not added', 'error');
+					this.reset();
+					this.invoiceArray = [];
 				}
 			});
 		} else if (this.invoiceArray.length === 0) {
@@ -157,7 +153,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		}
 	}
 	saveAndPrint() {
-		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0 && !this.processType) {
+		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0) {
 			const datePipe = new DatePipe('en-in');
 			this.feeTransactionForm.patchValue({
 				'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
@@ -169,10 +165,13 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
 					saveAs(result.data, result.data.split('/')[length - 1]);
+					this.reset();
+					this.invoiceArray = [];
 				} else {
 					const length = result.data.split('/').length;
 					saveAs(result.data, result.data.split('/')[length - 1]);
-					this.feeTransactionForm.reset();
+					this.reset();
+					this.invoiceArray = [];
 				}
 			});
 		} else if (this.invoiceArray.length === 0) {
@@ -184,7 +183,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		this.feeTransactionForm.patchValue({
 			'inv_id': [],
 			'login_id': '',
-			'ftr_emod_id': '',
+			'ftr_emod_id': '1',
 			'ftr_transaction_id': '',
 			'ftr_transaction_date': new Date(),
 			'ftr_pay_id': '',
@@ -212,9 +211,5 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				this.minDate = new Date(new Date().getFullYear(), this.startMonth - 1 , 1);
 			}
 		});
-	}
-	changeProcessType($event) {
-		this.processType = $event.value;
-		this.processtypeService.setProcesstype(this.processType);
 	}
 }

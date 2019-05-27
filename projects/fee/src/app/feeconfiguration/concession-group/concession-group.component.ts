@@ -131,6 +131,7 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 			fcg_name: value.fcg_name,
 			fcg_description: value.fcg_description,
 			fcgr_fcc_id: this.getConcessionId(value.fcgr_fcc_id),
+			fcg_status: value.fcg_status
 		});
 	}
 	getConcessionId(array) {
