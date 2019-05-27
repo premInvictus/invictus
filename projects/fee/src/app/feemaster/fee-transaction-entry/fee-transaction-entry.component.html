@@ -96,7 +96,7 @@
                         <span *ngIf="!permission" class="font-size-20 font-regular">{{currentDate | date: 'd-MMMM-y'}}</span>
                        <mat-form-field  [hidden]="!permission" appearance="outline" class="form-field">
                           <mat-label>Select Date</mat-label>
-                          <input matInput [matDatepicker]="picker" [max]="currentDate" [min]="minDate"
+                          <input matInput [matDatepicker]="picker" 
                           placeholder="Choose a date"  formControlName="ftr_transaction_date">
                           <mat-datepicker-toggle   matSuffix [for]="picker"></mat-datepicker-toggle>
                           <mat-datepicker #picker></mat-datepicker>

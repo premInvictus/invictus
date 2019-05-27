@@ -79,7 +79,7 @@
                          <div class="col-12 remove-col-padding">
                             <mat-form-field appearance="outline" class="form-field">
                                <mat-label>Invoice Date</mat-label>
-                               <input matInput [matDatepicker]="picker" placeholder="Invoice Date" [min]="minInvoiceDate"
+                               <input matInput [matDatepicker]="picker" placeholder="Invoice Date" 
                                formControlName="inv_invoice_date" (dateChange)="setMinDueDate($event)" required>
                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                <mat-datepicker #picker></mat-datepicker>
@@ -90,7 +90,7 @@
                          <div class="col-12 remove-col-padding">
                             <mat-form-field appearance="outline" class="form-field">
                                <mat-label>Last Date</mat-label>
-                               <input matInput [matDatepicker]="picker1" placeholder="Last Date" [min]="minDueDate"
+                               <input matInput [matDatepicker]="picker1" placeholder="Last Date" 
                                formControlName="inv_due_date" required>
                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                <mat-datepicker #picker1></mat-datepicker>
