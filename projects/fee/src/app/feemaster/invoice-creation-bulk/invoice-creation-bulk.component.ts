@@ -250,7 +250,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			inv_activity: ''
 		});
 		this.invoiceSearchForm = this.fb.group({
-			processType: '',
 			class_id: '',
 			sec_id: '',
 			inv_process_usr_no: '',
@@ -381,10 +380,5 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		});
 		this.processType = $event.value;
 		this.processtypeService.setProcesstype(this.processType);
-	}
-	changeProcessType2($event) {
-		this.invoiceSearchForm.patchValue({
-			processType: $event.value
-		});
 	}
 }

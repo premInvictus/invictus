@@ -124,16 +124,6 @@
                    <div class="row margin-top-5">
                       <div class="col-1 fee-custom-col-10 col-padding-5">
                          <mat-form-field appearance="outline" class="form-field">
-                            <mat-label>Process Type</mat-label>
-                            <mat-select placeholder="Process Type" formControlName="processType"
-                               (selectionChange)="changeProcessType2($event)">
-                               <mat-option value="">Please Select</mat-option>
-                               <mat-option *ngFor="let item of processTypeArray" [value]="item.id">{{item.name}}</mat-option>
-                            </mat-select>
-                         </mat-form-field>
-                      </div>
-                      <div class="col-1 fee-custom-col-10 col-padding-5">
-                         <mat-form-field appearance="outline" class="form-field">
                             <mat-label>Enrollment No.</mat-label>
                             <input matInput placeholder="Enrollment No." formControlName="inv_process_usr_no">
                          </mat-form-field>

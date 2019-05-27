@@ -96,7 +96,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			} else {
 				this.transportFlag = false;
 			}
-			if (this.feeDet.accd_tr_id === '1' && this.feeDet.accd_is_terminate === 'Y') {
+			if (this.feeDet.accd_tr_id === '1' && this.feeDet.accd_is_transport === 'Y') {
 				this.modeFlag = true;
 			} else {
 				this.modeFlag = false;
@@ -280,7 +280,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				this.validateFlag = false;
 			}
-		} if (this.validateFlag) {
+		}  if (this.validateFlag) {
 			const datePipe = new DatePipe('en-in');
 			let accountJSON = {};
 			accountJSON = {
@@ -308,7 +308,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			};
 			this.feeService.insertFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
-					this.commonAPIService.showSuccessErrorMessage('Inserted SucessFully', 'success');
 					// this.getFeeAccount(this.feeLoginId);
 				}
 			});
@@ -351,7 +350,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				this.validateFlag = false;
 			}
-		}if (this.validateFlag) {
+		} if (this.validateFlag) {
 			const datePipe = new DatePipe('en-in');
 			let accountJSON = {};
 			accountJSON = {
@@ -379,7 +378,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			};
 			this.feeService.updateFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
-					this.commonAPIService.showSuccessErrorMessage('Updated SucessFully', 'success');
 				}
 			});
 		}

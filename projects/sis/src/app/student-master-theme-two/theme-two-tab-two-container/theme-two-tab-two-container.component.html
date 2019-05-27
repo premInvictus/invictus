@@ -16,7 +16,9 @@
               <app-account-details-theme-two #account
               [addOnly]="addOnly"
               [viewOnly]="viewOnly"
-              [feeDet]="accountDetails"></app-account-details-theme-two>
+              [feeDet]="accountDetails"
+              [feeLoginId]="context.studentdetails.studentdetailsform.value.au_login_id ? 
+              context.studentdetails.studentdetailsform.value.au_login_id : ''"></app-account-details-theme-two>
             </mat-expansion-panel>
         <mat-expansion-panel [expanded]="'true'" *ngIf="common.isExistUserAccessMenuByLabel(parentId,'Education Details')">
           <mat-expansion-panel-header class="exp-header-new-stu-detail">

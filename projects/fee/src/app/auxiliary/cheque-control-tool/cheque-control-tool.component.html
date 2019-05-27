@@ -30,15 +30,6 @@
             </div>
             <form *ngIf="toggleSearch" [formGroup]="filterForm">
               <div class="row margin-top-5">
-                <div class="col-2 custom-col-15 remove-col-padding-left">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Process Type</mat-label>
-                    <mat-select placeholder="Process Type" formControlName="inv_process_type">
-                      <mat-option>Please Select</mat-option>
-                      <mat-option *ngFor="let item of processTypeArray" [value]="item.id">{{item.name}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
                 <div class="col-2 custom-col-15">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Enrollment No.</mat-label>
