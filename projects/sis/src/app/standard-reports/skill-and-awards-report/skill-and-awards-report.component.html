@@ -1,6 +1,6 @@
 
-<div class="container-box__grey">
-    <div class="container-box__white">
+<div class="fee-container-box__grey">
+    <div class="container-box__white card-height-840-lp">
         <div class="row">
             <div class="col-12 text-center">
                 <h4 class="text-uppercase"><b>Skills and Awards Report</b></h4>
@@ -10,7 +10,8 @@
         <form [formGroup]="skillAwardsReportForm" autocomplete="off">
             <div class="row">
                 <div class="col-2 ">
-                        <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>Skills</mat-label>
                                 <mat-select placeholder="Skills" formControlName="skill_id">
                                     <mat-option *ngFor="let item of activityArray" [value]="item.act_id">{{item.act_name}}
                                     </mat-option>
@@ -18,7 +19,8 @@
                             </mat-form-field>
                 </div>
                 <div class="col-2">
-                        <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>Level of Interest</mat-label>
                                 <mat-select placeholder="Level of Interest" formControlName="loe_id">
                                     <mat-option *ngFor="let item of levelOfIntrestArray" [value]="item.loi_id">
                                         {{item.loi_name}}</mat-option>
@@ -26,7 +28,8 @@
                             </mat-form-field>
                 </div>
                 <div class="col-2">
-                        <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>Awards</mat-label>
                                 <mat-select placeholder="Awards" formControlName="award_id">
                                     <mat-option *ngFor="let item of activityArray" [value]="item.act_id">{{item.act_name}}
                                     </mat-option>
@@ -34,7 +37,8 @@
                             </mat-form-field>
                 </div>
                 <div class="col-2">
-                        <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>Level</mat-label>
                                 <mat-select placeholder="Level" formControlName="award_event_id">
                                     <mat-option *ngFor="let item of eventArray" [value]="item.el_id">{{item.el_name}}
                                     </mat-option>
@@ -144,8 +148,8 @@
                                             </mat-cell>
                                         </ng-container>
                                         <!-- Section Column -->
-                                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                                     </table>
                                 </div>
                                 <div class="col-12" *ngIf="REPORT_SKILL_AWARD_WISE_ELEMENT_DATA.length == 0">

@@ -90,8 +90,8 @@
                       <mat-cell *matCellDef="let element">{{element.house}}</mat-cell>
                     </ng-container>
   
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns;"></mat-row>
                   </mat-table>
                 </div>
               </div>
@@ -210,8 +210,8 @@
                           </mat-cell>
                         </ng-container>
   
-                        <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns1;"></mat-row>
+                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns1"></mat-header-row>
+                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns1;"></mat-row>
                       </mat-table>
                     </div>
                   </div>

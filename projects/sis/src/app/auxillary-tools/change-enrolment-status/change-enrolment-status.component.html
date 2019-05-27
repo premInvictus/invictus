@@ -33,7 +33,8 @@
                                 <div class="col-6">
                                     <div class="row">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Enrollment Type</mat-label>
                                                 <mat-select placeholder="Enrolment Type" formControlName="enrolment_type"
                                                     (selectionChange)="prepareEnrolmentToArray($event)" required>
                                                     <mat-option value="">Please Select</mat-option>
@@ -46,12 +47,14 @@
                                         <div class="col-12">
                                             <div class="row">
                                             <div class="col-9" style="display: none;">
-                                                <mat-form-field class="form-field">
+                                                    <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Login ID</mat-label>
                                                     <input matInput placeholder="Login Id" formControlName="login_id">
                                                 </mat-form-field>
                                             </div>
                                             <div class="col-9">
-                                            <mat-form-field class="form-field">
+                                                    <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>No</mat-label>
                                                 <input matInput placeholder="{{enrolmentPlaceholder}} No."
                                                     formControlName="au_login_id" (blur)="getStudentData($event)">
                                             </mat-form-field>
@@ -68,7 +71,8 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Student No.</mat-label>
                                                 <input class="text-capitalize" matInput placeholder="Student Name" formControlName="au_full_name"
                                                     readonly>
                                             </mat-form-field>
@@ -80,7 +84,8 @@
                                 <div class="col-6">
                                     <div class="row" *ngIf="changeEnrolmentStatusForm.value.enrolment_type != 1 && changeEnrolmentStatusForm.value.enrolment_type != 2">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Section</mat-label>
                                                 <input matInput placeholder="Section" formControlName="section"
                                                     readonly>
                                             </mat-form-field>
@@ -92,14 +97,16 @@
 
 
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Class</mat-label>
                                                 <input matInput placeholder="Class" formControlName="class" readonly>
                                             </mat-form-field>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Date of Enrollment</mat-label>
                                                 <input matInput [matDatepicker]="picker" placeholder="Date of {{enrolmentPlaceholder}}"
                                                     formControlName="doa" (dateInput)="enrolStatusToEvent('input', $event)"
                                                     readonly>
@@ -139,7 +146,8 @@
                             <br>
                             <div class="row">
                                 <div class="col-6">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Enrollment To</mat-label>
                                         <mat-select placeholder="{{enrolmentPlaceholder}} To" formControlName="enrolment_to" required>
                                                 <mat-option value="">Please Select</mat-option>
                                             <mat-option *ngFor="let item of enrollMentToArray" value="{{item?.au_process_type}}">{{item?.au_process_name}}</mat-option>
@@ -147,7 +155,8 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-6">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Reason For Change</mat-label>
                                         <mat-select placeholder="Reason for change" formControlName="reason_id"
                                             required>
                                             <mat-option value="">Please Select</mat-option>
@@ -158,7 +167,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Remarks</mat-label>
                                         <input matInput placeholder="Remarks" formControlName="remarks" required>
                                     </mat-form-field>
                                 </div>
@@ -173,7 +183,8 @@
                                         (change)="checkForCancelDate($event,'active')"> Active </mat-checkbox>
                                 </div>
                                 <div class="col-6" *ngIf="showCancelDate" style="display: none;">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Process Date</mat-label>
                                         <input matInput [matDatepicker]="picker4" placeholder="Process Date"
                                             formControlName="cancel_date" (dateInput)="enrolCancelToEvent('input', $event)">
                                         <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
