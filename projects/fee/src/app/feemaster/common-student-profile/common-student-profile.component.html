@@ -104,7 +104,7 @@
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Parent Name </span><br>
             <span class="font-size-16 font-bold">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
-              studentdetails.parentinfo[0].epd_parent_name : 'NA'}}</span>
+              (studentdetails.parentinfo[0].epd_parent_name | capitalize) : 'NA'}}</span>
           </div>
         </div>
 
@@ -121,7 +121,7 @@
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Emg Contact Name </span><br>
             <span
-              class="font-size-16 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails.medicalinfo[0].mi_emergency_contact_name : 'NA'}}</span>
+              class="font-size-16 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? (studentdetails.medicalinfo[0].mi_emergency_contact_name | capitalize) : 'NA'}}</span>
           </div>
         </div>
         <div class="row margin-top-10">
