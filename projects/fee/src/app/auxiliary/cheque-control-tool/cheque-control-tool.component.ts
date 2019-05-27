@@ -64,7 +64,9 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		const dialogRef = this.dialog.open(BouncedChequeModalComponent, {
 			data: item,
 			width: '800px',
-			height: '50%'
+			height: '50%',
+			hasBackdrop: true,
+			disableClose: true
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
@@ -89,7 +91,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						srno: pos,
 						invoiceno: item.invoice_no ? item.invoice_no : 'NA',
 						chequeno: item.cheque_no,
-						admno: item.au_admission_no,
+						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
 						recieptno: item.receipt_id,
 						amount: item.receipt_amount,
@@ -148,7 +150,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						srno: pos,
 						invoiceno: item.invoice_no ? item.invoice_no : 'NA',
 						chequeno: item.cheque_no,
-						admno: item.au_admission_no,
+						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
 						recieptno: item.receipt_id,
 						amount: item.receipt_amount,
@@ -181,22 +183,24 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	}
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
+			height: '80vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
 	}
 	openReceiptDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
+			height: '80vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
 	}
 	fetchData(event?: PageEvent) {

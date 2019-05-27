@@ -414,7 +414,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 				invoiceNo: invoiceNo,
 				edit: edit
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
 
 		dialogRef.afterClosed().subscribe(result => {

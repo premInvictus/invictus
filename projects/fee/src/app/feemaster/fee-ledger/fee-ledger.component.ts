@@ -122,12 +122,11 @@ export class FeeLedgerComponent implements OnInit {
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
-			height: '85vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
@@ -138,12 +137,11 @@ export class FeeLedgerComponent implements OnInit {
 	openReceiptDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
-			height: '85vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
 
 		dialogRef.afterClosed().subscribe(result => {

@@ -253,7 +253,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			processType: '',
 			class_id: '',
 			sec_id: '',
-			admission_no: '',
+			inv_process_usr_no: '',
 			invoice_no: '',
 			user_name: '',
 			from_date: '',
