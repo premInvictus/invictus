@@ -233,7 +233,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	getStudentInformation(au_login_id) {
 		if (au_login_id && this.studentdetailsflag) {
 			this.studentdetailsflag = false;
-			this.sisService.getStudentInformation({ au_login_id: au_login_id, au_status: '1' }).subscribe((result: any) => {
+			this.sisService.getStudentInformation({ au_login_id: au_login_id}).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.nextB = true;
 					this.firstB = true;

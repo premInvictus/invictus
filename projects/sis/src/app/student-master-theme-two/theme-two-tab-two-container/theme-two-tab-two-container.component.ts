@@ -51,6 +51,9 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				this.getAdditionalDetails(this.context.studentdetails.studentdetailsform.value.au_login_id);
 				this.getFeeAccount(this.context.studentdetails.studentdetailsform.value.au_login_id);
 				const processType = this.processtypeService.getProcesstype();
+				if (processType === '1') {
+					this.parentId = '157';
+				}
 				if (processType === '2') {
 					this.parentId = '158';
 				}
@@ -116,7 +119,8 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			if (result.status === 'ok') {
 				this.account.submit();
 				this.common.showSuccessErrorMessage('Additional Details Added Successfully', 'success');
-				if (this.processtypeService.getProcesstype() === '2' || this.processtypeService.getProcesstype() === '5') {
+				if (this.processtypeService.getProcesstype() === '1' ||
+				this.processtypeService.getProcesstype() === '2' || this.processtypeService.getProcesstype() === '5') {
 					this.common.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
 				} else {
 					this.common.renderTab.next({ tabMove: true });

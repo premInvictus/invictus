@@ -32,7 +32,6 @@ export class FeeTransactionEntryComponent implements OnInit {
 	invoiceTypes: any[] = [];
 	banks: any[] = [];
 	allBanks: any[] = [];
-	permission = false;
 	currentDate = new Date();
 	minDate: any;
 	schoolInfo: any;
@@ -43,7 +42,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 		public processtypeService: ProcesstypeFeeService,
 		public feeService: FeeService,
 		private fbuild: FormBuilder,
-		private common: CommonAPIService,
+		public common: CommonAPIService,
 		private router: Router,
 		private route: ActivatedRoute,
 		public dialog: MatDialog,
@@ -62,11 +61,6 @@ export class FeeTransactionEntryComponent implements OnInit {
 		this.getEntryModes();
 		this.getPayModes();
 		this.buildForm();
-		if (this.common.isExistUserAccessMenu('368')) {
-			this.permission = true;
-		} else {
-			this.permission = false;
-		}
 		this.selectedMode = '';
 		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
 			if (data.adm_no && data.login_id) {

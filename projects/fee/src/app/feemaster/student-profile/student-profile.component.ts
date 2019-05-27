@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SisService, CommonAPIService, ProcesstypeFeeService, FeeService } from '../../_services';
 import { StudentAccountComponent } from '../student-account/student-account.component';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
+import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 
 @Component({
 	selector: 'app-student-profile',
@@ -16,6 +17,7 @@ export class StudentProfileComponent implements OnInit {
 	permissionFlag: any;
 	viewOnly = true;
 	@ViewChild(StudentAccountComponent) stuAcc: StudentAccountComponent;
+	@ViewChild (CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	constructor(
 		private sisService: SisService,
 		private commmon: CommonAPIService,
@@ -24,12 +26,6 @@ export class StudentProfileComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		if (this.commmon.isExistUserAccessMenu('350')) {
-			this.editFlag = true;
-		}
-		if (this.commmon.isExistUserAccessMenu('374')) {
-			this.editRequestFlag = true;
-		}
 		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
 			if (data.adm_no && data.login_id) {
 				this.lastRecordId = data.adm_no;
@@ -86,12 +82,29 @@ export class StudentProfileComponent implements OnInit {
 		this.editRequestFlag = false;
 	}
 	editChange(flag) {
-		this.viewOnly = flag;
-		if (this.viewOnly && this.commmon.isExistUserAccessMenu('350')) {
+		if (flag) {
+		this.viewOnly = true;
+		}
+		this.commonStu.getStudentInformation(flag);
+		if (this.viewOnly && this.isExist('350') ) {
 			this.editFlag = true;
 		}
 		if (this.viewOnly && this.commmon.isExistUserAccessMenu('374')) {
 			this.editRequestFlag = true;
+		}
+	}
+	isExist(mod_id) {
+		if (mod_id === '350') {
+			if (this.commmon.isExistUserAccessMenu(mod_id)) {
+				this.editFlag = true;
+				return true;
+			}
+		}
+		if (mod_id === '374') {
+			if (this.commmon.isExistUserAccessMenu(mod_id)) {
+				this.editRequestFlag = true;
+				return true;
+			}
 		}
 	}
 }

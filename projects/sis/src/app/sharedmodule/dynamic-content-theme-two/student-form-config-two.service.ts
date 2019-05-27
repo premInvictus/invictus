@@ -18,7 +18,7 @@ export class StudentFormConfigTwoService {
 				{ 'label': 'Remarks', 'component': 'app-theme-two-tab-three-container' }
 		];
 		formconfig = {
-				'enquiry': [0],
+				'enquiry': [0, 1],
 				'registration': [0, 1],
 				'provisional': [0, 1, 2],
 				'admission': [0, 1, 2],

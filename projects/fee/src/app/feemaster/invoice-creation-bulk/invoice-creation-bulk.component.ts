@@ -42,7 +42,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	classArray: any[] = [];
 	sectionArray: any[] = [];
 	minInvoiceDate = new Date();
-	minDueDate = new Date();
 	totalRecords: any;
 	pageEvent: PageEvent;
 	processType: any = '';
@@ -250,7 +249,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			inv_activity: ''
 		});
 		this.invoiceSearchForm = this.fb.group({
-			processType: '',
 			class_id: '',
 			sec_id: '',
 			inv_process_usr_no: '',
@@ -359,11 +357,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		});
 		this.filterResult = [];
 	}
-	setMinDueDate(event) {
-		const tdate = event.value;
-		tdate.add(1, 'days');
-		this.minDueDate = tdate;
-	}
 	ngOnDestroy() {
 		localStorage.removeItem('invoiceBulkRecords');
 	}
@@ -381,10 +374,5 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		});
 		this.processType = $event.value;
 		this.processtypeService.setProcesstype(this.processType);
-	}
-	changeProcessType2($event) {
-		this.invoiceSearchForm.patchValue({
-			processType: $event.value
-		});
 	}
 }

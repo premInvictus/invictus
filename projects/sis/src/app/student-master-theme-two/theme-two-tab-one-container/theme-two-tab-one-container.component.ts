@@ -152,11 +152,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 							au_enrollment_id: result.data.au_enrollment_id
 						});
 						this.commonAPIService.showSuccessErrorMessage('Student Details Inserted Successfully', 'success');
-						if (this.processTypeService.getProcesstype() === '1') {
-							this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
-						} else {
 							this.commonAPIService.renderTab.next({ tabMove: true });
-						}
 					} else {
 						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 					}
@@ -237,16 +233,12 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			this.sisService.addStudent(this.taboneform).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage('Student Details Updated Successfully', 'success');
-					if (this.processTypeService.getProcesstype() === '1') {
-						this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
-					} else {
 						if (isview) {
 							this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 							this.getStudent(this.login_id);
 						} else {
 							this.commonAPIService.renderTab.next({ tabMove: true });
 						}
-					}
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 				}

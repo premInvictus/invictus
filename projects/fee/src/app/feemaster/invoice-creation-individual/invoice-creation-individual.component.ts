@@ -38,7 +38,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	currentAdmno: string;
 	currentLoginId: string;
 	minInvoiceDate = new Date();
-	minDueDate = new Date();
 	pageEvent: PageEvent;
 	type: any = '';
 
@@ -439,10 +438,4 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	applyFilter(filtervalue: string) {
 		this.dataSource.filter = filtervalue.trim().toLowerCase();
 	}
-	setMinDueDate(event) {
-		const tdate = event.value;
-		tdate.add(1, 'days');
-		this.minDueDate = tdate;
-	}
-
 }

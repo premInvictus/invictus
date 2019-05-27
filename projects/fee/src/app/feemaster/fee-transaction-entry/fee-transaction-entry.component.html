@@ -93,8 +93,8 @@
               <div class="col-6">
                  <div class="row">
                     <div class="col-12">
-                        <span *ngIf="!permission" class="font-size-20 font-regular">{{currentDate | date: 'd-MMMM-y'}}</span>
-                       <mat-form-field  [hidden]="!permission" appearance="outline" class="form-field">
+                        <span *ngIf="!(common.isExistUserAccessMenu('368'))" class="font-size-20 font-regular">{{currentDate | date: 'd-MMMM-y'}}</span>
+                       <mat-form-field  [hidden]="!(common.isExistUserAccessMenu('368'))" appearance="outline" class="form-field">
                           <mat-label>Select Date</mat-label>
                           <input matInput [matDatepicker]="picker" 
                           placeholder="Choose a date"  formControlName="ftr_transaction_date">

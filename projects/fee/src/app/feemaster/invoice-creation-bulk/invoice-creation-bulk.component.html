@@ -80,7 +80,7 @@
                             <mat-form-field appearance="outline" class="form-field">
                                <mat-label>Invoice Date</mat-label>
                                <input matInput [matDatepicker]="picker" placeholder="Invoice Date" 
-                               formControlName="inv_invoice_date" (dateChange)="setMinDueDate($event)" required>
+                               formControlName="inv_invoice_date" required>
                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                <mat-datepicker #picker></mat-datepicker>
                             </mat-form-field>
@@ -122,16 +122,6 @@
                    </div>
                    <form [formGroup]="invoiceSearchForm" novalidate *ngIf="advanceSearchFlag">
                    <div class="row margin-top-5">
-                      <div class="col-1 fee-custom-col-10 col-padding-5">
-                         <mat-form-field appearance="outline" class="form-field">
-                            <mat-label>Process Type</mat-label>
-                            <mat-select placeholder="Process Type" formControlName="processType"
-                               (selectionChange)="changeProcessType2($event)">
-                               <mat-option value="">Please Select</mat-option>
-                               <mat-option *ngFor="let item of processTypeArray" [value]="item.id">{{item.name}}</mat-option>
-                            </mat-select>
-                         </mat-form-field>
-                      </div>
                       <div class="col-1 fee-custom-col-10 col-padding-5">
                          <mat-form-field appearance="outline" class="form-field">
                             <mat-label>Enrollment No.</mat-label>

@@ -53,7 +53,6 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'au_full_name': '',
-			'inv_process_usr_no': '',
 			'from_date': '',
 			'to_date': '',
 			'status': ''
@@ -216,7 +215,6 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'au_full_name': '',
-			'inv_process_usr_no': '',
 			'from_date': '',
 			'to_date': '',
 			'status': ''
