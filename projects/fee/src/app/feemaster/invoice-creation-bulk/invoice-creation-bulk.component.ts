@@ -45,13 +45,13 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	minDueDate = new Date();
 	totalRecords: any;
 	pageEvent: PageEvent;
-	processType: any = '4';
+	processType: any = '';
 	processTypeArray: any[] = [
-		{ id: '1', name: 'Enquiry No.' },
-		{ id: '2', name: 'Registration No.' },
-		{ id: '3', name: 'Provisional Admission No.' },
-		{ id: '4', name: 'Admission No.' },
-		{ id: '5', name: 'Alumini No.' }
+		{ id: '1', name: 'Enquiry' },
+		{ id: '2', name: 'Registration' },
+		{ id: '3', name: 'Provisional Admission' },
+		{ id: '4', name: 'Admission' },
+		{ id: '5', name: 'Alumini' }
 	];
 	getClass() {
 		this.classArray = [];
@@ -131,7 +131,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 
 	ngOnInit() {
 		localStorage.removeItem('invoiceBulkRecords');
-		this.processtypeService.setProcesstype(this.processType);
 		this.buildForm();
 		this.getCalculationMethods();
 		this.getInvoiceFeeMonths();
@@ -161,7 +160,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		invoicearr.forEach((element, index) => {
 			this.ELEMENT_DATA.push({
 				srno: (this.invoiceSearchForm.value.pageSize * this.invoiceSearchForm.value.pageIndex) + (index + 1),
-				admno: element.au_admission_no,
+				admno: element.inv_process_usr_no,
 				studentname: element.au_full_name,
 				classsection: element.class_name + ' - ' + element.sec_name,
 				invoiceno: element.inv_invoice_no,
@@ -206,7 +205,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		});
 	}
 	async insertInvoice() {
-		if (this.invoiceCreationForm.valid) {
+		if (this.invoiceCreationForm.valid && this.processType) {
 			const formData: any = await this.insertInvoiceData(Object.assign({}, this.invoiceCreationForm.value));
 			let arrAdmno = [];
 			if (this.filterResult.length > 0) {
@@ -251,6 +250,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			inv_activity: ''
 		});
 		this.invoiceSearchForm = this.fb.group({
+			processType: '',
 			class_id: '',
 			sec_id: '',
 			admission_no: '',
@@ -346,7 +346,17 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.router.navigate(['../invoice-creation-individual'], { relativeTo: this.route });
 	}
 	reset() {
-		this.invoiceCreationForm.reset();
+		this.invoiceCreationForm.patchValue({
+			recalculation_flag: '',
+			inv_id: [],
+			inv_title: '',
+			login_id: [],
+			inv_calm_id: '',
+			inv_fm_id: [],
+			inv_invoice_date: '',
+			inv_due_date: '',
+			inv_activity: ''
+		});
 		this.filterResult = [];
 	}
 	setMinDueDate(event) {
@@ -358,9 +368,23 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		localStorage.removeItem('invoiceBulkRecords');
 	}
 	changeProcessType($event) {
+		this.invoiceCreationForm.patchValue({
+			recalculation_flag: '',
+			inv_id: [],
+			inv_title: '',
+			login_id: [],
+			inv_calm_id: '',
+			inv_fm_id: [],
+			inv_invoice_date: '',
+			inv_due_date: '',
+			inv_activity: ''
+		});
 		this.processType = $event.value;
 		this.processtypeService.setProcesstype(this.processType);
-		this.getInvoice(this.invoiceSearchForm.value);
 	}
-
+	changeProcessType2($event) {
+		this.invoiceSearchForm.patchValue({
+			processType: $event.value
+		});
+	}
 }

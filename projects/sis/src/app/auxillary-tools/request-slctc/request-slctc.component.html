@@ -1,4 +1,4 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey">
     <div class="container-box__white">
       <div class="row">
         <!-- <div class="col-4 text-center">
@@ -17,7 +17,8 @@
         <div class="col-6">
           <div class="row">
             <div class="col-12">
-              <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Admission No.</mat-label>
                 <input matInput placeholder="Admission No." formControlName="tc_admission_no" (blur)="getStudentDetails(studentdetailsform.value.tc_admission_no)"
                 (keydown.enter)="getStudentDetails(studentdetailsform.value.tc_admission_no)" required>
               </mat-form-field>
@@ -25,14 +26,16 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Student Name</mat-label>
                 <input matInput placeholder="Student Name" formControlName="au_full_name" readonly tabindex="-1">
               </mat-form-field>
             </div>
           </div>
           <div class="row">
             <div class="col-6">
-              <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Class</mat-label>
                 <mat-select formControlName="class_id" placeholder="Class" (ngModelChange)="getSectionsByClass()" disabled tabindex="-1"> 
                     <mat-option value="">Please Select</mat-option>
                   <mat-option *ngFor="let item of classArray" [value]="item.class_id">
@@ -42,7 +45,8 @@
               </mat-form-field>
             </div>
             <div class="col-6">
-              <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Section</mat-label>
                 <mat-select placeholder="Section" formControlName="sec_id" disabled tabindex="-1">
                     <mat-option value="">Please Select</mat-option>
                   <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
@@ -54,7 +58,8 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Email ID</mat-label>
                 <input matInput placeholder="Email ID" formControlName="au_email" readonly tabindex="-1">
               </mat-form-field>
             </div>
@@ -63,21 +68,24 @@
         <div class="col-6">
           <div class="row">
             <div class="col-12">
-              <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Father's Name</mat-label>
                 <input matInput placeholder="Father's Name" formControlName="father_name" readonly tabindex="-1">
               </mat-form-field>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
-              <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Mother's Name</mat-label>
                 <input matInput placeholder="Mother's Name" formControlName="mother_name" readonly tabindex="-1">
               </mat-form-field>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
-              <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Contact No.</mat-label>
                 <input matInput placeholder="Contact No." formControlName="au_mobile" readonly tabindex="-1">
               </mat-form-field>
             </div>
@@ -102,7 +110,8 @@
       <br>
       <div class="row">
         <div class="col-12">
-          <mat-form-field class="form-field">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Reason For Change</mat-label>
             <mat-select placeholder="Reason For Change" formControlName="tc_reason" required>
                 <mat-option value="">Please Select</mat-option>
               <mat-option value="Select" *ngFor="let item of reasonDataArray" value="{{item.reason_id}}">{{item.reason_title}}</mat-option>
@@ -112,7 +121,8 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <mat-form-field class="form-field">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Remarks</mat-label>
             <textarea rows="3" matInput placeholder="Remarks" formControlName="tc_remark" required></textarea>
           </mat-form-field>
         </div>

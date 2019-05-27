@@ -40,6 +40,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	minInvoiceDate = new Date();
 	minDueDate = new Date();
 	pageEvent: PageEvent;
+	type: any = '';
 
 	getCalculationMethods() {
 		this.invoiceType = [];
@@ -111,7 +112,18 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				this.lastRecordAdmno = data.adm_no;
 				this.currentAdmno = data.adm_no;
 				this.currentLoginId = data.login_id;
-				this.getInvoice({ admission_no: this.currentAdmno });
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			} else {
 				this.getLastRecordAdmno();
 			}
@@ -124,19 +136,42 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				this.lastRecordAdmno = result.data[0].last_record;
 				this.currentAdmno = result.data[0].last_record;
 				this.currentLoginId = result.data[0].au_login_id;
-				this.getInvoice({ admission_no: this.currentAdmno });
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			}
 		});
 	}
 	checkEmit(process_type) {
 		if (process_type) {
+			this.type = process_type;
 			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 				if (result.status === 'ok') {
 					if (result.data[0].last_record && result.data[0].au_login_id) {
 						this.lastRecordAdmno = result.data[0].last_record;
 						this.currentAdmno = result.data[0].last_record;
 						this.currentLoginId = result.data[0].au_login_id;
-						this.getInvoice({ admission_no: this.currentAdmno });
+						this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+						this.invoiceCreationForm.patchValue({
+							recalculation_flag: '',
+							inv_id: [],
+							inv_title: '',
+							login_id: [],
+							inv_calm_id: '',
+							inv_fm_id: [],
+							inv_invoice_date: '',
+							inv_due_date: '',
+							inv_activity: ''
+						});
 					}
 				}
 			});
@@ -159,23 +194,23 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	key2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ admission_no: event });
+		this.getInvoice({ inv_process_usr_no: event });
 	}
 	next2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ admission_no: event });
+		this.getInvoice({ inv_process_usr_no: event });
 	}
 	prev2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ admission_no: event });
+		this.getInvoice({ inv_process_usr_no: event });
 	}
 	first2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ admission_no: event });
+		this.getInvoice({ inv_process_usr_no: event });
 	}
 	last2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ admission_no: event });
+		this.getInvoice({ inv_process_usr_no: event });
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -184,12 +219,24 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	getInvoice(value: any) {
 		this.invoiceArray = [];
 		this.selection.clear();
+		value.processType = this.type;
 		value.pageIndex = 0;
 		value.pageSize = 1000;
 		this.feeService.getInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.invoiceArray = result.data.invoiceData;
 				this.invoiceTableData(this.invoiceArray);
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			} else {
 				this.invoiceTableData();
 			}
@@ -248,8 +295,18 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			this.feeService.insertInvoice(formData).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-					this.invoiceCreationForm.reset();
-					this.getInvoice({ admission_no: this.currentAdmno });
+					this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+					this.invoiceCreationForm.patchValue({
+						recalculation_flag: '',
+						inv_id: [],
+						inv_title: '',
+						login_id: [],
+						inv_calm_id: '',
+						inv_fm_id: [],
+						inv_invoice_date: '',
+						inv_due_date: '',
+						inv_activity: ''
+					});
 				}
 			});
 		} else {
@@ -275,7 +332,8 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
+			height: '80vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
@@ -309,7 +367,18 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getInvoice({ admission_no: this.currentAdmno });
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -323,7 +392,18 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.feeService.recalculateInvoice(this.invoiceCreationForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getInvoice({ admission_no: this.currentAdmno });
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -334,7 +414,18 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.feeService.consolidateInvoice({ inv_id: this.fetchInvId() }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getInvoice({ admission_no: this.currentAdmno });
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
