@@ -6,7 +6,7 @@
         <div class="container-printid-landscape margin-auto">
           <div [ngStyle]="{'border':showBorder, 'border-radius': '15px'}">
             <div id="id_card_header"
-            [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor}">
+            [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor, 'margin-top': '-11px'}">
             <div class="row remove-margin">
                 <div class="col-3 my-col remove-col-padding text-center">
                   <img *ngIf="showSchoolLogo" 
@@ -88,6 +88,7 @@
       <div class="col-3"></div>
     </div>
     <br>
+    <br>
     <div class="row">
         <div class="col-3"></div>
       <div *ngIf="showLandscape && showBackSide" class="col-6 custom-col-50">
@@ -95,7 +96,7 @@
           <div class="container-landscape-box__white" [ngStyle]="{'border':showBorder}">
             <div  [ngStyle]="{'background': idcardBodyColor,'border-bottom-left-radius':'15px',
             'border-bottom-right-radius':'15px', 'border-top-right-radius':'15px',
-            'border-top-left-radius':'15px'}">
+            'border-top-left-radius':'15px', 'margin-top': '-11px'}">
             <div class="row remove-margin">
               <div [ngStyle]="{'font-weight':allContentBold}" 
               class="col-4 text-center remove-col-padding">
@@ -156,7 +157,7 @@
           <div class="container-portrait-box__white">
             <img class="background-portrait-one" src="/assets/images/id-card-portait-1_bg.png">
             <div id="id_card_portrait_body">
-              <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px'}">
+              <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px','margin-top': '-44px'}">
               <div class="row remove-margin">
                 <div class="col-3 remove-col-padding text-center">
                   <img *ngIf="showSchoolLogo" class="id-card-portriat-school-logo" [src]="schoolLogo">
@@ -231,6 +232,7 @@
       <div class="col-3"></div>
     </div>
     <br>
+    <br>
     <div class="row">
         <div class="col-3"></div>
       <div *ngIf="showPotrait && showBackSide" class="col-6 custom-col-50 custom-margin-25">
@@ -238,7 +240,7 @@
           <div class="container-portrait-box__white">
             <img class="background-portrait-one" src="/assets/images/id-card-portait-1_bg.png">
             <div id="id_card_portrait_body">
-              <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px'}">
+              <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px', 'margin-top': '-20px'}">
               <div class="row remove-margin">
                 <div style="width: 55px;
                 height: 55px;margin:auto" class="col-4 remove-col-padding text-center">
