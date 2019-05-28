@@ -9,6 +9,7 @@ import { FeeService, CommonAPIService, SisService, ProcesstypeFeeService } from 
 import { InvoiceElement } from './invoice-element.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
+import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('recalculateModal') recalculateModal;
 	@ViewChild('consolidateModal') consolidateModal;
+	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	ELEMENT_DATA: InvoiceElement[] = [];
 	displayedColumns: string[] =
 		['select', 'srno', 'invoiceno', 'feeperiod', 'feedue', 'status', 'action'];
@@ -40,6 +42,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	minInvoiceDate = new Date();
 	pageEvent: PageEvent;
 	type: any = '';
+	feeRenderId: any;
 
 	getCalculationMethods() {
 		this.invoiceType = [];
@@ -295,6 +298,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 					this.invoiceCreationForm.patchValue({
 						recalculation_flag: '',
 						inv_id: [],
@@ -306,6 +310,8 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 						inv_due_date: '',
 						inv_activity: ''
 					});
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 				}
 			});
 		} else {
@@ -367,6 +373,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				this.invoiceCreationForm.patchValue({
 					recalculation_flag: '',
 					inv_id: [],
@@ -392,6 +399,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				this.invoiceCreationForm.patchValue({
 					recalculation_flag: '',
 					inv_id: [],
@@ -414,6 +422,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				this.invoiceCreationForm.patchValue({
 					recalculation_flag: '',
 					inv_id: [],

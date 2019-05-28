@@ -19,7 +19,8 @@
   </div>
   <div class="row margin-top-25">
     <div class="col-12 remove-col-padding">
-      <app-common-student-profile [loginId]="lastRecordAdmno" (next)="next($event)" (prev)="prev($event)"
+      <app-common-student-profile [feeRenderId]="feeRenderId" 
+      [loginId]="lastRecordAdmno" (next)="next($event)" (prev)="prev($event)"
         (first)="first($event)" (last)="last($event)" (key)="key($event)" (next2)="next2($event)" (prev2)="prev2($event)"
         (first2)="first2($event)" (last2)="last2($event)" (key2)="key2($event)"
         (processTypeEmit)="checkEmit($event)">
