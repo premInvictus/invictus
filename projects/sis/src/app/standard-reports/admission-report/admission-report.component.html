@@ -52,7 +52,7 @@
                 </mat-form-field>
             </div>
             <div class="col-3">
-                <button class="btn-success" mat-raised-button (click)="submit()">Submit</button>
+                <button class="btn-success margin-top-15" mat-raised-button (click)="submit()">Submit</button>
             </div>
         </div>
         <div class="row">
@@ -62,13 +62,13 @@
         </div>
     </form>
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 ">
                 <mat-form-field class="form-feild"
                     *ngIf="(admissionReportForm.value.reviewReport == '0' && REPORT_PROCESS_WISE_ELEMENT_DATA.length > 0) || (admissionReportForm.value.reviewReport == '1' && REPORT_ENROLMENT_WISE_ELEMENT_DATA.length > 0)">
                     <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
                 </mat-form-field>
-                <div class="row" *ngIf="admissionReportForm.value.reviewReport == '0'" id="admissionReportPrint">
-                    <div class="col-12" [hidden]="!REPORT_PROCESS_WISE_ELEMENT_DATA.length>0" #TABLE>
+                <div class="row " *ngIf="admissionReportForm.value.reviewReport == '0'" id="admissionReportPrint">
+                    <div class="col-12 remove-col-padding" [hidden]="!REPORT_PROCESS_WISE_ELEMENT_DATA.length>0" #TABLE>
 
                         <table mat-table #table [dataSource]="userDataSource" matSort
                             class="table-100 mat-elevation-z1">

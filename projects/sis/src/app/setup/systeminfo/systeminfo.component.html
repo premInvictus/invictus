@@ -2,7 +2,7 @@
       <div class="row">
          <div class="col-lg-12 col-mobile-view-add-ques">
             <div class="white-box">
-               <div class="white-box-content">
+               <div class="container-box__white">
                   <div class="row">
                      <div class="col-lg-12 col-mobile-view-add-ques">
                         <div class="white-box-content-title">
@@ -12,7 +12,7 @@
                   </div>
                   <div class="row">
                      <div class="col-lg-2 col-apple-2 apple-screen-paramter-content-div col-mobile-view-add-ques">
-                        <div class="left-parameter-content">
+                        <div>
                            <div class="left-side-box">
                               <div class="left-side-box-content">
                                  <span class="left-side-box-content-title">Select Setup Options</span>
@@ -408,7 +408,7 @@
                                           <div [hidden]="!configFlag">
                                              <div class="row">
                                                 <div class="col-lg-12 col-mobile-view-add-ques">
-                                                   <div class="table-box mob-table-box">
+                                                   <div class=" mob-table-box">
                                                       <div class="example-container table-box-main">
                                                          <div class="example-header table-filter">
                                                             <mat-form-field class="form-feild">
@@ -471,8 +471,8 @@
                                                                   matTooltip="Delete" aria-hidden="true" (click)="openDeleteDialog({data : item.action, type: configValue})"></i>
                                                             </mat-cell>
                                                          </ng-container>
-                                                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                                         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                                                         <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                                         <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                                                          >
                                                          </mat-table> 
                                                       </div>
