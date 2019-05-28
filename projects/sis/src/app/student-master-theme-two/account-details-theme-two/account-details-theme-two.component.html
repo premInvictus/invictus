@@ -143,16 +143,6 @@
      </div>
      <div class="col-3">
          <mat-form-field  class="form-field" appearance="outline">
-               <mat-label>Hostel Concession</mat-label>
-           <mat-select placeholder="Hostel Concession" [disabled]="viewOnly"
-           formControlName="accd_hostel_fcc_id">
-              <mat-option value="">Please Select</mat-option>
-              <mat-option *ngFor="let item of hostelConGroupArray" [value]="item.fcg_id">{{item.fcg_name}}</mat-option>
-           </mat-select>
-        </mat-form-field>
-     </div>
-     <div class="col-3">
-         <mat-form-field  class="form-field" appearance="outline">
                <mat-label>Applicable From</mat-label>
            <input  matInput [matDatepicker]="picker3" [max]="maxDate" [readonly]="viewOnly"
            placeholder="Application From" formControlName="accd_hostel_from" 
@@ -164,7 +154,7 @@
      </div>
      <div *ngIf="hostelTerminateFlag && hostelFlag" class="col-3">
          <mat-form-field  class="form-field" appearance="outline">
-               <mat-label>Application To</mat-label>
+               <mat-label>Applicable To</mat-label>
            <input  matInput [matDatepicker]="picker4" [max]="maxDate" [readonly]="viewOnly" 
            placeholder="Hostel Termination Date" formControlName="accd_hostel_to" 
            [errorStateMatcher]="confirmValidParentMatcher" required

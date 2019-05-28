@@ -12,7 +12,8 @@
    </div>
    <div class="row margin-top-25">
       <div class="col-12 remove-col-padding">
-         <app-common-student-profile [loginId]="lastRecordId" (next)="next($event)" (prev)="prev($event)"
+         <app-common-student-profile [loginId]="lastRecordId" 
+         [feeRenderId]="feeRenderId" (next)="next($event)" (prev)="prev($event)"
             (first)="first($event)" (last)="last($event)" (key)="key($event)"
             (processTypeEmit)="checkEmit($event)"></app-common-student-profile>
       </div>
