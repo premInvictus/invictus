@@ -18,6 +18,7 @@ export class StudentProfileComponent implements OnInit {
 	viewOnly = true;
 	@ViewChild(StudentAccountComponent) stuAcc: StudentAccountComponent;
 	@ViewChild (CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
+	feeRenderId: any;
 	constructor(
 		private sisService: SisService,
 		private commmon: CommonAPIService,
@@ -82,10 +83,11 @@ export class StudentProfileComponent implements OnInit {
 		this.editRequestFlag = false;
 	}
 	editChange(flag) {
+		this.feeRenderId = '';
 		if (flag) {
 		this.viewOnly = true;
+		this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 		}
-		this.commonStu.getStudentInformation(flag);
 		if (this.viewOnly && this.isExist('350') ) {
 			this.editFlag = true;
 		}

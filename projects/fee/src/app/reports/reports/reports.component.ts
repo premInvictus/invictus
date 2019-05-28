@@ -689,7 +689,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								if (Number(keys) === 0) {
 									fee_head_data.push('srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name',
 										'stu_class_name', 'invoice_no', 'receipt_no');
-									fee_head_data_name.push('SNo.', 'Date', 'Admission No', 'Student Name',
+									fee_head_data_name.push('SNo.', 'Date', 'Enrollment No', 'Student Name',
 										'Class-Section', 'Invoice No.', 'Reciept No.');
 								}
 								if (repoArray[Number(keys)]['fee_head_data']) {
@@ -866,7 +866,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						let index = 0;
 						let qindex = 1;
 						columnData.push('srno', 'au_admission_no', 'au_full_name', 'class_name');
-						columnHeaderData.push('SNo', 'Admission No.', 'Student Name', 'Class');
+						columnHeaderData.push('SNo', 'Enrollment No.', 'Student Name', 'Class');
 						for (const item of repoArray) {
 							const obj: any = {};
 							obj['fp_id'] = item.inv_fp_id;
@@ -1609,36 +1609,33 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				inv_id = item['invoice_id'];
 				const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 					width: '80%',
-					height: '80vh',
 					data: {
 						invoiceNo: inv_id,
 						edit: edit
 					},
-					hasBackdrop: false
+					hasBackdrop: true
 				});
 			}
 		} else {
 			inv_id = item['invoice_id'];
 			const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 				width: '80%',
-				height: '80vh',
 				data: {
 					invoiceNo: inv_id,
 					edit: edit
 				},
-				hasBackdrop: false
+				hasBackdrop: true
 			});
 		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
-			height: '80vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
 	}
 	getSchool() {
@@ -1986,12 +1983,19 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	renderDialog(inv_id, edit) {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
-			height: '80vh',
 			data: {
 				invoiceNo: inv_id,
 				edit: edit
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
+	}
+	checkEnable(report_id) {
+		if (Number(report_id) === 3 || Number(report_id) === 4 || Number(report_id) === 13
+		|| Number(report_id) === 14) {
+			return 'report-card1 mat-card';
+		} else {
+		return 'report-card mat-card';
+		}
 	}
 }

@@ -35,6 +35,7 @@ import { StudentRouteMoveStoreService } from '../student-route-move-store.servic
 })
 export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	@Input() loginId: any;
+	@Input () feeRenderId: any;
 	@Output() next = new EventEmitter();
 	@Output() prev = new EventEmitter();
 	@Output() first = new EventEmitter();
@@ -141,6 +142,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 			this.studentdetailsflag = true;
 			this.getStudentInformation(this.loginId);
 		}
+		if (this.feeRenderId) {
+			this.studentdetailsflag = true;
+			this.getStudentInformation(this.feeRenderId);
+		}
 	}
 	buildForm() {
 		this.studentdetailsform = this.fbuild.group({
@@ -161,6 +166,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		});
 	}
 	getStudentInformation(au_login_id) {
+		console.log(au_login_id);
 		this.studentLoginId = '';
 		if (au_login_id && this.studentdetailsflag) {
 			this.studentdetailsflag = false;
