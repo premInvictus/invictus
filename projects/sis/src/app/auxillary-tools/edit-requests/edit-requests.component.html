@@ -7,8 +7,7 @@
                   <h4 class="text-uppercase text-center"><b>Edit Request</b></h4>
                </div>
             </div>
-            <br>
-            <div *ngIf="showTable" class="row">
+            <div *ngIf="showTable" class="row remove-top-margin">
                <div class="col-12">
                   <div>
                      <mat-form-field class="form-feild" *ngIf="EDIT_REQUEST_ELEMENT_DATA.length > 0">
@@ -114,10 +113,7 @@
                   </div>
                </div>
             </div>
-            <br>
-            <br>
          </div>
-         <br>
       </div>
       <div *ngIf="viewRequestFlag" class="col-5 remove-col-padding-left">
          <div class="container-box__white">
