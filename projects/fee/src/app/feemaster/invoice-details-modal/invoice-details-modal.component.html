@@ -11,8 +11,8 @@
       <img class="student-profile-image-popup"
         [src]="invoiceDetails?.au_profileimage ? invoiceDetails.au_profileimage : '/assets/images/student.png'">
       <div class="">
-        <div class="font-size-16">
-          <span>{{invoiceDetails?.process_name}} : {{invoiceDetails?.au_admission_no}} </span>
+        <div class="font-size-16 font-bold">
+          <span>{{invoiceDetails?.process_name}} {{invoiceDetails?.au_admission_no}} </span>
         </div>
       </div>
     </div>
