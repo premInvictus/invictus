@@ -87,7 +87,7 @@
                 </mat-select>
              </mat-form-field>
           </div>
-          <div *ngIf="modeFlag && transPortModes" class="col-3 remove-col-padding-right">
+          <div *ngIf="modeFlag && transportFlag" class="col-3 remove-col-padding-right">
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Applicable Slab</mat-label>
                 <mat-select placeholder="Applicable Slab" [disabled]="viewOnly" [(ngModel)]="slabModel"

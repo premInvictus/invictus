@@ -58,7 +58,7 @@
            </mat-select>
         </mat-form-field>
      </div>
-     <div *ngIf="modeFlag" class="col-3">
+     <div *ngIf="modeFlag && transportFlag" class="col-3">
         <mat-form-field  class="form-field" appearance="outline">
            <mat-label>Route</mat-label>
            <mat-select placeholder="Route" [disabled]="viewOnly" (selectionChange)="getStoppages($event)"
@@ -68,7 +68,7 @@
            </mat-select>
         </mat-form-field>
      </div>
-     <div *ngIf="modeFlag" class="col-3">
+     <div *ngIf="modeFlag && transportFlag" class="col-3">
          <mat-form-field  class="form-field" appearance="outline">
                <mat-label>Stoppage</mat-label>
            <mat-select placeholder="Stoppage" [disabled]="viewOnly" (selectionChange)="getSlab($event)"
@@ -78,10 +78,10 @@
            </mat-select>
         </mat-form-field>
      </div>
-     <div *ngIf="modeFlag" class="col-3">
+     <div *ngIf="modeFlag && transportFlag" class="col-3">
         <mat-form-field  class="form-field" appearance="outline">
            <mat-label>Applicable Slab</mat-label>
-           <mat-select placeholder="Applicable Slab" [disabled]="viewOnly"
+           <mat-select placeholder="Applicable Slab" [disabled]="viewOnly" [(ngModel)]="slabModel"
               [errorStateMatcher]="confirmValidParentMatcher" formControlName="accd_ts_id" required>
               <mat-option>Please Select</mat-option>
               <mat-option *ngFor="let item of slabArray" [value]="item.ts_id">{{item.ts_name}}</mat-option>
@@ -90,7 +90,7 @@
      </div>
   </div>
   <div *ngIf="transportFlag" class="row margin-top-15">
-     <div *ngIf="modeFlag" class="col-3">
+     <div *ngIf="modeFlag && transportFlag" class="col-3">
          <mat-form-field  class="form-field" appearance="outline">
                <mat-label>Application Form</mat-label>
            <input  matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
@@ -101,7 +101,7 @@
            <mat-datepicker tabindex="-1" #picker [disabled]="viewOnly"></mat-datepicker>
         </mat-form-field>
      </div>
-     <div *ngIf="terminationFlag" class="col-3">
+     <div *ngIf="terminationFlag && transportFlag" class="col-3">
          <mat-form-field  class="form-field" appearance="outline">
                <mat-label>Termination Date</mat-label>
            <input  matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
@@ -162,7 +162,7 @@
            <mat-datepicker tabindex="-1" #picker3 [disabled]="viewOnly"></mat-datepicker>
         </mat-form-field>
      </div>
-     <div *ngIf="hostelTerminateFlag" class="col-3">
+     <div *ngIf="hostelTerminateFlag && hostelFlag" class="col-3">
          <mat-form-field  class="form-field" appearance="outline">
                <mat-label>Application To</mat-label>
            <input  matInput [matDatepicker]="picker4" [max]="maxDate" [readonly]="viewOnly" 
