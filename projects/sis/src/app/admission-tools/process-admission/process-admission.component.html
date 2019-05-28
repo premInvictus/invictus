@@ -1,4 +1,4 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey">
     <div class="container-box__white">
         <br>
         <div class="row">
@@ -132,8 +132,8 @@
                             <button *ngIf="element.status == 'Approved' && isExistUserAccessMenu('279')" mat-raised-button class="btn-success btn-promote" (click)="openDeleteDialog(element)">Admit</button>
                         </mat-cell>
                     </ng-container>
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                    <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                 </mat-table>
             </div>            
         </div>
@@ -141,8 +141,6 @@
                <span style="text-align: center;"> No Record Found</span>
             </div>
     </div>
-    <br>
-    <br>
 </div>
 <app-delete-modal #deleteModal [deleteMessage]="migrationMessage"
 (deleteOk)="moveToAdmission($event)" (deleteCancel)="deleteCancel()"></app-delete-modal>

@@ -1,6 +1,6 @@
 
-<div class="container-box__grey">
-    <div class="container-box__white">
+<div class="fee-container-box__grey">
+    <div class="container-box__white card-height-840-lp">
         <div class="row">
             <div class="col-12 text-center">
                 <h4 class="text-uppercase"><b>Student Strength Report</b></h4>
@@ -20,7 +20,8 @@
             </div>
             <div class="row">
                 <div class="col-3 " *ngIf="showDate">
-                        <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>Date</mat-label>
                                 <input matInput [matDatepicker]="cpicker" placeholder="Date" formControlName="cdate">
                                 <mat-datepicker-toggle matSuffix [for]="cpicker" (dateInput)="cpicker('input', $event)">
                                 </mat-datepicker-toggle>
@@ -28,7 +29,8 @@
                             </mat-form-field>
                 </div>
                 <div class="col-3" *ngIf="showDateRange">
-                        <mat-form-field class="form-field" >
+                        <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>From</mat-label>
                                 <input matInput [matDatepicker]="fpicker" placeholder="From" formControlName="fdate">
                                 <mat-datepicker-toggle matSuffix [for]="fpicker" (dateInput)="fpicker('input', $event)">
                                 </mat-datepicker-toggle>
@@ -36,7 +38,8 @@
                             </mat-form-field>
                 </div>
                 <div class="col-3 " *ngIf="showDateRange">
-                        <mat-form-field class="form-field" >
+                        <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>To</mat-label>
                                 <input matInput [matDatepicker]="tpicker" placeholder="To" formControlName="tdate">
                                 <mat-datepicker-toggle matSuffix [for]="tpicker" (dateInput)="tpicker('input', $event)">
                                 </mat-datepicker-toggle>
@@ -101,8 +104,8 @@
                                     <!-- <div *ngIf="!element.student_strength">N/A</div> -->
                                 </mat-cell>
                             </ng-container>
-                            <mat-header-row *matHeaderRowDef="displayedSummarizeColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedSummarizeColumns"></mat-row>
+                            <mat-header-row class="header-normal" *matHeaderRowDef="displayedSummarizeColumns"></mat-header-row>
+                            <mat-row class="row-normal" *matRowDef="let row; columns: displayedSummarizeColumns"></mat-row>
                         </table>
                     </div>
                     <div class="col-12" *ngIf="REPORT_SUMMARY_ELEMENT_DATA.length == 0">
@@ -188,8 +191,8 @@
                                     <span *ngIf="!element.process_type"><b>N/A</b></span>
                                 </mat-cell>
                             </ng-container>
-                            <mat-header-row *matHeaderRowDef="displayedDetailColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedDetailColumns"></mat-row>
+                            <mat-header-row class="header-normal" *matHeaderRowDef="displayedDetailColumns"></mat-header-row>
+                            <mat-row class="row-normal" *matRowDef="let row; columns: displayedDetailColumns"></mat-row>
                         </table>
                     </div>
                     <div class="col-12" *ngIf="REPORT_DETAIL_ELEMENT_DATA.length == 0">

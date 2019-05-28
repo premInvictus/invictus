@@ -162,8 +162,8 @@
                             <span style="color:#04a20d" class="text-center" [hidden]="!(item.action.pmap_status === '0') "><b>Promoted</b></span>
                           </mat-cell>
                         </ng-container>
-                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                         </mat-table>
                       </div>
                     </div>
@@ -314,8 +314,8 @@
                             <i class="fas fa-thumbs-down icon-danger" (click)="demoteStudent(item)"></i>
                           </mat-cell>
                         </ng-container>
-                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                         >
                         </mat-table>
                       </div>
