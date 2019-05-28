@@ -1,6 +1,5 @@
 <div class="fee-container-box__grey">
     <div class="container-box__white">
-        <br>
         <div class="row">
             <!-- <div class="col-4 text-center">
                 <div class="line-divider"></div>
@@ -12,8 +11,7 @@
                 <div class="line-divider"></div>
             </div> -->
         </div>
-        <br>
-        <div class="row">
+        <div class="row remove-top-margin">
             <div class="col-12" [hidden]="!(PROCESS_ELEMENT_DATA.length>0)">
                 <mat-form-field class="form-feild">
                     <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />

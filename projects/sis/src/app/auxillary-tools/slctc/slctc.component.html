@@ -20,7 +20,7 @@
 <div class="fee-container-box__grey">
   <div class="container-box__white card-height-745-lp">
     <div>
-      <div class="row">
+      <div class="row remove-top-margin">
         <div class="col-4 text-center">
           <div class="line-divider"></div>
         </div>
@@ -142,7 +142,7 @@
           <mat-form-field>
             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
           </mat-form-field>
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table-100">
+          <table mat-table [dataSource]="dataSource" class=" table-100">
             <!-- Position Column -->
             <ng-container *ngFor="let column of renderTable.columnDef; let i=index">
               <ng-container [matColumnDef]="column">
@@ -159,7 +159,7 @@
                               (click)="actionConfig(action.actionfunction,element[column])" >{{action.actionname}}</button>
                           </ng-container>
                           <ng-container *ngIf="action.actionpermission == '' ">
-                              <button [hidden]="element.status == 'Approved' && (action.actionname == 'Reissue' || action.actionname == 'Issue' ) 
+                              <button  [hidden]="element.status == 'Approved' && (action.actionname == 'Reissue' || action.actionname == 'Issue' ) 
                               || element.status == 'Issued' && (action.actionname == 'Issue' || action.actionname == 'Print') ||
                               element.status == 'Printed' && (action.actionname == 'Print' || action.actionname == 'Reissue') || 
                               element.status == 'Reissued' && (action.actionname == 'Print' || action.actionname == 'Issue')"
