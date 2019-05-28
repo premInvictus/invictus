@@ -1,5 +1,5 @@
-<div class="container-box__grey">
-    <div class="container-box__white">
+<div class="fee-container-box__grey">
+    <div class="container-box__white card-height-840-lp">
         <br>
         <div class="row">
             <!-- <div class="col-4 text-center">
@@ -128,8 +128,8 @@
                                 (click)="openDeleteDialog(element)">Delete</button>&nbsp;<br> -->
                         </mat-cell>
                     </ng-container>
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                    <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                 </mat-table>
             </div>
             <div *ngIf="USER_ELEMENT_DATA.length == 0">

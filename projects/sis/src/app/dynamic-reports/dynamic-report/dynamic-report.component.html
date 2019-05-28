@@ -1,5 +1,5 @@
 <div *ngIf="dynamicreport">
-  <div class="container-box__grey">
+  <div class="fee-container-box__grey">
     <div class="container-box__white">
       <div class="row">
         <div class="col-12">
@@ -42,12 +42,12 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-12 tab-remove-left-right-padding text-center">
+                  <div class="col-12 remove-col-padding tab-remove-left-right-padding text-center">
                     <div class="hide-for-tab-screen">
-                    <button mat-raised-button class="btn-success" (click)="finalSubmit()" >Submit</button>
+                    <button mat-raised-button class="btn-success-dy" (click)="finalSubmit()" >Submit</button>
                     <button mat-raised-button class="btn-neutral btn-spacer" (click)="filter()"><mat-icon class="material-icon mat-icon-no-color">tune</mat-icon>&nbsp;Filter</button>
                     <button mat-raised-button class="btn-setting btn-spacer" (click)="sort()"><mat-icon class="material-icon mat-icon-no-color">sort</mat-icon>&nbsp;Sort</button>
-                    <button mat-raised-button class="btn-danger btn-spacer" (click)="ResetForm()">Reset</button>
+                    <button mat-raised-button class="btn-danger-dy btn-spacer" (click)="ResetForm()">Reset</button>
                   </div>
                     <div class="hide-for-large-screen">
                         <button mat-raised-button class="btn-success" (click)="finalSubmit()" >Submit</button>
@@ -63,7 +63,7 @@
             
             <div class="col-4">
               <div class="container-outline__black dynamic-report-drag-container sis-overflow">
-                <div class="text-center margin-bottom-10">
+                <div class="text-center ">
                   <h4>Availiable Fields</h4>
                   <hr>
                 </div>

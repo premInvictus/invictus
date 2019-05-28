@@ -1,4 +1,4 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey">
   <div class="container-box__white">
     <div class="row">
       <div class="col-12 text-center">
@@ -10,15 +10,15 @@
     <div class="add-question-content">
       <div class="row row-remove-top-margin">
         <div class="col-lg-12 col-mobile-view-add-ques">
-          <div class="white-box">
-            <div class="white-box-content">
+          <div>
+            <div class="container-box__white">
              
               <!--white space-->
               <!--select parameters-->
               <div class="row row-remove-top-margin">
-                <div class="col-lg-12 col-mobile-view-add-ques">
+                <div class="col-lg-12 remove-col-padding col-mobile-view-add-ques">
                   <div class="top-right-parameter top-middle-parameter">
-                    <div class="top-right-box top-blue-box">
+                    <div class="top-right-box">
                       <div class="top-right-box-content top-middle-box-content">
                         <div class="top-right-box-content-title">
                           <div class="row">
@@ -105,8 +105,8 @@
               <br>
 
               <div class="row">
-                <div class="col-lg-12 col-mobile-view-add-ques">
-                  <div class="table-box" *ngIf="tableCollection">
+                <div class="col-lg-12 col-remove-padding col-mobile-view-add-ques">
+                  <div  *ngIf="tableCollection">
 
 
                     <div class="example-container table-box-main">
@@ -118,7 +118,7 @@
                         </mat-form-field>
                       </div>
 
-                      <mat-table class="specific-table table-main-structure" #table [dataSource]="dataSource" matSort>
+                      <mat-table class="specific-table " #table [dataSource]="dataSource" matSort>
                         <!-- Position Column -->
                         <ng-container matColumnDef="position">
                           <mat-header-cell *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
