@@ -87,7 +87,7 @@
                 </mat-select>
              </mat-form-field>
           </div>
-          <div *ngIf="modeFlag && transPortModes" class="col-3 remove-col-padding-right">
+          <div *ngIf="modeFlag && transportFlag" class="col-3 remove-col-padding-right">
              <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Applicable Slab</mat-label>
                 <mat-select placeholder="Applicable Slab" [disabled]="viewOnly" [(ngModel)]="slabModel"
@@ -148,16 +148,6 @@
           </div>
           <div class="col-3">
              <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Hostel Concession</mat-label>
-                <mat-select placeholder="Hostel Concession" [disabled]="viewOnly"
-                formControlName="accd_hostel_fcc_id">
-                   <mat-option value="">Please Select</mat-option>
-                   <mat-option *ngFor="let item of hostelConGroupArray" [value]="item.fcg_id">{{item.fcg_name}}</mat-option>
-                </mat-select>
-             </mat-form-field>
-          </div>
-          <div class="col-3">
-             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Appplicable From</mat-label>
                 <input  matInput [matDatepicker]="picker3" [max]="maxDate" [readonly]="viewOnly"
                 placeholder="Applicable From" formControlName="accd_hostel_from" 
@@ -169,7 +159,7 @@
           </div>
           <div *ngIf="hostelTerminateFlag && hostelFlag" class="col-3">
              <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Application To</mat-label>
+                <mat-label>Applicable To</mat-label>
                 <input  matInput [matDatepicker]="picker4" [max]="maxDate" [readonly]="viewOnly" 
                 placeholder="Hostel Termination Date" formControlName="accd_hostel_to" 
                 [errorStateMatcher]="confirmValidParentMatcher" required
@@ -179,16 +169,13 @@
              </mat-form-field>
           </div>
        </div>
-       <div class="row">
-          <div class="col-12">
              <mat-checkbox *ngIf="hostelFlag" [disabled]="viewOnly"
              class="font-size-16" (change)="hostel($event)" formControlName="accd_is_hostel_terminate">{{hostelStatus}}</mat-checkbox>
-          </div>
-       </div>
        <br>
        <div class="text-right margin-top-35 ">
           <button *ngIf="!viewOnly && !existFlag && isExist('351')" mat-raised-button class="btn-primary btn-success margin-bottom-115" (click)="submit()">Submit</button>
-          <button *ngIf="!viewOnly && existFlag &&  (isExist('352') || isExist('374'))" mat-raised-button class="btn-primary btn-success margin-bottom-115" (click)="update()">Update</button>
+          <button *ngIf="!viewOnly && existFlag &&  isExist('352')" mat-raised-button class="btn-primary btn-success margin-bottom-115" (click)="update()">Update</button> &nbsp;
+          <button *ngIf="!viewOnly && existFlag &&  isExist('374')" mat-raised-button class="btn-primary btn-success margin-bottom-115" (click)="editRequest()">Edit request</button>
           <button *ngIf="!viewOnly && !existFlag" mat-raised-button class="btn-primary btn-danger margin-bottom-115 btn-spacer" (click)="accountsForm.reset()">Reset</button>
           <button *ngIf="!viewOnly && existFlag" mat-raised-button class="btn-primary btn-danger margin-bottom-115 btn-spacer" (click)="getPreviousData()">Cancel</button>
        </div>

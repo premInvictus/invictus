@@ -39,6 +39,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	@Input() permissionFlag = false;
 	@Input() feeLoginId: any;
 	validateFlag = false;
+	slabModel: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -101,25 +102,26 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			} else {
 				this.modeFlag = false;
 			}
-			if (this.feeDet.accd_is_terminate === 'Y') {
+			if (this.feeDet.accd_is_terminate === 'Y' && this.transportFlag && this.modeFlag) {
 				this.terminationFlag = true;
 				this.terminateStatus = 'Transport Facility Terminated';
 			} else {
 				this.terminationFlag = false;
-				this.terminateStatus = 'Transport Facility Available';
+				this.terminateStatus = 'Transport Facility Terminated';
 			}
 			if (this.feeDet.accd_is_hostel_terminate === 'Y') {
 				this.hostelTerminateFlag = true;
 				this.hostelStatus = 'Hostel Facility Terminated';
 			} else {
 				this.hostelTerminateFlag = false;
-				this.hostelStatus = 'Hostel Facility Available';
+				this.hostelStatus = 'Hostel Facility Terminated';
 			}
 			if (this.feeDet.accd_is_hostel === 'Y') {
 				this.hostelFlag = true;
 			} else {
 				this.hostelFlag = false;
 			}
+			this.enableMode(this.feeDet.accd_transport_mode);
 			this.getStoppages(this.feeDet.accd_tr_id);
 			this.getSlab(this.feeDet.accd_tsp_id);
 			this.accountsForm.patchValue({
@@ -136,16 +138,17 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_ts_id: this.feeDet.accd_ts_id,
 				accd_is_terminate: this.feeDet.accd_is_terminate === 'N' ? false : true,
 				accd_is_hostel_terminate: this.feeDet.accd_is_hostel_terminate === 'N' ? false : true,
-				accd_transport_from: this.feeDet.accd_transport_from,
-				accd_transport_to: this.feeDet.accd_transport_to,
+				accd_transport_from: this.feeDet.accd_transport_from.split('-')[0] === '1970' ? '' : this.feeDet.accd_transport_from,
+				accd_transport_to: this.feeDet.accd_transport_to.split('-')[0] === '1970' ? '' : this.feeDet.accd_transport_to,
 				accd_remark: this.feeDet.accd_remark,
 				accd_hostel_fs_id: this.feeDet.accd_hostel_fs_id,
 				accd_hostel_fcc_id: this.feeDet.accd_hostel_fcc_id,
-				accd_hostel_from: this.feeDet.accd_hostel_from,
-				accd_hostel_to: this.feeDet.accd_hostel_to,
+				accd_hostel_from: this.feeDet.accd_hostel_from.split('-')[0] === '1970' ? '' : this.feeDet.accd_hostel_from,
+				accd_hostel_to: this.feeDet.accd_hostel_to.split('-')[0] === '1970' ? '' : this.feeDet.accd_hostel_to,
 				accd_ses_id: this.feeDet.ses_id,
 				accd_status: this.feeDet.accd_status
 			});
+			this.slabModel = this.feeDet.accd_ts_id;
 		} else {
 			this.accountsForm.reset();
 			this.transportFlag = false;
@@ -154,6 +157,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.terminationFlag = false;
 			this.existFlag = false;
 		}
+
 	}
 	getFeeOtherCategory() {
 		this.feeService.getFeeOthers({}).subscribe((result: any) => {
@@ -184,7 +188,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	getHostelConGroup() {
-		this.feeService.getConcessionGroup({ fcg_is_hostel_fee: 1 }).subscribe((result: any) => {
+		this.feeService.getConcessionGroup({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.hostelConGroupArray = result.data;
 			}
@@ -194,6 +198,17 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		if ($event.checked) {
 			this.transportFlag = true;
 		} else {
+			this.accountsForm.patchValue({
+				accd_transport_mode: '',
+				accd_tr_id: '',
+				accd_tsp_id: '',
+				accd_ts_id: '',
+				accd_is_terminate: 'N',
+				accd_transport_from: '',
+				accd_transport_to: '',
+			});
+			this.slabArray = [];
+			this.stoppageArray = [];
 			this.transportFlag = false;
 		}
 	}
@@ -201,6 +216,13 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		if ($event.checked) {
 			this.hostelFlag = true;
 		} else {
+			this.accountsForm.patchValue({
+				accd_hostel_fs_id: '',
+				accd_hostel_fcc_id: '',
+				accd_hostel_from: '',
+				accd_hostel_to: '',
+				accd_is_hostel_terminate: 'N',
+			});
 			this.hostelFlag = false;
 		}
 	}
@@ -402,6 +424,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.feeService.getTransportSlabPerStoppages({ tsp_id: $event.value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.slabArray = result.data;
+				this.slabModel = this.slabArray[0].ts_id;
 			}
 		});
 	}

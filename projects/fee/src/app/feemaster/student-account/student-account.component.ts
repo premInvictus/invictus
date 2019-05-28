@@ -424,9 +424,75 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					}
 				});
 			}
-			if (this.isExist('374')) {
-				this.checkFormChangedValue();
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please select required fields', 'error');
+		}
+	}
+	editRequest() {
+		let validateFlag = true;
+		if (!this.feeLoginId) {
+			validateFlag = false;
+			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
+		}
+		if (!this.accountsForm.value.accd_fo_id &&
+			!this.accountsForm.value.accd_fs_id &&
+			!this.modeFlag && !this.transportFlag && !this.hostelFlag
+			&& !this.terminationFlag) {
+			this.accountsForm.get('accd_fo_id').markAsDirty();
+			this.accountsForm.get('accd_fs_id').markAsDirty();
+			validateFlag = false;
+		}
+		if (this.transportFlag && !this.modeFlag) {
+			if (!this.accountsForm.value.accd_transport_mode) {
+				validateFlag = false;
+				this.accountsForm.get('accd_transport_mode').markAsDirty();
 			}
+		}
+		if (this.transportFlag && this.modeFlag) {
+			if (!this.accountsForm.value.accd_tr_id &&
+				!this.accountsForm.value.accd_tsp_id &&
+				!this.accountsForm.value.accd_ts_id &&
+				!this.accountsForm.value.accd_transport_from) {
+				this.accountsForm.get('accd_tr_id').markAsDirty();
+				this.accountsForm.get('accd_tsp_id').markAsDirty();
+				this.accountsForm.get('accd_ts_id').markAsDirty();
+				this.accountsForm.get('accd_transport_from').markAsDirty();
+				validateFlag = false;
+			}
+		}
+		if (this.terminationFlag) {
+			if (!this.accountsForm.value.accd_transport_to) {
+				this.accountsForm.get('accd_transport_to').markAsDirty();
+				validateFlag = false;
+			}
+		}
+		if (validateFlag) {
+			const datePipe = new DatePipe('en-in');
+			let accountJSON = {};
+			accountJSON = {
+				accd_id: this.accountsForm.value.accd_id,
+				accd_login_id: this.feeLoginId,
+				accd_fo_id: this.accountsForm.value.accd_fo_id,
+				accd_fs_id: this.accountsForm.value.accd_fs_id,
+				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
+				accd_is_transport: this.transportFlag ? 'Y' : 'N',
+				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
+				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
+				accd_tr_id: this.accountsForm.value.accd_tr_id,
+				accd_tsp_id: this.accountsForm.value.accd_tsp_id,
+				accd_ts_id: this.accountsForm.value.accd_ts_id,
+				accd_is_terminate: this.terminationFlag ? 'Y' : 'N',
+				accd_is_hostel_terminate: this.hostelTerminateFlag ? 'Y' : 'N',
+				accd_transport_from: datePipe.transform(this.accountsForm.value.accd_transport_from, 'yyyy-MM-dd'),
+				accd_transport_to: datePipe.transform(this.accountsForm.value.accd_transport_to, 'yyyy-MM-dd'),
+				accd_remark: this.accountsForm.value.accd_remark,
+				accd_hostel_fs_id: this.accountsForm.value.accd_hostel_fs_id,
+				accd_hostel_fcc_id: this.accountsForm.value.accd_hostel_fcc_id,
+				accd_hostel_from: datePipe.transform(this.accountsForm.value.accd_hostel_from, 'yyyy-MM-dd'),
+				accd_hostel_to: datePipe.transform(this.accountsForm.value.accd_hostel_to, 'yyyy-MM-dd'),
+				accd_status: this.accountsForm.value.accd_status
+			};
+				this.checkFormChangedValue();
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please select required fields', 'error');
 		}
