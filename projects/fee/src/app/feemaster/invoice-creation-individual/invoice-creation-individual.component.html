@@ -28,20 +28,14 @@
     </div>
   </div>
   <form [formGroup]="invoiceCreationForm" novalidate>
-    <div class="row margin-top-25 ">
+    <div class="row margin-top-25">
       <div class="col-12 remove-col-padding">
         <mat-card class="card-top-title__container">
-          <div class="row">
-            <!-- <div class="col-3 remove-col-padding-left">
-              <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Invoice Type</mat-label>
-                <mat-select placeholder="Invoice Type" formControlName="inv_calm_id" required>
-                  <mat-option>Please Select</mat-option>
-                  <mat-option *ngFor="let item of invoiceType" [value]="item.calm_id">{{item.calm_name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div> -->
+          <div class="text-center" *ngIf="!checkStatus()">
+            <h4><b>{{'Invoice Cannot be generated for this Student' | uppercase}}</b></h4><br>
+            <span><h6>Note: Student has been promoted to next session</h6></span>
+          </div>
+          <div class="row" *ngIf="checkStatus()">
             <div class="col-4">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Fee Period</mat-label>
@@ -69,7 +63,7 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="row">
+          <div class="row" *ngIf="checkStatus()">
             <div class="col-6 remove-col-padding-left">
               <mat-checkbox formControlName="recalculation_flag"><span class="font-size-16 font-medium">Recalulate All
                   Unpaid Invoices</span></mat-checkbox>

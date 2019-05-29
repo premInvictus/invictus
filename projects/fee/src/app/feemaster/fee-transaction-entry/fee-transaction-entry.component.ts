@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { InvoiceElement } from './invoiceelement.model';
@@ -8,12 +8,14 @@ import { DatePipe } from '@angular/common';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { saveAs } from 'file-saver';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
+import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 @Component({
 	selector: 'app-fee-transaction-entry',
 	templateUrl: './fee-transaction-entry.component.html',
 	styleUrls: ['./fee-transaction-entry.component.scss']
 })
 export class FeeTransactionEntryComponent implements OnInit {
+	@ViewChild (CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	displayedColumns: string[] = ['srno', 'feehead', 'feedue', 'concession', 'adjustment', 'netpay'];
 	INVOICE_ELEMENT_DATA: InvoiceElement[] = [];
 	dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
@@ -428,6 +430,13 @@ export class FeeTransactionEntryComponent implements OnInit {
 			this.feeTransactionForm.patchValue({
 				'ftr_amount': this.invoice.netPay
 			});
+		}
+	}
+	checkStatus () {
+		if (this.commonStu.studentdetails.editable_status === '1') {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

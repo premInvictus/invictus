@@ -291,6 +291,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	async insertInvoice() {
 		if (this.invoiceCreationForm.valid) {
+			this.feeRenderId = '0';
 			const formData: any = await this.insertInvoiceData(Object.assign({}, this.invoiceCreationForm.value));
 			const arrAdmno = [this.currentLoginId];
 			formData.login_id = arrAdmno;
@@ -369,6 +370,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
 	openConsolidateDialog = (data) => this.consolidateModal.openModal(data);
 	deleteConfirm(value) {
+		this.feeRenderId = '0';
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -391,6 +393,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		});
 	}
 	recalculateConfirm(value) {
+		this.feeRenderId = '0';
 		this.invoiceCreationForm.patchValue({
 			inv_id: this.fetchInvId(),
 			recalculation_flag: '1'
@@ -418,6 +421,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 
 	}
 	consolidateConfirm(value) {
+		this.feeRenderId = '0';
 		this.feeService.consolidateInvoice({ inv_id: this.fetchInvId() }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -446,5 +450,12 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	applyFilter(filtervalue: string) {
 		this.dataSource.filter = filtervalue.trim().toLowerCase();
+	}
+	checkStatus () {
+		if (this.commonStu.studentdetails.editable_status === '1') {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
