@@ -420,15 +420,15 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	deleteCancel() { }
 	openConfig() {
 		if (this.processtypeService.getProcesstype() === '1') {
-			window.open('/school/setup/enquiry', '_blank');
+			window.open('/sis/school/setup/enquiry', '_blank');
 		} else if (this.processtypeService.getProcesstype() === '2') {
-			window.open('/school/setup/registration', '_blank');
+			window.open('/sis/school/setup/registration', '_blank');
 		} else if (this.processtypeService.getProcesstype() === '3') {
-			window.open('/school/setup/provisional-admission', '_blank');
+			window.open('/sis/school/setup/provisional-admission', '_blank');
 		} else if (this.processtypeService.getProcesstype() === '4') {
-			window.open('/school/setup/admission', '_blank');
+			window.open('/sis/school/setup/admission', '_blank');
 		} else {
-			window.open('/school/setup/alumini', '_blank');
+			window.open('/sis/school/setup/alumini', '_blank');
 		}
 	}
 	isExistUserAccessMenu(actionT) {
