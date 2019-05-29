@@ -1003,4 +1003,9 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/validateToken', value);
 	}
+	insertInvoice(value) {
+		this.service.startLoading();
+		value.download = true;
+		return this.http.post(environment.apiFeeUrl + '/invoice/insertInvoice', value);
+	}
 }

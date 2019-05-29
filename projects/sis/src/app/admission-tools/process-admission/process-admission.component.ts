@@ -3,11 +3,11 @@ import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CommonAPIService, SisService } from '../../_services/index';
+import { CommonAPIService, SisService, ProcesstypeService } from '../../_services/index';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
-
+import { saveAs } from 'file-saver';
 export interface PeriodicElement {
 	select: any;
 	regd_no: number;
@@ -43,6 +43,7 @@ export class ProcessAdmissionComponent implements OnInit, AfterViewInit {
 
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
+		private processType: ProcesstypeService,
 		private router: Router,
 		private route: ActivatedRoute) { }
 	@ViewChild('deleteModal') deleteModal;
@@ -158,10 +159,26 @@ export class ProcessAdmissionComponent implements OnInit, AfterViewInit {
 			'process_type_from': '2',
 			'doc_verify_status': event.score.documentStatus
 		};
+		if (event.score.documentStatus) {
+			this.processType.setProcesstype('4');
+		} else {
+			this.processType.setProcesstype('3');
+		}
 		this.sisService.migrgateProcessAdmission(inputJson).subscribe((result: any) => {
-			if (result && result.data) {
-				this.notif.showSuccessErrorMessage('Student Admitted Successfully', 'success');
-				this.getProcessAdmissionData();
+			if (result.status === 'ok' && result.data) {
+				this.notif.showSuccessErrorMessage(result.message, 'success');
+				const invoiceJSOn = {
+					processFrom: '2',
+					processTo: event.score.documentStatus ? '4' : '3',
+					login_id: [result.data.toString()]
+				};
+				this.sisService.insertInvoice(invoiceJSOn).subscribe((result2: any) => {
+					if (result2.data && result2.status === 'ok') {
+						const length = result2.data.split('/').length;
+						saveAs(result2.data, result2.data.split('/')[length - 1]);
+						this.getProcessAdmissionData();
+					}
+				});
 			} else {
 				this.notif.showSuccessErrorMessage('Error While Admitting Student', 'error');
 			}
