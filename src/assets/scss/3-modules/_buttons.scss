@@ -606,3 +606,20 @@ button.mat-button:hover .right-text {
 .btn-save-continue {
     width: 145px !important;
 }
+
+.btn-success-dy {
+    background-color: $button-success;
+    color: #ffffff;
+}
+
+.btn-danger-dy {
+    background-color: $button-danger;
+    color: #ffffff;
+}
+
+.notification-aatachment-btn-sis {
+    position: absolute;
+    z-index: 1000;
+    margin-top: 39px;
+    margin-left: 139px;
+}

@@ -1,6 +1,5 @@
-<div class="container-box__grey">
-    <div class="container-box__white">
-        <br>
+<div class="fee-container-box__grey">
+    <div class="container-box__white card-height-840-lp">
         <div class="row">
             <!-- <div class="col-4 text-center">
                 <div class="line-divider"></div>
@@ -12,19 +11,20 @@
                 <div class="line-divider"></div>
             </div> -->
         </div>
-        <br>
         <div>
             <form [formGroup]="smsTemplateForm">
                 <div class="row">
                     <div class="col-6">
-                        <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Select Template</mat-label>
                             <mat-select placeholder="Select Template" formControlName="tpl_id" (selectionChange)="editTemplate($event)" [disabled]="viewMode">
                                 <mat-option value="Select" *ngFor="let item of templateDataArr" value="{{item?.tpl_id}}">{{item?.tpl_title}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="col-6">
-                        <mat-form-field class="form-field">
+                            <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Title</mat-label>
                             <input matInput placeholder="Title" formControlName="tpl_title" required [readonly]="viewMode">
                         </mat-form-field>
                     </div>
@@ -34,16 +34,20 @@
                         <h6>Mail Body</h6>
                         <ckeditor [config]="ckeConfig" formControlName="tpl_body"></ckeditor>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-12" *ngIf="viewMode">
                         <b>Message</b> <br><br><br>
                         <p [innerHTML]="smsTemplateForm.value.tpl_body"></p>
                     </div>
                 </div>
                 <div class="row" *ngIf="!viewMode">
-                    <div class="notification-aatachment-btn">
+                    <div class="row notification-aatachment-btn">
                         <div class="col-12" *ngIf="editFlag">
                             <mat-checkbox (change)="updateTemplate()">update as template</mat-checkbox>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-12" *ngIf="!editFlag">
                             <mat-checkbox (change)="saveTemplate()">save as template</mat-checkbox>
                         </div>
@@ -51,7 +55,6 @@
                 </div>
             </form>
         </div>
-        <br>
         <div>
             <form [formGroup]="smsScheduleForm">
                 <div class="row">
@@ -87,7 +90,8 @@
                     </div>
                     <div class="row">
                         <div class="col-4">
-                            <mat-form-field class="form-field">
+                                <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Class</mat-label>
                                 <mat-select placeholder="Class" formControlName="class_id" (selectionChange)="getSectionByClass($event)" required [disabled]="viewMode">
                                     <mat-option value="Select" *ngFor="let item of classDataArr" value="{{item?.class_id}}">{{item?.class_name}}</mat-option>
                                     <mat-option value="all">ALL</mat-option>
@@ -95,7 +99,8 @@
                             </mat-form-field>
                         </div>
                         <div class="col-4">
-                            <mat-form-field class="form-field" *ngIf="showSection">
+                            <mat-form-field class="form-field" appearance="outline" *ngIf="showSection">
+                                <mat-label>Section</mat-label>
                                 <mat-select placeholder="Section" formControlName="sec_id" [disabled]="viewMode">
                                     <mat-option value="Select" *ngFor="let item of sectionDataArr" value="{{item?.sec_id}}">{{item?.sec_name}}</mat-option>
                                 </mat-select>
@@ -198,16 +203,16 @@
                             <!-- <tr mat-header-row *matHeaderRowDef="displayedColumnsTwo"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsTwo"></tr> -->
                             <ng-container *ngIf="currentReceivers == 'Student'">
-                                <mat-header-row *matHeaderRowDef="displayedColumnsTwo"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumnsTwo"></mat-row>
+                                <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumnsTwo"></mat-header-row>
+                                <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumnsTwo"></mat-row>
                             </ng-container>
                             <ng-container *ngIf="currentReceivers == 'Teacher'">
-                                <mat-header-row *matHeaderRowDef="displayedColumnsThree"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumnsThree"></mat-row>
+                                <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumnsThree"></mat-header-row>
+                                <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumnsThree"></mat-row>
                             </ng-container>
                             <ng-container *ngIf="currentReceivers == 'Parent'">
-                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                                <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                             </ng-container>
                         </mat-table>
                     </div>
@@ -225,14 +230,16 @@
                 <div>
                     <div class="row" *ngIf="showScheduleBox">
                         <div class="col-6 margin-top-10">
-                            <mat-form-field class="form-field">
+                                <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Choose a Date</mat-label>
                                 <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="schedule_date" (dateInput)="scheduleDate('input', $event)" required readonly="viewMode">
                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
                             </mat-form-field>
                         </div>
                         <div class="col-6 margin-top-10">
-                            <mat-form-field class="form-field">
+                                <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Time</mat-label>
                                 <input matInput type="time" placeholder="Time" formControlName="schedule_time" readonly="viewMode" required>
                             </mat-form-field>
                         </div>
