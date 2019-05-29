@@ -14,21 +14,24 @@
        <form [formGroup]="idcardForm">
           <div class="row">
              <div class="col-4">
-                <mat-form-field class="form-field">
+                <mat-form-field class="form-field" appearance="outline">
+                   <mat-label>Identity Card Style</mat-label>
                    <mat-select placeholder="Identity Card Style" formControlName="ps_card_style">
                       <mat-option *ngFor="let item of styleArray" [value]="item.ps_card_style">{{item.ps_card_style_name}}</mat-option>
                    </mat-select>
                 </mat-form-field>
              </div>
              <div class="col-4">
-                <mat-form-field class="form-field">
+                  <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Identity Card Layout</mat-label>
                    <mat-select placeholder="Identity Card Layout" formControlName="ps_card_layout">
                       <mat-option *ngFor="let item of layoutArray" [value]="item.ps_card_layout">{{item.ps_card_layout_name}}</mat-option>
                    </mat-select>
                 </mat-form-field>
              </div>
              <div class="col-4">
-                <mat-form-field class="form-field">
+                  <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>ID Card Block Per Page</mat-label>
                    <mat-select placeholder="ID Card Block Per Page" formControlName="ps_per_page">
                       <mat-option [value]="item" *ngFor="let item of pageArray">{{item}}</mat-option>
                    </mat-select>
@@ -87,7 +90,8 @@
              <div class="col-4">
                 <div class="row">
                    <div class="col-12">
-                      <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Top Header Font Color</mat-label>
                          <input matInput placeholder="Top Header Font Color" formControlName="ps_header_fore_color" [value]="headerforecolor"
                          [style.background]="headerforecolor"
                          [cpOKButton]="true"
@@ -103,7 +107,8 @@
                 </div>
                 <div class="row">
                    <div class="col-12">
-                      <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Top Header Background Color</mat-label>
                          <input matInput placeholder="Top Header Background Color" formControlName="ps_header_back_color" [value]="headerbackcolor"
                          [style.background]="headerbackcolor"
                          [cpOKButton]="true"
@@ -118,7 +123,8 @@
                 </div>
                 <div class="row">
                    <div class="col-12">
-                      <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Student Name Font Color</mat-label>
                          <input matInput placeholder="Student Name Font Color" formControlName="ps_student_fore_color" [value]="stunameforecolor"
                          [style.background]="stunameforecolor"
                          [cpOKButton]="true"
@@ -135,7 +141,8 @@
              <div class="col-4">
                 <div class="row">
                    <div class="col-12">
-                      <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Footer Font Color</mat-label>
                          <input matInput placeholder="Footer Font Color" formControlName="ps_footer_fore_color" [value]="footerforecolor"
                          [style.background]="footerforecolor"
                          [cpOKButton]="true"
@@ -150,7 +157,8 @@
                 </div>
                 <div class="row">
                    <div class="col-12">
-                      <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Footer Background Color</mat-label>
                          <input matInput placeholder="Footer Background Color" formControlName="ps_footer_back_color" [value]="footerbackcolor"
                          [style.background]="footerbackcolor"
                          [cpOKButton]="true"
@@ -165,7 +173,8 @@
                 </div>
                 <div class="row">
                    <div class="col-12">
-                      <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Student Name </mat-label>
                          <input matInput placeholder="Student Name Background Color" formControlName="ps_student_back_color" [value]="stunamebackcolor"
                          [style.background]="stunamebackcolor"
                          [cpOKButton]="true"
@@ -182,7 +191,8 @@
              <div class="col-4">
                 <div class="row">
                    <div class="col-12">
-                      <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>School Address Font Size</mat-label>
                          <mat-select placeholder="School Address Font Size" formControlName="ps_sch_addr_font_size">
                             <mat-option *ngFor="let item of addressFontSize" [value]="item">{{item}}</mat-option>
                          </mat-select>
@@ -191,7 +201,8 @@
                 </div>
                 <div class="row">
                    <div class="col-12">
-                      <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Imaze Size Layout </mat-label>
                          <mat-select placeholder="Image Size Layout" formControlName="ps_image_layout_size">
                             <mat-option [value]="item.id" *ngFor="let item of sizeArray">{{item.name}}</mat-option>
                          </mat-select>
@@ -200,7 +211,8 @@
                 </div>
                 <div class="row">
                    <div class="col-12">
-                      <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>ID Card Detail Color </mat-label>
                          <input matInput placeholder="ID Card Detail Color" formControlName="ps_id_color" [value]="icarddetforecolor"
                          [style.background]="icarddetforecolor"
                          [cpPosition]="'bottom'"
@@ -344,7 +356,8 @@
                        <label><span><b>Footer</b></span></label>
                     </div>
                     <div class="col-4 text-center">
-                      <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Insert Your Desired Footer Text </mat-label>
                      <textarea placeholder="Insert your desired footer text" matInput rows="5" formControlName="ps_footer"></textarea>
                      </mat-form-field>
                     </div>
