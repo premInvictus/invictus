@@ -166,7 +166,6 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		});
 	}
 	getStudentInformation(au_login_id) {
-		console.log(au_login_id);
 		this.studentLoginId = '';
 		if (au_login_id && this.studentdetailsflag) {
 			this.studentdetailsflag = false;
@@ -397,8 +396,6 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 								this.previousB = false;
 							}
 						}
-					} else {
-						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 					}
 				});
 		}

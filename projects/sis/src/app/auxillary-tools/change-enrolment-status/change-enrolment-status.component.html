@@ -147,7 +147,8 @@
                                 <div class="col-6">
                                         <mat-form-field class="form-field" appearance="outline">
                                                 <mat-label>Enrollment To</mat-label>
-                                        <mat-select placeholder="{{enrolmentPlaceholder}} To" formControlName="enrolment_to" required>
+                                        <mat-select placeholder="{{enrolmentPlaceholder}} To" formControlName="enrolment_to" 
+                                        (selectionChange)="setProcess($event)" required>
                                                 <mat-option value="">Please Select</mat-option>
                                             <mat-option *ngFor="let item of enrollMentToArray" value="{{item?.au_process_type}}">{{item?.au_process_name}}</mat-option>
                                         </mat-select>

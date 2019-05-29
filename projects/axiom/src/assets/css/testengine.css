@@ -602,7 +602,7 @@ a.link {
     color: #fff;
 }
 
-// .dropdown:hover .dropbtn {background-color: #0054ff; color: #38aae9;}
+.dropdown:hover .dropbtn {background-color: #0054ff; color: #38aae9;}
 
 
 .adv-jee-mat-tab-ongoing .mat-tab-header .mat-tab-label-container .mat-tab-list .mat-tab-labels .mat-tab-label {

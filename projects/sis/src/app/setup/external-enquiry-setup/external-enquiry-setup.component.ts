@@ -89,7 +89,7 @@ export class ExternalEnquirySetupComponent implements OnInit {
 		this.sisService.getTabBifurcation().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				for (const tab of result.data) {
-					if (Number(tab.tb_id) > 11) {
+					if (Number(tab.tb_id) > 11 && Number(tab.tb_id < 18)) {
 						this.tabBifurCationEnqCumRegistration.push(tab);
 					}
 				}

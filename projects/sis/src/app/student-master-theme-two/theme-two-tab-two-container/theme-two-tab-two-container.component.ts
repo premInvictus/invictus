@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 import { FormEnabledService } from '../../sharedmodule/dynamic-content/formEnabled.service';
 import { AccountDetailsThemeTwoComponent } from '../account-details-theme-two/account-details-theme-two.component';
 import { FormControl } from '@angular/forms';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-theme-two-tab-two-container',
 	templateUrl: './theme-two-tab-two-container.component.html',
@@ -14,7 +15,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	@ViewChild('edu') edu;
 	@ViewChild('skill') skill;
 	@ViewChild('doc') doc;
-	@ViewChild('account')account: AccountDetailsThemeTwoComponent;
+	@ViewChild('account') account: AccountDetailsThemeTwoComponent;
 	addOnly = false;
 	viewOnly = true;
 	editOnly = false;
@@ -104,7 +105,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			}
 		});
 	}
-	ngOnChanges() {}
+	ngOnChanges() { }
 	saveForm() {
 		for (const item of this.educationDetails) {
 			item.eed_login_id = this.context.studentdetails.studentdetailsform.value.au_login_id;
@@ -119,8 +120,18 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			if (result.status === 'ok') {
 				this.account.submit();
 				this.common.showSuccessErrorMessage('Additional Details Added Successfully', 'success');
+				const invoiceJSON = { login_id: [this.context.studentdetails.studentdetailsform.value.au_login_id] };
+				if (this.processtypeService.getProcesstype() === '2' ||
+					this.processtypeService.getProcesstype() === '3' || this.processtypeService.getProcesstype() === '4') {
+					this.sisService.insertInvoice(invoiceJSON).subscribe((result2: any) => {
+						if (result2.data && result2.status === 'ok') {
+							const length = result2.data.split('/').length;
+							saveAs(result2.data, result2.data.split('/')[length - 1]);
+						}
+					});
+				}
 				if (this.processtypeService.getProcesstype() === '1' ||
-				this.processtypeService.getProcesstype() === '2' || this.processtypeService.getProcesstype() === '5') {
+					this.processtypeService.getProcesstype() === '2' || this.processtypeService.getProcesstype() === '5') {
 					this.common.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
 				} else {
 					this.common.renderTab.next({ tabMove: true });
@@ -345,58 +356,58 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				}
 				let param3: any = {};
 				const sibReqArray3: any[] = [];
-		Object.keys(this.account.accountsForm.value).forEach((key: any) => {
-			const formControl = <FormControl>this.account.accountsForm.controls[key];
-			if (formControl.dirty) {
-				if (key === 'accd_transport_from' || key === 'accd_transport_to'
-					|| key === 'accd_hostel_to' || key === 'accd_hostel_from') {
-					sibReqArray3.push({
-						rff_where_id: 'accd_id',
-						rff_where_value: this.accountDetails['accd_id'],
-						rff_field_name: key,
-						rff_new_field_value: new DatePipe('en-in').transform(formControl.value, 'yyyy-MM-dd'),
-						rff_old_field_value: this.accountDetails[key],
-					});
-				}
-				if (key === 'accd_is_terminate' || key === 'accd_is_transport'
-				|| key === 'accd_is_hostel' || key === 'accd_is_hostel_terminate') {
-				sibReqArray3.push({
-					rff_where_id: 'accd_id',
-					rff_where_value: this.accountDetails['accd_id'],
-					rff_field_name: key,
-					rff_new_field_value: formControl.value ? 'Y' : 'N',
-					rff_old_field_value: this.accountDetails[key],
+				Object.keys(this.account.accountsForm.value).forEach((key: any) => {
+					const formControl = <FormControl>this.account.accountsForm.controls[key];
+					if (formControl.dirty) {
+						if (key === 'accd_transport_from' || key === 'accd_transport_to'
+							|| key === 'accd_hostel_to' || key === 'accd_hostel_from') {
+							sibReqArray3.push({
+								rff_where_id: 'accd_id',
+								rff_where_value: this.accountDetails['accd_id'],
+								rff_field_name: key,
+								rff_new_field_value: new DatePipe('en-in').transform(formControl.value, 'yyyy-MM-dd'),
+								rff_old_field_value: this.accountDetails[key],
+							});
+						}
+						if (key === 'accd_is_terminate' || key === 'accd_is_transport'
+							|| key === 'accd_is_hostel' || key === 'accd_is_hostel_terminate') {
+							sibReqArray3.push({
+								rff_where_id: 'accd_id',
+								rff_where_value: this.accountDetails['accd_id'],
+								rff_field_name: key,
+								rff_new_field_value: formControl.value ? 'Y' : 'N',
+								rff_old_field_value: this.accountDetails[key],
+							});
+						} else {
+							sibReqArray3.push({
+								rff_where_id: 'accd_id',
+								rff_where_value: this.accountDetails['accd_id'],
+								rff_field_name: key,
+								rff_new_field_value: formControl.value,
+								rff_old_field_value: this.accountDetails[key],
+							});
+						}
+					}
 				});
-			} else {
-					sibReqArray3.push({
-						rff_where_id: 'accd_id',
-						rff_where_value: this.accountDetails['accd_id'],
-						rff_field_name: key,
-						rff_new_field_value: formControl.value,
-						rff_old_field_value: this.accountDetails[key],
-					});
+				this.finalSibReqArray3.push({ item: sibReqArray3 });
+				for (const sib of this.finalSibReqArray3) {
+					for (const titem of sib.item) {
+						this.finalArray.push(titem);
+					}
 				}
-			}
-		});
-		this.finalSibReqArray3.push({ item: sibReqArray3 });
-		for (const sib of this.finalSibReqArray3) {
-			for (const titem of sib.item) {
-				this.finalArray.push(titem);
-			}
-		}
-		if (this.finalSibReqArray3.length > 0) {
-			param3.req_login_id = this.login_id;
-			param3.req_process_type = this.context.processType;
-			param3.req_tab_id = '4';
-			param3.req_priority = '';
-			param3.req_remarks = '';
-			param3.req_reason = '';
-			param3.req_date = datepipe.transform(new Date, 'yyyy-MM-dd');
-			param3.req_param = [];
-			this.params.push(param3);
-		} else {
-			param3 = {};
-		}
+				if (this.finalSibReqArray3.length > 0) {
+					param3.req_login_id = this.login_id;
+					param3.req_process_type = this.context.processType;
+					param3.req_tab_id = '4';
+					param3.req_priority = '';
+					param3.req_remarks = '';
+					param3.req_reason = '';
+					param3.req_date = datepipe.transform(new Date, 'yyyy-MM-dd');
+					param3.req_param = [];
+					this.params.push(param3);
+				} else {
+					param3 = {};
+				}
 			}
 		});
 	}

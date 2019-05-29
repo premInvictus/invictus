@@ -23,6 +23,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	filterForm: FormGroup;
 	status: any[] = [{ status: '0', value: 'Pending' }, { status: '1', value: 'Cleared' }, { status: '2', value: 'Bounced' }];
 	toggleSearch = false;
+	pageEvent: PageEvent;
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },

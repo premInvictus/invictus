@@ -41,12 +41,16 @@ export class FeeLedgerComponent implements OnInit {
 	ngOnInit() {
 		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
 			if (data.adm_no && data.login_id) {
+				this.FEE_LEDGER_ELEMENT = [];
+				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				this.lastRecordId = data.adm_no;
 				this.loginId = data.login_id;
 				this.getFeeLedger(this.loginId);
 			} else {
 				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 					if (result.status === 'ok') {
+						this.FEE_LEDGER_ELEMENT = [];
+						this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 						this.lastRecordId = result.data[0].last_record;
 						this.loginId = result.data[0].au_login_id;
 						this.getFeeLedger(this.loginId);
@@ -62,6 +66,8 @@ export class FeeLedgerComponent implements OnInit {
 				if (result.status === 'ok') {
 					this.lastRecordId = result.data[0].last_record;
 					this.loginId = result.data[0].au_login_id;
+					this.FEE_LEDGER_ELEMENT = [];
+					this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 					this.getFeeLedger(this.loginId);
 				}
 			});
