@@ -83,7 +83,7 @@ export class StudentProfileComponent implements OnInit {
 		this.editRequestFlag = false;
 	}
 	editChange(flag) {
-		this.feeRenderId = '';
+		this.feeRenderId = '0';
 		if (flag) {
 		this.viewOnly = true;
 		this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
@@ -107,6 +107,13 @@ export class StudentProfileComponent implements OnInit {
 				this.editRequestFlag = true;
 				return true;
 			}
+		}
+	}
+	checkStatus () {
+		if (this.commonStu.studentdetails.editable_status === '1') {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

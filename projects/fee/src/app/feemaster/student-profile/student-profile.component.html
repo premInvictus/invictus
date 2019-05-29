@@ -6,15 +6,21 @@
                <div class="col-6">
                   <h1 class="remove-bottom-margin font-size-24">Accounts</h1>
                </div>
+               <div *ngIf="!checkStatus()" class="col-6">
+                  <div class="float-right">
+                     <span>
+                        <h6><b>Note: Student detail cannot be updated as  he/she has been promoted to next session</b></h6>
+                     </span>
+                  </div>
+               </div>
             </div>
          </mat-card>
       </div>
    </div>
    <div class="row margin-top-25">
       <div class="col-12 remove-col-padding">
-         <app-common-student-profile [loginId]="lastRecordId" 
-         [feeRenderId]="feeRenderId" (next)="next($event)" (prev)="prev($event)"
-            (first)="first($event)" (last)="last($event)" (key)="key($event)"
+         <app-common-student-profile [loginId]="lastRecordId" [feeRenderId]="feeRenderId" (next)="next($event)"
+            (prev)="prev($event)" (first)="first($event)" (last)="last($event)" (key)="key($event)"
             (processTypeEmit)="checkEmit($event)"></app-common-student-profile>
       </div>
    </div>
@@ -25,13 +31,15 @@
       </div>
    </div>
    <div class="floating-button">
-      <button *ngIf="isExist('350')" mat-button class="float-edit-button"><i class="material-icons font-white">
+      <button *ngIf="isExist('350') && checkStatus()" mat-button class="float-edit-button"><i
+            class="material-icons font-white">
             edit
          </i><span class="margin-top-2 right-text" (click)="enableEdit()"><i class="fas fa-pencil-alt "></i> <span
                class="btn-spacer">Edit</span></span></button>
       <br>
       <br>
-      <button *ngIf="isExist('374')" mat-button class="float-edit-button" style="background-color: #dc9f36 !important">
+      <button *ngIf="isExist('374') && checkStatus()" mat-button class="float-edit-button"
+         style="background-color: #dc9f36 !important">
          <i class="material-icons font-white">
             edit
          </i><span class="margin-top-2 right-text" (click)="enableEditRequest()"><i class="fas fa-pencil-alt "></i>
