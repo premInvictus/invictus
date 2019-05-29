@@ -11,10 +11,10 @@
     <div class="col-12 remove-col-padding col-mobile-view-add-ques">
       <div >
         <div class="container-box__white">
-            <div class="row">
+            <div class="row remove-top-margin">
                 <div class="col-lg-12 col-mobile-view-add-ques">
                   <a *ngIf="isExistUserAccessMenu('298')" [routerLink]="['../create-new-user']">
-                    <button  mat-raised-button class="btn-success create-new-user" >Create New User</button>
+                    <button  mat-raised-button class="btn-success-sis create-new-user" >Create New User</button>
                   </a>
                 </div>
               </div> 
@@ -25,14 +25,14 @@
               <div >                
                 <div>
                   <div class="example-container table-box-main">
-                    <div class="example-header table-filter">
+                    <div class="example-header ">
                       <mat-form-field>
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                         <span matPrefix>
                           <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
                       </mat-form-field>
                     </div>
-                    <mat-table class="specific-table " #table [dataSource]="dataSource">
+                    <mat-table class=" " #table [dataSource]="dataSource">
 
                       <!-- Position Column -->
                       <ng-container matColumnDef="position">

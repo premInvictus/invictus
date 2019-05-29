@@ -23,10 +23,10 @@
          <br>
          <div *ngIf="showFormFieldSetup" class="row">
             <div class="col-12">
-               <div class="row">
+               <div class="row remove-top-margin">
                   <div class="col-4 remove-col-padding-right">
                      <div class="container-box__white">
-                        <div class="row">
+                        <div class="row remove-top-margin">
                            <div class="col-12 text-center">
                               <h4 class="text-uppercase ">
                                  <b>Add Fields</b>
@@ -36,7 +36,8 @@
                         <form [formGroup]="labelForm">
                            <div class="row">
                               <div class="col-12">
-                                 <mat-form-field class="form-field">
+                                 <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Enter Label</mat-label>
                                     <input matInput formControlName="sff_label"
                                        [errorStateMatcher]="confirmValidParentMatcher" required 
                                        placeholder="Enter label">
@@ -57,8 +58,8 @@
                                  </mat-radio-group>
                               </div>
                               <div *ngIf="prefetchFlag" class="col-12">
-                                 <br>
-                                 <mat-form-field class="form-field">
+                                 <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Availiable Fields</mat-label>
                                     <mat-select placeholder="Available Fields" formControlName="sff_ff_id" [required]="checkRequire">
                                        <mat-option *ngFor="let item of formfields" [value]="item.ff_id">{{item.ff_label}}</mat-option>
                                     </mat-select>
@@ -83,16 +84,15 @@
                   </div>
                   <div class="col-lg-1"></div>
                   <div class="col-lg-7">
-                     <br>
                      <h4 class="text-uppercase text-center">
                         <b>Custom Fields</b>
                      </h4>
                      <div *ngIf="configArray.length > 0">
-                        <div class="row">
+                        <div class="row remove-top-margin">
                            <div class="col-lg-12 col-mobile-view-add-ques">
-                              <div class="table-box mob-table-box">
+                              <div class=" mob-table-box">
                                  <div class="example-container table-box-main">
-                                    <div class="example-header table-filter">
+                                    <div class="example-header">
                                        <mat-form-field class="form-feild">
                                           <input
                                              matInput
@@ -101,7 +101,7 @@
                                              />
                                        </mat-form-field>
                                     </div>
-                                    <mat-table #table [dataSource]="configDataSource" matSort class="specific-table table-main-structure">
+                                    <mat-table #table [dataSource]="configDataSource" matSort class="">
                                     <!-- Position Column -->
                                     <ng-container matColumnDef="position">
                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -144,8 +144,8 @@
                                           <i class="fas fa-trash-alt" (click)="delete(item.position)"></i>
                                        </mat-cell>
                                     </ng-container>
-                                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                                    <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                    <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                                     >
                                     </mat-table> 
                                  </div>
@@ -166,7 +166,7 @@
             </div>
          </div>
          <div *ngIf="mappedFlag">
-               <div class="row">
+               <!-- <div class="row">
                      <div class="col-4 text-center">
                      </div>
                      <div class="col-4 text-center">
@@ -175,11 +175,12 @@
                      <div class="col-4 text-center">
                      </div>
                   </div>
-                  <br>
+                  <br> -->
                   <div *ngIf="configArray.length > 0">
-                     <div class="row">
+                     <div class="row remove-top-margin">
                      <div class="col-lg-3">
-                        <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                           <mat-label>Select Type</mat-label>
                            <mat-select placeholder="Select type.." (selectionChange)="setId($event)">
                               <mat-option *ngFor="let item of typeArray" [value]="item.tmap_usts_id">{{item.tmap_usts_type}}</mat-option>
                            </mat-select>
@@ -188,9 +189,9 @@
                   </div>
                         <div class="row">
                            <div class="col-lg-12 col-mobile-view-add-ques">
-                              <div class="table-box mob-table-box">
+                              <div class=" mob-table-box">
                                  <div class="example-container table-box-main">
-                                    <mat-table #table [dataSource]="configDataSource" matSort class="specific-table table-main-structure">
+                                    <mat-table #table [dataSource]="configDataSource" matSort class="">
                                     <!-- Position Column -->
                                     <ng-container matColumnDef="select">
                                           <mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -226,8 +227,8 @@
                                           {{ item.field_mapped }}
                                        </mat-cell>
                                     </ng-container>
-                                    <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
-                                    <mat-row *matRowDef="let row; columns: displayedColumns2"></mat-row>
+                                    <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns2"></mat-header-row>
+                                    <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns2"></mat-row>
                                     >
                                     </mat-table> 
                                  </div>

@@ -1552,7 +1552,7 @@
     </div> -->
 
 
-    <div class="container-box__grey">
+    <div class="fee-container-box__grey">
         <div class="container-box__white">
             <form [formGroup]="Teacher_Form" novalidate>
                 <div class="row">
@@ -1573,7 +1573,8 @@
                             <div class="col-6">
                                 <div class="row">
                                     <div class="col-12">
-                                        <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                            <mat-label>Teacher Id</mat-label>
                                             <input matInput formControlName="au_login_id" readonly
                                                 placeholder="Teacher Id">
 
@@ -1582,7 +1583,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Full Name</mat-label>
                                             <input matInput class="text-capitalize" formControlName="au_full_name" required
                                                 placeholder="Full Name">
                                             <mat-error *ngIf="au_full_name.hasError('required')">
@@ -1593,7 +1595,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Contact No.</mat-label>
                                             <input matInput formControlName="au_mobile" required
                                                 placeholder="Contact No." maxlength="10" pattern="[0-9]*">
                                             <mat-error *ngIf="au_mobile.hasError('required')">
@@ -1606,7 +1609,8 @@
                             <div class="col-6">
                                 <div class="row">
                                     <div class="col-12">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>School Code</mat-label>
                                             <input matInput [value]="schoolinfoArray.school_prefix" readonly
                                                 placeholder="School Code">
                                         </mat-form-field>
@@ -1614,7 +1618,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>School Name</mat-label>
                                             <input matInput name="schoolname" class="text-capitalize" [value]="schoolinfoArray.school_name"
                                                 readonly placeholder="School Name">
                                         </mat-form-field>
@@ -1622,7 +1627,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Email ID</mat-label>
                                             <input matInput name="email" formControlName="au_email" required
                                                 pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
                                                 placeholder="Email ID">
@@ -1655,18 +1661,21 @@
                         <form [formGroup]="Cs_relation_Form" novalidate>
                             <div class="row">
                                 <div class="col-2">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Designation</mat-label>
                                         <input matInput name="user" class="text-capitalize" placeholder="Designation"
                                             formControlName="uc_designation">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-2">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Department</mat-label>
                                         <input matInput placeholder="Department" class="text-capitalize" formControlName="uc_department">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-2">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Class</mat-label>
                                         <mat-select formControlName="uc_class_id" #inputclass
                                             (selectionChange)="getSectionsByClass();getSubjectsByClass();setCurrentClass(inputclass.value)"
                                             placeholder="Class" required>
@@ -1678,7 +1687,8 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-2">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Select Section</mat-label>
                                         <mat-select formControlName="uc_sec_id" #inputsec
                                             (selectionChange)="getSubjectsByClass();setCurrentSection(inputsec.value)"
                                             placeholder="Section" required>
@@ -1690,7 +1700,8 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-2">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Subject</mat-label>
                                         <mat-select formControlName="uc_sub_id" #inputsub
                                             (selectionChange)="setCurrentSubject(inputsub.value)" placeholder="Subject"
                                             required>
@@ -1781,7 +1792,8 @@
                                                 <div class="col-6">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Aadhaar No</mat-label>
                                                                 <input matInput name="teacher-uid"
                                                                     placeholder="Aadhaar No."
                                                                     formControlName="upd_adhaar_no"
@@ -1791,7 +1803,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Date Of Birth</mat-label>
                                                                 <input matInput [matDatepicker]="scheduleDate" min="{{mintoday}}" placeholder="Date of birth" formControlName="upd_dob" (dateInput)="addEvent('input', $event)"
                                                                     (dateChange)="addEvent('change', $event)">
                                                                 <mat-datepicker-toggle class="calendar-color" matSuffix [for]="scheduleDate"></mat-datepicker-toggle>
@@ -1801,7 +1814,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Gender</mat-label>
                                                                 <mat-select placeholder="Gender"
                                                                     formControlName="upd_gender">
                                                                     <mat-option value="M">
@@ -1819,7 +1833,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Martial Status</mat-label>
                                                                 <mat-select formControlName="upd_martial_status"
                                                                     placeholder="Marital Status">
                                                                     <mat-option value="s">
@@ -1834,7 +1849,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Date</mat-label>
                                                                 <input matInput [matDatepicker]="picker" placeholder="Date" formControlName="upd_doj">
                                                                 <mat-datepicker-toggle class="calendar-color" matSuffix [for]="picker"></mat-datepicker-toggle>
                                                                 <mat-datepicker #picker></mat-datepicker>
@@ -1845,7 +1861,8 @@
                                                 <div class="col-6">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Permanant Addess</mat-label>
                                                                 <input matInput placeholder="Permanent Address"
                                                                     value="Deogarh">
 
@@ -1854,7 +1871,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Pin Code</mat-label>
                                                                 <input matInput name="pincode" placeholder="Pin-code"
                                                                     formControlName="upd_spouse_pincode" required
                                                                     value="882013">
@@ -1864,7 +1882,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>City</mat-label>
                                                                 <mat-select formControlName="upd_cit_id"
                                                                     placeholder="City">
                                                                     <mat-option value="">
@@ -1882,7 +1901,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>State</mat-label>
                                                                 <mat-select formControlName="upd_sta_id"
                                                                     placeholder="State">
                                                                     <mat-option value="">
@@ -1915,7 +1935,8 @@
                                                 <div class="col-6">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Spouse's/ Parent's Name</mat-label>
                                                                 <input matInput placeholder="Spouse's/Parent's Name" class="text-capitalize"
                                                                     formControlName="upd_spouse_name"
                                                                     value="">
@@ -1924,7 +1945,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Spouse Education</mat-label>
                                                                 <input matInput placeholder="Spouse's Education"
                                                                     formControlName="upd_spouse_education"
                                                                     value="">
@@ -1933,7 +1955,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Spouse Occupation</mat-label>
                                                                 <input matInput placeholder="Spouse's Occupation"
                                                                     formControlName="upd_spouse_occupation"
                                                                     value="Teacher">
@@ -1942,7 +1965,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Designation</mat-label>
                                                                 <input matInput placeholder="Designation" class="text-capitalize"
                                                                     formControlName="upd_spouse_designation"
                                                                     value="Teacher">
@@ -1953,7 +1977,8 @@
                                                 <div class="col-6">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Spouse's mobile no</mat-label>
                                                                 <input matInput placeholder="Spouse's Mobile No"
                                                                     value="Teacher">
                                                             </mat-form-field>
@@ -1961,7 +1986,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Spouse Email</mat-label>
                                                                 <input matInput placeholder="Spouse's Email"
                                                                     value="abc@xyz.com">
                                                             </mat-form-field>
@@ -1969,7 +1995,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <mat-form-field class="form-field">
+                                                                <mat-form-field class="form-field" appearance="outline">
+                                                                        <mat-label>Office Address</mat-label>
                                                                 <input matInput placeholder="Office Address"
                                                                     value="Deogarh">
                                                             </mat-form-field>

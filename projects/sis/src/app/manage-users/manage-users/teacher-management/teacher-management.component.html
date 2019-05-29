@@ -21,17 +21,18 @@
                     <div class="top-right-box">
                       <div class="top-right-box-content top-middle-box-content">
                         <div class="top-right-box-content-title">
-                          <div class="row">
+                          <!-- <div class="row">
                             <div class="col-lg-12 col-mobile-view-add-ques">
                               <span>Select Parameters</span>
                             </div>
-                          </div>
+                          </div> -->
                           <div class="row">
                             <div class="col-lg-12 col-mobile-view-add-ques">
                               <form [formGroup]="Filter_form" novalidate>
                                 <div class="row">
                                   <div class="col-lg-2 fin-tab-col-25  col-mobile-view-add-ques">
-                                    <mat-form-field class="form-field">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                          <mat-label>Select Class</mat-label>
                                       <mat-select id="school-region" formControlName="uc_class_id"
                                         (change)="getSubjectsByClass();getSectionsByClass()" placeholder="Select Class">
                                         <mat-option *ngFor="let item of classArray" [value]="item.class_id">
@@ -41,7 +42,8 @@
                                     </mat-form-field>
                                   </div>
                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                    <mat-form-field class="form-field">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                          <mat-label>Section</mat-label>
                                       <mat-select formControlName="sub_id" id="school-region"
                                         formControlName="uc_sec_id" placeholder="Section">
                                         <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
@@ -51,7 +53,8 @@
                                     </mat-form-field>
                                   </div>
                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                    <mat-form-field class="form-field">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                          <mat-label>Subject</mat-label>
                                       <mat-select formControlName="topic_id" id="school-region"
                                         formControlName="uc_sub_id" placeholder="Subject">
                                         <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
@@ -70,8 +73,8 @@
                                         <div class="add-question-button-collection">
                                           <!-- <button class="btn btn-primary" (click)="insertQuestion()" [disabled]="!ind_entry_form1.valid">Submit</button>
                         <button class="btn btn-danger submit-button" (click)="reset()">Reset</button> -->
-                                          <div class="button-row">
-                                            <button mat-raised-button class="btn-success"
+                                          <div class="button-row text-center margin-top-12">
+                                            <button mat-raised-button class="btn-success-sis"
                                               (click)="getAllTeacher(this)">Apply</button>
                                           </div>
                                         </div>
@@ -92,7 +95,7 @@
               <!--select parameters-->
 
 
-              <div class="row">
+              <div class="row remove-top-margin">
                 <div class="col-sm-12 col-md-12 col-lg-12">
                   <button mat-raised-button class="create-new-user reset-button"
                     *ngIf="isExistUserAccessMenu('114')">View Profile</button>
@@ -104,13 +107,13 @@
               </div>
               <br>
 
-              <div class="row">
+              <div class="row remove-top-margin">
                 <div class="col-lg-12 col-remove-padding col-mobile-view-add-ques">
                   <div  *ngIf="tableCollection">
 
 
                     <div class="example-container table-box-main">
-                      <div class="example-header table-filter">
+                      <div class="example-header">
 
                         <mat-form-field>
                           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
@@ -118,7 +121,7 @@
                         </mat-form-field>
                       </div>
 
-                      <mat-table class="specific-table " #table [dataSource]="dataSource" matSort>
+                      <mat-table class="" #table [dataSource]="dataSource" matSort>
                         <!-- Position Column -->
                         <ng-container matColumnDef="position">
                           <mat-header-cell *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
@@ -175,8 +178,8 @@
                               (click)="deleteUsr(item.action.au_login_id);openModal({});">delete</i>
                           </mat-cell>
                         </ng-container>
-                        <mat-header-row class="top_header" *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        <mat-header-row class="top_header header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns;"></mat-row>
                       </mat-table>
                       <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]"
                         [showFirstLastButtons]="true">
