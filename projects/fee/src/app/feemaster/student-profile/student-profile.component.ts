@@ -83,7 +83,6 @@ export class StudentProfileComponent implements OnInit {
 		this.checkFlag2 = false;
 	}
 	editChange(flag) {
-		this.feeRenderId = '0';
 		if (flag) {
 		this.viewOnly = true;
 		this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;

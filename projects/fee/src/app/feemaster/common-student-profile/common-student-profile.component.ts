@@ -396,6 +396,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 								this.previousB = false;
 							}
 						}
+						this.loginId = '';
+						this.feeRenderId = '';
 					} else {
 						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 						this.processtypeService.setProcesstype(this.studentRouteMoveStoreService.getProcessTypePrev());
