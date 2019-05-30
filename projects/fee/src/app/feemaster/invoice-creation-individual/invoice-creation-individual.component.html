@@ -19,10 +19,9 @@
   </div>
   <div class="row margin-top-25">
     <div class="col-12 remove-col-padding">
-      <app-common-student-profile [feeRenderId]="feeRenderId" 
-      [loginId]="lastRecordAdmno" (next)="next($event)" (prev)="prev($event)"
-        (first)="first($event)" (last)="last($event)" (key)="key($event)" (next2)="next2($event)" (prev2)="prev2($event)"
-        (first2)="first2($event)" (last2)="last2($event)" (key2)="key2($event)"
+      <app-common-student-profile [feeRenderId]="feeRenderId" [loginId]="lastRecordAdmno" (next)="next($event)"
+        (prev)="prev($event)" (first)="first($event)" (last)="last($event)" (key)="key($event)" (next2)="next2($event)"
+        (prev2)="prev2($event)" (first2)="first2($event)" (last2)="last2($event)" (key2)="key2($event)"
         (processTypeEmit)="checkEmit($event)">
       </app-common-student-profile>
     </div>
@@ -33,7 +32,9 @@
         <mat-card class="card-top-title__container">
           <div class="text-center" *ngIf="!checkStatus()">
             <h4><b>{{'Invoice Cannot be generated for this Student' | uppercase}}</b></h4><br>
-            <span><h6>Note: Student has been promoted to next session</h6></span>
+            <span>
+              <h6>Note: Student has been promoted to next session</h6>
+            </span>
           </div>
           <div class="row" *ngIf="checkStatus()">
             <div class="col-4">
@@ -48,7 +49,7 @@
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Invoice Date</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Invoice Date" formControlName="inv_invoice_date"
-                required>
+                  required>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -57,7 +58,7 @@
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Due Date</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Due Date" formControlName="inv_due_date"
-                 required>
+                  required>
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
@@ -70,9 +71,10 @@
             </div>
 
             <div class="col-6 remove-col-padding-right text-right">
-              <button *ngIf="commonAPIService.isExistUserAccessMenu('359')" mat-raised-button class="btn-primary  btn-width-164 btn-success"
-                (click)="insertInvoice()">Generate Invoice</button>
-                <button mat-raised-button style="margin-left: 10px" class="print-btn" (click)="invoiceCreationForm.reset()">Reset</button>
+              <button *ngIf="commonAPIService.isExistUserAccessMenu('359')" mat-raised-button
+                class="btn-primary  btn-width-164 btn-success" (click)="insertInvoice()">Generate Invoice</button>
+              <button mat-raised-button style="margin-left: 10px" class="print-btn"
+                (click)="invoiceCreationForm.reset()">Reset</button>
             </div>
           </div>
         </mat-card>
@@ -91,11 +93,14 @@
 
           </div>
           <div class="col-8 text-right">
-            <button *ngIf="commonAPIService.isExistUserAccessMenu('360') && this.selection.selected.length > 1" mat-raised-button class="btn-primary btn-consolidate"
+            <button *ngIf="commonAPIService.isExistUserAccessMenu('360') && this.selection.selected.length > 1"
+              mat-raised-button class="btn-primary btn-consolidate"
               (click)="openConsolidateDialog({})">Consolidate</button>
-            <button *ngIf="commonAPIService.isExistUserAccessMenu('361') && this.selection.selected.length > 0" mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer"
+            <button *ngIf="commonAPIService.isExistUserAccessMenu('361') && this.selection.selected.length > 0"
+              mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer"
               (click)="openRecalculateDialog()">Recalutate</button>
-            <button *ngIf="commonAPIService.isExistUserAccessMenu('362') && this.selection.selected.length > 0" mat-raised-button class="btn-primary btn-danger btn-spacer"
+            <button *ngIf="commonAPIService.isExistUserAccessMenu('362') && this.selection.selected.length > 0"
+              mat-raised-button class="btn-primary btn-danger btn-spacer"
               (click)="openDeleteDialog(fetchInvId())">Delete</button>
           </div>
         </div>
@@ -120,18 +125,6 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr. No. </th>
                 <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
               </ng-container>
-             <!--  <ng-container matColumnDef="admno">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Adm. No. </th>
-                <td mat-cell *matCellDef="let element"> {{element.admno}} </td>
-              </ng-container>
-              <ng-container matColumnDef="studentname">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.studentname | titlecase}} </td>
-              </ng-container>
-              <ng-container matColumnDef="classsection">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Class Section </th>
-                <td mat-cell *matCellDef="let element"> {{element.classsection}} </td>
-              </ng-container> -->
               <ng-container matColumnDef="invoiceno">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice No </th>
                 <td mat-cell *matCellDef="let element"> <a class="font-skyblue text-link font-size-14"
@@ -141,23 +134,41 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Period </th>
                 <td mat-cell *matCellDef="let element"> {{element.feeperiod}} </td>
               </ng-container>
+              <ng-container matColumnDef="invoicedate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Date</th>
+                <td mat-cell *matCellDef="let element"> {{element.invoicedate | date: 'd-MMM-y'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="duedate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.duedate | date: 'd-MMM-y'}} </td>
+              </ng-container>
               <ng-container matColumnDef="feedue">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Due </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount Due </th>
                 <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
               </ng-container>
               <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
                 <td mat-cell *matCellDef="let element" [style.color]="element.statuscolor">
-                  {{element.status | titlecase}} </td>
+                  <span *ngIf="element.status === 'paid'">
+                    <a style="color: green" class="text-link font-size-14" (click)="openDialog2(element.inv_id, false)">
+                      {{element.status | titlecase}}
+                    </a>
+                  </span>
+                  <span *ngIf="element.status !== 'paid'">
+                    {{element.status | titlecase}}
+                  </span>
+                </td>
               </ng-container>
               <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef> Action </th>
                 <td mat-cell *matCellDef="let element">
-                  <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('363')" class="material-icons icon-edit"
-                    (click)="openDialog(element.inv_id, true)">create</i>
-                  <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('362')" class="material-icons icon-danger icon-spacer"
+                  <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('363')"
+                    class="material-icons icon-edit" (click)="openDialog(element.inv_id, true)">create</i>
+                  <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('362')"
+                    class="material-icons icon-danger icon-spacer"
                     (click)="openDeleteDialog([element.inv_id])">delete</i>
-                    <i *ngIf="element.remark" class="material-icons icon-spacer" [matTooltip]="element.remark" >bookmark</i>
+                  <i *ngIf="element.remark" class="material-icons icon-spacer"
+                    [matTooltip]="element.remark | capitalize">bookmark</i>
                 </td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

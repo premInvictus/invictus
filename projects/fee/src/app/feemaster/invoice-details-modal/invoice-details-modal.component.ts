@@ -36,8 +36,12 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		console.log(this.data);
 		this.getInvoiceBifurcation(this.data.invoiceNo);
+		if (this.data.edit) {
+			this.modificationFlag = true;
+		} else {
+			this.modificationFlag = false;
+		}
 	}
 	openEditDialog = (data) => this.editReference.openModal(data);
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
@@ -55,7 +59,6 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		this.checkChangedFieldsArray = [];
 	}
 	changeAdjAmt(invg_id, $event) {
-		console.log(invg_id, $event, $event.target.value);
 		const invg_id_idx = this.invoiceBifurcationArray.findIndex(item => item.invg_id === invg_id);
 		if (invg_id_idx !== -1 && $event.target.value > -1) {
 			this.checkChangedFieldsArray.push({
@@ -66,10 +69,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				rff_old_field_value: this.invoiceBifurcationArray[invg_id_idx].invg_adj_amount,
 				rff_custom_data: this.invoiceBifurcationArray[invg_id_idx].invg_fh_name,
 			});
-			console.log(this.checkChangedFieldsArray);
 			this.invoiceBifurcationArray[invg_id_idx].invg_adj_amount = $event.target.value;
 		}
-		console.log(this.invoiceBifurcationArray);
 		this.invoiceDetialsTable(this.invoiceBifurcationArray);
 	}
 	recalculateInvoice(event) {
@@ -84,7 +85,10 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			});
 	}
 	cancelInvoice() {
-		this.modificationFlag = false;
+		if (this.data.edit) {
+		this.modificationFlag = true;
+		this.adjRemark = '';
+		}
 		this.getInvoiceBifurcation(this.invoiceDetails.inv_id);
 	}
 	updateInvoice() {
@@ -94,9 +98,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			adj.adjustment.push({ invg_id: item.invg_id, invg_adj_amount: item.invg_adj_amount });
 		});
 		adj.remark = this.adjRemark;
-		this.modificationFlag = false;
 		// this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')
-		if (false) {
+		if (!(this.commonAPIService.isExistUserAccessMenu('357')) && this.adjRemark) {
 			this.feeService.invoiceAdjustmentRemark(adj).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -106,9 +109,10 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			const param: any = {};
 			const params: any[] = [];
 			const datalist: any[] = [];
-			console.log('adjustment', adj);
-			console.log(this.invoiceDetails);
-			if (this.checkChangedFieldsArray.length > 0) {
+			if (!this.adjRemark) {
+				this.commonAPIService.showSuccessErrorMessage('Please enter remarks', 'error');
+			}
+			if (this.checkChangedFieldsArray.length > 0 && this.adjRemark) {
 				param.req_login_id = this.invoiceDetails.login_id ? this.invoiceDetails.login_id : '';
 				param.req_process_type = '4';
 				param.req_tab_id = '18';
@@ -126,8 +130,10 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				});
 				params.push(param);
 				datalist.push(this.checkChangedFieldsArray);
+				this.openEditDialog({ data: datalist, reqParam: params });
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('No changes to update', 'error');
 			}
-			this.openEditDialog({ data: datalist, reqParam: params });
 		}
 	}
 	deleteInvoice(event) {
@@ -164,7 +170,6 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		this.invoiceBifurcationArray = [];
 		this.feeService.getInvoiceBifurcation({ inv_id: invoiceNo }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				console.log(result);
 				if (result.data.length > 0) {
 					this.invoiceDetails = result.data[0];
 					if (this.invoiceDetails.invoice_bifurcation.length > 0) {
@@ -174,7 +179,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 
 				}
 			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				this.closemodal();
 			}
 		});
 	}
@@ -185,6 +191,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				const length = result.data.split('/').length;
 				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
