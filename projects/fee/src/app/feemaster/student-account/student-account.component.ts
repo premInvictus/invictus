@@ -48,8 +48,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
-		this.terminateStatus = 'Transport Facility Terminated';
-		this.hostelStatus = 'Hostel Facility Terminated';
+		this.terminateStatus = 'Terminate Transport Facility';
+		this.hostelStatus = 'Terminate Hostel Facility';
 		this.buildForm();
 		this.getFeeOtherCategory();
 		this.getConGroup();
@@ -116,17 +116,17 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				}
 				if (this.accountDetails.accd_is_terminate === 'Y' && this.transportFlag && this.modeFlag) {
 					this.terminationFlag = true;
-					this.terminateStatus = 'Transport Facility Terminated';
+					this.terminateStatus = 'Terminate Transport Facility';
 				} else {
 					this.terminationFlag = false;
-					this.terminateStatus = 'Transport Facility Terminated';
+					this.terminateStatus = 'Terminate Transport Facility';
 				}
 				if (this.accountDetails.accd_is_hostel_terminate === 'Y') {
 					this.hostelTerminateFlag = true;
-					this.hostelStatus = 'Hostel Facility Terminated';
+					this.hostelStatus = 'Terminate Hostel Facility';
 				} else {
 					this.hostelTerminateFlag = false;
-					this.hostelStatus = 'Hostel Facility Terminated';
+					this.hostelStatus = 'Terminate Hostel Facility';
 				}
 				if (this.accountDetails.accd_is_hostel === 'Y') {
 					this.hostelFlag = true;
@@ -262,19 +262,19 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	terminate($event) {
 		if ($event.checked) {
 			this.terminationFlag = true;
-			this.terminateStatus = 'Transport Facility Terminated';
+			this.terminateStatus = 'Terminate Transport Facility';
 		} else {
 			this.terminationFlag = false;
-			this.terminateStatus = 'Transport  Facility Terminated';
+			this.terminateStatus = 'Terminate Transport Facility';
 		}
 	}
 	hostel($event) {
 		if ($event.checked) {
 			this.hostelTerminateFlag = true;
-			this.hostelStatus = 'Hostel Facility Terminated';
+			this.hostelStatus = 'Terminate Hostel Facility';
 		} else {
 			this.hostelTerminateFlag = false;
-			this.hostelStatus = 'Hostel  Facility Terminated';
+			this.hostelStatus = 'Terminate Hostel Facility';
 		}
 	}
 	submit() {
