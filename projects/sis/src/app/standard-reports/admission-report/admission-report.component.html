@@ -6,61 +6,62 @@
             </div>
         </div>
         <form [formGroup]="admissionReportForm" autocomplete="off">
-        <div class="row">
-            <div class="col-12">
-                <mat-radio-group formControlName="reviewReport">
-                    <mat-radio-button value="0" checked="checked">Gender Wise</mat-radio-button>
-                    <mat-radio-button class="inline-form-radio-spacing" value="1">Enrolment Type Wise</mat-radio-button>
-                </mat-radio-group>
+            <div class="row">
+                <div class="col-12">
+                    <mat-radio-group formControlName="reviewReport">
+                        <mat-radio-button value="0" checked="checked">Gender Wise</mat-radio-button>
+                        <mat-radio-button class="inline-form-radio-spacing" value="1">Enrolment Type Wise
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-3" *ngIf="admissionReportForm.value.reviewReport == '0'">
-                <mat-form-field class="form-field" appearance="outline">
-                    <mat-label>Enrollment Type</mat-label>
-                    <mat-select placeholder="Enrollment Type" formControlName="enrolment_type" required>
-                        <mat-option *ngFor="let item of enrollMentTypeArray" value="{{item?.au_process_type}}">
-                            {{item?.au_process_name}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-3" *ngIf="showDate">
+            <div class="row">
+                <div class="col-3" *ngIf="admissionReportForm.value.reviewReport == '0'">
                     <mat-form-field class="form-field" appearance="outline">
-                            <mat-label>Date</mat-label>
-                    <input matInput [matDatepicker]="cpicker" placeholder="Date" formControlName="cdate">
-                    <mat-datepicker-toggle matSuffix [for]="cpicker" (dateInput)="cpicker('input', $event)">
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #cpicker></mat-datepicker>
-                </mat-form-field>
-            </div>
-            <div class="col-3" *ngIf="showDateRange">
+                        <mat-label>Enrollment Type</mat-label>
+                        <mat-select placeholder="Enrollment Type" formControlName="enrolment_type" required>
+                            <mat-option *ngFor="let item of enrollMentTypeArray" value="{{item?.au_process_type}}">
+                                {{item?.au_process_name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-3" *ngIf="showDate">
                     <mat-form-field class="form-field" appearance="outline">
-                            <mat-label>From</mat-label>
-                    <input matInput [matDatepicker]="fpicker" placeholder="From" formControlName="fdate">
-                    <mat-datepicker-toggle matSuffix [for]="fpicker" (dateInput)="fpicker('input', $event)">
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #fpicker></mat-datepicker>
-                </mat-form-field>
-            </div>
-            <div class="col-3" *ngIf="showDateRange">
+                        <mat-label>Date</mat-label>
+                        <input matInput [matDatepicker]="cpicker" placeholder="Date" formControlName="cdate">
+                        <mat-datepicker-toggle matSuffix [for]="cpicker" (dateInput)="cpicker('input', $event)">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #cpicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-3" *ngIf="showDateRange">
                     <mat-form-field class="form-field" appearance="outline">
-                            <mat-label>To</mat-label>
-                    <input matInput [matDatepicker]="tpicker" placeholder="To" formControlName="tdate">
-                    <mat-datepicker-toggle matSuffix [for]="tpicker" (dateInput)="tpicker('input', $event)">
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #tpicker></mat-datepicker>
-                </mat-form-field>
+                        <mat-label>From</mat-label>
+                        <input matInput [matDatepicker]="fpicker" placeholder="From" formControlName="fdate">
+                        <mat-datepicker-toggle matSuffix [for]="fpicker" (dateInput)="fpicker('input', $event)">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #fpicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-3" *ngIf="showDateRange">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>To</mat-label>
+                        <input matInput [matDatepicker]="tpicker" placeholder="To" formControlName="tdate">
+                        <mat-datepicker-toggle matSuffix [for]="tpicker" (dateInput)="tpicker('input', $event)">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #tpicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <button class="btn-success margin-top-15" mat-raised-button (click)="submit()">Submit</button>
+                </div>
             </div>
-            <div class="col-3">
-                <button class="btn-success margin-top-15" mat-raised-button (click)="submit()">Submit</button>
+            <div class="row">
+                <div class="col-12">
+                    <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
-            </div>
-        </div>
-    </form>
+        </form>
         <div class="row">
             <div class="col-12 ">
                 <mat-form-field class="form-feild"
@@ -73,74 +74,76 @@
                         <table mat-table #table [dataSource]="userDataSource" matSort
                             class="table-100 mat-elevation-z1">
                             <ng-container matColumnDef="counter">
-                                <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                                     S.No.
-                                </mat-header-cell>
-                                <mat-cell mat-cell *matCellDef="let element">
+                                </th>
+                                <td mat-cell mat-cell *matCellDef="let element">
                                     <div [innerHTML]="element.counter"></div>
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="class_name">
-                                <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Class Name
-                                </mat-header-cell>
-                                <mat-cell mat-cell *matCellDef="let element">
+                                </th>
+                                <td mat-cell mat-cell *matCellDef="let element">
                                     <span *ngIf="element.class_name">
                                         {{ element.class_name }}
                                     </span>
                                     <span *ngIf="!element.class_name">
                                         <!-- N/A -->
                                     </span>
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="Boys">
-                                <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Boys
-                                </mat-header-cell>
-                                <mat-cell mat-cell *matCellDef="let element">
+                                </th>
+                                <td mat-cell mat-cell *matCellDef="let element">
                                     <div *ngIf="element.Boys" [innerHTML]="element.Boys"></div>
                                     <!-- <span *ngIf="!element.Boys">N/A</span>                                     -->
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="Girls">
-                                <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Girls
-                                </mat-header-cell>
-                                <mat-cell mat-cell *matCellDef="let element">                                    
-                                    <div *ngIf="element.Girls" [innerHTML]="element.Girls"></div>                                        
+                                </th>
+                                <td mat-cell mat-cell *matCellDef="let element">
+                                    <div *ngIf="element.Girls" [innerHTML]="element.Girls"></div>
                                     <!-- <span *ngIf="!element.Girls">N/A</span>                                     -->
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="Other">
-                                <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Other
-                                </mat-header-cell>
-                                <mat-cell mat-cell *matCellDef="let element">
-                                    <div *ngIf="element.Other" [innerHTML]="element.Other"></div>  
+                                </th>
+                                <td mat-cell mat-cell *matCellDef="let element">
+                                    <div *ngIf="element.Other" [innerHTML]="element.Other"></div>
                                     <!-- <span *ngIf="!element.Other">N/A</span> -->
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="Total">
-                                <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Total
-                                </mat-header-cell>
-                                <mat-cell mat-cell *matCellDef="let element">
+                                </th>
+                                <td mat-cell mat-cell *matCellDef="let element">
                                     <div *ngIf="element.Total" [innerHTML]="element.Total"></div>
                                     <!-- <div *ngIf="!element.Total">N/A</div> -->
-                                </mat-cell>
+                                </td>
                             </ng-container>
-                            <mat-header-row class="header-normal" mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
+                            <tr mat-header-row class="header-normal" mat-header-row *matHeaderRowDef="displayedColumns">
+                            </tr>
+                            <tr mat-row mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
                         </table>
                     </div>
-                    
+
                     <div class="col-12" *ngIf="REPORT_PROCESS_WISE_ELEMENT_DATA.length == 0">
                         <span style="text-align: center;"> No Record Found</span>
                     </div>
                     <br>
                     <br>
                     <br>
-                    <div class="row" [hidden]="!REPORT_PROCESS_WISE_ELEMENT_DATA.length>0" style="margin-top: 15px" class="tab-margin-button-bottom">
+                    <div class="row" [hidden]="!REPORT_PROCESS_WISE_ELEMENT_DATA.length>0" style="margin-top: 15px"
+                        class="tab-margin-button-bottom">
                         <div class="col-12">
                             <button mat-raised-button class="btn-neutral" (click)="print()">
                                 <mat-icon class="material-icon">local_printshop</mat-icon>&nbsp;&nbsp;Print
@@ -158,78 +161,80 @@
 
                 <table mat-table #table [dataSource]="enrolmentDataSource" matSort class="table-100 mat-elevation-z1">
                     <ng-container matColumnDef="counter">
-                        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                             S.No.
-                        </mat-header-cell>
-                        <mat-cell mat-cell *matCellDef="let element">
+                        </th>
+                        <td mat-cell mat-cell *matCellDef="let element">
                             <div [innerHTML]="element.counter"></div>
-                        </mat-cell>
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="class_name">
-                        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                             Class Name
-                        </mat-header-cell>
-                        <mat-cell mat-cell *matCellDef="let element">                            
+                        </th>
+                        <td mat-cell mat-cell *matCellDef="let element">
                             <span *ngIf="element.class_name">{{ element.class_name }}</span>
                             <span *ngIf="!element.class_name">{{ element.class_name }}</span>
-                        </mat-cell>
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="Enquiry">
-                        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                             Enquiry
-                        </mat-header-cell>
-                        <mat-cell mat-cell *matCellDef="let element">
+                        </th>
+                        <td mat-cell mat-cell *matCellDef="let element">
                             <div *ngIf="element.Enquiry" [innerHTML]="element.Enquiry"></div>
                             <div *ngIf="!element.Enquiry">N/A</div>
-                        </mat-cell>
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="Registration">
-                        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                             Registration
-                        </mat-header-cell>
-                        <mat-cell mat-cell *matCellDef="let element">
+                        </th>
+                        <td mat-cell mat-cell *matCellDef="let element">
                             <div *ngIf="element.Registration" [innerHTML]="element.Registration"></div>
                             <div *ngIf="!element.Registration">N/A</div>
-                        </mat-cell>
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="Proadmission">
-                        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                             Pro-Admission
-                        </mat-header-cell>
-                        <mat-cell mat-cell *matCellDef="let element">
+                        </th>
+                        <td mat-cell mat-cell *matCellDef="let element">
                             <div *ngIf="element.Proadmission" [innerHTML]="element.Proadmission"></div>
                             <div *ngIf="!element.Proadmission">N/A</div>
-                        </mat-cell>
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="Admission">
-                        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                             Admission
-                        </mat-header-cell>
-                        <mat-cell mat-cell *matCellDef="let element">
+                        </th>
+                        <td mat-cell mat-cell *matCellDef="let element">
                             <div *ngIf="element.Admission" [innerHTML]="element.Admission"></div>
                             <div *ngIf="!element.Admission">N/A</div>
-                        </mat-cell>
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="Alumini">
-                        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                             Alumini
-                        </mat-header-cell>
-                        <mat-cell mat-cell *matCellDef="let element">
+                        </th>
+                        <td mat-cell mat-cell *matCellDef="let element">
                             <div *ngIf="element.Alumini" [innerHTML]="element.Alumini"></div>
                             <div *ngIf="!element.Alumini">N/A</div>
-                        </mat-cell>
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="Total">
-                        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
                             Total
-                        </mat-header-cell>
-                        <mat-cell mat-cell *matCellDef="let element">
+                        </th>
+                        <td mat-cell mat-cell *matCellDef="let element">
                             <div *ngIf="element.Total" [innerHTML]="element.Total"></div>
                             <div *ngIf="!element.Total">N/A</div>
-                        </mat-cell>
+                        </td>
                     </ng-container>
-                    <mat-header-row mat-header-row class="header-normal" *matHeaderRowDef="displayedEnrolmentColumns"></mat-header-row>
-                    <mat-row mat-row class="row-normal" *matRowDef="let row; columns: displayedEnrolmentColumns"></mat-row>
+                    <tr mat-header-row mat-header-row class="header-normal"
+                        *matHeaderRowDef="displayedEnrolmentColumns"></tr>
+                    <tr mat-row mat-row class="row-normal" *matRowDef="let row; columns: displayedEnrolmentColumns">
+                    </tr>
                 </table>
             </div>
             <br>
@@ -239,16 +244,16 @@
             </div>
             <br>
             <br>
-            <div class="row" [hidden]="!REPORT_ENROLMENT_WISE_ELEMENT_DATA.length>0" style="margin-top: 15px" >
+            <div class="row" [hidden]="!REPORT_ENROLMENT_WISE_ELEMENT_DATA.length>0" style="margin-top: 15px">
                 <div class="col-12">
                     <div class="tab-margin-button-bottom">
-                    <button mat-raised-button class="btn-neutral" (click)="print()">
-                        <mat-icon class="material-icon">local_printshop</mat-icon>&nbsp;&nbsp;Print
-                    </button>
-                    <button mat-raised-button class="btn-success btn-spacer" (click)="exportAsExcel()">
-                        <mat-icon class="material-icon">publish</mat-icon>&nbsp;&nbsp;Export
-                    </button>
-                </div>
+                        <button mat-raised-button class="btn-neutral" (click)="print()">
+                            <mat-icon class="material-icon">local_printshop</mat-icon>&nbsp;&nbsp;Print
+                        </button>
+                        <button mat-raised-button class="btn-success btn-spacer" (click)="exportAsExcel()">
+                            <mat-icon class="material-icon">publish</mat-icon>&nbsp;&nbsp;Export
+                        </button>
+                    </div>
                 </div>
             </div>
             <br>
