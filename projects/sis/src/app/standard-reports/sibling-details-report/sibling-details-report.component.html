@@ -57,142 +57,142 @@
                                 <table mat-table #table [dataSource]="studentSiblingDataSource" matSort
                                     class="table-100 tab-table-180 sibling-details-report mat-elevation-z1">
                                     <ng-container matColumnDef="counter">
-                                        <mat-header-cell class="mat-sno-sibling" *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell class="mat-sno-sibling" *matHeaderCellDef mat-sort-header>
                                             S.No.
-                                        </mat-header-cell>
-                                        <mat-cell class="mat-sno-sibling" *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell class="mat-sno-sibling" *matCellDef="let element">
                                             {{ element.counter }}
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="class_name">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Class
-                                        </mat-header-cell>
-                                        <mat-cell *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.class_name">{{ element.class_name }}</span>
                                             <span *ngIf="!element.class_name">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="sec_name">
-                                        <mat-header-cell class="mat-section-sibling" *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell class="mat-section-sibling" *matHeaderCellDef mat-sort-header>
                                             Section
-                                        </mat-header-cell>
-                                        <mat-cell class="mat-section-sibling" *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell class="mat-section-sibling" *matCellDef="let element">
                                             <span *ngIf="element.sec_name">{{ element.sec_name }}</span>
                                             <span *ngIf="!element.sec_name">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                         
                                     </ng-container>
                                     <ng-container matColumnDef="admission_no">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Adm No.
-                                        </mat-header-cell>
-                                        <mat-cell *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.admission_no">{{ element.admission_no }}</span>
                                             <span *ngIf="!element.admission_no">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="full_name">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Student Name
-                                        </mat-header-cell>
+                                        </th>
                                         
-                                        <mat-cell *matCellDef="let element">
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.full_name">{{ element.full_name | titlecase }}</span>
                                             <span *ngIf="!element.full_name">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="gender">
-                                        <mat-header-cell class="mat-gender-sibling" *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell class="mat-gender-sibling" *matHeaderCellDef mat-sort-header>
                                             Gender
-                                        </mat-header-cell>
-                                        <mat-cell class="mat-gender-sibling" *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell class="mat-gender-sibling" *matCellDef="let element">
                                             <span *ngIf="element.gender">{{ element.gender }}</span>
                                             <span *ngIf="!element.gender">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="admission_date">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Admission Date
-                                        </mat-header-cell>
-                                        <mat-cell *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.admission_date">{{ element.admission_date |  date:'d-MMM-y'}}</span>
                                             <span *ngIf="!element.admission_date">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="alumini_date">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Left Date
-                                        </mat-header-cell>
-                                        <mat-cell *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.alumini_date">{{ element.alumini_date |  date:'d-MMM-y'}}</span>
                                             <span *ngIf="!element.alumini_date">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="enrollment_status">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Enrolment Status
-                                        </mat-header-cell>
-                                        <mat-cell *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.enrollment_status">{{ element.enrollment_status | titlecase }}</span>
                                             <span *ngIf="!element.enrollment_status">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="email">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Email
-                                        </mat-header-cell>
-                                        <mat-cell *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.email">{{ element.email }}</span>
                                             <span *ngIf="!element.email">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="mobile">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Mobile
-                                        </mat-header-cell>
-                                        <mat-cell *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.mobile">{{ element.mobile }}</span>
                                             <span *ngIf="!element.mobile">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="father_name">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Father Name
-                                        </mat-header-cell>
-                                        <mat-cell *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.father_name">{{ element.father_name | titlecase }}</span>
                                             <span *ngIf="!element.father_name">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="mother_name">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Mother Name
-                                        </mat-header-cell>
+                                        </th>
 
-                                        <mat-cell *matCellDef="let element">
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.mother_name">{{ element.mother_name | titlecase }}</span>
                                             <span *ngIf="!element.mother_name">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="guardian_name">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                             Guardian Name
-                                        </mat-header-cell>
+                                        </th>
 
-                                        <mat-cell *matCellDef="let element">
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.guardian_name">{{ element.guardian_name | titlecase }}</span>
                                             <span *ngIf="!element.guardian_name">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="transport_required">
-                                        <mat-header-cell class="mat-transport-sibling" *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell class="mat-transport-sibling" *matHeaderCellDef mat-sort-header>
                                             Transport Required
-                                        </mat-header-cell>
-                                        <mat-cell *matCellDef="let element">
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
                                             <span *ngIf="element.transport_required">{{ element.transport_required | titlecase }}</span>
                                             <span *ngIf="!element.transport_required">N/A</span>
-                                        </mat-cell>
+                                        </td>
                                     </ng-container>
                                     <!-- Student Column -->
                                     <!-- <ng-container matColumnDef="parent_data">
@@ -218,8 +218,8 @@
                                             </ul>
                                         </td>
                                     </ng-container> -->
-                                    <mat-header-row class="header-normal" *matHeaderRowDef="displayedSiblingsColumns"></mat-header-row>
-                                    <mat-row class="row-normal" *matRowDef="let row; columns: displayedSiblingsColumns"></mat-row>
+                                    <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedSiblingsColumns"></tr>
+                                    <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedSiblingsColumns"></tr>
                                 </table>
                             </div>
                             <div class="col-12" *ngIf="SIBLING_REPORT_ELEMENT_DATA.length === 0">

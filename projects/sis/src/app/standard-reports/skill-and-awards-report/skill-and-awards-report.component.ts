@@ -178,7 +178,8 @@ export class SkillAndAwardsReportComponent implements OnInit, AfterViewInit {
 		const printModal2 = document.getElementById('skillAwardReportPrint');
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
-		popupWin.document.write('<html> <link rel="stylesheet" href=".//assets/css/print.css">' +
+		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
+		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
 			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Skills And Awards Report</h2></center></div>' +
 			printModal2.innerHTML + '</html>');
 		popupWin.document.close();
