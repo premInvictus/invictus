@@ -35,7 +35,7 @@ import { StudentRouteMoveStoreService } from '../student-route-move-store.servic
 })
 export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	@Input() loginId: any;
-	@Input () feeRenderId: any;
+	@Input() feeRenderId: any;
 	@Output() next = new EventEmitter();
 	@Output() prev = new EventEmitter();
 	@Output() first = new EventEmitter();
@@ -89,17 +89,15 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	lastFlag = false;
 	keyFlag = false;
 	studentLoginId: any;
-	invoice_creation_individual_flag = true;
-	student_profile_flag = true;
-	fee_ledger_flag = true;
-	fee_transaction_entry_individual_flag = true;
 	processType: any = '';
+	previousProcessType: any = '';
+	previousAdmno: any  = '';
+	previousLoginId = '';
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },
 		{ id: '3', name: 'Provisional Admission No.' },
-		{ id: '4', name: 'Admission No.' },
-		{ id: '5', name: 'Alumni No.' }
+		{ id: '4', name: 'Admission No.' }
 	];
 	constructor(
 		private fbuild: FormBuilder,
@@ -120,17 +118,12 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 			this.processType = '4';
 		}
 		this.processtypeService.setProcesstype(this.processType);
-		this.processTypeEmit.emit(this.processType);
 		const currentUrl = this.route.snapshot.routeConfig.path;
 		if (currentUrl !== '') {
 			if (currentUrl === 'invoice-creation-individual') {
-				this.invoice_creation_individual_flag = false;
 			} else if (currentUrl === 'student-profile') {
-				this.student_profile_flag = false;
 			} else if (currentUrl === 'fee-ledger') {
-				this.fee_ledger_flag = false;
 			} else if (currentUrl === 'fee-transaction-entry-individual') {
-				this.fee_transaction_entry_individual_flag = false;
 			}
 		}
 	}
@@ -173,6 +166,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 				.getStudentInformation({ au_login_id: au_login_id, au_status: '1' })
 				.subscribe((result: any) => {
 					if (result && result.status === 'ok') {
+						this.studentRouteMoveStoreService.setProcessTypePrev(this.processType);
 						this.nextB = true;
 						this.firstB = true;
 						this.lastB = true;
@@ -181,6 +175,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						this.defaultsrc = '/assets/images/student.png';
 						if (result && result.data && result.data[0]) {
 							this.studentdetails = result.data[0];
+							this.previousLoginId = this.studentdetails.au_login_id;
 							if (Number(this.processType) === 4) {
 								this.studentRouteMoveStoreService.setRouteStore(
 									this.studentdetails.em_admission_no,
@@ -224,6 +219,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 							}
 							this.studentLoginId = this.studentdetails.au_login_id;
 							if (Number(this.processType) === 4) {
+								this.previousAdmno = this.studentdetails.em_admission_no;
 								if (this.nextFlag) {
 									this.next.emit(this.studentLoginId);
 									this.next2.emit(this.studentdetails.em_admission_no);
@@ -245,6 +241,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 									this.key2.emit(this.studentdetails.em_admission_no);
 								}
 							} else if (Number(this.processType) === 2) {
+								this.previousAdmno = this.studentdetails.em_regd_no;
 								if (this.nextFlag) {
 									this.next.emit(this.studentLoginId);
 									this.next2.emit(this.studentdetails.em_regd_no);
@@ -266,6 +263,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 									this.key2.emit(this.studentdetails.em_regd_no);
 								}
 							} else if (Number(this.processType) === 3) {
+								this.previousAdmno = this.studentdetails.em_provisional_admission_no;
 								if (this.nextFlag) {
 									this.next.emit(this.studentLoginId);
 									this.next2.emit(
@@ -297,6 +295,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 									);
 								}
 							} else if (Number(this.processType) === 1) {
+								this.previousAdmno = this.studentdetails.em_enq_no;
 								if (this.nextFlag) {
 									this.next.emit(this.studentLoginId);
 									this.next2.emit(this.studentdetails.em_enq_no);
@@ -318,6 +317,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 									this.key2.emit(this.studentdetails.em_enq_no);
 								}
 							} else if (Number(this.processType) === 5) {
+								this.previousAdmno = this.studentdetails.em_alumini_no;
 								if (this.nextFlag) {
 									this.next.emit(this.studentLoginId);
 									this.next2.emit(this.studentdetails.em_alumini_no);
@@ -396,6 +396,12 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 								this.previousB = false;
 							}
 						}
+					} else {
+						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+						this.processtypeService.setProcesstype(this.studentRouteMoveStoreService.getProcessTypePrev());
+						this.processType = this.studentRouteMoveStoreService.getProcessTypePrev();
+						this.nextId(this.previousAdmno);
+						this.next.emit(this.previousLoginId);
 					}
 				});
 		}

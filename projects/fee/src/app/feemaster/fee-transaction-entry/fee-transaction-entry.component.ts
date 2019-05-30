@@ -15,7 +15,7 @@ import { CommonStudentProfileComponent } from '../common-student-profile/common-
 	styleUrls: ['./fee-transaction-entry.component.scss']
 })
 export class FeeTransactionEntryComponent implements OnInit {
-	@ViewChild (CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
+	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	displayedColumns: string[] = ['srno', 'feehead', 'feedue', 'concession', 'adjustment', 'netpay'];
 	INVOICE_ELEMENT_DATA: InvoiceElement[] = [];
 	dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
@@ -154,10 +154,10 @@ export class FeeTransactionEntryComponent implements OnInit {
 						feedue: item.invg_fh_amount,
 						concession: item.invg_fcc_amount,
 						adjustment: item.invg_adj_amount,
-// tslint:disable-next-line: max-line-length
+						// tslint:disable-next-line: max-line-length
 						netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
 					});
-// tslint:disable-next-line: max-line-length
+					// tslint:disable-next-line: max-line-length
 					this.invoiceTotal += Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
 					pos++;
 				}
@@ -215,23 +215,48 @@ export class FeeTransactionEntryComponent implements OnInit {
 	}
 	next(admno) {
 		this.loginId = admno;
-		this.getStudentInformation(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getStudentInformation(this.loginId);
+		} else {
+			this.getStudentInformation(this.loginId);
+		}
 	}
 	prev(admno) {
 		this.loginId = admno;
-		this.getStudentInformation(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getStudentInformation(this.loginId);
+		} else {
+			this.getStudentInformation(this.loginId);
+		}
 	}
 	first(admno) {
 		this.loginId = admno;
-		this.getStudentInformation(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getStudentInformation(this.loginId);
+		} else {
+			this.getStudentInformation(this.loginId);
+		}
 	}
 	last(admno) {
 		this.loginId = admno;
-		this.getStudentInformation(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getStudentInformation(this.loginId);
+		} else {
+			this.getStudentInformation(this.loginId);
+		}
 	}
 	key(admno) {
 		this.loginId = admno;
-		this.getStudentInformation(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getStudentInformation(this.loginId);
+		} else {
+			this.getStudentInformation(this.loginId);
+		}
 	}
 	next2(admno) {
 		this.feeLoginId = admno;
@@ -432,7 +457,7 @@ export class FeeTransactionEntryComponent implements OnInit {
 			});
 		}
 	}
-	checkStatus () {
+	checkStatus() {
 		if (this.commonStu.studentdetails.editable_status === '1') {
 			return true;
 		} else {

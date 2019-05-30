@@ -97,23 +97,43 @@ export class FeeLedgerComponent implements OnInit {
 	}
 	next(admno) {
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	prev(admno) {
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	first(admno) {
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	last(admno) {
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	key(admno) {
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	exportAsExcel() {
 		// tslint:disable-next-line:max-line-length
