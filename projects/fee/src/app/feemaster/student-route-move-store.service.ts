@@ -6,18 +6,17 @@ import { Injectable } from '@angular/core';
 export class StudentRouteMoveStoreService {
 	routeStore: RouteStore = new RouteStore();
 	processType: any = '';
-	constructor() {}
+	prevProcessType: any = '';
+	constructor() { }
 	setRouteStore(adm_no, login_id) {
 		return new Promise(resolve => {
 			this.routeStore.adm_no = adm_no;
 			this.routeStore.login_id = login_id;
-			console.log(this.routeStore);
 			resolve();
 		});
 	}
 	getRouteStore() {
 		return new Promise(resolve => {
-			console.log(this.routeStore);
 			resolve(this.routeStore);
 		});
 	}
@@ -26,6 +25,12 @@ export class StudentRouteMoveStoreService {
 	}
 	getProcesRouteType() {
 		return this.processType;
+	}
+	setProcessTypePrev(prev_type) {
+		this.prevProcessType = prev_type;
+	}
+	getProcessTypePrev() {
+		return this.prevProcessType;
 	}
 }
 

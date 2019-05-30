@@ -48,6 +48,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
+		this.stoppageArray = [];
+		this.slabArray = [];
 		this.terminateStatus = 'Terminate Transport Facility';
 		this.hostelStatus = 'Terminate Hostel Facility';
 		this.buildForm();
@@ -595,21 +597,21 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.editModal.openModal({ data: [this.finalArray], reqParam: [this.reqObj] });
 		}
 	}
-	getStoppages($event) {
+	getStoppages(value) {
 		this.accountsForm.patchValue({
 			accd_tsp_id: '',
 			accd_ts_id: ''
 		});
 		this.stoppageArray = [];
-		this.feeService.getStoppagesPerRoute({ tr_id: $event.value }).subscribe((result: any) => {
+		this.feeService.getStoppagesPerRoute({ tr_id: value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.stoppageArray = result.data;
 			}
 		});
 	}
-	getSlab($event) {
+	getSlab(value) {
 		this.slabArray = [];
-		this.feeService.getTransportSlabPerStoppages({ tsp_id: $event.value }).subscribe((result: any) => {
+		this.feeService.getTransportSlabPerStoppages({ tsp_id: value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.slabArray = result.data;
 				this.slabModel = this.slabArray[0].ts_id;

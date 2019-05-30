@@ -109,6 +109,11 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.buildForm();
 		this.getCalculationMethods();
 		this.getInvoiceFeeMonths();
+		if (this.studentRouteMoveStoreService.getProcesRouteType()) {
+			this.type = this.studentRouteMoveStoreService.getProcesRouteType();
+		} else {
+			this.type = '4';
+		}
 		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
 			if (data.adm_no && data.login_id) {
 				this.lastRecordAdmno = data.adm_no;
@@ -196,15 +201,30 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	key2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ inv_process_usr_no: event });
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getInvoice({ inv_process_usr_no: event });
+		} else {
+			this.getInvoice({ inv_process_usr_no: event });
+		}
 	}
 	next2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ inv_process_usr_no: event });
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getInvoice({ inv_process_usr_no: event });
+		} else {
+			this.getInvoice({ inv_process_usr_no: event });
+		}
 	}
 	prev2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ inv_process_usr_no: event });
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getInvoice({ inv_process_usr_no: event });
+		} else {
+			this.getInvoice({ inv_process_usr_no: event });
+		}
 	}
 	first2(event) {
 		this.currentAdmno = event;
@@ -212,7 +232,12 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	last2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ inv_process_usr_no: event });
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getInvoice({ inv_process_usr_no: event });
+		} else {
+			this.getInvoice({ inv_process_usr_no: event });
+		}
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -291,7 +316,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	async insertInvoice() {
 		if (this.invoiceCreationForm.valid) {
-			this.feeRenderId = '0';
+
 			const formData: any = await this.insertInvoiceData(Object.assign({}, this.invoiceCreationForm.value));
 			const arrAdmno = [this.currentLoginId];
 			formData.login_id = arrAdmno;
@@ -370,7 +395,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
 	openConsolidateDialog = (data) => this.consolidateModal.openModal(data);
 	deleteConfirm(value) {
-		this.feeRenderId = '0';
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -393,7 +417,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		});
 	}
 	recalculateConfirm(value) {
-		this.feeRenderId = '0';
 		this.invoiceCreationForm.patchValue({
 			inv_id: this.fetchInvId(),
 			recalculation_flag: '1'
@@ -421,7 +444,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 
 	}
 	consolidateConfirm(value) {
-		this.feeRenderId = '0';
 		this.feeService.consolidateInvoice({ inv_id: this.fetchInvId() }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -451,7 +473,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	applyFilter(filtervalue: string) {
 		this.dataSource.filter = filtervalue.trim().toLowerCase();
 	}
-	checkStatus () {
+	checkStatus() {
 		if (this.commonStu.studentdetails.editable_status === '1') {
 			return true;
 		} else {
