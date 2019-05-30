@@ -28,7 +28,7 @@ export class FilterModalComponent implements OnInit {
 	filterone = true;
 	filterdivtwo = false;
 	ELEMENT_DATA: any[];
-	displayedColumns: string[] = ['fieldlabel', 'fromto', 'equalto', 'discrete', 'action'];
+	displayedColumns: string[] = ['srno', 'fieldlabel', 'fromto', 'equalto', 'discrete', 'action'];
 	dataSource: any;
 	filterdiv = false;
 	currentFilterStatus: any = {};
@@ -143,6 +143,7 @@ export class FilterModalComponent implements OnInit {
 					this.filterArray = result.data;
 					this.ELEMENT_DATA = [];
 					this.dataSource = new MatTableDataSource<DynamicReport>(this.ELEMENT_DATA);
+					let pos = 1;
 					if (this.filterArray.length > 0) {
 						for (const item of this.filterArray) {
 							const parentfilter = this.getFilterFromParent(item.ff_id);
@@ -153,6 +154,7 @@ export class FilterModalComponent implements OnInit {
 								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
 								item.ff_field_name !== 'em_regd_no')) {
 									this.ELEMENT_DATA.push({
+										sr_no: pos,
 										ff_id: item.ff_id,
 										ff_field_name: item.ff_field_name,
 										ff_field_type: item.ff_field_type,
@@ -166,10 +168,12 @@ export class FilterModalComponent implements OnInit {
 										discretevalue: '',
 										action: item
 									});
+									pos++;
 								} else 	if (Number(this.processType) === 2 && (item.ff_field_name !== 'em_provisional_admission_no' &&
 								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
 								item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
+										sr_no: pos,
 										ff_id: item.ff_id,
 										ff_field_name: item.ff_field_name,
 										ff_field_type: item.ff_field_type,
@@ -183,10 +187,12 @@ export class FilterModalComponent implements OnInit {
 										discretevalue: '',
 										action: item
 									});
+									pos++;
 								} else 	if (Number(this.processType) === 3 && (item.ff_field_name !== 'em_regd_no' &&
 								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
 								item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
+										sr_no: pos,
 										ff_id: item.ff_id,
 										ff_field_name: item.ff_field_name,
 										ff_field_type: item.ff_field_type,
@@ -200,10 +206,12 @@ export class FilterModalComponent implements OnInit {
 										discretevalue: '',
 										action: item
 									});
+									pos++;
 								} else 	if (Number(this.processType) === 4 && (item.ff_field_name !== 'em_provisional_admission_no' &&
 								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_regd_no' &&
 								item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
+										sr_no: pos,
 										ff_id: item.ff_id,
 										ff_field_name: item.ff_field_name,
 										ff_field_type: item.ff_field_type,
@@ -217,10 +225,12 @@ export class FilterModalComponent implements OnInit {
 										discretevalue: '',
 										action: item
 									});
+									pos++;
 								} else 	if (Number(this.processType) === 5 && (item.ff_field_name !== 'em_provisional_admission_no' &&
 								item.ff_field_name !== 'em_regd_no' && item.ff_field_name !== 'em_admission_no' &&
 								item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
+										sr_no: pos,
 										ff_id: item.ff_id,
 										ff_field_name: item.ff_field_name,
 										ff_field_type: item.ff_field_type,
@@ -234,6 +244,7 @@ export class FilterModalComponent implements OnInit {
 										discretevalue: '',
 										action: item
 									});
+									pos++;
 								}
 							}
 						}
@@ -471,13 +482,13 @@ export class FilterModalComponent implements OnInit {
 						});
 						break;
 					case 'getCategory':
-						this.sisService.getCategory().subscribe((result: any) => {
+						this.feeService.getFeeOthers({}).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								if (result.data.length > 0) {
 									for (const item1 of result.data) {
 										this.dropdownArray.push({
-											field_id: item1[item.fieldId],
-											field_name: item1[item.fieldValue]
+											field_id: item1['fo_id'],
+											field_name: item1['fo_name']
 										});
 									}
 								}

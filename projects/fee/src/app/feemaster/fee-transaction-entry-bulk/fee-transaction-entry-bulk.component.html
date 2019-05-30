@@ -36,10 +36,9 @@
             <div class="col-3 remove-col-padding-left">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Payment Mode</mat-label>
-                <mat-select formControlName="ftr_pay_id" placeholder="Payment Mode" required>
-                  <mat-option value="">Please Select</mat-option>
-                  <mat-option *ngFor="let mode of payModes" [hidden]="!(mode.pay_id === '2')" [value]="mode.pay_id">
-                    {{mode.pay_name}}</mat-option>
+                <mat-select formControlName="ftr_pay_id" placeholder="Payment Mode" disabled
+                required>
+                  <mat-option value="2">Cash at Bank</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>

@@ -155,7 +155,13 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	}
 	getReceiptBifurcation(invoiceNo) {
 		this.invoiceBifurcationArray = [];
-		this.feeService.getReceiptBifurcation({ flgr_invoice_receipt_no: invoiceNo }).subscribe((result: any) => {
+		let recieptJSON = {};
+		if (this.data.from) {
+			recieptJSON = {inv_id : invoiceNo};
+		} else {
+			recieptJSON = {flgr_invoice_receipt_no: invoiceNo };
+		}
+		this.feeService.getReceiptBifurcation(recieptJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				if (result.data.length > 0) {
 					this.invoiceDetails = result.data[0];

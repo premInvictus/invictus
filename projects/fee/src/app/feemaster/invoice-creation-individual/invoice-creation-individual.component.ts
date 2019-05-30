@@ -10,6 +10,7 @@ import { InvoiceElement } from './invoice-element.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
+import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	ELEMENT_DATA: InvoiceElement[] = [];
 	displayedColumns: string[] =
-		['select', 'srno', 'invoiceno', 'feeperiod', 'feedue', 'status', 'action'];
+		['select', 'srno', 'invoiceno', 'feeperiod', 'invoicedate', 'duedate', 'feedue', 'status', 'action'];
 	dataSource = new MatTableDataSource<InvoiceElement>(this.ELEMENT_DATA);
 	selection = new SelectionModel<InvoiceElement>(true, []);
 	filterResult: any[] = [];
@@ -280,6 +281,8 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				invoiceno: element.inv_invoice_no,
 				inv_id: element.inv_id,
 				feeperiod: element.fp_name,
+				invoicedate: element.inv_invoice_date,
+				duedate: element.inv_due_date,
 				feedue: element.inv_fee_amount,
 				remark: element.inv_remark,
 				status: element.inv_paid_status,
@@ -479,5 +482,16 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		} else {
 			return false;
 		}
+	}
+	openDialog2(inv_id , editFlag) {
+		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
+			width: '80%',
+			data: {
+				invoiceNo: inv_id,
+				edit: editFlag,
+				from: 'invoice'
+			},
+			hasBackdrop: true
+		});
 	}
 }
