@@ -279,8 +279,15 @@
 }
 
 .sis-student-pic__size {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
+}
+
+.sis-parent-pic__size {
+    width: 200px !important;
+    height: 200px !important;
+    border-radius: 100%;
+    border: 2px solid #dfdfdf;
 }
 
 // $imgpath: '/../assets/images';

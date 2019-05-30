@@ -279,3 +279,32 @@
 .sis-student-img__container {
     height: 100%;
 }
+
+.registration-container__box {
+    margin-top: 8px;
+    
+    padding: 7px 20px;
+    width: 104px;
+    height: 28px;
+    border-radius: 5px;
+    background-color: #007D9E;
+}
+
+.liveadm-container__box {
+    width: 100%;
+    height: 40px;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    background-color: #1E88E5;
+    color: #fff;
+    padding: 10px 37px;
+    border-radius: 5px;
+}
+
+.grey-container__box {
+    background-color: #ebebeb;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    padding: 5px;
+}

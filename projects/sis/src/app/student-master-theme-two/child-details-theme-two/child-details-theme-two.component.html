@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12 remove-col-padding">
         <div class="row remove-top-margin">
-          <div class="col-3" *ngIf="checkIfFieldExist('upd_dob')">
+          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('upd_dob')">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Date of Birth</mat-label>
               <input formControlName="upd_dob" [max]="dobDate" matInput [matDatepicker]="picker"
@@ -16,7 +16,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-3" *ngIf="checkIfFieldExist('upd_doj')">
+          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('upd_doj')">
               <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Date of Joining</mat-label>
               <input formControlName="upd_doj" [max]="maxDate" matInput [matDatepicker]="picker1"
@@ -29,7 +29,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-3" *ngIf="checkIfFieldExist('upd_gender')">
+          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('upd_gender')">
               <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Gender</mat-label>
               <mat-select placeholder="Gender" formControlName="upd_gender" required [disabled]="viewOnly"
@@ -44,7 +44,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-3" *ngIf="checkIfFieldExist('upd_category')">
+          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('upd_category')">
               <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Category</mat-label>
               <mat-select placeholder="Category" formControlName="upd_category" required [disabled]="viewOnly"
@@ -59,13 +59,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="row remove-top-margin">
-      <div class="col-12 remove-col-padding">
-        <div class="row remove-top-margin">
-          <div class="col-3" *ngIf="checkIfFieldExist('upd_religion_id')">
+          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('upd_religion_id')">
               <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Religion</mat-label>
               <mat-select formControlName="upd_religion_id" placeholder="Religion" required [disabled]="viewOnly"
@@ -80,7 +74,14 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-3" *ngIf="checkIfFieldExist('upd_mt_id')">
+        </div>
+      </div>
+    </div>
+    <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+        <div class="row remove-top-margin">
+          
+          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('upd_mt_id')">
               <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Mother Tongue</mat-label>
               <mat-select formControlName="upd_mt_id" placeholder="Mother Tongue" required [disabled]="viewOnly"
@@ -95,7 +96,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-3" *ngIf="checkIfFieldExist('upd_nationality')">
+          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('upd_nationality')">
               <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Nationality</mat-label>
               <mat-select placeholder="Nationality" formControlName="upd_nationality" required [disabled]="viewOnly"
@@ -110,7 +111,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-3" *ngIf="checkIfFieldExist('upd_aadhaar_no')">
+          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('upd_aadhaar_no')">
               <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Aadhar No.</mat-label>
               <input formControlName="upd_aadhaar_no" mask="0000 0000 0000" minlength="12" maxlength="14" matInput
@@ -125,7 +126,7 @@
     </div>
   </form>
   <div class="row remove-top-margin">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding">
       <div *ngIf="!(paddressform?.value?.ea_same_residential_address)" class="row remove-top-margin">
         <div class="col-12 remove-col-padding">
           <form [formGroup]="paddressform" novalidate>
@@ -135,19 +136,20 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-12 remove-col-padding" *ngIf="checkIfFieldExist('ea_address1')">
-                  <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Address</mat-label>
-                  <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address" required
-                    [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-              </div>
+              
             </div>
             <div class="row remove-top-margin">
-              <div class="col-3 remove-col-padding-left" *ngIf="checkIfFieldExist('ea_city')">
+                <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('ea_address1')">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Address</mat-label>
+                    <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address" required
+                      [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
+                    <mat-error>
+                      This field is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('ea_city')">
                   <mat-form-field class="form-field" appearance="outline">
                       <mat-label>City</mat-label>
                   <input type="text" matInput placeholder="City" formControlName="ea_city" required
@@ -165,7 +167,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-3" *ngIf="checkIfFieldExist('ea_state')">
+              <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('ea_state')">
                   <mat-form-field class="form-field" appearance="outline">
                       <mat-label>State</mat-label>
                   <mat-select formControlName="ea_state" placeholder="State" required disabled="true"
@@ -180,7 +182,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-3" *ngIf="checkIfFieldExist('ea_country')">
+              <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('ea_country')">
                   <mat-form-field class="form-field" appearance="outline">
                       <mat-label>Country</mat-label>
                   <mat-select formControlName="ea_country" placeholder="Country" required disabled="true"
@@ -195,7 +197,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-3 remove-col-padding-right" *ngIf="checkIfFieldExist('ea_pincode')">
+              <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('ea_pincode')">
                   <mat-form-field class="form-field" appearance="outline">
                       <mat-label>Pin Code</mat-label>
                   <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
