@@ -24,7 +24,18 @@
                       </div>
                   </div>
                   <div class="row">
+                    <div class="col-2 text-center">
+                        <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
+                        multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
+                        style="display: none !important">
+                    
+                      <a class=" text-center" *ngIf="!viewOnly">
+                        <mat-icon class="margin-top-10 cloud-icon btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
+                            class="btn-document-label" [for]="item.docreq_id">Choose
+                            File</label></a>
+                    </div>
                       <ng-container *ngFor="let img of this.imageArray;let i = index">
+                        
                       <div class="col-1 tab-custom-col-20 col-doc-img-3 custom-col-15" *ngIf="img.ed_docreq_id === item.docreq_id">
                           <div class="remove-col-padding" >
                               <div>
