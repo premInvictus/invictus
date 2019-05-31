@@ -49,7 +49,7 @@ export class FilterModalComponent implements OnInit {
 		{ filterId: 'epd_parent_occupation_type', apiName: 'getOccupationType', fieldId: 'ocpt_id', fieldValue: 'ocpt_name' },
 		{ filterId: 'au_enrollment_status', apiName: 'getEnrollmentStatus', fieldId: 'enrol_id', fieldValue: 'enrol_name' },
 		{ filterId: 'upd_gender', apiName: 'getGender', fieldId: 'gen_id', fieldValue: 'gen_name' },
-		{ filterId: 'upd_category', apiName: 'getCategory', fieldId: 'cat_id', fieldValue: 'cat_name' },
+		{ filterId: 'accd_fo_id', apiName: 'getCategory', fieldId: 'fo_id', fieldValue: 'fo_name' },
 		{ filterId: 'accd_fcg_id', apiName: 'getConcessionCategory', fieldId: 'fcc_id', fieldValue: 'fcc_name' },
 		{ filterId: 'accd_ts_id', apiName: 'getSlabs', fieldId: 'ts_id', fieldValue: 'ts_name' },
 		{ filterId: 'accd_tr_id', apiName: 'getRoutes', fieldId: 'tr_id', fieldValue: 'tr_route_name' }
@@ -489,8 +489,8 @@ export class FilterModalComponent implements OnInit {
 								if (result.data.length > 0) {
 									for (const item1 of result.data) {
 										this.dropdownArray.push({
-											field_id: item1['fo_id'],
-											field_name: item1['fo_name']
+											field_id: item1[item.fieldId],
+											field_name: item1[item.fieldValue]
 										});
 									}
 								}
