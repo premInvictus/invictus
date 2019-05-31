@@ -1,7 +1,7 @@
 <div class="padding-15">
     <form [formGroup]="awardsform">
   <div class="row" *ngIf="!viewOnly">
-      <div class="col-3" *ngIf="checkIfFieldExist('eaw_activity_name')">
+      <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('eaw_activity_name')">
             <mat-form-field  class="form-field" appearance="outline">
                   <mat-label>Activity Name</mat-label>
              <mat-select placeholder="Activity Name" [disabled]="viewOnly" formControlName="eaw_activity_name"
@@ -14,7 +14,7 @@
              </mat-error>
           </mat-form-field>
        </div>
-       <div class="col-3" *ngIf="checkIfFieldExist('eaw_level_of_interest')">
+       <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('eaw_level_of_interest')">
             <mat-form-field  class="form-field" appearance="outline">
                   <mat-label>Level of Interest</mat-label>
              <mat-select placeholder="Level of Interest" [disabled]="viewOnly" formControlName="eaw_level_of_interest"
@@ -27,7 +27,7 @@
              </mat-error>
           </mat-form-field>
        </div>
-       <div class="col-3" *ngIf="checkIfFieldExist('eaw_authority')">
+       <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('eaw_authority')">
             <mat-form-field  class="form-field" appearance="outline">
                   <mat-label>Awarding Authority</mat-label>
              <mat-select placeholder="Awarding Authority" [disabled]="viewOnly" formControlName="eaw_authority"
@@ -40,7 +40,7 @@
              </mat-error>
           </mat-form-field>
        </div>
-       <div class="col-3" *ngIf="checkIfFieldExist('eaw_event_level')">
+       <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('eaw_event_level')">
             <mat-form-field  class="form-field" appearance="outline">
                   <mat-label>Event Level</mat-label>
              <mat-select placeholder="Event Level" formControlName="eaw_event_level" required [disabled]="viewOnly"
@@ -53,19 +53,20 @@
              </mat-error>
           </mat-form-field>
        </div>
+       <div class="col-2 sis-col-20">
+            <mat-form-field  class="form-field" appearance="outline">
+                  <mat-label>Remarks</mat-label>
+               <input (keyup)="capitalizeRemarks($event)" matInput placeholder="Remarks (eg. Excellent)" [readonly]="viewOnly" formControlName="eaw_teacher_remark"
+                  required [errorStateMatcher]="confirmValidParentMatcher">
+               <mat-error>
+                  Remarks is required
+               </mat-error>
+            </mat-form-field>
+       </div>
   </div>
   <div *ngIf="!viewOnly" class="row">
-    <div class="col-9">
-         <mat-form-field  class="form-field" appearance="outline">
-               <mat-label>Remarks</mat-label>
-            <input (keyup)="capitalizeRemarks($event)" matInput placeholder="Remarks (eg. Excellent)" [readonly]="viewOnly" formControlName="eaw_teacher_remark"
-               required [errorStateMatcher]="confirmValidParentMatcher">
-            <mat-error>
-               Remarks is required
-            </mat-error>
-         </mat-form-field>
-    </div>
-    <div class="col-3">
+    
+    <div class="col-12 text-center">
         <button *ngIf="!awardUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral" (click)="addAwardsList()">Add
             to list</button>
          <button *ngIf="awardUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"  (click)="updateAwardsList()">Update</button>

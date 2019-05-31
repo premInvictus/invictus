@@ -1,7 +1,7 @@
 <div class="padding-15">
   <form [formGroup]="Education_Form">
   <div class="row" *ngIf="!viewOnly">
-    <div *ngIf="checkIfFieldExist('eed_previous_school_name')" class="col-2">
+    <div *ngIf="checkIfFieldExist('eed_previous_school_name')" class="col-2 sis-col-20">
         <mat-form-field  class="form-field" appearance="outline">
             <mat-label>Previous School Name</mat-label>
             <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="eed_previous_school_name"  required
@@ -11,7 +11,7 @@
              </mat-error>
           </mat-form-field>
     </div>
-    <div *ngIf="checkIfFieldExist('eed_current_class')" class="col-2">
+    <div *ngIf="checkIfFieldExist('eed_current_class')" class="col-2 sis-col-20">
         <mat-form-field  class="form-field" appearance="outline">
             <mat-label>Current Class</mat-label>
             <mat-select formControlName="eed_current_class" required [errorStateMatcher]="confirmValidParentMatcher"
@@ -26,7 +26,7 @@
                </mat-error>
           </mat-form-field>
     </div>
-    <div class="col-2" *ngIf="checkIfFieldExist('eed_admitted_class')">
+    <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('eed_admitted_class')">
         <mat-form-field  class="form-field" appearance="outline">
             <mat-label>Admitted Class</mat-label>
         <mat-select formControlName="eed_admitted_class" placeholder="Admitted in Class" required
@@ -41,7 +41,7 @@
            </mat-error>
       </mat-form-field>
     </div>
-    <div *ngIf="checkIfFieldExist('eed_reason_of_leaving')" class="col-2">
+    <div *ngIf="checkIfFieldExist('eed_reason_of_leaving')" class="col-2 sis-col-20">
         <mat-form-field  class="form-field" appearance="outline">
             <mat-label>Reason of Leaving</mat-label>
             <mat-select formControlName="eed_reason_of_leaving" [errorStateMatcher]="confirmValidParentMatcher"
@@ -56,7 +56,7 @@
                </mat-error>
           </mat-form-field>
     </div>
-    <div class="col-2" *ngIf="checkIfFieldExist('eed_joining_from')">
+    <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('eed_joining_from')">
         <mat-form-field  class="form-field" appearance="outline">
             <mat-label>Joining From</mat-label>
             <input formControlName="eed_joining_from" required [max]="maxDate" [errorStateMatcher]="confirmValidParentMatcher"
@@ -69,7 +69,7 @@
                </mat-error>
           </mat-form-field>
     </div>
-    <div class="col-2" *ngIf="checkIfFieldExist('eed_joining_to')">
+    <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('eed_joining_to')">
         <mat-form-field  class="form-field" appearance="outline">
             <mat-label>Joining To</mat-label>
         <input formControlName="eed_joining_to" [max]="maxDate" matInput [matDatepicker]="picker2" placeholder="Date of Leaving"
@@ -81,7 +81,7 @@
          </mat-error>
       </mat-form-field>
     </div>
-    <div class="col-2" *ngIf="checkIfFieldExist('eed_specify_reason')">
+    <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('eed_specify_reason')">
         <mat-form-field  class="form-field" appearance="outline">
             <mat-label>Specify Reason</mat-label>
         <input class="text-capitalize" formControlName="eed_specify_reason"  matInput placeholder="Specify the Reason"
@@ -91,13 +91,12 @@
          </mat-error>
       </mat-form-field>
     </div>
-    <div class="col-2">
+    <div class="col-2 sis-col-20 text-center margin-top-12">
       <button *ngIf="!educationUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral" (click)="addPreviousEducations()">Add To List</button>
       <button *ngIf="educationUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral" (click)="updatePreviousEducationList()">Update List</button>
     </div>
   </div>
 </form>
-<br>
   <div class="row" *ngIf="previousEducations.length > 0 ">
     <div class="col-12">
       <table class="table table-borderd table-stripped custom-table">

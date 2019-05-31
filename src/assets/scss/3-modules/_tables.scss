@@ -323,3 +323,34 @@ mat-row.fee-row {
 }
 
 
+table.custom-table th {
+    border-top: 2px solid #89A8C9 !important;
+}
+
+table.custom-table {  
+    color: #222F3E;
+    font-family: Helvetica, Arial, sans-serif;
+    width: 100%; 
+    border-collapse: 
+    collapse; border-spacing: 0; 
+}
+
+td.custom-td, th.custom-th {  
+    border: 1px solid #89A8C9 !important; 
+    height: 30px; 
+    transition: all 0.3s;  
+}
+
+th.custom-th {  
+    background: #C8D6E5;  
+    font-weight: bold;
+}
+
+td.custom-td {  
+    background: #FAFAFA;
+    text-align: center;
+}
+
+.table tbody td {
+    border: 1px solid #89A8C9;
+}

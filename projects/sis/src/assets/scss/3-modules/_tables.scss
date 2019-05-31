@@ -22,29 +22,29 @@ td.remove-tb-padding {
     width: 100%;
 }
 
-table.custom-table {  
-    color: #333;
-    font-family: Helvetica, Arial, sans-serif;
-    width: 100%; 
-    border-collapse: 
-    collapse; border-spacing: 0; 
-}
+// table.custom-table {  
+//     color: #333;
+//     font-family: Helvetica, Arial, sans-serif;
+//     width: 100%; 
+//     border-collapse: 
+//     collapse; border-spacing: 0; 
+// }
 
-td.custom-td, th.custom-th {  
-    border: 1px solid transparent; /* No more visible border */
-    height: 30px; 
-    transition: all 0.3s;  /* Simple transition for hover effect */
-}
+// td.custom-td, th.custom-th {  
+//     border: 1px solid transparent; 
+//     height: 30px; 
+//     transition: all 0.3s;  
+// }
 
-th.custom-th {  
-    background: #DFDFDF;  /* Darken header a bit */
-    font-weight: bold;
-}
+// th.custom-th {  
+//     background: #DFDFDF;  
+//     font-weight: bold;
+// }
 
-td.custom-td {  
-    background: #FAFAFA;
-    text-align: center;
-}
+// td.custom-td {  
+//     background: #FAFAFA;
+//     text-align: center;
+// }
 
 /* Cells in even rows (2,4,6...) are one color */        
 tr.custom-tr:nth-child(even) td.custom-td { background: #F1F1F1; }   
