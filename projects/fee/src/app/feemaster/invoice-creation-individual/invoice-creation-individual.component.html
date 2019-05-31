@@ -36,6 +36,13 @@
               <h6>Note: Student has been promoted to next session</h6>
             </span>
           </div>
+          <div *ngIf="checkStatus()" class="row">
+            <div class="col-4 margin-top-25 custom-col-20">
+              <div class="float-left">
+                <h4 class="font-medium">Select Parameters</h4>
+              </div>
+            </div>
+          </div>
           <div class="row" *ngIf="checkStatus()">
             <div class="col-4">
               <mat-form-field appearance="outline" class="form-field">
@@ -54,7 +61,7 @@
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
             </div>
-            <div class="col-4 remove-col-padding-right">
+            <div class="col-4">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Due Date</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Due Date" formControlName="inv_due_date"
@@ -65,12 +72,12 @@
             </div>
           </div>
           <div class="row" *ngIf="checkStatus()">
-            <div class="col-6 remove-col-padding-left">
+            <div class="col-6">
               <mat-checkbox formControlName="recalculation_flag"><span class="font-size-16 font-medium">Recalulate All
                   Unpaid Invoices</span></mat-checkbox>
             </div>
 
-            <div class="col-6 remove-col-padding-right text-right">
+            <div class="col-6 text-right">
               <button *ngIf="commonAPIService.isExistUserAccessMenu('359')" mat-raised-button
                 class="btn-primary  btn-width-164 btn-success" (click)="insertInvoice()">Generate Invoice</button>
               <button mat-raised-button style="margin-left: 10px" class="print-btn"
@@ -86,7 +93,7 @@
       <mat-card class="card-top-title__container card-height-440 card-height-560 ">
         <div class="row">
           <div class="col-4">
-            <mat-form-field>
+            <mat-form-field *ngIf="ELEMENT_DATA.length > 0">
               <input class="margin-left-10" matInput placeholder="Filter" (keyup)="applyFilter($event.target.value)">
               <mat-icon matPrefix>filter_list</mat-icon>
             </mat-form-field>
@@ -104,8 +111,15 @@
               (click)="openDeleteDialog(fetchInvId())">Delete</button>
           </div>
         </div>
+        <div *ngIf="checkStatus()" class="row">
+          <div class="col-4 margin-top-25 custom-col-20">
+            <div class="float-left">
+              <h4 class="font-medium">Invoice Details</h4>
+            </div>
+          </div>
+        </div>
         <div class="row">
-          <div class="col-12 remove-col-padding">
+          <div class="col-12">
             <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center">
               <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef class="select-checkbox">
@@ -128,7 +142,7 @@
               <ng-container matColumnDef="invoiceno">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice No </th>
                 <td mat-cell *matCellDef="let element"> <a class="font-skyblue text-link font-size-14"
-                    (click)="openDialog(element.inv_id, false)">{{element.invoiceno}}</a> </td>
+                    (click)="openDialog(element.inv_id,element,false)">{{element.invoiceno}}</a> </td>
               </ng-container>
               <ng-container matColumnDef="feeperiod">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Period </th>
@@ -163,7 +177,7 @@
                 <th mat-header-cell *matHeaderCellDef> Action </th>
                 <td mat-cell *matCellDef="let element">
                   <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('363')"
-                    class="material-icons icon-edit" (click)="openDialog(element.inv_id, true)">create</i>
+                    class="material-icons icon-edit" (click)="openDialog(element.inv_id,element,true)">create</i>
                   <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('362')"
                     class="material-icons icon-danger icon-spacer"
                     (click)="openDeleteDialog([element.inv_id])">delete</i>

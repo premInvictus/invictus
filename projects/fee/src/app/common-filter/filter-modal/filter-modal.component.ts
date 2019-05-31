@@ -151,8 +151,8 @@ export class FilterModalComponent implements OnInit {
 								this.ELEMENT_DATA.push(parentfilter);
 							} else {
 								if (Number(this.processType) === 1 && (item.ff_field_name !== 'em_provisional_admission_no' &&
-								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
-								item.ff_field_name !== 'em_regd_no')) {
+									item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
+									item.ff_field_name !== 'em_regd_no')) {
 									this.ELEMENT_DATA.push({
 										sr_no: pos,
 										ff_id: item.ff_id,
@@ -169,9 +169,9 @@ export class FilterModalComponent implements OnInit {
 										action: item
 									});
 									pos++;
-								} else 	if (Number(this.processType) === 2 && (item.ff_field_name !== 'em_provisional_admission_no' &&
-								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
-								item.ff_field_name !== 'em_enq_no')) {
+								} else if (Number(this.processType) === 2 && (item.ff_field_name !== 'em_provisional_admission_no' &&
+									item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
+									item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
 										sr_no: pos,
 										ff_id: item.ff_id,
@@ -188,9 +188,9 @@ export class FilterModalComponent implements OnInit {
 										action: item
 									});
 									pos++;
-								} else 	if (Number(this.processType) === 3 && (item.ff_field_name !== 'em_regd_no' &&
-								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
-								item.ff_field_name !== 'em_enq_no')) {
+								} else if (Number(this.processType) === 3 && (item.ff_field_name !== 'em_regd_no' &&
+									item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
+									item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
 										sr_no: pos,
 										ff_id: item.ff_id,
@@ -207,9 +207,9 @@ export class FilterModalComponent implements OnInit {
 										action: item
 									});
 									pos++;
-								} else 	if (Number(this.processType) === 4 && (item.ff_field_name !== 'em_provisional_admission_no' &&
-								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_regd_no' &&
-								item.ff_field_name !== 'em_enq_no')) {
+								} else if (Number(this.processType) === 4 && (item.ff_field_name !== 'em_provisional_admission_no' &&
+									item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_regd_no' &&
+									item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
 										sr_no: pos,
 										ff_id: item.ff_id,
@@ -226,9 +226,9 @@ export class FilterModalComponent implements OnInit {
 										action: item
 									});
 									pos++;
-								} else 	if (Number(this.processType) === 5 && (item.ff_field_name !== 'em_provisional_admission_no' &&
-								item.ff_field_name !== 'em_regd_no' && item.ff_field_name !== 'em_admission_no' &&
-								item.ff_field_name !== 'em_enq_no')) {
+								} else if (Number(this.processType) === 5 && (item.ff_field_name !== 'em_provisional_admission_no' &&
+									item.ff_field_name !== 'em_regd_no' && item.ff_field_name !== 'em_admission_no' &&
+									item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
 										sr_no: pos,
 										ff_id: item.ff_id,
@@ -310,10 +310,12 @@ export class FilterModalComponent implements OnInit {
 							if (result && result.status === 'ok') {
 								if (result.data.length > 0) {
 									for (const item1 of result.data) {
-										this.dropdownArray.push({
-											field_id: item1[item.fieldId],
-											field_name: item1[item.fieldValue]
-										});
+										if (Number(item1.sec_id) !== 0) {
+											this.dropdownArray.push({
+												field_id: item1[item.fieldId],
+												field_name: item1[item.fieldValue]
+											});
+										}
 									}
 								}
 							} else {
@@ -603,15 +605,16 @@ export class FilterModalComponent implements OnInit {
 			this.filtersItemArray.splice(existi, 1);
 		}
 		if (this.filtertype === 'fromto') {
-			this.currentFilter.fromto = this.commonAPIService.dateConvertion(this.currentFilter.from, 'd-MMM-y') + ' - ' +
-				this.commonAPIService.dateConvertion(this.currentFilter.to, 'd-MMM-y');
-			this.filtersItemArray.push({
-				filter: this.currentFilter,
-				ff_field_name: this.currentFilter.ff_field_name,
-				filter_type: 'Fixed',
-				filter_from: this.currentFilter.from,
-				filter_to: this.currentFilter.to
-			});
+			if (this.currentFilter.ff_field_type === 'text') {
+				this.currentFilter.fromto = this.currentFilter.from + ' - ' + this.currentFilter.to;
+				this.filtersItemArray.push({
+					filter: this.currentFilter,
+					ff_field_name: this.currentFilter.ff_field_name,
+					filter_type: 'Fixed',
+					filter_from: this.currentFilter.from,
+					filter_to: this.currentFilter.to
+				});
+			}
 		} else if (this.filtertype === 'equalto') {
 			this.filtersItemArray.push({
 				filter: this.currentFilter,

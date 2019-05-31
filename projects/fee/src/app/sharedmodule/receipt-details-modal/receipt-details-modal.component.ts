@@ -181,6 +181,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				const length = result.data.split('/').length;
 				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}

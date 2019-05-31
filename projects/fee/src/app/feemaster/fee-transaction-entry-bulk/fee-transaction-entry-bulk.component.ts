@@ -164,7 +164,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					saveAs(result.data, result.data.split('/')[length - 1]);
+					window.open(result.data, '_blank');
 					this.reset();
 					this.invoiceArray = [];
 				} else {
