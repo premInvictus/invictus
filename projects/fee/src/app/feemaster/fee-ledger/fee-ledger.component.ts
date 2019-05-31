@@ -148,7 +148,8 @@ export class FeeLedgerComponent implements OnInit {
 			width: '80%',
 			data: {
 				invoiceNo: invoiceNo,
-				edit: edit
+				edit: edit,
+				paidStatus: 'paid'
 			},
 			hasBackdrop: true
 		});

@@ -4,9 +4,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { InvoiceDetails } from './invoice-details.model';
-import { FeeService, CommonAPIService } from '../../_services/index';
+import { FeeService, CommonAPIService, ProcesstypeFeeService } from '../../_services/index';
+import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { saveAs } from 'file-saver';
-
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
 	selector: 'app-invoice-details-modal',
 	templateUrl: './invoice-details-modal.component.html',
@@ -31,8 +32,12 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		public dialogRef: MatDialogRef<InvoiceDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
 		private feeService: FeeService,
+		private studentRouteStoreService: StudentRouteMoveStoreService,
+		public processtypeService: ProcesstypeFeeService,
 		private fb: FormBuilder,
-		public commonAPIService: CommonAPIService
+		public commonAPIService: CommonAPIService,
+		private router: Router,
+		private route: ActivatedRoute,
 	) { }
 
 	ngOnInit() {
@@ -86,8 +91,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	}
 	cancelInvoice() {
 		if (this.data.edit) {
-		this.modificationFlag = true;
-		this.adjRemark = '';
+			this.modificationFlag = true;
+			this.adjRemark = '';
 		}
 		this.getInvoiceBifurcation(this.invoiceDetails.inv_id);
 	}
@@ -199,5 +204,15 @@ export class InvoiceDetailsModalComponent implements OnInit {
 
 	}
 	editConfirm() { }
-
+	makePayment(invoiceDetails) {
+		if (invoiceDetails.inv_id) {
+			this.studentRouteStoreService.setProcessRouteType(
+				invoiceDetails.inv_process_type
+			);
+			this.processtypeService.setProcesstype(invoiceDetails.inv_process_type);
+			this.studentRouteStoreService.setInvoiceId(invoiceDetails);
+			this.closemodal();
+			this.router.navigate(['fees/school/feemaster/fee-transaction-entry-individual']);
+		}
+	}
 }

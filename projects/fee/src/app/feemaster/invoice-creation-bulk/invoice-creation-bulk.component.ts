@@ -194,7 +194,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 				remark: element.inv_remark,
 				status: status,
 				statuscolor: statusColor,
-				selectionDisable: element.inv_paid_status === 'paid' ? true : false,
+				selectionDisable: status === 'paid' ? true : false,
 				action: element
 			});
 

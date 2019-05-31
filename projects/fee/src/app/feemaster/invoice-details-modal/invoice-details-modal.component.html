@@ -82,7 +82,9 @@
             <button
               *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
               mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
-              (click)="openRecalculateDialog()">Recalulate Invoice</button>
+              (click)="openRecalculateDialog()">Recalculate Invoice</button>
+            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button
+              class="btn-spacer make-pay-btn" (click)="makePayment(invoiceDetails)">Make Payment</button>
             <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
               (click)="printInvoice()">Print Invoice</button>
             <button
@@ -103,8 +105,9 @@
           <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
         </ng-container>
         <ng-container matColumnDef="feehead">
-          <th mat-header-cell *matHeaderCellDef style="width: 400px !important;"> Particulars </th>
-          <td mat-cell *matCellDef="let element"> {{element.feehead | titlecase}} </td>
+          <th mat-header-cell *matHeaderCellDef style="width: 55% !important;"> Particulars </th>
+          <td mat-cell *matCellDef="let element" style="text-align: left !important;"> {{element.feehead | titlecase}}
+          </td>
         </ng-container>
         <ng-container matColumnDef="feedue">
           <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Fee Due </th>

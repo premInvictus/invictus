@@ -7,6 +7,7 @@ export class StudentRouteMoveStoreService {
 	routeStore: RouteStore = new RouteStore();
 	processType: any = '';
 	prevProcessType: any = '';
+	invoice = {};
 	constructor() { }
 	setRouteStore(adm_no, login_id) {
 		return new Promise(resolve => {
@@ -31,6 +32,12 @@ export class StudentRouteMoveStoreService {
 	}
 	getProcessTypePrev() {
 		return this.prevProcessType;
+	}
+	setInvoiceId(details) {
+		this.invoice = details;
+	}
+	getInvoiceId() {
+		return this.invoice;
 	}
 }
 
