@@ -76,13 +76,7 @@
 
 
           </div>
-          <div class="row  margin-top-30">
-              <div class="col-12">
-                <div class="grey-container__box text-center">
-                    <span><b>Route :</b> {{studentdetails.ead_bus_route ? studentdetails.ead_bus_route : '-'}}</span>
-                </div>
-              </div>
-            </div>
+          
         </div>
         <div class="col-2 sis-col-15">
           <div class="row remove-top-margin">
@@ -103,12 +97,12 @@
                 </div>
           </div>
           <div class="row remove-top-margin">
-            <div class="col-12">
-              <div class="grey-container__box text-center">
-                  <span><b>Stoppage :</b> {{studentdetails.ead_pickup_point ? studentdetails.ead_pickup_point: '-'}}</span>
+              <div class="col-12">
+                <div class="grey-container__box text-center">
+                    <span><b>Route :</b> {{studentdetails.ead_bus_route ? studentdetails.ead_bus_route : '-'}}</span>
+                </div>
               </div>
             </div>
-          </div>
         </div>
         <div class="col-2 sis-col-15">
           <div class="row remove-top-margin">
@@ -132,10 +126,9 @@
               
             </div>
             <div class="row remove-top-margin">
-                <div class="col-12 remove-col-padding">
+                <div class="col-12">
                   <div class="grey-container__box text-center">
-                      <span><b>Fees O/S :</b> {{studentdetails.fee_outstanding ? 
-                        (studentdetails.fee_outstanding | number): 'NA'}}</span>
+                      <span><b>Stoppage :</b> {{studentdetails.ead_pickup_point ? studentdetails.ead_pickup_point: '-'}}</span>
                   </div>
                 </div>
               </div>
@@ -168,7 +161,8 @@
               <div class="row remove-top-margin">
                   <div class="col-12 remove-col-padding">
                     <div class="grey-container__box text-center">
-                        <span><b>Concession Ctgy:</b> {{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+                        <span><b>Fees O/S :</b> {{studentdetails.fee_outstanding ? 
+                          (studentdetails.fee_outstanding | number): 'NA'}}</span>
                     </div>
                   </div>
                 </div>
@@ -197,6 +191,13 @@
                       </mat-form-field>
                     </div>
                 </div>
+                <div class="row remove-top-margin">
+                    <div class="col-12 remove-col-padding">
+                      <div class="grey-container__box text-center">
+                          <span><b>Concession Ctgy:</b> {{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+                      </div>
+                    </div>
+                  </div>
             </div>
             <div class="col-2 sis-col-15">
                 <div class="row remove-top-margin">
