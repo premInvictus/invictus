@@ -1611,7 +1611,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					width: '80%',
 					data: {
 						invoiceNo: inv_id,
-						edit: edit
+						edit: edit,
+						paidStatus: 'paid'
 					},
 					hasBackdrop: true
 				});
@@ -1622,7 +1623,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				width: '80%',
 				data: {
 					invoiceNo: inv_id,
-					edit: edit
+					edit: edit,
+					paidStatus: 'paid'
 				},
 				hasBackdrop: true
 			});

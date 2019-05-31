@@ -99,7 +99,7 @@
             </mat-form-field>
 
           </div>
-          <div class="col-8 text-right">
+          <div style="margin-top:15px !important" class="col-8 text-right">
             <button *ngIf="commonAPIService.isExistUserAccessMenu('360') && this.selection.selected.length > 1"
               mat-raised-button class="btn-primary btn-consolidate"
               (click)="openConsolidateDialog({})">Consolidate</button>
@@ -109,13 +109,6 @@
             <button *ngIf="commonAPIService.isExistUserAccessMenu('362') && this.selection.selected.length > 0"
               mat-raised-button class="btn-primary btn-danger btn-spacer"
               (click)="openDeleteDialog(fetchInvId())">Delete</button>
-          </div>
-        </div>
-        <div *ngIf="checkStatus()" class="row">
-          <div class="col-4 margin-top-25 custom-col-20">
-            <div class="float-left">
-              <h4 class="font-medium">Invoice Details</h4>
-            </div>
           </div>
         </div>
         <div class="row">

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { InvoiceElement } from './invoiceelement.model';
@@ -14,7 +14,7 @@ import { CommonStudentProfileComponent } from '../common-student-profile/common-
 	templateUrl: './fee-transaction-entry.component.html',
 	styleUrls: ['./fee-transaction-entry.component.scss']
 })
-export class FeeTransactionEntryComponent implements OnInit {
+export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	displayedColumns: string[] = ['srno', 'feehead', 'feedue', 'concession', 'adjustment', 'netpay'];
 	INVOICE_ELEMENT_DATA: InvoiceElement[] = [];
@@ -64,24 +64,52 @@ export class FeeTransactionEntryComponent implements OnInit {
 		this.getPayModes();
 		this.buildForm();
 		this.selectedMode = '';
-		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
-			if (data.adm_no && data.login_id) {
-				this.lastRecordId = data.adm_no;
-				this.loginId = data.adm_no;
-				this.feeLoginId = data.login_id;
-				this.getStudentInformation(this.lastRecordId);
-			} else {
-				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-					if (result.status === 'ok') {
-						this.lastRecordId = result.data[0].last_record;
-						this.loginId = result.data[0].au_login_id;
-						this.feeLoginId = this.loginId;
-						this.getStudentInformation(this.lastRecordId);
-					}
-				});
-			}
+		const invDet: any = this.studentRouteMoveStoreService.getInvoiceId();
+		if (!(invDet.inv_id)) {
+			this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
+				if (data.adm_no && data.login_id) {
+					this.lastRecordId = data.adm_no;
+					this.loginId = data.adm_no;
+					this.feeLoginId = data.login_id;
+					this.getStudentInformation(this.lastRecordId);
+				} else {
+					this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+						if (result.status === 'ok') {
+							this.lastRecordId = result.data[0].last_record;
+							this.loginId = result.data[0].au_login_id;
+							this.feeLoginId = this.loginId;
+							this.getStudentInformation(this.lastRecordId);
+						}
+					});
+				}
 
-		});
+			});
+		} else {
+			const invDet2: any = this.studentRouteMoveStoreService.getInvoiceId();
+			this.lastRecordId = invDet2.au_admission_no;
+			this.loginId = invDet2.login_id;
+			this.feeLoginId = this.loginId;
+			this.studentInfo = {};
+			this.feeTransactionForm.patchValue({
+				'inv_id': [],
+				'login_id': '',
+				'ftr_emod_id': '',
+				'ftr_transaction_id': '',
+				'ftr_transaction_date': new Date(),
+				'ftr_pay_id': '1',
+				'ftr_cheque_no': '',
+				'ftr_cheque_date': '',
+				'ftr_bnk_id': '',
+				'ftr_branch': '',
+				'ftr_amount': '',
+				'ftr_remark': '',
+				'is_cheque': '',
+				'ftr_deposit_bnk_id': '',
+				'saveAndPrint': ''
+			});
+			this.selectedMode = '1';
+			this.getInvoices(invDet2.inv_id);
+		}
 	}
 	buildForm() {
 		this.feeTransactionForm = this.fbuild.group({
@@ -349,11 +377,11 @@ export class FeeTransactionEntryComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Fee transaction added', 'success');
 					this.reset();
-					this.getStudentInformation(this.loginId);
+					this.getStudentInformation(this.lastRecordId);
 				} else {
 					this.common.showSuccessErrorMessage('Fee transaction not added', 'error');
 					this.reset();
-					this.getStudentInformation(this.loginId);
+					this.getStudentInformation(this.lastRecordId);
 				}
 			});
 		}
@@ -393,10 +421,10 @@ export class FeeTransactionEntryComponent implements OnInit {
 					this.common.showSuccessErrorMessage(result.message, 'success');
 					window.open(result.data, '_blank');
 					this.reset();
-					this.getStudentInformation(this.loginId);
+					this.getStudentInformation(this.lastRecordId);
 				} else {
 					this.reset();
-					this.getStudentInformation(this.loginId);
+					this.getStudentInformation(this.lastRecordId);
 				}
 			});
 		}
@@ -435,13 +463,59 @@ export class FeeTransactionEntryComponent implements OnInit {
 			width: '80%',
 			data: {
 				invoiceNo: invoiceNo,
-				edit: edit
+				edit: edit,
+				paidStatus: 'paid'
 			},
 			hasBackdrop: true
 		});
 
-		dialogRef.afterClosed().subscribe(result => {
-			this.getStudentInformation(this.loginId);
+		dialogRef.afterClosed().subscribe(result2 => {
+			const invDet: any = this.studentRouteMoveStoreService.getInvoiceId();
+			if (!(invDet.inv_id)) {
+				this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
+					if (data.adm_no && data.login_id) {
+						this.lastRecordId = data.adm_no;
+						this.loginId = data.adm_no;
+						this.feeLoginId = data.login_id;
+						this.getStudentInformation(this.lastRecordId);
+					} else {
+						this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+							if (result.status === 'ok') {
+								this.lastRecordId = result.data[0].last_record;
+								this.loginId = result.data[0].au_login_id;
+								this.feeLoginId = this.loginId;
+								this.getStudentInformation(this.lastRecordId);
+							}
+						});
+					}
+
+				});
+			} else {
+				const invDet2: any = this.studentRouteMoveStoreService.getInvoiceId();
+				this.lastRecordId = invDet2.au_admission_no;
+				this.loginId = invDet2.login_id;
+				this.feeLoginId = this.loginId;
+				this.studentInfo = {};
+				this.feeTransactionForm.patchValue({
+					'inv_id': [],
+					'login_id': '',
+					'ftr_emod_id': '',
+					'ftr_transaction_id': '',
+					'ftr_transaction_date': new Date(),
+					'ftr_pay_id': '1',
+					'ftr_cheque_no': '',
+					'ftr_cheque_date': '',
+					'ftr_bnk_id': '',
+					'ftr_branch': '',
+					'ftr_amount': '',
+					'ftr_remark': '',
+					'is_cheque': '',
+					'ftr_deposit_bnk_id': '',
+					'saveAndPrint': ''
+				});
+				this.selectedMode = '1';
+				this.getInvoices(invDet2.inv_id);
+			}
 
 		});
 	}
@@ -465,5 +539,8 @@ export class FeeTransactionEntryComponent implements OnInit {
 		} else {
 			return false;
 		}
+	}
+	ngOnDestroy() {
+		this.studentRouteMoveStoreService.setInvoiceId({});
 	}
 }
