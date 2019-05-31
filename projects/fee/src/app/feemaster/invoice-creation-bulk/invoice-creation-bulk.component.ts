@@ -160,6 +160,26 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	invoiceTableData(invoicearr = []) {
 		this.ELEMENT_DATA = [];
 		invoicearr.forEach((element, index) => {
+			let status = '';
+			let statusColor = '';
+			if (element.inv_activity) {
+				status = element.inv_activity;
+			} else {
+				status = element.inv_paid_status;
+			}
+			if (element.inv_activity) {
+				if (element.inv_activity === 'consolidated') {
+					statusColor = '#ec398e';
+				} else if (element.inv_activity === 'modified') {
+					statusColor = '#0e7d9e';
+				}
+			} else {
+				if (element.inv_paid_status === 'paid') {
+					statusColor = 'green';
+				} else {
+					statusColor = 'red';
+				}
+			}
 			this.ELEMENT_DATA.push({
 				srno: (this.invoiceSearchForm.value.pageSize * this.invoiceSearchForm.value.pageIndex) + (index + 1),
 				admno: element.inv_process_usr_no,
@@ -172,8 +192,8 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 				duedate: element.inv_due_date,
 				feedue: element.inv_fee_amount,
 				remark: element.inv_remark,
-				status: element.inv_paid_status,
-				statuscolor: element.inv_paid_status === 'paid' ? 'green' : 'red',
+				status: status,
+				statuscolor: statusColor,
 				selectionDisable: element.inv_paid_status === 'paid' ? true : false,
 				action: element
 			});
@@ -278,12 +298,13 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	searchInvoice() {
 		this.getInvoice(this.invoiceSearchForm.value);
 	}
-	openDialog(invoiceNo, edit): void {
+	openDialog(invoiceNo, details, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
 			data: {
 				invoiceNo: invoiceNo,
-				edit: edit
+				edit: edit,
+				paidStatus: details.status
 			}
 		});
 
@@ -413,7 +434,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
 
 	}
-	openDialog2(inv_id , editFlag) {
+	openDialog2(inv_id, editFlag) {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {

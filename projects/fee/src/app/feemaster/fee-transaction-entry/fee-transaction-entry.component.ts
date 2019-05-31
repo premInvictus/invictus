@@ -390,6 +390,8 @@ export class FeeTransactionEntryComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
 					saveAs(result.data, result.data.split('/')[length - 1]);
+					this.common.showSuccessErrorMessage(result.message, 'success');
+					window.open(result.data, '_blank');
 					this.reset();
 					this.getStudentInformation(this.loginId);
 				} else {

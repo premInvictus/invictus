@@ -27,3 +27,8 @@ button.reset-bt:hover{
   background-color: white !important ;
   height: 33px;
 }
+@media (max-width: 1899px) and (min-width: 1200px) {
+.my-inv {
+  margin-left: -74% !important;
+}
+}

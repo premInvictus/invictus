@@ -17,11 +17,16 @@
          </mat-card>
          <mat-card class="margin-top-8 card-height-760 card-height-880">
             <div class="row">
-               <div class="col-4 remove-col-padding margin-top-25">
-                  <h4 class="font-medium">Select Parameters</h4>
+               <div class="col-2 remove-col-padding margin-top-25 custom-col-20">
+                  <div class="float-left">
+                     <h4 class="font-medium">Select Parameters</h4>
+                  </div>
                </div>
-               <div class="col-4 remove-col-padding margin-top-25">
-                  <h4 class="font-medium">Invoice Details</h4>
+               <div class="col-2 custom-col-20"></div>
+               <div class="col-2 remove-col-padding margin-top-25 custom-col-20">
+                  <div class="float-left my-inv">
+                     <h4 class="font-medium">Invoice Details</h4>
+                  </div>
                </div>
             </div>
             <div class="row margin-top-20">
@@ -239,7 +244,7 @@
                            <ng-container matColumnDef="invoiceno">
                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice No </th>
                               <td mat-cell *matCellDef="let element"> <a class="font-skyblue text-link font-size-14"
-                                    (click)="openDialog(element.inv_id, false)">{{element.invoiceno}}</a> </td>
+                                    (click)="openDialog(element.inv_id,element,false)">{{element.invoiceno}}</a> </td>
                            </ng-container>
                            <ng-container matColumnDef="feeperiod">
                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Period </th>
@@ -276,7 +281,7 @@
                               <td mat-cell *matCellDef="let element" class="tab-display-flex">
                                  <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('356')"
                                     class="material-icons icon-edit"
-                                    (click)="openDialog(element.inv_id, true)">create</i>
+                                    (click)="openDialog(element.inv_id,element,true)">create</i>
                                  <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('355')"
                                     class="material-icons icon-danger icon-spacer"
                                     (click)="openDeleteDialog([element.inv_id])">delete</i>

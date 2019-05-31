@@ -28,7 +28,7 @@
           <div class="col-6 remove-col-padding-left">
             <!-- <span class="font-size-24 font-medium">Accounts</span> -->
           </div>
-          <div class="col-6 remove-col-padding-right text-right">
+          <div *ngIf="FEE_LEDGER_ELEMENT.length > 0" class="col-6 text-right">
             <div class="inline-flex">
             <div><img style="cursor: pointer" src="/assets/images/xml.svg" (click)="exportAsExcel()"
               matTooltip="Export as excel"></div>
@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12 remove-col-padding">
+          <div class="col-12">
             <div >
               <div class="table-fee-ledger-child">
             <table id="fee_ledger" #table mat-table [dataSource]="dataSource" class="text-center table-100">
