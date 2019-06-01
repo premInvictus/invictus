@@ -285,6 +285,8 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 					statusColor = '#ec398e';
 				} else if (element.inv_activity === 'modified') {
 					statusColor = '#0e7d9e';
+				} else if (element.inv_activity === 'recalculated') {
+					statusColor = '#ff962e';
 				}
 			} else {
 				if (element.inv_paid_status === 'paid') {
