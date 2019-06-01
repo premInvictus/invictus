@@ -637,3 +637,8 @@ button.mat-button:hover .right-text {
 .mat-checkbox-checked.mat-accent .mat-checkbox-background {
     background-color: #007D9E;
   }
+
+  .sis-btn-success {
+      background-color: $button-success;
+      color: #fff !important;
+  }
