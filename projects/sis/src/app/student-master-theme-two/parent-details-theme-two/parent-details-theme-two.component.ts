@@ -848,9 +848,9 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	}
 	checkCssClass(index) {
 		if (index === 0) {
-			return 'col-6 col-custom-49 vertical-line-1';
+			return 'col-12 border-bottom';
 		} else {
-			return 'col-6 col-custom-49';
+			return 'col-12 border-bottom';
 		}
 	}
 	filterOccupation(val) {

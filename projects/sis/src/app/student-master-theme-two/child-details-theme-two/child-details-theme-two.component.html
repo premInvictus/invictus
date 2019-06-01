@@ -131,14 +131,11 @@
         <div class="col-12 remove-col-padding">
           <form [formGroup]="paddressform" novalidate>
             <div class="row remove-top-margin">
-              <div class="col-12  text-center">
+              <div class="col-12">
                 <span class="text-uppercase"><b>Permanent Address</b></span>
               </div>
             </div>
-            <div class="row">
-              
-            </div>
-            <div class="row remove-top-margin">
+            <div class="row ">
                 <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('ea_address1')">
                     <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Address</mat-label>
@@ -232,7 +229,7 @@
         <div class="col-6 remove-col-padding-left col-custom-49 vertical-line-1">
           <form [formGroup]="paddressform" novalidate>
             <div class="row">
-              <div class="col-12 text-center">
+              <div class="col-12">
                 <span class="text-uppercase"><b>Permanent Address</b></span>
               </div>
             </div>
@@ -322,7 +319,7 @@
         <div class="col-6 remove-col-padding-right col-custom-49">
           <form [formGroup]="raddressform" novalidate>
             <div class="row">
-              <div class="col-12 remove-col-padding-right text-center">
+              <div class="col-12 remove-col-padding-right">
                 <span class="text-uppercase"><b>Correspondence Address</b></span>
               </div>
             </div>
@@ -408,11 +405,9 @@
       </div>
     </div>
   </div>
-  <br>
-  <br>
   <div *ngIf="siblingdetailsdiv">
     <div class="row">
-      <div class="col-12 text-center">
+      <div class="col-12">
         <span class="text-uppercase"><b>Sibling Details</b></span>
       </div>
     </div>
