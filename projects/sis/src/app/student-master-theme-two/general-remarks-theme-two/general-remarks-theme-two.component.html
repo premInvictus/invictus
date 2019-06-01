@@ -1,7 +1,7 @@
 <div class="padding-15">
     <form [formGroup]="generalRemarkForm" *ngIf="!viewOnly">
         <div class="row">
-            <div *ngIf="checkIfFieldExist('era_doj')" class="col-4">
+            <div *ngIf="checkIfFieldExist('era_doj')" class="col-2 sis-col-20">
                 <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Date</mat-label>
                     <input matInput [errorStateMatcher]="confirmValidParentMatcher" [matDatepicker]="picker"
@@ -14,7 +14,7 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            <div *ngIf="checkIfFieldExist('era_aut_id')" class="col-4">
+            <div *ngIf="checkIfFieldExist('era_aut_id')" class="col-2 sis-col-20">
                     <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Authority</mat-label>
                     <mat-select placeholder="Authority" [errorStateMatcher]="confirmValidParentMatcher"
@@ -28,7 +28,7 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            <div *ngIf="checkIfFieldExist('era_ar_id')" class="col-4">
+            <div *ngIf="checkIfFieldExist('era_ar_id')" class="col-2 sis-col-20">
                     <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Area</mat-label>
                     <mat-select placeholder="Area" [errorStateMatcher]="confirmValidParentMatcher"
@@ -41,19 +41,20 @@
                     </mat-error>
                 </mat-form-field>
             </div>
+            <div class="col-4 sis-col-40">
+                <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Remarks</mat-label>
+    <input (keyup)="capitalizeRemarks($event)" matInput placeholder="Remarks" [errorStateMatcher]="confirmValidParentMatcher"
+                    formControlName="era_teachers_remark" [readOnly]="viewOnly" required>
+                <mat-error>
+                    This field is required*
+                </mat-error>
+            </mat-form-field>
         </div>
-        <div *ngIf="checkIfFieldExist('era_teachers_remark')" class="row">
-            <div class="col-8">
-                    <mat-form-field class="form-field" appearance="outline">
-                            <mat-label>Remarks</mat-label>
-        <input (keyup)="capitalizeRemarks($event)" matInput placeholder="Remarks" [errorStateMatcher]="confirmValidParentMatcher"
-                        formControlName="era_teachers_remark" [readOnly]="viewOnly" required>
-                    <mat-error>
-                        This field is required*
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-4">
+        </div>
+        <div *ngIf="checkIfFieldExist('era_teachers_remark')" class="row remove-top-margin">
+            
+            <div class="col-12 text-center">
                 <button [disabled]="viewOnly" *ngIf="!generalAddToList" mat-raised-button class="btn-neutral"
                     (click)="addGeneralRemarkList()">Add to list</button>
                 <button *ngIf="generalRemarkUpdateFlag && !viewOnly && generalAddToList" mat-raised-button
@@ -63,7 +64,8 @@
             </div>
         </div>
     </form>
-    <div class="row">
+    <br>
+    <div class="row remove-top-margin">
         <div class="col-12">
             <table class="table table-borderd table-stripped custom-table management-remarks-table">
                 <thead class="table-skill__head text-center">
