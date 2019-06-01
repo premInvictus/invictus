@@ -22,9 +22,12 @@ export class ShufflingToolComponent implements OnInit {
 	SHUFFLE_ELEMENT_DATA_ONE: any;
 	sorttableflag = false;
 	shuffletableflag = false;
+	allShuffleFlag = false;
 	selectedShuffleArray = [];
 	selectedShuffleArrayValue = [];
+	loginArray: any[] = [];
 	displayedColumns: string[] = [
+		'select',
 		'no',
 		'name',
 		'class',
@@ -110,7 +113,7 @@ export class ShufflingToolComponent implements OnInit {
 					let nos = 1;
 					this.studentsArray.forEach(element => {
 						this.STUDENT_ELEMENT_DATA.push({
-							select: nos,
+							select: element.au_login_id,
 							no: element.au_process_type === '4' ? element.em_admission_no : element.em_provisional_admission_no,
 							name: element.au_full_name,
 							class: element.class_name,
@@ -140,36 +143,41 @@ export class ShufflingToolComponent implements OnInit {
 			param.class_id = this.shufflesortform.value.class_id;
 			param.order_by = this.shufflesortform.value.order_by;
 			param.based_on = this.shufflebasedform.value.based_on;
-			this.sisService.getShuffleStudents(param).subscribe((result: any) => {
-				if (result.status === 'ok') {
-					this.shuffletableflag = true;
-					this.shuffleStudentsArray = result.data;
-					this.shuffleStudentsArray.forEach(element => {
-						this.SHUFFLE_ELEMENT_DATA.push({
-							select: element.au_login_id,
-							no: element.au_process_type === '4' ? element.em_admission_no : element.em_provisional_admission_no,
-							name: element.au_full_name,
-							class: element.class_name,
-							section: this.shufflebasedform.value.based_on === 'sec_id' ? element.shuf_sec_name : element.sec_name,
-							house: this.shufflebasedform.value.based_on === 'hou_id' ? element.shuf_hou_house_name : element.hou_house_name,
-							action: element
+			param.login_id = this.loginArray;
+			if (this.loginArray.length > 0) {
+				this.sisService.getShuffleStudents(param).subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.shuffletableflag = true;
+						this.shuffleStudentsArray = result.data;
+						this.shuffleStudentsArray.forEach(element => {
+							this.SHUFFLE_ELEMENT_DATA.push({
+								select: element.au_login_id,
+								no: element.au_process_type === '4' ? element.em_admission_no : element.em_provisional_admission_no,
+								name: element.au_full_name,
+								class: element.class_name,
+								section: this.shufflebasedform.value.based_on === 'sec_id' ? element.shuf_sec_name : element.sec_name,
+								house: this.shufflebasedform.value.based_on === 'hou_id' ? element.shuf_hou_house_name : element.hou_house_name,
+								action: element
+							});
+							this.selectedShuffleArrayValue.push({
+								login_id: element.au_login_id,
+								class_id: element.class_id,
+								ses_id: element.ses_id,
+								sec_id: this.shufflebasedform.value.based_on === 'sec_id' ? element.shuf_sec_id : element.sec_id,
+								hou_id: this.shufflebasedform.value.based_on === 'hou_id' ? element.shuf_hou_id : element.hou_id
+							});
 						});
-						this.selectedShuffleArrayValue.push({
-							login_id: element.au_login_id,
-							class_id: element.class_id,
-							ses_id: element.ses_id,
-							sec_id: this.shufflebasedform.value.based_on === 'sec_id' ? element.shuf_sec_id : element.sec_id,
-							hou_id: this.shufflebasedform.value.based_on === 'hou_id' ? element.shuf_hou_id : element.hou_id
-						});
-					});
-					this.shuffledataSource = new MatTableDataSource(this.SHUFFLE_ELEMENT_DATA);
-				} else {
-					this.shuffletableflag = false;
-					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
-					this.SHUFFLE_ELEMENT_DATA = [];
-					this.shuffledataSource = new MatTableDataSource(this.SHUFFLE_ELEMENT_DATA);
-				}
-			});
+						this.shuffledataSource = new MatTableDataSource(this.SHUFFLE_ELEMENT_DATA);
+					} else {
+						this.shuffletableflag = false;
+						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+						this.SHUFFLE_ELEMENT_DATA = [];
+						this.shuffledataSource = new MatTableDataSource(this.SHUFFLE_ELEMENT_DATA);
+					}
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please choose a student to proceed', 'error');
+			}
 		}
 	}
 	setSuffleStudent(login_id, field, value) {
@@ -211,6 +219,11 @@ export class ShufflingToolComponent implements OnInit {
 					this.SHUFFLE_ELEMENT_DATA = [];
 					this.shuffledataSource = new MatTableDataSource(this.SHUFFLE_ELEMENT_DATA);
 					this.commonAPIService.showSuccessErrorMessage('Suffled successfully', 'success');
+					this.loginArray = [];
+					this.allShuffleFlag = false;
+					this.shufflebasedform.patchValue({
+						based_on : ''
+					});
 					this.getMasterStudentDetail();
 				}
 			});
@@ -229,6 +242,22 @@ export class ShufflingToolComponent implements OnInit {
 			this.selectedShuffleArray = [];
 		}
 	}
-
-
+	assignAll($event) {
+		if ($event.checked) {
+			this.allShuffleFlag = true;
+			for (const item of this.STUDENT_ELEMENT_DATA) {
+				this.loginArray.push(item.select);
+			}
+		} else {
+			this.allShuffleFlag = false;
+		}
+	}
+	addLogin($event) {
+		const index = this.loginArray.indexOf($event.source.value);
+		if (index === -1) {
+			this.loginArray.push($event.source.value);
+		} else {
+			this.loginArray.splice(index, 1);
+		}
+	}
 }
