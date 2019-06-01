@@ -61,7 +61,7 @@
      <div *ngIf="modeFlag && transportFlag" class="col-2 sis-col-20">
         <mat-form-field  class="form-field" appearance="outline">
            <mat-label>Route</mat-label>
-           <mat-select placeholder="Route" [disabled]="viewOnly" (selectionChange)="getStoppages($event)"
+           <mat-select placeholder="Route" [disabled]="viewOnly" (selectionChange)="getStoppages($event.value)"
               [errorStateMatcher]="confirmValidParentMatcher" formControlName="accd_tr_id" required>
               <mat-option>Please Select</mat-option>
               <mat-option *ngFor="let item of routeArray" [value]="item.tr_id">{{item.tr_route_name}}</mat-option>
@@ -71,7 +71,7 @@
      <div *ngIf="modeFlag && transportFlag" class="col-2 sis-col-20">
          <mat-form-field  class="form-field" appearance="outline">
                <mat-label>Stoppage</mat-label>
-           <mat-select placeholder="Stoppage" [disabled]="viewOnly" (selectionChange)="getSlab($event)"
+           <mat-select placeholder="Stoppage" [disabled]="viewOnly" (selectionChange)="getSlab($event.value)"
               [errorStateMatcher]="confirmValidParentMatcher" required formControlName="accd_tsp_id">
               <mat-option>Please Select</mat-option>
               <mat-option *ngFor="let item of stoppageArray" [value]="item.tsp_id">{{item.tsp_name}}</mat-option>
@@ -81,9 +81,8 @@
      <div *ngIf="modeFlag && transportFlag" class="col-2 sis-col-20">
         <mat-form-field  class="form-field" appearance="outline">
            <mat-label>Applicable Slab</mat-label>
-           <mat-select placeholder="Applicable Slab" [disabled]="viewOnly" [(ngModel)]="slabModel"
+           <mat-select placeholder="Applicable Slab" disabled [(ngModel)]="slabModel"
               [errorStateMatcher]="confirmValidParentMatcher" formControlName="accd_ts_id" required>
-              <mat-option>Please Select</mat-option>
               <mat-option *ngFor="let item of slabArray" [value]="item.ts_id">{{item.ts_name}}</mat-option>
            </mat-select>
         </mat-form-field>
