@@ -23,7 +23,8 @@
          <app-common-student-profile [loginId]="lastRecordId" (next2)="next($event)" (prev2)="prev($event)"
             (first2)="first($event)" (last2)="last($event)" (key2)="key($event)" (next)="next2($event)"
             (prev)="prev2($event)" (first)="first2($event)" (last)="last2($event)" (key)="key2($event)"
-            (processTypeEmit)="checkEmit($event)"></app-common-student-profile>
+            (processTypeEmit)="checkEmit($event)"
+            [feeRenderId]="feeRenderId"></app-common-student-profile>
       </div>
    </div>
    <div [hidden]="!(invoiceArray.length > 0)" class="row margin-top-25 ">
