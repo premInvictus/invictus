@@ -168,6 +168,10 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				this.invoice.netPay = this.invoice.late_fine_amt ?
 					Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
 					Number(this.invoice.fee_amount);
+
+				if (this.invoice.balance_amt) {
+					this.invoice.netPay += Number(this.invoice.balance_amt);
+				}
 				this.invoiceArray = this.invoice.invoice_bifurcation;
 				this.feeTransactionForm.patchValue({
 					'ftr_amount': this.invoice.netPay,
@@ -352,6 +356,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
 			'saveAndPrint': false
 		});
+		if (this.invoice.late_fine_amt) {
+			this.feeTransactionForm.value.lateFeeAmt = this.invoice.late_fine_amt;
+		}
 		this.feeTransactionForm.value.login_id = this.feeLoginId;
 		this.feeTransactionForm.value.inv_id = [this.invoice.inv_id];
 		this.feeTransactionForm.value.is_cheque = this.feeTransactionForm.value.ftr_pay_id === '3' ? true : false;
@@ -388,6 +395,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	}
 	saveAndPrint() {
 		const datePipe = new DatePipe('en-in');
+		if (this.invoice.late_fine_amt) {
+			this.feeTransactionForm.value.lateFeeAmt = this.invoice.late_fine_amt;
+		}
 		this.feeTransactionForm.patchValue({
 			'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
 			'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
