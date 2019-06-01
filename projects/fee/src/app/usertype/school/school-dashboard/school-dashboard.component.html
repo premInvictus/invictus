@@ -1,4 +1,4 @@
-<div class="container-box__grey">
+<!-- <div class="container-box__grey">
     <div class="row">
         <div class="col-12">
             <mat-card class="card-content__container">
@@ -155,8 +155,8 @@
                             <h1 class="remove-margin-bottom"><i class="fas fa-rupee-sign font-size-24"></i>
                                 <b>&nbsp;35,86,200</b></h1>
                             <span class="font-size-16">As on 20 Sep, 2019</span>
-                        </div>
-                        <!-- <div class="col-4 text-right">
+                        </div> -->
+<!-- <div class="col-4 text-right">
                                 <div class="dropdown">
                                         <button class="month-selector" mat-button >Sept 2019</button>
                                 
@@ -166,7 +166,7 @@
                             </div>
                                 
                             </div> -->
-                    </div>
+<!-- </div>
                     <div class="row">
                         <div class="col-12 margin-top-20">
 
@@ -221,9 +221,9 @@
                                                     <h4 class="pie-text">Total Outstanding</h4>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
 
-                                        <!-- <div class="row">
+<!-- <div class="row">
                                                                             <div class="col-6 padding-left-150">
                                                                                 <div class="legend-box legend-blue display-inline">
                                                                                 </div><span class="font-size-14 middle-align">&nbsp;Projected</span>
@@ -238,7 +238,7 @@
                                                                                 </div>
                                                                         </div> -->
 
-                                    </div>
+<!-- </div>
                                 </div>
                             </div>
 
@@ -250,6 +250,49 @@
                 <mat-card-content>
 
                 </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div> -->
+<div class="container-box__grey">
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="card-content__container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <h2><b>{{'Welcome to Fees Management' | uppercase}}</b></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <img [src]="schoolInfo.school_logo" style="width: 16%">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <p><span>
+                                    <h3><b>{{schoolInfo.school_name | uppercase}}</b></h3>
+                                </span></p>
+                            <p><span>
+                                    <h6>{{schoolInfo.school_country | uppercase}}</h6>
+                                </span></p>
+                            <p><span>
+                                    <h6>{{schoolInfo.school_city | uppercase}}</h6>
+                                </span>
+                                <span>
+                                    <h6>{{schoolInfo.school_state | uppercase}}</h6>
+                                </span></p>
+                            <p><span>
+                                    <h6>{{schoolInfo.school_phone | uppercase}}</h6>
+                                </span></p>
+                        </div>
+                    </div>
+                </div>
             </mat-card>
         </div>
     </div>
