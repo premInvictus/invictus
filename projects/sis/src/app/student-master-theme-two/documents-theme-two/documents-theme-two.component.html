@@ -2,15 +2,15 @@
   <div>
 
     <div class="row">
-      <div class="col-6">
+      <div class="col-6 vertical-line-1">
         <div class="row">
           <div class="col-12">
-              <mat-card class="document-main-card" *ngFor="let item of documentsArray;let i =index">
-                  <div class="row margin-bottom-10">
-                      <div class="col-8">
-                          <span class="document-title"><b>{{item.docreq_name}}</b></span>
+              <div class="document-main-card border-bottom" *ngFor="let item of documentsArray;let i =index">
+                  <div class="row margin-top-20 margin-bottom-20">
+                      <div class="col-12">
+                          <span class="document-title font-size-16"><b>{{item.docreq_name}}</b></span>
                       </div>
-                      <div class="col-4">
+                      <!-- <div class="col-4">
                           <div class="float-right">
                               <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
                                   multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
@@ -21,7 +21,7 @@
                                       File</label>
                               </button>
                           </div>
-                      </div>
+                      </div> -->
                   </div>
                   <div class="row">
                     <div class="col-2 text-center">
@@ -59,18 +59,18 @@
                       </div>
                   </ng-container>
                   </div>
-              </mat-card>
+                </div>
           </div>
         </div>
       </div>
       <div class="col-6">
         <div class="row">
           <div class="col-12">
-            <mat-card>
+            <div>
               <span><b>Instruction for Uploading Instruction</b></span>
               <br>
               <br>
-              <ol>
+              <ol >
                 <li>You can upload multiple file</li>
                 <li>Try selecting more than one file when browsing for file in particular section.
                 </li>
@@ -80,26 +80,26 @@
               </ol>
               <br>
               <br>
-            </mat-card>
+            </div>
           </div>
         </div>
         <br>
         <div class="row">
           <div class="col-12">
-            <mat-card>
+            <div>
               <span><b>List of Document Required for Admission</b></span>
               <br>
               <br>
-              <ol *ngFor="let item of documentsArray;let i =index">
+              <ol class="remove-col-padding" *ngFor="let item of documentsArray;let i =index">
                   <mat-checkbox [disabled]="viewOnly || !(fileUploadedStatus(item?.docreq_id))" class="inline-form-doc-checkbox" [checked]="checkVerifiedStatus(item.docreq_id)"
                       [value]="item.docreq_id" (change)="insertVerifyId($event)">
                   </mat-checkbox>{{item.docreq_name}}
               </ol>
               <br>
-              <div class="text-center">
-                  <button mat-raised-button class="btn-neutral" [disabled]="viewOnly" (click)="verifyDocument()">Verify</button>
+              <div >
+                  <button mat-raised-button class="btn-success" [disabled]="viewOnly" (click)="verifyDocument()">Verify</button>
               </div>
-            </mat-card>
+            </div>
           </div>
         </div>
       </div>
