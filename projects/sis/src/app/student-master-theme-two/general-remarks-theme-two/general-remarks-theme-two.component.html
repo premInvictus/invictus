@@ -67,7 +67,7 @@
     <br>
     <div class="row remove-top-margin">
         <div class="col-12">
-            <table class="table table-borderd table-stripped custom-table management-remarks-table">
+            <table class="table table-borderd table-stripped custom-table">
                 <thead class="table-skill__head text-center">
                     <tr class="custom-tr">
                         <th class="custom-th">Sr. No.</th>
@@ -102,54 +102,11 @@
                     </tr>
                 </ng-container>
 
-                    <!-- <tr class="custom-tr" *ngFor="let item of htmlFinalGeneralRemarkArray;let i=index">
-                        <td class="custom-td">{{i+1}}</td>
-                        <td class="custom-td">
-                            <p *ngFor="let rowItem of item | slice:0:1;">
-                                <span
-                                    *ngIf="checkIfFieldExist('era_aut_id')">{{getAuthorityName(rowItem.era_aut_id)}}</span>
-                            </p>
-                        </td>
-                        <td class="custom-td group_row">
-                            <span *ngFor="let rowItem of item">
-                                <span *ngIf="checkIfFieldExist('era_doj')">{{rowItem.era_doj | date : 'd-MMM-y'}}</span>
-                                <div class="group-separator"></div>
-                            </span>
-                        </td>
-                        <td class="custom-td group_row">
-                            <span *ngFor="let rowItem of item">
-                                <span *ngIf="checkIfFieldExist('era_ar_id')">{{getAreaName(rowItem.era_ar_id)}}</span>
-                                <div class="group-separator"></div>
-                            </span>
-                        </td>
-                        <td class="custom-td group_row">
-                            <span *ngFor="let rowItem of item">
-                                <span
-                                    *ngIf="checkIfFieldExist('era_teachers_remark')">{{rowItem.era_teachers_remark}}</span>
-                                <div class="group-separator"></div>
-                            </span>
-                        </td>
-                        <td class="custom-td" *ngIf="checkIfFieldExist('era_aut_id')">{{getAuthorityName(item.era_aut_id)}}</td>                        
-                        <td class="custom-td" *ngIf="checkIfFieldExist('era_doj')">{{item.era_doj | date : 'd-MMM-y'}}</td>                        
-                        <td class="custom-td" *ngIf="checkIfFieldExist('era_ar_id')">{{getAreaName(item.era_ar_id)}}</td>
-                        <td class="custom-td" *ngIf="checkIfFieldExist('era_teachers_remark')">{{item.era_teachers_remark}}</td> -->
-                        <!-- <td class="custom-td"><i class="far fa-edit modify-icon"></i>&nbsp;
-                            <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"></i>
-                        </td> -->
-                        <!-- <td class="custom-td" *ngIf="!viewOnly">
-                            <p *ngFor="let rowItem of item; let j=index;">
-                                <i class="far fa-edit modify-icon" style="cursor: pointer;"
-                                    (click)="editGeneralRemarkList(rowItem.era_id)" title="Edit"></i>&nbsp;
-                                <i class="far fa-trash-alt inline-form-table-icon-spacing delete-icon"
-                                    style="cursor: pointer;" (click)="deleteGeneralRemarkList(rowItem.era_id)"
-                                    title="Delete"></i>
-                            </p>
-                        </td>
-                    </tr> -->
+                    
                 </tbody>
                 <tbody *ngIf="!(finalGeneralRemarkArray?.length > 0) ">
                     <tr>
-                        <td colspan="6" class="text-center table-third-tab-custom">No Record Found</td>
+                        <td colspan="6" class="text-center">No Record Found</td>
                     </tr>
                 </tbody>
             </table>

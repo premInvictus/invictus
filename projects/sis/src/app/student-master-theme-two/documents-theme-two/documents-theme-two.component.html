@@ -1,12 +1,12 @@
 <div class="container-box__white">
   <div>
 
-    <div class="row">
-      <div class="col-6 vertical-line-1">
-        <div class="row">
-          <div class="col-12">
+    <div class="row remove-top-margin">
+      <div class="col-6 remove-col-padding vertical-line-1">
+        <div class="row remove-top-margin">
+          <div class="col-12 remove-col-padding-left">
               <div class="document-main-card border-bottom" *ngFor="let item of documentsArray;let i =index">
-                  <div class="row margin-top-20 margin-bottom-20">
+                  <div class="row margin-top-10 margin-bottom-20">
                       <div class="col-12">
                           <span class="document-title font-size-16"><b>{{item.docreq_name}}</b></span>
                       </div>
@@ -23,7 +23,7 @@
                           </div>
                       </div> -->
                   </div>
-                  <div class="row">
+                  <div class="row height-100">
                     <div class="col-2 text-center">
                         <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
                         multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
@@ -78,12 +78,9 @@
                 <li>Uploading file format can be of following instruction jpeg, jpg, pdf, doc.
                 </li>
               </ol>
-              <br>
-              <br>
             </div>
           </div>
         </div>
-        <br>
         <div class="row">
           <div class="col-12">
             <div>
