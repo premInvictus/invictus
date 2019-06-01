@@ -39,6 +39,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	schoolInfo: any;
 	startMonth: any;
 	type: any = '';
+	feeRenderId: any = '';
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -385,10 +386,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.common.showSuccessErrorMessage('Fee transaction added', 'success');
 					this.reset();
 					this.getStudentInformation(this.lastRecordId);
+					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				} else {
 					this.common.showSuccessErrorMessage('Fee transaction not added', 'error');
 					this.reset();
 					this.getStudentInformation(this.lastRecordId);
+					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				}
 			});
 		}
@@ -432,9 +435,11 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					window.open(result.data, '_blank');
 					this.reset();
 					this.getStudentInformation(this.lastRecordId);
+					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				} else {
 					this.reset();
 					this.getStudentInformation(this.lastRecordId);
+					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				}
 			});
 		}

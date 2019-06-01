@@ -1,6 +1,9 @@
+<div class="row">
+   <div class="col-12">
+ 
 <form [formGroup]="accountsForm" novalidate>
   <div class="row margin-top-15">
-     <div class="col-4">
+     <div class="col-2 sis-col-20">
         <mat-form-field  class="form-field" appearance="outline">
            <mat-label>Other Category</mat-label>
            <mat-select placeholder="Other Category"  [disabled]="viewOnly"
@@ -10,7 +13,7 @@
            </mat-select>
         </mat-form-field>
      </div>
-     <div class="col-4">
+     <div class="col-2 sis-col-20">
          <mat-form-field  class="form-field" appearance="outline">
                <mat-label>Applicable Fee Structure</mat-label>
            <mat-select placeholder="Applicable Fee Structure" [disabled]="viewOnly"
@@ -20,7 +23,7 @@
            </mat-select>
         </mat-form-field>
      </div>
-     <div class="col-4">
+     <div class="col-2 sis-col-20">
          <mat-form-field  class="form-field" appearance="outline">
                <mat-label>Concession Group</mat-label>
            <mat-select placeholder="Concession Group" [disabled]="viewOnly"
@@ -112,7 +115,7 @@
            <mat-datepicker tabindex="-1" #picker [disabled]="viewOnly"></mat-datepicker>
         </mat-form-field>
      </div>
-     <div *ngIf="modeFlag" class="col-5">
+     <div *ngIf="modeFlag" class="col-5 sis-col-40">
          <mat-form-field  class="form-field" appearance="outline">
                <mat-label>Remarks</mat-label>
            <input matInput placeholder="Remarks" formControlName="accd_remark" [readonly]="viewOnly">
@@ -172,3 +175,7 @@
   </div>
   <br>
 </form>
+
+     
+</div>
+</div>
