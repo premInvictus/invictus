@@ -165,9 +165,9 @@
                             Promote
                           </mat-header-cell>
                           <mat-cell *matCellDef="let item">
-                            <span class="text-center"><i *ngIf="item.action.pmap_status !== '0' " class="fas fa-thumbs-up icon-success" 
+                            <span class="text-center"><i *ngIf="item.action.pmap_status !== '0' " class="fas fa-thumbs-up cursor-pointer icon-success" 
                               (click)="promoteStudent(item)"></i></span>
-                            <span style="color:#04a20d" class="text-center" [hidden]="!(item.action.pmap_status === '0') "><b>Promoted</b></span>
+                            <span style="color:#04a20d" class="text-center cursor-pointer" [hidden]="!(item.action.pmap_status === '0') "><b>Promoted</b></span>
                           </mat-cell>
                         </ng-container>
                         <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -339,7 +339,7 @@
                     <br />
                     <br />
                     <div class="text-center">
-                      <button mat-raised-button class="btn-danger" (click)="demoteStudentInBulk()">Demote</button>
+                      <button mat-raised-button class="btn-danger cursor-pointer" (click)="demoteStudentInBulk()">Demote</button>
                     </div>
                     <br />
                     <br />

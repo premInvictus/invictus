@@ -13,7 +13,7 @@
             </mat-form-field>
           </div>
         </div>
-        <div class="row">
+        <div class="row remove-top-margin">
           <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
             <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="firstB"
               (click)="firstId(navigation_record.first_record)"><i class="material-icons">
@@ -42,14 +42,14 @@
           </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-8">
+      <div class="col-1 custom-fee-entry-col-8 margin-top-30">
         <div class="row margin-top-20">
           <div class="col-12 text-center">
             <img class="student-profile-image-68" [src]="defaultsrc">
           </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-12">
+      <div class="col-1 custom-fee-entry-col-12 margin-top-30">
         <div class="row margin-top-30">
           <div class="col-12 text-left">
             <span
@@ -59,7 +59,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2 custom-fee-entry-col-12">
+      <div class="col-2 custom-fee-entry-col-12 margin-top-25">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Fee Outstanding</span><br>
@@ -75,7 +75,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2 custom-fee-entry-col-12">
+      <div class="col-2 custom-fee-entry-col-12 margin-top-25">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Route </span><br>
@@ -91,14 +91,14 @@
           </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-5 tab-display-none ">
+      <div class="col-1 margin-top-25 custom-fee-entry-col-8 lap-custom-fee-entry-col-5 tab-display-none ">
         <div class="row">
           <div class="col-12 text-center">
             <div class="vertical-divider-fee-entry"></div>
           </div>
         </div>
       </div>
-      <div class="col-2 custom-fee-entry-col-12 tab-col-14">
+      <div class="col-2 margin-top-25 custom-fee-entry-col-12 tab-col-14">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Parent Name </span><br>
@@ -115,7 +115,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2 custom-fee-entry-col-12 tab-col-14">
+      <div class="col-2 margin-top-25 custom-fee-entry-col-12 tab-col-14">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Emg Contact Name </span><br>
@@ -131,7 +131,7 @@
           </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-9 tab-remove-padding">
+      <div class="col-1 margin-top-25 custom-fee-entry-col-8 lap-custom-fee-entry-col-9 tab-remove-padding">
         <div class="row margin-top-8">
           <div *ngIf="student_profile_flag" class="col-6">
             <div class=" blue-circle-btn margin-top-5" (click)="goToPage('student-profile')"

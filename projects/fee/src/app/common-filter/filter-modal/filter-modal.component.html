@@ -7,7 +7,7 @@
     </div>
   </div>
   <div class="filter-body-white-container-filterone">
-    <div class="row table-container">
+    <div class="row">
       <div class="col-12 remove-col-padding" *ngIf="filterdiv">
         <table mat-table [dataSource]="dataSource" class=" table-100">
           <ng-container matColumnDef="fieldlabel">
@@ -36,8 +36,8 @@
           <!-- Action Column -->
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef> Action </th>
-            <td mat-cell *matCellDef="let element" class="text-center"> <button mat-raised-button class="print-btn btn-spacer"
-                (click)="resetOneFilter(element)">Reset</button> </td>
+            <td mat-cell *matCellDef="let element" class="text-center"> <a
+                (click)="resetOneFilter(element)">Reset</a> </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -145,7 +145,7 @@
     </div>
     <div class="filter-body-white-container">
       <div class="row">
-        <div class="col-12 filter-discrete-val-container">
+        <div class="col-12">
           <ng-container *ngIf="currentFilterStatus.ff_field_type == 'text'">
             <div class="row">
               <div class="col-12">
@@ -174,15 +174,12 @@
 
       </div>
       <hr>
-      <br>
-      <br>
       <div class="row">
         <div class="col-12 text-center">
           <button mat-raised-button class="btn-success" (click)="filterok()">Ok</button>
           <button mat-raised-button class="btn-danger btn-spacer" (click)="gobacktofilterOne()">Cancel</button>
         </div>
       </div>
-      <br>
       <br>
     </div>
   </div>

@@ -642,3 +642,12 @@ button.mat-button:hover .right-text {
       background-color: $button-success;
       color: #fff !important;
   }
+
+  .sis-btn-document-label {
+    margin-bottom: 0px !important;
+    /* z-index: 11; */
+    position: absolute;
+    width: 90px;
+    padding-top: 50px;
+    margin-left: -57px;
+}
