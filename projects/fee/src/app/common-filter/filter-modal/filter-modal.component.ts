@@ -283,6 +283,13 @@ export class FilterModalComponent implements OnInit {
 	gobacktofilterOne() {
 		this.filterdivtwo = false;
 		this.filterone = true;
+		this.currentFilter.fromto = '';
+		this.currentFilter.fromtovalue = '';
+		this.currentFilter.from = '';
+		this.currentFilter.to = '';
+		this.currentFilter.equalto = '';
+		this.currentFilter.discrete = [];
+		this.currentFilter.discretevalue = [];
 	}
 	getDropdown(ff_field_name) {
 		for (const item of this.fieldApiMapping) {
