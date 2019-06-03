@@ -145,7 +145,8 @@ export class ReceiptDetailsModalComponent implements OnInit {
 				feedue: Number(item.invg_fh_amount),
 				concession: Number(item.invg_fcc_amount),
 				adjustment: Number(item.invg_adj_amount),
-				netpay: Number(item.invg_fh_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+				netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount)
+				- (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
 				invg_id: item.invg_id
 			};
 			this.invoiceTotal += element.netpay;
