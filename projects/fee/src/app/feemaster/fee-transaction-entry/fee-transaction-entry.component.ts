@@ -93,6 +93,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			this.studentInfo = {};
 			this.feeTransactionForm.patchValue({
 				'inv_id': [],
+				'inv_invoice_no': '',
 				'login_id': '',
 				'ftr_emod_id': '',
 				'ftr_transaction_id': '',
@@ -116,6 +117,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.feeTransactionForm = this.fbuild.group({
 			'inv_id': [],
 			'login_id': '',
+			'inv_invoice_no': '',
 			'ftr_emod_id': '',
 			'ftr_transaction_id': '',
 			'ftr_transaction_date': new Date(),
@@ -202,6 +204,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.studentInfo = {};
 		this.feeTransactionForm.patchValue({
 			'inv_id': [],
+			'inv_invoice_no': '',
 			'login_id': '',
 			'ftr_emod_id': '',
 			'ftr_transaction_id': '',
@@ -362,6 +365,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		}
 		this.feeTransactionForm.value.login_id = this.feeLoginId;
 		this.feeTransactionForm.value.inv_id = [this.invoice.inv_id];
+		this.feeTransactionForm.value.inv_invoice_no = [this.invoice.inv_invoice_no];
 		this.feeTransactionForm.value.is_cheque = this.feeTransactionForm.value.ftr_pay_id === '3' ? true : false;
 		let validateFlag = true;
 		if (!this.loginId) {
@@ -408,6 +412,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		});
 		this.feeTransactionForm.value.login_id = this.feeLoginId;
 		this.feeTransactionForm.value.inv_id = [this.invoice.inv_id];
+		this.feeTransactionForm.value.inv_invoice_no = [this.invoice.inv_invoice_no];
 		this.feeTransactionForm.value.is_cheque = this.feeTransactionForm.value.ftr_pay_id === '3' ? true : false;
 		let validateFlag = true;
 		if (!this.loginId) {
@@ -456,6 +461,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	reset() {
 		this.feeTransactionForm.patchValue({
 			'inv_id': [],
+			'inv_invoice_no': '',
 			'login_id': '',
 			'ftr_emod_id': '',
 			'ftr_transaction_id': '',
@@ -514,6 +520,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				this.feeTransactionForm.patchValue({
 					'inv_id': [],
 					'login_id': '',
+					'inv_invoice_no': '',
 					'ftr_emod_id': '',
 					'ftr_transaction_id': '',
 					'ftr_transaction_date': new Date(),
