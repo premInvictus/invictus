@@ -50,19 +50,23 @@ mat-expansion-panel.bookmark-expansion-panel {
 }
 
 .exp-header-new-stu-detail.mat-expansion-panel-header:hover {
-  background: #f1f1f1 !important;
+  background: #899FA5 !important;
   font-weight: bold !important;
   font-size: 15px !important;
   color: #fff !important;
 }
 
 .exp-header-new-stu-detail {
-  background-color: #f1f1f1 !important;
+  background-color: #899FA5 !important;
 }
 
 .exp-header-new-stu-detail.mat-expanded {
   font-weight: bold !important;
   // background-color: #02ed10 !important;
+}
+
+.mat-expansion-panel-header-title {
+  color: #fff !important;
 }
 
 .theme-accordion .mat-expansion-panel-spacing {

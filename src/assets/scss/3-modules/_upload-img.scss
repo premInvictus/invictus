@@ -284,8 +284,8 @@
 }
 
 .sis-parent-pic__size {
-    width: 200px !important;
-    height: 200px !important;
+    width: 150px !important;
+    height: 150px !important;
     border-radius: 100%;
     border: 2px solid #dfdfdf;
 }
@@ -295,6 +295,11 @@
     color: #1e88e5;
 }
 
+.sis-parent-pic--imgtwo {
+    position: absolute;
+    top: 69%;
+    left: 65%;
+}
 // $imgpath: '/../assets/images';
 
 // #dashboard_icon {
