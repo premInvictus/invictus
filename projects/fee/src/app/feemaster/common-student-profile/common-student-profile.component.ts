@@ -1,7 +1,30 @@
-import { Component, OnInit, OnChanges, Input, EventEmitter, Output } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { SisService, CommonAPIService, ProcesstypeService, FeeService } from '../../_services';
-import { Router, ActivatedRoute, NavigationEnd, RouterStateSnapshot } from '@angular/router';
+import {
+	Component,
+	OnInit,
+	OnChanges,
+	Input,
+	EventEmitter,
+	Output
+} from '@angular/core';
+import {
+	FormGroup,
+	FormBuilder,
+	FormControl,
+	FormGroupDirective,
+	NgForm
+} from '@angular/forms';
+import {
+	SisService,
+	CommonAPIService,
+	ProcesstypeFeeService,
+	FeeService
+} from '../../_services';
+import {
+	Router,
+	ActivatedRoute,
+	NavigationEnd,
+	RouterStateSnapshot
+} from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 
@@ -12,6 +35,7 @@ import { StudentRouteMoveStoreService } from '../student-route-move-store.servic
 })
 export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	@Input() loginId: any;
+	@Input() feeRenderId: any;
 	@Output() next = new EventEmitter();
 	@Output() prev = new EventEmitter();
 	@Output() first = new EventEmitter();
@@ -22,6 +46,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	@Output() first2 = new EventEmitter();
 	@Output() last2 = new EventEmitter();
 	@Output() key2 = new EventEmitter();
+	@Output() processTypeEmit = new EventEmitter();
 	studentdetailsform: FormGroup;
 	accountsForm: FormGroup;
 	studentdetails: any = {};
@@ -64,45 +89,56 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	lastFlag = false;
 	keyFlag = false;
 	studentLoginId: any;
-	invoice_creation_individual_flag = true;
-	student_profile_flag = true;
-	fee_ledger_flag = true;
-	fee_transaction_entry_individual_flag = true;
-
-	constructor(private fbuild: FormBuilder,
+	processType: any = '';
+	previousProcessType: any = '';
+	previousAdmno: any  = '';
+	previousLoginId = '';
+	processTypeArray: any[] = [
+		{ id: '1', name: 'Enquiry No.' },
+		{ id: '2', name: 'Registration No.' },
+		{ id: '3', name: 'Provisional Admission No.' },
+		{ id: '4', name: 'Admission No.' }
+	];
+	constructor(
+		private fbuild: FormBuilder,
 		private feeService: FeeService,
 		private sisService: SisService,
 		private router: Router,
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
-		public processtypeService: ProcesstypeService,
-		public studentRouteMoveStoreService: StudentRouteMoveStoreService) { }
+		public processtypeService: ProcesstypeFeeService,
+		public studentRouteMoveStoreService: StudentRouteMoveStoreService
+	) { }
 
 	ngOnInit() {
-		this.processtypeService.setProcesstype('4');
 		this.buildForm();
+		if (this.studentRouteMoveStoreService.getProcesRouteType()) {
+			this.processType = this.studentRouteMoveStoreService.getProcesRouteType();
+		} else {
+			this.processType = '4';
+		}
+		this.processtypeService.setProcesstype(this.processType);
 		const currentUrl = this.route.snapshot.routeConfig.path;
 		if (currentUrl !== '') {
 			if (currentUrl === 'invoice-creation-individual') {
-				this.invoice_creation_individual_flag = false;
 			} else if (currentUrl === 'student-profile') {
-				this.student_profile_flag = false;
 			} else if (currentUrl === 'fee-ledger') {
-				this.fee_ledger_flag = false;
 			} else if (currentUrl === 'fee-transaction-entry-individual') {
-				this.fee_transaction_entry_individual_flag = false;
 			}
 		}
 	}
 	goToPage(url) {
-		this.router.navigate([`../${url}`],{ relativeTo: this.route });
+		this.router.navigate([`../${url}`], { relativeTo: this.route });
 	}
 	ngOnChanges() {
 		if (this.loginId) {
 			this.studentdetailsflag = true;
+			this.getStudentInformation(this.loginId);
 		}
-		console.log('loginId', this.loginId);
-		this.getStudentInformation(this.loginId);
+		if (this.feeRenderId) {
+			this.studentdetailsflag = true;
+			this.getStudentInformation(this.feeRenderId);
+		}
 	}
 	buildForm() {
 		this.studentdetailsform = this.fbuild.group({
@@ -126,78 +162,251 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.studentLoginId = '';
 		if (au_login_id && this.studentdetailsflag) {
 			this.studentdetailsflag = false;
-			this.sisService.getStudentInformation({ au_login_id: au_login_id, au_status: '1' }).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.nextB = true;
-					this.firstB = true;
-					this.lastB = true;
-					this.previousB = true;
-					this.studentdetails = [];
-					this.defaultsrc = '/assets/images/student.png';
-					if (result && result.data && result.data[0]) {
-						this.studentdetails = result.data[0];
-						this.studentRouteMoveStoreService.setRouteStore(this.studentdetails.em_admission_no, this.studentdetails.au_login_id);
-						this.studentLoginId = this.studentdetails.au_login_id;
-						if (this.nextFlag) {
-							this.next.emit(this.studentLoginId);
-							this.next2.emit(this.studentdetails.em_admission_no);
+			this.sisService
+				.getStudentInformation({ au_login_id: au_login_id, au_status: '1' })
+				.subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.studentRouteMoveStoreService.setProcessTypePrev(this.processType);
+						this.nextB = true;
+						this.firstB = true;
+						this.lastB = true;
+						this.previousB = true;
+						this.studentdetails = [];
+						this.defaultsrc = '/assets/images/student.png';
+						if (result && result.data && result.data[0]) {
+							this.studentdetails = result.data[0];
+							this.previousLoginId = this.studentdetails.au_login_id;
+							if (Number(this.processType) === 4) {
+								this.studentRouteMoveStoreService.setRouteStore(
+									this.studentdetails.em_admission_no,
+									this.studentdetails.au_login_id
+								);
+								this.studentRouteMoveStoreService.setProcessRouteType(
+									this.processType
+								);
+							} else if (Number(this.processType) === 3) {
+								this.studentRouteMoveStoreService.setRouteStore(
+									this.studentdetails.em_provisional_admission_no,
+									this.studentdetails.au_login_id
+								);
+								this.studentRouteMoveStoreService.setProcessRouteType(
+									this.processType
+								);
+							} else if (Number(this.processType) === 2) {
+								this.studentRouteMoveStoreService.setRouteStore(
+									this.studentdetails.em_regd_no,
+									this.studentdetails.au_login_id
+								);
+								this.studentRouteMoveStoreService.setProcessRouteType(
+									this.processType
+								);
+							} else if (Number(this.processType) === 1) {
+								this.studentRouteMoveStoreService.setRouteStore(
+									this.studentdetails.em_enq_no,
+									this.studentdetails.au_login_id
+								);
+								this.studentRouteMoveStoreService.setProcessRouteType(
+									this.processType
+								);
+							} else if (Number(this.processType) === 5) {
+								this.studentRouteMoveStoreService.setRouteStore(
+									this.studentdetails.em_alumini_no,
+									this.studentdetails.au_login_id
+								);
+								this.studentRouteMoveStoreService.setProcessRouteType(
+									this.processType
+								);
+							}
+							this.studentLoginId = this.studentdetails.au_login_id;
+							if (Number(this.processType) === 4) {
+								this.previousAdmno = this.studentdetails.em_admission_no;
+								if (this.nextFlag) {
+									this.next.emit(this.studentLoginId);
+									this.next2.emit(this.studentdetails.em_admission_no);
+								}
+								if (this.prevFlag) {
+									this.prev.emit(this.studentLoginId);
+									this.prev2.emit(this.studentdetails.em_admission_no);
+								}
+								if (this.firstFlag) {
+									this.first.emit(this.studentLoginId);
+									this.first2.emit(this.studentdetails.em_admission_no);
+								}
+								if (this.lastFlag) {
+									this.last.emit(this.studentLoginId);
+									this.last2.emit(this.studentdetails.em_admission_no);
+								}
+								if (this.keyFlag) {
+									this.key.emit(this.studentLoginId);
+									this.key2.emit(this.studentdetails.em_admission_no);
+								}
+							} else if (Number(this.processType) === 2) {
+								this.previousAdmno = this.studentdetails.em_regd_no;
+								if (this.nextFlag) {
+									this.next.emit(this.studentLoginId);
+									this.next2.emit(this.studentdetails.em_regd_no);
+								}
+								if (this.prevFlag) {
+									this.prev.emit(this.studentLoginId);
+									this.prev2.emit(this.studentdetails.em_regd_no);
+								}
+								if (this.firstFlag) {
+									this.first.emit(this.studentLoginId);
+									this.first2.emit(this.studentdetails.em_regd_no);
+								}
+								if (this.lastFlag) {
+									this.last.emit(this.studentLoginId);
+									this.last2.emit(this.studentdetails.em_regd_no);
+								}
+								if (this.keyFlag) {
+									this.key.emit(this.studentLoginId);
+									this.key2.emit(this.studentdetails.em_regd_no);
+								}
+							} else if (Number(this.processType) === 3) {
+								this.previousAdmno = this.studentdetails.em_provisional_admission_no;
+								if (this.nextFlag) {
+									this.next.emit(this.studentLoginId);
+									this.next2.emit(
+										this.studentdetails.em_provisional_admission_no
+									);
+								}
+								if (this.prevFlag) {
+									this.prev.emit(this.studentLoginId);
+									this.prev2.emit(
+										this.studentdetails.em_provisional_admission_no
+									);
+								}
+								if (this.firstFlag) {
+									this.first.emit(this.studentLoginId);
+									this.first2.emit(
+										this.studentdetails.em_provisional_admission_no
+									);
+								}
+								if (this.lastFlag) {
+									this.last.emit(this.studentLoginId);
+									this.last2.emit(
+										this.studentdetails.em_provisional_admission_no
+									);
+								}
+								if (this.keyFlag) {
+									this.key.emit(this.studentLoginId);
+									this.key2.emit(
+										this.studentdetails.em_provisional_admission_no
+									);
+								}
+							} else if (Number(this.processType) === 1) {
+								this.previousAdmno = this.studentdetails.em_enq_no;
+								if (this.nextFlag) {
+									this.next.emit(this.studentLoginId);
+									this.next2.emit(this.studentdetails.em_enq_no);
+								}
+								if (this.prevFlag) {
+									this.prev.emit(this.studentLoginId);
+									this.prev2.emit(this.studentdetails.em_enq_no);
+								}
+								if (this.firstFlag) {
+									this.first.emit(this.studentLoginId);
+									this.first2.emit(this.studentdetails.em_enq_no);
+								}
+								if (this.lastFlag) {
+									this.last.emit(this.studentLoginId);
+									this.last2.emit(this.studentdetails.em_enq_no);
+								}
+								if (this.keyFlag) {
+									this.key.emit(this.studentLoginId);
+									this.key2.emit(this.studentdetails.em_enq_no);
+								}
+							} else if (Number(this.processType) === 5) {
+								this.previousAdmno = this.studentdetails.em_alumini_no;
+								if (this.nextFlag) {
+									this.next.emit(this.studentLoginId);
+									this.next2.emit(this.studentdetails.em_alumini_no);
+								}
+								if (this.prevFlag) {
+									this.prev.emit(this.studentLoginId);
+									this.prev2.emit(this.studentdetails.em_alumini_no);
+								}
+								if (this.firstFlag) {
+									this.first.emit(this.studentLoginId);
+									this.first2.emit(this.studentdetails.em_alumini_no);
+								}
+								if (this.lastFlag) {
+									this.last.emit(this.studentLoginId);
+									this.last2.emit(this.studentdetails.em_alumini_no);
+								}
+								if (this.keyFlag) {
+									this.key.emit(this.studentLoginId);
+									this.key2.emit(this.studentdetails.em_alumini_no);
+								}
+							}
 						}
-						if (this.prevFlag) {
-							this.prev.emit(this.studentLoginId);
-							this.prev2.emit(this.studentdetails.em_admission_no);
+						if (result && result.data && result.data[0].navigation[0]) {
+							this.navigation_record = result.data[0].navigation[0];
 						}
-						if (this.firstFlag) {
-							this.first.emit(this.studentLoginId);
-							this.first2.emit(this.studentdetails.em_admission_no);
+						if (this.processtypeService.getProcesstype() === '4') {
+							this.studentdetailsform.patchValue({
+								au_enrollment_id: this.studentdetails.em_admission_no
+							});
+						} else if (this.processtypeService.getProcesstype() === '2') {
+							this.studentdetailsform.patchValue({
+								au_enrollment_id: this.studentdetails.em_regd_no
+							});
+						} else if (this.processtypeService.getProcesstype() === '1') {
+							this.studentdetailsform.patchValue({
+								au_enrollment_id: this.studentdetails.em_enq_no
+							});
+						} else if (this.processtypeService.getProcesstype() === '3') {
+							this.studentdetailsform.patchValue({
+								au_enrollment_id: this.studentdetails
+									.em_provisional_admission_no
+							});
 						}
-						if (this.lastFlag) {
-							this.last.emit(this.studentLoginId);
-							this.last2.emit(this.studentdetails.em_admission_no);
-						}
-						if (this.keyFlag) {
-							this.key.emit(this.studentLoginId);
-							this.key2.emit(this.studentdetails.em_admission_no);
-						}
-					}
-					if (result && result.data && result.data[0].navigation[0]) {
-						this.navigation_record = result.data[0].navigation[0];
-					}
-					if (this.processtypeService.getProcesstype() === '4') {
 						this.studentdetailsform.patchValue({
-							au_enrollment_id: this.studentdetails.em_admission_no
+							au_profileimage: this.studentdetails.au_profileimage
+								? this.studentdetails.au_profileimage
+								: this.defaultsrc,
+							au_login_id: this.studentdetails.au_login_id
 						});
+						this.defaultsrc =
+							this.studentdetails.au_profileimage !== ''
+								? this.studentdetails.au_profileimage
+								: this.defaultsrc;
+						if (this.navigation_record) {
+							this.viewOnly = true;
+							if (
+								this.navigation_record.first_record &&
+								this.navigation_record.first_record !==
+								this.studentdetailsform.value.au_enrollment_id &&
+								this.viewOnly
+							) {
+								this.firstB = false;
+							}
+							if (
+								this.navigation_record.last_record &&
+								this.navigation_record.last_record !==
+								this.studentdetailsform.value.au_enrollment_id &&
+								this.viewOnly
+							) {
+								this.lastB = false;
+							}
+							if (this.navigation_record.next_record && this.viewOnly) {
+								this.nextB = false;
+							}
+							if (this.navigation_record.prev_record && this.viewOnly) {
+								this.previousB = false;
+							}
+						}
+						this.loginId = '';
+						this.feeRenderId = '';
+					} else {
+						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+						this.processtypeService.setProcesstype(this.studentRouteMoveStoreService.getProcessTypePrev());
+						this.processType = this.studentRouteMoveStoreService.getProcessTypePrev();
+						this.nextId(this.previousAdmno);
+						this.next.emit(this.previousLoginId);
 					}
-					this.studentdetailsform.patchValue({
-						au_profileimage: this.studentdetails.au_profileimage ? this.studentdetails.au_profileimage : this.defaultsrc,
-						au_login_id: this.studentdetails.au_login_id,
-					});
-					this.defaultsrc = this.studentdetails.au_profileimage !== '' ? this.studentdetails.au_profileimage : this.defaultsrc;
-					if (this.navigation_record) {
-						this.viewOnly = true;
-						if (this.navigation_record.first_record &&
-							this.navigation_record.first_record !== this.studentdetailsform.value.au_enrollment_id &&
-							this.viewOnly) {
-							this.firstB = false;
-						}
-						if (this.navigation_record.last_record &&
-							this.navigation_record.last_record !== this.studentdetailsform.value.au_enrollment_id &&
-							this.viewOnly) {
-							this.lastB = false;
-						}
-						if (this.navigation_record.next_record && this.viewOnly) {
-							this.nextB = false;
-						}
-						if (this.navigation_record.prev_record && this.viewOnly) {
-							this.previousB = false;
-						}
-					}
-
-				} else {
-					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
-				}
-			});
+				});
 		}
-
 	}
 	loadOnEnrollmentId($event) {
 		this.keyFlag = false;
@@ -244,5 +453,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.lastFlag = true;
 		this.getStudentDetailsByAdmno(admno);
 		// this.studentRouteMoveStoreService.setRouteStore(admno, null);
+	}
+	changeProcessType($event) {
+		this.processType = $event.value;
+		this.processtypeService.setProcesstype(this.processType);
+		this.processTypeEmit.emit(this.processType);
 	}
 }

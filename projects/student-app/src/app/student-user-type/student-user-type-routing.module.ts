@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { StudentComponent } from './student/student.component';
 import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
 import { UserCredentialComponent } from './user-credential/user-credential.component';
 import {AuthGuard} from '../_guards/auth.guard';
+import { ProjectComponent } from 'src/app/invictus-shared/project/project.component';
 const routes: Routes = [
 	{
 		path: '',
-		component: StudentComponent,
+		component: ProjectComponent,
 		canActivate: [AuthGuard],
 		children: [
 			{ path: '', component: StudentDashboardComponent },

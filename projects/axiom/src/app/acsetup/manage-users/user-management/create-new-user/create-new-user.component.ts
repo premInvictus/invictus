@@ -162,7 +162,7 @@ export class CreateNewUserComponent implements OnInit {
 								xhr.send();
 							}
 							this.notif.showSuccessErrorMessage('User Created Successfully', 'success');
-							this.router.navigate(['/school/setup/manage-access-user', this.userIdManageAccess]);
+							this.router.navigate(['../manage-access-user', this.userIdManageAccess], { relativeTo: this.route });
 							this.saveief();
 						}
 					}

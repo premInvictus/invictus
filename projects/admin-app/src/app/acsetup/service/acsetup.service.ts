@@ -206,6 +206,10 @@ export class AcsetupService {
 				return this.http.get(environment.apiAxiomUrl + '/setup/getState');
 
 		}
+		getStateCountryByCity(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiSisUrl + '/setup/getStateCountryByCity', value);
+		}
 		getCity() {
 				this.loaderService.startLoading();
 				return this.http.get(environment.apiAxiomUrl + '/setup/getCity/1');

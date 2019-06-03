@@ -39,7 +39,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	@Input() permissionFlag = false;
 	@Input() feeLoginId: any;
 	validateFlag = false;
-	slabModel: any = '';
+	slabModel: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -48,8 +48,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
-		this.terminateStatus = 'Transport Facility Available';
-		this.hostelStatus = 'Hostel Facility Available';
+		this.terminateStatus = 'Terminate Transport Facility';
+		this.hostelStatus = 'Terminate Hostel Facility';
 		this.buildForm();
 		this.getFeeOtherCategory();
 		this.getConGroup();
@@ -58,8 +58,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.getHostelFeeStructures();
 		this.getTransportMode();
 		this.getRoutes();
-		this.getStoppages();
-		this.getSlabs();
 	}
 	ngOnChanges() {
 		this.renderData();
@@ -93,69 +91,75 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	renderData() {
-			if (this.feeDet.accd_login_id) {
-				if (this.feeDet.accd_is_transport === 'Y') {
-					this.transportFlag = true;
-				} else {
-					this.transportFlag = false;
-				}
-				if (this.feeDet.accd_tr_id === '1') {
-					this.modeFlag = true;
-				} else {
-					this.modeFlag = false;
-				}
-				if (this.feeDet.accd_is_terminate === 'Y') {
-					this.terminationFlag = true;
-					this.terminateStatus = 'Transport Facility Terminated';
-				} else {
-					this.terminationFlag = false;
-					this.terminateStatus = 'Transport Facility Available';
-				}
-				if (this.feeDet.accd_is_hostel_terminate === 'Y') {
-					this.hostelTerminateFlag = true;
-					this.hostelStatus = 'Hostel Facility Terminated';
-				} else {
-					this.hostelTerminateFlag = false;
-					this.hostelStatus = 'Hostel Facility Available';
-				}
-				if (this.feeDet.accd_is_hostel === 'Y') {
-					this.hostelFlag = true;
-				} else {
-					this.hostelFlag = false;
-				}
-				this.slabModel = this.feeDet.accd_tsp_id;
-				this.accountsForm.patchValue({
-					accd_id: this.feeDet.accd_id,
-					accd_login_id: this.feeDet.accd_login_id,
-					accd_fo_id: this.feeDet.accd_fo_id,
-					accd_fs_id: this.feeDet.accd_fs_id,
-					accd_fcg_id: this.feeDet.accd_fcg_id,
-					accd_is_transport: this.feeDet.accd_is_transport === 'N' ? false : true,
-					accd_is_hostel: this.feeDet.accd_is_hostel === 'N' ? false : true,
-					accd_transport_mode: this.feeDet.accd_transport_mode,
-					accd_tr_id: this.feeDet.accd_tr_id,
-					accd_tsp_id: this.feeDet.accd_tsp_id,
-					accd_ts_id: this.feeDet.accd_ts_id,
-					accd_is_terminate: this.feeDet.accd_is_terminate === 'N' ? false : true,
-					accd_is_hostel_terminate: this.feeDet.accd_is_hostel_terminate === 'N' ? false : true,
-					accd_transport_from: this.feeDet.accd_transport_from,
-					accd_transport_to: this.feeDet.accd_transport_to,
-					accd_remark: this.feeDet.accd_remark,
-					accd_hostel_fs_id: this.feeDet.accd_hostel_fs_id,
-					accd_hostel_fcc_id: this.feeDet.accd_hostel_fcc_id,
-					accd_hostel_from: this.feeDet.accd_hostel_from,
-					accd_hostel_to: this.feeDet.accd_hostel_to,
-					accd_ses_id: this.feeDet.ses_id,
-					accd_status: this.feeDet.accd_status
-				});
+		this.stoppageArray = [];
+		this.slabArray = [];
+		if (this.feeDet.accd_login_id) {
+			if (this.feeDet.accd_is_transport === 'Y') {
+				this.transportFlag = true;
 			} else {
-				this.accountsForm.reset();
 				this.transportFlag = false;
-				this.hostelFlag = false;
-				this.modeFlag = false;
-				this.terminationFlag = false;
-				this.existFlag = false;
 			}
+			if (this.feeDet.accd_tr_id === '1' && this.feeDet.accd_is_transport === 'Y') {
+				this.modeFlag = true;
+			} else {
+				this.modeFlag = false;
+			}
+			if (this.feeDet.accd_is_terminate === 'Y' && this.transportFlag && this.modeFlag) {
+				this.terminationFlag = true;
+				this.terminateStatus = 'Terminate Transport Facility';
+			} else {
+				this.terminationFlag = false;
+				this.terminateStatus = 'Terminate Transport Facility';
+			}
+			if (this.feeDet.accd_is_hostel_terminate === 'Y') {
+				this.hostelTerminateFlag = true;
+				this.hostelStatus = 'Terminate Hostel Facility';
+			} else {
+				this.hostelTerminateFlag = false;
+				this.hostelStatus = 'Terminate Hostel Facility';
+			}
+			if (this.feeDet.accd_is_hostel === 'Y') {
+				this.hostelFlag = true;
+			} else {
+				this.hostelFlag = false;
+			}
+			this.enableMode(this.feeDet.accd_transport_mode);
+			this.getStoppages(this.feeDet.accd_tr_id);
+			this.getSlab(this.feeDet.accd_tsp_id);
+			this.accountsForm.patchValue({
+				accd_id: this.feeDet.accd_id,
+				accd_login_id: this.feeDet.accd_login_id,
+				accd_fo_id: this.feeDet.accd_fo_id,
+				accd_fs_id: this.feeDet.accd_fs_id,
+				accd_fcg_id: this.feeDet.accd_fcg_id,
+				accd_is_transport: this.feeDet.accd_is_transport === 'N' ? false : true,
+				accd_is_hostel: this.feeDet.accd_is_hostel === 'N' ? false : true,
+				accd_transport_mode: this.feeDet.accd_transport_mode,
+				accd_tr_id: this.feeDet.accd_tr_id,
+				accd_tsp_id: this.feeDet.accd_tsp_id,
+				accd_ts_id: this.feeDet.accd_ts_id,
+				accd_is_terminate: this.feeDet.accd_is_terminate === 'N' ? false : true,
+				accd_is_hostel_terminate: this.feeDet.accd_is_hostel_terminate === 'N' ? false : true,
+				accd_transport_from: this.feeDet.accd_transport_from.split('-')[0] === '1970' ? '' : this.feeDet.accd_transport_from,
+				accd_transport_to: this.feeDet.accd_transport_to.split('-')[0] === '1970' ? '' : this.feeDet.accd_transport_to,
+				accd_remark: this.feeDet.accd_remark,
+				accd_hostel_fs_id: this.feeDet.accd_hostel_fs_id,
+				accd_hostel_fcc_id: this.feeDet.accd_hostel_fcc_id,
+				accd_hostel_from: this.feeDet.accd_hostel_from.split('-')[0] === '1970' ? '' : this.feeDet.accd_hostel_from,
+				accd_hostel_to: this.feeDet.accd_hostel_to.split('-')[0] === '1970' ? '' : this.feeDet.accd_hostel_to,
+				accd_ses_id: this.feeDet.ses_id,
+				accd_status: this.feeDet.accd_status
+			});
+			this.slabModel = this.feeDet.accd_ts_id;
+		} else {
+			this.accountsForm.reset();
+			this.transportFlag = false;
+			this.hostelFlag = false;
+			this.modeFlag = false;
+			this.terminationFlag = false;
+			this.existFlag = false;
+		}
+
 	}
 	getFeeOtherCategory() {
 		this.feeService.getFeeOthers({}).subscribe((result: any) => {
@@ -186,7 +190,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	getHostelConGroup() {
-		this.feeService.getConcessionGroup({ fcg_is_hostel_fee: 1 }).subscribe((result: any) => {
+		this.feeService.getConcessionGroup({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.hostelConGroupArray = result.data;
 			}
@@ -196,6 +200,17 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		if ($event.checked) {
 			this.transportFlag = true;
 		} else {
+			this.accountsForm.patchValue({
+				accd_transport_mode: '',
+				accd_tr_id: '',
+				accd_tsp_id: '',
+				accd_ts_id: '',
+				accd_is_terminate: 'N',
+				accd_transport_from: '',
+				accd_transport_to: '',
+			});
+			this.slabArray = [];
+			this.stoppageArray = [];
 			this.transportFlag = false;
 		}
 	}
@@ -203,6 +218,13 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		if ($event.checked) {
 			this.hostelFlag = true;
 		} else {
+			this.accountsForm.patchValue({
+				accd_hostel_fs_id: '',
+				accd_hostel_fcc_id: '',
+				accd_hostel_from: '',
+				accd_hostel_to: '',
+				accd_is_hostel_terminate: 'N',
+			});
 			this.hostelFlag = false;
 		}
 	}
@@ -220,20 +242,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		});
 	}
-	getStoppages() {
-		this.feeService.getStoppages({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.stoppageArray = result.data;
-			}
-		});
-	}
-	getSlabs() {
-		this.feeService.getSlabs({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.slabArray = result.data;
-			}
-		});
-	}
 	enableMode($event) {
 		if ($event === '1') {
 			this.modeFlag = true;
@@ -244,19 +252,19 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	terminate($event) {
 		if ($event.checked) {
 			this.terminationFlag = true;
-			this.terminateStatus = 'Transport Facility Terminated';
+			this.terminateStatus = 'Terminate Transport Facility';
 		} else {
 			this.terminationFlag = false;
-			this.terminateStatus = 'Transport  Facility Available';
+			this.terminateStatus = 'Terminate Transport Facility';
 		}
 	}
 	hostel($event) {
 		if ($event.checked) {
 			this.hostelTerminateFlag = true;
-			this.hostelStatus = 'Hostel Facility Terminated';
+			this.hostelStatus = 'Terminate Hostel Facility';
 		} else {
 			this.hostelTerminateFlag = false;
-			this.hostelStatus = 'Hostel  Facility Available';
+			this.hostelStatus = 'Terminate Hostel Facility';
 		}
 	}
 	submit() {
@@ -265,26 +273,25 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.get('accd_fo_id').valid &&
-			!this.accountsForm.get('accd_fs_id').valid &&
-			!this.accountsForm.get('accd_fcg_id').valid && !this.modeFlag && !this.transportFlag && !this.hostelFlag
+		if (!this.accountsForm.value.accd_fo_id &&
+			!this.accountsForm.value.accd_fs_id &&
+			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
 			this.accountsForm.get('accd_fs_id').markAsDirty();
-			this.accountsForm.get('accd_fcg_id').markAsDirty();
 			this.validateFlag = false;
 		}
-		if (this.transportFlag) {
-			if (!this.accountsForm.get('accd_transport_mode').valid) {
-				this.accountsForm.get('accd_transport_mode').markAsDirty();
+		if (this.transportFlag && !this.modeFlag) {
+			if (!this.accountsForm.value.accd_transport_mode) {
 				this.validateFlag = false;
+				this.accountsForm.get('accd_transport_mode').markAsDirty();
 			}
 		}
-		if (this.modeFlag && this.transportFlag) {
-			if (!this.accountsForm.get('accd_tr_id').valid &&
-				!this.accountsForm.get('accd_tsp_id').valid &&
-				!this.accountsForm.get('accd_ts_id').valid &&
-				!this.accountsForm.get('accd_transport_from').valid) {
+		if (this.transportFlag && this.modeFlag) {
+			if (!this.accountsForm.value.accd_tr_id &&
+				!this.accountsForm.value.accd_tsp_id &&
+				!this.accountsForm.value.accd_ts_id &&
+				!this.accountsForm.value.accd_transport_from) {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
 				this.accountsForm.get('accd_ts_id').markAsDirty();
@@ -293,7 +300,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.terminationFlag) {
-			if (!this.accountsForm.get('accd_transport_to').valid) {
+			if (!this.accountsForm.value.accd_transport_to) {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				this.validateFlag = false;
 			}
@@ -325,7 +332,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			};
 			this.feeService.insertFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
-					this.commonAPIService.showSuccessErrorMessage('Inserted SucessFully', 'success');
 					// this.getFeeAccount(this.feeLoginId);
 				}
 			});
@@ -337,26 +343,25 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.validateFlag = false;
 			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
 		}
-		if (!this.accountsForm.get('accd_fo_id').valid &&
-			!this.accountsForm.get('accd_fs_id').valid &&
-			!this.accountsForm.get('accd_fcg_id').valid && !this.modeFlag && !this.transportFlag && !this.hostelFlag
+		if (!this.accountsForm.value.accd_fo_id &&
+			!this.accountsForm.value.accd_fs_id &&
+			!this.modeFlag && !this.transportFlag && !this.hostelFlag
 			&& !this.terminationFlag) {
 			this.accountsForm.get('accd_fo_id').markAsDirty();
 			this.accountsForm.get('accd_fs_id').markAsDirty();
-			this.accountsForm.get('accd_fcg_id').markAsDirty();
 			this.validateFlag = false;
 		}
-		if (this.transportFlag) {
-			if (!this.accountsForm.get('accd_transport_mode').valid) {
-				this.accountsForm.get('accd_transport_mode').markAsDirty();
+		if (this.transportFlag && !this.modeFlag) {
+			if (!this.accountsForm.value.accd_transport_mode) {
 				this.validateFlag = false;
+				this.accountsForm.get('accd_transport_mode').markAsDirty();
 			}
 		}
-		if (this.modeFlag && this.transportFlag) {
-			if (!this.accountsForm.get('accd_tr_id').valid &&
-				!this.accountsForm.get('accd_tsp_id').valid &&
-				!this.accountsForm.get('accd_ts_id').valid &&
-				!this.accountsForm.get('accd_transport_from').valid) {
+		if (this.transportFlag && this.modeFlag) {
+			if (!this.accountsForm.value.accd_tr_id &&
+				!this.accountsForm.value.accd_tsp_id &&
+				!this.accountsForm.value.accd_ts_id &&
+				!this.accountsForm.value.accd_transport_from) {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
 				this.accountsForm.get('accd_ts_id').markAsDirty();
@@ -365,7 +370,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.terminationFlag) {
-			if (!this.accountsForm.get('accd_transport_to').valid) {
+			if (!this.accountsForm.value.accd_transport_to) {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				this.validateFlag = false;
 			}
@@ -397,8 +402,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			};
 			this.feeService.updateFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
-					this.commonAPIService.showSuccessErrorMessage('Updated SucessFully', 'success');
-					// this.getFeeAccount(this.feeLoginId);
 				}
 			});
 		}
@@ -406,7 +409,25 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	isExist(mod_id) {
 		return this.commonAPIService.isExistUserAccessMenu(mod_id);
 	}
-	getSlab($event) {
-		this.slabModel = $event.value;
+	getStoppages(value) {
+		this.accountsForm.patchValue({
+			accd_tsp_id: '',
+			accd_ts_id: ''
+		});
+		this.stoppageArray = [];
+		this.feeService.getStoppagesPerRoute({ tr_id: value }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.stoppageArray = result.data;
+			}
+		});
+	}
+	getSlab(value) {
+		this.slabArray = [];
+		this.feeService.getTransportSlabPerStoppages({ tsp_id: value }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.slabArray = result.data;
+				this.slabModel = this.slabArray[0].ts_id;
+			}
+		});
 	}
 }

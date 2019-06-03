@@ -11,6 +11,8 @@ const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
+import { reduce } from 'rxjs/operators';
+import { CapitalizePipe } from '../../_pipes';
 @Component({
 	selector: 'app-reports',
 	templateUrl: './reports.component.html',
@@ -34,6 +36,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	reportTypeArray: any[] = [];
 	reportFilterForm: FormGroup;
 	REPORT_ELEMENT_DATA: any[] = [];
+	REPORT_ELEMENT_DATA2: any[] = [];
 	valueLabel: any = 'Value';
 	totalRecords: any;
 	currentDate = new Date();
@@ -45,6 +48,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	hiddenFieldLabel: any = '';
 	@ViewChild('paginator') paginator: MatPaginator;
 	dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
+	dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
 	feePeriod: any[] = [];
 	hiddenValueArray: any[] = [];
 	hiddenValueArray2: any[] = [];
@@ -212,6 +216,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
+		this.dataSource2.paginator = this.paginator;
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
@@ -243,6 +248,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.reportFlag = true;
 		this.advSearchFlag = true;
 		this.accountFlag = false;
+		this.reportType = '';
 		this.tableFlag = false;
 		this.reportFilterForm.patchValue({
 			'report_type': '',
@@ -284,8 +290,24 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				this.renderTable = renderingArray[findex2]['dataReport'];
 				this.reportType = report_id;
 			}
-			if (Number(report_id) === 1
-			|| Number(report_id) === 2) {
+			if (Number(report_id) === 1) {
+				this.reportTypeArray.push({
+					report_type: 'headwise', report_name: 'Head Wise'
+				},
+					{
+						report_type: 'classwise', report_name: 'Class Wise'
+					},
+					{
+						report_type: 'modewise', report_name: 'Mode Wise'
+					},
+					{
+						report_type: 'routewise', report_name: 'Route Wise'
+					},
+					{
+						report_type: 'mfr', report_name: 'MFR Report'
+					});
+			}
+			if (Number(report_id) === 2) {
 				this.reportTypeArray.push({
 					report_type: 'headwise', report_name: 'Head Wise'
 				},
@@ -366,7 +388,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	getHiddenFieldValue($event, type) {
 		this.hiddenValueArray = [];
-		if (Number(type) === 1 && this.reportFilterForm.value.report_type === 'classwise') {
+		if (Number(type) === 1 && (this.reportFilterForm.value.report_type === 'classwise'
+			|| this.reportFilterForm.value.report_type === 'mfr')) {
 			this.sisService.getSectionsByClass({ class_id: $event.value }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					for (const item of result.data) {
@@ -473,6 +496,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.hiddenFieldLabel2 = 'Section';
 		}
 		if ($event.value === 'classwise') {
+			this.hiddenValueArray = [];
+			this.valueLabel = 'Class';
+			this.hiddenFieldLabel = 'Section';
+			this.getClass();
+		}
+		if ($event.value === 'mfr') {
 			this.hiddenValueArray = [];
 			this.valueLabel = 'Class';
 			this.hiddenFieldLabel = 'Section';
@@ -639,179 +668,306 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		let repoArray: any[] = [];
 		this.REPORT_ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
-		if ((Number(this.reportType) === 1 || Number(this.reportType) === 2 )
-		&& this.reportFilterForm.value.report_type) {
-			this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					repoArray = result.data.reportData;
-					this.totalRecords = Number(result.data.totalRecords);
-					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					if (this.reportFilterForm.value.report_type === 'headwise') {
-						let i = 0;
-						let j = 0;
-						const fee_head_data: any[] = [];
-						const fee_head_data_name: any[] = [];
-						Object.keys(repoArray).forEach((keys: any) => {
-							const obj: any = {};
-							if (Number(keys) === 0) {
-								fee_head_data.push('srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name',
-									'stu_class_name', 'invoice_no', 'receipt_no');
-								fee_head_data_name.push('SNo.', 'Date', 'Admission No', 'Student Name',
-									'Class-Section', 'Invoice No.', 'Reciept No.');
-							}
-							if (repoArray[Number(keys)]['fee_head_data']) {
-								let k = 0;
-								let tot = 0;
-								for (const titem of repoArray[Number(keys)]['fee_head_data']) {
-									Object.keys(titem).forEach((key2: any) => {
-										if (key2 === 'fh_id' && Number(keys) === 0) {
-											fee_head_data.push(key2 + j);
-											j++;
-										}
-										if (key2 === 'fh_name' && Number(keys) === 0) {
-											fee_head_data_name.push(titem[key2]);
-										}
-										if (key2 === 'fh_id') {
-											obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-												(Number(keys) + 1);
-											obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
-											obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '0';
-											obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
-												repoArray[Number(keys)]['invoice_no'] : '-';
-											obj['invoice_id'] = repoArray[Number(keys)]['invoice_id'] ?
-												repoArray[Number(keys)]['invoice_id'] : '0';
-											obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
-												repoArray[Number(keys)]['rpt_id'] : '0';
-											obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
-												repoArray[Number(keys)]['receipt_no'] : 'NA';
-											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
-												repoArray[Number(keys)]['stu_admission_no'] : '-';
-											obj['stu_full_name'] = repoArray[Number(keys)]['stu_full_name'];
-											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
-												repoArray[Number(keys)]['stu_sec_name'];
-											tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
-											obj['total'] = new DecimalPipe('en-us').transform(tot);
-											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
-												repoArray[Number(keys)]['pay_name'] : 'NA';
-											k++;
-										}
-									});
+		this.REPORT_ELEMENT_DATA2 = [];
+		this.dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
+		if ((Number(this.reportType) === 1 || Number(this.reportType) === 2)
+			&& this.reportFilterForm.value.report_type) {
+			if (this.reportFilterForm.value.report_type !== 'mfr') {
+				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage(result.message, 'success');
+						repoArray = result.data.reportData;
+						this.totalRecords = Number(result.data.totalRecords);
+						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+						if (this.reportFilterForm.value.report_type === 'headwise') {
+							let i = 0;
+							let j = 0;
+							const fee_head_data: any[] = [];
+							const fee_head_data_name: any[] = [];
+							Object.keys(repoArray).forEach((keys: any) => {
+								const obj: any = {};
+								if (Number(keys) === 0) {
+									fee_head_data.push('srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name',
+										'stu_class_name', 'invoice_no', 'receipt_no');
+									fee_head_data_name.push('SNo.', 'Date', 'Enrollment No', 'Student Name',
+										'Class-Section', 'Invoice No.', 'Reciept No.');
 								}
+								if (repoArray[Number(keys)]['fee_head_data']) {
+									let k = 0;
+									let tot = 0;
+									for (const titem of repoArray[Number(keys)]['fee_head_data']) {
+										Object.keys(titem).forEach((key2: any) => {
+											if (key2 === 'fh_id' && Number(keys) === 0) {
+												fee_head_data.push(key2 + j);
+												j++;
+											}
+											if (key2 === 'fh_name' && Number(keys) === 0) {
+												fee_head_data_name.push(titem[key2]);
+											}
+											if (key2 === 'fh_id') {
+												obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+													(Number(keys) + 1);
+												obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
+												obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '0';
+												obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
+													repoArray[Number(keys)]['invoice_no'] : '-';
+												obj['invoice_id'] = repoArray[Number(keys)]['invoice_id'] ?
+													repoArray[Number(keys)]['invoice_id'] : '0';
+												obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
+													repoArray[Number(keys)]['rpt_id'] : '0';
+												obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
+													repoArray[Number(keys)]['receipt_no'] : 'NA';
+												obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
+													repoArray[Number(keys)]['stu_admission_no'] : '-';
+												obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+													repoArray[Number(keys)]['stu_sec_name'];
+												tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
+												obj['total'] = new DecimalPipe('en-us').transform(tot);
+												obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
+													repoArray[Number(keys)]['pay_name'] : 'NA';
+												k++;
+											}
+										});
+									}
+								}
+								i++;
+								this.REPORT_ELEMENT_DATA.push(obj);
+							});
+							fee_head_data.push('total', 'receipt_mode_name');
+							fee_head_data_name.push('Total', 'Mode');
+							this.tableFlag = true;
+							this.finalTable.columnDef = fee_head_data;
+							this.finalTable.colunmHeader = fee_head_data_name;
+						} else if (this.reportFilterForm.value.report_type === 'classwise') {
+							let index = 0;
+							for (const item of repoArray) {
+								const obj: any = {};
+								obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+									(index + 1);
+								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
+								obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
+									repoArray[Number(index)]['invoice_no'] : '-';
+								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
+									repoArray[Number(index)]['invoice_id'] : '0';
+								obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
+									repoArray[Number(index)]['receipt_no'] : 'NA';
+								obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
+									repoArray[Number(index)]['rpt_id'] : '0';
+								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
+									repoArray[Number(index)]['stu_admission_no'] : '-';
+								obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
+								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
+									repoArray[Number(index)]['stu_sec_name'];
+								obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
+									new DecimalPipe('en-us').transform(repoArray[Number(index)]['rpt_amount'])
+									: '0';
+								obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
+									repoArray[Number(index)]['fp_name'] : '-';
+								this.REPORT_ELEMENT_DATA.push(obj);
+								this.tableFlag = true;
+								index++;
 							}
-							i++;
-							this.REPORT_ELEMENT_DATA.push(obj);
-						});
-						fee_head_data.push('total', 'receipt_mode_name');
-						fee_head_data_name.push('Total', 'Mode');
+						} else if (this.reportFilterForm.value.report_type === 'modewise') {
+							let index = 0;
+							for (const item of repoArray) {
+								const obj: any = {};
+								obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+									(index + 1);
+								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
+								obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
+									repoArray[Number(index)]['invoice_no'] : '-';
+								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
+									repoArray[Number(index)]['invoice_id'] : '0';
+								obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
+									repoArray[Number(index)]['receipt_no'] : 'NA';
+								obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
+									repoArray[Number(index)]['rpt_id'] : '0';
+								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
+									repoArray[Number(index)]['stu_admission_no'] : '-';
+								obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
+								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
+									repoArray[Number(index)]['stu_sec_name'];
+								obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
+									new DecimalPipe('en-us').transform(repoArray[Number(index)]['rpt_amount'])
+									: 0;
+								obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
+									repoArray[Number(index)]['fp_name'] : 'NA';
+								obj['pay_name'] = repoArray[Number(index)]['pay_name'] ?
+									repoArray[Number(index)]['pay_name'] : 'NA';
+								this.REPORT_ELEMENT_DATA.push(obj);
+								this.tableFlag = true;
+								index++;
+							}
+						} else if (this.reportFilterForm.value.report_type === 'routewise') {
+							let index = 0;
+							for (const item of repoArray) {
+								const obj: any = {};
+								obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+									(index + 1);
+								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
+								obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
+									repoArray[Number(index)]['invoice_no'] : '-';
+								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
+									repoArray[Number(index)]['invoice_id'] : '0';
+								obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
+									repoArray[Number(index)]['receipt_no'] : 'NA';
+								obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
+									repoArray[Number(index)]['rpt_id'] : '0';
+								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
+									repoArray[Number(index)]['stu_admission_no'] : '-';
+								obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
+								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
+									repoArray[Number(index)]['stu_sec_name'];
+								obj['rpt_amount'] = repoArray[Number(index)]['transport_amount'] ?
+									new DecimalPipe('en-us').transform(repoArray[Number(index)]['transport_amount'])
+									: 0;
+								obj['route_name'] = repoArray[Number(index)]['route_name'] ?
+									repoArray[Number(index)]['route_name'] : 'NA';
+								obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
+									repoArray[Number(index)]['stoppages_name'] : 'NA';
+								this.REPORT_ELEMENT_DATA.push(obj);
+								this.tableFlag = true;
+								index++;
+							}
+						}
+						this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
+						this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+						this.dataSource.paginator = this.paginator;
+					} else {
+						this.common.showSuccessErrorMessage(result.message, 'error');
+						this.REPORT_ELEMENT_DATA = [];
+						this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
 						this.tableFlag = true;
-						this.finalTable.columnDef = fee_head_data;
-						this.finalTable.colunmHeader = fee_head_data_name;
 					}
-					if (this.reportFilterForm.value.report_type === 'classwise') {
+				});
+			}
+			if (this.reportFilterForm.value.report_type === 'mfr') {
+				const columnData: any[] = [];
+				const columnHeaderData: any[] = [];
+				collectionJSON = {
+					'report_type': value.report_type,
+					'from_date': value.from_date,
+					'to_date': value.to_date,
+					'pageSize': value.pageSize,
+					'pageIndex': value.pageIndex,
+					'classId': value.fee_value,
+					'admission_no': value.admission_no,
+					'secId': value.hidden_value,
+					'studentName': value.au_full_name,
+					'filterReportBy': 'collection'
+				};
+				this.feeService.getMFRReport(collectionJSON).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage(result.message, 'success');
+						repoArray = result.data.reportData;
+						this.totalRecords = Number(result.data.totalRecords);
+						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 						let index = 0;
+						let qindex = 1;
+						columnData.push('srno', 'au_admission_no', 'au_full_name', 'class_name');
+						columnHeaderData.push('SNo', 'Enrollment No.', 'Student Name', 'Class');
 						for (const item of repoArray) {
 							const obj: any = {};
+							obj['fp_id'] = item.inv_fp_id;
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
-							obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
-							obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
-								repoArray[Number(index)]['invoice_no'] : '-';
-							obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
-								repoArray[Number(index)]['invoice_id'] : '0';
-							obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-								repoArray[Number(index)]['receipt_no'] : 'NA';
-							obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
-								repoArray[Number(index)]['rpt_id'] : '0';
-							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
+							obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
-							obj['stu_full_name'] = repoArray[Number(index)]['stu_full_name'];
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
+							obj['au_full_name'] = repoArray[Number(index)]['stu_full_name'] ?
+								new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
+							obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 								repoArray[Number(index)]['stu_sec_name'];
-							obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
-								new DecimalPipe('en-us').transform(repoArray[Number(index)]['rpt_amount'])
-								: '0';
-							obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
-								repoArray[Number(index)]['fp_name'] : '-';
-							this.REPORT_ELEMENT_DATA.push(obj);
+							for (const titem of item['inv_invoice_generated_status']) {
+								Object.keys(titem).forEach((key: any) => {
+									if (key === 'fm_name' && index === 0 &&
+										Number(item.inv_fp_id) === 2) {
+										columnData.push('Q' + qindex);
+										qindex++;
+										columnHeaderData.push(titem[key]);
+									} else if (key === 'fm_name' && index === 0 &&
+										Number(item.inv_fp_id) === 1) {
+										columnData.push('Q' + qindex);
+										qindex++;
+										columnHeaderData.push(titem[key]);
+									} else if (key === 'fm_name' && index === 0 &&
+										Number(item.inv_fp_id) === 3) {
+										columnData.push('Q' + qindex);
+										qindex++;
+										columnHeaderData.push(titem[key]);
+									} else if (key === 'fm_name' && index === 0 &&
+										Number(item.inv_fp_id) === 4) {
+										columnData.push('Q' + qindex);
+										qindex++;
+										columnHeaderData.push(titem[key]);
+									}
+									if (key === 'fm_name' &&
+										Number(item.inv_fp_id) === 2) {
+										obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
+										obj['Q2'] = item['inv_invoice_generated_status'][1]['invoice_paid_status'];
+										obj['Q3'] = item['inv_invoice_generated_status'][2]['invoice_paid_status'];
+										obj['Q4'] = item['inv_invoice_generated_status'][3]['invoice_paid_status'];
+										obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
+										obj['inv_id2'] = item['inv_invoice_generated_status'][1]['invoice_id'];
+										obj['inv_id3'] = item['inv_invoice_generated_status'][2]['invoice_id'];
+										obj['inv_id4'] = item['inv_invoice_generated_status'][3]['invoice_id'];
+									} else if (key === 'fm_name' &&
+										Number(item.inv_fp_id) === 1) {
+										obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
+										obj['Q2'] = item['inv_invoice_generated_status'][1]['invoice_paid_status'];
+										obj['Q3'] = item['inv_invoice_generated_status'][2]['invoice_paid_status'];
+										obj['Q4'] = item['inv_invoice_generated_status'][3]['invoice_paid_status'];
+										obj['Q5'] = item['inv_invoice_generated_status'][4]['invoice_paid_status'];
+										obj['Q6'] = item['inv_invoice_generated_status'][5]['invoice_paid_status'];
+										obj['Q7'] = item['inv_invoice_generated_status'][6]['invoice_paid_status'];
+										obj['Q8'] = item['inv_invoice_generated_status'][7]['invoice_paid_status'];
+										obj['Q9'] = item['inv_invoice_generated_status'][8]['invoice_paid_status'];
+										obj['Q10'] = item['inv_invoice_generated_status'][9]['invoice_paid_status'];
+										obj['Q11'] = item['inv_invoice_generated_status'][10]['invoice_paid_status'];
+										obj['Q12'] = item['inv_invoice_generated_status'][11]['invoice_paid_status'];
+										obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
+										obj['inv_id2'] = item['inv_invoice_generated_status'][1]['invoice_id'];
+										obj['inv_id3'] = item['inv_invoice_generated_status'][2]['invoice_id'];
+										obj['inv_id4'] = item['inv_invoice_generated_status'][3]['invoice_id'];
+										obj['inv_id5'] = item['inv_invoice_generated_status'][4]['invoice_id'];
+										obj['inv_id6'] = item['inv_invoice_generated_status'][5]['invoice_id'];
+										obj['inv_id7'] = item['inv_invoice_generated_status'][6]['invoice_id'];
+										obj['inv_id8'] = item['inv_invoice_generated_status'][7]['invoice_id'];
+										obj['inv_id9'] = item['inv_invoice_generated_status'][8]['invoice_id'];
+										obj['inv_id10'] = item['inv_invoice_generated_status'][9]['invoice_id'];
+										obj['inv_id11'] = item['inv_invoice_generated_status'][10]['invoice_id'];
+										obj['inv_id12'] = item['inv_invoice_generated_status'][11]['invoice_id'];
+									} else if (key === 'fm_name' &&
+										Number(item.inv_fp_id) === 3) {
+										obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
+										obj['Q2'] = item['inv_invoice_generated_status'][1]['invoice_paid_status'];
+										obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
+										obj['inv_id2'] = item['inv_invoice_generated_status'][1]['invoice_id'];
+									} else if (key === 'fm_name' &&
+										Number(item.inv_fp_id) === 4) {
+										obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
+										obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
+									}
+								});
+								this.finalTable.columnDef = columnData;
+								this.finalTable.colunmHeader = columnHeaderData;
+							}
+							this.REPORT_ELEMENT_DATA2.push(obj);
 							this.tableFlag = true;
 							index++;
 						}
+						this.dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
+						this.dataSource2.paginator.length = this.paginator.length = this.totalRecords;
+						this.dataSource2.paginator = this.paginator;
+					} else {
+						this.common.showSuccessErrorMessage(result.message, 'error');
+						this.REPORT_ELEMENT_DATA2 = [];
+						this.dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
+						this.tableFlag = true;
 					}
-					if (this.reportFilterForm.value.report_type === 'modewise') {
-						let index = 0;
-						for (const item of repoArray) {
-							const obj: any = {};
-							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-								(index + 1);
-							obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
-							obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
-								repoArray[Number(index)]['invoice_no'] : '-';
-							obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
-								repoArray[Number(index)]['invoice_id'] : '0';
-							obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-								repoArray[Number(index)]['receipt_no'] : 'NA';
-							obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
-								repoArray[Number(index)]['rpt_id'] : '0';
-							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-								repoArray[Number(index)]['stu_admission_no'] : '-';
-							obj['stu_full_name'] = repoArray[Number(index)]['stu_full_name'];
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-								repoArray[Number(index)]['stu_sec_name'];
-							obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
-								new DecimalPipe('en-us').transform(repoArray[Number(index)]['rpt_amount'])
-								: 0;
-							obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
-								repoArray[Number(index)]['fp_name'] : 'NA';
-							obj['pay_name'] = repoArray[Number(index)]['pay_name'] ?
-								repoArray[Number(index)]['pay_name'] : 'NA';
-							this.REPORT_ELEMENT_DATA.push(obj);
-							this.tableFlag = true;
-							index++;
-						}
-					}
-					if (this.reportFilterForm.value.report_type === 'routewise') {
-						let index = 0;
-						for (const item of repoArray) {
-							const obj: any = {};
-							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-								(index + 1);
-							obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
-							obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
-								repoArray[Number(index)]['invoice_no'] : '-';
-							obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
-								repoArray[Number(index)]['invoice_id'] : '0';
-							obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-								repoArray[Number(index)]['receipt_no'] : 'NA';
-							obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
-								repoArray[Number(index)]['rpt_id'] : '0';
-							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-								repoArray[Number(index)]['stu_admission_no'] : '-';
-							obj['stu_full_name'] = repoArray[Number(index)]['stu_full_name'];
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-								repoArray[Number(index)]['stu_sec_name'];
-							obj['rpt_amount'] = repoArray[Number(index)]['transport_amount'] ?
-								new DecimalPipe('en-us').transform(repoArray[Number(index)]['transport_amount'])
-								: 0;
-							obj['route_name'] = repoArray[Number(index)]['route_name'] ?
-								repoArray[Number(index)]['route_name'] : 'NA';
-							obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
-								repoArray[Number(index)]['stoppages_name'] : 'NA';
-							this.REPORT_ELEMENT_DATA.push(obj);
-							this.tableFlag = true;
-							index++;
-						}
-					}
-					this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
-					this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
-					this.dataSource.paginator = this.paginator;
-				} else {
-					this.REPORT_ELEMENT_DATA = [];
-					this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
-					this.tableFlag = true;
-				}
-			});
-		}
-		if (Number(this.reportType) === 9) {
+				});
+			}
+		} else if (Number(this.reportType) === 9) {
 			const missingInvoiceJSON = {
 				'from_date': value.from_date,
 				'to_date': value.to_date,
@@ -824,6 +980,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			};
 			this.feeService.getMissingFeeInvoiceReport(missingInvoiceJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -836,7 +993,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_login_id'] = repoArray[Number(index)]['au_admission_no'] ?
 							repoArray[Number(index)]['au_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['au_full_name'] ?
-							repoArray[Number(index)]['au_full_name'] : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						let feePeriod: any = '';
 						for (const period of repoArray[Number(index)]['inv_invoice_generated_status']) {
 							feePeriod = feePeriod + period.fm_name + '<br>';
@@ -855,8 +1012,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 11) {
+		} else if (Number(this.reportType) === 11) {
 			let CheckControlJson = {};
 			CheckControlJson = {
 				'from_date': value.from_date,
@@ -870,6 +1026,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			};
 			this.feeService.getCheckControlReport(CheckControlJson).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -883,7 +1040,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_admission_no'] = repoArray[Number(index)]['au_admission_no'] ?
 							repoArray[Number(index)]['au_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['au_full_name'] ?
-							repoArray[Number(index)]['au_full_name'] : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['class_name'] + '-' +
 							repoArray[Number(index)]['sec_name'];
 						obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
@@ -923,8 +1080,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 5) {
+		} else if (Number(this.reportType) === 5) {
 			let feeLedgerJson = {};
 			feeLedgerJson = {
 				'from_date': value.from_date,
@@ -938,6 +1094,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			};
 			this.feeService.getFeeLedgerReport(feeLedgerJson).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -949,11 +1106,13 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								(++index);
 							obj['class_name'] = item['class_name'] + '-' +
 								item['sec_name'];
-							obj['au_full_name'] = item['au_full_name'] ? item['au_full_name'] : '-';
+							obj['au_full_name'] = item['au_full_name'] ?
+								new CapitalizePipe().transform(item['au_full_name']) : '-';
 							obj['au_admission_no'] = item['au_admission_no'] ?
 								item['au_admission_no'] : '-';
 							obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
 								stu_arr['flgr_particulars'] : '-';
+							obj['flgr_created_date'] = new DatePipe('en-us').transform(stu_arr['flgr_created_date'], 'd-MMM-y');
 							obj['invoice_id'] = stu_arr['flgr_inv_id'] ?
 								stu_arr['flgr_inv_id'] : '-';
 							obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
@@ -987,9 +1146,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-
-		if (Number(this.reportType) === 6) {
+		} else if (Number(this.reportType) === 6) {
 			let deletedFeeTransJson = {};
 			deletedFeeTransJson = {
 				'from_date': value.from_date,
@@ -1003,6 +1160,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			};
 			this.feeService.getDeletedFeeTransactionReport(deletedFeeTransJson).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1015,7 +1173,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['stu_admission_no'] = repoArray[Number(index)]['au_admission_no'] ?
 							repoArray[Number(index)]['au_admission_no'] : '-';
 						obj['stu_full_name'] = repoArray[Number(index)]['au_full_name'] ?
-							repoArray[Number(index)]['au_full_name'] : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						obj['stu_class_name'] = repoArray[Number(index)]['class_name'] + '-' +
 							repoArray[Number(index)]['sec_name'];
 						obj['invoice_no'] = repoArray[Number(index)]['inv_invoice_no'] ?
@@ -1037,11 +1195,11 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 10) {
+		} else if (Number(this.reportType) === 10) {
 			if (this.reportFilterForm.value.report_type === 'feestructure') {
 				this.feeService.getFeeStructureReport(this.reportFilterForm.value).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage(result.message, 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1050,31 +1208,46 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							const obj: any = {};
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
-							obj['fs_name'] = repoArray[Number(index)]['fs_name'];
-							let feeStructure: any = '';
-							let grandTotal = 0;
-							for (const fee of item['fs_structure']) {
-								if (fee['fc_classfication'] === 'head') {
-									feeStructure = feeStructure + '<b>' + fee['fh_name'] + '(' +
-										fee['ft_name'] + ')</b>: ' +
-										new DecimalPipe('en-us').transform(fee['fh_amount']) + ' (' +
-										new DecimalPipe('en-us').transform((Number(fee['fh_amount']) * fee['fh_fm_id'].length))
-										+ ')' +
-										'<br>';
-									grandTotal = grandTotal + (Number(fee['fh_amount']) * fee['fh_fm_id'].length);
-								} else if (fee['fc_classfication'] === 'group') {
-									let totalAmount = 0;
-									for (const amt of fee['fee_groups']) {
-										totalAmount = totalAmount + Number(amt['fh_amount']);
+							obj['fs_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['fs_name']);
+							let feeHead = '';
+							let feeHead2 = '';
+							if (item.fs_structure && item.fs_structure.length > 0) {
+								for (const item1 of item.fs_structure) {
+									if (item1.fc_classfication === 'head') {
+										feeHead = feeHead + '<b><u>' + new CapitalizePipe().transform(item1.fh_name) + '(' + item1.ft_name + ')' + '</u></b><br>';
+										let classAmt = '';
+										if (item1.fh_class_amount_detail &&
+											JSON.parse(item1.fh_class_amount_detail).length > 0) {
+											for (const titem of JSON.parse(item1.fh_class_amount_detail)) {
+												classAmt = classAmt + 'Class ' +
+													titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+														item1.fh_fm_id.length) + ', ';
+											}
+											classAmt = classAmt.substring(0, classAmt.length - 2);
+										}
+										feeHead = feeHead + classAmt + '<br>';
+
+									} else if (item1.fc_classfication === 'group') {
+										if (item1.fee_groups && item1.fee_groups.length > 0) {
+											for (const item2 of item1.fee_groups) {
+												let classAmt = '';
+												feeHead2 = feeHead2 + '<b><u>' + new CapitalizePipe().transform(item2.fh_name) + '(' + item2.ft_name + ')' + '</u></b><br>';
+												if (item2.fh_class_amount_detail &&
+													JSON.parse(item2.fh_class_amount_detail).length > 0) {
+													for (const titem of JSON.parse(item2.fh_class_amount_detail)) {
+														classAmt = classAmt + 'Class ' +
+															titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+																item2.fh_fm_id.length) + ', ';
+													}
+													classAmt = classAmt.substring(0, classAmt.length - 2);
+												}
+												feeHead2 = feeHead2 + classAmt + '<br>';
+											}
+										}
 									}
-									feeStructure = feeStructure + '<b>' + fee['fs_name'] + ' (' +
-										fee['fee_groups'][0]['ft_name'] + ')</b> : ' + totalAmount + '<br>';
-									grandTotal = grandTotal + Number(totalAmount);
 								}
 							}
-							feeStructure = feeStructure + '<b>Total :</b>'
-								+ new DecimalPipe('en-us').transform(grandTotal);
-							obj['fs_structure'] = feeStructure;
+							obj['fs_structure'] = feeHead + feeHead2;
 							obj['fs_description'] = item['fs_description'];
 							this.REPORT_ELEMENT_DATA.push(obj);
 							this.tableFlag = true;
@@ -1104,6 +1277,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				};
 				this.feeService.getFeeStructureAllotedReport(feestructureallotedJson).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage(result.message, 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1113,37 +1287,51 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
 							obj['fs_name'] = repoArray[Number(index)]['fs_name'] ?
-								repoArray[Number(index)]['fs_name'] : 'NA';
+								new CapitalizePipe().transform(repoArray[Number(index)]['fs_name']) : 'NA';
 							obj['class_name'] = item['class_name'] + '-' +
 								item['sec_name'];
-							obj['au_full_name'] = item['au_full_name'] ? item['au_full_name'] : '-';
+							obj['au_full_name'] = item['au_full_name'] ? new CapitalizePipe().transform(item['au_full_name']) : '-';
 							obj['au_admission_no'] = item['au_admission_no'] ?
 								item['au_admission_no'] : '-';
-							let feeStructure: any = '';
-							let grandTotal = 0;
-							for (const fee of item['fee_structure_head_group']) {
-								if (fee['fc_classfication'] === 'head') {
-									feeStructure = feeStructure + '<b>' + fee['fh_name'] + '(' +
-										fee['ft_name'] + ')</b>: ' +
-										new DecimalPipe('en-us').transform(fee['fh_amount']) + ' (' +
-										new DecimalPipe('en-us').transform((Number(fee['fh_amount']) * fee['fh_fm_id'].length))
-										+ ')' +
-										'<br>';
-									grandTotal = grandTotal + (Number(fee['fh_amount']) * fee['fh_fm_id'].length);
-								} else if (fee['fc_classfication'] === 'group') {
-									let totalAmount = 0;
-									for (const amt of fee['fee_groups']) {
-										totalAmount = totalAmount + Number(amt['fh_amount']);
+							let feeHead = '';
+							let feeHead2 = '';
+							if (item.fee_structure_head_group && item.fee_structure_head_group.length > 0) {
+								for (const item1 of item.fee_structure_head_group) {
+									if (item1.fc_classfication === 'head') {
+										feeHead = feeHead + '<b><u>' + new CapitalizePipe().transform(item1.fh_name) + '(' + item1.ft_name + ')' + '</u></b><br>';
+										let classAmt = '';
+										if (item1.fh_class_amount_detail &&
+											JSON.parse(item1.fh_class_amount_detail).length > 0) {
+											for (const titem of JSON.parse(item1.fh_class_amount_detail)) {
+												classAmt = classAmt + 'Class ' +
+													titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+														item1.fh_fm_id.length) + ', ';
+											}
+											classAmt = classAmt.substring(0, classAmt.length - 2);
+										}
+										feeHead = feeHead + classAmt + '<br>';
+
+									} else if (item1.fc_classfication === 'group') {
+										if (item1.fee_groups && item1.fee_groups.length > 0) {
+											for (const item2 of item1.fee_groups) {
+												let classAmt = '';
+												feeHead2 = feeHead2 + '<b><u>' + new CapitalizePipe().transform(item2.fh_name) + '(' + item2.ft_name + ')' + '</u></b><br>';
+												if (item2.fh_class_amount_detail &&
+													JSON.parse(item2.fh_class_amount_detail).length > 0) {
+													for (const titem of JSON.parse(item2.fh_class_amount_detail)) {
+														classAmt = classAmt + 'Class ' +
+															titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+																item2.fh_fm_id.length) + ', ';
+													}
+													classAmt = classAmt.substring(0, classAmt.length - 2);
+												}
+												feeHead2 = feeHead2 + classAmt + '<br>';
+											}
+										}
 									}
-									feeStructure = feeStructure + '<b>' + fee['fs_name'] + ' (' +
-										fee['fee_groups'][0]['ft_name'] + ')</b> : ' + totalAmount + '<br>';
-									grandTotal = grandTotal + Number(totalAmount);
 								}
 							}
-							feeStructure = feeStructure + '<b>Total :</b>'
-								+ new DecimalPipe('en-us').transform(grandTotal);
-							obj['fs_structure'] = feeStructure;
-							obj['fs_structure'] = feeStructure;
+							obj['fs_structure'] = feeHead + feeHead2;
 							this.REPORT_ELEMENT_DATA.push(obj);
 							this.tableFlag = true;
 							index++;
@@ -1158,8 +1346,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					}
 				});
 			}
-		}
-		if (Number(this.reportType) === 8 && this.reportFilterForm.value.report_type === 'concession') {
+		} else if (Number(this.reportType) === 8 && this.reportFilterForm.value.report_type === 'concession') {
 			const obj2: any = {};
 			obj2['from_date'] = this.reportFilterForm.value.from_date;
 			obj2['to_date'] = this.reportFilterForm.value.to_date;
@@ -1167,6 +1354,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			obj2['pageIndex'] = this.reportFilterForm.value.pageIndex;
 			this.feeService.getFeeConcessionReport(obj2).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1175,8 +1363,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						const obj: any = {};
 						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 							(index + 1);
-						obj['fcc_name'] = repoArray[Number(index)]['fcc_name'];
-						obj['fh_name'] = repoArray[Number(index)]['fh_name'];
+						obj['fcc_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['fcc_name']);
+						obj['fcc_head_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['fcc_head_type']);
+						obj['fh_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['fh_name']);
 						obj['fcc_class_id'] =
 							this.getClassName(repoArray[Number(index)]['fcc_class_id']);
 						obj['fcrt_name'] = repoArray[Number(index)]['fcrt_name'];
@@ -1195,8 +1384,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 8 && this.reportFilterForm.value.report_type === 'concessionAlloted') {
+		} else if (Number(this.reportType) === 8 && this.reportFilterForm.value.report_type === 'concessionAlloted') {
 			let conAllotedJson = {};
 			conAllotedJson = {
 				'from_date': value.from_date,
@@ -1210,6 +1398,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			};
 			this.feeService.getFeeConcessionAllotedReport(conAllotedJson).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1220,7 +1409,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(++index);
 							obj['stu_admission_no'] = item['stu_admission_no'];
-							obj['stu_full_name'] = item['stu_full_name'];
+							obj['stu_full_name'] = new CapitalizePipe().transform(item['stu_full_name']);
 							obj['stu_class_name'] = item['stu_class_name'] + '-' +
 								item['stu_sec_name'];
 							obj['fee_amount'] = cons['invg_fh_amount'] ?
@@ -1241,8 +1430,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 7) {
+		} else if (Number(this.reportType) === 7) {
 			let feeAdjustmentJson = {};
 			feeAdjustmentJson = {
 				'from_date': value.from_date,
@@ -1256,6 +1444,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			};
 			this.feeService.getFeeAdjustmentReport(feeAdjustmentJson).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1265,7 +1454,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 							(index + 1);
 						obj['au_admission_no'] = item['au_admission_no'] ? item['au_admission_no'] : '-';
-						obj['au_full_name'] = item['au_full_name'];
+						obj['au_full_name'] = new CapitalizePipe().transform(item['au_full_name']);
 						obj['class_name'] = item['class_name'] + '-' +
 							item['sec_name'];
 						obj['invoice_no'] = item['inv_invoice_no'];
@@ -1281,7 +1470,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['receipt_no'] = item['rpt_receipt_no'] ? item['rpt_receipt_no'] : 'NA';
 						obj['receipt_id'] = item['receipt_id'];
 						obj['dishonor_date'] = item['rpt_receipt_date'];
-						obj['inv_remark'] = item['inv_remark'] ? item['inv_remark'] : 'NA';
+						obj['inv_remark'] = item['inv_remark'] ? new CapitalizePipe().transform(item['inv_remark']) : 'NA';
 						index++;
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
@@ -1295,9 +1484,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-
-		if (Number(this.reportType) === 12) {
+		} else if (Number(this.reportType) === 12) {
 			let secureJson = {};
 			secureJson = {
 				'from_date': value.from_date,
@@ -1311,6 +1498,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			};
 			this.feeService.getAdvanceSecurityDepositReport(secureJson).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1323,7 +1511,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 							repoArray[Number(index)]['stu_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['stu_full_name'] ?
-							repoArray[Number(index)]['stu_full_name'] : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 							repoArray[Number(index)]['stu_sec_name'];
 						obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
@@ -1349,8 +1537,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.tableFlag = true;
 				}
 			});
-		}
-		if (Number(this.reportType) === 15) {
+		} else if (Number(this.reportType) === 15) {
 			let transportJSON = {};
 			transportJSON = {
 				'from_date': value.from_date,
@@ -1367,6 +1554,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			};
 			this.feeService.getTransportReport(transportJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1380,7 +1568,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 							repoArray[Number(index)]['stu_admission_no'] : '-';
 						obj['au_full_name'] = repoArray[Number(index)]['stu_full_name'] ?
-							repoArray[Number(index)]['stu_full_name'] : '-';
+							new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 							repoArray[Number(index)]['stu_sec_name'];
 						obj['route_name'] = repoArray[Number(index)]['route_name'] ?
@@ -1420,34 +1608,36 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			if (item['flgr_invoice_type'] === 'I') {
 				inv_id = item['invoice_id'];
 				const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-					width: '100%',
+					width: '80%',
 					data: {
 						invoiceNo: inv_id,
-						edit: edit
+						edit: edit,
+						paidStatus: 'paid'
 					},
-					hasBackdrop: false
+					hasBackdrop: true
 				});
 			}
 		} else {
 			inv_id = item['invoice_id'];
 			const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-				width: '100%',
+				width: '80%',
 				data: {
 					invoiceNo: inv_id,
-					edit: edit
+					edit: edit,
+					paidStatus: 'paid'
 				},
-				hasBackdrop: false
+				hasBackdrop: true
 			});
 		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
 	}
 	getSchool() {
@@ -1500,7 +1690,13 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	exportAsExcel() {
 		// tslint:disable-next-line:max-line-length
-		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table')); // converts a DOM TABLE element to a worksheet
+		let id: any;
+		if (this.reportFilterForm.value.report_type === 'mfr') {
+			id = 'report_table2';
+		} else {
+			id = 'report_table';
+		}
+		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById(id)); // converts a DOM TABLE element to a worksheet
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
@@ -1534,8 +1730,16 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		localStorage.removeItem('invoiceBulkRecords');
 	}
 	exportAsPDF() {
-		const doc = new jsPDF();
-		doc.autoTable({ html: '#report_table' });
+		let id: any;
+		if (this.reportFilterForm.value.report_type === 'mfr') {
+			id = 'report_table2';
+		} else {
+			id = 'report_table';
+		}
+		const doc = new jsPDF('landscape');
+		doc.setFont('helvetica');
+		doc.setFontSize(5);
+		doc.autoTable({ html: '#' + id });
 		doc.save('table.pdf');
 	}
 	enableSearch($event) {
@@ -1543,6 +1747,257 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.toggleSearch = true;
 		} else {
 			this.toggleSearch = false;
+		}
+	}
+	getColor(status) {
+		if (status === 'unpaid') {
+			return '#e2564b';
+		} else if (status === 'paid') {
+			return '#7bd451';
+		} else if (status === 'Not Generated') {
+			return '#a5cede';
+		} else if (status === 'Unpaid with fine') {
+			return '#598ac5';
+		} else {
+			return '';
+		}
+	}
+	getColor2(status) {
+		if (status === 'unpaid' || status === 'paid' ||
+			status === 'Not Generated' || status === 'Unpaid with fine') {
+			return '#fff';
+		} else {
+			return '';
+		}
+	}
+	getBorder(status) {
+		if (status === 'unpaid' || status === 'paid' || status === 'Not Generated' ||
+			status === 'Unpaid with fine') {
+			return '1px solid #fff';
+		} else {
+			return '';
+		}
+	}
+	getColumn(item, column) {
+		if (Number(item['fp_id']) === 2) {
+			if (column === 'Q1') {
+				return item['inv_id1'];
+			}
+			if (column === 'Q2') {
+				return item['inv_id2'];
+			}
+			if (column === 'Q3') {
+				return item['inv_id3'];
+			}
+			if (column === 'Q4') {
+				return item['inv_id4'];
+			}
+			return item[column];
+		} else if (Number(item['fp_id']) === 1) {
+			if (column === 'Q1') {
+				return item['inv_id1'];
+			}
+			if (column === 'Q2') {
+				return item['inv_id2'];
+			}
+			if (column === 'Q3') {
+				return item['inv_id3'];
+			}
+			if (column === 'Q4') {
+				return item['inv_id4'];
+			}
+			if (column === 'Q5') {
+				return item['inv_id5'];
+			}
+			if (column === 'Q6') {
+				return item['inv_id6'];
+			}
+			if (column === 'Q7') {
+				return item['inv_id7'];
+			}
+			if (column === 'Q8') {
+				return item['inv_id8'];
+			}
+			if (column === 'Q9') {
+				return item['inv_id9'];
+			}
+			if (column === 'Q10') {
+				return item['inv_id10'];
+			}
+			if (column === 'Q11') {
+				return item['inv_id11'];
+			}
+			if (column === 'Q12') {
+				return item['inv_id12'];
+			}
+			return item[column];
+		} else if (Number(item['fp_id']) === 3) {
+			if (column === 'Q1') {
+				return item['inv_id1'];
+			}
+			if (column === 'Q2') {
+				return item['inv_id2'];
+			}
+			return item[column];
+		} else if (Number(item['fp_id']) === 4) {
+			if (column === 'Q1') {
+				return item['inv_id1'];
+			}
+			return item[column];
+		}
+	}
+	checkColumnStatus(item, column) {
+		if (Number(item['fp_id']) === 2) {
+			if (column === 'Q1') {
+				return true;
+			}
+			if (column === 'Q2') {
+				return true;
+			}
+			if (column === 'Q3') {
+				return true;
+			}
+			if (column === 'Q4') {
+				return true;
+			}
+			return false;
+		} else if (Number(item['fp_id']) === 1) {
+			if (column === 'Q1') {
+				return true;
+			}
+			if (column === 'Q2') {
+				return true;
+			}
+			if (column === 'Q3') {
+				return true;
+			}
+			if (column === 'Q4') {
+				return true;
+			}
+			if (column === 'Q5') {
+				return true;
+			}
+			if (column === 'Q6') {
+				return true;
+			}
+			if (column === 'Q7') {
+				return true;
+			}
+			if (column === 'Q8') {
+				return true;
+			}
+			if (column === 'Q9') {
+				return true;
+			}
+			if (column === 'Q10') {
+				return true;
+			}
+			if (column === 'Q11') {
+				return true;
+			}
+			if (column === 'Q12') {
+				return true;
+			}
+			return false;
+		} else if (Number(item['fp_id']) === 3) {
+			if (column === 'Q1') {
+				return true;
+			}
+			if (column === 'Q2') {
+				return true;
+			}
+			return false;
+		} else if (Number(item['fp_id']) === 4) {
+			if (column === 'Q1') {
+				return true;
+			}
+			return false;
+		}
+	}
+	openDialogNew(item, column) {
+		if (Number(item['fp_id']) === 2) {
+			if (column === 'Q1') {
+				this.renderDialog(item['inv_id1'], false);
+			}
+			if (column === 'Q2') {
+				this.renderDialog(item['inv_id2'], false);
+			}
+			if (column === 'Q3') {
+				this.renderDialog(item['inv_id3'], false);
+			}
+			if (column === 'Q4') {
+				this.renderDialog(item['inv_id4'], false);
+			}
+		}
+		if (Number(item['fp_id']) === 3) {
+			if (column === 'Q1') {
+				this.renderDialog(item['inv_id1'], false);
+			}
+			if (column === 'Q2') {
+				this.renderDialog(item['inv_id2'], false);
+			}
+		}
+		if (Number(item['fp_id']) === 4) {
+			if (column === 'Q1') {
+				this.renderDialog(item['inv_id1'], false);
+			}
+		}
+		if (Number(item['fp_id']) === 1) {
+			if (column === 'Q1') {
+				this.renderDialog(item['inv_id1'], false);
+			}
+			if (column === 'Q2') {
+				this.renderDialog(item['inv_id2'], false);
+			}
+			if (column === 'Q3') {
+				this.renderDialog(item['inv_id3'], false);
+			}
+			if (column === 'Q4') {
+				this.renderDialog(item['inv_id4'], false);
+			}
+			if (column === 'Q5') {
+				this.renderDialog(item['inv_id5'], false);
+			}
+			if (column === 'Q6') {
+				this.renderDialog(item['inv_id6'], false);
+			}
+			if (column === 'Q7') {
+				this.renderDialog(item['inv_id7'], false);
+			}
+			if (column === 'Q8') {
+				this.renderDialog(item['inv_id8'], false);
+			}
+			if (column === 'Q9') {
+				this.renderDialog(item['inv_id9'], false);
+			}
+			if (column === 'Q10') {
+				this.renderDialog(item['inv_id10'], false);
+			}
+			if (column === 'Q11') {
+				this.renderDialog(item['inv_id11'], false);
+			}
+			if (column === 'Q12') {
+				this.renderDialog(item['inv_id12'], false);
+			}
+		}
+
+	}
+	renderDialog(inv_id, edit) {
+		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
+			width: '80%',
+			data: {
+				invoiceNo: inv_id,
+				edit: edit
+			},
+			hasBackdrop: true
+		});
+	}
+	checkEnable(report_id) {
+		if (Number(report_id) === 3 || Number(report_id) === 4 || Number(report_id) === 13
+		|| Number(report_id) === 14) {
+			return 'report-card1 mat-card';
+		} else {
+		return 'report-card mat-card';
 		}
 	}
 }

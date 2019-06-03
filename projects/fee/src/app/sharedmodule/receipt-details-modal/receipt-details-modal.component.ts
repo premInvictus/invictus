@@ -35,7 +35,6 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		console.log(this.data);
 		this.getReceiptBifurcation(this.data.invoiceNo);
 	}
 	openEditDialog = (data) => this.editReference.openModal(data);
@@ -54,7 +53,6 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		this.checkChangedFieldsArray = [];
 	}
 	changeAdjAmt(invg_id, $event) {
-		console.log(invg_id, $event, $event.target.value);
 		const invg_id_idx = this.invoiceBifurcationArray.findIndex(item => item.invg_id === invg_id);
 		if (invg_id_idx !== -1 && $event.target.value > -1) {
 			this.checkChangedFieldsArray.push({
@@ -65,10 +63,8 @@ export class ReceiptDetailsModalComponent implements OnInit {
 				rff_old_field_value: this.invoiceBifurcationArray[invg_id_idx].invg_adj_amount,
 				rff_custom_data: this.invoiceBifurcationArray[invg_id_idx].invg_fh_name,
 			});
-			console.log(this.checkChangedFieldsArray);
 			this.invoiceBifurcationArray[invg_id_idx].invg_adj_amount = $event.target.value;
 		}
-		console.log(this.invoiceBifurcationArray);
 		this.invoiceDetialsTable(this.invoiceBifurcationArray);
 	}
 	recalculateInvoice(event) {
@@ -105,8 +101,6 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			const param: any = {};
 			const params: any[] = [];
 			const datalist: any[] = [];
-			console.log('adjustment', adj);
-			console.log(this.invoiceDetails);
 			if (this.checkChangedFieldsArray.length > 0) {
 				param.req_login_id = this.invoiceDetails.login_id ? this.invoiceDetails.login_id : '';
 				param.req_process_type = '4';
@@ -161,9 +155,14 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	}
 	getReceiptBifurcation(invoiceNo) {
 		this.invoiceBifurcationArray = [];
-		this.feeService.getReceiptBifurcation({ flgr_invoice_receipt_no: invoiceNo }).subscribe((result: any) => {
+		let recieptJSON = {};
+		if (this.data.from) {
+			recieptJSON = {inv_id : invoiceNo};
+		} else {
+			recieptJSON = {flgr_invoice_receipt_no: invoiceNo };
+		}
+		this.feeService.getReceiptBifurcation(recieptJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				console.log(result);
 				if (result.data.length > 0) {
 					this.invoiceDetails = result.data[0];
 					if (this.invoiceDetails.invoice_bifurcation.length > 0) {
@@ -182,6 +181,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				const length = result.data.split('/').length;
 				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}

@@ -13,12 +13,14 @@ export class SchoolDashboardComponent implements OnInit {
 	notificationsDashboard: any[] = [];
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
+	schoolInfo: any;
 
 	constructor(private sisService: SisService,
 		private common: CommonAPIService,
 		private processtypeService: ProcesstypeService) { }
 
 	ngOnInit() {
+		this.getSchool();
 		this.getProcessCardData();
 		this.getStudentClassWiseDashboard();
 		this.getStudentBirthdayDashboard();
@@ -87,6 +89,13 @@ export class SchoolDashboardComponent implements OnInit {
 				if (result.data) {
 					this.notificationsDashboard = result.data;
 				}
+			}
+		});
+	}
+	getSchool() {
+		this.common.getSchoolDetails().subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.schoolInfo = result.data[0];
 			}
 		});
 	}

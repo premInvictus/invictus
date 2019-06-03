@@ -6,9 +6,6 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AccordionModule } from 'ngx-bootstrap';
 import { CKEditorModule } from 'ng2-ckeditor';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
-import { TopNavComponent } from './top-nav/top-nav.component';
-import { SideNavComponent } from './side-nav/side-nav.component';
-import { FooterComponent } from './footer/footer.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -45,6 +42,7 @@ import { EssayDialogsComponent } from '../questionbank/essay-dialogs/essay-dialo
 import { EditobjectiveComponent } from '../questionbank/reviewo/editobjective/editobjective.component';
 import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit-essay.component';
 import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dialog/question-paper-dialog.component';
+import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -79,14 +77,12 @@ import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dia
 		BsDropdownModule,
 		AccordionModule.forRoot(),
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		InvictusSharedModule
 
 	],
 	declarations: [
 		DeleteModalComponent,
-		TopNavComponent,
-		SideNavComponent,
-		FooterComponent,
 		AddInstructionComponent,
 		CommonDynamicChartComponent,
 		PublishUnpublishDialogComponent,
@@ -99,7 +95,6 @@ import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dia
 	],
 	exports: [
 		DeleteModalComponent,
-		TopNavComponent,
 		MatProgressBarModule,
 		MatSlideToggleModule,
 		MatDialogModule,
@@ -108,8 +103,6 @@ import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dia
 		MatRadioModule,
 		MatChipsModule,
 		MatCheckboxModule,
-		SideNavComponent,
-		FooterComponent,
 		MatTableModule,
 		MatPaginatorModule,
 		MatSortModule,

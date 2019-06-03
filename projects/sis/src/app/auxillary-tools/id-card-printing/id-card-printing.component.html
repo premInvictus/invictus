@@ -1,4 +1,4 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey card-height-860-lp">
   <div class="container-box__white">
     <div class="row">
       <!-- <div class="col-4 text-center">
@@ -15,13 +15,14 @@
   </div>
   <div class="margin-bottom-10"></div>
   <div class="row">
-    <div class="col-6 remove-col-padding-right">
-      <div class="container-box__white">
+    <div class="col-6 remove-col-padding-left remove-col-padding-right">
+      <div class="container-box__white card-height-775-lp">
 
         <form [formGroup]="individualPrintForm">
           <div class="row">
             <div class="col-12">
-              <mat-form-field class="form-field">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Enrollment Type</mat-label>
                 <mat-select placeholder="Enrollment Type" (selectionChange)="enableRadio($event)" formControlName="enrollment_type">
                     <mat-option value="">Please Select</mat-option>
                   <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">{{item.au_process_name}}</mat-option>
@@ -40,12 +41,18 @@
           </div>
           <br>
           <div *ngIf="radioOne.checked && isExistUserAccessMenu('259')">
-            <span><b>Individual Print</b></span>
+              <div class="row">
+                  <div class="col-12">
+                      <span><b>Individual Print</b></span>
+                  </div>
+                </div>
             <div class="row">
-              <div class="col-6">
+              <div class="col-6 remove-col-padding-left">
+                
                 <div class="row">
                   <div class="col-12">
-                    <mat-form-field class="form-field">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Admission No.</mat-label>
                       <input #adm_no matInput placeholder="Admission No." (blur)="getUserDetails($event, adm_no.value)"
                         formControlName="au_admission_no">
                     </mat-form-field>
@@ -53,65 +60,74 @@
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <mat-form-field class="form-field">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Student Name</mat-label>
                       <input matInput placeholder="Student Name" class="text-capitalize" formControlName="au_full_name">
                     </mat-form-field>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <mat-form-field class="form-field">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Class</mat-label>
                       <input matInput placeholder="Class" formControlName="class_name">
                     </mat-form-field>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <mat-form-field class="form-field">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Section</mat-label>
                       <input matInput placeholder="Section" formControlName="sec_name">
                     </mat-form-field>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <mat-form-field class="form-field">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>House</mat-label>
                       <input matInput placeholder="House" formControlName="hou_house_name">
                     </mat-form-field>
                   </div>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-6 remove-col-padding-right">
                 <div class="row">
                   <div class="col-12">
-                    <mat-form-field class="form-field">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Father's Name</mat-label>
                       <input matInput placeholder="Father's Name" class="text-capitalize" formControlName="father_name">
                     </mat-form-field>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <mat-form-field class="form-field">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Mother's Name</mat-label>
                       <input matInput placeholder="Mother's Name" class="text-capitalize" formControlName="mother_name">
                     </mat-form-field>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <mat-form-field class="form-field">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Guardian's Name</mat-label>
                       <input matInput placeholder="Guardian's Name" class="text-capitalize" formControlName="guardian_name">
                     </mat-form-field>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <mat-form-field class="form-field">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Pickup & Drop Location</mat-label>
                       <input matInput placeholder="Pickup & Drop Location" formControlName="au_admission_no">
                     </mat-form-field>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <mat-form-field class="form-field">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Contact No.</mat-label>
                       <input matInput placeholder="Contact No." formControlName="au_mobile">
                     </mat-form-field>
                   </div>
@@ -157,37 +173,42 @@
       </div>
     </div>
 
-    <div class="col-6 col-padding-left-eight">
+    <div class="col-6 col-padding-left-eight remove-col-padding-right">
       <div *ngIf="radioOne.checked" class="container-box__white">
         <div *ngIf="showIdCard">
           <div class="row">
-            <div *ngIf="idCardSettings?.ps_card_style == '1'" class="col-12">
+            <div *ngIf="idCardSettings?.ps_card_style == '1'" class="col-12"
+            id="card1">
               <app-idcard-style1 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style1>
             </div>
-            <div *ngIf="idCardSettings?.ps_card_style == '2'" class="col-12">
+            <div *ngIf="idCardSettings?.ps_card_style == '2'" class="col-12"
+            id="card2">
               <app-idcard-style2 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style2>
             </div>
-            <div *ngIf="idCardSettings?.ps_card_style == '3'" class="col-12">
+            <div *ngIf="idCardSettings?.ps_card_style == '3'" class="col-12"
+            id="card3">
               <app-idcard-style3 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style3>
             </div>
           </div>
           <div class="row margin-bottom-10">
             <div class="col-12 text-center">
               <a><button *ngIf="isExistUserAccessMenu('260')" mat-raised-button class="btn-setting" (click)="showSettings()">Print Setting</button></a>
-              <button *ngIf="isExistUserAccessMenu('261')" mat-raised-button class="btn-success btn-spacer" [disabled]="dontPrintStatus">Print</button>
+              <button *ngIf="isExistUserAccessMenu('261')" mat-raised-button class="btn-success btn-spacer" 
+              [disabled]="dontPrintStatus"
+              (click)="showPrint()">Print</button>
               <button mat-raised-button class="btn-danger btn-spacer">Reset</button>
             </div>
           </div>
         </div>
       </div>
       <div *ngIf="radioTwo.checked">
-        <div class="row">
-          <div class="col-12">
-            <div class="container-box__white">
+        <div class="row remove-top-margin">
+          <div class="col-12 remove-col-padding-right">
+            <div class="container-box__white card-height-775-lp">
               <div class="row">
                 <div class="col-12">
                   <div>
-                    <mat-table [dataSource]="dataSource" matSort class="table-100 mat-elevation-z1">
+                    <mat-table [dataSource]="dataSource" matSort class="fee-table-100 mat-elevation-z1">
                       <!-- Checkbox Column -->
                       <ng-container matColumnDef="select">
                         <mat-header-cell *matHeaderCellDef>
@@ -274,8 +295,8 @@
                         </mat-cell>
                       </ng-container>
 
-                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                      <mat-header-row *matHeaderRowDef="displayedColumns" class="header-normal"></mat-header-row>
+                      <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                     </mat-table>
                     <br>
                     <div class="text-center">
@@ -291,6 +312,5 @@
     </div>
 
   </div>
-  <br>
 
 </div>

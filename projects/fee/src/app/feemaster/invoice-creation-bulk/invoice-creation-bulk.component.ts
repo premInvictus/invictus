@@ -5,11 +5,13 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl 
 import { MatDialog } from '@angular/material';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { FilterModalComponent } from '../../common-filter/filter-modal/filter-modal.component';
-import { FeeService, CommonAPIService, SisService } from '../../_services/index';
+import { FeeService, CommonAPIService, SisService, ProcesstypeFeeService } from '../../_services/index';
 import { InvoiceElement } from './invoice-element.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
 import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 @Component({
 	selector: 'app-invoice-creation-bulk',
 	templateUrl: './invoice-creation-bulk.component.html',
@@ -26,7 +28,8 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	@ViewChild('recalculateModal') recalculateModal;
 	ELEMENT_DATA: InvoiceElement[] = [];
 	displayedColumns: string[] =
-		['select', 'srno', 'admno', 'studentname', 'classsection', 'invoiceno', 'feeperiod', 'feedue', 'status', 'action'];
+		['select', 'srno', 'admno',
+			'studentname', 'classsection', 'invoiceno', 'feeperiod', 'invoicedate', 'duedate', 'feedue', 'status', 'action'];
 	dataSource = new MatTableDataSource<InvoiceElement>(this.ELEMENT_DATA);
 	selection = new SelectionModel<InvoiceElement>(true, []);
 	filterResult: any[] = [];
@@ -38,13 +41,18 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	invoicepagesizeoptions = [10, 25, 50, 100];
 	invoiceCreationForm: FormGroup;
 	invoiceSearchForm: FormGroup;
-	advanceSearchFlag = false;
 	classArray: any[] = [];
 	sectionArray: any[] = [];
 	minInvoiceDate = new Date();
-	minDueDate = new Date();
 	totalRecords: any;
 	pageEvent: PageEvent;
+	processType: any = '';
+	processTypeArray: any[] = [
+		{ id: '1', name: 'Enquiry' },
+		{ id: '2', name: 'Registration' },
+		{ id: '3', name: 'Provisional Admission' },
+		{ id: '4', name: 'Admission' }
+	];
 	getClass() {
 		this.classArray = [];
 		this.sisService.getClass({}).subscribe((result: any) => {
@@ -116,7 +124,8 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		public commonAPIService: CommonAPIService,
 		private route: ActivatedRoute,
 		private router: Router,
-		private sisService: SisService
+		private sisService: SisService,
+		private processtypeService: ProcesstypeFeeService
 
 	) { }
 
@@ -127,6 +136,8 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.getInvoiceFeeMonths();
 		this.getInvoice(this.invoiceSearchForm.value);
 		this.getClass();
+		const filterModal = document.getElementById('formFlag');
+		filterModal.style.display = 'none';
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -149,28 +160,52 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	invoiceTableData(invoicearr = []) {
 		this.ELEMENT_DATA = [];
 		invoicearr.forEach((element, index) => {
+			let status = '';
+			let statusColor = '';
+			if (element.inv_activity) {
+				status = element.inv_activity;
+			} else {
+				status = element.inv_paid_status;
+			}
+			if (element.inv_activity) {
+				if (element.inv_activity === 'consolidated') {
+					statusColor = '#ec398e';
+				} else if (element.inv_activity === 'modified') {
+					statusColor = '#0e7d9e';
+				} else if (element.inv_activity === 'recalculated') {
+					statusColor = '#ff962e';
+				}
+			} else {
+				if (element.inv_paid_status === 'paid') {
+					statusColor = 'green';
+				} else {
+					statusColor = 'red';
+				}
+			}
 			this.ELEMENT_DATA.push({
 				srno: (this.invoiceSearchForm.value.pageSize * this.invoiceSearchForm.value.pageIndex) + (index + 1),
-				admno: element.au_admission_no,
+				admno: element.inv_process_usr_no,
 				studentname: element.au_full_name,
 				classsection: element.class_name + ' - ' + element.sec_name,
 				invoiceno: element.inv_invoice_no,
 				inv_id: element.inv_id,
 				feeperiod: element.fp_name,
+				invoicedate: element.inv_invoice_date,
+				duedate: element.inv_due_date,
 				feedue: element.inv_fee_amount,
 				remark: element.inv_remark,
-				status: element.inv_paid_status,
-				statuscolor: element.inv_paid_status === 'paid' ? 'green' : 'red',
-				selectionDisable: element.inv_paid_status === 'paid' ? true : false,
+				status: status,
+				statuscolor: statusColor,
+				selectionDisable: status === 'paid' ? true : false,
 				action: element
 			});
 
 		});
 		this.dataSource = new MatTableDataSource<InvoiceElement>(this.ELEMENT_DATA);
-		this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
-		this.dataSource.paginator = this.paginator;
 		this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 		this.dataSource.sort = this.sort;
+		this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+		this.dataSource.paginator = this.paginator;
 	}
 	addTo(row) {
 	}
@@ -196,7 +231,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		});
 	}
 	async insertInvoice() {
-		if (this.invoiceCreationForm.valid) {
+		if (this.invoiceCreationForm.valid && this.processType) {
 			const formData: any = await this.insertInvoiceData(Object.assign({}, this.invoiceCreationForm.value));
 			let arrAdmno = [];
 			if (this.filterResult.length > 0) {
@@ -226,7 +261,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		}
 	}
 	recalculateInvoice() {
-		console.log(this.invoiceCreationForm.value);
 	}
 	buildForm() {
 		this.invoiceCreationForm = this.fb.group({
@@ -244,7 +278,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.invoiceSearchForm = this.fb.group({
 			class_id: '',
 			sec_id: '',
-			admission_no: '',
+			inv_process_usr_no: '',
 			invoice_no: '',
 			user_name: '',
 			from_date: '',
@@ -255,17 +289,24 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		});
 	}
 	advanceSearchToggle() {
-		this.advanceSearchFlag = !this.advanceSearchFlag;
+		const filter = document.getElementById('formFlag');
+		if (filter.style.display === 'none') {
+			filter.style.display = 'block';
+		} else {
+			filter.style.display = 'none';
+			this.resetSearch();
+		}
 	}
 	searchInvoice() {
 		this.getInvoice(this.invoiceSearchForm.value);
 	}
-	openDialog(invoiceNo, edit): void {
+	openDialog(invoiceNo, details, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
 			data: {
 				invoiceNo: invoiceNo,
-				edit: edit
+				edit: edit,
+				paidStatus: details.status
 			}
 		});
 
@@ -275,19 +316,24 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	}
 
 	openFilterDialog() {
-		const dialogRefFilter = this.dialog.open(FilterModalComponent, {
-			width: '70%',
-			height: '80%',
-			data: {
-				filterResult: this.filterResult,
-				pro_id: '3'
-			}
-		});
-		dialogRefFilter.afterClosed().subscribe(result => {
-		});
-		dialogRefFilter.componentInstance.filterResult.subscribe((data: any) => {
-			this.filterResult = data;
-		});
+		if (this.processType) {
+			const dialogRefFilter = this.dialog.open(FilterModalComponent, {
+				width: '70%',
+				height: '80%',
+				data: {
+					filterResult: this.filterResult,
+					pro_id: '3',
+					process_type: this.processType
+				}
+			});
+			dialogRefFilter.afterClosed().subscribe(result => {
+			});
+			dialogRefFilter.componentInstance.filterResult.subscribe((data: any) => {
+				this.filterResult = data;
+			});
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please choose a processtype first', 'error');
+		}
 	}
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
@@ -320,7 +366,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		const printParam = {
 			inv_id: this.fetchInvId()
 		};
-		console.log(printParam);
 		if (printParam.inv_id.length > 0) {
 			this.feeService.printInvoice(printParam).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -337,16 +382,69 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.router.navigate(['../invoice-creation-individual'], { relativeTo: this.route });
 	}
 	reset() {
-		this.invoiceCreationForm.reset();
+		this.invoiceCreationForm.patchValue({
+			recalculation_flag: '',
+			inv_id: [],
+			inv_title: '',
+			login_id: [],
+			inv_calm_id: '',
+			inv_fm_id: [],
+			inv_invoice_date: '',
+			inv_due_date: '',
+			inv_activity: ''
+		});
 		this.filterResult = [];
-	}
-	setMinDueDate(event) {
-		const tdate = event.value;
-		tdate.add(1, 'days');
-		this.minDueDate = tdate;
 	}
 	ngOnDestroy() {
 		localStorage.removeItem('invoiceBulkRecords');
 	}
+	changeProcessType($event) {
+		this.invoiceCreationForm.patchValue({
+			recalculation_flag: '',
+			inv_id: [],
+			inv_title: '',
+			login_id: [],
+			inv_calm_id: '',
+			inv_fm_id: [],
+			inv_invoice_date: '',
+			inv_due_date: '',
+			inv_activity: ''
+		});
+		this.processType = $event.value;
+		this.processtypeService.setProcesstype(this.processType);
+	}
+	resetSearch() {
+		this.invoiceSearchForm.patchValue({
+			class_id: '',
+			sec_id: '',
+			inv_process_usr_no: '',
+			invoice_no: '',
+			user_name: '',
+			from_date: '',
+			to_date: '',
+			status: '',
+			pageIndex: '0',
+			pageSize: '10'
+		});
+		this.searchInvoice();
+	}
+	exportAsExcel() {
+		// tslint:disable-next-line:max-line-length
+		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table')); // converts a DOM TABLE element to a worksheet
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
 
+	}
+	openDialog2(inv_id, editFlag) {
+		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
+			width: '80%',
+			data: {
+				invoiceNo: inv_id,
+				edit: editFlag,
+				from: 'invoice'
+			},
+			hasBackdrop: true
+		});
+	}
 }

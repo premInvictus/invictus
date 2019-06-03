@@ -1,4 +1,4 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey">
   <div class="row">
     <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container">
@@ -11,181 +11,194 @@
     </div>
   </div>
   <div class="row">
-      <div class="col-12 remove-col-padding">
-        <mat-card>
-          <div class="row">
-            <div class="col-12 remove-col-padding">
-                <div class="row">
-                    <div class="col-12 remove-col-padding">
-                      <div class="float-right">
-                      <span class="font-size-16 font-medium">
-                          <i class="fas fa-search">&nbsp;Advanced Search</i> 
-                      </span>&nbsp;
-                      <span><mat-slide-toggle matTooltip="Click to enable advanced search" (change)="enableSearch($event)"></mat-slide-toggle></span>
-                      </div>
-                    </div>
-                  </div>
-                  <form *ngIf="toggleSearch" [formGroup]="filterForm">
-                  <div class="row margin-top-5">
-                    <div class="col-2 custom-col-15 remove-col-padding-left">
-                      <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Admission</mat-label>
-                        <input matInput placeholder="Admission" formControlName="admission_no">
-    
-                      </mat-form-field>
-                    </div>
-                    <div class="col-2 custom-col-15 ">
-                        <mat-form-field appearance="outline" class="form-field">
-                          <mat-label>Student Name</mat-label>
-                          <input matInput placeholder="Student Name" formControlName="au_full_name">
-      
-                        </mat-form-field>
-                      </div>
-                    <div class="col-2 custom-col-15 ">
-                      <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Invoice No.</mat-label>
-                        <input matInput placeholder="Invoice No." formControlName="invoice_no">
-    
-                      </mat-form-field>
-                    </div>
-                    <div class="col-2 custom-col-15 ">
-                      <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>From</mat-label>
-                        <input matInput [matDatepicker]="picker4" placeholder="From" formControlName="from_date">
-                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-                        <mat-datepicker #picker4></mat-datepicker>
-    
-                      </mat-form-field>
-                    </div>
-                    <div class="col-2 custom-col-15  ">
-                      <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>To</mat-label>
-                        <input matInput [matDatepicker]="picker5" placeholder="To" formControlName="to_date">
-                        <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
-                        <mat-datepicker #picker5></mat-datepicker>
-    
-                      </mat-form-field>
-                    </div>
-                    <div class="col-1 custom-col-10 ">
-                      <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Status</mat-label>
-                        <mat-select placeholder="Status" formControlName="status">
-                            <mat-option value="">Please Select</mat-option>
-                            <mat-option *ngFor="let item of status" [value]="item.status">{{item.value}}</mat-option>
-                        </mat-select>
-    
-                      </mat-form-field>
-                    </div>
-                    <div class="col-1 custom-col-10 remove-col-padding-right ">
-                      <button mat-raised-button class="apply-btn margin-top-10" (click)="getFilteredValue()">Apply</button>
-                    </div>
-                  </div>
-                </form>
-            </div>
-          </div>
+    <div class="col-12 remove-col-padding">
+      <mat-card class="card-height-760 card-height-880">
+        <div class="row">
+          <div class="col-12 remove-col-padding">
             <div class="row">
-                <div class="col-12">
-                  <mat-form-field [hidden]="!(CHEQUE_ELEMENT_DATA.length > 0)">
-                      <input matInput placeholder="Filter" #input (keyup)="applyFilter(input.value)">
-                      <i class="fas fa-filter table-filter" matPrefix></i>
-                  </mat-form-field>
-                    
+              <div class="col-12 remove-col-padding">
+                <div class="float-right">
+                  <span class="font-size-16 font-medium">
+                    <i class="fas fa-search">&nbsp;Advanced Search</i>
+                  </span>&nbsp;
+                  <span>
+                    <mat-slide-toggle matTooltip="Click to enable advanced search" (change)="enableSearch($event)">
+                    </mat-slide-toggle>
+                  </span>
                 </div>
               </div>
-          <div class="row">
-            <div class="col-12 remove-col-padding">
-                <table mat-table [dataSource]="dataSource" class="fee-table-100 text-center">
-                    
-                    <ng-container matColumnDef="srno">
-                      <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
-                      <td mat-cell *matCellDef="let item"> {{item.srno}} </td>
-                    </ng-container>
-                    
-                    <ng-container matColumnDef="invoiceno">
-                      <th mat-header-cell *matHeaderCellDef> Invoice No </th>
-                      <td mat-cell *matCellDef="let item"> <a class="font-skyblue text-link font-size-14" (click)="openDialog(item.action.invoice_id, false)" >{{item.invoiceno}}</a> </td>
-                    </ng-container>
-                    <ng-container matColumnDef="chequeno">
-                        <th mat-header-cell *matHeaderCellDef> Cheque No </th>
-                        <td mat-cell *matCellDef="let item"> {{item.chequeno}}</td>
-                      </ng-container>
-                    <ng-container matColumnDef="admno">
-                      <th mat-header-cell *matHeaderCellDef> Admission no. </th>
-                      <td mat-cell *matCellDef="let item"> {{item.admno}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="studentname">
-                      <th mat-header-cell *matHeaderCellDef> Student name </th>
-                      <td mat-cell *matCellDef="let item"> {{item.studentname}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="recieptno">
-                      <th mat-header-cell *matHeaderCellDef> Reciept no. </th>
-                      <td mat-cell *matCellDef="let item"> <a class="font-skyblue text-link font-size-14" (click)="openReceiptDialog(item.action.receipt_id, false)" >{{item.recieptno}}</a> </td>
-                    </ng-container>
-                    <ng-container matColumnDef="amount">
-                      <th mat-header-cell *matHeaderCellDef> Amount </th>
-                      <td mat-cell *matCellDef="let item"> {{item.amount}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="bankname">
-                        <th mat-header-cell *matHeaderCellDef> Bank Name </th>
-                        <td mat-cell *matCellDef="let item"> {{item.bankname}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="recieptdate">
-                          <th mat-header-cell *matHeaderCellDef> Reciept Date </th>
-                          <td mat-cell *matCellDef="let item"> {{item.recieptdate}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="processingdate">
-                            <th mat-header-cell *matHeaderCellDef> Processing Date </th>
-                            <td mat-cell *matCellDef="let item"> 
-                              <form [formGroup]="formGroupArray[item.srno - 1].formGroup">
-                                <mat-form-field [hidden]="item.action.status === '1' || item.action.status === '2'" 
-                                class="cheque-control-tool margin-top-5" >
-                                    <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="fcc_process_date">
-                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
-                                  </mat-form-field>
-                                </form>
-                                  <span style="font-size: 14px" *ngIf="item.action.status === '2'" class="font-size-10">
-                                    <b>{{item.action.dishonor_date | date : 'd-MMM-y'}}</b>
-                                  </span>
-                                  <span style="font-size: 14px" *ngIf="item.action.status === '1'" class="font-size-10">
-                                      <b>{{item.action.fcc_process_date | date : 'd-MMM-y'}}</b>
-                                    </span>
-                               </td>
-                          </ng-container>
-                    <ng-container matColumnDef="action">
-                      <th mat-header-cell *matHeaderCellDef> Action </th>
-                      <td  mat-cell *matCellDef="let item">
-                        <div class="inline-flex margin-top-5">
-                            <div class="text-center">
-                            <span style="font-size: 14px" *ngIf="item.action.status === '1'" class="font-size-10">
-                              <b>Cleared</b>
-                            </span>
-                            <span [matTooltip]="item.action.fcc_remarks" style="font-size: 14px;cursor: pointer;" *ngIf="item.action.status === '2'" class="font-size-10"><b>Bounced</b></span>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="inline-flex margin-top-5">
-                            <div class="cleared-button" [hidden]="item.action.status === '1' || item.action.status === '2'" (click)="clearCheck(item.srno, item.action)">
-                              <span class="font-size-10">Cleared</span></div> 
-                            <div class="bounce-button margin-left-10" [hidden]="item.action.status === '1' || item.action.status === '2'"
-                            (click)="openBounced(item.action)"><span class="font-size-10">bounced</span></div> 
-                        </div>
-                      </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-                    </tr>
-                  </table>
-                  <table class="table-100 text-center" style="margin-top:5px;">
-                      <tr *ngIf="CHEQUE_ELEMENT_DATA.length == 0">
-                        <td colspan="11">No Record Found</td>
-                      </tr>
-                    </table>
-                  <mat-paginator [hidden]="!(CHEQUE_ELEMENT_DATA.length > 0)" #paginator [pageSize]="8" [pageSizeOptions]="[5,10,20]"></mat-paginator>
             </div>
+            <form *ngIf="toggleSearch" [formGroup]="filterForm">
+              <div class="row margin-top-5">
+                <div class="col-2 custom-col-15">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Enrollment No.</mat-label>
+                    <input matInput placeholder="Enrollment No." formControlName="inv_process_usr_no">
+
+                  </mat-form-field>
+                </div>
+                <div class="col-2 custom-col-15 ">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Student Name</mat-label>
+                    <input matInput placeholder="Student Name" formControlName="au_full_name">
+
+                  </mat-form-field>
+                </div>
+                <div class="col-2 custom-col-15 ">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Invoice No.</mat-label>
+                    <input matInput placeholder="Invoice No." formControlName="invoice_no">
+
+                  </mat-form-field>
+                </div>
+                <div class="col-2 custom-col-15 ">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>From</mat-label>
+                    <input matInput [matDatepicker]="picker4" placeholder="From" formControlName="from_date">
+                    <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                    <mat-datepicker #picker4></mat-datepicker>
+
+                  </mat-form-field>
+                </div>
+                <div class="col-2 custom-col-15  ">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>To</mat-label>
+                    <input matInput [matDatepicker]="picker5" placeholder="To" formControlName="to_date">
+                    <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                    <mat-datepicker #picker5></mat-datepicker>
+
+                  </mat-form-field>
+                </div>
+                <div class="col-2 custom-col-15 remove-col-padding-left">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Status</mat-label>
+                    <mat-select placeholder="Status" formControlName="status">
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of status" [value]="item.status">{{item.value}}</mat-option>
+                    </mat-select>
+
+                  </mat-form-field>
+                </div>
+                <div class="col-6 fee-custom-col-10">
+                  <span><button mat-raised-button class="apply-btn margin-top-10"
+                      (click)="getFilteredValue()">Apply</button></span> &nbsp;
+                  <span>
+                    <button mat-raised-button class="rst-btn margin-top-10" (click)="reset()">Reset</button>
+                  </span>
+                </div>
+              </div>
+            </form>
           </div>
-        </mat-card>
-      </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field [hidden]="!(CHEQUE_ELEMENT_DATA.length > 0)">
+              <input matInput placeholder="Filter" #input (keyup)="applyFilter(input.value)">
+              <i class="fas fa-filter table-filter" matPrefix></i>
+            </mat-form-field>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 remove-col-padding">
+            <table mat-table [dataSource]="dataSource" class="fee-table-100 text-center">
+
+              <ng-container matColumnDef="srno">
+                <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
+                <td mat-cell *matCellDef="let item"> {{item.srno}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="invoiceno">
+                <th mat-header-cell *matHeaderCellDef> Invoice No </th>
+                <td mat-cell *matCellDef="let item"> <a class="font-skyblue text-link font-size-14"
+                    (click)="openDialog(item.action.invoice_id, false)">{{item.invoiceno}}</a> </td>
+              </ng-container>
+              <ng-container matColumnDef="chequeno">
+                <th mat-header-cell *matHeaderCellDef> Cheque No </th>
+                <td mat-cell *matCellDef="let item"> {{item.chequeno}}</td>
+              </ng-container>
+              <ng-container matColumnDef="admno">
+                <th mat-header-cell *matHeaderCellDef> Enrollment no. </th>
+                <td mat-cell *matCellDef="let item"> {{item.admno}} </td>
+              </ng-container>
+              <ng-container matColumnDef="studentname">
+                <th mat-header-cell *matHeaderCellDef> Student name </th>
+                <td mat-cell *matCellDef="let item"> {{item.studentname}} </td>
+              </ng-container>
+              <ng-container matColumnDef="recieptno">
+                <th mat-header-cell *matHeaderCellDef> Reciept no. </th>
+                <td mat-cell *matCellDef="let item"> <a class="font-skyblue text-link font-size-14"
+                    (click)="openReceiptDialog(item.action.receipt_id, false)">{{item.recieptno}}</a> </td>
+              </ng-container>
+              <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef> Amount </th>
+                <td mat-cell *matCellDef="let item"> {{item.amount | number}} </td>
+              </ng-container>
+              <ng-container matColumnDef="bankname">
+                <th mat-header-cell *matHeaderCellDef> Bank Name </th>
+                <td mat-cell *matCellDef="let item"> {{item.bankname}} </td>
+              </ng-container>
+              <ng-container matColumnDef="recieptdate">
+                <th mat-header-cell *matHeaderCellDef> Reciept Date </th>
+                <td mat-cell *matCellDef="let item"> {{item.recieptdate}} </td>
+              </ng-container>
+              <ng-container matColumnDef="processingdate">
+                <th mat-header-cell *matHeaderCellDef> Processing Date </th>
+                <td mat-cell *matCellDef="let item">
+                  <form [formGroup]="formGroupArray[item.srno - 1].formGroup">
+                    <mat-form-field [hidden]="item.action.status === '1' || item.action.status === '2'"
+                      class="cheque-control-tool margin-top-5">
+                      <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                        formControlName="fcc_process_date">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </form>
+                  <span style="font-size: 14px" *ngIf="item.action.status === '2'" class="font-size-10">
+                    <b>{{item.action.dishonor_date | date : 'd-MMM-y'}}</b>
+                  </span>
+                  <span style="font-size: 14px" *ngIf="item.action.status === '1'" class="font-size-10">
+                    <b>{{item.action.fcc_process_date | date : 'd-MMM-y'}}</b>
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let item">
+                  <div class="inline-flex margin-top-5">
+                    <div class="text-center">
+                      <span style="font-size: 14px" *ngIf="item.action.status === '1'" class="font-size-10">
+                        <b>Cleared</b>
+                      </span>
+                      <span [matTooltip]="item.action.fcc_remarks" style="font-size: 14px;cursor: pointer;"
+                        *ngIf="item.action.status === '2'" class="font-size-10"><b>Bounced</b></span>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="inline-flex margin-top-5">
+                    <div class="cleared-button" [hidden]="item.action.status === '1' || item.action.status === '2'"
+                      (click)="clearCheck(item.srno, item.action)">
+                      <span class="font-size-10">Cleared</span></div>
+                    <div class="bounce-button margin-left-10"
+                      [hidden]="item.action.status === '1' || item.action.status === '2'"
+                      (click)="openBounced(item.action)"><span class="font-size-10">bounced</span></div>
+                  </div>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+              </tr>
+            </table>
+            <table class="table-100 text-center" style="margin-top:5px;">
+              <tr *ngIf="CHEQUE_ELEMENT_DATA.length == 0">
+                <td colspan="11">No Record Found</td>
+              </tr>
+            </table>
+            <mat-paginator [hidden]="!(CHEQUE_ELEMENT_DATA.length > 0)" #paginator [pageSize]="8"
+              [pageSizeOptions]="[5,10,25,100]" (page)="pageEvent = fetchData($event)"></mat-paginator>
+          </div>
+        </div>
+      </mat-card>
     </div>
   </div>
- 
+</div>

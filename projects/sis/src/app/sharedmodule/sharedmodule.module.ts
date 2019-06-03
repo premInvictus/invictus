@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TopNavComponent } from './top-nav/top-nav.component';
-import { SideNavComponent } from './side-nav/side-nav.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import {
@@ -14,7 +12,6 @@ import {
 	MatCardModule, MatListModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatAutocompleteModule
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
-import { FooterComponent } from './footer/footer.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
 import { DynamicContentComponent } from './dynamic-content/dynamic-content.component';
@@ -72,7 +69,8 @@ import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 import { CapitalizePipe } from '../_pipes';
 import { SafePipe } from '../_pipes/safe.pipe';
 import { AccountDetailsThemeTwoComponent } from '../student-master-theme-two/account-details-theme-two/account-details-theme-two.component';
-
+import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
+declare var CKEDITOR: any;
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -120,9 +118,10 @@ export const MY_FORMATS = {
 		ImageCropperModule,
 		NgxBarcodeModule,
 		NgxDocViewerModule,
-		NgxMaskModule.forRoot()
+		NgxMaskModule.forRoot(),
+		InvictusSharedModule,
 	],
-	declarations: [TopNavComponent, SideNavComponent, FooterComponent, CommonDynamicChartComponent, DynamicContentComponent,
+	declarations: [CommonDynamicChartComponent, DynamicContentComponent,
 		ChildDetailsComponent, ParentDetailsComponent, EducationDetailsComponent, AccountsComponent,
 		MedicalInformationComponent, SkillsAwardsComponent, DocumentsComponent, ParentGeneralRemarksComponent, AdmissionConcessionComponent,
 		AdmissionRemarksComponent, ThemeTwoTabOneContainerComponent, ThemeTwoTabTwoContainerComponent, ThemeTwoTabThreeContainerComponent,
@@ -133,8 +132,7 @@ export const MY_FORMATS = {
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent, AccountDetailsThemeTwoComponent,
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
 		ManagementRemarksThemeTwoComponent, AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent],
-	exports: [FormsModule, ReactiveFormsModule, TopNavComponent,
-		SideNavComponent,
+	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
 		MatSlideToggleModule,
 		MatButtonModule,
@@ -191,4 +189,31 @@ export const MY_FORMATS = {
 		{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
 	]
 })
-export class SharedmoduleModule { }
+export class SharedmoduleModule {
+	constructor() {
+		const script: any = document.createElement('script');
+		if (!(CKEDITOR.type === '4')) {
+			CKEDITOR.type = '4';
+			script.type = 'text/javascript';
+			script[('innerHTML')] = CKEDITOR.plugins.addExternal('html5audio', '/assets/js/html5audio/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('html5video', '/assets/js/html5video/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('pramukhime', '/assets/js/pramukhime/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('pastefromword', '/assets/js/pastefromword/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('clipboard', '/assets/js/clipboard/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('uploadfile', '/assets/js/uploadfile/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('uploadimage', '/assets/js/uploadimage/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('uploadwidget', '/assets/js/uploadwidget/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('filetools', '/assets/js/filetools/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('notificationaggregator', '/assets/js/notificationaggregator/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('notification', '/assets/js/notification/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('simpleImageUpload', '/assets/js/simpleImageUpload/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('simpleVideoUpload', '/assets/js/simpleVideoUpload/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('simpleAudioUpload', '/assets/js/simpleAudioUpload/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('keystrokes', '/assets/js/keystrokes/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('eqneditor', '/assets/js/eqneditor/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('videoembed', '/assets/js/videoembed/', 'plugin.js');
+				CKEDITOR.plugins.addExternal('strinsert', '/assets/js/strinsert/', 'plugin.js');
+			document.getElementsByTagName('head')[0].appendChild(script);
+		}
+	}
+}

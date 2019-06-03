@@ -13,7 +13,7 @@ export class SisService {
 	}
 	updateFeeAccount(value) {
 		this.service.startLoading();
-		return this.http.put(environment.apiSisUrl + '/feeAccount/updateFeeAccount/' + value.accd_id , value);
+		return this.http.put(environment.apiSisUrl + '/feeAccount/updateFeeAccount/' + value.accd_id, value);
 	}
 	getFeeAccount(value) {
 		this.service.startLoading();
@@ -945,15 +945,9 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/dashboardSis/getNotificationsDashboard');
 	}
-	uploadBulkData(uploadedFile: any) {
-		const fileList: FileList = uploadedFile;
-		if (fileList.length > 0) {
-			const file: File = fileList[0];
-			const formData: FormData = new FormData();
-			formData.append('zip_file', file, file.name);
-			this.service.startLoading();
-			return this.http.post(environment.apiSisUrl + '/bulkUploadSis/uploadBulkData', formData);
-		}
+	uploadBulkData(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/bulkUploadSis/uploadBulkData', value);
 	}
 	generateExcelForBulkUpload() {
 		this.service.startLoading();
@@ -1008,5 +1002,10 @@ export class SisService {
 	validateToken(value: any) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/validateToken', value);
+	}
+	insertInvoice(value) {
+		this.service.startLoading();
+		value.download = true;
+		return this.http.post(environment.apiFeeUrl + '/invoice/insertInvoice', value);
 	}
 }

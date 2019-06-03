@@ -7,7 +7,7 @@ export const slctable = {
 				actions: [
 						{ actionname: 'Approve', actionclass: 'btn-success  btn-promote', actionfunction: 'pendingapprove', actionpermission: '263' },
 						{
-								actionname: 'View', actionclass: 'btn-neutral btn-navspacer btn-promote', actionfunction: 'pendingaview',
+								actionname: 'View', actionclass: 'btn-neutral btn-navspacer ', actionfunction: 'pendingaview',
 								actionpermission: ''
 						},
 						{

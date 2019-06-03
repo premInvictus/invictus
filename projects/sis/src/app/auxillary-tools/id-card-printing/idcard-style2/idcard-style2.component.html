@@ -21,7 +21,7 @@
                      <img class="background-landscape-one" src="/assets/images/landscape-id-card_bg_three_3.jpg">
                      <div id="id_card_landscape_body">
                         <div id="id_card_header"
-                           [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor}">
+                           [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor, 'margin-top': '-18px'}">
                            <div class="row remove-margin">
                               <div class="col-3 my-col remove-col-padding text-center">
                                  <img *ngIf="showSchoolLogo" 
@@ -54,8 +54,8 @@
                                     </b>{{studentDetails.class_name}} - {{studentDetails.sec_name}}
                                  </p>
                                  <p [ngStyle]="{'font-weight':allContentBold}" 
-                                    class="id_card_student_info remove-paragraph-bottom-padding"><b>Route & Bus Stop :</b> Delhi
-                                    -Noida
+                                    class="id_card_student_info remove-paragraph-bottom-padding"><b>Route & Bus Stop :</b>
+                                    {{studentDetails.route_name}}- {{studentDetails.stoppages_name}}
                                  </p>
                                  <p [ngStyle]="{'font-weight':allContentBold}" 
                                     class="id_card_student_info remove-paragraph-bottom-padding"><b>Mobile no. :</b>{{studentDetails.au_mobile}}</p>
@@ -108,6 +108,7 @@
             <div class="col-3"></div>
          </div>
          <br>
+         <br>
          <div class="row">
             <div class="col-3"></div>
             <div *ngIf="showLandscape && showBackSide" class="col-6 custom-col-50">
@@ -115,7 +116,7 @@
                   <div class="container-landscape-box__white" [ngStyle]="{'border':showBorder}">
                      <div  [ngStyle]="{'background': idcardBodyColor,'border-bottom-left-radius':'15px',
                         'border-bottom-right-radius':'15px', 'border-top-right-radius':'15px',
-                        'border-top-left-radius':'15px'}">
+                        'border-top-left-radius':'15px', 'margin-top': '-10px'}">
                         <div class="row remove-margin">
                            <div [ngStyle]="{'font-weight':allContentBold}" 
                               class="col-4 text-center remove-col-padding">
@@ -148,8 +149,8 @@
                         <div class="row remove-margin">
                            <div class="col-12">
                               <p [ngStyle]="{'font-weight':allContentBold}" 
-                                 class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b> Shakuha jungle,
-                                 Karnibagh, Deogarh, Jharkhand - 814112
+                                 class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b>
+                                 {{studentDetails.address1}}{{studentDetails.address2}}
                               </p>
                               <p [ngStyle]="{'font-weight':allContentBold}" 
                                  class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Disclaimer :</b>
@@ -176,10 +177,11 @@
                   <div class="container-portrait-box__white">
                      <img class="background-portrait-one" src="/assets/images/id-card-portait-bg_background_two.jpg">
                      <div id="id_card_portrait_body_style2">
-                        <div [ngStyle]="{'border-top-right-radius': '12px'}">
+                        <div [ngStyle]="{'border-top-right-radius': '12px', 'margin-top': '-10px'}">
                            <div class="row remove-margin">
-                              <div class="col-3 remove-col-padding text-center">
-                                 <img *ngIf="showSchoolLogo" class="id-card-portriat-school-logo-style2" [src]="schoolLogo">
+                              <div class="col-3 remove-col-padding text-center" [ngStyle]="{'margin-top': '0px'}" >
+                                 <img *ngIf="showSchoolLogo"  class="id-card-portriat-school-logo-style2" 
+                                  [src]="schoolLogo">
                               </div>
                               <div class="col-9 col-padding-school-addr">
                                  <p [ngStyle]="{'font-weight':allContentBold, 'font-size': addressFontSize}" *ngIf="stuAddressFlag" 
@@ -213,8 +215,7 @@
                                  </p>
                                  <p [ngStyle]="{'font-weight':allContentBold}" 
                                     class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Route & Bus Stop :</b>
-                                    Delhi
-                                    -Noida
+                                    {{studentDetails.route_name}}- {{studentDetails.stoppages_name}}
                                  </p>
                                  <p [ngStyle]="{'font-weight':allContentBold}" 
                                     class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Mobile no. :</b> 
@@ -240,7 +241,7 @@
                               </div>
                            </div>
                            <div class="row remove-margin top-portrait-top-footer-style2">
-                              <div [ngStyle]="{'background':footerBgColor}" 
+                              <div [ngStyle]="{'background':footerBgColor, 'margin-top': '-19px'}" 
                               class="col-12 text-center">
                                  <p [ngStyle]="{'font-weight':allContentBold, 'color':footerFontColor, 'background':footerBgColor}" 
                                     class="id_card_footer remove-paragraph-bottom-padding">{{idCardConfig.ps_footer}}</p>
@@ -252,6 +253,8 @@
             </div>
             <div class="col-3"></div>
          </div>
+         <br>
+         <br>
          <div class="row">
             <div class="col-3"></div>
             <div *ngIf="showPotrait && showBackSide" class="col-6 custom-col-50 custom-margin-25">
@@ -259,7 +262,7 @@
                   <div class="container-portrait-box__white">
                      <img class="background-portrait-one" src="/assets/images/id-card-portait-bg_background_white.jpg">
                      <div id="id_card_portrait_body">
-                        <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px'}">
+                        <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px', 'margin-top': '-30px'}">
                            <div class="row remove-margin">
                               <div style="width: 55px;
                                  height: 55px;margin:auto" class="col-4 remove-col-padding text-center">

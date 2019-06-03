@@ -2,17 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { UserTypeRoutingModule } from './user-type-routing.module';
-import { AdminComponent } from './admin/admin.component';
 import { TeacherComponent } from './teacher/teacher.component';
-import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
 import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
-import { SchoolsetupComponent } from './admin/schoolsetup/schoolsetup.component';
-import { AccesscontrolComponent } from './admin/accesscontrol/accesscontrol.component';
-import { CreateNewUserComponent } from './admin/create-new-user/create-new-user.component';
-import { ManageAccessComponent } from './admin/manage-access/manage-access.component';
-import { CreateNewSchoolComponent } from './admin/create-new-school/create-new-school.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -42,17 +35,10 @@ import { UserCredentialComponent } from './user-credential/user-credential.compo
 		SharedModule,
 	],
 	declarations: [
-		AdminComponent,
 		TeacherComponent,
-		AdminDashboardComponent,
 		TeacherDashboardComponent,
 		SchoolComponent,
 		SchoolDashboardComponent,
-		SchoolsetupComponent,
-		AccesscontrolComponent,
-		CreateNewUserComponent,
-		ManageAccessComponent,
-		CreateNewSchoolComponent,
 		UserCredentialComponent
 	],
 	providers: []

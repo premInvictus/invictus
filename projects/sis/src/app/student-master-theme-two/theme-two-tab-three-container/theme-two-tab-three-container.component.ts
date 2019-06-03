@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
 import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
-
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-theme-two-tab-three-container',
 	templateUrl: './theme-two-tab-three-container.component.html',
@@ -151,7 +151,16 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 				message = this.addOnly ? 'Remarks Added Successfully' : this.editOnly ? 'Remarks Updated Successfully' : '';
 				if (message) {
 					this.commonAPIService.showSuccessErrorMessage(message, 'success');
+					const invoiceJSON = { login_id: [this.context.studentdetails.studentdetailsform.value.au_login_id] };
 					this.getRemarkData(this.context.studentdetails.studentdetailsform.value.au_login_id);
+					if (this.processTypeService.getProcesstype() === '3' || this.processTypeService.getProcesstype() === '4') {
+					this.sisService.insertInvoice(invoiceJSON).subscribe((result2: any) => {
+						if (result2.data && result2.status === 'ok') {
+							const length = result2.data.split('/').length;
+							saveAs(result2.data, result2.data.split('/')[length - 1]);
+						}
+					});
+				}
 					if (!this.isSubmit) {
 						this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 					} else {

@@ -151,6 +151,7 @@ export class SisService {
 	}
 	getStudentInformation(value) {
 		this.service.startLoading();
+		value.fromFee = 'fee';
 		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentInformation', value);
 	}
 	addStudentInformation(value) {
@@ -790,7 +791,7 @@ export class SisService {
 	}
 	getStudentLastRecordPerProcessType() {
 		this.service.startLoading();
-		return this.http.get(environment.apiSisUrl + '/studentDetails/getStudentLastRecordPerProcessType');
+		return this.http.get(environment.apiSisUrl + '/studentDetails/getStudentLastRecordPerProcessType/fee');
 	}
 	insertConfigureSetting(value) {
 		this.service.startLoading();
@@ -1005,5 +1006,9 @@ export class SisService {
 	logout(value: any) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/logout', value);
+	}
+	saveUserLastState(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/users/saveUserLastState', value);
 	}
 }

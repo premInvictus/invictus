@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonAPIService } from '../../../_services';
 declare const require: any;
 const Highcharts = require('highcharts');
 @Component({
@@ -7,11 +8,11 @@ const Highcharts = require('highcharts');
 	styleUrls: ['./school-dashboard.component.scss']
 })
 export class SchoolDashboardComponent implements OnInit {
-
-
-	constructor() { }
+	schoolInfo: any  = {};
+	constructor(private common: CommonAPIService) { }
 
 	ngOnInit() {
+		this.getSchool();
 		document.addEventListener('DOMContentLoaded', function () {
 			const myChart = Highcharts.chart('containerone', {
 				chart: {
@@ -320,6 +321,13 @@ export class SchoolDashboardComponent implements OnInit {
 
 	tabClick() {
 		window.location.reload();
+	}
+	getSchool() {
+		this.common.getSchoolDetails().subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.schoolInfo = result.data[0];
+			}
+		});
 	}
 }
 

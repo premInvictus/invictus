@@ -4,7 +4,6 @@ export interface FHModel {
 	feetype: string;
 	class: string;
 	calculate: string;
-	amount: number;
 	period: string;
 	date: string;
 	status: string;

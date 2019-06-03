@@ -6,6 +6,8 @@ export interface InvoiceElement {
 	invoiceno: number;
 	inv_id: number;
 	feeperiod: string;
+	invoicedate: any;
+	duedate: any;
 	feedue: string;
 	remark: string;
 	status: string;

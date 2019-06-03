@@ -1,9 +1,9 @@
-<div class="container-box__grey">
-    <div class="row">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-6 remove-col-padding-right">
-            <div class="container-box__white">
+<div class="fee-container-box__grey card-height-860-lp">
+    <div class="row ">
+      <div class="col-12 remove-col-padding">
+        <div class="row remove-top-margin">
+          <div class="col-6 remove-col-padding-left remove-col-padding-right">
+            <div class="container-box__white card-height-830">
               <div class="row">
                 <!-- <div class="col-3 custom-col-10 text-center">
                   <div class="line-divider"></div>
@@ -20,7 +20,8 @@
               <form [formGroup]="promoteForm">
               <div class="row">
                 <div class="col-6">
-                  <mat-form-field class="form-field">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Enrollment Type</mat-label>
                     <mat-select placeholder="Enrollment type" formControlName="enrollment_type" 
                     [errorStateMatcher]="confirmValidParentMatcher" required>
                     <mat-option value="">Please Select</mat-option>  
@@ -32,7 +33,8 @@
                   </mat-form-field>
                 </div>
                 <div class="col-6">
-                  <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Current Class</mat-label>
                     <mat-select placeholder="Current Class" #promoClass_id formControlName="class_id"
                     (selectionChange)="getSectionByClassForPromotion(promoClass_id.value)" 
                     [errorStateMatcher]="confirmValidParentMatcher" required>
@@ -47,7 +49,8 @@
               </div>
               <div class="row">
                 <div class="col-6">
-                  <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Section</mat-label>
                     <mat-select placeholder="Section" formControlName="sec_id">
                         <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of promotionSectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
@@ -55,7 +58,8 @@
                   </mat-form-field>
                 </div>
                 <div class="col-6">
-                  <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>New Class</mat-label>
                       <mat-select  placeholder="New Class" required formControlName="new_class_id" 
                       [errorStateMatcher]="confirmValidParentMatcher" required>
                       <mat-option value="">Please Select</mat-option>    
@@ -69,30 +73,43 @@
               </div>
               <div class="row">
                 <div class="col-6">
-                  <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Sorted By</mat-label>
                     <mat-select placeholder="Sorted by" formControlName="order_by" >
                         <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of orderByArray" [value]="item.order_by">{{item.order_by_name}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
-                <div class="col-6">
-                  <button mat-raised-button class="btn-success" (click)="getPromotionList()">Generate</button>
+                <div class="col-6 ">
+                  <button mat-raised-button class="btn-success margin-top-12" (click)="getPromotionList()">Generate</button>
                 </div>
               </div>
             </form>
             <div class="row">
                 <div class="col-12">
                   <div *ngIf="promoteFlag">
-                    <div class="row">
+                    <div class="row remove-top-margin">
                       <div class="col-12">
-                        <mat-form-field class="form-feild">
-                          <input
-                            matInput
-                            (keyup)="applyFilterPromote($event.target.value)"
-                            placeholder="Filter"
-                            />
-                        </mat-form-field>
+                        <div class="row remove-top-margin">
+                          <div class="col-4 remove-col-padding-left">
+                              <mat-form-field  >
+                                  <input
+                                    matInput
+                                    (keyup)="applyFilterPromote($event.target.value)"
+                                    placeholder="Filter"
+                                    />
+                                </mat-form-field>
+                          </div>
+                          <div class="col-8 margin-top-12 text-right">
+                              <div *ngIf="toBePromotedList.length > 0"class="float-right">
+                                  <span><b>Selected Students: </b></span>
+                                  <span>{{toBePromotedList.length}}</span>
+                                </div>
+                          </div>
+                        </div>
+                          
+                        
                         <mat-table #table [dataSource]="promotedataSource" matSort class="table-100 mat-elevation-z1">
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="select">
@@ -153,8 +170,8 @@
                             <span style="color:#04a20d" class="text-center" [hidden]="!(item.action.pmap_status === '0') "><b>Promoted</b></span>
                           </mat-cell>
                         </ng-container>
-                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                         </mat-table>
                       </div>
                     </div>
@@ -171,8 +188,8 @@
             </div>
             
           </div>
-          <div class="col-6 col-padding-left-eight">
-            <div class="container-box__white">
+          <div class="col-6 col-padding-left-eight remove-col-padding-right">
+            <div class="container-box__white card-height-830">
               <div class="row">
                 <!-- <div class="col-3 custom-col-10 text-center">
                   <div class="line-divider"></div>
@@ -189,7 +206,8 @@
               <form [formGroup]="demoteForm">
               <div class="row">
                 <div class="col-6">
-                  <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Enrollment Type</mat-label>
                       <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
                       [errorStateMatcher]="confirmValidParentMatcher" required>
                       <mat-option value="">Please Select</mat-option>    
@@ -201,7 +219,8 @@
                   </mat-form-field>
                 </div>
                 <div class="col-6">
-                  <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Promoted Class</mat-label>
                       <mat-select placeholder="Promoted Class" #demoClass_id formControlName="class_id"
                       (selectionChange)="getSectionByClassForDemotion(demoClass_id.value)" 
                       [errorStateMatcher]="confirmValidParentMatcher" required>
@@ -216,7 +235,8 @@
               </div>
               <div class="row margin-bottom-65 ">
                 <div class="col-6">
-                  <mat-form-field class="form-field">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Promoted Section</mat-label>
                     <mat-select placeholder="Promoted Section" formControlName="sec_id">
                         <mat-option value="">Please Select</mat-option>  
                       <mat-option *ngFor="let item of demotionSectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
@@ -224,7 +244,7 @@
                   </mat-form-field>
                 </div>
                 <div class="col-6 ">
-                  <button mat-raised-button class="btn-success" (click)="getDemotionList()">Generate</button>
+                  <button mat-raised-button class="btn-success margin-top-12" (click)="getDemotionList()">Generate</button>
                 </div>
               </div>
             </form>
@@ -233,13 +253,26 @@
                   <div *ngIf="demoteFlag">
                     <div class="row">
                       <div class="col-12">
-                        <mat-form-field class="form-feild">
-                          <input
-                            matInput
-                            (keyup)="applyFilterDemote($event.target.value)"
-                            placeholder="Filter"
-                            />
-                        </mat-form-field>
+                        <div class="row margin-top-25">
+                          <div class="col-4 remove-col-padding-left">
+                              <mat-form-field class="form-field">
+                             
+                                  <input
+                                    matInput
+                                    (keyup)="applyFilterDemote($event.target.value)"
+                                    placeholder="Filter"
+                                    />
+                                </mat-form-field>
+                          </div>
+                          <div class="col-8 margin-top-12 text-right">
+                              <div *ngIf="toBeDemotedList.length > 0"class="float-right">
+                                  <span><b>Selected Students: </b></span>
+                                  <span>{{toBeDemotedList.length}}</span>
+                                </div>
+                          </div>
+                        </div>
+                          
+                        
                         <mat-table #table [dataSource]="demotedataSource" matSort class="table-100 mat-elevation-z1">
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="select">
@@ -297,8 +330,8 @@
                             <i class="fas fa-thumbs-down icon-danger" (click)="demoteStudent(item)"></i>
                           </mat-cell>
                         </ng-container>
-                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                         >
                         </mat-table>
                       </div>
@@ -319,5 +352,4 @@
         </div>
       </div>
     </div>
-    <br />
   </div>

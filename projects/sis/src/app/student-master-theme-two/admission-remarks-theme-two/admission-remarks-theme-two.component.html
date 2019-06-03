@@ -1,14 +1,12 @@
 <div class="padding-15">
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-12 text-center">
             <span class="text-uppercase"><b>Admission Remarks</b></span>
         </div>
-    </div>
-    <br>
-    <br>
+    </div> -->
     <form [formGroup]="admissionRemarkForm">
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 remove-col-padding">
                 <ng-container formArrayName="admission_array">
                     <div class="row">
                         <ng-container *ngFor="let item of admissionRemarkFields.controls; let i = index"
@@ -17,7 +15,8 @@
                                 <p><input type="hidden" formControlName="equs_id"
                                         value="{{item.controls?.equs_id.value}}">
                                     <label><b>Q.{{i+1}}</b> {{item.controls?.equs_name.value}}</label></p>
-                                <mat-form-field class="form-field">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                            <mat-label>Write You Answer</mat-label>
                                     <textarea matInput placeholder="Write Your Answer" formControlName="eqa_answer"
                                         value="{{item.controls?.eqa_answer.value}}" [readonly]="viewOnly"></textarea>
                                 </mat-form-field>
@@ -28,10 +27,8 @@
             </div>
             <div class="col-12 text-center" *ngIf="!(admissionRemarkFields.controls.length > 0)">No Record Found</div>
         </div>
-        <br>
-        <br>
         <div class="row">
-            <div class="col-12 text-center">
+            <div class="col-12">
                 <span class="text-uppercase"><b>How to you learn about the school</b></span>
             </div>
         </div>
@@ -46,7 +43,8 @@
                             {{item.controls.equs_name?.value}}</mat-checkbox>
                     </div>
                     <div class="col-6">
-                        <mat-form-field class="form-field">
+                            <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>From Whom</mat-label>
                             <input class="text-capitalize" matInput placeholder="From Whom" formControlName="eqa_answer"
                                 value="{{item.controls.eqa_answer?.value}}" [readonly]="viewOnly">
                         </mat-form-field>

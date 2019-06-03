@@ -1,13 +1,12 @@
 <div class="container-box__white">
   <div >
-    
     <div class="row">
       <div class="col-3"></div>
       <div *ngIf="showLandscape" class="col-6 custom-col-50">
         <div class="container-printid-landscape margin-auto">
           <div [ngStyle]="{'border':showBorder, 'border-radius': '15px'}">
             <div id="id_card_header"
-            [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor}">
+            [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor, 'margin-top': '-11px'}">
             <div class="row remove-margin">
                 <div class="col-3 my-col remove-col-padding text-center">
                   <img *ngIf="showSchoolLogo" 
@@ -38,12 +37,12 @@
                   class="id_card_student_info remove-paragraph-bottom-padding"><b>Class - Section :
                   </b>{{studentDetails.class_name}} - {{studentDetails.sec_name}}</p>
                   <p [ngStyle]="{'font-weight':allContentBold}" 
-                  class="id_card_student_info remove-paragraph-bottom-padding"><b>Route & Bus Stop :</b> Delhi
-                    -Noida</p>
+                  class="id_card_student_info remove-paragraph-bottom-padding"><b>Route & Bus Stop :</b>
+                  {{studentDetails.route_name}}- {{studentDetails.stoppages_name}}</p>
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_student_info remove-paragraph-bottom-padding"><b>Mobile no. :</b>{{studentDetails.au_mobile}}</p>
                   <p *ngIf="dobFlag" [ngStyle]="{'font-weight':allContentBold}" 
-                  class="id_card_student_info remove-paragraph-bottom-padding"><b>Date of Birth :</b>{{studentDetails.upd_dob}}</p>
+                  class="id_card_student_info remove-paragraph-bottom-padding"><b>Date of Birth :</b>{{studentDetails.upd_dob | date: 'd-MMM-y'}}</p>
 
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_student_info remove-paragraph-bottom-padding"><b>House :</b> {{studentDetails.hou_house_name}}</p>
@@ -89,6 +88,7 @@
       <div class="col-3"></div>
     </div>
     <br>
+    <br>
     <div class="row">
         <div class="col-3"></div>
       <div *ngIf="showLandscape && showBackSide" class="col-6 custom-col-50">
@@ -96,7 +96,7 @@
           <div class="container-landscape-box__white" [ngStyle]="{'border':showBorder}">
             <div  [ngStyle]="{'background': idcardBodyColor,'border-bottom-left-radius':'15px',
             'border-bottom-right-radius':'15px', 'border-top-right-radius':'15px',
-            'border-top-left-radius':'15px'}">
+            'border-top-left-radius':'15px', 'margin-top': '-11px'}">
             <div class="row remove-margin">
               <div [ngStyle]="{'font-weight':allContentBold}" 
               class="col-4 text-center remove-col-padding">
@@ -129,8 +129,9 @@
             <div class="row remove-margin">
               <div class="col-12">
                 <p [ngStyle]="{'font-weight':allContentBold}" 
-                class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b> Shakuha jungle,
-                  Karnibagh, Deogarh, Jharkhand - 814112</p>
+                class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b>
+                {{studentDetails.address1}}{{studentDetails.address2}}
+                </p>
                 <p [ngStyle]="{'font-weight':allContentBold}" 
                 class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Disclaimer :</b>
                   Id-Card is school's property. Please return if found.</p>
@@ -156,7 +157,7 @@
           <div class="container-portrait-box__white">
             <img class="background-portrait-one" src="/assets/images/id-card-portait-1_bg.png">
             <div id="id_card_portrait_body">
-              <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px'}">
+              <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px','margin-top': '-44px'}">
               <div class="row remove-margin">
                 <div class="col-3 remove-col-padding text-center">
                   <img *ngIf="showSchoolLogo" class="id-card-portriat-school-logo" [src]="schoolLogo">
@@ -195,14 +196,13 @@
                   {{studentDetails.class_name}} - {{studentDetails.sec_name}}</p>
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Route & Bus Stop :</b>
-                    Delhi
-                    -Noida</p>
+                  {{studentDetails.route_name}}- {{studentDetails.stoppages_name}}</p>
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Mobile no. :</b> 
                     {{studentDetails.au_mobile}}</p>
                   <p *ngIf="dobFlag" [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Date of Birth :</b>
-                    {{studentDetails.upd_dob}}</p>
+                    {{studentDetails.upd_dob | date: 'd-MMM-y'}}</p>
 
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>House :</b> 
@@ -232,6 +232,7 @@
       <div class="col-3"></div>
     </div>
     <br>
+    <br>
     <div class="row">
         <div class="col-3"></div>
       <div *ngIf="showPotrait && showBackSide" class="col-6 custom-col-50 custom-margin-25">
@@ -239,7 +240,7 @@
           <div class="container-portrait-box__white">
             <img class="background-portrait-one" src="/assets/images/id-card-portait-1_bg.png">
             <div id="id_card_portrait_body">
-              <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px'}">
+              <div [ngStyle]="{'background': idcardBodyColor, 'border-top-right-radius': '12px', 'margin-top': '-20px'}">
               <div class="row remove-margin">
                 <div style="width: 55px;
                 height: 55px;margin:auto" class="col-4 remove-col-padding text-center">
@@ -286,8 +287,9 @@
               <div class="row remove-margin">
                 <div class="col-12 remove-col-padding">
                   <p  [ngStyle]="{'font-weight':allContentBold}"
-                  class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b> Shakuha jungle,
-                    Karnibagh,- 814112</p>
+                  class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b>
+                  {{studentDetails.address1}}{{studentDetails.address2}}
+                   </p>
                   <p [ngStyle]="{'font-weight':allContentBold}" 
                   class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Disclaimer :</b>
                     Id-Card is school's property. Please return if found.</p>

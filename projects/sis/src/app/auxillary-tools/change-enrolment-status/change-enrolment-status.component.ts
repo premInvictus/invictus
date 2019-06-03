@@ -3,10 +3,11 @@ import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CommonAPIService, SisService } from '../../_services/index';
+import { CommonAPIService, SisService, ProcesstypeService } from '../../_services/index';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-change-enrolment-status',
 	templateUrl: './change-enrolment-status.component.html',
@@ -43,6 +44,7 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	change_status = '';
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
+		private processType: ProcesstypeService,
 		private router: Router,
 		private route: ActivatedRoute) { }
 
@@ -184,7 +186,8 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 				this.showActive = false;
 			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '2') {
 				this.enrolmentPlaceholder = 'Regisrtation';
-				if (this.enrollMentTypeArray[i]['au_process_type'] !== '2') {
+				if (this.enrollMentTypeArray[i]['au_process_type'] !== '2' &&
+					this.enrollMentTypeArray[i]['au_process_type'] !== '1' && this.enrollMentTypeArray[i]['au_process_type'] !== '5') {
 					temp_arr.push(this.enrollMentTypeArray[i]);
 				}
 				this.showCancel = true;
@@ -275,13 +278,32 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 				cancel_date: this.changeEnrolmentStatusForm.value.cancel_date ? this.changeEnrolmentStatusForm.value.cancel_date : '',
 			};
 			this.sisService.changeEnrollmentStatus(inputJson).subscribe((result: any) => {
-				if (result) {
-					this.notif.showSuccessErrorMessage('Student Enrolment Status Changed Successfully', 'success');
-					this.change_status = '';
-					this.showCancel = false;
-					this.showLeft = false;
-					this.showActive = false;
-					this.reset();
+				if (result.data && result.status === 'ok') {
+					this.notif.showSuccessErrorMessage(result.message, 'success');
+					if (inputJson['process_type_from'] === '1' || inputJson['process_type_from'] === '2') {
+						const invoiceJSOn = {
+							processFrom: this.changeEnrolmentStatusForm.value.enrolment_type,
+							processTo: this.changeEnrolmentStatusForm.value.enrolment_to,
+							login_id: [result.data.toString()]
+						};
+						this.sisService.insertInvoice(invoiceJSOn).subscribe((result2: any) => {
+							if (result2.data && result2.status === 'ok') {
+								const length = result2.data.split('/').length;
+								saveAs(result2.data, result2.data.split('/')[length - 1]);
+								this.change_status = '';
+								this.showCancel = false;
+								this.showLeft = false;
+								this.showActive = false;
+								this.reset();
+							}
+						});
+					} else {
+						this.change_status = '';
+						this.showCancel = false;
+						this.showLeft = false;
+						this.showActive = false;
+						this.reset();
+					}
 				}
 			});
 
@@ -310,6 +332,9 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 		this.changeEnrolmentStatusForm.patchValue({
 			'cancel_date': convertedDate
 		});
+	}
+	setProcess($event) {
+		this.processType.setProcesstype($event.value);
 	}
 
 

@@ -1,240 +1,230 @@
-
-
-<div class="container-box__grey">
-  <div class="row">
-    <div class="col-12">
-      <div class="row">
-        <div class="col-6 remove-col-padding-right">
-          <div class="container-box__white">
+<div class="fee-container-box__grey">
+    <div class="row remove-top-margin">
+        <div class="col-12 remove-col-padding">
             <div class="row">
-              <!-- <div class="col-4 custom-col-10 text-center">
-                <div class="line-divider"></div>
-              </div> -->
-              <div class="col-12 text-center">
-                <h4 class="text-uppercase text-center"><b>Shuffle</b></h4>
-              </div>
-              <!-- <div class="col-4 custom-col-10 text-center">
-                <div class="line-divider"></div>
-              </div> -->
-            </div>
-            
-            <form [formGroup]="shufflesortform" novalidate>
-            <div class="row">
-              <div class="col-4">
-                <mat-form-field class="form-field">
-                  <mat-select formControlName="class_id" placeholder="Current Class" (ngModelChange)="getSectionsByClass()" required>
-                      <mat-option value="">Please Select</mat-option>  
-                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                          {{item.class_name}}
-                      </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-4">
-                <mat-form-field class="form-field">
-                  <mat-select formControlName="order_by" placeholder="Sort Based On" required>
-                    <mat-option value="sec_id">Section</mat-option>
-                    <mat-option value="hou_id">House</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-4">
-                <button mat-raised-button class="btn-success btn-margin-top" (click)="getMasterStudentDetail()" >Generate</button>
-              </div>
-            </div>
-            </form>
-            <!-- <br> -->
-            <!-- <div class="row">
+                <div class="col-6 remove-col-padding-left remove-col-padding-right">
+                    <div class="container-box__white card-height-830">
+                        <div class="row">
 
-              <div class="col-12 text-center">
-                <button mat-raised-button class="btn-deeppurple" (click)="getMasterStudentDetail()" >Generate</button>
-              </div>
-            </div> -->
-            <div class="row" *ngIf="sorttableflag">
-              <div class="col-12">
-                <div>
-                  <mat-form-field class="form-feild">
-                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                  </mat-form-field>
-                  <mat-table [dataSource]="studentdataSource" matSort class="table-100 mat-elevation-z1">
-  
-                    <!-- Admission Column -->
-                    <ng-container matColumnDef="no">
-                      <mat-header-cell *matHeaderCellDef mat-sort-header> Adm. No. </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{element.no}} </mat-cell>
-                    </ng-container>
-  
-                    <!-- Student Column -->
-                    <ng-container matColumnDef="name">
-                      <mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> <span  class="text-capitalize">{{element.name}}</span> </mat-cell>
-                    </ng-container>
-  
-                    <!-- Class Column -->
-                    <ng-container matColumnDef="class">
-                      <mat-header-cell *matHeaderCellDef mat-sort-header> Class </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{element.class}} </mat-cell>
-                    </ng-container>
-  
-                    <!-- Section Column -->
-                    <ng-container matColumnDef="section">
-                      <mat-header-cell *matHeaderCellDef mat-sort-header> Section </mat-header-cell>
-                      <mat-cell *matCellDef="let element"> {{element.section}} </mat-cell>
-                    </ng-container>
-  
-                    <!-- Promote Column -->
-                    <ng-container matColumnDef="house">
-                      <mat-header-cell *matHeaderCellDef mat-sort-header> House</mat-header-cell>
-                      <mat-cell *matCellDef="let element">{{element.house}}</mat-cell>
-                    </ng-container>
-  
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                  </mat-table>
+                            <div class="col-12 text-center">
+                                <h4 class="text-uppercase text-center"><b>Shuffle</b></h4>
+                            </div>
+
+                        </div>
+
+                        <form [formGroup]="shufflesortform" novalidate>
+                            <div class="row">
+                                <div class="col-4">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Current Class</mat-label>
+                                        <mat-select formControlName="class_id" placeholder="Current Class" (ngModelChange)="getSectionsByClass()" required>
+                                            <mat-option value="">Please Select</mat-option>
+                                            <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                {{item.class_name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-4">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Sort Based On</mat-label>
+                                        <mat-select formControlName="order_by" placeholder="Sort Based On" required>
+                                            <mat-option value="sec_id">Section</mat-option>
+                                            <mat-option value="hou_id">House</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-4">
+                                    <button mat-raised-button class="btn-success btn-margin-top" (click)="getMasterStudentDetail()">Generate</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row" *ngIf="sorttableflag">
+                            <div class="col-12 margin-top-10">
+                                <div>
+                                    <mat-form-field class="form-feild">
+                                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                                    </mat-form-field>
+                                    <mat-table [dataSource]="studentdataSource" matSort class="table-100 mat-elevation-z1">
+                                        <!--Select Column-->
+                                        <ng-container matColumnDef="select">
+                                            <mat-header-cell *matHeaderCellDef>
+                                                <mat-checkbox (change)="assignAll($event)" [checked]="allShuffleFlag">
+                                                </mat-checkbox>
+                                            </mat-header-cell>
+                                            <mat-cell *matCellDef="let element">
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <mat-checkbox (change)="addLogin($event)" [checked]="allShuffleFlag"
+                                                [value]="element.select"></mat-checkbox>
+                                            </mat-cell>
+                                        </ng-container>
+                                        <!-- Admission Column -->
+                                        <ng-container matColumnDef="no">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header> Adm. No. </mat-header-cell>
+                                            <mat-cell *matCellDef="let element"> {{element.no}} </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Student Column -->
+                                        <ng-container matColumnDef="name">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </mat-header-cell>
+                                            <mat-cell *matCellDef="let element"> <span class="text-capitalize">{{element.name}}</span> </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Class Column -->
+                                        <ng-container matColumnDef="class">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header> Class </mat-header-cell>
+                                            <mat-cell *matCellDef="let element"> {{element.class}} </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Section Column -->
+                                        <ng-container matColumnDef="section">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header> Section </mat-header-cell>
+                                            <mat-cell *matCellDef="let element"> {{element.section}} </mat-cell>
+                                        </ng-container>
+
+                                        <!-- Promote Column -->
+                                        <ng-container matColumnDef="house">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header> House</mat-header-cell>
+                                            <mat-cell *matCellDef="let element">{{element.house}}</mat-cell>
+                                        </ng-container>
+
+                                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                    </mat-table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
-              </div>
+                <div class="col-6 remove-col-padding-right col-padding-left-eight">
+                    <div class="container-box__white card-height-830">
+                        <div class="row">
+
+                            <div class="col-12  text-center">
+                                <h4 class="text-uppercase text-center"><b>Shuffle</b></h4>
+                            </div>
+
+                        </div>
+                        <form [formGroup]="shufflebasedform" novalidate>
+                            <div class="row">
+                                <div class="col-6">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Shuffle Based On</mat-label>
+                                        <mat-select formControlName="based_on" placeholder="Shuffle Based On" (ngModelChange)="resetshuffletableflag()" required>
+                                            <mat-option value="sec_id">Section</mat-option>
+                                            <mat-option value="hou_id">House</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-6">
+                                    <button mat-raised-button class="btn-success btn-margin-top" (click)="getShuffleStudents()">Generate</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row" *ngIf="shuffletableflag">
+                            <div class="col-12">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-12">
+
+                                            <mat-form-field class="form-feild">
+                                                <input matInput (keyup)="applyFilter1($event.target.value)" placeholder="Filter">
+                                            </mat-form-field>
+                                            <mat-table [dataSource]="shuffledataSource" matSort class="table-100 mat-elevation-z1">
+
+                                                <!-- Checkbox Column -->
+                                                <ng-container matColumnDef="select">
+                                                    <mat-header-cell *matHeaderCellDef>
+                                                        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="allselected">
+                                                        </mat-checkbox>
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element">
+                                                        <mat-checkbox [checked]="allselected" (change)="$event ? selectShuffleStudent(element.select) : null" [value]="element.select"></mat-checkbox>
+                                                    </mat-cell>
+                                                </ng-container>
+
+                                                <!-- Admission Column -->
+                                                <ng-container matColumnDef="no">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Adm. No. </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element"> {{element.no}} </mat-cell>
+                                                </ng-container>
+
+                                                <!-- Student Column -->
+                                                <ng-container matColumnDef="name">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element"> <span class="text-capitalize">{{element.name}}</span> </mat-cell>
+                                                </ng-container>
+
+                                                <!-- Class Column -->
+                                                <ng-container matColumnDef="class">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Class </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element"> {{element.class}} </mat-cell>
+                                                </ng-container>
+
+                                                <!-- Section Column -->
+                                                <ng-container matColumnDef="section">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Section </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element">
+                                                        <ng-template [ngIf]="shufflebasedform.value.based_on == 'sec_id'" [ngIfElse]="sectionname">
+                                                            <mat-form-field class="form-field-80">
+                                                                <mat-select [(ngModel)]="element.action.shuf_sec_id" (ngModelChange)="setSuffleStudent(element.action.au_login_id,'sec_id',$event)">
+                                                                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                                                        {{item.sec_name}}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </ng-template>
+                                                        <ng-template #sectionname>
+                                                            {{element.section}}
+                                                        </ng-template>
+                                                    </mat-cell>
+                                                </ng-container>
+
+                                                <!-- Promote Column -->
+                                                <ng-container matColumnDef="house">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header> House </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element">
+                                                        <ng-template [ngIf]="shufflebasedform.value.based_on == 'hou_id'" [ngIfElse]="housename">
+                                                            <mat-form-field class="form-field">
+                                                                <mat-select [(ngModel)]="element.action.shuf_hou_id" (ngModelChange)="setSuffleStudent(element.action.au_login_id,'hou_id',$event)">
+                                                                    <mat-option *ngFor="let item of houseArray" [value]="item.hou_id">
+                                                                        {{item.hou_house_name}}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </ng-template>
+                                                        <ng-template #housename>
+                                                            {{element.house}}
+                                                        </ng-template>
+                                                    </mat-cell>
+                                                </ng-container>
+
+                                                <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns1"></mat-header-row>
+                                                <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns1;"></mat-row>
+                                            </mat-table>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <br>
+                                            <br>
+                                            <div class="text-center">
+                                                <button mat-raised-button class="btn-green" (click)="freeze()">Freeze</button>
+                                            </div>
+                                            <br>
+                                            <br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-
-          </div>
-
-          
 
         </div>
-        <div class="col-6 col-padding-left-eight">
-          <div class="container-box__white">
-            <div class="row">
-              <!-- <div class="col-4 custom-col-10 text-center">
-                <div class="line-divider"></div>
-              </div> -->
-              <div class="col-12  text-center">
-                <h4 class="text-uppercase text-center"><b>Shuffle</b></h4>
-              </div>
-              <!-- <div class="col-4 custom-col-10 text-center">
-                <div class="line-divider"></div>
-              </div> -->
-            </div>
-            <form [formGroup]="shufflebasedform" novalidate>
-            <div class="row">
-              <div class="col-6">
-                <mat-form-field class="form-field">
-                  <mat-select formControlName="based_on" placeholder="Shuffle Based On" (ngModelChange)="resetshuffletableflag()" required>
-                    <mat-option value="sec_id">Section</mat-option>
-                    <mat-option value="hou_id">House</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-6">
-                <button mat-raised-button class="btn-success btn-margin-top" (click)="getShuffleStudents()" >Generate</button>
-              </div>
-            </div>
-            </form>
-            <div class="row" *ngIf="shuffletableflag">
-              <div class="col-12">
-                <div >
-                  <div class="row">
-                    <div class="col-12">
-  
-                      <mat-form-field class="form-feild">
-                        <input matInput (keyup)="applyFilter1($event.target.value)" placeholder="Filter">
-                      </mat-form-field>
-                      <mat-table [dataSource]="shuffledataSource" matSort class="table-100 mat-elevation-z1">
-  
-                        <!-- Checkbox Column -->
-                        <ng-container matColumnDef="select">
-                          <mat-header-cell *matHeaderCellDef>
-                            <mat-checkbox (change)="$event ? masterToggle() : null"
-                                          [checked]="allselected">
-                            </mat-checkbox>
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            <mat-checkbox [checked]="allselected" (change)="$event ? selectShuffleStudent(element.select) : null" [value]="element.select"></mat-checkbox>
-                          </mat-cell>>
-                        </ng-container>
-  
-                        <!-- Admission Column -->
-                        <ng-container matColumnDef="no">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Adm. No. </mat-header-cell>
-                          <mat-cell *matCellDef="let element"> {{element.no}} </mat-cell>
-                        </ng-container>
-  
-                        <!-- Student Column -->
-                        <ng-container matColumnDef="name">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </mat-header-cell>
-                          <mat-cell *matCellDef="let element"> <span class="text-capitalize">{{element.name}}</span> </mat-cell>
-                        </ng-container>
-  
-                        <!-- Class Column -->
-                        <ng-container matColumnDef="class">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Class </mat-header-cell>
-                          <mat-cell *matCellDef="let element"> {{element.class}} </mat-cell>
-                        </ng-container>
-  
-                        <!-- Section Column -->
-                        <ng-container matColumnDef="section">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Section </mat-header-cell>
-                          <mat-cell *matCellDef="let element"> 
-                            <ng-template [ngIf]="shufflebasedform.value.based_on == 'sec_id'" [ngIfElse]="sectionname">
-                              <mat-form-field class="form-field-80">
-                                <mat-select [(ngModel)]="element.action.shuf_sec_id" (ngModelChange)="setSuffleStudent(element.action.au_login_id,'sec_id',$event)" >
-                                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
-                                      {{item.sec_name}}
-                                  </mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                            </ng-template>
-                            <ng-template #sectionname>
-                                {{element.section}}
-                            </ng-template>
-                          </mat-cell>
-                        </ng-container>
-  
-                        <!-- Promote Column -->
-                        <ng-container matColumnDef="house">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> House </mat-header-cell>
-                          <mat-cell *matCellDef="let element"> 
-                            <ng-template [ngIf]="shufflebasedform.value.based_on == 'hou_id'" [ngIfElse]="housename">
-                              <mat-form-field class="form-field">
-                                <mat-select [(ngModel)]="element.action.shuf_hou_id" (ngModelChange)="setSuffleStudent(element.action.au_login_id,'hou_id',$event)" >
-                                    <mat-option *ngFor="let item of houseArray" [value]="item.hou_id">
-                                      {{item.hou_house_name}}
-                                  </mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                            </ng-template>
-                            <ng-template #housename>
-                                {{element.house}}
-                            </ng-template>
-                          </mat-cell>
-                        </ng-container>
-  
-                        <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns1;"></mat-row>
-                      </mat-table>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12">
-                      <br>
-                      <br>
-                      <div class="text-center">
-                        <button mat-raised-button class="btn-green" (click)="freeze()" >Freeze</button>
-                      </div>
-                      <br>
-                      <br>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-
-        </div>
-      </div>
-
     </div>
-  </div>
-
-
-  <br>
 </div>

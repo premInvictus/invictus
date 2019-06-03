@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { SisService, ProcesstypeService, FeeService, CommonAPIService } from '../../_services';
+import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { BarecodeScannerLivestreamComponent } from 'ngx-barcode-scanner';
 import { DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
@@ -19,25 +19,26 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	barecodeScanner: BarecodeScannerLivestreamComponent;
 	barcodeValue;
 	invoiceArray: any[] = [];
-	permission = false;
 	currentDate = new Date();
 	startMonth: any;
 	minDate: any;
 	schoolInfo: any;
+	processTypeArray: any[] = [
+		{ id: '1', name: 'Enquiry No.' },
+		{ id: '2', name: 'Registration No.' },
+		{ id: '3', name: 'Provisional Admission No.' },
+		{ id: '4', name: 'Admission No.' },
+		{ id: '5', name: 'Alumni No.' }
+	];
 	constructor(private router: Router,
 		private route: ActivatedRoute,
 		private sisService: SisService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public feeService: FeeService,
 		private fbuild: FormBuilder,
-		private common: CommonAPIService) { }
+		public common: CommonAPIService) { }
 
 	ngOnInit() {
-		if (this.common.isExistUserAccessMenu('371')) {
-			this.permission = true;
-		} else {
-			this.permission = false;
-		}
 		this.getSchool();
 		this.getBanks();
 		this.getEntryModes();
@@ -51,10 +52,10 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		this.feeTransactionForm = this.fbuild.group({
 			'inv_id': [],
 			'login_id': '',
-			'ftr_emod_id': '',
+			'ftr_emod_id': '1',
 			'ftr_transaction_id': '',
 			'ftr_transaction_date': new Date(),
-			'ftr_pay_id': '',
+			'ftr_pay_id': '2',
 			'ftr_cheque_no': '',
 			'ftr_cheque_date': '',
 			'ftr_bnk_id': '',
@@ -98,9 +99,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		});
 		this.barcodeValue = result.codeResult.code;
 		this.feeTransactionForm.value.inv_id = this.barcodeValue;
-		const index = this.invoiceArray.indexOf(Number(this.barcodeValue));
+		const index = this.invoiceArray.indexOf(this.barcodeValue);
 		if (index === -1) {
-			this.invoiceArray.push(Number(this.barcodeValue));
+			this.invoiceArray.push(this.barcodeValue);
 		} else {
 			this.feeTransactionForm.patchValue({
 				inv_id: ''
@@ -109,9 +110,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	}
 	insertInvoice($event) {
 		this.feeTransactionForm.value.inv_id = $event.srcElement.value;
-		const index = this.invoiceArray.indexOf(Number($event.srcElement.value));
+		const index = this.invoiceArray.indexOf($event.srcElement.value);
 		if (index === -1) {
-			this.invoiceArray.push(Number(this.feeTransactionForm.value.inv_id));
+			this.invoiceArray.push(this.feeTransactionForm.value.inv_id);
 			this.feeTransactionForm.patchValue({
 				inv_id: ''
 			});
@@ -122,7 +123,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		}
 	}
 	deleteInvoice(inv_id) {
-		const index = this.invoiceArray.indexOf(Number(inv_id));
+		const index = this.invoiceArray.indexOf(inv_id);
 		if (index !== -1) {
 			this.invoiceArray.splice(index, 1);
 		}
@@ -139,8 +140,12 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Fee transaction added', 'success');
+					this.reset();
+					this.invoiceArray = [];
 				} else {
 					this.common.showSuccessErrorMessage('Fee transaction not added', 'error');
+					this.reset();
+					this.invoiceArray = [];
 				}
 			});
 		} else if (this.invoiceArray.length === 0) {
@@ -159,11 +164,16 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					saveAs(result.data, result.data.split('/')[length - 1]);
+					window.open(result.data, '_blank');
+					this.reset();
+					this.invoiceArray = [];
 				} else {
 					const length = result.data.split('/').length;
 					saveAs(result.data, result.data.split('/')[length - 1]);
-					this.feeTransactionForm.reset();
+					this.reset();
+					this.invoiceArray = [];
 				}
 			});
 		} else if (this.invoiceArray.length === 0) {
@@ -175,10 +185,10 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		this.feeTransactionForm.patchValue({
 			'inv_id': [],
 			'login_id': '',
-			'ftr_emod_id': '',
+			'ftr_emod_id': '1',
 			'ftr_transaction_id': '',
 			'ftr_transaction_date': new Date(),
-			'ftr_pay_id': '',
+			'ftr_pay_id': '2',
 			'ftr_cheque_no': '',
 			'ftr_cheque_date': '',
 			'ftr_bnk_id': '',
@@ -187,6 +197,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			'ftr_remark': '',
 			'saveAndPrint' : ''
 		});
+		this.invoiceArray = [];
 	}
 	ngOnDestroy() {
 		this.barecodeScanner.stop();

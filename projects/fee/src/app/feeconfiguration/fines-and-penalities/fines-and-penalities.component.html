@@ -1,157 +1,180 @@
-<div class="container-box__grey">
-  <div class="row">
-     <div class="col-12 remove-col-padding">
-        <mat-card class="card-content__container margin-bottom-10">
-           <mat-card-title>
-              
-              <div class="row">
-               <div class="col-6">
-                  <h1>Fines and Penalties</h1>
+<div class="fee-container-box__grey">
+   <div class="row">
+      <div class="col-12 remove-col-padding">
+         <mat-card class="card-content__container card-height-830 card-height-835">
+            <mat-card-title>
+
+               <div class="row">
+                  <div class="col-6">
+                     <h1>Fines and Penalties</h1>
+                  </div>
+                  <div class="col-6 text-right">
+                     <div class="inline-flex">
+                        <h3>School</h3>
+                        <mat-slide-toggle class="btn-spacer" [ngModel]="fin_is_hostel_fee === 1 ? 'checked' : ''"
+                           (change)="changeIsHostelFee($event)"></mat-slide-toggle>
+                        <h3 class="btn-spacer">Hostel</h3>
+                     </div>
+
+                  </div>
                </div>
-               <div class="col-6 text-right">
-                 <div class="inline-flex"><h3>School</h3> <mat-slide-toggle  class="btn-spacer" [ngModel]="fin_is_hostel_fee === 1 ? 'checked' : ''"
-                  (change)="changeIsHostelFee($event)"></mat-slide-toggle><h3 class="btn-spacer">Hostel</h3></div>
-                 
-               </div>
-             </div>
-           </mat-card-title>
-           <mat-card-content>
-              <div class="row">
-                 <div class="col-4 remove-col-padding custom-col-27">
-                    <form [formGroup]="finepenaltiesForm" novalidate>
-                       <div class="row">
-                          <div class="col-12 margin-top-25">
+            </mat-card-title>
+            <mat-card-content>
+               <div class="row">
+                  <div class="col-4 remove-col-padding custom-col-27">
+                     <form [formGroup]="finepenaltiesForm" novalidate>
+                        <div class="row">
+                           <div class="col-12 margin-top-25">
                               <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Fine Name</mat-label>
-                                <input matInput placeholder="Fine Name" formControlName="fin_name"
-                                   [errorStateMatcher]="confirmValidParentMatcher" required>
-                             </mat-form-field>
-                          </div>
-                       </div>
-                       <div class="row">
-                          <div class="col-12">
-                              <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Fine Type</mat-label>
-                                <mat-select placeholder="Fine Type"
-                                   [errorStateMatcher]="confirmValidParentMatcher" formControlName="fin_type_id" required>
-                                   <mat-option value="">Please Select</mat-option>
-                                   <mat-option *ngFor="let item of fineTypeArray" [value]="item.ft_id">{{item.ft_type_name}}</mat-option>
-                                </mat-select>
-                             </mat-form-field>
-                          </div>
-                       </div>
-                       <div class="row">
-                          <div class="col-12">
-                              <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Fine Amount</mat-label>
-                                <input matInput placeholder="Fine Amount" type="number" formControlName="fin_amt"
-                                   [errorStateMatcher]="confirmValidParentMatcher" required>
-                             </mat-form-field>
-                          </div>
-                       </div>
-                       <div class="row">
-                          <div class="col-12">
-                              <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Description</mat-label>
-                                <textarea matInput placeholder="Description" formControlName="fin_desc">{{finepenaltiesForm.value.fin_desc}}</textarea>
-                             </mat-form-field>
-                          </div>
-                       </div>
-                       <!-- <div class="row">
-                          <div class="col-12 margin-top-25">
-                             <h4 class="font-medium">Additional Filter</h4>
-                          </div>
-                       </div> -->
-                       <div class="row">
-                          <div class="col-12">
-                              <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Please Select</mat-label>
-                                <mat-select placeholder="Event" formControlName="fin_event_id">
-                                   <mat-option>Please Select</mat-option>
-                                   <mat-option *ngFor="let item of fineEventTypeArray" [value]="item.fe_id">{{item.fe_event_name}}</mat-option>
-                                </mat-select>
-                             </mat-form-field>
-                          </div>
-                       </div>
-                       <div class="text-center margin-top-25">
-                          <div class="inline-flex">
-                          <button *ngIf="!editFlag" mat-raised-button class="btn-primary btn-custom btn-success" (click)="submit()">Submit</button>
-                          <button *ngIf="editFlag" mat-raised-button class="btn-primary btn-custom btn-success" (click)="update()">Update</button>
-                          <button mat-raised-button class="btn-primary btn-danger btn-custom btn-spacer" (click)="finepenaltiesForm.reset()">Reset</button>
+                                 <mat-label>Fine Name</mat-label>
+                                 <input matInput placeholder="Fine Name" formControlName="fin_name"
+                                    [errorStateMatcher]="confirmValidParentMatcher" required>
+                              </mat-form-field>
+                           </div>
                         </div>
-                       </div>
-                    </form>
-                 </div>
-                 <div class="col-1 fee-custom-col-8">
-                  <div class="vertical-line-divider"></div>
-                 </div>
-                 <div class="col-7 fee-custom-col-64">
-                    <div class="row">
-                       <div class="col-12 remove-col-padding">
-                          <div >
-                             <mat-form-field [hidden]="!(FINEPENALTIES_ELEMENT_DATA.length > 0)">
-                                <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                                <mat-icon matPrefix>filter_list</mat-icon>
-                             </mat-form-field>
-                             <table class="table-100 text-center " mat-table [dataSource]="dataSource" matSort>
-                                <ng-container matColumnDef="srno">
-                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
-                                   <td mat-cell *matCellDef="let item"> {{item.srno}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="finename">
-                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Fine Name </th>
-                                   <td mat-cell *matCellDef="let item"> {{item.finename}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="finetype">
-                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Fine Type </th>
-                                   <td mat-cell *matCellDef="let item"> {{item.finetype}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="fineamount">
-                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Fine Amount </th>
-                                   <td mat-cell *matCellDef="let item"> {{item.fineamount | number}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="event">
-                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Event </th>
-                                   <td mat-cell *matCellDef="let item"> {{item.event}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="description">
-                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
-                                   <td mat-cell *matCellDef="let item"> {{item.description | capitalize}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="status">
-                                   <th mat-header-cell *matHeaderCellDef> Status </th>
-                                   <td mat-cell *matCellDef="let item">
-                                      <mat-slide-toggle [checked]="item.status"
-                                      (change)="changeStatus($event, item.action)"></mat-slide-toggle>
-                                   </td>
-                                </ng-container>
-                                <ng-container matColumnDef="action">
-                                   <th mat-header-cell *matHeaderCellDef> Action </th>
-                                   <td mat-cell *matCellDef="let item" class="inline-flex padding-top-10"> <i class="material-icons icon-edit" (click)="patchValue(item.action)">
-                                      create
-                                      </i> <i class="material-icons icon-danger icon-spacer" (click)="openDeleteDialog(item.action)">
-                                      delete 
-                                      </i> 
-                                   </td>
-                                </ng-container>
-                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
-                             </table>
-                             <table class="table-100 text-center" style="margin-top:5px;">
+                        <div class="row">
+                           <div class="col-12">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Fine Type</mat-label>
+                                 <mat-select placeholder="Fine Type" [errorStateMatcher]="confirmValidParentMatcher"
+                                    formControlName="fin_type_id" required>
+                                    <mat-option value="">Please Select</mat-option>
+                                    <mat-option *ngFor="let item of fineTypeArray" [value]="item.ft_id">
+                                       {{item.ft_type_name}}</mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-12">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Fine Amount</mat-label>
+                                 <input matInput placeholder="Fine Amount" type="number" formControlName="fin_amt"
+                                    [errorStateMatcher]="confirmValidParentMatcher" required>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                        <div class="row">
+                              <div class="col-12">
+                                 <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Upper Limit</mat-label>
+                                    <input matInput placeholder="Upper Limit" type="number" formControlName="fin_upper_limit"
+                                       [errorStateMatcher]="confirmValidParentMatcher">
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                        <div class="row">
+                           <div class="col-12">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Description</mat-label>
+                                 <textarea matInput placeholder="Description"
+                                    formControlName="fin_desc">{{finepenaltiesForm.value.fin_desc}}</textarea>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-12">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Please Select</mat-label>
+                                 <mat-select placeholder="Event" formControlName="fin_event_id">
+                                    <mat-option>Please Select</mat-option>
+                                    <mat-option *ngFor="let item of fineEventTypeArray" [value]="item.fe_id">
+                                       {{item.fe_event_name}}</mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                        <div class="text-center margin-top-25">
+                           <div class="inline-flex">
+                              <button *ngIf="!editFlag" mat-raised-button class="btn-primary btn-custom btn-success"
+                                 (click)="submit()">Submit</button>
+                              <button *ngIf="editFlag" mat-raised-button class="btn-primary btn-custom btn-success"
+                                 (click)="update()">Update</button>
+                              <button mat-raised-button class="btn-primary btn-danger btn-custom btn-spacer"
+                                 (click)="finepenaltiesForm.reset()">Reset</button>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+                  <div class="col-1 fee-custom-col-8">
+                     <div class="vertical-line-divider"></div>
+                  </div>
+                  <div class="col-7 fee-custom-col-64">
+                     <div class="row">
+                        <div class="col-12 remove-col-padding">
+                           <div>
+                              <mat-form-field [hidden]="!(FINEPENALTIES_ELEMENT_DATA.length > 0)">
+                                 <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)"
+                                    placeholder="Filter">
+                                 <mat-icon matPrefix>filter_list</mat-icon>
+                              </mat-form-field>
+                              <table class="table-100 text-center " mat-table [dataSource]="dataSource" matSort>
+                                 <ng-container matColumnDef="srno">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
+                                    <td mat-cell *matCellDef="let item"> {{item.srno}} </td>
+                                 </ng-container>
+                                 <ng-container matColumnDef="finename">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fine Name </th>
+                                    <td mat-cell *matCellDef="let item"> {{item.finename}} </td>
+                                 </ng-container>
+                                 <ng-container matColumnDef="finetype">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fine Type </th>
+                                    <td mat-cell *matCellDef="let item"> {{item.finetype}} </td>
+                                 </ng-container>
+                                 <ng-container matColumnDef="fineamount">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fine Amount </th>
+                                    <td mat-cell *matCellDef="let item"> {{item.fineamount | number}} </td>
+                                 </ng-container>
+                                 <ng-container matColumnDef="event">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Event </th>
+                                    <td mat-cell *matCellDef="let item"> {{item.event}} </td>
+                                 </ng-container>
+                                 <ng-container matColumnDef="upperlimit">
+                                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Upper Limit</th>
+                                       <td mat-cell *matCellDef="let item"> {{item.upperLimit}} </td>
+                                    </ng-container>
+                                 <ng-container matColumnDef="description">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+                                    <td mat-cell *matCellDef="let item"> {{item.description | capitalize}} </td>
+                                 </ng-container>
+                                 <ng-container matColumnDef="status">
+                                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                                    <td mat-cell *matCellDef="let item">
+                                       <mat-slide-toggle [checked]="item.status"
+                                          (change)="changeStatus($event, item.action)"></mat-slide-toggle>
+                                    </td>
+                                 </ng-container>
+                                 <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                                    <td mat-cell *matCellDef="let item" class="inline-flex padding-top-10"> <i
+                                          class="material-icons icon-edit" (click)="patchValue(item.action)">
+                                          create
+                                       </i> <i class="material-icons icon-danger icon-spacer"
+                                          (click)="openDeleteDialog(item.action)">
+                                          delete
+                                       </i>
+                                    </td>
+                                 </ng-container>
+                                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                 <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+                              </table>
+                              <table class="table-100 text-center" style="margin-top:5px;">
                                  <tr *ngIf="FINEPENALTIES_ELEMENT_DATA.length == 0">
-                                   <td colspan="12">No Record Found</td>
+                                    <td colspan="12">No Record Found</td>
                                  </tr>
-                               </table>
-                             <mat-paginator [hidden]="!(FINEPENALTIES_ELEMENT_DATA.length > 0)" #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
-                             </mat-paginator>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-              </div>
-           </mat-card-content>
-        </mat-card>
-     </div>
-  </div>
+                              </table>
+                              <mat-paginator [hidden]="!(FINEPENALTIES_ELEMENT_DATA.length > 0)" #paginator
+                                 [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                              </mat-paginator>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </mat-card-content>
+         </mat-card>
+      </div>
+   </div>
 </div>
-<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)"></app-delete-modal>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)">
+</app-delete-modal>

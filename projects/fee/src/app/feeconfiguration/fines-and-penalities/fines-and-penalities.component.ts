@@ -23,7 +23,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 		private common: CommonAPIService,
 		private feeService: FeeService) { }
 	FINEPENALTIES_ELEMENT_DATA: FinePenaltiesElement[] = [];
-	displayedColumns: string[] = ['srno', 'finename', 'finetype', 'fineamount', 'event', 'description', 'status', 'action'];
+	displayedColumns: string[] = ['srno', 'finename', 'finetype', 'fineamount', 'event', 'upperlimit', 'description', 'status', 'action'];
 	dataSource = new MatTableDataSource<FinePenaltiesElement>(this.FINEPENALTIES_ELEMENT_DATA);
 	fin_is_hostel_fee = 0;
 	@ViewChild('paginator') paginator: MatPaginator;
@@ -47,7 +47,8 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 			fin_class_id: '',
 			fin_sec_id: '',
 			fin_event_id: '',
-			fin_status: '1'
+			fin_status: '1',
+			fin_upper_limit: ''
 		});
 	}
 	ngAfterViewInit() {
@@ -112,6 +113,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 						classsection: item.class_name + '-' + item.sec_name,
 						description: item.fin_desc,
 						event: item.fe_event_name,
+						upperLimit: item.fin_upper_limit ? item.fin_upper_limit : 'NA',
 						status: item.fin_status === '1' ? true : false,
 						action: item
 					});
@@ -131,6 +133,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 		} else {
 			this.finepenaltiesForm.markAsPristine();
 			this.finepenaltiesForm.updateValueAndValidity();
+			this.finepenaltiesForm.value['fin_status'] = '1';
 			this.finepenaltiesForm.value['fin_is_hostel_fee'] = this.fin_is_hostel_fee;
 			this.feeService.insertFineandPenalties(this.finepenaltiesForm.value).subscribe((result: any) => {
 				if (result.status === 'ok') {
@@ -181,6 +184,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 			fin_sec_id: value.fin_sec_id,
 			fin_event_id: value.fin_event_id,
 			fin_status: value.fin_status,
+			fin_upper_limit: value.fin_upper_limit,
 		});
 	}
 	update() {

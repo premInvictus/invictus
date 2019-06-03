@@ -960,6 +960,14 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
                                     <mat-cell *matCellDef="let item">{{item.class}}</mat-cell>
                                  </ng-container>
+                                  <!--Explanations Column-->
+                                  <ng-container matColumnDef="explanations">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-explanation">
+                                       Explanations</mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="mcq-explanation">
+                                       <div [MathJax]="item.explanations"></div>
+                                    </mat-cell>
+                                 </ng-container>
                                  <!-- Topic Name Column -->
                                  <ng-container matColumnDef="topic">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
@@ -1094,6 +1102,14 @@
                                  <ng-container matColumnDef="class">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
                                     <mat-cell *matCellDef="let item">{{item.class}}</mat-cell>
+                                 </ng-container>
+                                  <!--Explanations Column-->
+                                  <ng-container matColumnDef="explanations">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-explanation">
+                                       Explanations</mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="mcq-explanation">
+                                       <div [MathJax]="item.explanations"></div>
+                                    </mat-cell>
                                  </ng-container>
                                  <!-- Topic Name Column -->
                                  <ng-container matColumnDef="topic">

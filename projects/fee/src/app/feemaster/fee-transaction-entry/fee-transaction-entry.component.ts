@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { SisService, ProcesstypeService, FeeService, CommonAPIService } from '../../_services';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { InvoiceElement } from './invoiceelement.model';
 import { MatTableDataSource, MatDialog } from '@angular/material';
@@ -8,12 +8,14 @@ import { DatePipe } from '@angular/common';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { saveAs } from 'file-saver';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
+import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 @Component({
 	selector: 'app-fee-transaction-entry',
 	templateUrl: './fee-transaction-entry.component.html',
 	styleUrls: ['./fee-transaction-entry.component.scss']
 })
-export class FeeTransactionEntryComponent implements OnInit {
+export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
+	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	displayedColumns: string[] = ['srno', 'feehead', 'feedue', 'concession', 'adjustment', 'netpay'];
 	INVOICE_ELEMENT_DATA: InvoiceElement[] = [];
 	dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
@@ -32,17 +34,18 @@ export class FeeTransactionEntryComponent implements OnInit {
 	invoiceTypes: any[] = [];
 	banks: any[] = [];
 	allBanks: any[] = [];
-	permission = false;
 	currentDate = new Date();
 	minDate: any;
 	schoolInfo: any;
 	startMonth: any;
+	type: any = '';
+	feeRenderId: any = '';
 	constructor(
 		private sisService: SisService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public feeService: FeeService,
 		private fbuild: FormBuilder,
-		private common: CommonAPIService,
+		public common: CommonAPIService,
 		private router: Router,
 		private route: ActivatedRoute,
 		public dialog: MatDialog,
@@ -61,31 +64,53 @@ export class FeeTransactionEntryComponent implements OnInit {
 		this.getEntryModes();
 		this.getPayModes();
 		this.buildForm();
-		if (this.common.isExistUserAccessMenu('368')) {
-			this.permission = true;
-		} else {
-			this.permission = false;
-		}
 		this.selectedMode = '';
-		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
-			if (data.adm_no && data.login_id) {
-				this.lastRecordId = data.adm_no;
-				this.loginId = data.adm_no;
-				this.feeLoginId = data.login_id;
-				this.getStudentInformation(this.lastRecordId);
-			} else {
-				this.processtypeService.setProcesstype('4');
-				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-					if (result.status === 'ok') {
-						this.lastRecordId = result.data[0].last_record;
-						this.loginId = result.data[0].au_login_id;
-						this.feeLoginId = this.loginId;
-						this.getStudentInformation(this.lastRecordId);
-					}
-				});
-			}
+		const invDet: any = this.studentRouteMoveStoreService.getInvoiceId();
+		if (!(invDet.inv_id)) {
+			this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
+				if (data.adm_no && data.login_id) {
+					this.lastRecordId = data.adm_no;
+					this.loginId = data.adm_no;
+					this.feeLoginId = data.login_id;
+					this.getStudentInformation(this.lastRecordId);
+				} else {
+					this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+						if (result.status === 'ok') {
+							this.lastRecordId = result.data[0].last_record;
+							this.loginId = result.data[0].au_login_id;
+							this.feeLoginId = this.loginId;
+							this.getStudentInformation(this.lastRecordId);
+						}
+					});
+				}
 
-		});
+			});
+		} else {
+			const invDet2: any = this.studentRouteMoveStoreService.getInvoiceId();
+			this.lastRecordId = invDet2.au_admission_no;
+			this.loginId = invDet2.login_id;
+			this.feeLoginId = this.loginId;
+			this.studentInfo = {};
+			this.feeTransactionForm.patchValue({
+				'inv_id': [],
+				'login_id': '',
+				'ftr_emod_id': '',
+				'ftr_transaction_id': '',
+				'ftr_transaction_date': new Date(),
+				'ftr_pay_id': '1',
+				'ftr_cheque_no': '',
+				'ftr_cheque_date': '',
+				'ftr_bnk_id': '',
+				'ftr_branch': '',
+				'ftr_amount': '',
+				'ftr_remark': '',
+				'is_cheque': '',
+				'ftr_deposit_bnk_id': '',
+				'saveAndPrint': ''
+			});
+			this.selectedMode = '1';
+			this.getInvoices(invDet2.inv_id);
+		}
 	}
 	buildForm() {
 		this.feeTransactionForm = this.fbuild.group({
@@ -105,6 +130,19 @@ export class FeeTransactionEntryComponent implements OnInit {
 			'ftr_deposit_bnk_id': '',
 			'saveAndPrint': ''
 		});
+	}
+	checkEmit(process_type) {
+		if (process_type) {
+			this.type = process_type;
+			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.lastRecordId = result.data[0].last_record;
+					this.loginId = result.data[0].au_login_id;
+					this.feeLoginId = this.loginId;
+					this.getStudentInformation(this.lastRecordId);
+				}
+			});
+		}
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((result: any) => {
@@ -131,6 +169,10 @@ export class FeeTransactionEntryComponent implements OnInit {
 				this.invoice.netPay = this.invoice.late_fine_amt ?
 					Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
 					Number(this.invoice.fee_amount);
+
+				if (this.invoice.balance_amt) {
+					this.invoice.netPay += Number(this.invoice.balance_amt);
+				}
 				this.invoiceArray = this.invoice.invoice_bifurcation;
 				this.feeTransactionForm.patchValue({
 					'ftr_amount': this.invoice.netPay,
@@ -145,9 +187,11 @@ export class FeeTransactionEntryComponent implements OnInit {
 						feedue: item.invg_fh_amount,
 						concession: item.invg_fcc_amount,
 						adjustment: item.invg_adj_amount,
-						netpay: Number(item.invg_total_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+						// tslint:disable-next-line: max-line-length
+						netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
 					});
-					this.invoiceTotal += Number(item.invg_total_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
+					// tslint:disable-next-line: max-line-length
+					this.invoiceTotal += Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
 					pos++;
 				}
 				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
@@ -204,23 +248,48 @@ export class FeeTransactionEntryComponent implements OnInit {
 	}
 	next(admno) {
 		this.loginId = admno;
-		this.getStudentInformation(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getStudentInformation(this.loginId);
+		} else {
+			this.getStudentInformation(this.loginId);
+		}
 	}
 	prev(admno) {
 		this.loginId = admno;
-		this.getStudentInformation(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getStudentInformation(this.loginId);
+		} else {
+			this.getStudentInformation(this.loginId);
+		}
 	}
 	first(admno) {
 		this.loginId = admno;
-		this.getStudentInformation(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getStudentInformation(this.loginId);
+		} else {
+			this.getStudentInformation(this.loginId);
+		}
 	}
 	last(admno) {
 		this.loginId = admno;
-		this.getStudentInformation(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getStudentInformation(this.loginId);
+		} else {
+			this.getStudentInformation(this.loginId);
+		}
 	}
 	key(admno) {
 		this.loginId = admno;
-		this.getStudentInformation(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getStudentInformation(this.loginId);
+		} else {
+			this.getStudentInformation(this.loginId);
+		}
 	}
 	next2(admno) {
 		this.feeLoginId = admno;
@@ -288,6 +357,9 @@ export class FeeTransactionEntryComponent implements OnInit {
 			'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
 			'saveAndPrint': false
 		});
+		if (this.invoice.late_fine_amt) {
+			this.feeTransactionForm.value.lateFeeAmt = this.invoice.late_fine_amt;
+		}
 		this.feeTransactionForm.value.login_id = this.feeLoginId;
 		this.feeTransactionForm.value.inv_id = [this.invoice.inv_id];
 		this.feeTransactionForm.value.is_cheque = this.feeTransactionForm.value.ftr_pay_id === '3' ? true : false;
@@ -313,17 +385,22 @@ export class FeeTransactionEntryComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Fee transaction added', 'success');
 					this.reset();
-					this.getStudentInformation(this.loginId);
+					this.getStudentInformation(this.lastRecordId);
+					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				} else {
 					this.common.showSuccessErrorMessage('Fee transaction not added', 'error');
 					this.reset();
-					this.getStudentInformation(this.loginId);
+					this.getStudentInformation(this.lastRecordId);
+					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				}
 			});
 		}
 	}
 	saveAndPrint() {
 		const datePipe = new DatePipe('en-in');
+		if (this.invoice.late_fine_amt) {
+			this.feeTransactionForm.value.lateFeeAmt = this.invoice.late_fine_amt;
+		}
 		this.feeTransactionForm.patchValue({
 			'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
 			'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
@@ -354,11 +431,15 @@ export class FeeTransactionEntryComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
 					saveAs(result.data, result.data.split('/')[length - 1]);
+					this.common.showSuccessErrorMessage(result.message, 'success');
+					window.open(result.data, '_blank');
 					this.reset();
-					this.getStudentInformation(this.loginId);
+					this.getStudentInformation(this.lastRecordId);
+					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				} else {
 					this.reset();
-					this.getStudentInformation(this.loginId);
+					this.getStudentInformation(this.lastRecordId);
+					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				}
 			});
 		}
@@ -394,16 +475,62 @@ export class FeeTransactionEntryComponent implements OnInit {
 
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
 			data: {
 				invoiceNo: invoiceNo,
-				edit: edit
+				edit: edit,
+				paidStatus: 'paid'
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
 
-		dialogRef.afterClosed().subscribe(result => {
-			this.getStudentInformation(this.loginId);
+		dialogRef.afterClosed().subscribe(result2 => {
+			const invDet: any = this.studentRouteMoveStoreService.getInvoiceId();
+			if (!(invDet.inv_id)) {
+				this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
+					if (data.adm_no && data.login_id) {
+						this.lastRecordId = data.adm_no;
+						this.loginId = data.adm_no;
+						this.feeLoginId = data.login_id;
+						this.getStudentInformation(this.lastRecordId);
+					} else {
+						this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+							if (result.status === 'ok') {
+								this.lastRecordId = result.data[0].last_record;
+								this.loginId = result.data[0].au_login_id;
+								this.feeLoginId = this.loginId;
+								this.getStudentInformation(this.lastRecordId);
+							}
+						});
+					}
+
+				});
+			} else {
+				const invDet2: any = this.studentRouteMoveStoreService.getInvoiceId();
+				this.lastRecordId = invDet2.au_admission_no;
+				this.loginId = invDet2.login_id;
+				this.feeLoginId = this.loginId;
+				this.studentInfo = {};
+				this.feeTransactionForm.patchValue({
+					'inv_id': [],
+					'login_id': '',
+					'ftr_emod_id': '',
+					'ftr_transaction_id': '',
+					'ftr_transaction_date': new Date(),
+					'ftr_pay_id': '1',
+					'ftr_cheque_no': '',
+					'ftr_cheque_date': '',
+					'ftr_bnk_id': '',
+					'ftr_branch': '',
+					'ftr_amount': '',
+					'ftr_remark': '',
+					'is_cheque': '',
+					'ftr_deposit_bnk_id': '',
+					'saveAndPrint': ''
+				});
+				this.selectedMode = '1';
+				this.getInvoices(invDet2.inv_id);
+			}
 
 		});
 	}
@@ -420,5 +547,15 @@ export class FeeTransactionEntryComponent implements OnInit {
 				'ftr_amount': this.invoice.netPay
 			});
 		}
+	}
+	checkStatus() {
+		if (this.commonStu.studentdetails.editable_status === '1') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	ngOnDestroy() {
+		this.studentRouteMoveStoreService.setInvoiceId({});
 	}
 }

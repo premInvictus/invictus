@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FeeLedgerElement } from './fee-ledger.model';
-import { SisService, ProcesstypeService, FeeService } from '../../_services';
+import { SisService, ProcesstypeFeeService, FeeService } from '../../_services';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
@@ -33,19 +33,20 @@ export class FeeLedgerComponent implements OnInit {
 	@ViewChild('table') table: ElementRef;
 	constructor(private sisService: SisService,
 		private feeService: FeeService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public dialog: MatDialog,
 		public studentRouteMoveStoreService: StudentRouteMoveStoreService
 	) { }
 
 	ngOnInit() {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
 			if (data.adm_no && data.login_id) {
 				this.lastRecordId = data.adm_no;
 				this.loginId = data.login_id;
 				this.getFeeLedger(this.loginId);
 			} else {
-				this.processtypeService.setProcesstype('4');
 				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 					if (result.status === 'ok') {
 						this.lastRecordId = result.data[0].last_record;
@@ -56,6 +57,19 @@ export class FeeLedgerComponent implements OnInit {
 			}
 
 		});
+	}
+	checkEmit(process_type) {
+		if (process_type) {
+			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.lastRecordId = result.data[0].last_record;
+					this.loginId = result.data[0].au_login_id;
+					this.FEE_LEDGER_ELEMENT = [];
+					this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
+					this.getFeeLedger(this.loginId);
+				}
+			});
+		}
 	}
 	getFeeLedger(login_id) {
 		this.FEE_LEDGER_ELEMENT = [];
@@ -83,23 +97,43 @@ export class FeeLedgerComponent implements OnInit {
 	}
 	next(admno) {
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	prev(admno) {
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	first(admno) {
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	last(admno) {
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	key(admno) {
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	exportAsExcel() {
 		// tslint:disable-next-line:max-line-length
@@ -112,12 +146,12 @@ export class FeeLedgerComponent implements OnInit {
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
-			height: '75vh',
 			data: {
 				invoiceNo: invoiceNo,
-				edit: edit
+				edit: edit,
+				paidStatus: 'paid'
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
@@ -128,12 +162,11 @@ export class FeeLedgerComponent implements OnInit {
 	openReceiptDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
-			height: '75vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
 
 		dialogRef.afterClosed().subscribe(result => {

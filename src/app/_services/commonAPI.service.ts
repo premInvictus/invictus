@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {of} from 'rxjs';
+import { of } from 'rxjs';
 import { Subject } from 'rxjs';
 import { TreeviewItem } from 'ngx-treeview';
 import { NotificationsService } from 'angular2-notifications';
@@ -11,58 +11,75 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class CommonAPIService {
-
+	menus: any[] = [];
 	homeUrl: string;
 	userData: any;
-		constructor(private http: HttpClient, private _cookieService: CookieService,
-								private _notificationService: NotificationsService) { }
-		UserAccessMenu: any[] = [];
-			showLoading = new Subject();
-			studentData = new Subject();
-			reRenderForm = new Subject();
-			renderTab = new Subject();
-		htmlToText(html: any) {
-				const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
-				tmp.innerHTML = html;
-				return tmp.textContent || tmp.innerText || '';
-			}
+	constructor(private http: HttpClient, private _cookieService: CookieService,
+		private _notificationService: NotificationsService) {
+		this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
+			(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
+	}
+	UserAccessMenu: any[] = [];
+	showLoading = new Subject();
+	studentData = new Subject();
+	reRenderForm = new Subject();
+	renderTab = new Subject();
+	htmlToText(html: any) {
+		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
+		tmp.innerHTML = html;
+		return tmp.textContent || tmp.innerText || '';
+	}
 
 	startLoading() {
 		this.showLoading.next(true);
 	}
 
 	stopLoading() {
-			this.showLoading.next(false);
+		this.showLoading.next(false);
 	}
 	getUserAccessMenu(value) {
 		const param: any = {};
 		if (value.login_id) {
-				param.login_id = value.login_id;
+			param.login_id = value.login_id;
 		}
 		if (value.role_id) {
-				param.role_id = value.role_id;
+			param.role_id = value.role_id;
 		}
 		if (value.pro_id) {
-				param.pro_id = value.pro_id;
+			param.pro_id = value.pro_id;
 		}
 		return this.http.post('/users/getUserAccessMenu', param);
-}
-setUserAccessMenu(value) {
-		this.UserAccessMenu = value;
-}
-returnUserAccessMenu() {
+	}
+	setUserAccessMenu(value) {
+		this.UserAccessMenu = [];
+		if (this.menus.length === 0) {
+			this.UserAccessMenu = value;
+		} else {
+			this.UserAccessMenu = this.menus;
+		}
+	}
+	returnUserAccessMenu() {
 		return of(this.UserAccessMenu);
 
-}
-isExistUserAccessMenu(mod_id) {
-		for (const mitem of this.UserAccessMenu) {
-				if (mitem.menu_mod_id === mod_id) {
-						return true;
+	}
+	isExistUserAccessMenu(mod_id) {
+		if (this.menus.length === 0) {
+			for (const mitem of this.UserAccessMenu) {
+				if (Number(mitem.menu_mod_id) === Number(mod_id)) {
+					return true;
 				}
+			}
+			return false;
+		} else {
+			for (const mitem of this.menus) {
+				if (Number(mitem.menu_mod_id) === Number(mod_id)) {
+					return true;
+				}
+			}
+			return false;
 		}
-		return false;
-}
-isExist(arrayhas, field, id) {
+	}
+	isExist(arrayhas, field, id) {
 		if (arrayhas.length > 0) {
 			if (arrayhas.find(item => item[field] === id)) {
 				return true;
@@ -72,9 +89,9 @@ isExist(arrayhas, field, id) {
 	}
 
 	getItemData(type, arrayhas, data) {
-		const treeItems: any [] = [];
+		const treeItems: any[] = [];
 		switch (type) {
-			case 'menu' :
+			case 'menu':
 				for (const moditem of data) {
 					const mitem: any = {};
 					mitem.text = moditem.mod_name;
@@ -99,7 +116,7 @@ isExist(arrayhas, field, id) {
 					treeItems.push(new TreeviewItem(mitem));
 				}
 				break;
-			case 'class' :
+			case 'class':
 				for (const element of data) {
 					const mitem: any = {};
 					mitem.text = element.class_name;
@@ -108,7 +125,7 @@ isExist(arrayhas, field, id) {
 					treeItems.push(new TreeviewItem(mitem));
 				}
 				break;
-			case 'subject' :
+			case 'subject':
 				for (const element of data) {
 					const mitem: any = {};
 					mitem.text = element.sub_name;
@@ -117,7 +134,7 @@ isExist(arrayhas, field, id) {
 					treeItems.push(new TreeviewItem(mitem));
 				}
 				break;
-			case 'topic' :
+			case 'topic':
 				for (const element of data) {
 					const mitem: any = {};
 					mitem.text = element.topic_name;
@@ -175,17 +192,17 @@ isExist(arrayhas, field, id) {
 		}
 		//
 		return this.homeUrl;
-}
-getCokkieData() {
-	if (this._cookieService && this._cookieService.get('userData')) {
-		return this.userData = JSON.parse(this._cookieService.get('userData'));
 	}
-}
-getSession() {
-	return this.http.get(environment.apiSisUrl + '/siSetup/session');
-}
-getSchool() {
-	return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
-}
+	getCokkieData() {
+		if (this._cookieService && this._cookieService.get('userData')) {
+			return this.userData = JSON.parse(this._cookieService.get('userData'));
+		}
+	}
+	getSession() {
+		return this.http.get(environment.apiSisUrl + '/siSetup/session');
+	}
+	getSchool() {
+		return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
+	}
 
 }

@@ -59,20 +59,18 @@
     </div>
   </div>
   <br>
-  <br>
   <div class="row">
-    <div class="col-12 text-center margin-bottom-65">
-      <button *ngIf="addOnly" mat-raised-button class="btn-success" (click)="saveForm()">Save & Continue</button>
+    <div class="col-12 text-center ">
+      <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save & Continue</button>
       <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
-      <button *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer" (click)="updateForm(false)">Update &
+      <button *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer btn-save-continue" (click)="updateForm(false)">Update &
         Continue</button>
       <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
         (click)="checkFormChangedValue()">Edit & Continue</button>
       <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
     </div>
   </div>
-  <br>
-  <br>
+  
   </ng-container>
 </div>
 <app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>

@@ -1,41 +1,41 @@
-import {Injectable} from '@angular/core';
-import { HttpClient} from '@angular/common/http';
-import {of} from 'rxjs';
-import {environment} from 'src/environments/environment';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class UserAccessMenuService {
-		UserAccessMenu: any[] = [];
-		constructor(
-				private http: HttpClient
-		) {}
-		getUserAccessMenu(value) {
-				const param: any = {};
-				if (value.login_id) {
-						param.login_id = value.login_id;
-				}
-				if (value.role_id) {
-						param.role_id = value.role_id;
-				}
-				if (value.pro_id) {
-						param.pro_id = value.pro_id;
-				}
-				return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessMenu', param);
+	UserAccessMenu: any[] = [];
+	menus: any[] = [];
+	constructor(
+		private http: HttpClient
+	) {
+	}
+	getUserAccessMenu(value) {
+		const param: any = {};
+		if (value.login_id) {
+			param.login_id = value.login_id;
 		}
-		setUserAccessMenu(value) {
-				this.UserAccessMenu = value;
+		if (value.role_id) {
+			param.role_id = value.role_id;
 		}
-		returnUserAccessMenu() {
-				return of(this.UserAccessMenu);
-
+		if (value.pro_id) {
+			param.pro_id = value.pro_id;
 		}
-		isExistUserAccessMenu(mod_id) {
-				for (const mitem of this.UserAccessMenu) {
-						if (Number(mitem.menu_mod_id) === Number(mod_id)) {
-								return true;
-						}
+		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessMenu', param);
+	}
+	isExistUserAccessMenu(mod_id) {
+		if (this.menus.length === 0) {
+			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
+				(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
+		} else {
+			for (const mitem of this.menus) {
+				if (Number(mitem.menu_mod_id) === Number(mod_id)) {
+					return true;
 				}
-				return false;
+			}
+			return false;
 		}
+	}
 
 }

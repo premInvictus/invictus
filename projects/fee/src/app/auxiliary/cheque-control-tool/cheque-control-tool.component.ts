@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 import { ChequeToolElement } from './cheque-control-tool.model';
 import { FeeService, CommonAPIService } from '../../_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -21,8 +21,17 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 	formGroupArray: any[] = [];
 	filterForm: FormGroup;
-	status: any[] = [{status: '0', value: 'Pending'}, {status: '1', value: 'Cleared'}, {status: '2', value: 'Bounced'}];
+	status: any[] = [{ status: '0', value: 'Pending' }, { status: '1', value: 'Cleared' }, { status: '2', value: 'Bounced' }];
 	toggleSearch = false;
+	pageEvent: PageEvent;
+	processTypeArray: any[] = [
+		{ id: '1', name: 'Enquiry No.' },
+		{ id: '2', name: 'Registration No.' },
+		{ id: '3', name: 'Provisional Admission No.' },
+		{ id: '4', name: 'Admission No.' },
+		{ id: '5', name: 'Alumni No.' }
+	];
+	totalRecords: number;
 	constructor(public feeService: FeeService,
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
@@ -40,9 +49,11 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	}
 	buildForm() {
 		this.filterForm = this.fbuild.group({
+			'inv_process_type': '',
 			'invoice_no': '',
+			'pageSize': '10',
+			'pageIndex': '0',
 			'au_full_name': '',
-			'admission_no': '',
 			'from_date': '',
 			'to_date': '',
 			'status': ''
@@ -53,7 +64,9 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		const dialogRef = this.dialog.open(BouncedChequeModalComponent, {
 			data: item,
 			width: '800px',
-			height: '50%'
+			height: '50%',
+			hasBackdrop: true,
+			disableClose: true
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
@@ -64,19 +77,21 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	}
 
 	getChequeControlListAll() {
-		this.CHEQUE_ELEMENT_DATA = [];
 		this.formGroupArray = [];
+		this.CHEQUE_ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
-		this.feeService.getCheckControlList({pageSize: '100', pageIndex: '0'}).subscribe((result: any) => {
+		this.feeService.getCheckControlList(this.filterForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				let pos = 1;
 				const temparray = result.data.reportData ? result.data.reportData : [];
+				this.totalRecords = Number(result.data.totalRecords);
+				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: pos,
 						invoiceno: item.invoice_no ? item.invoice_no : 'NA',
 						chequeno: item.cheque_no,
-						admno: item.au_admission_no,
+						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
 						recieptno: item.receipt_id,
 						amount: item.receipt_amount,
@@ -96,6 +111,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					pos++;
 				}
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
+				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
 				this.dataSource.paginator = this.paginator;
 			}
 		});
@@ -116,22 +132,25 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		}
 	}
 	getFilteredValue() {
-		this.filterForm.value.from_date =  new DatePipe('en-in').
-		transform(this.filterForm.value.from_date, 'yyyy-MM-dd');
-		this.filterForm.value.to_date =  new DatePipe('en-in').
-		transform(this.filterForm.value.to_date, 'yyyy-MM-dd');
+		this.filterForm.value.from_date = new DatePipe('en-in').
+			transform(this.filterForm.value.from_date, 'yyyy-MM-dd');
+		this.filterForm.value.to_date = new DatePipe('en-in').
+			transform(this.filterForm.value.to_date, 'yyyy-MM-dd');
 		this.CHEQUE_ELEMENT_DATA = [];
 		this.formGroupArray = [];
 		this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 		this.feeService.getCheckControlList(this.filterForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				let pos = 1;
-				for (const item of result.data) {
+				const temparray = result.data.reportData ? result.data.reportData : [];
+				this.totalRecords = Number(result.data.totalRecords);
+				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: pos,
 						invoiceno: item.invoice_no ? item.invoice_no : 'NA',
 						chequeno: item.cheque_no,
-						admno: item.au_admission_no,
+						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
 						recieptno: item.receipt_id,
 						amount: item.receipt_amount,
@@ -164,32 +183,44 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	}
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
+			height: '80vh',
 			data: {
 				invoiceNo: invoiceNo,
-				edit: edit
+				edit: edit,
+				paidStatus: 'paid'
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
-
-		/* dialogRef.afterClosed().subscribe(result => {
-			this.getFeeLedger(this.loginId);
-
-		}); */
 	}
 	openReceiptDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
-			width: '100%',
+			width: '80%',
+			height: '80vh',
 			data: {
 				invoiceNo: invoiceNo,
 				edit: edit
 			},
-			hasBackdrop: false
+			hasBackdrop: true
 		});
-
-		/* dialogRef.afterClosed().subscribe(result => {
-			this.getFeeLedger(this.loginId);
-
-		}); */
+	}
+	fetchData(event?: PageEvent) {
+		this.filterForm.value.pageIndex = event.pageIndex;
+		this.filterForm.value.pageSize = event.pageSize;
+		this.getChequeControlListAll();
+		return event;
+	}
+	reset() {
+		this.filterForm.patchValue({
+			'inv_process_type': '',
+			'invoice_no': '',
+			'pageSize': '10',
+			'pageIndex': '0',
+			'au_full_name': '',
+			'from_date': '',
+			'to_date': '',
+			'status': ''
+		});
+		this.getChequeControlListAll();
 	}
 }

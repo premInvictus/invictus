@@ -595,3 +595,50 @@ button.mat-button:hover .right-text {
 .nav-button1 {
     background-color: white !important;
 }
+
+.close-btn {
+    position: absolute;
+    margin-top: -15px;
+    margin-left: -6px;
+
+}
+
+.btn-save-continue {
+    width: 145px !important;
+}
+
+.btn-success-dy {
+    background-color: $button-success;
+    color: #ffffff;
+}
+
+.btn-danger-dy {
+    background-color: $button-danger;
+    color: #ffffff;
+}
+
+.notification-aatachment-btn-sis {
+    position: absolute;
+    z-index: 1000;
+    margin-top: 39px;
+    margin-left: 139px;
+}
+
+.sis-nav-btn {
+    background-color: #ffffff !important;
+    color: #000 !important;
+}
+
+.mat-checkbox-inner-container {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+    background-color: #007D9E;
+  }
+
+  .sis-btn-success {
+      background-color: $button-success;
+      color: #fff !important;
+  }

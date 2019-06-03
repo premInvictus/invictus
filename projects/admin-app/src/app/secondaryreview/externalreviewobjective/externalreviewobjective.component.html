@@ -896,6 +896,14 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
                                     <mat-cell *matCellDef="let item">{{item.class}}</mat-cell>
                                  </ng-container>
+                                  <!--Explanations Column-->
+                                  <ng-container matColumnDef="explanations">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-explanation">
+                                       Explanations</mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="mcq-explanation">
+                                       <div [MathJax]="item.explanations"></div>
+                                    </mat-cell>
+                                 </ng-container>
                                  <!-- Topic Name Column -->
                                  <ng-container matColumnDef="topic">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
@@ -941,15 +949,15 @@
                                           class="far fa-hand-point-up table-publish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="Publish to questionbank" aria-hidden="true"
                                           (click)="updateQuestion(item.action, '1')"></i>&nbsp;
-                                       <i *ngIf="isExistUserAccessMenu('26')"
+                                       <i *ngIf="isExistUserAccessMenu('158')"
                                           class="far fa-thumbs-up table-publish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="Publish" aria-hidden="true"
                                           (click)="updateQuestion(item.action)"></i>
-                                       <a *ngIf="isExistUserAccessMenu('24')" (click)="openDialog(item.action)">
+                                       <a *ngIf="isExistUserAccessMenu('162')" (click)="openDialog(item.action)">
                                           <i class="far fa-edit table-edit-icon" data-toggle="tooltip"
                                              data-placement="top" matTooltip="Edit" aria-hidden="true"></i>
                                        </a>
-                                       <i *ngIf="isExistUserAccessMenu('14')" class="far fa-trash-alt table-delete-icon"
+                                       <i *ngIf="isExistUserAccessMenu('160')" class="far fa-trash-alt table-delete-icon"
                                           data-placement="top" matTooltip="Delete" aria-hidden="true"
                                           (click)="openModal(template);deleteQus(item.action.qus_id)"></i>
                                     </mat-cell>
@@ -1016,6 +1024,14 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
                                     <mat-cell *matCellDef="let item">{{item.class}}</mat-cell>
                                  </ng-container>
+                                 <!--Explanations Column-->
+                                 <ng-container matColumnDef="explanations">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-explanation">
+                                       Explanations</mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="mcq-explanation">
+                                       <div [MathJax]="item.explanations"></div>
+                                    </mat-cell>
+                                 </ng-container>
                                  <!-- Topic Name Column -->
                                  <ng-container matColumnDef="topic">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
@@ -1061,15 +1077,15 @@
                                           class="far fa-hand-point-up table-publish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="Publish to questionbank" aria-hidden="true"
                                           (click)="updateQuestion(item.action, '1')"></i>&nbsp;
-                                       <i *ngIf="isExistUserAccessMenu('26')"
+                                       <i *ngIf="isExistUserAccessMenu('158')"
                                           class="far fa-thumbs-up table-publish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="Publish" aria-hidden="true"
                                           (click)="updateQuestion(item.action)"></i>
-                                       <a *ngIf="isExistUserAccessMenu('24')" (click)="openDialog(item.action)">
+                                       <a *ngIf="isExistUserAccessMenu('162')" (click)="openDialog(item.action)">
                                           <i class="far fa-edit table-edit-icon" data-toggle="tooltip"
                                              data-placement="top" matTooltip="Edit" aria-hidden="true"></i>
                                        </a>
-                                       <i *ngIf="isExistUserAccessMenu('14')" class="far fa-trash-alt table-delete-icon"
+                                       <i *ngIf="isExistUserAccessMenu('160')" class="far fa-trash-alt table-delete-icon"
                                           data-placement="top" matTooltip="Delete" aria-hidden="true"
                                           (click)="openModal(template);deleteQus(item.action.qus_id)"></i>
                                     </mat-cell>

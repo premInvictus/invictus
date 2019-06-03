@@ -1,9 +1,9 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey">
     <form [formGroup]="suspensionForm" autocomplete="off">
-        <div class="row">
-            <div class="col-12">
+        <div class="row remove-top-margin">
+            <div class="col-12 remove-col-padding">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 remove-col-padding">
                         <div class="container-box__white">
                             <div class="row">
                                 <!-- <div class="col-4 text-center">
@@ -17,16 +17,19 @@
                                 </div> -->
                             </div>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-6 remove-col-padding-left">
                                     <div class="row">
                                         <div class="col-9">
-                                            <mat-form-field class="form-field" style="display: none;">
+                                            <mat-form-field class="form-field" appearance="outline" style="display: none;">
+                                                <mat-label>Suspension ID</mat-label>
                                                 <input matInput placeholder="" formControlName="susp_id">
                                             </mat-form-field>
-                                            <mat-form-field class="form-field" style="display: none;">
+                                            <mat-form-field class="form-field" appearance="outline" style="display: none;">
+                                                <mat-label>Login ID</mat-label>
                                                 <input matInput placeholder="" formControlName="au_login_id">
                                             </mat-form-field>
-                                            <mat-form-field class="form-field">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Admission No.</mat-label>
                                                 <input matInput placeholder="Admission No." formControlName="susp_login_id" required (blur)="getStudentData($event);">
                                             </mat-form-field>
                                         </div>
@@ -36,52 +39,59 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Student Name</mat-label>
                                                 <input class="text-capitalize" matInput placeholder="Student Name" formControlName="au_full_name">
                                             </mat-form-field>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Class - Section</mat-label>
                                                 <input matInput placeholder="Class - Section" formControlName="class_section">
                                             </mat-form-field>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Contact No.</mat-label>
                                                 <input matInput placeholder="Contact No." formControlName="au_mobile">
                                             </mat-form-field>
                                         </div>
                                     </div>
                                     
                                 </div>
-                                <div class="col-6">
+                                <div class="col-6 remove-col-padding-right">
                                     <div class="row">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Father's Name</mat-label>
                                                 <input class="text-capitalize" matInput placeholder="Father's Name" formControlName="au_father_name">
                                             </mat-form-field>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Mother's Name</mat-label>
                                                 <input class="text-capitalize" matInput placeholder="Mother's Name" formControlName="au_mother_name">
                                             </mat-form-field>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Guardian's Name</mat-label>
                                                 <input class="text-capitalize" matInput placeholder="Guardian's Name" formControlName="au_gurdian_name">
                                             </mat-form-field>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <mat-form-field class="form-field">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>Email ID</mat-label>
                                                 <input matInput placeholder="Email Id" formControlName="au_email">
                                             </mat-form-field>
                                         </div>
@@ -100,7 +110,7 @@
                 </div>
                 <div class="margin-bottom-10"></div>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 remove-col-padding">
                         <div class="container-box__white">
                             <div class="row">
                                 <!-- <div class="col-4 text-center">
@@ -116,14 +126,16 @@
                             <br>
                             <div class="row">
                                 <div class="col-6">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Suspended From</mat-label>
                                         <input matInput [matDatepicker]="picker1" placeholder="Suspended From" formControlName="susp_from" required>
                                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                         <mat-datepicker #picker1></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-6">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Suspended Till</mat-label>
                                         <input matInput [matDatepicker]="picker" placeholder="Suspended Till" formControlName="susp_to" [required]="susp_to_required">
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
@@ -132,7 +144,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Reason od Suspension</mat-label>
                                         <mat-select placeholder="Reason of suspension" formControlName="susp_reason" required>
                                                 <mat-option value="">Please Select</mat-option> 
                                             <mat-option value="Select" *ngFor="let item of reasonDataArray" value="{{item?.reason_id}}">{{item?.reason_title}}</mat-option>
@@ -140,7 +153,8 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-6">
-                                        <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Authority</mat-label>
                                             <mat-select placeholder="Authority" formControlName="susp_aut_id" required>
                                                     <mat-option value="">Please Select</mat-option> 
                                                 <mat-option value="Select" *ngFor="let item of authorityArray" value="{{item?.aut_id}}">{{item?.aut_name}}</mat-option>
@@ -150,7 +164,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <mat-form-field class="form-field">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Suspension Remarks</mat-label>
                                         <textarea rows="3" matInput placeholder="Suspension Remarks" formControlName="susp_remark" required></textarea>
                                     </mat-form-field>
                                 </div>
@@ -194,5 +209,4 @@
             </div>
         </div>
     </form>
-    <br>
 </div>

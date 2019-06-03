@@ -2860,9 +2860,9 @@ th {
   height: 15px;
 }
 
-.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-  background-color: #fe756d;
-}
+// .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+//   background-color: #fe756d;
+// }
 
 .add-option-card-title {
   text-align: center;
@@ -5035,7 +5035,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
   }
 
   .table-100 {
-      height: 100% !important;
+      width: 100% !important;
   }
 
   .table-qpaper-table-padding {

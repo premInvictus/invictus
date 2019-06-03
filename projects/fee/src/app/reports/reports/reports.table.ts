@@ -12,23 +12,28 @@ export const reportTable = {
 				tableHeader: 'Classwise Fee Collection Report',
 				columnDef: ['srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'receipt_no',
 					'rpt_amount', 'fp_name'],
-				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
+				colunmHeader: ['SNo.', 'Date', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
 					'Reciept Amount', 'Fee Period'],
 			},
 			modewise: {
 				tableHeader: 'Modewise Fee Collection Report',
 				columnDef: ['srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'receipt_no',
 					'rpt_amount', 'fp_name', 'pay_name'],
-				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
+				colunmHeader: ['SNo.', 'Date', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
 					'Reciept Amount', 'Fee Period', 'Fee Payment Mode'],
 			},
 			routewise: {
 				tableHeader: 'Routewise Fee Collection Report',
 				columnDef: ['srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'receipt_no',
 					'rpt_amount', 'route_name', 'stoppages_name'],
-				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
+				colunmHeader: ['SNo.', 'Date', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
 					'Transport Amount', 'Route Name', 'Stoppage'],
-			}
+			},
+			mfr: {
+				tableHeader: 'MRF Report',
+				columnDef: [],
+				colunmHeader: [],
+			},
 		}
 	},
 	{
@@ -44,21 +49,21 @@ export const reportTable = {
 				tableHeader: 'Classwise Fee Collection Report',
 				columnDef: ['srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'receipt_no',
 					'rpt_amount', 'fp_name'],
-				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
+				colunmHeader: ['SNo.', 'Date', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
 					'Reciept Amount', 'Fee Period'],
 			},
 			modewise: {
 				tableHeader: 'Modewise Fee Collection Report',
 				columnDef: ['srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'receipt_no',
 					'rpt_amount', 'fp_name', 'pay_name'],
-				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
+				colunmHeader: ['SNo.', 'Date', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
 					'Reciept Amount', 'Fee Period', 'Fee Payment Mode'],
 			},
 			routewise: {
 				tableHeader: 'Routewise Fee Collection Report',
 				columnDef: ['srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'receipt_no',
 					'rpt_amount', 'route_name', 'stoppages_name'],
-				colunmHeader: ['SNo.', 'Date', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
+				colunmHeader: ['SNo.', 'Date', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Reciept No.',
 					'Transport Amount', 'Route Name', 'Stoppage'],
 			}
 		}
@@ -70,7 +75,7 @@ export const reportTable = {
 			missingFeeInvoice: {
 				tableHeader: 'Missing Fee Invoice Report',
 				columnDef: ['srno', 'au_login_id', 'au_full_name', 'fp_name'],
-				colunmHeader: ['SNo', 'Admission No', 'Student Name', 'Fee Period'],
+				colunmHeader: ['SNo', 'Enrollment No.', 'Student Name', 'Fee Period'],
 			}
 		}
 	},
@@ -82,7 +87,7 @@ export const reportTable = {
 				tableHeader: 'Cheque Clearance Report',
 				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name',
 					'invoice_no', 'receipt_no', 'receipt_amount', 'bank_name', 'cheque_date', 'dishonor_date', 'status', 'fcc_reason_id', 'fcc_remarks'],
-				colunmHeader: ['SNo', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Receipt No', 'Amount', 'Bank Name',
+				colunmHeader: ['SNo', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Receipt No', 'Amount', 'Bank Name',
 					'Cheque Date', 'Dishonoured Date', 'Status', 'Reason', 'Remarks'],
 			}
 		}
@@ -93,9 +98,10 @@ export const reportTable = {
 		dataReport: {
 			feeLedger: {
 				tableHeader: 'Fee Ledger Report',
-				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'flgr_particulars',
+				columnDef: ['srno', 'flgr_created_date' , 'au_admission_no', 'au_full_name', 'class_name', 'flgr_particulars',
 					'flgr_invoice_receipt_no', 'flgr_amount', 'flgr_concession', 'flgr_receipt', 'flgr_balance'],
-				colunmHeader: ['SNo', 'Admission No', 'Student Name', 'Class-Section', 'Particulars', 'Invoice/Receipt No', 'Amount Due', 'Concession',
+				colunmHeader: ['SNo', 'Date', 'Enrollment No.', 'Student Name', 'Class-Section' ,
+				'Particulars', 'Invoice/Receipt No', 'Amount Due', 'Concession',
 					'Reciept', 'Balance'],
 			}
 		}
@@ -108,7 +114,7 @@ export const reportTable = {
 				tableHeader: 'Deleted Fee Transaction Report',
 				columnDef: ['srno', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'invoice_no', 'fp_name',
 					'invoice_created_date', 'inv_paid_status'],
-				colunmHeader: ['SNo', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Fee Period', 'Fee Due',
+				colunmHeader: ['SNo', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Fee Period', 'Fee Due',
 					'Status'],
 			}
 		}
@@ -126,7 +132,7 @@ export const reportTable = {
 				tableHeader: 'Fee Structure Alloted Report',
 				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name',
 					'fs_name', 'fs_structure'],
-				colunmHeader: ['SNo.', 'Admission Number', 'Student Name', 'Class-Section',
+				colunmHeader: ['SNo.', 'Enrollment No.', 'Student Name', 'Class-Section',
 					'Fee Structure', 'Fee Head'],
 			}
 		}
@@ -137,15 +143,15 @@ export const reportTable = {
 		dataReport: {
 			concession: {
 				tableHeader: 'Fee Concession Report',
-				columnDef: ['srno', 'fcc_name', 'fh_name', 'fcc_class_id', 'fcrt_name',
+				columnDef: ['srno', 'fcc_name', 'fcc_head_type' , 'fh_name', 'fcc_class_id', 'fcrt_name',
 					'fcc_amount'],
-				colunmHeader: ['Sno.', 'Concession Category', 'Fee Head', 'Class', 'Concession Type',
+				colunmHeader: ['Sno.', 'Concession Category', 'Type' , 'Fee Head', 'Class', 'Concession Type',
 					'Concession Amount'],
 			},
 			concessionAlloted: {
 				tableHeader: 'Fee Concession Alloted Report',
 				columnDef: ['srno', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'fee_amount', 'concession_cat', 'con_amount'],
-				colunmHeader: ['Sno.', 'Admission Number', 'Student Name', 'Class-Section', 'Fee Amount', 'Concession', 'Concession Amount'],
+				colunmHeader: ['Sno.', 'Enrollment No.', 'Student Name', 'Class-Section', 'Fee Amount', 'Concession', 'Concession Amount'],
 			}
 		}
 	},
@@ -158,7 +164,7 @@ export const reportTable = {
 				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'invoice_no', 'invoice_created_date',
 					'cheque_date', 'invg_fh_name', 'invg_fh_amount', 'invg_fcc_name', 'invg_adj_amount',
 					'receipt_no', 'dishonor_date', 'inv_remark'],
-				colunmHeader: ['Sno.', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Invoice Date',
+				colunmHeader: ['Sno.', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Invoice Date',
 					'Due Date', 'Fee Head', 'Amount', 'Concession', 'Adjustment', 'Reciept No', 'Receipt Date',
 					'Remarks'],
 			}
@@ -172,7 +178,7 @@ export const reportTable = {
 				tableHeader: 'Advanced Security Deposit Report',
 				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'invoice_no', 'receipt_no', 'invoice_created_date',
 					'fh_amount'],
-				colunmHeader: ['Sno.', 'Admission No', 'Student Name', 'Class-Section', 'Invoice No.', 'Receipt No.', 'Invoice Date',
+				colunmHeader: ['Sno.', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Receipt No.', 'Invoice Date',
 			'Amount'],
 			}
 		}
@@ -185,7 +191,7 @@ export const reportTable = {
 				tableHeader: 'Transport Report',
 				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'route_name', 'slab_name', 'stoppages_name',
 					'invoice_created_date', 'cheque_date'],
-				colunmHeader: ['Sno.', 'Admission No', 'Student Name', 'Class-Section', 'Route', 'Slab', 'Stoppage',
+				colunmHeader: ['Sno.', 'Enrollment No.', 'Student Name', 'Class-Section', 'Route', 'Slab', 'Stoppage',
 			'Applicable From', 'Applicable To'],
 			}
 		}

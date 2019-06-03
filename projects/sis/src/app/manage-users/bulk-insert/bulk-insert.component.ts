@@ -12,6 +12,7 @@ export class BulkInsertComponent implements OnInit {
 	header2: any = 'or drag it here !';
 	header3: any = 'Upload';
 	header4: any = 'Zip File';
+	buildId: any = '';
 	validateFlag = false;
 	constructor(
 		private sisService: SisService,
@@ -26,6 +27,7 @@ export class BulkInsertComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage('File is valid', 'success');
 				this.validateFlag = true;
 				this.header1 = 'File Uploaded Successfully';
+				this.buildId = result.data.bul_id;
 				this.header2 = '';
 				this.myInputVariable.nativeElement.value = '';
 			} else {
@@ -48,7 +50,13 @@ export class BulkInsertComponent implements OnInit {
 		});
 	}
 	bulkInsert($event) {
-		this.sisService.uploadBulkData($event.target.files).subscribe((result: any) => {
+		const fileList: FileList = $event.target.files;
+		if (fileList.length > 0) {
+			const file: File = fileList[0];
+			const formData: FormData = new FormData();
+			formData.append('zip_file', file, file.name);
+			formData.append('bul_id', this.buildId);
+		this.sisService.uploadBulkData(formData).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage('File is valid', 'success');
 				this.header1 = 'Choose a file';
@@ -64,5 +72,6 @@ export class BulkInsertComponent implements OnInit {
 			}
 		});
 	}
+}
 
 }

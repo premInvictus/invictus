@@ -1,17 +1,12 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey">
   <div class="row">
     <div class="col-12 remove-col-padding">
-      <mat-card class="card-content__container margin-bottom-10">
+      <mat-card class="card-content__container card-height-830 card-height-950">
         <mat-card-title>
           
           <div class="row">
             <div class="col-6">
               <h1>Concession Group</h1>
-            </div>
-            <div class="col-6 text-right">
-              <div class="inline-flex"><h3>School</h3> <mat-slide-toggle  class="btn-spacer" [ngModel]="fcg_is_hostel_fee === 1 ? 'checked' : ''"
-                (change)="changeIsHostelFee($event)"></mat-slide-toggle><h3 class="btn-spacer">Hostel</h3></div>
-              
             </div>
           </div>
         </mat-card-title>
@@ -85,9 +80,11 @@
 
                       <ng-container matColumnDef="category">
                         <th mat-header-cell *matHeaderCellDef>Concession Category</th>
-                        <td mat-cell *matCellDef="let item">
-                          <p *ngFor="let element of item.con_categories"><b>{{element.fh_name | capitalize}} ( {{element.fcrt_alias}} )</b> : {{element.total_concession | number}}</p>
-                          <p><b>Total Concession</b>: {{item.totalConcession | number}}</p>
+                        <td mat-cell *matCellDef="let item" style="text-align: left !important">
+                          <ng-container *ngFor="let element of item.con_categories"><b>
+                            {{element.fcc_name | capitalize}} ( {{element.fcrt_alias}} ) : {{element.fcc_amount | number}}</b>
+                            <div [innerHTML]="getTotalConcession(element.total_concession)"></div>
+                          </ng-container>
                         </td>
                       </ng-container>
 

@@ -1,5 +1,5 @@
-<div class="container-box__grey">
-  <div class="container-box__white">
+<div class="fee-container-box__grey">
+  <div class="container-box__white card-height-840-lp">
     <div class="row">
       <div class="col-12 text-center">
           <h4 class="text-uppercase"><b>User Management</b></h4>
@@ -8,32 +8,31 @@
 <!--white Space area-->
 <div class="add-question-content">
   <div class="row row-remove-top-margin">
-    <div class="col-12 col-mobile-view-add-ques">
-      <div class="white-box">
-        <div class="white-box-content">
-            <div class="row">
+    <div class="col-12 remove-col-padding col-mobile-view-add-ques">
+      <div >
+        <div class="container-box__white">
+            <div class="row remove-top-margin">
                 <div class="col-lg-12 col-mobile-view-add-ques">
                   <a *ngIf="isExistUserAccessMenu('298')" [routerLink]="['../create-new-user']">
-                    <button  mat-raised-button class="btn-success create-new-user" >Create New User</button>
+                    <button  mat-raised-button class="btn-success-sis create-new-user" >Create New User</button>
                   </a>
                 </div>
               </div> 
           
 <!--white space area end-->
-
           <div class="row">
             <div class="col-lg-12 col-mobile-view-add-ques">
-              <div class="table-box">                
+              <div >                
                 <div>
                   <div class="example-container table-box-main">
-                    <div class="example-header table-filter">
+                    <div class="example-header ">
                       <mat-form-field>
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                         <span matPrefix>
                           <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
                       </mat-form-field>
                     </div>
-                    <mat-table class="specific-table table-main-structure" #table [dataSource]="dataSource">
+                    <mat-table class=" " #table [dataSource]="dataSource">
 
                       <!-- Position Column -->
                       <ng-container matColumnDef="position">
@@ -65,8 +64,8 @@
                           <i *ngIf="isExistUserAccessMenu('300')"class="material-icons delete-icon icon-pointer inline-form-table-icon-spacing" aria-hidden="true" (click)="openModal({});deleteUsr(item.action.au_login_id)">delete</i>
                         </mat-cell>
                       </ng-container>
-                      <mat-header-row class="top_header" *matHeaderRowDef="displayedColumns"></mat-header-row>
-                      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                      <mat-header-row class="top_header header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                      <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns;"></mat-row>
                     </mat-table>
                     <mat-paginator #paginator [pageSize]="9" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"></mat-paginator>
                   </div>

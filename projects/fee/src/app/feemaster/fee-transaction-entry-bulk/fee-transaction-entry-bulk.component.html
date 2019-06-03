@@ -1,100 +1,91 @@
-<div class="container-box__grey">
-    <div class="row">
-        <div class="col-12 remove-col-padding">
-           <mat-card class="card-top-title__container">
-              <div class="row">
-                 <div class="col-6">
-                    <h1 class="remove-bottom-margin font-size-24">Fee Transaction Entry</h1>
-                 </div>
-                 <div class="col-6 text-right">
-                    <div class="vertical-align-sub inline-flex">
-                       <h3 class="font-size-15 margin-top-2 remove-bottom-margin">Bulk</h3>
-                       <mat-slide-toggle checked="false" (change)="gotoIndividual($event)"class="btn-spacer"></mat-slide-toggle>
-                       <h3 class="font-size-15 margin-top-2 remove-bottom-margin btn-spacer">Individual</h3>
-                    </div>
-                 </div>
-              </div>
-           </mat-card>
-        </div>
-     </div>
-  <form [formGroup]="feeTransactionForm">
+<div class="fee-container-box__grey">
   <div class="row">
     <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container">
         <div class="row">
-          <div class="col-3 remove-col-padding-left">
-              <span *ngIf="!permission" class="font-size-20 font-regular">{{currentDate | date: 'd-MMMM-y'}}</span>
-              <mat-form-field  [hidden]="!permission" appearance="outline" class="form-field">
-                 <mat-label>Select Date</mat-label>
-                 <input matInput [matDatepicker]="picker" [max]="currentDate" [min]="minDate"
-                 placeholder="Choose a date"  formControlName="ftr_transaction_date">
-                 <mat-datepicker-toggle   matSuffix [for]="picker"></mat-datepicker-toggle>
-                 <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
+          <div class="col-6">
+            <h1 class="remove-bottom-margin font-size-24">Fee Transaction Entry</h1>
           </div>
-          <div class="col-3">
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Entry Mode</mat-label>
-              <mat-select  placeholder="Select Mode" formControlName="ftr_emod_id" required>
-                  <mat-option value="">Please Select</mat-option>
-                  <mat-option *ngFor="let mode of entryModes" [value]="mode.emod_id">{{mode.emod_name}}</mat-option>
-               </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-3 remove-col-padding-left">
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Payment Mode</mat-label>
-              <mat-select formControlName="ftr_pay_id"  placeholder="Payment Mode" required>
-                  <mat-option value="">Please Select</mat-option>
-                  <mat-option *ngFor="let mode of payModes" [hidden]="!(mode.pay_id === '2')" [value]="mode.pay_id">{{mode.pay_name}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col-3">
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Bank</mat-label>
-              <mat-select placeholder="Bank Name" formControlName="ftr_bnk_id" required>
-                  <mat-option value="">Please Select</mat-option>
-                  <mat-option *ngFor="let bank of banks" [value]="bank.bnk_id">{{bank.bank_name}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col-3">
-              <mat-form-field appearance="outline" class="form-field">
-                  <mat-label>Invoice no.</mat-label>
-                  <input matInput placeholder="Placeholder" (keydown.enter)="insertInvoice($event)" formControlName="inv_id">
-                  </mat-form-field>
-            <barcode-scanner-livestream type="code_128" (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
-          </div>
-        </div>
-        <div class="row ">
-          <div class="col-12 ">
-            <button *ngFor="let item of invoiceArray" mat-stroked-button class="custom-entry-button margin-left-10">
-              <span class="custom-entry-btn-text"><a>{{item}}</a></span>
-              <i class="fas fa-times-circle custom-entry-btn-icon" (click)="deleteInvoice(item)"></i>
-            </button>
+          <div class="col-6 text-right">
+            <div class="vertical-align-sub inline-flex">
+              <h3 class="font-size-15 margin-top-2 remove-bottom-margin">Bulk</h3>
+              <mat-slide-toggle checked="false" (change)="gotoIndividual($event)" class="btn-spacer"></mat-slide-toggle>
+              <h3 class="font-size-15 margin-top-2 remove-bottom-margin btn-spacer">Individual</h3>
             </div>
-        </div>
-        
-        <div class="row">
-          <div class="col-6 remove-col-padding">
-              <mat-form-field appearance="outline" class="form-field">
-                  <mat-label>Remarks</mat-label>
-                  <textarea rows="5" matInput placeholder="Write Remarks" formControlName="ftr_remark"></textarea>
-                </mat-form-field>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12 text-center">
-            <button *ngIf="isExist('369')" mat-button class="btn-success" (click)="submit()">Submit</button>
-            <button *ngIf="isExist('370')" mat-button class="text-uppercase recalulate-invoice-btn btn-spacer"
-            (click)="saveAndPrint()">save & print</button>
-            <button mat-button class="btn-spacer btn-danger" (click)="reset()">Cancel</button>
           </div>
         </div>
       </mat-card>
     </div>
   </div>
-</form>
+  <form [formGroup]="feeTransactionForm">
+    <div class="row">
+      <div class="col-12 remove-col-padding">
+        <mat-card class="card-top-title__container card-height-760 card-height-880">
+          <div class="row">
+            <div class="col-3 remove-col-padding-left">
+              <span *ngIf="!(common.isExistUserAccessMenu('371'))"
+                class="font-size-20 font-regular">{{currentDate | date: 'd-MMMM-y'}}</span>
+              <mat-form-field [hidden]="!(common.isExistUserAccessMenu('371'))" appearance="outline" class="form-field">
+                <mat-label>Select Date</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                  formControlName="ftr_transaction_date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-3 remove-col-padding-left">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Payment Mode</mat-label>
+                <mat-select formControlName="ftr_pay_id" placeholder="Payment Mode" disabled
+                required>
+                  <mat-option value="2">Cash at Bank</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-3">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Bank</mat-label>
+                <mat-select placeholder="Bank Name" formControlName="ftr_bnk_id" required>
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let bank of banks" [value]="bank.bnk_id">{{bank.bank_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-3">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Invoice no.</mat-label>
+                <input matInput placeholder="Placeholder" (keydown.enter)="insertInvoice($event)"
+                  formControlName="inv_id">
+              </mat-form-field>
+              <barcode-scanner-livestream (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
+            </div>
+          </div>
+          <div class="row ">
+            <div class="col-12 ">
+              <button *ngFor="let item of invoiceArray" mat-stroked-button class="custom-entry-button margin-left-10">
+                <span class="custom-entry-btn-text"><a>{{item}}</a></span>
+                <i class="fas fa-times-circle custom-entry-btn-icon" (click)="deleteInvoice(item)"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6 remove-col-padding">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Remarks</mat-label>
+                <textarea rows="5" matInput placeholder="Write Remarks" formControlName="ftr_remark"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 text-center">
+              <button *ngIf="isExist('369')" mat-button class="btn-success" (click)="submit()">Submit</button>
+              <button *ngIf="isExist('370')" mat-button class="text-uppercase recalulate-invoice-btn btn-spacer"
+                (click)="saveAndPrint()">save & print</button>
+              <button mat-button class="btn-spacer btn-danger" (click)="reset()">Cancel</button>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </form>

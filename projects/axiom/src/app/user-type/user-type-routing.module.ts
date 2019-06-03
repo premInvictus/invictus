@@ -1,18 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard, RouteAccessGuard } from '../_guards/index';
-import { AdminComponent } from './admin/admin.component';
+import { AuthGuard } from '../_guards/index';
 import { TeacherComponent } from './teacher/teacher.component';
-import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
 import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
-import { SchoolsetupComponent } from './admin/schoolsetup/schoolsetup.component';
-import { AccesscontrolComponent } from './admin/accesscontrol/accesscontrol.component';
-import { CreateNewUserComponent } from './admin/create-new-user/create-new-user.component';
-import { ManageAccessComponent } from './admin/manage-access/manage-access.component';
-import { CreateNewSchoolComponent } from './admin/create-new-school/create-new-school.component';
 import { UserCredentialComponent } from './user-credential/user-credential.component';
+import { ProjectComponent } from 'src/app/invictus-shared/project/project.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -20,49 +14,9 @@ const routes: Routes = [
 		redirectTo: 'school',
 		pathMatch: 'full'
 	},
-
-
-	// {
-	// 	path: 'admin',
-	// 	component: AdminComponent,
-	// 	canActivate: [AuthGuard],
-	// 	children: [
-	// 		{
-	// 			path: 'setup',
-	// 			loadChildren: '../acsetup/acsetup.module#AcsetupModule'
-	// 		},
-	// 		{
-	// 			path: 'questionbank',
-	// 			loadChildren: '../questionbank/questionbank.module#QuestionbankModule'
-	// 		},
-	// 		{
-	// 			path: 'question',
-	// 			loadChildren: '../question/question.module#QuestionModule'
-	// 		},
-	// 		{
-	// 			path: 'review',
-	// 			loadChildren: '../secondaryreview/secondaryreview.module#SecondaryreviewModule'
-	// 		},
-	// 		{ path: '', component: AdminDashboardComponent },
-	// 		{
-	// 			path: 'schoolsetup',
-	// 			component: SchoolsetupComponent,
-	// 			canActivate: [RouteAccessGuard]
-	// 		},
-	// 		{
-	// 			path: 'accesscontrol',
-	// 			component: AccesscontrolComponent,
-	// 			canActivate: [RouteAccessGuard]
-	// 		},
-	// 		{ path: 'create_new_user', component: CreateNewUserComponent },
-	// 		{ path: 'manage-access/:id', component: ManageAccessComponent },
-	// 		{ path: 'create-new-school', component: CreateNewSchoolComponent },
-	// 		{ path: 'user-credential', component: UserCredentialComponent }
-	// 	]
-	// },
 	{
 		path: 'teacher',
-		component: TeacherComponent,
+		component: ProjectComponent,
 		canActivate: [AuthGuard],
 		children: [
 			{ path: '', component: TeacherDashboardComponent },
@@ -115,7 +69,7 @@ const routes: Routes = [
 	},
 	{
 		path: 'school',
-		component: SchoolComponent,
+		component: ProjectComponent,
 		canActivate: [AuthGuard],
 		children: [
 			{ path: '', component: SchoolDashboardComponent },

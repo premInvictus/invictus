@@ -79,7 +79,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 	}
 	loadPlugin(array2: any) {
 		// tslint:disable-next-line:forin
-		if (!CKEDITOR.plugins.registered['strinsertExt']) {
+		if (!(CKEDITOR.plugins.registered['strinsertExt'])) {
 			CKEDITOR.plugins.add('strinsertExt', {
 				requires: ['richcombo'],
 				init: function (editor) {

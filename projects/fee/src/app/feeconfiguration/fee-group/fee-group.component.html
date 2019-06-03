@@ -1,7 +1,7 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey">
     <div class="row">
       <div class="col-12 remove-col-padding">
-        <mat-card class="card-content__container margin-bottom-30">
+        <mat-card class="card-content__container card-height-830 card-height-835">
           <mat-card-title>
             <div class="row">
               <div class="col-6">
@@ -86,11 +86,7 @@
                         <ng-container matColumnDef="feehead">
                           <th mat-header-cell *matHeaderCellDef> Fee Head </th>
                           <td mat-cell style="text-align: left !important" *matCellDef="let element"> 
-                            <p *ngFor="let item of element.feehead"><b>{{item.fh_name | capitalize}} ( {{item.ft_name}} ) : </b>
-                              <ng-container *ngIf="item.fh_fm_id.length > 1;else oneMonth">{{item.fh_amount | number}} ({{item.fh_amount * item.fh_fm_id.length |number }})</ng-container>
-                              <ng-template #oneMonth>{{item.fh_amount}}</ng-template>
-                              </p>
-                            <p><b>Total :</b> {{element.action.total}}</p>
+                            <div [innerHTML]="element.feehead"></div>
                           </td>
                         </ng-container>
   

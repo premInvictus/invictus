@@ -1,14 +1,13 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey">
       <div class="row">
-      <div class="col-7 col-padding-right-eight margin-bottom-35">
+      <div class="col-7 remove-col-padding-left col-padding-right-eight">
          <div class="container-box__white">
             <div class="row">
                <div class="col-12 text-center">
                   <h4 class="text-uppercase text-center"><b>Edit Request</b></h4>
                </div>
             </div>
-            <br>
-            <div *ngIf="showTable" class="row">
+            <div *ngIf="showTable" class="row remove-top-margin">
                <div class="col-12">
                   <div>
                      <mat-form-field class="form-feild" *ngIf="EDIT_REQUEST_ELEMENT_DATA.length > 0">
@@ -103,8 +102,8 @@
                               class="material-icons icon-pointer view-icon" (click)="viewRequest(item.action, item.no)">visibility</mat-icon>
                            </mat-cell>
                         </ng-container>
-                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
                      </mat-table>
                      <table class="table-100 text-center" style="margin-top:5px;">
                            <tr *ngIf="EDIT_REQUEST_ELEMENT_DATA.length == 0">
@@ -114,10 +113,7 @@
                   </div>
                </div>
             </div>
-            <br>
-            <br>
          </div>
-         <br>
       </div>
       <div *ngIf="viewRequestFlag" class="col-5 remove-col-padding-left">
          <div class="container-box__white">

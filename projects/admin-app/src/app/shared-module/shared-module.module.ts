@@ -4,8 +4,6 @@ import { RouterModule } from '@angular/router';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AccordionModule } from 'ngx-bootstrap';
 import { CKEditorModule } from 'ng2-ckeditor';
-import { TopNavComponent } from './top-nav/top-nav.component';
-import { SideNavComponent } from './side-nav/side-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -35,12 +33,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
 import { MathJaxDirective } from '../mathjax.directive';
-import { FooterComponent } from './footer/footer.component';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 import { EssayDialogsComponent } from '../questionbank/essay-dialogs/essay-dialogs.component';
 import { EditobjectiveComponent } from '../questionbank/reviewo/editobjective/editobjective.component';
 import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dialog/question-paper-dialog.component';
 import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit-essay.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -74,15 +73,14 @@ import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit
 		LayoutModule,
 		RouterModule,
 		BsDropdownModule,
+		MatAutocompleteModule,
 		AccordionModule.forRoot(),
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		InvictusSharedModule
 	],
 	declarations: [
-		TopNavComponent,
-		SideNavComponent,
 		CommonDynamicChartComponent,
-		FooterComponent,
 		MathJaxDirective,
 		DeleteModalComponent,
 		EssayDialogsComponent,
@@ -91,7 +89,6 @@ import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit
 		QuestionPaperDialogComponent
 	],
 	exports: [
-		TopNavComponent,
 		MatProgressBarModule,
 		MatSlideToggleModule,
 		MatDialogModule,
@@ -100,9 +97,9 @@ import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit
 		MatRadioModule,
 		MatChipsModule,
 		MatCheckboxModule,
-		SideNavComponent,
 		MatTableModule,
 		MatPaginatorModule,
+		MatAutocompleteModule,
 		MatSortModule,
 		MatTabsModule,
 		MatProgressSpinnerModule,

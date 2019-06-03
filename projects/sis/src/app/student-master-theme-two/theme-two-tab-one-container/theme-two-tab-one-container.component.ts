@@ -123,12 +123,10 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 					this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_dob, 'yyyy-MM-dd');
 				this.taboneform.personalDetails = this.childDetails.baseform.value;
 				this.childDetails.paddressform.patchValue({
-					'ea_city': this.childDetails.getCityId(this.childDetails.paddressform.value.ea_city,
-						this.childDetails.paddressform.value.ea_country)
+					'ea_city': this.childDetails.cityId
 				});
 				this.childDetails.raddressform.patchValue({
-					'ea_city': this.childDetails.getCityId(this.childDetails.raddressform.value.ea_city,
-						this.childDetails.raddressform.value.ea_country)
+					'ea_city': this.childDetails.cityId2
 				});
 				this.childDetails.paddressform.patchValue({
 					'ea_same_residential_address': this.childDetails.paddressform.value.ea_same_residential_address ? 'Y' : 'N'
@@ -154,11 +152,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 							au_enrollment_id: result.data.au_enrollment_id
 						});
 						this.commonAPIService.showSuccessErrorMessage('Student Details Inserted Successfully', 'success');
-						if (this.processTypeService.getProcesstype() === '1') {
-							this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
-						} else {
 							this.commonAPIService.renderTab.next({ tabMove: true });
-						}
 					} else {
 						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 					}
@@ -213,18 +207,16 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 				this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_dob, 'yyyy-MM-dd');
 			this.taboneform.personalDetails = this.childDetails.baseform.value;
 			this.childDetails.paddressform.patchValue({
-				'ea_city': this.childDetails.getCityId(this.childDetails.paddressform.value.ea_city,
-					this.childDetails.paddressform.value.ea_country)
+				'ea_city': this.childDetails.cityId
+			});
+			this.childDetails.raddressform.patchValue({
+				'ea_city': this.childDetails.cityId2
 			});
 			this.childDetails.paddressform.patchValue({
 				'ea_same_residential_address': this.childDetails.paddressform.value.ea_same_residential_address ? 'Y' : 'N'
 			});
 			this.childDetails.raddressform.patchValue({
 				'ea_same_residential_address': this.childDetails.raddressform.value.ea_same_residential_address ? 'Y' : 'N'
-			});
-			this.childDetails.raddressform.patchValue({
-				'ea_city': this.childDetails.getCityId(this.childDetails.raddressform.value.ea_city,
-					this.childDetails.raddressform.value.ea_country)
 			});
 			this.taboneform.personalDetails.addressDetails = [this.childDetails.paddressform.value, this.childDetails.raddressform.value];
 			this.taboneform.personalDetails.siblingDetails = [];
@@ -241,16 +233,12 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			this.sisService.addStudent(this.taboneform).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage('Student Details Updated Successfully', 'success');
-					if (this.processTypeService.getProcesstype() === '1') {
-						this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
-					} else {
 						if (isview) {
 							this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 							this.getStudent(this.login_id);
 						} else {
 							this.commonAPIService.renderTab.next({ tabMove: true });
 						}
-					}
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 				}
@@ -288,8 +276,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		let checkRequiredFieldCounter = 0, checkAluminiFieldCounter = 0;
 		if (!this.parentDetails.showHideGuardianField) {
 			for (let i = 0; i < 2; i++) {
-				if (!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_name').valid ||
-					!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_nationality').valid) {
+				if (!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_name').valid) {
 					checkRequiredFieldCounter++;
 				} else {
 					continue;
@@ -317,8 +304,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		let checkRequiredFieldCounter2 = 0, checkAluminiFieldCounter2 = 0;
 		if (this.parentDetails.showHideGuardianField) {
 			for (let i = 0; i < 3; i++) {
-				if (!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_name').valid ||
-					!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_nationality').valid) {
+				if (!this.parentDetails.formGroupArray[i].formGroup.get('epd_parent_name').valid) {
 					checkRequiredFieldCounter2++;
 				} else {
 					continue;

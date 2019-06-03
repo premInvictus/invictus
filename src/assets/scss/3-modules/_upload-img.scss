@@ -269,11 +269,36 @@
 
 .student-profile-image-popup {
     border-radius: 100%;
-    width: 132px;
-    height: 132px;
+    width: 80px;
+    height: 80px;
 }
 
 .student-image-bounce-modal {
     width: 70px;
     border-radius: 100%;
 }
+
+.sis-student-pic__size {
+    width: 100px;
+    height: 100px;
+}
+
+.sis-parent-pic__size {
+    width: 200px !important;
+    height: 200px !important;
+    border-radius: 100%;
+    border: 2px solid #dfdfdf;
+}
+
+.cloud-icon {
+    font-size: 40px;
+    color: #1e88e5;
+}
+
+// $imgpath: '/../assets/images';
+
+// #dashboard_icon {
+//   left: 0px;
+//   width: 36px;
+//   background:url(#{$imgpath}/sprite_icons.png) 0 0;
+// }

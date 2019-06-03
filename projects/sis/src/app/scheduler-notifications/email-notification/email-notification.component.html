@@ -1,4 +1,4 @@
-<div class="container-box__grey">
+<div class="fee-container-box__grey">
     <div class="container-box__white">
 
         <div class="row">
@@ -17,7 +17,8 @@
             <form [formGroup]="emailTemplateForm">
                 <div class="row">
                     <div class="col-6">
-                        <mat-form-field class="form-field">
+                        <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Select Template</mat-label>
                             <mat-select placeholder="Select Template" formControlName="tpl_id" (selectionChange)="editTemplate($event)"
                                 [disabled]="viewMode">
                                 <mat-option value="Select" *ngFor="let item of templateDataArr" value="{{item?.tpl_id}}">{{item?.tpl_title}}</mat-option>
@@ -25,14 +26,16 @@
                         </mat-form-field>
                     </div>
                     <div class="col-6">
-                        <mat-form-field class="form-field">
+                            <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Title</mat-label>
                             <input matInput placeholder="Title" class="text-capitalize" formControlName="tpl_title" required [readonly]="viewMode">
                         </mat-form-field>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <mat-form-field class="form-field">
+                            <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Subject</mat-label>
                             <input matInput placeholder="Subject" formControlName="tpl_subject" required [readonly]="viewMode">
                         </mat-form-field>
                     </div>
@@ -50,7 +53,7 @@
 
                 <div class="row">
                     <div class="col-12" *ngIf="!viewMode">
-                        <div class="notification-aatachment-btn">
+                        <div class="notification-aatachment-btn-sis">
                             <label mat-raised-button class="notification-btn" for="attachment"><span class="notification-btn-label">Add
                                     Attachment <i class="fas fa-paperclip">
                                     </i></span></label>
@@ -94,6 +97,8 @@
                 </div>
             </form>
         </div>
+        <br>
+        <br>
         <div>
             <form [formGroup]="emailScheduleForm">
                 <div class="row">
@@ -130,7 +135,8 @@
                     </div>
                     <div class="row">
                         <div class="col-4">
-                            <mat-form-field class="form-field">
+                                <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Class</mat-label>
                                 <mat-select placeholder="Class" formControlName="class_id" (selectionChange)="getSectionByClass($event)"
                                     required [disabled]="viewMode">
                                     <mat-option value="Select" *ngFor="let item of classDataArr" value="{{item?.class_id}}">{{item?.class_name}}</mat-option>
@@ -139,7 +145,8 @@
                             </mat-form-field>
                         </div>
                         <div class="col-4">
-                            <mat-form-field class="form-field" *ngIf="showSection">
+                                <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Section</mat-label>
                                 <mat-select placeholder="Section" formControlName="sec_id" [disabled]="viewMode">
                                     <mat-option value="Select" *ngFor="let item of sectionDataArr" value="{{item?.sec_id}}">{{item?.sec_name}}</mat-option>
                                 </mat-select>
@@ -268,7 +275,8 @@
                 <div>
                     <div class="row" *ngIf="showScheduleBox">
                         <div class="col-6 margin-top-10">
-                            <mat-form-field class="form-field">
+                                <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Choose a date</mat-label>
                                 <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="schedule_date"
                                     (dateInput)="scheduleDate('input', $event)" required readonly="viewMode">
                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -276,7 +284,8 @@
                             </mat-form-field>
                         </div>
                         <div class="col-6 margin-top-10">
-                            <mat-form-field class="form-field">
+                                <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Time</mat-label>
                                 <input matInput type="time" placeholder="Time" formControlName="schedule_time" required
                                     readonly="viewMode">
                             </mat-form-field>
