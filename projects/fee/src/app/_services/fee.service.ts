@@ -221,6 +221,7 @@ export class FeeService {
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getPaymentMode');
 	}
 	insertFeeTransaction(value: any) {
+		this.service.startLoading();
 		if (this.processType.getProcesstype()) {
 			value.inv_process_type = this.processType.getProcesstype();
 		}
