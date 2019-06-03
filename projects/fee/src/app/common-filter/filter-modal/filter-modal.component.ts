@@ -290,6 +290,10 @@ export class FilterModalComponent implements OnInit {
 		this.currentFilter.equalto = '';
 		this.currentFilter.discrete = [];
 		this.currentFilter.discretevalue = [];
+		const ind = this.filtersItemArray.findIndex(element => element.ff_field_name === this.currentFilter.ff_field_name);
+		if (ind !== -1) {
+			this.filtersItemArray.splice(ind, 1);
+		}
 	}
 	getDropdown(ff_field_name) {
 		for (const item of this.fieldApiMapping) {
