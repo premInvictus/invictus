@@ -29,9 +29,9 @@
                         multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
                         style="display: none !important">
                     
-                      <a class=" text-center" *ngIf="!viewOnly">
-                        <mat-icon class="margin-top-10 cloud-icon btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
-                            class="btn-document-label" [for]="item.docreq_id">Choose
+                      <a class=" text-center cursor-pointer" *ngIf="!viewOnly">
+                        <mat-icon class="margin-top-10  cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
+                            class="sis-btn-document-label cursor-pointer" [for]="item.docreq_id">Choose
                             File</label></a>
                     </div>
                       <ng-container *ngFor="let img of this.imageArray;let i = index">

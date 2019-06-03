@@ -144,7 +144,7 @@
             </div>
             <div class="row remove-top-margin">
               <div class="col-2 sis-col-20">
-                <div class="row">
+                <div class="row remove-top-margin">
                   <div
                     [ngClass]="studentdetailsform.value.epd_parent_name? 'col-12 remove-col-padding' : 'col-12 remove-col-padding '">
                     <mat-form-field appearance="outline" class="form-field"
@@ -235,7 +235,7 @@
                 *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
                   <span><b>Concession
-                      Ctgy:</b>{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+                      Group:</b>{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
                 </div>
               </div>
             </div>

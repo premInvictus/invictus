@@ -121,7 +121,7 @@
           <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment </th>
           <td mat-cell *matCellDef="let element">
             <ng-template [ngIf]="modificationFlag" [ngIfElse]="elseContaint">
-              <mat-form-field class="form-field" style="width:50%">
+              <mat-form-field class="margin-top-10" appearance="outline">
                 <input matInput type="number" [value]="element.adjustment"
                   (change)="changeAdjAmt(element.invg_id, $event)">
               </mat-form-field>
@@ -155,7 +155,8 @@
   </div>
   <div class="row">
     <div *ngIf="this.data.edit" class="col-6 margin-top-25">
-      <mat-form-field class="form-field">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Remarks</mat-label>
         <input matInput placeholder="Remarks" [(ngModel)]="adjRemark" required>
       </mat-form-field>
     </div>
