@@ -137,6 +137,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				'saveAndPrint': true
 			});
 			this.feeTransactionForm.value.inv_invoice_no = this.invoiceArray;
+			this.feeTransactionForm.value.isBulk = true;
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Fee transaction added', 'success');
@@ -161,6 +162,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				'saveAndPrint': true
 			});
 			this.feeTransactionForm.value.inv_invoice_no = this.invoiceArray;
+			this.feeTransactionForm.value.isBulk = true;
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
