@@ -39,18 +39,16 @@ export class FeeLedgerComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
 			if (data.adm_no && data.login_id) {
-				this.FEE_LEDGER_ELEMENT = [];
-				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				this.lastRecordId = data.adm_no;
 				this.loginId = data.login_id;
 				this.getFeeLedger(this.loginId);
 			} else {
 				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 					if (result.status === 'ok') {
-						this.FEE_LEDGER_ELEMENT = [];
-						this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 						this.lastRecordId = result.data[0].last_record;
 						this.loginId = result.data[0].au_login_id;
 						this.getFeeLedger(this.loginId);
@@ -98,24 +96,54 @@ export class FeeLedgerComponent implements OnInit {
 		});
 	}
 	next(admno) {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	prev(admno) {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	first(admno) {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	last(admno) {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	key(admno) {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
-		this.getFeeLedger(this.loginId);
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.getFeeLedger(this.loginId);
+		} else {
+			this.getFeeLedger(this.loginId);
+		}
 	}
 	exportAsExcel() {
 		// tslint:disable-next-line:max-line-length
@@ -130,14 +158,13 @@ export class FeeLedgerComponent implements OnInit {
 			width: '80%',
 			data: {
 				invoiceNo: invoiceNo,
-				edit: edit
+				edit: edit,
+				paidStatus: 'paid'
 			},
 			hasBackdrop: true
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.getFeeLedger(this.loginId);
-
 		});
 	}
 	openReceiptDialog(invoiceNo, edit): void {
@@ -151,8 +178,6 @@ export class FeeLedgerComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.getFeeLedger(this.loginId);
-
 		});
 	}
 

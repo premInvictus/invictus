@@ -82,9 +82,14 @@
             <button
               *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
               mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
-              (click)="openRecalculateDialog()">Recalulate Invoice</button>
+              (click)="openRecalculateDialog()">Recalculate Invoice</button>
+            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button
+              class="make-pay-btn" (click)="makePayment(invoiceDetails)">Make Payment</button>
             <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
               (click)="printInvoice()">Print Invoice</button>
+            <button
+              *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('355') || commonAPIService.isExistUserAccessMenu('362'))"
+              mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()">Delete</button>
           </div>
         </div>
       </div>
@@ -100,19 +105,20 @@
           <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
         </ng-container>
         <ng-container matColumnDef="feehead">
-          <th mat-header-cell *matHeaderCellDef> Fee Head </th>
-          <td mat-cell *matCellDef="let element"> {{element.feehead | titlecase}} </td>
+          <th mat-header-cell *matHeaderCellDef style="width: 55% !important;"> Particulars </th>
+          <td mat-cell *matCellDef="let element" style="text-align: left !important;"> {{element.feehead | titlecase}}
+          </td>
         </ng-container>
         <ng-container matColumnDef="feedue">
-          <th mat-header-cell *matHeaderCellDef> Fee Due </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Fee Due </th>
           <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
         </ng-container>
         <ng-container matColumnDef="concession">
-          <th mat-header-cell *matHeaderCellDef> Concession </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Concession </th>
           <td mat-cell *matCellDef="let element"> {{element.concession | number}} </td>
         </ng-container>
         <ng-container matColumnDef="adjustment">
-          <th mat-header-cell *matHeaderCellDef> Adjustment </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment </th>
           <td mat-cell *matCellDef="let element">
             <ng-template [ngIf]="modificationFlag" [ngIfElse]="elseContaint">
               <mat-form-field class="margin-top-10" appearance="outline">
@@ -126,7 +132,7 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="netpay">
-          <th mat-header-cell *matHeaderCellDef> Net Payable </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Net Payable </th>
           <td mat-cell *matCellDef="let element">{{element.netpay | number}} </td>
         </ng-container>
 
@@ -141,9 +147,9 @@
     <div class="col-12">
       <div class="grey-box ">
         <div class="margin-right-50"><span class="font-size-16 ">Amount in Words :</span><span
-            class="font-size-20 font-medium"> {{invoiceTotal | numberToWord | titlecase}} </span><span
+            class="font-size-16 font-medium">Rupees {{invoiceTotal | numberToWord | titlecase}} </span><span
             class="float-right"><span class="font-size-16">Grand Total :</span><span
-              class="font-size-20 font-medium">{{invoiceTotal | number}} </span></span></div>
+              class="font-size-16 font-medium">{{invoiceTotal | number}} </span></span></div>
       </div>
     </div>
   </div>
@@ -151,7 +157,7 @@
     <div *ngIf="this.data.edit" class="col-6 margin-top-25">
       <mat-form-field class="form-field" appearance="outline">
         <mat-label>Remarks</mat-label>
-        <input matInput placeholder="Remarks" [(ngModel)]="adjRemark">
+        <input matInput placeholder="Remarks" [(ngModel)]="adjRemark" required>
       </mat-form-field>
     </div>
     <div class="col-6">
@@ -162,9 +168,6 @@
           (click)="updateInvoice()">Update</button>
         <button *ngIf="modificationFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"
           (click)="cancelInvoice()">Cancel</button>
-        <button
-          *ngIf="(!modificationFlag) && this.data.edit && (commonAPIService.isExistUserAccessMenu('355') || commonAPIService.isExistUserAccessMenu('362'))"
-          mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()">Delete</button>
       </div>
     </div>
   </div>

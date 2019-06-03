@@ -145,7 +145,8 @@ export class ReceiptDetailsModalComponent implements OnInit {
 				feedue: Number(item.invg_fh_amount),
 				concession: Number(item.invg_fcc_amount),
 				adjustment: Number(item.invg_adj_amount),
-				netpay: Number(item.invg_fh_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+				netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount)
+				- (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
 				invg_id: item.invg_id
 			};
 			this.invoiceTotal += element.netpay;
@@ -155,7 +156,13 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	}
 	getReceiptBifurcation(invoiceNo) {
 		this.invoiceBifurcationArray = [];
-		this.feeService.getReceiptBifurcation({ flgr_invoice_receipt_no: invoiceNo }).subscribe((result: any) => {
+		let recieptJSON = {};
+		if (this.data.from) {
+			recieptJSON = {inv_id : invoiceNo};
+		} else {
+			recieptJSON = {flgr_invoice_receipt_no: invoiceNo };
+		}
+		this.feeService.getReceiptBifurcation(recieptJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				if (result.data.length > 0) {
 					this.invoiceDetails = result.data[0];
@@ -175,6 +182,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				const length = result.data.split('/').length;
 				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}

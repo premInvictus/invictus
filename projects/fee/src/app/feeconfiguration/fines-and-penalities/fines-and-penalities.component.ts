@@ -44,6 +44,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 			fin_type_id: '',
 			fin_amt: '',
 			fin_desc: '',
+			fin_max_month: '',
 			fin_class_id: '',
 			fin_sec_id: '',
 			fin_event_id: '',
@@ -179,6 +180,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 			fin_name: value.fin_name,
 			fin_type_id: value.fin_type_id,
 			fin_amt: value.fin_amt,
+			fin_max_month: value.fin_max_month,
 			fin_desc: value.fin_desc,
 			fin_class_id: value.fin_class_id,
 			fin_sec_id: value.fin_sec_id,
@@ -218,6 +220,8 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 			this.fin_is_hostel_fee = 0;
 		}
 		this.getFinePenalties();
+	}
+	checkFineType(fine_id) {
 	}
 }
 

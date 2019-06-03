@@ -10,6 +10,7 @@ import { InvoiceElement } from './invoice-element.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
+import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	ELEMENT_DATA: InvoiceElement[] = [];
 	displayedColumns: string[] =
-		['select', 'srno', 'invoiceno', 'feeperiod', 'feedue', 'status', 'action'];
+		['select', 'srno', 'invoiceno', 'feeperiod', 'invoicedate', 'duedate', 'feedue', 'status', 'action'];
 	dataSource = new MatTableDataSource<InvoiceElement>(this.ELEMENT_DATA);
 	selection = new SelectionModel<InvoiceElement>(true, []);
 	filterResult: any[] = [];
@@ -109,6 +110,11 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		this.buildForm();
 		this.getCalculationMethods();
 		this.getInvoiceFeeMonths();
+		if (this.studentRouteMoveStoreService.getProcesRouteType()) {
+			this.type = this.studentRouteMoveStoreService.getProcesRouteType();
+		} else {
+			this.type = '4';
+		}
 		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
 			if (data.adm_no && data.login_id) {
 				this.lastRecordAdmno = data.adm_no;
@@ -196,15 +202,30 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	key2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ inv_process_usr_no: event });
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getInvoice({ inv_process_usr_no: event });
+		} else {
+			this.getInvoice({ inv_process_usr_no: event });
+		}
 	}
 	next2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ inv_process_usr_no: event });
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getInvoice({ inv_process_usr_no: event });
+		} else {
+			this.getInvoice({ inv_process_usr_no: event });
+		}
 	}
 	prev2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ inv_process_usr_no: event });
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getInvoice({ inv_process_usr_no: event });
+		} else {
+			this.getInvoice({ inv_process_usr_no: event });
+		}
 	}
 	first2(event) {
 		this.currentAdmno = event;
@@ -212,7 +233,12 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	last2(event) {
 		this.currentAdmno = event;
-		this.getInvoice({ inv_process_usr_no: event });
+		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
+			this.getInvoice({ inv_process_usr_no: event });
+		} else {
+			this.getInvoice({ inv_process_usr_no: event });
+		}
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -247,6 +273,28 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	invoiceTableData(invoicearr = []) {
 		this.ELEMENT_DATA = [];
 		invoicearr.forEach((element, index) => {
+			let status = '';
+			let statusColor = '';
+			if (element.inv_activity) {
+				status = element.inv_activity;
+			} else {
+				status = element.inv_paid_status;
+			}
+			if (element.inv_activity) {
+				if (element.inv_activity === 'consolidated') {
+					statusColor = '#ec398e';
+				} else if (element.inv_activity === 'modified') {
+					statusColor = '#0e7d9e';
+				} else if (element.inv_activity === 'recalculated') {
+					statusColor = '#ff962e';
+				}
+			} else {
+				if (element.inv_paid_status === 'paid') {
+					statusColor = 'green';
+				} else {
+					statusColor = 'red';
+				}
+			}
 			this.ELEMENT_DATA.push({
 				srno: index + 1,
 				admno: element.au_admission_no,
@@ -255,11 +303,13 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				invoiceno: element.inv_invoice_no,
 				inv_id: element.inv_id,
 				feeperiod: element.fp_name,
+				invoicedate: element.inv_invoice_date,
+				duedate: element.inv_due_date,
 				feedue: element.inv_fee_amount,
 				remark: element.inv_remark,
-				status: element.inv_paid_status,
-				statuscolor: element.inv_paid_status === 'paid' ? 'green' : 'red',
-				selectionDisable: element.inv_paid_status === 'paid' ? true : false,
+				status: status,
+				statuscolor: statusColor,
+				selectionDisable: status === 'paid' ? true : false,
 				action: element
 			});
 
@@ -291,6 +341,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	async insertInvoice() {
 		if (this.invoiceCreationForm.valid) {
+
 			const formData: any = await this.insertInvoiceData(Object.assign({}, this.invoiceCreationForm.value));
 			const arrAdmno = [this.currentLoginId];
 			formData.login_id = arrAdmno;
@@ -335,13 +386,14 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		});
 	}
 
-	openDialog(invoiceNo, edit): void {
+	openDialog(invoiceNo, details, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
 			height: '80vh',
 			data: {
 				invoiceNo: invoiceNo,
-				edit: edit
+				edit: edit,
+				paidStatus: details.status
 			}
 		});
 
@@ -446,5 +498,23 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 	applyFilter(filtervalue: string) {
 		this.dataSource.filter = filtervalue.trim().toLowerCase();
+	}
+	checkStatus() {
+		if (this.commonStu.studentdetails.editable_status === '1') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	openDialog2(inv_id, editFlag) {
+		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
+			width: '80%',
+			data: {
+				invoiceNo: inv_id,
+				edit: editFlag,
+				from: 'invoice'
+			},
+			hasBackdrop: true
+		});
 	}
 }

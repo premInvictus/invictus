@@ -28,7 +28,7 @@ export class FilterModalComponent implements OnInit {
 	filterone = true;
 	filterdivtwo = false;
 	ELEMENT_DATA: any[];
-	displayedColumns: string[] = ['fieldlabel', 'fromto', 'equalto', 'discrete', 'action'];
+	displayedColumns: string[] = ['srno', 'fieldlabel', 'fromto', 'equalto', 'discrete', 'action'];
 	dataSource: any;
 	filterdiv = false;
 	currentFilterStatus: any = {};
@@ -49,7 +49,7 @@ export class FilterModalComponent implements OnInit {
 		{ filterId: 'epd_parent_occupation_type', apiName: 'getOccupationType', fieldId: 'ocpt_id', fieldValue: 'ocpt_name' },
 		{ filterId: 'au_enrollment_status', apiName: 'getEnrollmentStatus', fieldId: 'enrol_id', fieldValue: 'enrol_name' },
 		{ filterId: 'upd_gender', apiName: 'getGender', fieldId: 'gen_id', fieldValue: 'gen_name' },
-		{ filterId: 'upd_category', apiName: 'getCategory', fieldId: 'cat_id', fieldValue: 'cat_name' },
+		{ filterId: 'accd_fo_id', apiName: 'getCategory', fieldId: 'fo_id', fieldValue: 'fo_name' },
 		{ filterId: 'accd_fcg_id', apiName: 'getConcessionCategory', fieldId: 'fcc_id', fieldValue: 'fcc_name' },
 		{ filterId: 'accd_ts_id', apiName: 'getSlabs', fieldId: 'ts_id', fieldValue: 'ts_name' },
 		{ filterId: 'accd_tr_id', apiName: 'getRoutes', fieldId: 'tr_id', fieldValue: 'tr_route_name' }
@@ -143,6 +143,7 @@ export class FilterModalComponent implements OnInit {
 					this.filterArray = result.data;
 					this.ELEMENT_DATA = [];
 					this.dataSource = new MatTableDataSource<DynamicReport>(this.ELEMENT_DATA);
+					let pos = 1;
 					if (this.filterArray.length > 0) {
 						for (const item of this.filterArray) {
 							const parentfilter = this.getFilterFromParent(item.ff_id);
@@ -150,9 +151,10 @@ export class FilterModalComponent implements OnInit {
 								this.ELEMENT_DATA.push(parentfilter);
 							} else {
 								if (Number(this.processType) === 1 && (item.ff_field_name !== 'em_provisional_admission_no' &&
-								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
-								item.ff_field_name !== 'em_regd_no')) {
+									item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
+									item.ff_field_name !== 'em_regd_no')) {
 									this.ELEMENT_DATA.push({
+										sr_no: pos,
 										ff_id: item.ff_id,
 										ff_field_name: item.ff_field_name,
 										ff_field_type: item.ff_field_type,
@@ -166,10 +168,12 @@ export class FilterModalComponent implements OnInit {
 										discretevalue: '',
 										action: item
 									});
-								} else 	if (Number(this.processType) === 2 && (item.ff_field_name !== 'em_provisional_admission_no' &&
-								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
-								item.ff_field_name !== 'em_enq_no')) {
+									pos++;
+								} else if (Number(this.processType) === 2 && (item.ff_field_name !== 'em_provisional_admission_no' &&
+									item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
+									item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
+										sr_no: pos,
 										ff_id: item.ff_id,
 										ff_field_name: item.ff_field_name,
 										ff_field_type: item.ff_field_type,
@@ -183,10 +187,12 @@ export class FilterModalComponent implements OnInit {
 										discretevalue: '',
 										action: item
 									});
-								} else 	if (Number(this.processType) === 3 && (item.ff_field_name !== 'em_regd_no' &&
-								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
-								item.ff_field_name !== 'em_enq_no')) {
+									pos++;
+								} else if (Number(this.processType) === 3 && (item.ff_field_name !== 'em_regd_no' &&
+									item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_admission_no' &&
+									item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
+										sr_no: pos,
 										ff_id: item.ff_id,
 										ff_field_name: item.ff_field_name,
 										ff_field_type: item.ff_field_type,
@@ -200,10 +206,12 @@ export class FilterModalComponent implements OnInit {
 										discretevalue: '',
 										action: item
 									});
-								} else 	if (Number(this.processType) === 4 && (item.ff_field_name !== 'em_provisional_admission_no' &&
-								item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_regd_no' &&
-								item.ff_field_name !== 'em_enq_no')) {
+									pos++;
+								} else if (Number(this.processType) === 4 && (item.ff_field_name !== 'em_provisional_admission_no' &&
+									item.ff_field_name !== 'em_alumini_no' && item.ff_field_name !== 'em_regd_no' &&
+									item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
+										sr_no: pos,
 										ff_id: item.ff_id,
 										ff_field_name: item.ff_field_name,
 										ff_field_type: item.ff_field_type,
@@ -217,10 +225,12 @@ export class FilterModalComponent implements OnInit {
 										discretevalue: '',
 										action: item
 									});
-								} else 	if (Number(this.processType) === 5 && (item.ff_field_name !== 'em_provisional_admission_no' &&
-								item.ff_field_name !== 'em_regd_no' && item.ff_field_name !== 'em_admission_no' &&
-								item.ff_field_name !== 'em_enq_no')) {
+									pos++;
+								} else if (Number(this.processType) === 5 && (item.ff_field_name !== 'em_provisional_admission_no' &&
+									item.ff_field_name !== 'em_regd_no' && item.ff_field_name !== 'em_admission_no' &&
+									item.ff_field_name !== 'em_enq_no')) {
 									this.ELEMENT_DATA.push({
+										sr_no: pos,
 										ff_id: item.ff_id,
 										ff_field_name: item.ff_field_name,
 										ff_field_type: item.ff_field_type,
@@ -234,6 +244,7 @@ export class FilterModalComponent implements OnInit {
 										discretevalue: '',
 										action: item
 									});
+									pos++;
 								}
 							}
 						}
@@ -272,6 +283,17 @@ export class FilterModalComponent implements OnInit {
 	gobacktofilterOne() {
 		this.filterdivtwo = false;
 		this.filterone = true;
+		this.currentFilter.fromto = '';
+		this.currentFilter.fromtovalue = '';
+		this.currentFilter.from = '';
+		this.currentFilter.to = '';
+		this.currentFilter.equalto = '';
+		this.currentFilter.discrete = [];
+		this.currentFilter.discretevalue = [];
+		const ind = this.filtersItemArray.findIndex(element => element.ff_field_name === this.currentFilter.ff_field_name);
+		if (ind !== -1) {
+			this.filtersItemArray.splice(ind, 1);
+		}
 	}
 	getDropdown(ff_field_name) {
 		for (const item of this.fieldApiMapping) {
@@ -299,10 +321,12 @@ export class FilterModalComponent implements OnInit {
 							if (result && result.status === 'ok') {
 								if (result.data.length > 0) {
 									for (const item1 of result.data) {
-										this.dropdownArray.push({
-											field_id: item1[item.fieldId],
-											field_name: item1[item.fieldValue]
-										});
+										if (Number(item1.sec_id) !== 0) {
+											this.dropdownArray.push({
+												field_id: item1[item.fieldId],
+												field_name: item1[item.fieldValue]
+											});
+										}
 									}
 								}
 							} else {
@@ -471,7 +495,7 @@ export class FilterModalComponent implements OnInit {
 						});
 						break;
 					case 'getCategory':
-						this.sisService.getCategory().subscribe((result: any) => {
+						this.feeService.getFeeOthers({}).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								if (result.data.length > 0) {
 									for (const item1 of result.data) {
@@ -592,15 +616,16 @@ export class FilterModalComponent implements OnInit {
 			this.filtersItemArray.splice(existi, 1);
 		}
 		if (this.filtertype === 'fromto') {
-			this.currentFilter.fromto = this.commonAPIService.dateConvertion(this.currentFilter.from, 'd-MMM-y') + ' - ' +
-				this.commonAPIService.dateConvertion(this.currentFilter.to, 'd-MMM-y');
-			this.filtersItemArray.push({
-				filter: this.currentFilter,
-				ff_field_name: this.currentFilter.ff_field_name,
-				filter_type: 'Fixed',
-				filter_from: this.currentFilter.from,
-				filter_to: this.currentFilter.to
-			});
+			if (this.currentFilter.ff_field_type === 'text') {
+				this.currentFilter.fromto = this.currentFilter.from + ' - ' + this.currentFilter.to;
+				this.filtersItemArray.push({
+					filter: this.currentFilter,
+					ff_field_name: this.currentFilter.ff_field_name,
+					filter_type: 'Fixed',
+					filter_from: this.currentFilter.from,
+					filter_to: this.currentFilter.to
+				});
+			}
 		} else if (this.filtertype === 'equalto') {
 			this.filtersItemArray.push({
 				filter: this.currentFilter,

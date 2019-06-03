@@ -10,9 +10,14 @@
     <div class="row">
       <div class="col-12 remove-col-padding" *ngIf="filterdiv">
         <table mat-table [dataSource]="dataSource" class=" table-100">
+          <ng-container matColumnDef="srno">
+            <th mat-header-cell *matHeaderCellDef>Sr No.</th>
+            <td mat-cell *matCellDef="let element" class="text-center"> {{element.sr_no}} </td>
+          </ng-container>
           <ng-container matColumnDef="fieldlabel">
-            <th mat-header-cell *matHeaderCellDef> Field </th>
-            <td mat-cell *matCellDef="let element" (click)="filterTwo(element)" class="text-center filterpointer" > {{element.fieldlabel}} </td>
+            <th mat-header-cell *matHeaderCellDef style="width: 11%"> Field </th>
+            <td mat-cell *matCellDef="let element" (click)="filterTwo(element)" class="text-center filterpointer">
+              {{element.fieldlabel}} </td>
           </ng-container>
 
           <!-- Name Column -->
@@ -35,9 +40,9 @@
 
           <!-- Action Column -->
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 14%"> Action </th>
             <td mat-cell *matCellDef="let element" class="text-center"> <a
-                (click)="resetOneFilter(element)">Reset</a> </td>
+                class="cursor-pointer" (click)="resetOneFilter(element)">Reset</a> </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -127,7 +132,8 @@
             <div class="row">
               <div class="col-12">
                 <mat-form-field class="form-field">
-                  <input matInput placeholder="Enter Value" [(value)]="equalto" (change)="equaltoTextValue($event, 'equalto')">
+                  <input matInput placeholder="Enter Value" [(value)]="equalto"
+                    (change)="equaltoTextValue($event, 'equalto')">
                 </mat-form-field>
               </div>
             </div>
@@ -136,7 +142,7 @@
       </div>
 
     </div>
-    <div class="filter-body-green-container">
+    <div class="filter-body-green-container" *ngIf="currentFilter.ff_field_type !== 'dropdown'">
       <div class="row">
         <div class="col-6">
           <span>Add Discrete Value</span>

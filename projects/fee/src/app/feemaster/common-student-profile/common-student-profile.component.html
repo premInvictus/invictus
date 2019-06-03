@@ -133,27 +133,27 @@
       </div>
       <div class="col-1 margin-top-25 custom-fee-entry-col-8 lap-custom-fee-entry-col-9 tab-remove-padding">
         <div class="row margin-top-8">
-          <div *ngIf="student_profile_flag" class="col-6">
+          <div class="col-6">
             <div class=" blue-circle-btn margin-top-5" (click)="goToPage('student-profile')"
               matTooltip="Student Profile">
-              <img style="margin-left: 11px ; margin-top: 10px" src="/assets/student_profile.svg">
+              <img style="margin-left: 13px ; margin-top: 12px" src="/assets/student_profile.svg">
             </div>
           </div>
-          <div *ngIf="invoice_creation_individual_flag" class="col-6">
+          <div class="col-6">
             <div class=" blue-circle-btn margin-top-5" matTooltip="Invoice Creation"
               (click)="goToPage('invoice-creation-individual')">
-              <img style="margin-left: 11px ; margin-top: 10px" src="/assets/invoice_creation.svg">
+              <img style="margin-left: 13px ; margin-top: 12px" src="/assets/invoice_creation.svg">
             </div>
           </div>
-          <div *ngIf="fee_transaction_entry_individual_flag" class="col-6">
+          <div class="col-6">
             <div class=" blue-circle-btn margin-top-5" matTooltip="Fee Transaction Entry"
               (click)="goToPage('fee-transaction-entry-individual')">
-              <img style="margin-left: 11px ; margin-top: 10px" src="/assets/fee_transaction_entry.svg">
+              <img style="margin-left: 13px ; margin-top: 12px" src="/assets/fee_transaction_entry.svg">
             </div>
           </div>
-          <div *ngIf="fee_ledger_flag" class="col-6">
+          <div class="col-6">
             <div class="margin-top-5 blue-circle-btn" (click)="goToPage('fee-ledger')" matTooltip="Fee Ledger">
-              <img style="margin-left: 11px ; margin-top: 10px" src="/assets/fee_modification.svg">
+              <img style="margin-left: 13px ; margin-top: 12px" src="/assets/fee_modification.svg">
             </div>
 
           </div>

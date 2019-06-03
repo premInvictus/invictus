@@ -5,3 +5,40 @@
     justify-content: center;
     background: white;
   }
+  .my-filter-btn.mat-raised-button {
+    color: white !important;
+    background-color: #757b85 !important;
+    text-transform: uppercase;
+    margin-left: 25px !important;
+    width: 126px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+.my-filter-btn.mat-raised-button:hover {
+  color:#757b85 !important;
+  background-color: white !important ;
+  margin-left: 25px !important;
+  border: 2px solid  #757b85;
+  text-transform: uppercase;
+  width: 126px;
+  height: 32px;
+  font-size: 13px;
+}
+button.reset-bt{
+  color: white !important;
+  background-color: #e11022 !important;
+  height: 33px !important;
+  text-transform: uppercase;
+}
+button.reset-bt:hover{
+  color: #e11022 !important;
+  background-color: white !important ;
+  border: 2px solid  #e11022;
+  height: 33px;
+}
+@media (max-width: 1899px) and (min-width: 1200px) {
+.my-inv {
+  margin-left: -74% !important;
+}
+}

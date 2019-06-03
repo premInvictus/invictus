@@ -37,7 +37,8 @@
                               <mat-form-field class="form-field" appearance="outline">
                                  <mat-label>Fine Type</mat-label>
                                  <mat-select placeholder="Fine Type" [errorStateMatcher]="confirmValidParentMatcher"
-                                    formControlName="fin_type_id" required>
+                                    formControlName="fin_type_id" (selectionChange)="checkFineType($event.value)"
+                                    required>
                                     <mat-option value="">Please Select</mat-option>
                                     <mat-option *ngFor="let item of fineTypeArray" [value]="item.ft_id">
                                        {{item.ft_type_name}}</mat-option>
@@ -45,7 +46,7 @@
                               </mat-form-field>
                            </div>
                         </div>
-                        <div class="row">
+                        <div *ngIf="finepenaltiesForm.value.fin_type_id !== '4'" class="row">
                            <div class="col-12">
                               <mat-form-field class="form-field" appearance="outline">
                                  <mat-label>Fine Amount</mat-label>
@@ -54,15 +55,38 @@
                               </mat-form-field>
                            </div>
                         </div>
-                        <div class="row">
-                              <div class="col-12">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Upper Limit</mat-label>
-                                    <input matInput placeholder="Upper Limit" type="number" formControlName="fin_upper_limit"
-                                       [errorStateMatcher]="confirmValidParentMatcher">
-                                 </mat-form-field>
+                        <div *ngIf="finepenaltiesForm.value.fin_type_id === '4'" class="row">
+                           <div class="col-6">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Fine Amount</mat-label>
+                                 <input matInput placeholder="Fine Amount" type="number" formControlName="fin_amt"
+                                    [errorStateMatcher]="confirmValidParentMatcher" required>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-1">
+                              <div class="text-center">
+                                 <div class="margin-top-25">
+                                    X
+                                 </div>
                               </div>
                            </div>
+                           <div class="col-5">
+                                 <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>No of Months</mat-label>
+                                    <input matInput placeholder="No of Months" formControlName="fin_max_month"
+                                    [errorStateMatcher]="confirmValidParentMatcher" required>
+                                 </mat-form-field>
+                              </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-12">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Upper Limit</mat-label>
+                                 <input matInput placeholder="Upper Limit" type="number"
+                                    formControlName="fin_upper_limit" [errorStateMatcher]="confirmValidParentMatcher">
+                              </mat-form-field>
+                           </div>
+                        </div>
                         <div class="row">
                            <div class="col-12">
                               <mat-form-field class="form-field" appearance="outline">
@@ -115,7 +139,7 @@
                                  </ng-container>
                                  <ng-container matColumnDef="finename">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Fine Name </th>
-                                    <td mat-cell *matCellDef="let item"> {{item.finename}} </td>
+                                    <td mat-cell *matCellDef="let item"> {{item.finename | capitalize}} </td>
                                  </ng-container>
                                  <ng-container matColumnDef="finetype">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Fine Type </th>
@@ -130,9 +154,9 @@
                                     <td mat-cell *matCellDef="let item"> {{item.event}} </td>
                                  </ng-container>
                                  <ng-container matColumnDef="upperlimit">
-                                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Upper Limit</th>
-                                       <td mat-cell *matCellDef="let item"> {{item.upperLimit}} </td>
-                                    </ng-container>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Upper Limit</th>
+                                    <td mat-cell *matCellDef="let item"> {{item.upperLimit}} </td>
+                                 </ng-container>
                                  <ng-container matColumnDef="description">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
                                     <td mat-cell *matCellDef="let item"> {{item.description | capitalize}} </td>

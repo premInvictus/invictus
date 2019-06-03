@@ -1,4 +1,4 @@
-<div class="fee-container-box__grey">
+<!-- <div class="fee-container-box__grey">
   <div>
     <div class="row">
       <div class="col-3 remove-col-padding">
@@ -79,7 +79,7 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <div class="overflow-auto">
+              <div class="overflow-auto"> -->
                 <!-- <table mat-table [dataSource]="dataSource" class="table-100">
 
                  
@@ -111,7 +111,7 @@
                 </table> -->
 
 
-                <table class="table table-borderd table-stripped custom-table">
+                <!-- <table class="table table-borderd table-stripped custom-table">
                   <thead class="table-skill__head text-center">
                     <tr class="custom-tr">
                       <th class="custom-th">Class</th>
@@ -170,7 +170,7 @@
                 <div class="col-12">
 
 
-                  <div class="">
+                  <div class=""> -->
                     <!-- <table mat-table [dataSource]="dataSourceTwo" class="table-100">
       
       
@@ -205,7 +205,7 @@
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsTwo"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsTwo;"></tr>
                       </table> -->
-                    <table class="table table-borderd table-stripped custom-table">
+                    <!-- <table class="table table-borderd table-stripped custom-table">
                       <thead class="table-skill__head text-center">
                         <tr class="custom-tr">
                           <th class="custom-th">Birthday</th>
@@ -260,7 +260,7 @@
                     <div class="col-12">
 
 
-                      <div>
+                      <div> -->
                         <!-- <table mat-table [dataSource]="dataSourceThree" class="table-100">
       
       
@@ -292,7 +292,7 @@
                             <tr mat-header-row *matHeaderRowDef="displayedColumnsThree"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumnsThree;"></tr>
                           </table> -->
-                        <table class="table table-borderd table-stripped custom-table">
+                        <!-- <table class="table table-borderd table-stripped custom-table">
                           <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
                               <th class="custom-th">S.No.</th>
@@ -344,4 +344,47 @@
     <br>
 
   </div>
+</div> -->
+<div class="container-box__grey">
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="card-content__container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <h2><b>{{'Welcome to Student Information System' | uppercase}}</b></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <img [src]="schoolInfo.school_logo" style="width: 16%">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <p><span>
+                                    <h3><b>{{schoolInfo.school_name | uppercase}}</b></h3>
+                                </span></p>
+                            <p><span>
+                                    <h6>{{schoolInfo.school_country | uppercase}}</h6>
+                                </span></p>
+                            <p><span>
+                                    <h6>{{schoolInfo.school_city | uppercase}}</h6>
+                                </span>
+                                <span>
+                                    <h6>{{schoolInfo.school_state | uppercase}}</h6>
+                                </span></p>
+                            <p><span>
+                                    <h6>{{schoolInfo.school_phone | uppercase}}</h6>
+                                </span></p>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
 </div>

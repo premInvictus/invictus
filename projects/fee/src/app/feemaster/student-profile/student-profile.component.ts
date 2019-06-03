@@ -12,9 +12,9 @@ import { CommonStudentProfileComponent } from '../common-student-profile/common-
 export class StudentProfileComponent implements OnInit {
 	lastRecordId;
 	loginId: any;
-	editFlag: any;
-	editRequestFlag: any;
 	permissionFlag: any;
+	checkFlag1 = true;
+	checkFlag2 = true;
 	viewOnly = true;
 	@ViewChild(StudentAccountComponent) stuAcc: StudentAccountComponent;
 	@ViewChild (CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
@@ -76,37 +76,41 @@ export class StudentProfileComponent implements OnInit {
 	}
 	enableEdit() {
 		this.viewOnly = false;
-		this.editFlag = false;
+		this.checkFlag1 = false;
 	}
 	enableEditRequest() {
 		this.viewOnly = false;
-		this.editRequestFlag = false;
+		this.checkFlag2 = false;
 	}
 	editChange(flag) {
-		this.feeRenderId = '';
 		if (flag) {
 		this.viewOnly = true;
 		this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 		}
 		if (this.viewOnly && this.isExist('350') ) {
-			this.editFlag = true;
+			this.checkFlag1 = true;
 		}
 		if (this.viewOnly && this.commmon.isExistUserAccessMenu('374')) {
-			this.editRequestFlag = true;
+			this.checkFlag2 = true;
 		}
 	}
 	isExist(mod_id) {
 		if (mod_id === '350') {
 			if (this.commmon.isExistUserAccessMenu(mod_id)) {
-				this.editFlag = true;
 				return true;
 			}
 		}
 		if (mod_id === '374') {
 			if (this.commmon.isExistUserAccessMenu(mod_id)) {
-				this.editRequestFlag = true;
 				return true;
 			}
+		}
+	}
+	checkStatus () {
+		if (this.commonStu.studentdetails.editable_status === '1') {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

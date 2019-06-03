@@ -48,8 +48,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
-		this.terminateStatus = 'Transport Facility Available';
-		this.hostelStatus = 'Hostel Facility Available';
+		this.terminateStatus = 'Terminate Transport Facility';
+		this.hostelStatus = 'Terminate Hostel Facility';
 		this.buildForm();
 		this.getFeeOtherCategory();
 		this.getConGroup();
@@ -91,6 +91,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	renderData() {
+		this.stoppageArray = [];
+		this.slabArray = [];
 		if (this.feeDet.accd_login_id) {
 			if (this.feeDet.accd_is_transport === 'Y') {
 				this.transportFlag = true;
@@ -104,17 +106,17 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 			if (this.feeDet.accd_is_terminate === 'Y' && this.transportFlag && this.modeFlag) {
 				this.terminationFlag = true;
-				this.terminateStatus = 'Transport Facility Terminated';
+				this.terminateStatus = 'Terminate Transport Facility';
 			} else {
 				this.terminationFlag = false;
-				this.terminateStatus = 'Transport Facility Terminated';
+				this.terminateStatus = 'Terminate Transport Facility';
 			}
 			if (this.feeDet.accd_is_hostel_terminate === 'Y') {
 				this.hostelTerminateFlag = true;
-				this.hostelStatus = 'Hostel Facility Terminated';
+				this.hostelStatus = 'Terminate Hostel Facility';
 			} else {
 				this.hostelTerminateFlag = false;
-				this.hostelStatus = 'Hostel Facility Terminated';
+				this.hostelStatus = 'Terminate Hostel Facility';
 			}
 			if (this.feeDet.accd_is_hostel === 'Y') {
 				this.hostelFlag = true;
@@ -250,19 +252,19 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	terminate($event) {
 		if ($event.checked) {
 			this.terminationFlag = true;
-			this.terminateStatus = 'Transport Facility Terminated';
+			this.terminateStatus = 'Terminate Transport Facility';
 		} else {
 			this.terminationFlag = false;
-			this.terminateStatus = 'Transport  Facility Available';
+			this.terminateStatus = 'Terminate Transport Facility';
 		}
 	}
 	hostel($event) {
 		if ($event.checked) {
 			this.hostelTerminateFlag = true;
-			this.hostelStatus = 'Hostel Facility Terminated';
+			this.hostelStatus = 'Terminate Hostel Facility';
 		} else {
 			this.hostelTerminateFlag = false;
-			this.hostelStatus = 'Hostel  Facility Available';
+			this.hostelStatus = 'Terminate Hostel Facility';
 		}
 	}
 	submit() {
@@ -302,7 +304,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				this.validateFlag = false;
 			}
-		}  if (this.validateFlag) {
+		} if (this.validateFlag) {
 			const datePipe = new DatePipe('en-in');
 			let accountJSON = {};
 			accountJSON = {
@@ -407,21 +409,21 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	isExist(mod_id) {
 		return this.commonAPIService.isExistUserAccessMenu(mod_id);
 	}
-	getStoppages($event) {
+	getStoppages(value) {
 		this.accountsForm.patchValue({
 			accd_tsp_id: '',
 			accd_ts_id: ''
 		});
 		this.stoppageArray = [];
-		this.feeService.getStoppagesPerRoute({ tr_id: $event.value }).subscribe((result: any) => {
+		this.feeService.getStoppagesPerRoute({ tr_id: value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.stoppageArray = result.data;
 			}
 		});
 	}
-	getSlab($event) {
+	getSlab(value) {
 		this.slabArray = [];
-		this.feeService.getTransportSlabPerStoppages({ tsp_id: $event.value }).subscribe((result: any) => {
+		this.feeService.getTransportSlabPerStoppages({ tsp_id: value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.slabArray = result.data;
 				this.slabModel = this.slabArray[0].ts_id;

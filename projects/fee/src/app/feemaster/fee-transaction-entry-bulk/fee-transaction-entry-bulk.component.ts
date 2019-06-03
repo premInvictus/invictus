@@ -50,12 +50,12 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	}
 	buildForm() {
 		this.feeTransactionForm = this.fbuild.group({
-			'inv_id': [],
+			'inv_invoice_no': [],
 			'login_id': '',
 			'ftr_emod_id': '1',
 			'ftr_transaction_id': '',
 			'ftr_transaction_date': new Date(),
-			'ftr_pay_id': '',
+			'ftr_pay_id': '2',
 			'ftr_cheque_no': '',
 			'ftr_cheque_date': '',
 			'ftr_bnk_id': '',
@@ -95,35 +95,35 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	}
 	onValueChanges(result) {
 		this.feeTransactionForm.patchValue({
-			inv_id: ''
+			inv_invoice_no: ''
 		});
 		this.barcodeValue = result.codeResult.code;
-		this.feeTransactionForm.value.inv_id = this.barcodeValue;
+		this.feeTransactionForm.value.inv_invoice_no = this.barcodeValue;
 		const index = this.invoiceArray.indexOf(this.barcodeValue);
 		if (index === -1) {
 			this.invoiceArray.push(this.barcodeValue);
 		} else {
 			this.feeTransactionForm.patchValue({
-				inv_id: ''
+				inv_invoice_no: ''
 			});
 		}
 	}
 	insertInvoice($event) {
-		this.feeTransactionForm.value.inv_id = $event.srcElement.value;
+		this.feeTransactionForm.value.inv_invoice_no = $event.srcElement.value;
 		const index = this.invoiceArray.indexOf($event.srcElement.value);
 		if (index === -1) {
-			this.invoiceArray.push(this.feeTransactionForm.value.inv_id);
+			this.invoiceArray.push(this.feeTransactionForm.value.inv_invoice_no);
 			this.feeTransactionForm.patchValue({
-				inv_id: ''
+				inv_invoice_no: ''
 			});
 		} else {
 			this.feeTransactionForm.patchValue({
-				inv_id: ''
+				inv_invoice_no: ''
 			});
 		}
 	}
-	deleteInvoice(inv_id) {
-		const index = this.invoiceArray.indexOf(inv_id);
+	deleteInvoice(inv_invoice_no) {
+		const index = this.invoiceArray.indexOf(inv_invoice_no);
 		if (index !== -1) {
 			this.invoiceArray.splice(index, 1);
 		}
@@ -136,7 +136,8 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
 				'saveAndPrint': true
 			});
-			this.feeTransactionForm.value.inv_id = this.invoiceArray;
+			this.feeTransactionForm.value.inv_invoice_no = this.invoiceArray;
+			this.feeTransactionForm.value.isBulk = true;
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Fee transaction added', 'success');
@@ -160,11 +161,14 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
 				'saveAndPrint': true
 			});
-			this.feeTransactionForm.value.inv_id = this.invoiceArray;
+			this.feeTransactionForm.value.inv_invoice_no = this.invoiceArray;
+			this.feeTransactionForm.value.isBulk = true;
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					saveAs(result.data, result.data.split('/')[length - 1]);
+					window.open(result.data, '_blank');
 					this.reset();
 					this.invoiceArray = [];
 				} else {
@@ -181,12 +185,12 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 
 	reset() {
 		this.feeTransactionForm.patchValue({
-			'inv_id': [],
+			'inv_invoice_no': [],
 			'login_id': '',
 			'ftr_emod_id': '1',
 			'ftr_transaction_id': '',
 			'ftr_transaction_date': new Date(),
-			'ftr_pay_id': '',
+			'ftr_pay_id': '2',
 			'ftr_cheque_no': '',
 			'ftr_cheque_date': '',
 			'ftr_bnk_id': '',
