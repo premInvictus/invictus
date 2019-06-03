@@ -96,6 +96,8 @@ export class FeeLedgerComponent implements OnInit {
 		});
 	}
 	next(admno) {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
 		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
 			this.getFeeLedger(this.loginId);
@@ -104,6 +106,8 @@ export class FeeLedgerComponent implements OnInit {
 		}
 	}
 	prev(admno) {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
 		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
 			this.getFeeLedger(this.loginId);
@@ -112,6 +116,8 @@ export class FeeLedgerComponent implements OnInit {
 		}
 	}
 	first(admno) {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
 		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
 			this.getFeeLedger(this.loginId);
@@ -120,6 +126,8 @@ export class FeeLedgerComponent implements OnInit {
 		}
 	}
 	last(admno) {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
 		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
 			this.getFeeLedger(this.loginId);
@@ -128,6 +136,8 @@ export class FeeLedgerComponent implements OnInit {
 		}
 	}
 	key(admno) {
+		this.FEE_LEDGER_ELEMENT = [];
+		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
 		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
 			this.getFeeLedger(this.loginId);
@@ -155,8 +165,6 @@ export class FeeLedgerComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.getFeeLedger(this.loginId);
-
 		});
 	}
 	openReceiptDialog(invoiceNo, edit): void {
@@ -170,8 +178,6 @@ export class FeeLedgerComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.getFeeLedger(this.loginId);
-
 		});
 	}
 
