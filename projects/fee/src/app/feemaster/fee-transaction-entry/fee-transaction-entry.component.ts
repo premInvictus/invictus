@@ -176,10 +176,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.invoice.netPay += Number(this.invoice.balance_amt);
 				}
 				this.invoiceArray = this.invoice.invoice_bifurcation;
-				this.feeTransactionForm.patchValue({
-					'ftr_amount': this.invoice.netPay,
-					'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
-				});
+				if (this.selectedMode === '1') {
+					this.feeTransactionForm.patchValue({
+						'ftr_amount': this.invoice.netPay,
+						'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
+					});
+				}
 				let pos = 1;
 				this.invoiceTotal = 0;
 				for (const item of this.invoiceArray) {

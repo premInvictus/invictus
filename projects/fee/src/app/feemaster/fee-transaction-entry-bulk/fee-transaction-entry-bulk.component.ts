@@ -23,6 +23,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	startMonth: any;
 	minDate: any;
 	schoolInfo: any;
+	checkBulkStatus = false;
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },
@@ -30,6 +31,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		{ id: '4', name: 'Admission No.' },
 		{ id: '5', name: 'Alumni No.' }
 	];
+	loaderText: string;
 	constructor(private router: Router,
 		private route: ActivatedRoute,
 		private sisService: SisService,
@@ -129,6 +131,8 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		}
 	}
 	submit() {
+		this.checkBulkStatus = true;
+		this.loaderText = '';
 		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0) {
 			const datePipe = new DatePipe('en-in');
 			this.feeTransactionForm.patchValue({
@@ -138,13 +142,22 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			});
 			this.feeTransactionForm.value.inv_invoice_no = this.invoiceArray;
 			this.feeTransactionForm.value.isBulk = true;
+			let i = 0;
+			const x = setInterval(() => {
+				this.loaderText =
+					'Adding ' +
+					' invoices ...';
+				i++;
+			}, 1);
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage('Fee transaction added', 'success');
+					this.common.showSuccessErrorMessage(result.message, 'success');
+					clearInterval(x);
+					this.checkBulkStatus = false;
 					this.reset();
 					this.invoiceArray = [];
 				} else {
-					this.common.showSuccessErrorMessage('Fee transaction not added', 'error');
+					this.common.showSuccessErrorMessage(result.message, 'error');
 					this.reset();
 					this.invoiceArray = [];
 				}
@@ -154,6 +167,8 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		}
 	}
 	saveAndPrint() {
+		this.checkBulkStatus = true;
+		this.loaderText = '';
 		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0) {
 			const datePipe = new DatePipe('en-in');
 			this.feeTransactionForm.patchValue({
@@ -163,17 +178,23 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			});
 			this.feeTransactionForm.value.inv_invoice_no = this.invoiceArray;
 			this.feeTransactionForm.value.isBulk = true;
+			let i = 0;
+			const x = setInterval(() => {
+				this.loaderText =
+					'Adding ' +
+					' invoices ...';
+				i++;
+			}, 1);
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
-					const length = result.data.split('/').length;
+					clearInterval(x);
+					this.checkBulkStatus = false;
 					this.common.showSuccessErrorMessage(result.message, 'success');
-					saveAs(result.data, result.data.split('/')[length - 1]);
 					window.open(result.data, '_blank');
 					this.reset();
 					this.invoiceArray = [];
+					this.checkBulkStatus = false;
 				} else {
-					const length = result.data.split('/').length;
-					saveAs(result.data, result.data.split('/')[length - 1]);
 					this.reset();
 					this.invoiceArray = [];
 				}
@@ -197,7 +218,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			'ftr_branch': '',
 			'ftr_amount': '',
 			'ftr_remark': '',
-			'saveAndPrint' : ''
+			'saveAndPrint': ''
 		});
 		this.invoiceArray = [];
 	}
@@ -212,7 +233,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			if (result && result.status === 'ok') {
 				this.schoolInfo = result.data[0];
 				this.startMonth = Number(this.schoolInfo.session_start_month);
-				this.minDate = new Date(new Date().getFullYear(), this.startMonth - 1 , 1);
+				this.minDate = new Date(new Date().getFullYear(), this.startMonth - 1, 1);
 			}
 		});
 	}
