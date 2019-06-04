@@ -44,8 +44,8 @@
                      <div class="row remove-top-margin">
                         <div *ngIf="checkIfFieldExist('epd_parent_name')" class="col-3 ">
                            <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Father's Full Name</mat-label>
-                              <input matInput placeholder="Father's Full name" [readonly]="viewOnly" minlength="2" maxlength="50"
+                              <mat-label>Full Name</mat-label>
+                              <input matInput placeholder="Full name" [readonly]="viewOnly" minlength="2" maxlength="50"
                                  formControlName="epd_parent_name" [errorStateMatcher]="confirmValidParentMatcher"
                                  required class="text-capitalize" />
                               <mat-error>
@@ -275,7 +275,7 @@
                   <div *ngIf="checkIfFieldExist('epd_organisation')" class="col-2 sis-col-20">
                         <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Name of Organisation</mat-label>
-                        <input class="text-capitalize" matInput placeholder="Organisation Name.." [readonly]="viewOnly"
+                        <input class="text-capitalize" matInput placeholder="Name of Organisation" [readonly]="viewOnly"
                            formControlName="epd_organisation" [errorStateMatcher]="confirmValidParentMatcher" />
                      </mat-form-field>
                   </div>
