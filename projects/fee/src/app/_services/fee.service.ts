@@ -297,6 +297,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getMFRReport', value);
 	}
+	getFeeProjectionReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeProjectionReport', value);
+	}
 	printReceipt(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/printReceipt', value);
