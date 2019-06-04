@@ -18,12 +18,14 @@ import { InvoiceDetailsModalComponent } from './invoice-details-modal/invoice-de
 import { FeeFilterModalComponent } from './fee-filter-modal/fee-filter-modal.component';
 import { FeeTransactionEntryBulkComponent } from './fee-transaction-entry-bulk/fee-transaction-entry-bulk.component';
 import { StudentRouteMoveStoreService } from './student-route-move-store.service';
+import { LoadingModule } from 'ngx-loading';
 @NgModule({
 	imports: [
 		CommonModule,
 		FeemasterRoutingModule,
 		SharedmoduleModule,
 		CommonFilterModule,
+		LoadingModule,
 		BarecodeScannerLivestreamModule
 	],
 	entryComponents: [InvoiceDetailsModalComponent],

@@ -10,3 +10,14 @@
 .custom-entry-button {
     width: 160px !important;
 }
+.text {
+    z-index: 2000;
+    position: absolute;
+    color: white;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 18px;
+    font-weight:bold;
+    top: calc(50% + 40px);
+  }

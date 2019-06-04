@@ -36,8 +36,7 @@
             <div class="col-3 remove-col-padding-left">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Payment Mode</mat-label>
-                <mat-select formControlName="ftr_pay_id" placeholder="Payment Mode" disabled
-                required>
+                <mat-select formControlName="ftr_pay_id" placeholder="Payment Mode" disabled required>
                   <mat-option value="2">Cash at Bank</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -89,3 +88,11 @@
       </div>
     </div>
   </form>
+  <div class="my-container">
+    <ngx-loading [show]="checkBulkStatus" [config]="{ 
+        backdropBorderRadius: '14px',
+        backdropBackgroundColour: 'rgba(0,0,0,0.55)'
+        }">
+    </ngx-loading>
+    <span *ngIf="checkBulkStatus" class="text">{{loaderText}}</span>
+  </div>
