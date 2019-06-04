@@ -154,7 +154,7 @@
                 <td mat-cell *matCellDef="let element"> {{element.duedate | date: 'd-MMM-y'}} </td>
               </ng-container>
               <ng-container matColumnDef="feedue">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount Due </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Fee Due (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
                 <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
               </ng-container>
               <ng-container matColumnDef="status">

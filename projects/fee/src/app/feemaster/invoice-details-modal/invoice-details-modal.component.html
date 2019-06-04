@@ -110,15 +110,15 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="feedue">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Fee Due </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Fee Due (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
           <td mat-cell *matCellDef="let element"> {{element.feedue | number | zerodash}} </td>
         </ng-container>
         <ng-container matColumnDef="concession">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Concession </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Concession (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
           <td mat-cell *matCellDef="let element"> {{element.concession | number | zerodash}} </td>
         </ng-container>
         <ng-container matColumnDef="adjustment">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
           <td mat-cell *matCellDef="let element">
             <ng-template [ngIf]="modificationFlag" [ngIfElse]="elseContaint">
               <mat-form-field class="margin-top-10" appearance="outline">
@@ -132,7 +132,7 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="netpay">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Net Payable </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Net Payable (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
           <td mat-cell *matCellDef="let element">{{element.netpay | number}} </td>
         </ng-container>
 
