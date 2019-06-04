@@ -460,4 +460,15 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.processtypeService.setProcesstype(this.processType);
 		this.processTypeEmit.emit(this.processType);
 	}
+	parent_type_fun(type){
+		if(type === 'F'){
+			return 'Father Name';
+		} else if(type === 'M'){
+			return 'Mother Name';
+		} else if(type === 'G'){
+			return 'Guardian Name';
+		}else{
+			return 'Active Parent Name';
+		}
+	}
 }
