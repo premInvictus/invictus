@@ -25,7 +25,8 @@
           </div>
           <div class="col-4 custom-col-30 text-center remove-col-padding">
             <mat-form-field class="form-field text-center">
-              <input matInput class="adm-no-student-30 font-size-30" formControlName="au_enrollment_id"
+              <input matInput class="adm-no-student-30 font-size-30" 
+              id="blur_id" formControlName="au_enrollment_id"
                 (keydown.enter)="loadOnEnrollmentId($event)" (blur)="loadOnEnrollmentId($event)">
             </mat-form-field>
           </div>
