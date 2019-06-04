@@ -413,6 +413,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.keyFlag = true;
 		$event.preventDefault();
 		this.getStudentDetailsByAdmno($event.target.value);
+		document.getElementById('blur_id').blur();
 	}
 	getStudentDetailsByAdmno(admno) {
 		this.studentdetailsflag = true;
