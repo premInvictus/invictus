@@ -74,22 +74,22 @@
 
               <ng-container matColumnDef="amount">
                 <th mat-header-cell *matHeaderCellDef> Fee Due(<span><i class="fas fa-rupee-sign" ></i></span>)</th>
-                <td mat-cell *matCellDef="let item"> {{item.amount | number}} </td>
+                <td mat-cell *matCellDef="let item"> {{item.amount | number | zerodash}} </td>
               </ng-container>
 
               <ng-container matColumnDef="concession">
                 <th mat-header-cell *matHeaderCellDef> Concession(<span><i class="fas fa-rupee-sign" ></i></span>) </th>
-                <td mat-cell *matCellDef="let item"> {{item.concession | number}} </td>
+                <td mat-cell *matCellDef="let item"> {{item.concession | number | zerodash}} </td>
               </ng-container>
 
               <ng-container matColumnDef="reciept">
                 <th mat-header-cell *matHeaderCellDef> Receipt(<span><i class="fas fa-rupee-sign" ></i></span>) </th>
-                <td mat-cell *matCellDef="let item"> {{item.reciept | number}} </td>
+                <td mat-cell *matCellDef="let item"> {{item.reciept | number | zerodash}} </td>
               </ng-container>
 
               <ng-container matColumnDef="balance">
                 <th mat-header-cell *matHeaderCellDef> Balance(<span><i class="fas fa-rupee-sign" ></i></span>) </th>
-                <td mat-cell *matCellDef="let item"> {{item.balance | number}} </td>
+                <td mat-cell *matCellDef="let item"> {{item.balance | number | zerodash}} </td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
