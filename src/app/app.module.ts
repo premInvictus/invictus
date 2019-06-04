@@ -7,10 +7,10 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CookieModule } from 'ngx-cookie';
 import { SimpleNotificationsModule } from 'angular2-notifications';
-import {AppRoutingModule} from './app.routing';
+import { AppRoutingModule} from './app.routing';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService} from './login/login/authentication.service';
-import {CommonAPIService} from './_services/commonAPI.service';
+import { CommonAPIService} from './_services/commonAPI.service';
 import { AuthGuard} from './_guards/index';
 import { ApiPrefixInterceptor, SuccessErrorInterceptor } from './_helpers';
 import { UserAccessMenuService } from './_services';
@@ -28,7 +28,6 @@ import { UserAccessMenuService } from './_services';
 		BrowserAnimationsModule,
 		CookieModule.forRoot(),
 		SimpleNotificationsModule.forRoot(),
-
 	],
 	providers: [
 		AuthenticationService, CommonAPIService, AuthGuard, UserAccessMenuService,
