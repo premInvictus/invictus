@@ -270,11 +270,11 @@
                            <mat-option *ngFor="let item of occupationTypeArray" [value]="item.ocpt_id">
                               {{item.ocpt_name}}</mat-option>
                         </mat-select>
-                     </mat-form-field>
+                     </mat-form-field> 
                   </div>
                   <div *ngIf="checkIfFieldExist('epd_organisation')" class="col-2 sis-col-20">
                         <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Organisation Name</mat-label>
+                              <mat-label>Name of Organisation</mat-label>
                         <input class="text-capitalize" matInput placeholder="Organisation Name.." [readonly]="viewOnly"
                            formControlName="epd_organisation" [errorStateMatcher]="confirmValidParentMatcher" />
                      </mat-form-field>

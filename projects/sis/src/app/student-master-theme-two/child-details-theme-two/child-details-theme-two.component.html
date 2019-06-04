@@ -196,7 +196,7 @@
               </div>
               <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('ea_pincode')">
                   <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Pin Code</mat-label>
+                      <mat-label>Pin</mat-label>
                   <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
                     placeholder="PIN" required [readonly]="viewOnly"
                     [errorStateMatcher]="confirmValidParentMatcher" />
@@ -476,7 +476,7 @@
         <div class="col-1">
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Age</mat-label>
-            <input type="number" matInput placeholder="Age (yrs)" formControlName="esd_age">
+            <input type="number" matInput placeholder="Age (yrs)" formControlName="esd_age">  
           </mat-form-field>
         </div>
         <div class="col-2">
@@ -487,7 +487,7 @@
         </div>
 
       </div>
-    </form>
+    </form> 
     <br>
     <div class="row" *ngIf="siblingArray.length > 0">
       <div class="col-12">
