@@ -41,7 +41,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.getInvoiceBifurcation(this.data.invoiceNo);
+		this.getInvoiceBifurcation(this.data);
 		if (this.data.edit) {
 			this.modificationFlag = true;
 		} else {
@@ -83,7 +83,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			.subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-					this.getInvoiceBifurcation(this.data.invoiceNo);
+					this.getInvoiceBifurcation(this.data);
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 				}
@@ -104,10 +104,12 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		});
 		adj.remark = this.adjRemark;
 		// this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')
-		if (!(this.commonAPIService.isExistUserAccessMenu('357')) && this.adjRemark) {
+		if (!(this.commonAPIService.isExistUserAccessMenu('357')
+		&& this.commonAPIService.isExistUserAccessMenu('364')) && this.adjRemark) {
 			this.feeService.invoiceAdjustmentRemark(adj).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+					this.closemodal();
 				}
 			});
 		} else {
@@ -146,7 +148,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			.subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-					this.getInvoiceBifurcation(this.data.invoiceNo);
+					this.getInvoiceBifurcation(this.data);
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 				}
@@ -171,23 +173,41 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		});
 		this.dataSource = new MatTableDataSource<InvoiceDetails>(this.ELEMENT_DATA);
 	}
-	getInvoiceBifurcation(invoiceNo) {
+	getInvoiceBifurcation(data: any) {
 		this.invoiceBifurcationArray = [];
-		this.feeService.getInvoiceBifurcation({ inv_id: invoiceNo }).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				if (result.data.length > 0) {
-					this.invoiceDetails = result.data[0];
-					if (this.invoiceDetails.invoice_bifurcation.length > 0) {
-						this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
-						this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
-					}
+		if (this.data.invoiceNo) {
+			this.feeService.getInvoiceBifurcation({ inv_id: this.data.invoiceNo }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					if (result.data.length > 0) {
+						this.invoiceDetails = result.data[0];
+						if (this.invoiceDetails.invoice_bifurcation.length > 0) {
+							this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
+							this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
+						}
 
+					}
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+					this.closemodal();
 				}
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-				this.closemodal();
-			}
-		});
+			});
+		} else if (this.data.inv_invoice_no) {
+			this.feeService.getInvoiceBifurcation({ inv_invoice_no: this.data.inv_invoice_no }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					if (result.data.length > 0) {
+						this.invoiceDetails = result.data[0];
+						if (this.invoiceDetails.invoice_bifurcation.length > 0) {
+							this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
+							this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
+						}
+
+					}
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+					this.closemodal();
+				}
+			});
+		}
 	}
 
 	printInvoice() {

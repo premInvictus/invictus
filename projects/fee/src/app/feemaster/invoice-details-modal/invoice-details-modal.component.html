@@ -162,8 +162,6 @@
     </div>
     <div class="col-6">
       <div class="text-right margin-top-25">
-        <button *ngIf="(!modificationFlag) && this.data.edit && commonAPIService.isExistUserAccessMenu('357')"
-          mat-raised-button class="btn-primary btn-180 btn-success" (click)="modifyInvoice()">Modify</button>
         <button *ngIf="modificationFlag" mat-raised-button class="btn-primary btn-180 btn-success"
           (click)="updateInvoice()">Update</button>
         <button *ngIf="modificationFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"
