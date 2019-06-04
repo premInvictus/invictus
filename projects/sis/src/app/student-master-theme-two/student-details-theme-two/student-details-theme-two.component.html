@@ -149,9 +149,9 @@
                     [ngClass]="studentdetailsform.value.epd_parent_name? 'col-12 remove-col-padding' : 'col-12 remove-col-padding '">
                     <mat-form-field appearance="outline" class="form-field"
                       *ngIf="studentdetailsform.value.epd_parent_name">
-                      <mat-label>Active Parent Name</mat-label>
+                      <mat-label>{{parent_type_fun(studentdetails.parentinfo[0].epd_parent_type)}}</mat-label>
                       <input class="text-capitalize" matInput formControlName="epd_parent_name"
-                        placeholder="Active Parent Name" readonly>
+                        [placeholder]="parent_type_fun(studentdetails.parentinfo[0].epd_parent_type)" readonly>
                     </mat-form-field>
                   </div>
                 </div>

@@ -127,9 +127,20 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         font-size: 16px;
         margin-top: 15px;
     }
+
+    .sis-col-14 {
+        max-width: 14.2% !important;
+        flex: 0 0 14.2% !important;
+    }
+    
     .sis-col-15 {
         max-width: 15% !important;
         flex: 0 0 15% !important;
+    }
+
+    .sis-col-16 {
+        max-width: 16.6% !important;
+        flex: 0 0 16.6% !important;
     }
 
     .sis-col-20 {
@@ -154,9 +165,19 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         min-height: 600px;
     }
 
+    .sis-col-14 {
+        max-width: 14.2% !important;
+        flex: 0 0 14.2% !important;
+    }
+
     .sis-col-15 {
         max-width: 15% !important;
         flex: 0 0 15% !important;
+    }
+
+    .sis-col-16 {
+        max-width: 16.6% !important;
+        flex: 0 0 16.6% !important;
     }
 
     .sis-col-20 {
