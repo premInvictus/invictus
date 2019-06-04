@@ -17,14 +17,14 @@
          </mat-card>
       </div>
    </div>
-   <div class="row margin-top-25">
+   <div class="row margin-top-10">
       <div class="col-12 remove-col-padding">
          <app-common-student-profile [loginId]="lastRecordId" [feeRenderId]="feeRenderId" (next)="next($event)"
             (prev)="prev($event)" (first)="first($event)" (last)="last($event)" (key)="key($event)"
             (processTypeEmit)="checkEmit($event)"></app-common-student-profile>
       </div>
    </div>
-   <div class="row margin-top-25 ">
+   <div class="row margin-top-10 ">
       <div class="col-12 remove-col-padding">
          <app-student-account [feeLoginId]="loginId" [viewOnly]="viewOnly" (editChange)="editChange($event)">
          </app-student-account>

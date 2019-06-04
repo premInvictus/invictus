@@ -1,11 +1,10 @@
-<mat-card class="card-top-title__container ">
+<mat-card class="card-padding-5 ">
   <form [formGroup]="studentdetailsform">
     <div class="row remove-top-margin">
       <div class="col-2 tab-col-18 remove-col-padding custom-fee-entry-col-15 custom-fee-entry-col-18">
         <div class="row">
           <div class="col-12 text-center">
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Process Type</mat-label>
+            <mat-form-field class="form-field-220" appearance="outline">
               <mat-select placeholder="Process Type" [(value)]="processType"
                 (selectionChange)="changeProcessType($event)">
                 <mat-option *ngFor="let item of processTypeArray" [value]="item.id">{{item.name}}</mat-option>
@@ -13,7 +12,7 @@
             </mat-form-field>
           </div>
         </div>
-        <div class="row remove-top-margin">
+        <div class="row margin-top-ve25">
           <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
             <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="firstB"
               (click)="firstId(navigation_record.first_record)"><i class="material-icons">
@@ -43,14 +42,14 @@
         </div>
       </div>
       <div class="col-1 custom-fee-entry-col-8 margin-top-30">
-        <div class="row margin-top-20">
+        <div class="row margin-top-10">
           <div class="col-12 text-center">
             <img class="student-profile-image-68" [src]="defaultsrc">
           </div>
         </div>
       </div>
       <div class="col-1 custom-fee-entry-col-12 margin-top-30">
-        <div class="row margin-top-30">
+        <div class="row margin-top-20">
           <div class="col-12 text-left">
             <span
               class="font-size-16 font-bold">{{studentdetails.au_full_name ? (studentdetails.au_full_name | titlecase) : 'NA'}}</span><br>
@@ -59,7 +58,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2 custom-fee-entry-col-12 margin-top-25">
+      <div class="col-2 custom-fee-entry-col-12 margin-top-10">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Fee Outstanding</span><br>
@@ -75,7 +74,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2 custom-fee-entry-col-12 margin-top-25">
+      <div class="col-2 custom-fee-entry-col-12 margin-top-10">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Route </span><br>
@@ -91,14 +90,14 @@
           </div>
         </div>
       </div>
-      <div class="col-1 margin-top-25 custom-fee-entry-col-8 lap-custom-fee-entry-col-5 tab-display-none ">
+      <div class="col-1 margin-top-10 custom-fee-entry-col-8 lap-custom-fee-entry-col-5 tab-display-none ">
         <div class="row">
           <div class="col-12 text-center">
             <div class="vertical-divider-fee-entry"></div>
           </div>
         </div>
       </div>
-      <div class="col-2 margin-top-25 custom-fee-entry-col-12 tab-col-14">
+      <div class="col-2 margin-top-10 custom-fee-entry-col-12 tab-col-14">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Parent Name </span><br>
@@ -115,7 +114,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2 margin-top-25 custom-fee-entry-col-12 tab-col-14">
+      <div class="col-2 margin-top-10 custom-fee-entry-col-12 tab-col-14">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Emg Contact Name </span><br>
@@ -131,7 +130,7 @@
           </div>
         </div>
       </div>
-      <div class="col-1 margin-top-25 custom-fee-entry-col-8 lap-custom-fee-entry-col-9 tab-remove-padding">
+      <div class="col-1 margin-top-10 custom-fee-entry-col-8 lap-custom-fee-entry-col-9 tab-remove-padding">
         <div class="row margin-top-8">
           <div class="col-6">
             <div class=" blue-circle-btn margin-top-5" (click)="goToPage('student-profile')"
