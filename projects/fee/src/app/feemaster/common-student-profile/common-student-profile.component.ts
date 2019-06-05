@@ -413,6 +413,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.keyFlag = true;
 		$event.preventDefault();
 		this.getStudentDetailsByAdmno($event.target.value);
+		document.getElementById('blur_id').blur();
 	}
 	getStudentDetailsByAdmno(admno) {
 		this.studentdetailsflag = true;
@@ -458,5 +459,16 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.processType = $event.value;
 		this.processtypeService.setProcesstype(this.processType);
 		this.processTypeEmit.emit(this.processType);
+	}
+	parent_type_fun(type){
+		if(type === 'F'){
+			return 'Father Name';
+		} else if(type === 'M'){
+			return 'Mother Name';
+		} else if(type === 'G'){
+			return 'Guardian Name';
+		}else{
+			return 'Active Parent Name';
+		}
 	}
 }

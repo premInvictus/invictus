@@ -24,6 +24,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	lastrecordFlag = true;
 	navigation_record: any = {};
 	au_profileimage: any;
+	parent_type: any;
+	type: any;
 	minDate = new Date();
 	maxDate = new Date();
 	login_id;
@@ -317,6 +319,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			epd_parent_name: this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_name : '',
 			epd_contact_no: this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_contact_no : '',
 			epd_whatsapp_no: this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_whatsapp_no : '',
+			epd_parent_type: this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_type : '',
 			mi_emergency_contact_name: this.studentdetails.medicalinfo.length > 0 ?
 				this.studentdetails.medicalinfo[0].mi_emergency_contact_name : '',
 			mi_emergency_contact_no: this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_emergency_contact_no : ''
@@ -555,6 +558,15 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			this.router.navigate(url, { queryParams: { login_id: login_id }, relativeTo: this.route });
 		} else {
 			this.backOnly = false;
+		}
+	}
+	parent_type_fun(type){
+		if(type === 'F'){
+			return 'Father Name';
+		} else if(type === 'M'){
+			return 'Mother Name';
+		}else{
+			return 'Guardian Name';
 		}
 	}
 }
