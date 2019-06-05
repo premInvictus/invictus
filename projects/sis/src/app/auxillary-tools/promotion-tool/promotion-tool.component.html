@@ -110,69 +110,73 @@
                         </div>
                           
                         
-                        <mat-table #table [dataSource]="promotedataSource" matSort class="table-100 mat-elevation-z1">
+                        <table mat-table #table [dataSource]="promotedataSource" matSort class="table-100 text-center">
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="select">
-                          <mat-header-cell *matHeaderCellDef>
+                          <th mat-header-cell *matHeaderCellDef >
                             <span class="text-center"><mat-checkbox (change)="checkAllPromotionList($event)"></mat-checkbox></span>
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          </th>
+                          <td mat-cell *matCellDef="let item" >
                             <span class="text-center"><mat-checkbox [value]="item.no" 
                               (change)="insertIntoToBePromotedList($event,item.action)" [checked]="promotionListAllFlag"></mat-checkbox></span>
-                          </mat-cell>
+                          </td>
                         </ng-container>
                         <!-- Admission Column -->
                         <ng-container matColumnDef="no">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             {{promoteForm.value.enrollment_type === '4' ? 'Admission No.': 
-                          'Provisional No.'}}
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          'Pro. Adm. No.'}}
+                          </th>
+                          <td mat-cell *matCellDef="let item">
                             <span class="text-center">{{ item.em_admission_no }}</span>
-                          </mat-cell>
+                          </td>
                         </ng-container>
                         <!-- Student Column -->
                         <ng-container matColumnDef="name">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:50%;">
                             Student Name
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          </th>
+                          <td mat-cell *matCellDef="let item" >
                             <span class="text-center text-capitalize">{{ item.name }}</span>
-                          </mat-cell>
+                          </td>
                         </ng-container>
                         <!-- Class Column -->
                         <ng-container matColumnDef="class">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             Class
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          </th>
+                          <td mat-cell *matCellDef="let item">
                             <span class="text-center">{{ item.class }}</span>
-                          </mat-cell>
+                          </td>
                         </ng-container>
                         <!-- Section Column -->
                         <ng-container matColumnDef="section">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             Section
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          </th>
+                          <td mat-cell *matCellDef="let item">
                             <span class="text-center">{{ item.section }}</span>  
-                          </mat-cell>
+                          </td>
                           >
                         </ng-container>
                         <!-- Promote Column -->
                         <ng-container matColumnDef="action">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             Promote
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          </th>
+                          <td mat-cell *matCellDef="let item">
                             <span class="text-center"><i *ngIf="item.action.pmap_status !== '0' " class="fas fa-thumbs-up cursor-pointer icon-success" 
                               (click)="promoteStudent(item)"></i></span>
                             <span style="color:#04a20d" class="text-center cursor-pointer" [hidden]="!(item.action.pmap_status === '0') "><b>Promoted</b></span>
-                          </mat-cell>
+                          </td>
                         </ng-container>
-                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
-                        </mat-table>
+                        <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
+                        </table>
+
+
+
+
                       </div>
                     </div>
                     <br />
@@ -188,6 +192,9 @@
             </div>
             
           </div>
+
+
+
           <div class="col-6 col-padding-left-eight remove-col-padding-right">
             <div class="container-box__white card-height-830">
               <div class="row">
@@ -273,67 +280,68 @@
                         </div>
                           
                         
-                        <mat-table #table [dataSource]="demotedataSource" matSort class="table-100 mat-elevation-z1">
+                        <table mat-table #table [dataSource]="demotedataSource" matSort class="table-100 text-center">
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="select">
-                          <mat-header-cell *matHeaderCellDef>
+                          <th mat-header-cell *matHeaderCellDef >
                             <mat-checkbox (change)="checkAllDemotionList($event)"></mat-checkbox>
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          </th>
+                          <td mat-cell *matCellDef="let item" >
                             <mat-checkbox [value]="item.no"  (change)="insertIntoToBeDemotedList($event,item.action)" 
                             [checked]="demotionListAllFlag"></mat-checkbox>
-                          </mat-cell>
+                          </td>
                         </ng-container>
                         <!-- Admission Column -->
                         <ng-container matColumnDef="no">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>
-                            Admission No.
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                              {{promoteForm.value.enrollment_type === '4' ? 'Admission No.': 
+                          'Pro. Adm. No.'}}
+                          </th>
+                          <td mat-cell *matCellDef="let item">
                             {{ item.em_admission_no }}
-                          </mat-cell>
+                          </td>
                         </ng-container>
                         <!-- Student Column -->
                         <ng-container matColumnDef="name">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:50%;">
                             Student Name
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          </th>
+                          <td mat-cell *matCellDef="let item">
                            <span class="text-capitalize"> {{ item.name }} </span>
-                          </mat-cell>
+                          </td>
                         </ng-container>
                         <!-- Class Column -->
                         <ng-container matColumnDef="class">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             Class
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          </th>
+                          <td mat-cell *matCellDef="let item">
                             {{ item.class }}
-                          </mat-cell>
+                          </td>
                         </ng-container>
                         <!-- Section Column -->
                         <ng-container matColumnDef="section">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             Section
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          </th>
+                          <td mat-cell *matCellDef="let item">
                             {{ item.section }}
-                          </mat-cell>
+                          </td>
                           >
                         </ng-container>
                         <!-- Promote Column -->
                         <ng-container matColumnDef="action">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             Demote
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let item">
+                          </th>
+                          <td mat-cell *matCellDef="let item">
                             <i class="fas fa-thumbs-down icon-danger" (click)="demoteStudent(item)"></i>
-                          </mat-cell>
+                          </td>
                         </ng-container>
-                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
                         >
-                        </mat-table>
+                        </table>
                       </div>
                     </div>
                     <br />
