@@ -427,7 +427,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			validateFlag = false;
 			this.common.showSuccessErrorMessage('Invoice Number cannot be blank for against invoice', 'error');
 		}
-		if (Number(this.feeTransactionForm2.value.ftr_pay_id) !== 2 && Number(this.feeTransactionForm2.value.ftr_pay_id) !== 3) {
+		if (Number(this.feeTransactionForm2.value.ftr_pay_id) === 1) {
 			if (!(this.feeTransactionForm2.value.ftr_pay_id &&
 				this.feeTransactionForm2.value.ftr_amount && this.feeTransactionForm2.value.ftr_remark)) {
 				validateFlag = false;
@@ -444,6 +444,12 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				&& this.feeTransactionForm2.value.ftr_remark
 				&& this.feeTransactionForm2.value.ftr_cheque_date && this.feeTransactionForm2.value.ftr_cheque_no
 				&& this.feeTransactionForm2.value.ftr_deposit_bnk_id && this.feeTransactionForm2.value.ftr_branch)) {
+				validateFlag = false;
+			}
+		} else {
+			if (!(this.feeTransactionForm.value.ftr_pay_id &&
+				this.feeTransactionForm.value.ftr_amount &&  this.feeTransactionForm.value.ftr_transaction_id &&
+				this.feeTransactionForm.value.ftr_remark)) {
 				validateFlag = false;
 			}
 		}
@@ -486,7 +492,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			validateFlag = false;
 			this.common.showSuccessErrorMessage('Invoice Number cannot be blank for against invoice', 'error');
 		}
-		if (Number(this.feeTransactionForm2.value.ftr_pay_id) !== 2 && Number(this.feeTransactionForm2.value.ftr_pay_id) !== 3) {
+		if (Number(this.feeTransactionForm2.value.ftr_pay_id) === 1) {
 			if (!(this.feeTransactionForm2.value.ftr_pay_id &&
 				this.feeTransactionForm2.value.ftr_amount && this.feeTransactionForm2.value.ftr_remark)) {
 				validateFlag = false;
@@ -503,6 +509,12 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				&& this.feeTransactionForm2.value.ftr_remark
 				&& this.feeTransactionForm2.value.ftr_cheque_date && this.feeTransactionForm2.value.ftr_cheque_no
 				&& this.feeTransactionForm2.value.ftr_deposit_bnk_id && this.feeTransactionForm2.value.ftr_branch)) {
+				validateFlag = false;
+			}
+		} else {
+			if (!(this.feeTransactionForm.value.ftr_pay_id &&
+				this.feeTransactionForm.value.ftr_amount &&  this.feeTransactionForm.value.ftr_transaction_id &&
+				this.feeTransactionForm.value.ftr_remark)) {
 				validateFlag = false;
 			}
 		}
