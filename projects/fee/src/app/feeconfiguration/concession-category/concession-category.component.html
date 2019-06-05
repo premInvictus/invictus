@@ -11,7 +11,7 @@
         </mat-card-title>
         <mat-card-content>
           <div class="row">
-            <div class="col-4 remove-col-padding custom-col-27">
+            <div class="col-3 remove-col-padding custom-col-27">
               <form [formGroup]="conccesionCategoryForm">
                 <div class="row">
                   <div class="col-12 margin-top-25">
@@ -96,7 +96,7 @@
             <div class="col-1 fee-custom-col-8">
               <div class="vertical-line-divider"></div>
             </div>
-            <div class="col-7 fee-custom-col-64">
+            <div class="col-8 fee-custom-col-64">
               <div class="row">
                 <div class="col-12 remove-col-padding">
                   <div>
@@ -130,7 +130,7 @@
                         <td mat-cell *matCellDef="let item"> {{getRuleName(item.type)}} </td>
                       </ng-container>
                       <ng-container matColumnDef="amount">
-                        <th mat-header-cell *matHeaderCellDef> Concession Amount </th>
+                        <th mat-header-cell *matHeaderCellDef> Concession Amt </th>
                         <td mat-cell *matCellDef="let item"> {{item.amount | number}} </td>
                       </ng-container>
                       <ng-container matColumnDef="status">
@@ -142,13 +142,17 @@
                       </ng-container>
                       <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef> Action </th>
-                        <td mat-cell *matCellDef="let item" class="inline-flex margin-top-10"> <i
+                        <td mat-cell *matCellDef="let item"> 
+                            <ul class="inline-flex margin-top-10">
+                          <li><i
                             class="material-icons icon-edit" (click)="patchValue(item.action)">
                             create
-                          </i> <i class="material-icons icon-danger icon-spacer"
+                          </i></li> 
+                          <li><i class="material-icons icon-danger icon-spacer"
                             (click)="openDeleteDialog(item.action)">
                             delete
-                          </i>
+                          </i></li>
+                          </ul>
                         </td>
                       </ng-container>
                       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

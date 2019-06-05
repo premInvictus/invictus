@@ -4,7 +4,7 @@
       <div class="col-2 tab-col-18 remove-col-padding custom-fee-entry-col-15 custom-fee-entry-col-18">
         <div class="row remove-top-margin">
           <div class="col-12 text-center">
-            <mat-form-field class="form-field-220">
+            <mat-form-field class="form-field-220 center-field">
               <mat-select [(value)]="processType"
                 (selectionChange)="changeProcessType($event)">
                 <mat-option *ngFor="let item of processTypeArray" [value]="item.id">{{item.name}}</mat-option>
@@ -45,7 +45,8 @@
       <div class="col-1 custom-fee-entry-col-8 margin-top-20">
         <div class="row margin-top-10">
           <div class="col-12 text-center">
-            <img class="student-profile-image-68" [src]="defaultsrc">
+            <img class="student-profile-image-68" [src]="defaultsrc"
+            onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
           </div>
         </div>
       </div>
@@ -85,23 +86,23 @@
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Stoppage</span><br>
+            <span class="font-size-14 font-light">Stop</span><br>
             <span
               class="font-size-16 font-bold">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize) : '-'}}</span>
           </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-5 tab-display-none ">
+      <!-- <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-5 tab-display-none ">
         <div class="row remove-top-margin">
           <div class="col-12 text-center">
             <div class="vertical-divider-fee-entry"></div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="col-2  custom-fee-entry-col-12 tab-col-14">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">{{parent_type_fun(studentdetails.parentinfo[0].epd_parent_type)}} </span><br>
+            <span class="font-size-14 font-light">{{parent_type_fun(studentdetails)}} </span><br>
             <span class="font-size-16 font-bold">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
               (studentdetails.parentinfo[0].epd_parent_name | capitalize) : '-'}}</span>
           </div>
@@ -118,14 +119,14 @@
       <div class="col-2  custom-fee-entry-col-12 tab-col-14">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Emg Contact Name </span><br>
+            <span class="font-size-14 font-light">Emergency Name </span><br>
             <span
               class="font-size-16 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? (studentdetails.medicalinfo[0].mi_emergency_contact_name | capitalize) : '-'}}</span>
           </div>
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Emg Contact No</span><br>
+            <span class="font-size-14 font-light">Emergency Contact No</span><br>
             <span
               class="font-size-16 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails?.medicalinfo[0]?.mi_emergency_contact_no : '-'}}</span>
           </div>

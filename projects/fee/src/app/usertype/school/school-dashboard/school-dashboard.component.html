@@ -1,4 +1,4 @@
-<!-- <div class="container-box__grey">
+<div class="container-box__grey">
     <div class="row">
         <div class="col-12">
             <mat-card class="card-content__container">
@@ -7,21 +7,27 @@
                         <div class="col-8">
                             <h1>Fee Projection</h1>
                         </div>
-                        <div class="col-4 text-right">
-                            <div class="dropdown">
+                        <div class="col-4 text-right" *ngIf="currentTabIndex === 0">
+                            <!-- <div class="dropdown">
                                 <button class="month-selector" mat-button>Sept 2019</button>
-
                                 <div class="dropdown-content">
                                     <button mat-menu-item>Oct 2019</button>
                                 </div>
-                            </div>
+                            </div> -->
+                            <mat-form-field>
+                                <mat-select [(value)]="months" (selectionChange)="getFeeProjectionReportMonthly()">
+                                    <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id">
+                                        {{item.fm_name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
 
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 margin-top-20">
-                            <mat-tab-group animationDuration="2000ms">
-                                <mat-tab label="Month Wise" (click)="tabClick()">
+                            <mat-tab-group animationDuration="2000ms" (selectedIndexChange)="projectiontab($event)">
+                                <mat-tab label="Month Wise">
 
                                     <ng-template matTabContent>
                                         <div class="margin-top-20">
@@ -29,8 +35,11 @@
                                                 <div class="col-6">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <div class="padding-15" id="containerone"></div>
-                                                            
+                                                            <!-- <div class="padding-15" id="containerone"></div> -->
+                                                            <app-common-dynamic-chart *ngIf="feeprojectionlinechartflag"
+                                                                [options]="feeprojectionlinechart">
+                                                            </app-common-dynamic-chart>
+
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -40,7 +49,7 @@
                                                                 class="font-size-14 middle-align">&nbsp;Projected</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;35,86,200</b></h2>
+                                                                <b>&nbsp;{{totalprojected}}</b></h2>
 
                                                         </div>
                                                         <div class="col-6 padding-left-150 padding-left-100">
@@ -49,75 +58,83 @@
                                                                 class="font-size-14 middle-align">&nbsp;Recieved</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;35,86,200</b></h2>
+                                                                <b>&nbsp;{{totalreceived}}</b></h2>
 
                                                         </div>
                                                     </div>
-
                                                 </div>
                                                 <div class="col-6">
-                                                    <div>
-                                                        <div class="row">
-                                                            <div class="col-6 padding-left-150 padding-left-100">
-                                                                <div class="legend-box legend-cheque display-inline">
-                                                                </div><span
-                                                                    class="font-size-14 middle-align">&nbsp;Cheque</span>
-                                                                <h2 class="margin-top-10 font-medium"><i
-                                                                        class="fas fa-rupee-sign font-size-24"></i>
-                                                                    <b>&nbsp;35,86,200</b></h2>
+                                                    <div class="row">
+                                                        <div class="col-4 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-cheque"
+                                                                style="display: inline-block">
+                                                            </div><span
+                                                                class="font-size-14 middle-align">&nbsp;Cheque</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totalcheque}}</b></h2>
 
-                                                            </div>
-                                                            <div class="col-6  padding-left-340 padding-left-222">
-                                                                <div class="legend-box legend-cash display-inline">
-                                                                </div><span
-                                                                    class="font-size-14 middle-align">&nbsp;Cash</span>
-                                                                <h2 class="margin-top-10 font-medium"><i
-                                                                        class="fas fa-rupee-sign font-size-24"></i>
-                                                                    <b>&nbsp;35,86,200</b></h2>
+                                                        </div>
+                                                        <div class="col-4 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-cashatbank"
+                                                                style="display: inline-block">
+                                                            </div><span class="font-size-14 middle-align">&nbsp;Cash At
+                                                                Bank</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totalcashatbank}}</b></h2>
 
-                                                            </div>
-
+                                                        </div>
+                                                        <div class="col-4  padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-cash"
+                                                                style="display: inline-block">
+                                                            </div><span
+                                                                class="font-size-14 middle-align">&nbsp;Cash</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totalcash}}</b></h2>
 
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <div class="padding-15" id="containertwo"></div>
-                                                            
-                                                            <div class="top-pie-middle-text">
-                                                                <h2><i class="fas fa-rupee-sign font-size-24"></i>
-                                                                    <b>&nbsp;35,86,200</b></h2>
-                                                                <h4 class="pie-text">Total Reciept</h4>
-                                                            </div>
+                                                            <app-common-dynamic-chart
+                                                                *ngIf="feeprojectiondonutchartflag"
+                                                                [options]="feeprojectiondonutchart">
+                                                            </app-common-dynamic-chart>
+
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-4 padding-left-150 padding-left-100">
-                                                            <div
-                                                                class="legend-box legend-paymentgateway display-inline">
+                                                            <div class="legend-box legend-paymentgateway"
+                                                                style="display: inline-block">
                                                             </div><span class="font-size-14 middle-align">&nbsp;Payment
                                                                 Gateway</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;35,86,200</b></h2>
+                                                                <b>&nbsp;{{totalpgateway}}</b></h2>
 
                                                         </div>
                                                         <div class="col-4 padding-left-150 padding-left-100">
-                                                            <div class="legend-box legend-netbanking display-inline">
+                                                            <div class="legend-box legend-netbanking"
+                                                                style="display: inline-block">
                                                             </div><span class="font-size-14 middle-align">&nbsp;Net
                                                                 Banking</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;35,86,200</b></h2>
+                                                                <b>&nbsp;{{totalimps}}</b></h2>
 
                                                         </div>
                                                         <div class="col-4 padding-left-150 padding-left-100">
-                                                            <div class="legend-box legend-others display-inline">
+                                                            <div class="legend-box legend-others"
+                                                                style="display: inline-block">
                                                             </div><span
-                                                                class="font-size-14 middle-align">&nbsp;Other</span>
+                                                                class="font-size-14 middle-align">&nbsp;Debit/Credit
+                                                                Card</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;35,86,200</b></h2>
+                                                                <b>&nbsp;{{totaldccard}}</b></h2>
 
                                                         </div>
                                                     </div>
@@ -128,10 +145,121 @@
 
                                     </ng-template>
                                 </mat-tab>
-                                <mat-tab label="Year Wise" (click)="tabClick()">
+                                <mat-tab label="Year Wise">
 
                                     <ng-template matTabContent>
-                                        Content 2 - Loaded:
+                                        <div class="margin-top-20">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <!-- <div class="padding-15" id="containerone"></div> -->
+                                                            <app-common-dynamic-chart *ngIf="feeprojectionlinechartflag"
+                                                                [options]="feeprojectionlinechart">
+                                                            </app-common-dynamic-chart>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-green display-inline">
+                                                            </div><span
+                                                                class="font-size-14 middle-align">&nbsp;Projected</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totalprojected}}</b></h2>
+
+                                                        </div>
+                                                        <div class="col-6 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-silver display-inline">
+                                                            </div><span
+                                                                class="font-size-14 middle-align">&nbsp;Recieved</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totalreceived}}</b></h2>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-4 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-cheque"
+                                                                style="display: inline-block">
+                                                            </div><span
+                                                                class="font-size-14 middle-align">&nbsp;Cheque</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totalcheque}}</b></h2>
+
+                                                        </div>
+                                                        <div class="col-4 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-cashatbank"
+                                                                style="display: inline-block">
+                                                            </div><span class="font-size-14 middle-align">&nbsp;Cash At
+                                                                Bank</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totalcashatbank}}</b></h2>
+
+                                                        </div>
+                                                        <div class="col-4  padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-cash"
+                                                                style="display: inline-block">
+                                                            </div><span
+                                                                class="font-size-14 middle-align">&nbsp;Cash</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totalcash}}</b></h2>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <app-common-dynamic-chart
+                                                                *ngIf="feeprojectiondonutchartflag"
+                                                                [options]="feeprojectiondonutchart">
+                                                            </app-common-dynamic-chart>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-4 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-paymentgateway"
+                                                                style="display: inline-block">
+                                                            </div><span class="font-size-14 middle-align">&nbsp;Payment
+                                                                Gateway</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totalpgateway}}</b></h2>
+
+                                                        </div>
+                                                        <div class="col-4 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-netbanking"
+                                                                style="display: inline-block">
+                                                            </div><span class="font-size-14 middle-align">&nbsp;Net
+                                                                Banking</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totalimps}}</b></h2>
+
+                                                        </div>
+                                                        <div class="col-4 padding-left-150 padding-left-100">
+                                                            <div class="legend-box legend-others"
+                                                                style="display: inline-block">
+                                                            </div><span
+                                                                class="font-size-14 middle-align">&nbsp;Debit/Credit
+                                                                Card</span>
+                                                            <h2 class="margin-top-10 font-medium"><i
+                                                                    class="fas fa-rupee-sign font-size-24"></i>
+                                                                <b>&nbsp;{{totaldccard}}</b></h2>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
                                     </ng-template>
                                 </mat-tab>
 
@@ -155,18 +283,18 @@
                             <h1 class="remove-margin-bottom"><i class="fas fa-rupee-sign font-size-24"></i>
                                 <b>&nbsp;35,86,200</b></h1>
                             <span class="font-size-16">As on 20 Sep, 2019</span>
-                        </div> -->
-<!-- <div class="col-4 text-right">
-                                <div class="dropdown">
-                                        <button class="month-selector" mat-button >Sept 2019</button>
-                                
+                        </div>
+                        <div class="col-4 text-right">
+                            <div class="dropdown">
+                                <button class="month-selector" mat-button>Sept 2019</button>
+
                                 <div class="dropdown-content">
-                                        <button  mat-menu-item >Oct 2019</button>
+                                    <button mat-menu-item>Oct 2019</button>
                                 </div>
                             </div>
-                                
-                            </div> -->
-<!-- </div>
+
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-12 margin-top-20">
 
@@ -221,24 +349,28 @@
                                                     <h4 class="pie-text">Total Outstanding</h4>
                                                 </div>
                                             </div>
-                                        </div> -->
+                                        </div>
 
-<!-- <div class="row">
-                                                                            <div class="col-6 padding-left-150">
-                                                                                <div class="legend-box legend-blue display-inline">
-                                                                                </div><span class="font-size-14 middle-align">&nbsp;Projected</span>
-                                                                                <h2 class="margin-top-10 font-medium"><i class="fas fa-rupee-sign font-size-24"></i> <b>&nbsp;35,86,200</b></h2>
-                                                                                
-                                                                            </div>
-                                                                            <div class="col-6 padding-left-340">
-                                                                                    <div class="legend-box legend-blue display-inline">
-                                                                                    </div><span class="font-size-14 middle-align">&nbsp;Recieved</span>
-                                                                                    <h2 class="margin-top-10 font-medium"><i class="fas fa-rupee-sign font-size-24"></i> <b>&nbsp;35,86,200</b></h2>
-                                                                                    
-                                                                                </div>
-                                                                        </div> -->
+                                        <div class="row">
+                                            <div class="col-6 padding-left-150">
+                                                <div class="legend-box legend-blue display-inline">
+                                                </div><span class="font-size-14 middle-align">&nbsp;Projected</span>
+                                                <h2 class="margin-top-10 font-medium"><i
+                                                        class="fas fa-rupee-sign font-size-24"></i>
+                                                    <b>&nbsp;35,86,200</b></h2>
 
-<!-- </div>
+                                            </div>
+                                            <div class="col-6 padding-left-340">
+                                                <div class="legend-box legend-blue display-inline">
+                                                </div><span class="font-size-14 middle-align">&nbsp;Recieved</span>
+                                                <h2 class="margin-top-10 font-medium"><i
+                                                        class="fas fa-rupee-sign font-size-24"></i>
+                                                    <b>&nbsp;35,86,200</b></h2>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
 
@@ -253,8 +385,8 @@
             </mat-card>
         </div>
     </div>
-</div> -->
-<div class="container-box__grey">
+</div>
+<!-- <div class="container-box__grey">
     <div class="row">
         <div class="col-12">
             <mat-card class="card-content__container">
@@ -290,4 +422,4 @@
             </mat-card>
         </div>
     </div>
-</div>
+</div> -->

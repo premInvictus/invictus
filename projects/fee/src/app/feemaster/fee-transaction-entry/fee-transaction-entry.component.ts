@@ -488,6 +488,15 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	}
 	getSelectedMode($event) {
 		this.selectedMode = $event.value;
+		if (this.selectedMode !== '1') {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount': this.invoice.fee_amount,
+			});
+		} else {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount': this.invoice.netPay,
+			});
+		}
 	}
 
 	reset() {

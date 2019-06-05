@@ -330,7 +330,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		for (const item of classArray) {
 			for (const titem of this.classArray) {
 				if (Number(item) === Number(titem.class_id)) {
-					className = className + titem.class_name + ',';
+					className = className + titem.class_name + ', ';
 				}
 			}
 		}

@@ -15,24 +15,22 @@
 .fa-rupee-sign{
     font-size: 12px;
 }
-.cdk-column-srno{
-    width: 3%!important;
+.mat-column-srno {
+    width: 3% !important;
+    flex: 0 0 8% !important;
 }
-.cdk-column-date{
-    width: 6%!important;
+.cdk-column-feehead {
+    width: 65%!important;
 }
-.cdk-column-invoiceno{
-    width: 7%!important;
+@media only screen and (max-width: 1024px) {
+    .cdk-column-feehead {
+        width: 55%!important;
+    }
 }
-.cdk-column-amount{
-    width: 10%!important;
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
 }
-.cdk-column-concession{
-    width: 10%!important;
-}
-.cdk-column-reciept{
-    width: 8%!important;
-}
-.cdk-column-balance{
-    width: 8%!important;
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
 }
