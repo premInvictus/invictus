@@ -20,3 +20,9 @@ ul {
     width: 6% !important;
     flex: 0 0 8% !important;
 }
+::ng-deep.my-toggle > label > div > div > div.mat-slide-toggle-thumb {
+  background-color: #1aed11 !important;
+}
+::ng-deep.my-toggle > label > div.mat-slide-toggle-bar {
+  background-color: #1aed11 !important;
+}
