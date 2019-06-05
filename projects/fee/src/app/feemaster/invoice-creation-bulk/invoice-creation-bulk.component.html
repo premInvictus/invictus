@@ -9,7 +9,7 @@
                <div class="col-6 text-right">
                   <div class="vertical-align-sub inline-flex">
                      <h3 class="font-size-15 margin-top-2 remove-bottom-margin">Bulk</h3>
-                     <mat-slide-toggle class="btn-spacer" (change)="navigateIndividual()"></mat-slide-toggle>
+                     <mat-slide-toggle class="btn-spacer my-toggle" (change)="navigateIndividual()"></mat-slide-toggle>
                      <h3 class="font-size-15 margin-top-2 remove-bottom-margin btn-spacer">Individual</h3>
                   </div>
                </div>
@@ -33,7 +33,7 @@
                <div class="col-3 remove-col-padding custom-col-20">
                   <form [formGroup]="invoiceCreationForm" novalidate>
                      <div class="row">
-                        <div class="col-12 remove-col-padding">
+                        <div class="col-6 remove-col-padding">
                            <mat-form-field appearance="outline" class="form-field">
                               <mat-label>Process Type</mat-label>
                               <mat-select placeholder="Process Type" [(value)]="processType" required
@@ -44,21 +44,14 @@
                               </mat-select>
                            </mat-form-field>
                         </div>
-                     </div>
-                     <div class="row">
-                        <div class="col-12 remove-col-padding">
-                           <div class="text-center">
-                              <button mat-raised-button class="print-btn" (click)="openFilterDialog()">Filter</button>
+                        <div class="col-6 remove-col-padding-left">
+                              <div class="text-center margin-top-10">
+                                 <button mat-raised-button class="print-btn" (click)="openFilterDialog()">Filter</button>
+                              </div>
                            </div>
-                        </div>
                      </div>
                      <div class="row">
-                        <div class="col-12 remove-col-padding margin-top-25">
-                           <h4 class="font-medium">Fee Period</h4>
-                        </div>
-                     </div>
-                     <div class="row">
-                        <div class="col-12 remove-col-padding">
+                        <div class="col-4 remove-col-padding-left">
                            <mat-form-field appearance="outline" class="form-field">
                               <mat-label>Fee Period</mat-label>
                               <mat-select placeholder="Fee Period" multiple formControlName="inv_fm_id" required>
@@ -67,9 +60,7 @@
                               </mat-select>
                            </mat-form-field>
                         </div>
-                     </div>
-                     <div class="row">
-                        <div class="col-12 remove-col-padding">
+                        <div class="col-4">
                            <mat-form-field appearance="outline" class="form-field">
                               <mat-label>Invoice Date</mat-label>
                               <input matInput [matDatepicker]="picker" placeholder="Invoice Date"
@@ -78,9 +69,7 @@
                               <mat-datepicker #picker></mat-datepicker>
                            </mat-form-field>
                         </div>
-                     </div>
-                     <div class="row">
-                        <div class="col-12 remove-col-padding">
+                        <div class="col-4 remove-col-padding-right">
                            <mat-form-field appearance="outline" class="form-field">
                               <mat-label>Last Date</mat-label>
                               <input matInput [matDatepicker]="picker1" placeholder="Last Date"
@@ -91,12 +80,12 @@
                         </div>
                      </div>
                      <div class="row">
-                        <div class="col-12  remove-col-padding margin-top-10">
+                        <div class="col-12  remove-col-padding">
                            <mat-checkbox formControlName="recalculation_flag">Recalculate All Unpaid Invoices
                            </mat-checkbox>
                         </div>
                      </div>
-                     <div class="text-center margin-top-25 ">
+                     <div class="text-center margin-top-10">
                         <button *ngIf="commonAPIService.isExistUserAccessMenu('353')" mat-raised-button
                            class=" btn-generate-invoice" (click)="insertInvoice()">Generate
                            Invoice</button>
