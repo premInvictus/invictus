@@ -32,3 +32,25 @@
 .fa-rupee-sign{
     font-size: 12px!important;
 }
+.mat-column-srno {
+    width: 3% !important;
+    flex: 0 0 8% !important;
+}
+.cdk-column-feehead {
+    width: 50%!important;
+}
+@media only screen and (max-width: 1024px) {
+    .cdk-column-feehead {
+        width:45%!important;
+    }
+    .cdk-column-netpay {
+        width:11%!important;
+    }
+}
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}

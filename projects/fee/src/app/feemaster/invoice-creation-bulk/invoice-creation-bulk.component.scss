@@ -38,7 +38,21 @@ button.reset-bt:hover{
   height: 33px;
 }
 @media (max-width: 1899px) and (min-width: 1200px) {
-.my-inv {
-  margin-left: -74% !important;
+  .my-inv {
+    margin-left: -74% !important;
+  }
 }
+.cdk-column-select{
+  width: 3%!important;
+}
+.mat-column-srno {
+  width: 6% !important;
+  flex: 0 0 8% !important;
+}
+td.mat-cell {
+  border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
 }
