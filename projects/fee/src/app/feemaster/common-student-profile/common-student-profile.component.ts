@@ -69,7 +69,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	addOnly = true;
 	iddesabled = true;
 	backOnly = false;
-	defaultsrc = '/assets/images/student.png';
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
@@ -91,7 +91,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	studentLoginId: any;
 	processType: any = '';
 	previousProcessType: any = '';
-	previousAdmno: any  = '';
+	previousAdmno: any = '';
 	previousLoginId = '';
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
@@ -172,7 +172,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						this.lastB = true;
 						this.previousB = true;
 						this.studentdetails = [];
-						this.defaultsrc = '/assets/images/student.png';
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
 						if (result && result.data && result.data[0]) {
 							this.studentdetails = result.data[0];
 							this.previousLoginId = this.studentdetails.au_login_id;
@@ -460,14 +460,14 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.processtypeService.setProcesstype(this.processType);
 		this.processTypeEmit.emit(this.processType);
 	}
-	parent_type_fun(type){
-		if(type === 'F'){
+	parent_type_fun(type) {
+		if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'F') {
 			return 'Father Name';
-		} else if(type === 'M'){
+		} else if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'M') {
 			return 'Mother Name';
-		} else if(type === 'G'){
+		} else if (type.parentinfo[0] &&  type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'G') {
 			return 'Guardian Name';
-		}else{
+		} else {
 			return 'Active Parent Name';
 		}
 	}
