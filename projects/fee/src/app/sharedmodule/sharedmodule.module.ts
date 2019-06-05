@@ -140,7 +140,8 @@ export const MY_FORMATS = {
 		InvoiceDetailsModalComponent,
 		NumberToWordPipe,
 		ZerodashPipe,
-		ReceiptDetailsModalComponent
+		ReceiptDetailsModalComponent,
+		CommonDynamicChartComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
