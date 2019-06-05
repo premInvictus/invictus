@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { CommonAPIService } from '../../_services/commonAPI.service';
@@ -10,7 +10,8 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 @Component({
 	selector: 'app-parent-details-theme-two',
 	templateUrl: './parent-details-theme-two.component.html',
-	styleUrls: ['./parent-details-theme-two.component.scss']
+	styleUrls: ['./parent-details-theme-two.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
 export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	@ViewChild('cropModal') cropModal;
