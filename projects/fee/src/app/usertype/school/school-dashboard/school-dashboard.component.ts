@@ -11,6 +11,8 @@ export class SchoolDashboardComponent implements OnInit {
 	schoolInfo: any = {};
 	feeprojectionlinechart: any = {};
 	feeprojectiondonutchart: any = {};
+	feeoutstandingchart: any = {};
+	feeclassoutstandingchart: any = {};
 	norecordflag = false;
 	feeMonthArray = [];
 	months = '';
@@ -25,9 +27,18 @@ export class SchoolDashboardComponent implements OnInit {
 	totalimps = 0;
 	totalpgateway = 0;
 	totalreceipt = 0;
+	lessthanmonth = 0;
+	morethan3month = 0;
+	month13 = 0;
+	totalfeeoutstanding = 0;
+	totalfeeclassoutstanding = 0;
+	currentDate = new Date();
+
 
 	feeprojectionlinechartflag = false;
 	feeprojectiondonutchartflag = false;
+	feeoutstandingchartflag = false;
+	feeclassoutstandingchartflag = false;
 	totalreceived = 0;
 	tabType = {
 		0: 'monthly',
@@ -44,82 +55,136 @@ export class SchoolDashboardComponent implements OnInit {
 		this.getSchool();
 		this.getFeeProjectionReport();
 		this.getFeeReceiptReport();
+		this.getFeeOutstanding();
+		this.getClassWiseFeeOutstanding();
 		this.getFeeMonths();
-		document.addEventListener('DOMContentLoaded', function () {
-			const myChart = Highcharts.chart('containerthree', {
-				chart: {
-					type: 'pie',
-					options3d: {
-						enabled: true,
-						alpha: 45
-					}
-				},
-				title: {
-					text: ''
-				},
-
-				plotOptions: {
-					pie: {
-						innerSize: 250,
-						depth: 45,
-						colors: [
-							'#FFD558',
-							'#FFA502',
-							'#F93434',
-
-						],
-					}
-				},
-				series: [{
-					name: 'Outstanding amount',
-					data: [
-						['Less than Month', 8],
-						['1-3 Month', 3],
-						['More than 3 Month', 1],
-
-
-					]
-				}]
-			});
-		});
-
-		document.addEventListener('DOMContentLoaded', function () {
-			const myChart = Highcharts.chart('containerfour', {
-				chart: {
-					type: 'line',
-					height: '500px'
-				},
-				title: {
-					text: ''
-				},
-
-				xAxis: {
-					categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-				},
-				yAxis: {
-					title: {
-						text: 'Rupees (in Lacs)'
-					}
-				},
-				plotOptions: {
-					line: {
-						dataLabels: {
-							enabled: true
-						},
-						enableMouseTracking: false
-					}
-				},
-				series: [{
-					// name: 'London',
-					color: '#FF7979',
-					data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-				}]
-			});
-		});
-
-
 	}
-	projectiontab(tabindex) {
+	getFeeOutstanding() {
+		this.feeService.getFeeOutstanding({projectionType: 'yearly'}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log(result.data);
+				const feedata = result.data;
+				if (feedata.length > 0) {
+					this.totalfeeoutstanding = 0;
+					feedata.forEach(value => {
+						const amt = value.total_fee_amount ? Number(value.total_fee_amount) : 0;
+						this.totalfeeoutstanding = this.totalfeeoutstanding + amt;
+						if (value.label === 'Less Than Month') {
+							this.lessthanmonth = amt;
+						} else if (value.label === '1-3 Month') {
+							this.month13 = amt;
+						} else if (value.label === 'More Than 3 Months') {
+							this.morethan3month = amt;
+						}
+					});
+					this.FeeOutstandingCalculation(this.lessthanmonth, this.month13, this.morethan3month);
+				}
+			}
+		});
+	}
+	FeeOutstandingCalculation(lessthanmonth, month13, morethan3month) {
+		this.feeoutstandingchartflag = true;
+		this.feeoutstandingchart = {
+			chart: {
+				type: 'pie',
+				options3d: {
+					enabled: true,
+					alpha: 45
+				}
+			},
+			title: {
+				text: '<b>' + this.totalfeeoutstanding + '<b><br><b>Total Outstanding <b>',
+				align: 'center',
+				verticalAlign: 'middle',
+				y: 25
+			},
+
+			plotOptions: {
+				pie: {
+					innerSize: 250,
+					depth: 45,
+					dataLabels: {
+						enabled: false
+					},
+					colors: [
+						'#FFD558',
+						'#FFA502',
+						'#F93434',
+
+					],
+				}
+			},
+			series: [{
+				name: 'Outstanding amount',
+				data: [
+					['Less than Month', lessthanmonth],
+					['1-3 Month', month13],
+					['More than 3 Month', morethan3month],
+
+
+				]
+			}]
+		};
+	}
+	getClassWiseFeeOutstanding() {
+		this.feeService.getClassWiseFeeOutstanding({projectionType: 'yearly'}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log(result.data);
+				const xcategories: string[] = [];
+				const projected: any[] = result.data;
+				const projectedSeries: any[] = [];
+				if (projected.length > 0) {
+					this.totalfeeclassoutstanding = 0;
+					this.currentDate = projected[0].current_date;
+					projected.forEach(value => {
+						const amt = value.total_fee_amount ? Number(value.total_fee_amount) : 0;
+						xcategories.push(value.label);
+						projectedSeries.push(amt);
+						this.totalfeeclassoutstanding = this.totalfeeclassoutstanding + amt;
+					});
+					this.ClassWiseFeeOutstandingCalculation(xcategories, projectedSeries);
+				} else {
+					this.norecordflag = true;
+					this.common.showSuccessErrorMessage('No Record Found', 'error');
+				}
+			}
+		});
+	}
+	ClassWiseFeeOutstandingCalculation(xcategories, data) {
+		this.feeclassoutstandingchartflag = true;
+		this.feeclassoutstandingchart = {
+			chart: {
+				type: 'spline',
+				height: '500px'
+			},
+			title: {
+				text: ''
+			},
+
+			xAxis: {
+				categories: xcategories
+			},
+			yAxis: {
+				title: {
+					text: 'Rupees (in Lacs)'
+				}
+			},
+			plotOptions: {
+				line: {
+					dataLabels: {
+						enabled: true
+					},
+					enableMouseTracking: false
+				}
+			},
+			series: [{
+				name: 'Outstanding',
+				color: '#FF7979',
+				data: data
+			}]
+		};
+	}
+ 	projectiontab(tabindex) {
 		this.currentTabIndex = tabindex;
 		if (tabindex === 0) {
 			this.renderFeeProjectionReport(this.tabType[this.currentTabIndex], this.months);
@@ -229,10 +294,10 @@ export class SchoolDashboardComponent implements OnInit {
 				innerSize: '%'
 			},
 			title: {
-				text: this.totalreceipt + '<br>Total Recipt',
+				text: '<b>' + this.totalreceipt + '<b><br><b>Total Recipt <b>',
 				align: 'center',
 				verticalAlign: 'middle',
-				y: 40
+				y: 25
 			},
 
 			plotOptions: {

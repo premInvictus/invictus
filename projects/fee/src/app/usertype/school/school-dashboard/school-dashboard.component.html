@@ -14,9 +14,9 @@
                                     <button mat-menu-item>Oct 2019</button>
                                 </div>
                             </div> -->
-                            <mat-form-field>
+                            <mat-form-field style="max-height: 30px; margin-top: -7%">
                                 <mat-select [(value)]="months" (selectionChange)="getFeeProjectionReportMonthly()">
-                                    <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id">
+                                    <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id" style="font-size: 14px;">
                                         {{item.fm_name}}
                                     </mat-option>
                                 </mat-select>
@@ -49,7 +49,7 @@
                                                                 class="font-size-14 middle-align">&nbsp;Projected</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalprojected}}</b></h2>
+                                                                <b>&nbsp;{{totalprojected | number}}</b></h2>
 
                                                         </div>
                                                         <div class="col-6 padding-left-150 padding-left-100">
@@ -58,7 +58,7 @@
                                                                 class="font-size-14 middle-align">&nbsp;Recieved</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalreceived}}</b></h2>
+                                                                <b>&nbsp;{{totalreceived | number}}</b></h2>
 
                                                         </div>
                                                     </div>
@@ -72,7 +72,7 @@
                                                                 class="font-size-14 middle-align">&nbsp;Cheque</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcheque}}</b></h2>
+                                                                <b>&nbsp;{{totalcheque | number}}</b></h2>
 
                                                         </div>
                                                         <div class="col-4 padding-left-150 padding-left-100">
@@ -82,7 +82,7 @@
                                                                 Bank</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcashatbank}}</b></h2>
+                                                                <b>&nbsp;{{totalcashatbank | number}}</b></h2>
 
                                                         </div>
                                                         <div class="col-4  padding-left-150 padding-left-100">
@@ -92,7 +92,7 @@
                                                                 class="font-size-14 middle-align">&nbsp;Cash</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcash}}</b></h2>
+                                                                <b>&nbsp;{{totalcash | number}}</b></h2>
 
                                                         </div>
                                                     </div>
@@ -113,7 +113,7 @@
                                                                 Gateway</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalpgateway}}</b></h2>
+                                                                <b>&nbsp;{{totalpgateway | number}}</b></h2>
 
                                                         </div>
                                                         <div class="col-4 padding-left-150 padding-left-100">
@@ -123,7 +123,7 @@
                                                                 Banking</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalimps}}</b></h2>
+                                                                <b>&nbsp;{{totalimps | number}}</b></h2>
 
                                                         </div>
                                                         <div class="col-4 padding-left-150 padding-left-100">
@@ -134,7 +134,7 @@
                                                                 Card</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totaldccard}}</b></h2>
+                                                                <b>&nbsp;{{totaldccard | number}}</b></h2>
 
                                                         </div>
                                                     </div>
@@ -167,7 +167,7 @@
                                                                 class="font-size-14 middle-align">&nbsp;Projected</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalprojected}}</b></h2>
+                                                                <b>&nbsp;{{totalprojected | number}}</b></h2>
 
                                                         </div>
                                                         <div class="col-6 padding-left-150 padding-left-100">
@@ -176,7 +176,7 @@
                                                                 class="font-size-14 middle-align">&nbsp;Recieved</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalreceived}}</b></h2>
+                                                                <b>&nbsp;{{totalreceived | number}}</b></h2>
 
                                                         </div>
                                                     </div>
@@ -190,7 +190,7 @@
                                                                 class="font-size-14 middle-align">&nbsp;Cheque</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcheque}}</b></h2>
+                                                                <b>&nbsp;{{totalcheque | number}}</b></h2>
 
                                                         </div>
                                                         <div class="col-4 padding-left-150 padding-left-100">
@@ -200,7 +200,7 @@
                                                                 Bank</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcashatbank}}</b></h2>
+                                                                <b>&nbsp;{{totalcashatbank | number}}</b></h2>
 
                                                         </div>
                                                         <div class="col-4  padding-left-150 padding-left-100">
@@ -210,7 +210,7 @@
                                                                 class="font-size-14 middle-align">&nbsp;Cash</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcash}}</b></h2>
+                                                                <b>&nbsp;{{totalcash | number}}</b></h2>
 
                                                         </div>
                                                     </div>
@@ -231,7 +231,7 @@
                                                                 Gateway</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalpgateway}}</b></h2>
+                                                                <b>&nbsp;{{totalpgateway | number}}</b></h2>
 
                                                         </div>
                                                         <div class="col-4 padding-left-150 padding-left-100">
@@ -241,7 +241,7 @@
                                                                 Banking</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalimps}}</b></h2>
+                                                                <b>&nbsp;{{totalimps | number}}</b></h2>
 
                                                         </div>
                                                         <div class="col-4 padding-left-150 padding-left-100">
@@ -252,7 +252,7 @@
                                                                 Card</span>
                                                             <h2 class="margin-top-10 font-medium"><i
                                                                     class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totaldccard}}</b></h2>
+                                                                <b>&nbsp;{{totaldccard | number}}</b></h2>
 
                                                         </div>
                                                     </div>
@@ -281,18 +281,8 @@
                         </div>
                         <div class="col-4 text-right">
                             <h1 class="remove-margin-bottom"><i class="fas fa-rupee-sign font-size-24"></i>
-                                <b>&nbsp;35,86,200</b></h1>
-                            <span class="font-size-16">As on 20 Sep, 2019</span>
-                        </div>
-                        <div class="col-4 text-right">
-                            <div class="dropdown">
-                                <button class="month-selector" mat-button>Sept 2019</button>
-
-                                <div class="dropdown-content">
-                                    <button mat-menu-item>Oct 2019</button>
-                                </div>
-                            </div>
-
+                                <b>&nbsp;{{totalfeeclassoutstanding | number}}</b></h1>
+                            <span class="font-size-16">As on {{currentDate | date:'dd MMM, yy'}}</span>
                         </div>
                     </div>
                     <div class="row">
@@ -306,41 +296,43 @@
 
                                         <div class="row">
                                             <div class="col-12">
-                                                <div class="padding-15" id="containerthree"></div>
+                                                <app-common-dynamic-chart *ngIf="feeoutstandingchartflag"
+                                                    [options]="feeoutstandingchart">
+                                                </app-common-dynamic-chart>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-4 padding-left-150 padding-left-80">
-                                                <div class="legend-box legend-month display-inline">
+                                                <div class="legend-box legend-month" style="display: inline-block">
                                                 </div><span class="font-size-14 middle-align">&nbsp;Less Than
                                                     Month</span>
                                                 <h2 class="margin-top-10 font-medium"><i
                                                         class="fas fa-rupee-sign font-size-24"></i>
-                                                    <b>&nbsp;35,86,200</b></h2>
+                                                    <b>&nbsp;{{lessthanmonth | number}}</b></h2>
 
                                             </div>
                                             <div class="col-4 padding-left-150 padding-left-80">
-                                                <div class="legend-box legend-onemonth display-inline">
+                                                <div class="legend-box legend-onemonth" style="display: inline-block">
                                                 </div><span class="font-size-14 middle-align">&nbsp;1 - 3 Month</span>
                                                 <h2 class="margin-top-10 font-medium"><i
                                                         class="fas fa-rupee-sign font-size-24"></i>
-                                                    <b>&nbsp;35,86,200</b></h2>
+                                                    <b>&nbsp;{{month13 | number}}</b></h2>
 
                                             </div>
                                             <div class="col-4 padding-left-150 padding-left-80">
-                                                <div class="legend-box legend-moremonth display-inline">
+                                                <div class="legend-box legend-moremonth" style="display: inline-block">
                                                 </div><span class="font-size-14 middle-align">&nbsp;More Than 3
                                                     Month</span>
                                                 <h2 class="margin-top-10 font-medium"><i
                                                         class="fas fa-rupee-sign font-size-24"></i>
-                                                    <b>&nbsp;35,86,200</b></h2>
+                                                    <b>&nbsp;{{morethan3month | number}}</b></h2>
 
                                             </div>
                                         </div>
 
                                     </div>
                                     <div class="col-6">
-                                        <div class="row">
+                                        <!-- <div class="row">
                                             <div class="col-12">
                                                 <div class="padding-15" id="containerfour"></div>
                                                 <div class="pie-middle-text">
@@ -349,9 +341,9 @@
                                                     <h4 class="pie-text">Total Outstanding</h4>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
 
-                                        <div class="row">
+                                        <!-- <div class="row">
                                             <div class="col-6 padding-left-150">
                                                 <div class="legend-box legend-blue display-inline">
                                                 </div><span class="font-size-14 middle-align">&nbsp;Projected</span>
@@ -367,6 +359,13 @@
                                                         class="fas fa-rupee-sign font-size-24"></i>
                                                     <b>&nbsp;35,86,200</b></h2>
 
+                                            </div>
+                                        </div> -->
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <app-common-dynamic-chart *ngIf="feeclassoutstandingchartflag"
+                                                    [options]="feeclassoutstandingchart">
+                                                </app-common-dynamic-chart>
                                             </div>
                                         </div>
 
@@ -386,40 +385,3 @@
         </div>
     </div>
 </div>
-<!-- <div class="container-box__grey">
-    <div class="row">
-        <div class="col-12">
-            <mat-card class="card-content__container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="text-center">
-                            <h2><b>{{'Welcome to Fees Management' | uppercase}}</b></h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="text-center">
-                            <img [src]="schoolInfo.school_logo" style="width: 16%">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="text-center">
-                            <p><span>
-                                    <h3><b>{{schoolInfo.school_name | uppercase}}</b></h3>
-                                </span></p>
-                            <p><span>
-                                    <h6>{{schoolInfo.school_city | uppercase}}</h6>
-                                </span>
-                                <span>
-                                    <h6>{{schoolInfo.school_state | uppercase}}</h6>
-                                </span></p>
-                        </div>
-                    </div>
-                </div>
-            </mat-card>
-        </div>
-    </div>
-</div> -->
