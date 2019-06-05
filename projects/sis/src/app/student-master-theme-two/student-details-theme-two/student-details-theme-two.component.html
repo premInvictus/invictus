@@ -37,7 +37,7 @@
                 [ngClass]="studentdetails?.prevStep?.process_name ? 'registration-container__box':'registration-container__box'"
                 *ngIf="divFlag && studentdetails.prevStep.process_name && studentdetails.prevStep.process_no">
                 <span class="regno-title font-size-14 font-white"
-                  *ngIf="studentdetails?.prevStep?.process_name">{{studentdetails.prevStep.process_name}}: 
+                  *ngIf="studentdetails?.prevStep?.process_name">{{studentdetails.prevStep.process_name}}:
                   {{studentdetails.prevStep.process_no}}</span>
               </div>
             </div>
@@ -76,26 +76,25 @@
                   <mat-icon class="material-icons" title="Last">last_page</mat-icon>
                 </button>
               </div>
-
-
             </div>
-
           </div>
+
+
           <div class="col-9">
             <div class="row remove-top-margin">
-              <div class="col-2 sis-col-20">
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12 ">
                 <div class="liveadm-container__box">
                   <span class="livadm-text font-size-14">{{getLiveLabel()}} : {{studentdetails.livecount}}</span>
                 </div>
               </div>
-              <div class="col-2 sis-col-20">
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Full Name</mat-label>
                   <input class="text-capitalize" formControlName="au_full_name" matInput placeholder="Full Name"
                     required [readonly]="viewOnly">
                 </mat-form-field>
               </div>
-              <div class="col-2 sis-col-20" *ngIf="fieldEnableAtAdmission()">
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>{{classPlaceHolder}}</mat-label>
                   <mat-select formControlName="au_class_id" [placeholder]="classPlaceHolder" required
@@ -107,7 +106,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-2 sis-col-20" *ngIf="!fieldEnableAtAdmission()">
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="!fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Class Applied Forr</mat-label>
                   <mat-select formControlName="au_class_id" placeholder="Class Applied For" required
@@ -119,7 +118,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-2 sis-col-20" *ngIf="fieldEnableAtAdmission()">
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Section</mat-label>
                   <mat-select formControlName="au_sec_id" placeholder="Section" [disabled]="viewOnly">
@@ -130,7 +129,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-2 sis-col-20" *ngIf="fieldEnableAtAdmission()">
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>House Name</mat-label>
                   <mat-select formControlName="au_hou_id" placeholder="House Name" [disabled]="viewOnly">
@@ -141,101 +140,82 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-            </div>
-            <div class="row remove-top-margin">
-              <div class="col-2 sis-col-20">
-                <div class="row remove-top-margin">
-                  <div
-                    [ngClass]="studentdetailsform.value.epd_parent_name? 'col-12 remove-col-padding' : 'col-12 remove-col-padding '">
-                    <mat-form-field appearance="outline" class="form-field"
-                      *ngIf="studentdetailsform.value.epd_parent_name">
-                      <mat-label>{{parent_type_fun(studentdetails.parentinfo[0].epd_parent_type)}}</mat-label>
-                      <input class="text-capitalize" matInput formControlName="epd_parent_name"
-                        [placeholder]="parent_type_fun(studentdetails.parentinfo[0].epd_parent_type)" readonly>
-                    </mat-form-field>
-                  </div>
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_parent_name">
+                <div [ngClass]="studentdetailsform.value.epd_parent_name? 'remove-col-padding' : 'remove-col-padding '">
+                  <mat-form-field appearance="outline" class="form-field"
+                    *ngIf="studentdetailsform.value.epd_parent_name">
+                    <mat-label>{{parent_type_fun(studentdetails.parentinfo[0].epd_parent_type)}}</mat-label>
+                    <input class="text-capitalize" matInput formControlName="epd_parent_name"
+                      [placeholder]="parent_type_fun(studentdetails.parentinfo[0].epd_parent_type)" readonly>
+                  </mat-form-field>
                 </div>
               </div>
-              <div class="col-2 sis-col-20" *ngIf="viewOnly">
-                <div class="row remove-top-margin">
-                  <div
-                    [ngClass]="studentdetailsform.value.epd_contact_no? 'col-12 remove-col-padding' : 'col-12 remove-col-padding '">
-                    <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_contact_no"
-                      class="form-field">
-                      <mat-label>Contact No.</mat-label>
-                      <input class="margin-left-10" formControlName="epd_contact_no" matInput readonly>
-                      <i class="fas fa-phone call-field-icon" matPrefix></i>
-                    </mat-form-field>
-                  </div>
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_contact_no">
+                <div [ngClass]="studentdetailsform.value.epd_contact_no? 'remove-col-padding' : 'remove-col-padding '">
+                  <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_contact_no"
+                    class="form-field">
+                    <mat-label>Contact No.</mat-label>
+                    <input class="margin-left-10" formControlName="epd_contact_no" matInput readonly>
+                    <i class="fas fa-phone call-field-icon" matPrefix></i>
+                  </mat-form-field>
                 </div>
               </div>
-              <div class="col-2 sis-col-20" *ngIf="viewOnly">
-                <div class="row remove-top-margin">
-                  <div
-                    [ngClass]="studentdetailsform.value.epd_whatsapp_no? 'col-12 remove-col-padding' : 'col-12 remove-col-padding '">
-                    <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_whatsapp_no"
-                      class="form-field">
-                      <mat-label>WhatsApp No.</mat-label>
-                      <input class="margin-left-10" formControlName="epd_whatsapp_no" matInput readonly>
-                      <i class="fab fa-whatsapp whatsapp-field-icon" matPrefix></i>
-                    </mat-form-field>
-                  </div>
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_whatsapp_no">
+                <div [ngClass]="studentdetailsform.value.epd_whatsapp_no? 'remove-col-padding' : 'remove-col-padding '">
+                  <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_whatsapp_no"
+                    class="form-field">
+                    <mat-label>WhatsApp No.</mat-label>
+                    <input class="margin-left-10" formControlName="epd_whatsapp_no" matInput readonly>
+                    <i class="fab fa-whatsapp whatsapp-field-icon" matPrefix></i>
+                  </mat-form-field>
                 </div>
               </div>
-              <div class="col-2 sis-col-20">
-                <div class="row remove-top-margin">
-                  <div
-                    [ngClass]="studentdetailsform.value.mi_emergency_contact_name? 'col-12 remove-col-padding' : 'col-12 remove-col-padding '">
-                    <mat-form-field appearance="outline" class="form-field"
-                      *ngIf="studentdetailsform.value.mi_emergency_contact_name">
-                      <mat-label>Emergency Contact Name</mat-label>
-                      <input class="text-capitalize" formControlName="mi_emergency_contact_name" matInput
-                        placeholder="Emergency Contact Name" readonly>
-                    </mat-form-field>
-                  </div>
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12"
+                *ngIf="studentdetailsform.value.mi_emergency_contact_name">
+                <div
+                  [ngClass]="studentdetailsform.value.mi_emergency_contact_name? 'remove-col-padding' : 'remove-col-padding '">
+                  <mat-form-field appearance="outline" class="form-field"
+                    *ngIf="studentdetailsform.value.mi_emergency_contact_name">
+                    <mat-label>Emergency Contact Name</mat-label>
+                    <input class="text-capitalize" formControlName="mi_emergency_contact_name" matInput
+                      placeholder="Emergency Contact Name" readonly>
+                  </mat-form-field>
                 </div>
               </div>
-              <div class="col-2 sis-col-20">
-                <div class="row remove-top-margin" *ngIf="viewOnly">
-                  <div
-                    [ngClass]="studentdetailsform.value.mi_emergency_contact_no? 'col-12 remove-col-padding' : 'col-12 remove-col-padding '">
-                    <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.mi_emergency_contact_no"
-                      class="form-field">
-                      <mat-label>Emergency Contact No</mat-label>
-                      <input formControlName="mi_emergency_contact_no" matInput placeholder="Emergency Contact No."
-                        readonly>
-
-                    </mat-form-field>
-                  </div>
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12">
+                <div
+                  [ngClass]="studentdetailsform.value.mi_emergency_contact_no? 'remove-col-padding' : 'remove-col-padding '">
+                  <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.mi_emergency_contact_no"
+                    class="form-field">
+                    <mat-label>Emergency Contact No</mat-label>
+                    <input formControlName="mi_emergency_contact_no" matInput placeholder="Emergency Contact No."
+                      readonly>
+                  </mat-form-field>
                 </div>
               </div>
             </div>
             <div class="row remove-top-margin">
-              <div class="col-2 sis-col-20"
-                *ngIf="processtypeService.getProcesstype() !== '5' && stopFlag">
+              <div class="col-2 sis-col-20" *ngIf="processtypeService.getProcesstype() !== '5' && stopFlag">
                 <div class="grey-container__box text-center">
                   <span><b>Route :</b> {{studentdetails.ead_bus_route ? studentdetails.ead_bus_route : '-'}}</span>
                 </div>
               </div>
-              <div class="col-2 sis-col-20"
-                *ngIf="processtypeService.getProcesstype() !== '5' && stopFlag">
+              <div class="col-2 sis-col-20" *ngIf="processtypeService.getProcesstype() !== '5' && stopFlag">
                 <div class="grey-container__box text-center">
                   <span><b>Stop :</b>
                     {{studentdetails.ead_pickup_point ? studentdetails.ead_pickup_point: '-'}}</span>
                 </div>
               </div>
-              <div class="col-2 sis-col-20"
-                *ngIf="processtypeService.getProcesstype() !== '5'">
+              <div class="col-2 sis-col-20" *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
                   <span><b>Fees O/S :</b> {{studentdetails.fee_outstanding ? 
                   (studentdetails.fee_outstanding | number): 'NA'}}</span>
                 </div>
               </div>
-              <div class="col-4 sis-col-40"
-                *ngIf="processtypeService.getProcesstype() !== '5'">
+              <div class="col-2 sis-col-20" *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
                   <span><b>Concession
-                      Group:</b>{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+                      Grp:</b>{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
                 </div>
               </div>
             </div>
