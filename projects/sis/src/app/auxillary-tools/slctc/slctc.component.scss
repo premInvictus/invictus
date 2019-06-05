@@ -1,1 +1,10 @@
-/* colcor #3f51b5 */
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+.cdk-column-studentname , .cdk-column-action{
+    width: 30%;
+}

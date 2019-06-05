@@ -208,83 +208,83 @@
               <div class="row">
                 <div class="col-12">
                   <div>
-                    <mat-table [dataSource]="dataSource" matSort class="fee-table-100 mat-elevation-z1">
+                    <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center">
                       <!-- Checkbox Column -->
                       <ng-container matColumnDef="select">
-                        <mat-header-cell *matHeaderCellDef>
+                        <th mat-header-cell *matHeaderCellDef>
                           <mat-checkbox (change)="checkAllStudents($event)"></mat-checkbox>
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let item">
+                        </th>
+                        <td mat-cell *matCellDef="let item">
                           <mat-checkbox [value]="item.no" (change)="getSelectedStudents($event, item.action)" [checked]="checkAllFlag"></mat-checkbox>
-                        </mat-cell>
+                        </td>
                       </ng-container>
 
                       <!-- Admission Column -->
                       <ng-container matColumnDef="no">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                           Adm. No.
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let item">
+                        </th>
+                        <td mat-cell *matCellDef="let item">
                           {{ item.no }}
-                        </mat-cell>
+                        </td>
                       </ng-container>
 
                       <!-- Student Column -->
                       <ng-container matColumnDef="name">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                           Name
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let item">
+                        </th>
+                        <td mat-cell *matCellDef="let item">
                           {{ item.name }}
-                        </mat-cell>
+                        </td>
                       </ng-container>
 
                       <!-- Class Column -->
                       <ng-container matColumnDef="class">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                           Class
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let item">
+                        </th>
+                        <td mat-cell *matCellDef="let item">
                           {{ item.class }}
-                        </mat-cell>
+                        </td>
                       </ng-container>
 
                       <!-- Section Column -->
                       <ng-container matColumnDef="section">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                           Section
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let item">
+                        </th>
+                        <td mat-cell *matCellDef="let item">
                           {{ item.section }}
-                        </mat-cell>
+                        </td>
                       </ng-container>
 
                       <!-- Section Column -->
                       <ng-container matColumnDef="contact">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                           Contact
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let item">
+                        </th>
+                        <td mat-cell *matCellDef="let item">
                           {{ item.contact }}
-                        </mat-cell>
+                        </td>
                       </ng-container>
 
                       <!-- Section Column -->
                       <ng-container matColumnDef="print">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                           Status
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let item">
+                        </th>
+                        <td mat-cell *matCellDef="let item">
                           {{ item.print }}
-                        </mat-cell>
+                        </td>
                       </ng-container>
 
                       <!-- Promote Column -->
                       <ng-container matColumnDef="action">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                           Action
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let item">
+                        </th>
+                        <td mat-cell *matCellDef="let item">
                           <mat-icon (click)="openIdCard(item.no)" class="material-icons click-icon view-icon">
                               visibility
                           </mat-icon>
@@ -292,12 +292,12 @@
                               local_printshop
                           </mat-icon>
                           <!-- <i  class="fas fa-print inline-form-radio-spacing-parent remove-spacing"></i> -->
-                        </mat-cell>
+                        </td>
                       </ng-container>
 
-                      <mat-header-row *matHeaderRowDef="displayedColumns" class="header-normal"></mat-header-row>
-                      <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
-                    </mat-table>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-normal"></tr>
+                      <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
+                    </table>
                     <br>
                     <div class="text-center">
                       <button mat-raised-button *ngIf="checkStudents.length > 1" class="btn-purple" (click)="bulkPrint()">Print</button>
