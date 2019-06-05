@@ -48,6 +48,12 @@
             </div>
           </div>
           <div class="row">
+              <div class="col-12">
+                <span class="font-size-16 font-light">Receipt Date: </span><span
+                  class="font-size-16 font-regular">{{invoiceDetails?.receipt_created_date | date:'dd MMM, yyyy'}}</span>
+              </div>
+            </div>
+          <div class="row">
             <div class="col-12">
               <span class="font-size-16 font-light">Fee Period: </span><span
                 class="font-size-16 font-regular">{{invoiceDetails?.fp_months}}</span>
@@ -55,12 +61,7 @@
           </div>
         </div>
         <div class="col-4">
-          <div class="row">
-            <div class="col-12">
-              <span class="font-size-16 font-light">Receipt Date: </span><span
-                class="font-size-16 font-regular">{{invoiceDetails?.receipt_created_date | date:'dd MMM, yyyy'}}</span>
-            </div>
-          </div>
+          
           <div class="row" *ngIf="invoiceDetails?.pay_id === '1' || invoiceDetails?.pay_id === '2'">
             <div class="col-12">
               <span class="font-size-16 font-light">Payment Mode: </span><span
@@ -81,7 +82,7 @@
           </div>
           <div class="row" *ngIf="invoiceDetails?.pay_id === '3' || invoiceDetails?.pay_id === '2'">
             <div class="col-12">
-              <span class="font-size-16 font-light">Bank and Branch Details: </span><span
+              <span class="font-size-16 font-light">Bank Details: </span><span
                 class="font-size-16 font-regular">{{invoiceDetails?.ftr_bnk_name}},
                 {{invoiceDetails?.bnk_branch}}</span>
             </div>
