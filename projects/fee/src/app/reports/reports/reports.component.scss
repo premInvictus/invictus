@@ -81,3 +81,14 @@ th.mat-header-cell {
   border: 1px solid #D2D2D2;
   padding: 40px 0px !important;
 }
+td.mat-cell {
+  border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
+}
+.mat-column-srno {
+  width: 3% !important;
+  flex: 0 0 8% !important;
+}

@@ -161,11 +161,11 @@ export const reportTable = {
 		dataReport: {
 			feeAdjustment: {
 				tableHeader: 'Fee Adjustment Report',
-				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'invoice_no', 'invoice_created_date',
-					'cheque_date', 'invg_fh_name', 'invg_fh_amount', 'invg_fcc_name', 'invg_adj_amount',
-					'receipt_no', 'dishonor_date', 'inv_remark'],
-				colunmHeader: ['Sno.', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Invoice Date',
-					'Due Date', 'Fee Head', 'Amount', 'Concession', 'Adjustment', 'Reciept No', 'Receipt Date',
+				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'invoice_no', 'invoice_created_date', 'receipt_no',
+				'dishonor_date', 'cheque_date', 'invg_fh_name', 'invg_fh_amount', 'invg_fcc_name', 'invg_adj_amount',
+					 'inv_remark'],
+				colunmHeader: ['Sno.', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Invoice Date', 'Reciept No',
+				'Receipt Date', 'Due Date', 'Fee Head', 'Amount', 'Concession', 'Adjustment',
 					'Remarks'],
 			}
 		}
