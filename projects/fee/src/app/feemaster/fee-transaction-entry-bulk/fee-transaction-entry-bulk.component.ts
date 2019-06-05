@@ -320,9 +320,6 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			'saveAndPrint': ''
 		});
 	}
-	ngOnDestroy() {
-		this.barecodeScanner.stop();
-	}
 	isExist(mod_id) {
 		return this.common.isExistUserAccessMenu(mod_id);
 	}
@@ -354,6 +351,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			inv_id: inv_number
 		};
 		if (inv_number) {
+			document.getElementById('inv_num').blur();
 			this.feeService.getInvoiceBifurcation(invoiceJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.INVOICE_ELEMENT_DATA = [];
@@ -559,6 +557,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				'saveAndPrint': ''
 			});
 			this.invoiceArray = [];
+			this.barecodeScanner.start();
 		} else {
 			this.feeTransactionForm2.patchValue({
 				'inv_id': [],
@@ -579,6 +578,10 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				'ftr_deposit_bnk_id': '',
 				'saveAndPrint': ''
 			});
+			this.barecodeScanner.stop();
 		}
+	}
+	ngOnDestroy() {
+		this.barecodeScanner.stop();
 	}
 }
