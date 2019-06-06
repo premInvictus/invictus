@@ -447,9 +447,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				validateFlag = false;
 			}
 		} else {
-			if (!(this.feeTransactionForm.value.ftr_pay_id &&
-				this.feeTransactionForm.value.ftr_amount &&  this.feeTransactionForm.value.ftr_transaction_id &&
-				this.feeTransactionForm.value.ftr_remark)) {
+			if (!(this.feeTransactionForm2.value.ftr_pay_id &&
+				this.feeTransactionForm2.value.ftr_amount &&  this.feeTransactionForm2.value.ftr_transaction_id &&
+				this.feeTransactionForm2.value.ftr_remark)) {
 				validateFlag = false;
 			}
 		}
@@ -512,9 +512,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				validateFlag = false;
 			}
 		} else {
-			if (!(this.feeTransactionForm.value.ftr_pay_id &&
-				this.feeTransactionForm.value.ftr_amount &&  this.feeTransactionForm.value.ftr_transaction_id &&
-				this.feeTransactionForm.value.ftr_remark)) {
+			if (!(this.feeTransactionForm2.value.ftr_pay_id &&
+				this.feeTransactionForm2.value.ftr_amount &&  this.feeTransactionForm2.value.ftr_transaction_id &&
+				this.feeTransactionForm2.value.ftr_remark)) {
 				validateFlag = false;
 			}
 		}

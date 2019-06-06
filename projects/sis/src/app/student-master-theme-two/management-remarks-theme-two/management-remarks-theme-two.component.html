@@ -2,7 +2,8 @@
     <div class="row">
         <div class="col-12 ">
             <div class="row remove-top-margin">
-                <div class="col-4 remove-col-padding-left" *ngIf="checkIfFieldExist('erm_remark')">
+                <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4 remove-col-padding-left"
+                    *ngIf="checkIfFieldExist('erm_remark')">
                     <form [formGroup]="admissionremarkform" novalidate>
                         <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
 
@@ -14,7 +15,7 @@
                         </mat-form-field>
                     </form>
                 </div>
-                <div class="col-4 " *ngIf="checkIfFieldExist('erm_remark')">
+                <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4 " *ngIf="checkIfFieldExist('erm_remark')">
                     <form [formGroup]="studentremarkform" novalidate>
 
                         <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
@@ -29,7 +30,8 @@
                     </form>
                 </div>
 
-                <div class="col-4 remove-col-padding-right" *ngIf="checkIfFieldExist('erm_remark')">
+                <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4 remove-col-padding-right"
+                    *ngIf="checkIfFieldExist('erm_remark')">
                     <form [formGroup]="parentremarkform" novalidate>
 
                         <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
@@ -122,7 +124,7 @@
 
             <div class="col-6 remove-col-padding">
                 <div class="row remove-top-margin">
-                    <div class="col-4">
+                    <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Date</mat-label>
                             <input formControlName="era_doj" [min]="minDate" matInput [matDatepicker]="picker"
@@ -133,7 +135,7 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="col-4" *ngIf="checkIfFieldExist('era_aut_id')">
+                    <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4" *ngIf="checkIfFieldExist('era_aut_id')">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Authority</mat-label>
                             <mat-select formControlName="era_aut_id" placeholder="Authority" [disabled]="viewOnly"
@@ -145,7 +147,7 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-4" *ngIf="checkIfFieldExist('era_ar_id')">
+                    <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4" *ngIf="checkIfFieldExist('era_ar_id')">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Area</mat-label>
                             <mat-select formControlName="era_ar_id" [errorStateMatcher]="confirmValidParentMatcher"
@@ -270,14 +272,15 @@
             <form [formGroup]="finalremarksform" novalidate>
 
                 <div *ngIf="checkIfFieldExist('au_is_eligible_adimission')" class="row ">
-                    <div class="col-2">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Final Remarks</mat-label>
                             <input [errorStateMatcher]="confirmValidParentMatcher" formControlName="au_final_remark"
                                 matInput placeholder="Final Remarks" [readonly]="viewOnly">
                         </mat-form-field>
                     </div>
-                    <div class="col-2" *ngIf="checkIfFieldExist('au_is_eligible_adimission')">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2"
+                        *ngIf="checkIfFieldExist('au_is_eligible_adimission')">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Eligible for Admission</mat-label>
                             <mat-select [errorStateMatcher]="confirmValidParentMatcher"
@@ -289,7 +292,7 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-2"
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2"
                         *ngIf="checkIfFieldExist('au_process_class') && finalremarksform.value.au_is_eligible_adimission == 'Y'">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Proposed Class</mat-label>

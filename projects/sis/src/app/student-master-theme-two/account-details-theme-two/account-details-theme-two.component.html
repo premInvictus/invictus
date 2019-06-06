@@ -3,9 +3,9 @@
 
       <form [formGroup]="accountsForm" novalidate>
          <div class="row">
-            <div class="col-6 remove-col-padding">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding">
                <div class="row ">
-                  <div class="col-4">
+                  <div class="col-sm">
                      <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Other Category</mat-label>
                         <mat-select placeholder="Other Category" [disabled]="viewOnly" formControlName="accd_fo_id"
@@ -16,7 +16,7 @@
                         </mat-select>
                      </mat-form-field>
                   </div>
-                  <div class="col-4">
+                  <div class="col-sm">
                      <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Applicable Fee Structure</mat-label>
                         <mat-select placeholder="Applicable Fee Structure" [disabled]="viewOnly"
@@ -27,7 +27,7 @@
                         </mat-select>
                      </mat-form-field>
                   </div>
-                  <div class="col-4">
+                  <div class="col-sm">
                      <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Concession Group</mat-label>
                         <mat-select placeholder="Concession Group" [disabled]="viewOnly" formControlName="accd_fcg_id"
@@ -40,14 +40,14 @@
                   </div>
                </div>
             </div>
-            <div class="col-6 remove-col-padding">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding">
                <div class="row">
-                  <div class="col-6 margin-top-15 ">
+                  <div class="col-sm margin-top-15 ">
                      <mat-checkbox [disabled]="viewOnly" formControlName="accd_is_transport"
                         (change)="enableTransport($event)">Whether
                         the child has opted for Transport facility</mat-checkbox>
                   </div>
-                  <div class="col-6 margin-top-15">
+                  <div class="col-sm margin-top-15">
                      <mat-checkbox [disabled]="viewOnly" formControlName="accd_is_hostel"
                         (change)="enableHostel($event)">
                         Whether the child has opted for Hostel facility.</mat-checkbox>
@@ -61,7 +61,7 @@
             </div>
          </div>
          <div *ngIf="transportFlag" class="row margin-top-15">
-            <div class="col-2">
+            <div class="col-12 col-sm col-md-4 col-lg-2 col-xl-2">
                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Mode</mat-label>
                   <mat-select placeholder="Mode" [disabled]="viewOnly" (ngModelChange)="enableMode($event)"
@@ -71,7 +71,7 @@
                   </mat-select>
                </mat-form-field>
             </div>
-            <div class="col-2" *ngIf="modeFlag && transportFlag">
+            <div class="col-sm" *ngIf="modeFlag && transportFlag">
                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Route</mat-label>
                   <mat-select placeholder="Route" [disabled]="viewOnly" (selectionChange)="getStoppages($event.value)"
@@ -82,7 +82,7 @@
                   </mat-select>
                </mat-form-field>
             </div>
-            <div class="col-2" *ngIf="modeFlag && transportFlag">
+            <div class="col-sm" *ngIf="modeFlag && transportFlag">
                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Stoppage</mat-label>
                   <mat-select placeholder="Stoppage" [disabled]="viewOnly" (selectionChange)="getSlab($event.value)"
@@ -92,7 +92,7 @@
                   </mat-select>
                </mat-form-field>
             </div>
-            <div class="col-2" *ngIf="modeFlag && transportFlag">
+            <div class="col-sm" *ngIf="modeFlag && transportFlag">
                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Applicable Slab</mat-label>
                   <mat-select placeholder="Applicable Slab" disabled [(ngModel)]="slabModel"
@@ -101,7 +101,7 @@
                   </mat-select>
                </mat-form-field>
             </div>
-            <div class="col-2" *ngIf="modeFlag && transportFlag">
+            <div class="col-sm" *ngIf="modeFlag && transportFlag">
                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Application Form</mat-label>
                   <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
@@ -112,7 +112,7 @@
                   <mat-datepicker tabindex="-1" #picker [disabled]="viewOnly"></mat-datepicker>
                </mat-form-field>
             </div>
-            <div class="col-2" *ngIf="terminationFlag && transportFlag">
+            <div class="col-sm" *ngIf="terminationFlag && transportFlag">
                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Termination Date</mat-label>
                   <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
@@ -123,7 +123,7 @@
                   <mat-datepicker tabindex="-1" #picker [disabled]="viewOnly"></mat-datepicker>
                </mat-form-field>
             </div>
-            <div class="col-2" *ngIf="modeFlag">
+            <div class="col-sm" *ngIf="modeFlag">
                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Remarks</mat-label>
                   <input matInput placeholder="Remarks" formControlName="accd_remark" [readonly]="viewOnly">
@@ -142,7 +142,7 @@
             </div>
          </div>
          <div *ngIf="hostelFlag" class="row margin-top-15">
-            <div class="col-2">
+            <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2">
                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Applicable Hostel Fee</mat-label>
                   <mat-select placeholder="Applicable Hostel Fee" [disabled]="viewOnly"
@@ -153,7 +153,7 @@
                   </mat-select>
                </mat-form-field>
             </div>
-            <div class="col-2">
+            <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2">
                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Applicable From</mat-label>
                   <input matInput [matDatepicker]="picker3" [max]="maxDate" [readonly]="viewOnly"
@@ -164,7 +164,7 @@
                   <mat-datepicker tabindex="-1" #picker3 [disabled]="viewOnly"></mat-datepicker>
                </mat-form-field>
             </div>
-            <div *ngIf="hostelTerminateFlag && hostelFlag" class="col-2">
+            <div *ngIf="hostelTerminateFlag && hostelFlag" class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2">
                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Applicable To</mat-label>
                   <input matInput [matDatepicker]="picker4" [max]="maxDate" [readonly]="viewOnly"
