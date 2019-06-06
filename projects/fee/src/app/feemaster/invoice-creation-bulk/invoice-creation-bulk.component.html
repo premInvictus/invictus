@@ -16,7 +16,7 @@
             </div>
          </mat-card>
          <mat-card class="margin-top-8 card-height-760 card-height-880">
-            <div class="row">
+            <!-- <div class="row">
                <div class="col-2 remove-col-padding margin-top-25 custom-col-20">
                   <div class="float-left">
                      <h4 class="font-medium">Select Parameters</h4>
@@ -28,7 +28,7 @@
                      <h4 class="font-medium">Invoice Details</h4>
                   </div>
                </div>
-            </div>
+            </div> -->
             <div class="row margin-top-20">
                <div class="col-3 remove-col-padding custom-col-20">
                   <form [formGroup]="invoiceCreationForm" novalidate>
@@ -51,7 +51,7 @@
                            </div>
                      </div>
                      <div class="row">
-                        <div class="col-4 remove-col-padding-left">
+                        <div class="col-12 remove-col-padding-left remove-col-padding-right">
                            <mat-form-field appearance="outline" class="form-field">
                               <mat-label>Fee Period</mat-label>
                               <mat-select placeholder="Fee Period" multiple formControlName="inv_fm_id" required>
@@ -60,25 +60,27 @@
                               </mat-select>
                            </mat-form-field>
                         </div>
-                        <div class="col-4">
-                           <mat-form-field appearance="outline" class="form-field">
-                              <mat-label>Invoice Date</mat-label>
-                              <input matInput [matDatepicker]="picker" placeholder="Invoice Date"
-                                 formControlName="inv_invoice_date" required>
-                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                              <mat-datepicker #picker></mat-datepicker>
-                           </mat-form-field>
-                        </div>
-                        <div class="col-4 remove-col-padding-right">
-                           <mat-form-field appearance="outline" class="form-field">
-                              <mat-label>Last Date</mat-label>
-                              <input matInput [matDatepicker]="picker1" placeholder="Last Date"
-                                 formControlName="inv_due_date" required>
-                              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                              <mat-datepicker #picker1></mat-datepicker>
-                           </mat-form-field>
-                        </div>
                      </div>
+                     <div class="row">
+                           <div class="col-6 remove-col-padding-left">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Invoice Date</mat-label>
+                                 <input matInput [matDatepicker]="picker" placeholder="Invoice Date"
+                                    formControlName="inv_invoice_date" required>
+                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                 <mat-datepicker #picker></mat-datepicker>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-6 remove-col-padding-right">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Due Date</mat-label>
+                                 <input matInput [matDatepicker]="picker1" placeholder="Last Date"
+                                    formControlName="inv_due_date" required>
+                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                 <mat-datepicker #picker1></mat-datepicker>
+                              </mat-form-field>
+                           </div>
+                        </div>
                      <div class="row">
                         <div class="col-12  remove-col-padding">
                            <mat-checkbox formControlName="recalculation_flag">Recalculate All Unpaid Invoices
