@@ -361,6 +361,14 @@ body {
   font-size: 12px;
 }
 
+.margin-legt-imp-10{
+    margin-left: 4px !important;
+}
+.sis-student-pic--imgtwo {
+    position: absolute;
+    top: 45%;
+    left: 60%;
+}
 @media (min-width:992px) {
   .hide-for-larger-screen {
     display: none;
@@ -1908,8 +1916,6 @@ mat-tab-body .mat-tab-body-content {
   padding-top: 4px !important;
 }
 
-
-.test-button-value {}
 
 .test-invigilation-status {
   font-size: 12px;
@@ -3499,8 +3505,6 @@ ul li.nav-item .nav-link .sidenav-option-two:hover {
   height: 55px;
   width: 75px;
 }
-
-.score-card-info-car-box {}
 
 .teacher-report-card-img {
   margin-top: 20px !important;

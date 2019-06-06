@@ -188,7 +188,7 @@ th.mat-header-cell {
 }
 
 td.mat-cell {
-    font-size: 14px !important;
+    font-size: 16px !important;
 }
 
 // td.mat-cell {
@@ -361,4 +361,10 @@ td.custom-td {
 
 .table tbody td {
     border: 1px solid #89A8C9;
+}
+tr.mat-header-row {
+    height: 40px!important;
+}
+tr.mat-row {
+    height: 35px!important;
 }
