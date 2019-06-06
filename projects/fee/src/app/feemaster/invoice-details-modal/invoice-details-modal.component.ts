@@ -100,7 +100,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		this.getInvoiceBifurcation(this.invoiceDetails.inv_id);
 	}
 	updateInvoice() {
-		const adj: any = { inv_id: '', adjustment: [], remark: '' };
+		const adj: any = { inv_id: '', adjustment: [], remark: '', login_id: this.invoiceDetails.login_id};
 		adj.inv_id = this.invoiceDetails.inv_id;
 		this.invoiceBifurcationArray.forEach(item => {
 			adj.adjustment.push({ invg_id: item.invg_id, invg_adj_amount: item.invg_adj_amount });
