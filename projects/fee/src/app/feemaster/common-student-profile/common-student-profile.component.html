@@ -42,21 +42,20 @@
           </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-8 margin-top-20">
-        <div class="row margin-top-10">
+      <div class="col-1 custom-fee-entry-col-8 ">
+        <div class="row margin-top-20">
           <div class="col-12 text-center">
             <img class="student-profile-image-68" [src]="defaultsrc"
             onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
           </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-12 margin-top-20">
-        <div class="row margin-top-10">
+      <div class="col-1 custom-fee-entry-col-12 vertical-divider">
+        <div class="row margin-top-30">
           <div class="col-12 text-left">
             <span
               class="font-size-16 font-bold">{{studentdetails.au_full_name ? (studentdetails.au_full_name | titlecase) : '-'}}</span><br>
-            <span class="font-size-14">Class : {{studentdetails.class_name ? studentdetails.class_name : '-'}} -
-              {{studentdetails.sec_name ? studentdetails.sec_name : '-'}}</span>
+            <span class="font-size-14">Class : {{class_sec}}</span>
           </div>
         </div>
       </div>
@@ -76,7 +75,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2 custom-fee-entry-col-12 ">
+      <div class="col-2 custom-fee-entry-col-12 vertical-divider">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Route </span><br>

@@ -146,7 +146,7 @@
                 <th mat-header-cell *matHeaderCellDef> Processing Date </th>
                 <td mat-cell *matCellDef="let item">
                   <form [formGroup]="formGroupArray[item.srno - 1].formGroup">
-                    <mat-form-field [hidden]="item.action.status === '1' || item.action.status === '2'"
+                    <mat-form-field  appearance="outline" [hidden]="item.action.status === '1' || item.action.status === '2'"
                       class="cheque-control-tool margin-top-5">
                       <input matInput [matDatepicker]="picker" placeholder="Choose a date"
                         formControlName="fcc_process_date">
@@ -174,7 +174,7 @@
                         *ngIf="item.action.status === '2'" class="font-size-10"><b>Bounced</b></span>
                     </div>
                   </div>
-                  <br>
+                  
                   <div class="inline-flex margin-top-5">
                     <div class="cleared-button" [hidden]="item.action.status === '1' || item.action.status === '2'"
                       (click)="clearCheck(item.srno, item.action)">

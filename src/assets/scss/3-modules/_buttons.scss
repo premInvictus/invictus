@@ -523,17 +523,19 @@ button.mat-button:hover .right-text {
 
 .cleared-button {
     width: 62px;
-    height: 20px;
+    height: 25px;
     background: #43A047;
     padding: 0px 10px;
     text-transform: uppercase;
     color: #fff;
     cursor: pointer;
 }
-
+.fa-times{
+    cursor: pointer;
+}
 .bounce-button {
     width: 62px;
-    height: 20px;
+    height: 25px;
     background: #FF5A5A;
     padding: 0px 10px;
     text-transform: uppercase;

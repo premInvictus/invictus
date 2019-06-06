@@ -93,6 +93,9 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	previousProcessType: any = '';
 	previousAdmno: any = '';
 	previousLoginId = '';
+	class_name: any;
+	section_name: any;
+	class_sec: any;
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },
@@ -176,6 +179,13 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						if (result && result.data && result.data[0]) {
 							this.studentdetails = result.data[0];
 							this.previousLoginId = this.studentdetails.au_login_id;
+							this.class_name = this.studentdetails.class_name;
+							this.section_name = this.studentdetails.sec_name;
+							if(this.section_name != ' '){
+								this.class_sec = this.class_name +' - '+ this.section_name;
+							}else{
+								this.class_sec = this.class_name;
+							}
 							if (Number(this.processType) === 4) {
 								this.studentRouteMoveStoreService.setRouteStore(
 									this.studentdetails.em_admission_no,

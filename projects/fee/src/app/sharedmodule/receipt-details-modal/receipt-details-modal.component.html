@@ -1,4 +1,4 @@
-<div class="margin-20ne overflow-x-hidden">
+<div class="overflow-x-hidden">
   <div class="row">
     <div class="col-12 text-right">
       <a class="close-btn" (click)="closemodal()"><i class="material-icons">
@@ -9,21 +9,23 @@
   <div class="row">
     <div class="col-2 text-center">
       <img class="student-profile-image-popup"
-        [src]="invoiceDetails?.au_profileimage ? invoiceDetails.au_profileimage : '/assets/images/student.png'">
+        [src]="invoiceDetails?.au_profileimage ? invoiceDetails.au_profileimage : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
       <div class="">
         <div>
           <span class="font-size-16 font-bold">{{invoiceDetails?.process_name}} {{invoiceDetails?.au_admission_no}} </span>
         </div>
       </div>
     </div>
-    <div class="col-10">
+    <div class="col-1">
+        <div class="vertical-line-divider"></div>
+    </div>
+    <div class="col-8">
       <div class="row remove-top-margin">
-        <div class="col-4 ">
+        <div class="col-3 ">
           <div class="row">
             <div class="col-12">
               <span class="font-size-16 font-medium">{{invoiceDetails?.au_full_name | titlecase}},
-                {{invoiceDetails?.class_name}} -
-                {{invoiceDetails?.sec_name}}</span>
+                {{class_sec}}</span>
             </div>
           </div>
           <div class="row">
@@ -40,7 +42,10 @@
           </div>
 
         </div>
-        <div class="col-4">
+        <div class="col-1">
+            <div class="vertical-line-divider"></div>
+        </div>
+        <div class="col-3">
           <div class="row">
             <div class="col-12">
               <span class="font-size-16 font-light">Receipt no: </span><span
@@ -60,8 +65,10 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
-          
+        <div class="col-1">
+            <div class="vertical-line-divider"></div>
+        </div>
+        <div class="col-3">          
           <div class="row" *ngIf="invoiceDetails?.pay_id === '1' || invoiceDetails?.pay_id === '2'">
             <div class="col-12">
               <span class="font-size-16 font-light">Payment Mode: </span><span
@@ -87,23 +94,26 @@
                 {{invoiceDetails?.bnk_branch}}</span>
             </div>
           </div>
-
-
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
+        <div class="col-1">
+            <div class="vertical-line-divider"></div>
+        </div>
+      </div>      
+    </div>
+    <div class="col-1 print-receipt">
+    <div class="row">
+        <div class="">
           <div class="text-right">
             <button
               *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
               mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
               (click)="openRecalculateDialog()">Recalulate Invoice</button>
-            <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
+            <button mat-raised-button class="btn-primary btn-danger  print-invoice-btn"
               (click)="printReceipt()">Print Receipt</button>
           </div>
         </div>
       </div>
-    </div>
+      </div>
   </div>
   <div class="row margin-top-20">
     <div class="col-12">
@@ -154,9 +164,9 @@
   <div class="row">
     <div class="col-12">
       <div class="grey-box ">
-        <div class="margin-right-50"><span class="font-size-16 ">Amount in Words :</span><span
+        <div class="margin-right-50"><span class="font-size-16 ">Amount in Words : </span><span
             class="font-size-16 font-medium">Rupees {{invoiceTotal | numberToWord | titlecase}} </span><span
-            class="float-right"><span class="font-size-16">Grand Total :</span><span
+            class="float-right"><span class="font-size-16">Grand Total : </span><span
               class="font-size-16 font-medium">{{invoiceTotal | number}} </span></span></div>
       </div>
     </div>
