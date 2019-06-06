@@ -169,7 +169,7 @@ export const MY_FORMATS = {
 		StudentDetailsThemeTwoComponent, ChildDetailsThemeTwoComponent, ParentDetailsThemeTwoComponent,
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent,
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
-		ManagementRemarksThemeTwoComponent,
+		ManagementRemarksThemeTwoComponent, CommonDynamicChartComponent,
 		AccountDetailsThemeTwoComponent, AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent
 	],
 	entryComponents: [ChildDetailsComponent, ParentDetailsComponent, EducationDetailsComponent, AccountsComponent,

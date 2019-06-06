@@ -44,3 +44,10 @@
     
     border-right: 1px solid transparent;
 }
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}

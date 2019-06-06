@@ -18,7 +18,7 @@
          </mat-card>
       </div>
    </div>
-   <div class="row margin-top-25">
+   <div class="row">
       <div class="col-12 remove-col-padding">
          <app-common-student-profile [loginId]="lastRecordId" (next2)="next($event)" (prev2)="prev($event)"
             (first2)="first($event)" (last2)="last($event)" (key2)="key($event)" (next)="next2($event)"
@@ -26,7 +26,7 @@
             (processTypeEmit)="checkEmit($event)" [feeRenderId]="feeRenderId"></app-common-student-profile>
       </div>
    </div>
-   <div [hidden]="!(invoiceArray.length > 0)" class="row margin-top-25 ">
+   <div [hidden]="!(invoiceArray.length > 0)" class="row ">
       <div class="col-12 remove-col-padding">
          <mat-card class="card-top-title__container">
             <div class="row">
@@ -39,7 +39,7 @@
                      </ng-container>
                      <!-- Name Column -->
                      <ng-container matColumnDef="feehead">
-                        <th mat-header-cell *matHeaderCellDef > Fee Head </th>
+                        <th mat-header-cell *matHeaderCellDef> Fee Head </th>
                         <td mat-cell *matCellDef="let element" style="text-align: left !important;"> {{element.feehead}}
                         </td>
                      </ng-container>
@@ -80,7 +80,7 @@
          </mat-card>
       </div>
    </div>
-   <div class="row margin-top-25" *ngIf="!checkStatus()">
+   <div class="row" *ngIf="!checkStatus()">
       <div class="col-12 remove-col-padding">
          <mat-card class="card-top-form__container">
             <div class="text-center">
@@ -93,7 +93,7 @@
       </div>
    </div>
    <form [formGroup]="feeTransactionForm">
-      <div *ngIf="checkStatus()" class="row margin-top-25">
+      <div *ngIf="checkStatus()" class="row">
          <div class="col-6 remove-col-padding-left">
             <mat-card class="card-top-form__container card-height-605 card-height-720">
                <div class="row">
@@ -217,8 +217,7 @@
                   </div>
                   <div class="col-3"></div>
                </div>
-               <div *ngIf="((feeTransactionForm.value.ftr_pay_id === '1') || (feeTransactionForm.value.ftr_pay_id !== '2' 
-           && feeTransactionForm.value.ftr_pay_id !== '3' && feeTransactionForm.value.ftr_pay_id !== ''))">
+               <div *ngIf="feeTransactionForm.value.ftr_pay_id === '1'">
                   <div class="row">
                      <div class="col-3"></div>
                      <div class="col-6">
@@ -228,6 +227,41 @@
                                  <mat-label>Amount</mat-label>
                                  <input matInput placeholder="Amount" type="number" formControlName="ftr_amount"
                                     [readonly]="selectedMode === '1'" required>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-12">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Remarks</mat-label>
+                                 <textarea placeholder="Write your message" required formControlName="ftr_remark"
+                                    matInput rows="4"></textarea>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-3">
+                     </div>
+                  </div>
+               </div>
+               <div *ngIf="feeTransactionForm.value.ftr_pay_id !== '1' && feeTransactionForm.value.ftr_pay_id !== '2' 
+           && feeTransactionForm.value.ftr_pay_id !== '3' && feeTransactionForm.value.ftr_pay_id !== ''">
+                  <div class="row">
+                     <div class="col-3"></div>
+                     <div class="col-6">
+                        <div class="row">
+                           <div class="col-6">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Amount</mat-label>
+                                 <input matInput placeholder="Amount" type="number" formControlName="ftr_amount"
+                                    required>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-6">
+                              <mat-form-field appearance="outline" class="form-field">
+                                 <mat-label>Transaction Id</mat-label>
+                                 <input matInput placeholder="Transaction Id" type="number"
+                                    formControlName="ftr_transaction_id" required>
                               </mat-form-field>
                            </div>
                         </div>
@@ -276,7 +310,7 @@
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Remarks</mat-label>
                                  <textarea matInput placeholder="Write your message" formControlName="ftr_remark"
-                                    required rows="8"></textarea>
+                                    required rows="6"></textarea>
                               </mat-form-field>
                            </div>
                         </div>
@@ -285,9 +319,9 @@
                </div>
                <div *ngIf="feeTransactionForm.value.ftr_pay_id === '3'">
                   <div class="row">
-                     <div class="col-6">
+                     <div class="col-12">
                         <div class="row">
-                           <div class="col-12">
+                           <div class="col-3">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Deposited Bank</mat-label>
                                  <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required>
@@ -297,20 +331,15 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                        </div>
-                        <div class="row">
-                           <div class="col-12">
+                           <div class="col-3">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Cheque No.</mat-label>
-                                 <input  matInput placeholder="Cheque No." formControlName="ftr_cheque_no"
-                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
-                                 type = "number" maxlength = "6"
-                                    required>
+                                 <input matInput placeholder="Cheque No." formControlName="ftr_cheque_no"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    type="number" maxlength="6" required>
                               </mat-form-field>
                            </div>
-                        </div>
-                        <div class="row">
-                           <div class="col-12">
+                           <div class="col-3">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Drawn On</mat-label>
                                  <mat-select placeholder="Drawn On" formControlName="ftr_bnk_id" required>
@@ -320,9 +349,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                        </div>
-                        <div class="row">
-                           <div class="col-12">
+                           <div class="col-3">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Branch</mat-label>
                                  <input matInput placeholder="Bank Branch" formControlName="ftr_branch" required>
@@ -330,18 +357,16 @@
                            </div>
                         </div>
                      </div>
-                     <div class="col-6">
+                     <div class="col-12">
                         <div class="row">
-                           <div class="col-12">
+                           <div class="col-3">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Amount Chargeable</mat-label>
                                  <input matInput placeholder="Amount Chargeable" type="number"
                                     formControlName="ftr_amount" required>
                               </mat-form-field>
                            </div>
-                        </div>
-                        <div class="row">
-                           <div class="col-12">
+                           <div class="col-3">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Cheque Date</mat-label>
                                  <input matInput [matDatepicker]="picker3" placeholder="Choose a date"
@@ -350,12 +375,10 @@
                                  <mat-datepicker #picker3></mat-datepicker>
                               </mat-form-field>
                            </div>
-                        </div>
-                        <div class="row">
-                           <div class="col-12">
+                           <div class="col-6">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Remarks</mat-label>
-                                 <textarea placeholder="Write your message" matInput rows="6" required
+                                 <textarea placeholder="Write your message" matInput rows="2" required
                                     formControlName="ftr_remark"></textarea>
                               </mat-form-field>
                            </div>

@@ -17,7 +17,7 @@
       </mat-card>
     </div>
   </div>
-  <div class="row margin-top-25">
+  <div class="row">
     <div class="col-12 remove-col-padding">
       <app-common-student-profile [feeRenderId]="feeRenderId" [loginId]="lastRecordAdmno" (next)="next($event)"
         (prev)="prev($event)" (first)="first($event)" (last)="last($event)" (key)="key($event)" (next2)="next2($event)"
@@ -27,24 +27,17 @@
     </div>
   </div>
   <form [formGroup]="invoiceCreationForm" novalidate>
-    <div class="row margin-top-25">
+    <div class="row">
       <div class="col-12 remove-col-padding">
-        <mat-card class="card-top-title__container">
+        <mat-card style="padding-bottom: 0px !important" class="card-top-title__container">
           <div class="text-center" *ngIf="!checkStatus()">
             <h4><b>{{'Invoice Cannot be generated for this Student' | uppercase}}</b></h4><br>
             <span>
               <h6>Note: Student has been promoted to next session</h6>
             </span>
           </div>
-          <div *ngIf="checkStatus()" class="row">
-            <div class="col-4 margin-top-25 custom-col-20">
-              <div class="float-left">
-                <h4 class="font-medium">Select Parameters</h4>
-              </div>
-            </div>
-          </div>
           <div class="row" *ngIf="checkStatus()">
-            <div class="col-4">
+            <div class="col-2">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Fee Period</mat-label>
                 <mat-select placeholder="Fee Period" multiple formControlName="inv_fm_id" required>
@@ -52,7 +45,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-4">
+            <div class="col-2">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Invoice Date</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Invoice Date" formControlName="inv_invoice_date"
@@ -61,7 +54,7 @@
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
             </div>
-            <div class="col-4">
+            <div class="col-2">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Due Date</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Due Date" formControlName="inv_due_date"
@@ -70,14 +63,11 @@
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
             </div>
-          </div>
-          <div class="row" *ngIf="checkStatus()">
-            <div class="col-6">
+            <div class="col-2 remove-col-padding-right margin-top-15">
               <mat-checkbox formControlName="recalculation_flag"><span class="font-size-16 font-medium">Recalulate All
                   Unpaid Invoices</span></mat-checkbox>
             </div>
-
-            <div class="col-6 text-right">
+            <div class="col-3 margin-top-15">
               <button *ngIf="commonAPIService.isExistUserAccessMenu('359')" mat-raised-button
                 class="btn-primary  btn-width-164 btn-success" (click)="insertInvoice()">Generate Invoice</button>
               <button mat-raised-button style="margin-left: 10px; background-color: #e11022" class="print-btn"
@@ -88,7 +78,7 @@
       </div>
     </div>
   </form>
-  <div class="row margin-top-25 ">
+  <div class="row">
     <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container card-height-440 card-height-560 ">
         <div class="row">
@@ -154,7 +144,8 @@
                 <td mat-cell *matCellDef="let element"> {{element.duedate | date: 'd-MMM-y'}} </td>
               </ng-container>
               <ng-container matColumnDef="feedue">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Fee Due (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Fee Due (<span><i
+                      class="fas fa-rupee-sign"></i></span>)</th>
                 <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
               </ng-container>
               <ng-container matColumnDef="status">

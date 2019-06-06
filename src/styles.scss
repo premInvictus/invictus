@@ -1047,7 +1047,7 @@ img.no-records-fond-partial-img {
   position: -webkit-sticky;
   top: 0;
   z-index: 1;
-  background-color: #e6e5df;
+  background-color: #c8d6e5!important;
 }
 
 .text-lowercase {
@@ -2293,7 +2293,7 @@ overflow-y: scroll !important;*/
 }
 
 .info-four-circle {
-  color: #ffb519;
+  color: #ffb519; 
 }
 
 .table-question-generic-paper-review-list {
@@ -2307,7 +2307,7 @@ overflow-y: scroll !important;*/
 }
 
 .mat-header-row {
-  background-color: #f1f1f1;
+  background-color: #c8d6e5;
 }
 
 .table-filter {
@@ -2339,12 +2339,9 @@ overflow-y: scroll !important;*/
 
 .mat-cell {
   font-size: 12px !important;
-  padding-right: 20px;
 }
 
 mat-row:nth-child(even) {
-  padding-top: 10px;
-  padding-bottom: 10px;
   background-color: #ffffff;
 }
 
@@ -2807,8 +2804,6 @@ td.teacher-topic-subtpic-subject {
 
 
 mat-row:nth-child(odd) {
-  padding-top: 10px;
-  padding-bottom: 10px;
   background-color: #f1f1f1;
 }
 

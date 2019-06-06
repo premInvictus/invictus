@@ -13,7 +13,7 @@ td { padding-left: 10px; }
     background: #DFDFDF !important;
 }
 tr.mat-header-row {
-    height: 56px;
+    height: 45px;
 }
 .table-100 {
     width: 100%;
@@ -29,5 +29,5 @@ td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:
 }
 
 tr.mat-footer-row, tr.mat-row {
-    height: 48px;
+    height: 40px;
 }

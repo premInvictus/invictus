@@ -21,3 +21,24 @@
     font-weight:bold;
     top: calc(50% + 40px);
   }
+  @media (max-width: 2399px) and (min-width: 1900px) {
+    .card-height-720 {
+        min-height: 435px !important;
+    }
+    }
+    @media (max-width: 1899px) and (min-width: 1200px) {
+    .card-height-605 {
+        min-height: 433px !important;
+    }
+    }
+    @media (max-width: 1199px) and (min-width: 992px) {
+    .card-height-605 {
+        min-height: 432px !important;
+    }
+    }
+    ::ng-deep.my-toggle > label > div > div > div.mat-slide-toggle-thumb {
+        background-color: #1aed11 !important;
+      }
+      ::ng-deep.my-toggle > label > div.mat-slide-toggle-bar {
+        background-color: #1aed11 !important;
+      }
