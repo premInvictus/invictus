@@ -56,37 +56,41 @@
                               </mat-form-field>
                            </div>
                            <div class="col-1 remove-col-padding-left">
-                              <mat-form-field appearance="outline" class="form-field">
+                              <mat-form-field *ngIf="checkMultiple" appearance="outline" class="form-field">
                                  <mat-label>{{valueLabel}}</mat-label>
-                                 <mat-select formControlName="fee_value"
+                                 <mat-select formControlName="fee_value" [placeholder]="valueLabel" multiple
                                     (selectionChange)="getHiddenFieldValue($event,reportType)">
-                                    <mat-option>Please Select</mat-option>
+                                    <mat-option *ngFor="let item of valueArray" [value]="item.id">{{item.name}}
+                                    </mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                              <mat-form-field *ngIf="!checkMultiple" appearance="outline" class="form-field">
+                                 <mat-label>{{valueLabel}}</mat-label>
+                                 <mat-select formControlName="fee_value" [placeholder]="valueLabel"
+                                    (selectionChange)="getHiddenFieldValue($event,reportType)">
                                     <mat-option *ngFor="let item of valueArray" [value]="item.id">{{item.name}}
                                     </mat-option>
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left" *ngIf="reportFilterForm.value.report_type === 'classwise' ||
-                           reportFilterForm.value.report_type === 'routewise'||
-                           reportFilterForm.value.report_type === 'headwise'
-                           || reportFilterForm.value.report_type === 'modewise' ||
-                           reportFilterForm.value.report_type === 'mfr'">
+                           <div class="col-1 remove-col-padding-left" *ngIf="reportFilterForm.value.report_type === 'mfr'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>{{hiddenFieldLabel}}</mat-label>
-                                 <mat-select formControlName="hidden_value"
+                                 <mat-select formControlName="hidden_value" [placeholder]="hiddenFieldLabel"
                                     (selectionChange)="getHiddenFieldValue2($event,reportType)">
-                                    <mat-option>Please Select</mat-option>
                                     <mat-option *ngFor="let item of hiddenValueArray" [value]="item.id">{{item.name}}
                                     </mat-option>
                                  </mat-select>
                               </mat-form-field>
                            </div>
                            <div class="col-1 remove-col-padding-left" *ngIf="!(reportFilterForm.value.report_type === 'classwise' ||
+                           reportFilterForm.value.report_type === 'modewise' ||
+                           reportFilterForm.value.report_type === 'routewise' ||
+                           reportFilterForm.value.report_type === 'headwise' ||
                            reportFilterForm.value.report_type === 'mfr')">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>{{hiddenFieldLabel2}}</mat-label>
-                                 <mat-select formControlName="hidden_value2">
-                                    <mat-option>Please Select</mat-option>
+                                 <mat-select formControlName="hidden_value2" [placeholder]="hiddenFieldLabel2">
                                     <mat-option *ngFor="let item of hiddenValueArray2" [value]="item.id">{{item.name}}
                                     </mat-option>
                                  </mat-select>
@@ -96,7 +100,6 @@
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Route</mat-label>
                                  <mat-select formControlName="hidden_value3">
-                                    <mat-option>Please Select</mat-option>
                                     <mat-option *ngFor="let item of hiddenValueArray3" [value]="item.id">{{item.name}}
                                     </mat-option>
                                  </mat-select>
