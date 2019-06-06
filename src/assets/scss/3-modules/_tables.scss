@@ -346,7 +346,9 @@ td.custom-td, th.custom-th {
     height: 30px; 
     transition: all 0.3s;  
 }
-
+::ng-deep tr.mat-header-row {
+    height: 45px !important;
+}
 th.custom-th {  
     background: #C8D6E5;  
     font-weight: bold;

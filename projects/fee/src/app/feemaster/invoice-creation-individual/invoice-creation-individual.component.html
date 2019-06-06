@@ -17,7 +17,7 @@
       </mat-card>
     </div>
   </div>
-  <div class="row margin-top-25">
+  <div class="row">
     <div class="col-12 remove-col-padding">
       <app-common-student-profile [feeRenderId]="feeRenderId" [loginId]="lastRecordAdmno" (next)="next($event)"
         (prev)="prev($event)" (first)="first($event)" (last)="last($event)" (key)="key($event)" (next2)="next2($event)"
@@ -27,7 +27,7 @@
     </div>
   </div>
   <form [formGroup]="invoiceCreationForm" novalidate>
-    <div class="row margin-top-25">
+    <div class="row">
       <div class="col-12 remove-col-padding">
         <mat-card style="padding-bottom: 0px !important" class="card-top-title__container">
           <div class="text-center" *ngIf="!checkStatus()">
@@ -78,7 +78,7 @@
       </div>
     </div>
   </form>
-  <div class="row margin-top-25 ">
+  <div class="row">
     <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container card-height-440 card-height-560 ">
         <div class="row">
