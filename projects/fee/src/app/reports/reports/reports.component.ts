@@ -440,6 +440,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	switchReport() {
 		this.accountFlag = false;
+		this.totalRecords = 0;
+		localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 		this.REPORT_ELEMENT_DATA = [];
 		this.REPORT_ELEMENT_DATA2 = [];
 		this.REPORT_ELEMENT_DATA3 = [];
@@ -1803,10 +1805,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	exportAsPDF() {
 		let id: any;
-		if (this.reportFilterForm.value.report_type === 'mfr') {
+		if (this.reportFilterForm.value.report_type === 'mfr' && this.reportType !== '5') {
 			id = 'report_table2';
-		} else {
+		} else if (this.reportFilterForm.value.report_type !== 'mfr' && this.reportType !== '5') {
 			id = 'report_table';
+		} else {
+			id = 'report_table3';
 		}
 		const doc = new jsPDF('landscape');
 		doc.setFont('helvetica');
@@ -2098,10 +2102,6 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			'admission_no': '',
 			'au_full_name': ''
 		});
-		this.valueLabel = 'Filter 1';
-		this.hiddenFieldLabel = 'Filter2';
-		this.hiddenFieldLabel2 = 'Filter3';
-		this.checkMultiple = false;
 	}
 	checkRowSpan(val, index) {
 		if (val && index === 0) {
