@@ -29,11 +29,50 @@
           <div class="col-12 remove-col-padding">
             <mat-card class="card-top-title__container card-height-760 card-height-880">
               <div class="row">
-                <div class="col-3 remove-col-padding-left">
+                <div class="col-12 remove-col-padding">
+                    <div class="inline-flex margin-left-15">
+                        <span *ngIf="!(common.isExistUserAccessMenu('371'))"
+                          class="font-size-20 font-regular">{{currentDate | date: 'd-MMMM-y'}}</span>
+                        <mat-form-field [hidden]="!(common.isExistUserAccessMenu('371'))" appearance="outline"
+                          class="form-field-220">
+                          <mat-label>Select Date</mat-label>
+                          <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                            formControlName="ftr_transaction_date">
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                      <div class="inline-flex margin-left-15">
+                          <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Payment Mode</mat-label>
+                            <mat-select formControlName="ftr_pay_id" placeholder="Payment Mode" disabled required>
+                              <mat-option value="2">Cash at Bank</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="inline-flex margin-left-15">
+                            <mat-form-field appearance="outline" class="form-field">
+                              <mat-label>Bank</mat-label>
+                              <mat-select placeholder="Bank Name" formControlName="ftr_bnk_id" required>
+                                <mat-option value="">Please Select</mat-option>
+                                <mat-option *ngFor="let bank of banks" [value]="bank.bnk_id">{{bank.bank_name}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <div class="inline-flex margin-left-15">
+                              <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>Invoice no.</mat-label>
+                                <input autocomplete="off" matInput placeholder="Placeholder" (keydown.enter)="insertInvoice($event)"
+                                  type="number" formControlName="inv_invoice_no">
+                              </mat-form-field>
+                              <barcode-scanner-livestream (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
+                            </div>
+                </div>
+                <!-- <div class="col-3 remove-col-padding-left">
                   <span *ngIf="!(common.isExistUserAccessMenu('371'))"
                     class="font-size-20 font-regular">{{currentDate | date: 'd-MMMM-y'}}</span>
                   <mat-form-field [hidden]="!(common.isExistUserAccessMenu('371'))" appearance="outline"
-                    class="form-field">
+                    class="form-field-220">
                     <mat-label>Select Date</mat-label>
                     <input matInput [matDatepicker]="picker" placeholder="Choose a date"
                       formControlName="ftr_transaction_date">
@@ -65,7 +104,7 @@
                       type="number" formControlName="inv_invoice_no">
                   </mat-form-field>
                   <barcode-scanner-livestream (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
-                </div>
+                </div> -->
               </div>
               <div class="row ">
                 <div class="col-12 ">
@@ -78,7 +117,7 @@
               </div>
 
               <div class="row">
-                <div class="col-6 remove-col-padding">
+                <div class="col-6 ">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Remarks</mat-label>
                     <textarea rows="5" matInput placeholder="Write Remarks" formControlName="ftr_remark"
