@@ -11,6 +11,8 @@ export class SchoolDashboardComponent implements OnInit {
 	classWiseStudentDashboard: any[] = [];
 	studentBirthdayDashboard: any[] = [];
 	notificationsDashboard: any[] = [];
+	classBGChart: any = {};
+	classBGChartFlag = false;
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	schoolInfo: any;
@@ -26,7 +28,54 @@ export class SchoolDashboardComponent implements OnInit {
 		this.getStudentBirthdayDashboard();
 		this.getMessageNotification();
 	}
+	classBGChartCalculation(xcategories, boy, girl) {
+		this.classBGChartFlag = true;
+		this.classBGChart = {
+			chart: {
+				type: 'column'
+			},
+			title: {
+				text: ''
+			},
+			subtitle: {
+				text: ''
+			},
+			xAxis: {
+				categories: xcategories,
+				crosshair: true
+			},
+			yAxis: {
+				min: 0,
+				title: {
+					text: 'Students'
+				}
+			},
+			tooltip: {
+				headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+				pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					'<td style="padding:0"><b>{point.y} </b></td></tr>',
+				footerFormat: '</table>',
+				shared: true,
+				useHTML: true
+			},
+			plotOptions: {
+				column: {
+					pointPadding: 0.2,
+					borderWidth: 0
+				}
+			},
+			series: [{
+				name: 'Boys',
+				data: boy,
+				color: '#4b7aec'
+			}, {
+				name: 'Girls',
+				data: girl,
+				color: '#2cde80'
 
+			}]
+		};
+	}
 	getProcessCardData() {
 		this.sisService.getCountStudentDashboard().subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -51,11 +100,19 @@ export class SchoolDashboardComponent implements OnInit {
 					let boyTotal = 0;
 					let girlTotal = 0;
 					let otherTotal = 0;
+					const boyArray: any[] = [];
+					const girlArray: any[] = [];
+					const xcategories: any[] = [];
 					for (let i = 0; i < this.classWiseStudentDashboard.length; i++) {
 						const tempObj = {};
+						const boys = this.classWiseStudentDashboard[i]['Boys'] ? Number(this.classWiseStudentDashboard[i]['Boys']) : 0;
+						const girls = this.classWiseStudentDashboard[i]['Girls'] ? Number(this.classWiseStudentDashboard[i]['Girls']) : 0;
+						boyArray.push(boys);
+						girlArray.push(girls);
 						total = total + this.classWiseStudentDashboard[i]['Total'];
-						boyTotal = boyTotal + parseInt(this.classWiseStudentDashboard[i]['Boys'], 10);
-						girlTotal = girlTotal + parseInt(this.classWiseStudentDashboard[i]['Girls'], 10);
+						boyTotal = boyTotal + boys;
+						girlTotal = girlTotal + girls;
+						xcategories.push(this.classWiseStudentDashboard[i]['class_name']);
 						otherTotal = otherTotal + parseInt(this.classWiseStudentDashboard[i]['Other'], 10);
 						counter++;
 					}
@@ -67,6 +124,7 @@ export class SchoolDashboardComponent implements OnInit {
 					blankTempObj['Other'] = '<b>' + otherTotal + '</b>';
 					blankTempObj['Total'] = '<b>' + total + '</b>';
 					this.classWiseStudentDashboard.push(blankTempObj);
+					this.classBGChartCalculation(xcategories, boyArray, girlArray);
 
 				}
 			}

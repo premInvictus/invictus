@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonAPIService, FeeService } from '../../../_services';
-declare const require: any;
-const Highcharts = require('highcharts');
+import { DecimalPipe } from '@angular/common';
 @Component({
 	selector: 'app-school-dashboard',
 	templateUrl: './school-dashboard.component.html',
@@ -87,13 +86,14 @@ export class SchoolDashboardComponent implements OnInit {
 		this.feeoutstandingchart = {
 			chart: {
 				type: 'pie',
+				height: '300px',
 				options3d: {
 					enabled: true,
 					alpha: 45
 				}
 			},
 			title: {
-				text: '<b>' + this.totalfeeoutstanding + '<b><br><b>Total Outstanding <b>',
+				text: '<b>' + (new DecimalPipe('en-in').transform(this.totalfeeoutstanding)) + '<b><br><b>Total Outstanding <b>',
 				align: 'center',
 				verticalAlign: 'middle',
 				y: 25
@@ -101,7 +101,7 @@ export class SchoolDashboardComponent implements OnInit {
 
 			plotOptions: {
 				pie: {
-					innerSize: 250,
+					innerSize: 200,
 					depth: 45,
 					dataLabels: {
 						enabled: false
@@ -155,7 +155,7 @@ export class SchoolDashboardComponent implements OnInit {
 		this.feeclassoutstandingchart = {
 			chart: {
 				type: 'spline',
-				height: '500px'
+				height: '400px'
 			},
 			title: {
 				text: ''
@@ -260,7 +260,7 @@ export class SchoolDashboardComponent implements OnInit {
 						if (this.currentTabIndex === 0) {
 							xcategories.push(value.month_day);
 						} else if (this.currentTabIndex === 1) {
-							xcategories.push(value.month_name);
+							xcategories.push(value.month_name.substr(0, 3));
 						}
 						const amt = value.total_fee_amount ? Number(value.total_fee_amount) : 0;
 						projectedSeries.push(amt);
@@ -287,6 +287,7 @@ export class SchoolDashboardComponent implements OnInit {
 		this.feeprojectiondonutchart = {
 			chart: {
 				type: 'pie',
+				height: '300px',
 				options3d: {
 					enabled: true,
 					alpha: 45
@@ -294,7 +295,7 @@ export class SchoolDashboardComponent implements OnInit {
 				innerSize: '%'
 			},
 			title: {
-				text: '<b>' + this.totalreceipt + '<b><br><b>Total Recipt <b>',
+				text: '<b>' + ( new DecimalPipe('en-in').transform(this.totalreceipt)) + '<b><br><b>Total Recipt <b>',
 				align: 'center',
 				verticalAlign: 'middle',
 				y: 25
@@ -302,7 +303,7 @@ export class SchoolDashboardComponent implements OnInit {
 
 			plotOptions: {
 				pie: {
-					innerSize: 250,
+					innerSize: 200,
 					depth: 45,
 					dataLabels: {
 						enabled: false
@@ -339,7 +340,7 @@ export class SchoolDashboardComponent implements OnInit {
 		this.feeprojectionlinechart = {
 			chart: {
 				type: 'spline',
-				height: '480px',
+				height: '400px',
 			},
 			title: {
 				text: ''
