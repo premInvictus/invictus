@@ -130,12 +130,14 @@
                               </mat-error>
                            </mat-form-field>
                         </div>
-                        <div class="col-2 margin-top-15">
-                           <span>Whether Alumni of the School?</span>
-                           <mat-slide-toggle class="btn-spacer" (change)="checkAluminiStatus(i,$event)"
-                              [disabled]="viewOnly" [ngModel]="aluminiStatus[i] === 'No' ? false: true"
-                              formControlName="epd_parent_alumni">
-                              {{aluminiStatus[i]}}</mat-slide-toggle>
+                        <div class="col-2 remove-col-padding">
+                           <div class="margin-top-15">
+                              <span>Whether Alumni of the School?</span>
+                              <mat-slide-toggle class="margin-legt-imp-10" (change)="checkAluminiStatus(i,$event)"
+                                 [disabled]="viewOnly" [ngModel]="aluminiStatus[i] === 'No' ? false: true"
+                                 formControlName="epd_parent_alumni">
+                                 {{aluminiStatus[i]}}</mat-slide-toggle>
+                           </div>
                         </div>
                         <div class="col-2"
                            *ngIf="aluminiStatusArray[i] && checkIfFieldExist('epd_parent_alumni_last_class')">
@@ -214,8 +216,7 @@
                      <span class="text-uppercase"><b>Education Details</b></span>
                   </div>
                </div>
-               <br>
-               <div class="row remove-top-margin">
+               <div class="row">
                   <div *ngIf="checkIfFieldExist('epd_qualification')" class="col-2">
                      <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Choose Qualification</mat-label>
