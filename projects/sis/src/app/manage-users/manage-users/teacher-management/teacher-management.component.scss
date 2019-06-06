@@ -74,3 +74,23 @@ tr, th, td {
   float: right;
   margin-right: 10px;
 }
+td.mat-cell {
+  border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
+}
+.cdk-column-position{
+  width: 3% !important;
+}
+tr.mat-row:nth-child(even) {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #f1f4f7!important;
+}
+tr.mat-row:nth-child(odd) {
+padding-top: 10px;
+padding-bottom: 10px;
+background-color: #ffffff!important;
+} 

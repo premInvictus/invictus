@@ -171,57 +171,57 @@
                         <mat-form-field class="form-feild">
                             <input matInput (keyup)="applyFilterEmail($event.target.value)" placeholder="Filter" />
                         </mat-form-field>
-                        <mat-table #table [dataSource]="userDataSource" matSort class="table-100 mat-elevation-z1">
+                        <table mat-table #table [dataSource]="userDataSource" matSort class="table-100 text-center">
                             <!-- Checkbox Column -->
                             <ng-container matColumnDef="select">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    <mat-checkbox (change)="checkAllUserList($event)" [disabled]="viewMode"></mat-checkbox>
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let element">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-checkbox (change)="checkAllUserList($event)" [disabled]="viewMode" style="margin-left:18px;"></mat-checkbox>
+                                </th>
+                                <td mat-cell *matCellDef="let element">
                                     <mat-checkbox [value]="element.select" [checked]="element.checked ? element.checked : allUserSelectFlag"
                                         (change)="prepareSelectedRowData($event, element)" [disabled]="viewMode"></mat-checkbox>
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <!-- Student Column -->
                             <ng-container matColumnDef="user">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     User Name
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let element">
+                                </th>
+                                <td mat-cell *matCellDef="let element">
                                     {{ element.user }}
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="parent" *ngIf="currentReceivers == 'Parent'">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Active Parent
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let element">
+                                </th>
+                                <td mat-cell *matCellDef="let element">
                                     {{ element.parent }}
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <!-- Class Column -->
                             <ng-container matColumnDef="class" *ngIf="currentReceivers == 'Student' || currentReceivers == 'Parent' ">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Class
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let element">
+                                </th>
+                                <td mat-cell *matCellDef="let element">
                                     {{ element.class }}
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <!-- Section Column -->
                             <ng-container matColumnDef="section" *ngIf="currentReceivers == 'Student' || currentReceivers == 'Parent' ">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Section
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let element">
+                                </th>
+                                <td mat-cell *matCellDef="let element">
                                     {{ element.section }}
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="sub" *ngIf="currentReceivers == 'Teacher'">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Class - Section - Subject
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let element">
+                                </th>
+                                <td mat-cell *matCellDef="let element">
                                     <table>                                        
                                         <tbody>
                                             <tr *ngFor="let item of element.sub">
@@ -231,33 +231,33 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                </mat-cell>
+                                </td>
                                 
                             </ng-container>
                             <!-- Promote Column -->
                             <ng-container matColumnDef="email">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Email
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let element">
+                                </th>
+                                <td mat-cell *matCellDef="let element">
                                     {{element.email}}
-                                </mat-cell>
+                                </td>
                             </ng-container>
                             <!-- <tr mat-header-row *matHeaderRowDef="displayedColumnsTwo"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsTwo"></tr> -->
                             <ng-container *ngIf="currentReceivers == 'Student'">
-                                <mat-header-row *matHeaderRowDef="displayedColumnsTwo"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumnsTwo"></mat-row>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsTwo"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsTwo"></tr>
                             </ng-container>
                             <ng-container *ngIf="currentReceivers == 'Teacher'">
-                                <mat-header-row *matHeaderRowDef="displayedColumnsThree"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumnsThree"></mat-row>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsThree"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsThree"></tr>
                             </ng-container>
                             <ng-container *ngIf="currentReceivers == 'Parent'">
-                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
                             </ng-container>
-                        </mat-table>
+                        </table>
                     </div>
                 </div>
                 <br>
