@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12">
         <div class="row">
-          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('mi_blood_group')">
+          <div class="col-2" *ngIf="checkIfFieldExist('mi_blood_group')">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Blood Group</mat-label>
               <mat-select placeholder="Blood Group" formControlName="mi_blood_group" [disabled]="viewOnly">
@@ -12,14 +12,14 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('mi_identification_mark')">
+          <div class="col-2" *ngIf="checkIfFieldExist('mi_identification_mark')">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Identification Mark</mat-label>
               <input class="text-capitalize" matInput placeholder="Identification Mark"
                 formControlName="mi_identification_mark" [readonly]="viewOnly">
             </mat-form-field>
           </div>
-          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('upd_special_need')">
+          <div class="col-2" *ngIf="checkIfFieldExist('upd_special_need')">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Child with Special Needs</mat-label>
               <mat-select placeholder="Child with special needs?" formControlName="mi_special_need"
@@ -30,28 +30,24 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('mi_emergency_contact_name')">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Emergency Contact Name.</mat-label>
-                <input class="text-capitalize" matInput placeholder="Emergency Contact Name"
-                  formControlName="mi_emergency_contact_name" [readonly]="viewOnly">
-              </mat-form-field>
-            </div>
-            <div class="col-2 sis-col-20" *ngIf="checkIfFieldExist('mi_emergency_contact_no')">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Emergency Contact Name</mat-label>
-                  <input
-                    oninput="javascript: if(this.value.length > this.maxLength) this.value = this.value.slice(0,this.maxLength);"
-                    matInput placeholder="Emergency Contact No." type="number" maxlength="10"
-                    formControlName="mi_emergency_contact_no" [readonly]="viewOnly">
-                </mat-form-field>
-              </div>
+          <div class="col-2" *ngIf="checkIfFieldExist('mi_emergency_contact_name')">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Emergency Contact Name</mat-label>
+              <input class="text-capitalize" matInput placeholder="Emergency Contact Name"
+                formControlName="mi_emergency_contact_name" [readonly]="viewOnly">
+            </mat-form-field>
+          </div>
+          <div class="col-2" *ngIf="checkIfFieldExist('mi_emergency_contact_no')">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Emergency Contact Number</mat-label>
+              <input
+                oninput="javascript: if(this.value.length > this.maxLength) this.value = this.value.slice(0,this.maxLength);"
+                matInput placeholder="Emergency Contact No." type="number" maxlength="10"
+                formControlName="mi_emergency_contact_no" [readonly]="viewOnly">
+            </mat-form-field>
+          </div>
         </div>
         <div class="row">
-          
-
-
-          
         </div>
       </div>
     </div>

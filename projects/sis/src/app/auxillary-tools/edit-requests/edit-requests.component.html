@@ -13,98 +13,98 @@
                      <mat-form-field class="form-feild" *ngIf="EDIT_REQUEST_ELEMENT_DATA.length > 0">
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                      </mat-form-field>
-                     <mat-table [dataSource]="editRequestDataSource" matSort class="table-100 mat-elevation-z1">
+                     <table mat-table [dataSource]="editRequestDataSource" matSort class="table-100 text-center">
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="no">
-                           <mat-header-cell class="er_sn_no er_sn_no_pad" *matHeaderCellDef mat-sort-header>
+                           <th mat-header-cell class="er_sn_no er_sn_no_pad" *matHeaderCellDef mat-sort-header>
                               S.no
-                           </mat-header-cell>
-                           <mat-cell class="er_sn_no er_sn_no_rem_pad" *matCellDef="let item">
+                           </th>
+                           <td mat-cell class="er_sn_no er_sn_no_rem_pad" *matCellDef="let item">
                               {{ item.no }}
-                           </mat-cell>
+                           </td>
                         </ng-container>
                         <!-- Admission Column -->
                         <ng-container matColumnDef="request">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header>
+                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
                               Request No.
-                           </mat-header-cell>
-                           <mat-cell *matCellDef="let item">
+                           </th>
+                           <td mat-cell *matCellDef="let item">
                               {{ item.request }}
-                           </mat-cell>
+                           </td>
                         </ng-container>
                         <!-- Student Column -->
                         <ng-container matColumnDef="priority">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header>
+                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
                               Priority
-                           </mat-header-cell>
-                           <mat-cell *matCellDef="let item">
+                           </th>
+                           <td mat-cell *matCellDef="let item">
                               {{ item.priority }}
-                           </mat-cell>
+                           </td>
                         </ng-container>
                         <!-- Class Column -->
                         <ng-container matColumnDef="date">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header>
+                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
                               Date
-                           </mat-header-cell>
-                           <mat-cell *matCellDef="let item">
+                           </th>
+                           <td mat-cell *matCellDef="let item">
                               {{ item.date }}
-                           </mat-cell>
+                           </td>
                         </ng-container>
                         <!-- Section Column -->
                         <ng-container matColumnDef="requestedby">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header>
+                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
                               Requested By
-                           </mat-header-cell>
-                           <mat-cell *matCellDef="let item">
+                           </th>
+                           <td mat-cell *matCellDef="let item">
                               {{ item.requestedby }}
-                           </mat-cell>
+                           </td>
                         </ng-container>
                         <ng-container matColumnDef="processType">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header>
+                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
                               Process Type
-                           </mat-header-cell>
-                           <mat-cell *matCellDef="let item">
+                           </th>
+                           <td mat-cell *matCellDef="let item">
                               <span class="text-capitalize">{{configService.getProccessTypeName(item.processType)}}</span>
-                           </mat-cell>
+                           </td>
                         </ng-container>
                         <ng-container matColumnDef="tabName">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header>
+                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
                               Tab
-                           </mat-header-cell>
-                           <mat-cell *matCellDef="let item">
+                           </th>
+                           <td mat-cell *matCellDef="let item">
                               {{ item.tabName }}
-                           </mat-cell>
+                           </td>
                         </ng-container>
                         <ng-container matColumnDef="status">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header>
+                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
                               Status
-                           </mat-header-cell>
-                           <mat-cell *matCellDef="let item">
+                           </th>
+                           <td mat-cell *matCellDef="let item">
                               <div>
-                                 <br>
+                                 
                                  <p style="color: #e11022;font-size: 16px;" class="text-center" *ngIf="item.status == '3'"><b>Partial</b></p>
                               </div>
                               <div>
-                                 <br>
+                                
                                  <p style="color:#2dcf00;font-size: 16px;" class="text-center" *ngIf="item.status == '1'"><b>Active</b></p>
                               </div>
-                           </mat-cell>
+                           </td>
                         </ng-container>
                         <!-- Promote Column -->
                         <ng-container matColumnDef="action">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header>
+                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
                               Action
-                           </mat-header-cell>
-                           <mat-cell *matCellDef="let item">
+                           </th>
+                           <td mat-cell *matCellDef="let item">
                               <!-- <button *ngIf="isExistUserAccessMenu('269')" mat-flat-button class="btn-neutral-dull edit-request-btn" (click)="viewRequest(item.action)">View Request</button> -->
                               <mat-icon *ngIf="isExistUserAccessMenu('269')" 
                               [id]="'view' + item.no"
                               class="material-icons icon-pointer view-icon" (click)="viewRequest(item.action, item.no)">visibility</mat-icon>
-                           </mat-cell>
+                           </td>
                         </ng-container>
-                        <mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></mat-row>
-                     </mat-table>
+                        <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
+                     </table>
                      <table class="table-100 text-center" style="margin-top:5px;">
                            <tr *ngIf="EDIT_REQUEST_ELEMENT_DATA.length == 0">
                              <td colspan="12">No Record Found</td>

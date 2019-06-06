@@ -1,4 +1,4 @@
-<div class="margin-20ne">
+<div class="">
   <div class="row">
     <div class="col-12 text-right">
       <a class="close-btn" (click)="closemodal()"><i class="material-icons">
@@ -9,20 +9,23 @@
   <div class="row">
     <div class="col-2 text-center">
       <img class="student-profile-image-popup"
-        [src]="invoiceDetails?.au_profileimage ? invoiceDetails.au_profileimage : '/assets/images/student.png'">
+        [src]="invoiceDetails?.au_profileimage ? invoiceDetails.au_profileimage : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
       <div class="">
         <div class="font-size-16 font-bold">
           <span>{{invoiceDetails?.process_name}} {{invoiceDetails?.au_admission_no}} </span>
         </div>
       </div>
     </div>
-    <div class="col-10">
+    <div class="col-1">
+        <div class="vertical-line-divider"></div>
+    </div>
+    <div class="col-9">
       <div class="row remove-top-margin">
-        <div class="col-4 ">
+        <div class="col-3 ">
           <div class="row remove-top-margin">
             <div class="col-12">
               <span class="font-size-16 font-medium">{{invoiceDetails?.au_full_name | titlecase}},
-                {{invoiceDetails?.class_name}} - {{invoiceDetails?.sec_name}}</span>
+                {{class_sec}}</span>
             </div>
           </div>
           <div class="row">
@@ -39,7 +42,10 @@
           </div>
 
         </div>
-        <div class="col-4">
+        <div class="col-1">
+            <div class="vertical-line-divider"></div>
+        </div>
+        <div class="col-3">
           <div class="row remove-top-margin">
             <div class="col-12">
               <span class="font-size-16 font-light">Invoice no: </span><span
@@ -59,7 +65,10 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-1">
+            <div class="vertical-line-divider"></div>
+        </div>
+        <div class="col-3">
           <div class="row remove-top-margin">
             <div class="col-12">
               <span class="font-size-16 font-light">Invoice Date: </span><span
@@ -110,15 +119,15 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="feedue">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Fee Due </th>
-          <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Fee Due (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
+          <td mat-cell *matCellDef="let element"> {{element.feedue | number | zerodash}} </td>
         </ng-container>
         <ng-container matColumnDef="concession">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Concession </th>
-          <td mat-cell *matCellDef="let element"> {{element.concession | number}} </td>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Concession (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
+          <td mat-cell *matCellDef="let element"> {{element.concession | number | zerodash}} </td>
         </ng-container>
         <ng-container matColumnDef="adjustment">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
           <td mat-cell *matCellDef="let element">
             <ng-template [ngIf]="modificationFlag" [ngIfElse]="elseContaint">
               <mat-form-field class="margin-top-10" appearance="outline">
@@ -127,12 +136,12 @@
               </mat-form-field>
             </ng-template>
             <ng-template #elseContaint>
-              {{element.adjustment | number}}
+              {{element.adjustment | number | zerodash}}
             </ng-template>
           </td>
         </ng-container>
         <ng-container matColumnDef="netpay">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Net Payable </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Net Payable (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
           <td mat-cell *matCellDef="let element">{{element.netpay | number}} </td>
         </ng-container>
 
@@ -162,8 +171,6 @@
     </div>
     <div class="col-6">
       <div class="text-right margin-top-25">
-        <button *ngIf="(!modificationFlag) && this.data.edit && commonAPIService.isExistUserAccessMenu('357')"
-          mat-raised-button class="btn-primary btn-180 btn-success" (click)="modifyInvoice()">Modify</button>
         <button *ngIf="modificationFlag" mat-raised-button class="btn-primary btn-180 btn-success"
           (click)="updateInvoice()">Update</button>
         <button *ngIf="modificationFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"

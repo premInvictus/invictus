@@ -11,7 +11,7 @@
                   <div class="col-6 text-right">
                      <div class="inline-flex">
                         <h3>School</h3>
-                        <mat-slide-toggle class="btn-spacer" [ngModel]="fin_is_hostel_fee === 1 ? 'checked' : ''"
+                        <mat-slide-toggle class="btn-spacer my-toggle" [ngModel]="fin_is_hostel_fee === 1 ? 'checked' : ''"
                            (change)="changeIsHostelFee($event)"></mat-slide-toggle>
                         <h3 class="btn-spacer">Hostel</h3>
                      </div>
@@ -21,7 +21,7 @@
             </mat-card-title>
             <mat-card-content>
                <div class="row">
-                  <div class="col-4 remove-col-padding custom-col-27">
+                  <div class="col-2 remove-col-padding custom-col-27">
                      <form [formGroup]="finepenaltiesForm" novalidate>
                         <div class="row">
                            <div class="col-12 margin-top-25">
@@ -71,12 +71,12 @@
                               </div>
                            </div>
                            <div class="col-5">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>No of Months</mat-label>
-                                    <input matInput placeholder="No of Months" formControlName="fin_max_month"
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>No of Months</mat-label>
+                                 <input matInput placeholder="No of Months" formControlName="fin_max_month"
                                     [errorStateMatcher]="confirmValidParentMatcher" required>
-                                 </mat-form-field>
-                              </div>
+                              </mat-form-field>
+                           </div>
                         </div>
                         <div class="row">
                            <div class="col-12">
@@ -123,7 +123,7 @@
                   <div class="col-1 fee-custom-col-8">
                      <div class="vertical-line-divider"></div>
                   </div>
-                  <div class="col-7 fee-custom-col-64">
+                  <div class="col-9 fee-custom-col-64">
                      <div class="row">
                         <div class="col-12 remove-col-padding">
                            <div>
@@ -170,13 +170,16 @@
                                  </ng-container>
                                  <ng-container matColumnDef="action">
                                     <th mat-header-cell *matHeaderCellDef> Action </th>
-                                    <td mat-cell *matCellDef="let item" class="inline-flex padding-top-10"> <i
-                                          class="material-icons icon-edit" (click)="patchValue(item.action)">
-                                          create
-                                       </i> <i class="material-icons icon-danger icon-spacer"
-                                          (click)="openDeleteDialog(item.action)">
-                                          delete
-                                       </i>
+                                    <td mat-cell *matCellDef="let item">
+                                       <ul class="inline-flex margin-top-10">
+                                          <li><i class="material-icons icon-edit" (click)="patchValue(item.action)">
+                                             create
+                                          </i></li> 
+                                          <li><i class="material-icons icon-danger icon-spacer"
+                                             (click)="openDeleteDialog(item.action)">
+                                             delete
+                                          </i></li>
+                                       </ul>
                                     </td>
                                  </ng-container>
                                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

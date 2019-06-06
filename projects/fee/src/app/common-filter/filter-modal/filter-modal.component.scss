@@ -57,3 +57,34 @@
   .filterpointer{
     cursor: pointer;
   }
+  td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+.mat-checkbox{
+    padding: 2px;
+}
+.cdk-column-fromto{
+    width:20%;
+}
+.cdk-column-fieldlabel {
+    width: 25%!important; 
+}
+.cdk-column-discrete{
+    width: 25%!important; 
+}
+.filter-header-container {
+  background-color: #082a3e;
+  padding: 3px 3px;
+  color: #ffffff;
+}
+.btn-success {
+  background-color: #2b6c2d;
+}
+.btn-success:hover{
+  background-color: #ffffff;
+  color: #2b6c2d;
+}

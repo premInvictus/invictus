@@ -69,7 +69,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	addOnly = true;
 	iddesabled = true;
 	backOnly = false;
-	defaultsrc = '/assets/images/student.png';
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
@@ -91,8 +91,11 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	studentLoginId: any;
 	processType: any = '';
 	previousProcessType: any = '';
-	previousAdmno: any  = '';
+	previousAdmno: any = '';
 	previousLoginId = '';
+	class_name: any;
+	section_name: any;
+	class_sec: any;
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },
@@ -172,10 +175,17 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						this.lastB = true;
 						this.previousB = true;
 						this.studentdetails = [];
-						this.defaultsrc = '/assets/images/student.png';
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
 						if (result && result.data && result.data[0]) {
 							this.studentdetails = result.data[0];
 							this.previousLoginId = this.studentdetails.au_login_id;
+							this.class_name = this.studentdetails.class_name;
+							this.section_name = this.studentdetails.sec_name;
+							if(this.section_name != ' '){
+								this.class_sec = this.class_name +' - '+ this.section_name;
+							}else{
+								this.class_sec = this.class_name;
+							}
 							if (Number(this.processType) === 4) {
 								this.studentRouteMoveStoreService.setRouteStore(
 									this.studentdetails.em_admission_no,
@@ -413,6 +423,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.keyFlag = true;
 		$event.preventDefault();
 		this.getStudentDetailsByAdmno($event.target.value);
+		document.getElementById('blur_id').blur();
 	}
 	getStudentDetailsByAdmno(admno) {
 		this.studentdetailsflag = true;
@@ -458,5 +469,16 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.processType = $event.value;
 		this.processtypeService.setProcesstype(this.processType);
 		this.processTypeEmit.emit(this.processType);
+	}
+	parent_type_fun(type) {
+		if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'F') {
+			return 'Father Name';
+		} else if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'M') {
+			return 'Mother Name';
+		} else if (type.parentinfo[0] &&  type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'G') {
+			return 'Guardian Name';
+		} else {
+			return 'Active Parent Name';
+		}
 	}
 }

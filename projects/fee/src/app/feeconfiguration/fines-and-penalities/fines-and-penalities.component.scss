@@ -3,3 +3,24 @@
     position: relative !important;
     z-index: 1000 !important;
 }
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+ul {
+    list-style-type: none;
+    padding: 0px !important;
+  }
+  .mat-column-srno {
+    width: 4% !important;
+    flex: 0 0 8% !important;
+}
+::ng-deep.my-toggle > label > div > div > div.mat-slide-toggle-thumb {
+    background-color: #1aed11 !important;
+  }
+  ::ng-deep.my-toggle > label > div.mat-slide-toggle-bar {
+    background-color: #1aed11 !important;
+  }

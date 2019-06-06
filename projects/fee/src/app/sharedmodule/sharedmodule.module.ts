@@ -33,6 +33,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EditRequestModalComponent } from './edit-request-modal/edit-request-modal.component';
 import { InvoiceDetailsModalComponent } from '../feemaster/invoice-details-modal/invoice-details-modal.component';
 import { NumberToWordPipe } from '../_pipes/number-to-word.pipe';
+import { ZerodashPipe } from '../_pipes/zerodash.pipe';
 import { ReceiptDetailsModalComponent } from './receipt-details-modal/receipt-details-modal.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 const moment = _moment;
@@ -99,6 +100,7 @@ export const MY_FORMATS = {
 		ImageViewerComponent,
 		InvoiceDetailsModalComponent,
 		NumberToWordPipe,
+		ZerodashPipe,
 		ReceiptDetailsModalComponent
 	],
 	exports: [FormsModule, ReactiveFormsModule,
@@ -137,7 +139,9 @@ export const MY_FORMATS = {
 		EditRequestModalComponent,
 		InvoiceDetailsModalComponent,
 		NumberToWordPipe,
-		ReceiptDetailsModalComponent
+		ZerodashPipe,
+		ReceiptDetailsModalComponent,
+		CommonDynamicChartComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,

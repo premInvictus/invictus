@@ -35,10 +35,10 @@ export class ResolverService {
 					const tempJson = {
 						CID: user.clientKey,
 						SID: user.secretKey,
-						AN: user.token,
-						UR: user.role_id,
-						LN: user.login_id,
-						PF: user.Prefix
+						AN:  user.token,
+						UR:  user.role_id,
+						LN:  user.login_id,
+						PF:  user.Prefix
 					};
 					if (user) {
 						localStorage.setItem('currentUser', JSON.stringify(

@@ -162,43 +162,43 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		const invoiceJSON: any = {
 			inv_id: inv_number
 		};
-		this.feeService.getInvoiceBifurcation(invoiceJSON).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.INVOICE_ELEMENT_DATA = [];
-				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
-				this.invoice = {};
-				this.invoice = result.data[0];
-				this.invoice.netPay = this.invoice.late_fine_amt ?
-					Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
-					Number(this.invoice.fee_amount);
+			this.feeService.getInvoiceBifurcation(invoiceJSON).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.INVOICE_ELEMENT_DATA = [];
+					this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
+					this.invoice = {};
+					this.invoice = result.data[0];
+					this.invoice.netPay = this.invoice.late_fine_amt ?
+						Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
+						Number(this.invoice.fee_amount);
 
-				if (this.invoice.balance_amt) {
-					this.invoice.netPay += Number(this.invoice.balance_amt);
-				}
-				this.invoiceArray = this.invoice.invoice_bifurcation;
-				this.feeTransactionForm.patchValue({
-					'ftr_amount': this.invoice.netPay,
-					'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
-				});
-				let pos = 1;
-				this.invoiceTotal = 0;
-				for (const item of this.invoiceArray) {
-					this.INVOICE_ELEMENT_DATA.push({
-						srno: pos,
-						feehead: item.invg_fh_name,
-						feedue: item.invg_fh_amount,
-						concession: item.invg_fcc_amount,
-						adjustment: item.invg_adj_amount,
-						// tslint:disable-next-line: max-line-length
-						netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+					if (this.invoice.balance_amt) {
+						this.invoice.netPay += Number(this.invoice.balance_amt);
+					}
+					this.invoiceArray = this.invoice.invoice_bifurcation;
+					this.feeTransactionForm.patchValue({
+						'ftr_amount': this.invoice.netPay,
+						'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
 					});
-					// tslint:disable-next-line: max-line-length
-					this.invoiceTotal += Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
-					pos++;
+					let pos = 1;
+					this.invoiceTotal = 0;
+					for (const item of this.invoiceArray) {
+						this.INVOICE_ELEMENT_DATA.push({
+							srno: pos,
+							feehead: item.invg_fh_name,
+							feedue: item.invg_fh_amount,
+							concession: item.invg_fcc_amount,
+							adjustment: item.invg_adj_amount,
+							// tslint:disable-next-line: max-line-length
+							netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+						});
+						// tslint:disable-next-line: max-line-length
+						this.invoiceTotal += Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
+						pos++;
+					}
+					this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 				}
-				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
-			}
-		});
+			});
 	}
 	getStudentInformation(login_id) {
 		this.studentInfo = {};
@@ -380,19 +380,41 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			validateFlag = false;
 			this.common.showSuccessErrorMessage('Invoice Number cannot be blank for against invoice', 'error');
 		}
-		if (!this.feeTransactionForm.valid) {
-			this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
-			validateFlag = false;
+		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1) {
+			if (!(this.feeTransactionForm.value.ftr_pay_id &&
+				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_remark)) {
+				validateFlag = false;
+			}
+		} else if (Number(this.feeTransactionForm.value.ftr_pay_id) === 2) {
+			if (!(this.feeTransactionForm.value.ftr_pay_id &&
+				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_bnk_id
+				&& this.feeTransactionForm.value.ftr_remark)) {
+				validateFlag = false;
+			}
+		} else if (Number(this.feeTransactionForm.value.ftr_pay_id) === 3) {
+			if (!(this.feeTransactionForm.value.ftr_pay_id &&
+				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_bnk_id
+				&& this.feeTransactionForm.value.ftr_remark
+				&& this.feeTransactionForm.value.ftr_cheque_date && this.feeTransactionForm.value.ftr_cheque_no
+				&& this.feeTransactionForm.value.ftr_deposit_bnk_id && this.feeTransactionForm.value.ftr_branch)) {
+				validateFlag = false;
+			}
+		} else {
+			if (!(this.feeTransactionForm.value.ftr_pay_id &&
+				this.feeTransactionForm.value.ftr_amount &&  this.feeTransactionForm.value.ftr_transaction_id &&
+				this.feeTransactionForm.value.ftr_remark)) {
+				validateFlag = false;
+			}
 		}
 		if (validateFlag) {
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage('Fee transaction added', 'success');
+					this.common.showSuccessErrorMessage(result.messsage, 'success');
 					this.reset();
 					this.getStudentInformation(this.lastRecordId);
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				} else {
-					this.common.showSuccessErrorMessage('Fee transaction not added', 'error');
+					this.common.showSuccessErrorMessage(result.messsage, 'error');
 					this.reset();
 					this.getStudentInformation(this.lastRecordId);
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
@@ -427,15 +449,36 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			validateFlag = false;
 			this.common.showSuccessErrorMessage('Invoice Number cannot be blank for against invoice', 'error');
 		}
-		if (!this.feeTransactionForm.valid) {
-			this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
-			validateFlag = false;
+		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1 ) {
+			if (!(this.feeTransactionForm.value.ftr_pay_id &&
+				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_remark)) {
+				validateFlag = false;
+			}
+		} else if (Number(this.feeTransactionForm.value.ftr_pay_id) === 2) {
+			if (!(this.feeTransactionForm.value.ftr_pay_id &&
+				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_bnk_id
+				&& this.feeTransactionForm.value.ftr_remark)) {
+				validateFlag = false;
+			}
+		} else if (Number(this.feeTransactionForm.value.ftr_pay_id) === 3) {
+			if (!(this.feeTransactionForm.value.ftr_pay_id &&
+				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_bnk_id
+				&& this.feeTransactionForm.value.ftr_remark
+				&& this.feeTransactionForm.value.ftr_cheque_date && this.feeTransactionForm.value.ftr_cheque_no
+				&& this.feeTransactionForm.value.ftr_deposit_bnk_id && this.feeTransactionForm.value.ftr_branch)) {
+				validateFlag = false;
+			}
+		} else {
+			if (!(this.feeTransactionForm.value.ftr_pay_id &&
+				this.feeTransactionForm.value.ftr_amount &&  this.feeTransactionForm.value.ftr_transaction_id &&
+				this.feeTransactionForm.value.ftr_remark)) {
+				validateFlag = false;
+			}
 		}
 		if (validateFlag) {
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
-					saveAs(result.data, result.data.split('/')[length - 1]);
 					this.common.showSuccessErrorMessage(result.message, 'success');
 					window.open(result.data, '_blank');
 					this.reset();
@@ -443,6 +486,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				} else {
 					this.reset();
+					this.common.showSuccessErrorMessage(result.messsage, 'error');
 					this.getStudentInformation(this.lastRecordId);
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				}
@@ -456,6 +500,15 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	}
 	getSelectedMode($event) {
 		this.selectedMode = $event.value;
+		if (this.selectedMode !== '1') {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount': this.invoice.fee_amount,
+			});
+		} else {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount': this.invoice.netPay,
+			});
+		}
 	}
 
 	reset() {
@@ -547,11 +600,13 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	setPayAmount(event) {
 		if (event.value !== '1') {
 			this.feeTransactionForm.patchValue({
-				'ftr_amount': this.invoice.fee_amount
+				'ftr_amount': this.invoice.fee_amount,
+				'ftr_pay_id': event.value
 			});
 		} else {
 			this.feeTransactionForm.patchValue({
-				'ftr_amount': this.invoice.netPay
+				'ftr_amount': this.invoice.netPay,
+				'ftr_pay_id': event.value
 			});
 		}
 	}

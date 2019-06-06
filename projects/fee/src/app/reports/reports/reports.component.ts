@@ -33,11 +33,13 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	accountFlag = false;
 	tableFlag = false;
 	reportFlag = true;
+	checkMultiple = false;
 	reportTypeArray: any[] = [];
 	reportFilterForm: FormGroup;
 	REPORT_ELEMENT_DATA: any[] = [];
 	REPORT_ELEMENT_DATA2: any[] = [];
-	valueLabel: any = 'Value';
+	REPORT_ELEMENT_DATA3: any[] = [];
+	valueLabel: any = 'Filter 1';
 	totalRecords: any;
 	currentDate = new Date();
 	minDate: any;
@@ -45,17 +47,18 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	startMonth: any;
 	valueArray: any[] = [];
 	advSearchFlag = true;
-	hiddenFieldLabel: any = '';
+	hiddenFieldLabel: any = 'Filter 2';
 	@ViewChild('paginator') paginator: MatPaginator;
 	dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
 	dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
+	dataSource3 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
 	feePeriod: any[] = [];
 	hiddenValueArray: any[] = [];
 	hiddenValueArray2: any[] = [];
 	hiddenValueArray3: any[] = [];
 	hiddenValueArray4: any[] = [];
 	hiddenValueArray5: any[] = [];
-	hiddenFieldLabel2: any = '';
+	hiddenFieldLabel2: any = 'Filter 3';
 	classDataArray: any[] = [];
 	pageEvent: PageEvent;
 	feeReportArray: any[] = [
@@ -437,9 +440,15 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	switchReport() {
 		this.accountFlag = false;
+		this.REPORT_ELEMENT_DATA = [];
+		this.REPORT_ELEMENT_DATA2 = [];
+		this.REPORT_ELEMENT_DATA3 = [];
 		this.advSearchFlag = true;
 		this.toggleSearch = false;
-		this.valueLabel = 'Value';
+		this.valueLabel = 'Filter 1';
+		this.hiddenFieldLabel = 'Filter2';
+		this.hiddenFieldLabel2 = 'Filter3';
+		this.checkMultiple = false;
 		this.reportFlag = true;
 		this.valueArray = [];
 		this.hiddenValueArray = [];
@@ -461,6 +470,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		});
 	}
 	changeReportType($event, type) {
+		this.checkMultiple = false;
 		this.reportFilterForm.patchValue({
 			'fee_value': '',
 			'from_date': '',
@@ -490,6 +500,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 		if ($event.value === 'headwise') {
 			this.valueLabel = 'Fee Heads';
+			this.checkMultiple = true;
 			this.getFeeHeads();
 			this.hiddenFieldLabel = 'Class';
 			this.getClass2();
@@ -498,17 +509,20 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		if ($event.value === 'classwise') {
 			this.hiddenValueArray = [];
 			this.valueLabel = 'Class';
+			this.checkMultiple = true;
 			this.hiddenFieldLabel = 'Section';
 			this.getClass();
 		}
 		if ($event.value === 'mfr') {
 			this.hiddenValueArray = [];
 			this.valueLabel = 'Class';
+			this.checkMultiple = true;
 			this.hiddenFieldLabel = 'Section';
 			this.getClass();
 		}
 		if ($event.value === 'modewise') {
 			this.valueLabel = 'Mode';
+			this.checkMultiple = true;
 			this.hiddenFieldLabel = 'Class';
 			this.getModes();
 			this.hiddenFieldLabel2 = 'Section';
@@ -516,6 +530,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 		if ($event.value === 'routewise') {
 			this.valueLabel = 'Route';
+			this.checkMultiple = true;
 			this.getRoutes();
 			this.hiddenFieldLabel = 'Class';
 			this.hiddenFieldLabel2 = 'Section';
@@ -670,9 +685,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
 		this.REPORT_ELEMENT_DATA2 = [];
 		this.dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
+		this.REPORT_ELEMENT_DATA3 = [];
+		this.dataSource3 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA3);
 		if ((Number(this.reportType) === 1 || Number(this.reportType) === 2)
 			&& this.reportFilterForm.value.report_type) {
-			if (this.reportFilterForm.value.report_type !== 'mfr') {
+			if (this.reportFilterForm.value.report_type !== '' &&
+				this.reportFilterForm.value.report_type !== 'mfr') {
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage(result.message, 'success');
@@ -707,8 +725,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											if (key2 === 'fh_id') {
 												obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 													(Number(keys) + 1);
-												obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
-												obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '0';
+												obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
+												obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '-';
 												obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
 													repoArray[Number(keys)]['invoice_no'] : '-';
 												obj['invoice_id'] = repoArray[Number(keys)]['invoice_id'] ?
@@ -716,7 +734,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 												obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
 													repoArray[Number(keys)]['rpt_id'] : '0';
 												obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
-													repoArray[Number(keys)]['receipt_no'] : 'NA';
+													repoArray[Number(keys)]['receipt_no'] : '-';
 												obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 													repoArray[Number(keys)]['stu_admission_no'] : '-';
 												obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
@@ -725,7 +743,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 												tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 												obj['total'] = new DecimalPipe('en-us').transform(tot);
 												obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
-													repoArray[Number(keys)]['pay_name'] : 'NA';
+													repoArray[Number(keys)]['pay_name'] : '-';
 												k++;
 											}
 										});
@@ -745,13 +763,13 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								const obj: any = {};
 								obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 									(index + 1);
-								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
+								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
 								obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 									repoArray[Number(index)]['invoice_no'] : '-';
 								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 									repoArray[Number(index)]['invoice_id'] : '0';
 								obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-									repoArray[Number(index)]['receipt_no'] : 'NA';
+									repoArray[Number(index)]['receipt_no'] : '-';
 								obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 									repoArray[Number(index)]['rpt_id'] : '0';
 								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -761,7 +779,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									repoArray[Number(index)]['stu_sec_name'];
 								obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
 									new DecimalPipe('en-us').transform(repoArray[Number(index)]['rpt_amount'])
-									: '0';
+									: '-';
 								obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
 									repoArray[Number(index)]['fp_name'] : '-';
 								this.REPORT_ELEMENT_DATA.push(obj);
@@ -774,13 +792,13 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								const obj: any = {};
 								obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 									(index + 1);
-								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
+								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
 								obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 									repoArray[Number(index)]['invoice_no'] : '-';
 								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 									repoArray[Number(index)]['invoice_id'] : '0';
 								obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-									repoArray[Number(index)]['receipt_no'] : 'NA';
+									repoArray[Number(index)]['receipt_no'] : '-';
 								obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 									repoArray[Number(index)]['rpt_id'] : '0';
 								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -790,11 +808,11 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									repoArray[Number(index)]['stu_sec_name'];
 								obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
 									new DecimalPipe('en-us').transform(repoArray[Number(index)]['rpt_amount'])
-									: 0;
+									: '-';
 								obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
-									repoArray[Number(index)]['fp_name'] : 'NA';
+									repoArray[Number(index)]['fp_name'] : '-';
 								obj['pay_name'] = repoArray[Number(index)]['pay_name'] ?
-									repoArray[Number(index)]['pay_name'] : 'NA';
+									repoArray[Number(index)]['pay_name'] : '-';
 								this.REPORT_ELEMENT_DATA.push(obj);
 								this.tableFlag = true;
 								index++;
@@ -805,13 +823,13 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								const obj: any = {};
 								obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 									(index + 1);
-								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
+								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
 								obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 									repoArray[Number(index)]['invoice_no'] : '-';
 								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 									repoArray[Number(index)]['invoice_id'] : '0';
 								obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-									repoArray[Number(index)]['receipt_no'] : 'NA';
+									repoArray[Number(index)]['receipt_no'] : '-';
 								obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 									repoArray[Number(index)]['rpt_id'] : '0';
 								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -821,11 +839,11 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									repoArray[Number(index)]['stu_sec_name'];
 								obj['rpt_amount'] = repoArray[Number(index)]['transport_amount'] ?
 									new DecimalPipe('en-us').transform(repoArray[Number(index)]['transport_amount'])
-									: 0;
+									: '-';
 								obj['route_name'] = repoArray[Number(index)]['route_name'] ?
-									repoArray[Number(index)]['route_name'] : 'NA';
+									repoArray[Number(index)]['route_name'] : '-';
 								obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
-									repoArray[Number(index)]['stoppages_name'] : 'NA';
+									repoArray[Number(index)]['stoppages_name'] : '-';
 								this.REPORT_ELEMENT_DATA.push(obj);
 								this.tableFlag = true;
 								index++;
@@ -996,9 +1014,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						let feePeriod: any = '';
 						for (const period of repoArray[Number(index)]['inv_invoice_generated_status']) {
-							feePeriod = feePeriod + period.fm_name + '<br>';
+							feePeriod = feePeriod + period.fm_name + ',';
 						}
-						obj['fp_name'] = feePeriod ? feePeriod : 'NA';
+						feePeriod = feePeriod.substring(0, feePeriod.length - 1);
+						obj['fp_name'] = feePeriod ? feePeriod : '-';
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
 						index++;
@@ -1043,19 +1062,21 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['class_name'] + '-' +
 							repoArray[Number(index)]['sec_name'];
+						obj['cheque_no'] = repoArray[Number(index)]['cheque_no'] ?
+							repoArray[Number(index)]['cheque_no'] : '-';
 						obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 							repoArray[Number(index)]['invoice_no'] : '-';
 						obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 							repoArray[Number(index)]['invoice_id'] : '-';
 						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-							repoArray[Number(index)]['receipt_no'] : 'NA';
+							repoArray[Number(index)]['receipt_no'] : '-';
 						obj['receipt_id'] = repoArray[Number(index)]['receipt_id'] ?
 							repoArray[Number(index)]['receipt_id'] : '-';
 						obj['receipt_amount'] = repoArray[Number(index)]['receipt_amount'] ?
 							new DecimalPipe('en-us').transform(repoArray[Number(index)]['receipt_amount'])
-							: 0;
+							: '-';
 						obj['bank_name'] = repoArray[Number(index)]['bank_name'] ?
-							repoArray[Number(index)]['bank_name'] : 'NA';
+							repoArray[Number(index)]['bank_name'] : '-';
 						if (Number(repoArray[Number(index)]['status']) === 1) {
 							obj['status'] = 'Cleared';
 						} else if (Number(repoArray[Number(index)]['status']) === 2) {
@@ -1066,7 +1087,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['fcc_reason_id'] = repoArray[Number(index)]['fcc_reason_id'] ?
 							repoArray[Number(index)]['fcc_reason_id'] : '-';
 						obj['fcc_remarks'] = repoArray[Number(index)]['fcc_remarks'] ?
-							repoArray[Number(index)]['fcc_remarks'] : 'NA';
+							repoArray[Number(index)]['fcc_remarks'] : '-';
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
 						index++;
@@ -1098,13 +1119,36 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					let index = 0;
 					for (const item of repoArray) {
+						let obj2 = {};
+						let totAmt = 0;
+						let totCon = 0;
+						let totRec = 0;
+						let totBal = 0;
+						obj2 = {
+							newStudent: true,
+							class_name: '',
+							au_full_name: new CapitalizePipe().transform(item['au_full_name']) + ' (' + item['au_admission_no'] + ')' +
+								', ' + item['class_name'] + '-' +
+								item['sec_name'],
+							au_admission_no: '',
+							flgr_particulars: '',
+							flgr_created_date: '',
+							invoice_id: '',
+							flgr_invoice_type: '',
+							flgr_invoice_receipt_no: '',
+							flgr_concession: '',
+							flgr_receipt: '',
+							flgr_amount: '',
+							flgr_balance: ''
+						};
+						if (item.stu_ledger_arr.length > 0) {
+							this.REPORT_ELEMENT_DATA3.push(obj2);
+						}
 						for (const stu_arr of item.stu_ledger_arr) {
 							const obj: any = {};
-							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-								(++index);
-							obj['class_name'] = item['class_name'] + '-' +
+							obj['newStudent'] = false,
+								obj['class_name'] = item['class_name'] + '-' +
 								item['sec_name'];
 							obj['au_full_name'] = item['au_full_name'] ?
 								new CapitalizePipe().transform(item['au_full_name']) : '-';
@@ -1117,15 +1161,15 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								stu_arr['flgr_inv_id'] : '-';
 							obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
 							if (stu_arr['flgr_invoice_type'] === 'R') {
-								obj['flgr_invoice_receipt_no'] = 'R-#' + (stu_arr['flgr_invoice_receipt_no'] ?
+								obj['flgr_invoice_receipt_no'] = 'R-' + (stu_arr['flgr_invoice_receipt_no'] ?
 									stu_arr['flgr_invoice_receipt_no'] : '-');
 							} else {
-								obj['flgr_invoice_receipt_no'] = 'I-#' + (stu_arr['flgr_invoice_receipt_no'] ?
+								obj['flgr_invoice_receipt_no'] = 'I-' + (stu_arr['flgr_invoice_receipt_no'] ?
 									stu_arr['flgr_invoice_receipt_no'] : '-');
 							}
 							obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
 							obj['flgr_amount'] = stu_arr['flgr_amount'] ?
-								new DecimalPipe('en-us').transform(stu_arr['flgr_amount']) : '0';
+								new DecimalPipe('en-us').transform(stu_arr['flgr_amount']) : '-';
 							obj['flgr_concession'] = stu_arr['flgr_concession'] ?
 								new DecimalPipe('en-us').transform(stu_arr['flgr_concession']) : '-';
 							obj['flgr_receipt'] = stu_arr['flgr_receipt'] ?
@@ -1133,16 +1177,42 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['receipt_id'] = stu_arr['receipt_id'];
 							obj['flgr_balance'] = stu_arr['flgr_balance'] ?
 								new DecimalPipe('en-us').transform(stu_arr['flgr_balance']) : '-';
-							this.REPORT_ELEMENT_DATA.push(obj);
+							this.REPORT_ELEMENT_DATA3.push(obj);
+							totAmt = totAmt + (stu_arr['flgr_amount'] ?
+								Number(stu_arr['flgr_amount']) : 0);
+							totCon = totCon + (stu_arr['flgr_concession'] ?
+								Number(stu_arr['flgr_concession']) : 0);
+							totRec = totRec + (stu_arr['flgr_receipt'] ?
+								Number(stu_arr['flgr_receipt']) : 0);
+							totBal = totBal + (stu_arr['flgr_balance'] ?
+								Number(stu_arr['flgr_balance']) : 0);
+						}
+						if (item.stu_ledger_arr.length > 0) {
+							obj2 = {
+								newStudent: false,
+								class_name: '',
+								au_full_name: '',
+								au_admission_no: '',
+								flgr_particulars: '',
+								flgr_created_date: '',
+								invoice_id: '',
+								flgr_invoice_type: '',
+								flgr_invoice_receipt_no: '',
+								flgr_concession: '<b>' + new DecimalPipe('en-us').transform(totCon) + '</b>',
+								flgr_receipt: '<b>' + new DecimalPipe('en-us').transform(totRec) + '</b>',
+								flgr_amount: '<b>' + new DecimalPipe('en-us').transform(totAmt) + '</b>',
+								flgr_balance: ''
+							};
+							this.REPORT_ELEMENT_DATA3.push(obj2);
 						}
 						this.tableFlag = true;
 					}
-					this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
-					this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
-					this.dataSource.paginator = this.paginator;
+					this.dataSource3 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA3);
+					this.dataSource3.paginator.length = this.paginator.length = this.totalRecords;
+					this.dataSource3.paginator = this.paginator;
 				} else {
-					this.REPORT_ELEMENT_DATA = [];
-					this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
+					this.REPORT_ELEMENT_DATA3 = [];
+					this.dataSource3 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA3);
 					this.tableFlag = true;
 				}
 			});
@@ -1287,7 +1357,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
 							obj['fs_name'] = repoArray[Number(index)]['fs_name'] ?
-								new CapitalizePipe().transform(repoArray[Number(index)]['fs_name']) : 'NA';
+								new CapitalizePipe().transform(repoArray[Number(index)]['fs_name']) : '-';
 							obj['class_name'] = item['class_name'] + '-' +
 								item['sec_name'];
 							obj['au_full_name'] = item['au_full_name'] ? new CapitalizePipe().transform(item['au_full_name']) : '-';
@@ -1413,10 +1483,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['stu_class_name'] = item['stu_class_name'] + '-' +
 								item['stu_sec_name'];
 							obj['fee_amount'] = cons['invg_fh_amount'] ?
-								new DecimalPipe('en-us').transform(cons['invg_fh_amount']) : 0;
+								new DecimalPipe('en-us').transform(cons['invg_fh_amount']) : '-';
 							obj['concession_cat'] = cons['invg_fcc_name'] ? cons['invg_fcc_name'] : '-';
 							obj['con_amount'] = cons['invg_fcc_amount'] ?
-								new DecimalPipe('en-us').transform(cons['invg_fcc_amount']) : 0;
+								new DecimalPipe('en-us').transform(cons['invg_fcc_amount']) : '-';
 							this.REPORT_ELEMENT_DATA.push(obj);
 						}
 						this.tableFlag = true;
@@ -1461,16 +1531,16 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['invoice_id'] = item['inv_id'];
 						obj['invoice_created_date'] = item['inv_created_date'];
 						obj['cheque_date'] = item['inv_due_date'];
-						obj['invg_fh_name'] = item['invg_fh_name'] ? item['invg_fh_name'] : 'NA';
+						obj['invg_fh_name'] = item['invg_fh_name'] ? item['invg_fh_name'] : '-';
 						obj['invg_fh_amount'] = item['invg_fh_amount'] ?
-							new DecimalPipe('en-us').transform(item['invg_fh_amount']) : 0;
-						obj['invg_fcc_name'] = item['invg_fcc_name'] ? item['invg_fcc_name'] : 'NA';
+							new DecimalPipe('en-us').transform(item['invg_fh_amount']) : '-';
+						obj['invg_fcc_name'] = item['invg_fcc_name'] ? item['invg_fcc_name'] : '-';
 						obj['invg_adj_amount'] = item['invg_adj_amount'] ?
-							new DecimalPipe('en-us').transform(item['invg_adj_amount']) : 0;
-						obj['receipt_no'] = item['rpt_receipt_no'] ? item['rpt_receipt_no'] : 'NA';
+							new DecimalPipe('en-us').transform(item['invg_adj_amount']) : '-';
+						obj['receipt_no'] = item['rpt_receipt_no'] ? item['rpt_receipt_no'] : '-';
 						obj['receipt_id'] = item['receipt_id'];
 						obj['dishonor_date'] = item['rpt_receipt_date'];
-						obj['inv_remark'] = item['inv_remark'] ? new CapitalizePipe().transform(item['inv_remark']) : 'NA';
+						obj['inv_remark'] = item['inv_remark'] ? new CapitalizePipe().transform(item['inv_remark']) : '-';
 						index++;
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
@@ -1517,13 +1587,13 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 							repoArray[Number(index)]['invoice_no'] : '-';
 						obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
-							repoArray[Number(index)]['invoice_id'] : '0';
+							repoArray[Number(index)]['invoice_id'] : '-';
 						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-							repoArray[Number(index)]['receipt_no'] : 'NA';
+							repoArray[Number(index)]['receipt_no'] : '-';
 						obj['receipt_id'] = repoArray[Number(index)]['receipt_id'] ?
-							repoArray[Number(index)]['receipt_id'] : '0';
+							repoArray[Number(index)]['receipt_id'] : '-';
 						obj['fh_amount'] = item['fh_amount'] ?
-							new DecimalPipe('en-us').transform(item['fh_amount']) : 0;
+							new DecimalPipe('en-us').transform(item['fh_amount']) : '-';
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
 						index++;
@@ -1572,11 +1642,11 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 							repoArray[Number(index)]['stu_sec_name'];
 						obj['route_name'] = repoArray[Number(index)]['route_name'] ?
-							repoArray[Number(index)]['route_name'] : 'NA';
+							repoArray[Number(index)]['route_name'] : '-';
 						obj['slab_name'] = repoArray[Number(index)]['slab_name'] ?
-							repoArray[Number(index)]['slab_name'] : 'NA';
+							repoArray[Number(index)]['slab_name'] : '-';
 						obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
-							repoArray[Number(index)]['stoppages_name'] : 'NA';
+							repoArray[Number(index)]['stoppages_name'] : '-';
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
 						index++;
@@ -1691,10 +1761,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	exportAsExcel() {
 		// tslint:disable-next-line:max-line-length
 		let id: any;
-		if (this.reportFilterForm.value.report_type === 'mfr') {
+		if (this.reportFilterForm.value.report_type === 'mfr' && this.reportType !== '5') {
 			id = 'report_table2';
-		} else {
+		} else if (this.reportFilterForm.value.report_type !== 'mfr' && this.reportType !== '5') {
 			id = 'report_table';
+		} else {
+			id = 'report_table3';
 		}
 		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById(id)); // converts a DOM TABLE element to a worksheet
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
@@ -1987,17 +2059,55 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			width: '80%',
 			data: {
 				invoiceNo: inv_id,
-				edit: edit
+				edit: edit,
+				paidStatus: 'paid'
 			},
 			hasBackdrop: true
 		});
 	}
 	checkEnable(report_id) {
 		if (Number(report_id) === 3 || Number(report_id) === 4 || Number(report_id) === 13
-		|| Number(report_id) === 14) {
+			|| Number(report_id) === 14) {
 			return 'report-card1 mat-card';
 		} else {
-		return 'report-card mat-card';
+			return 'report-card mat-card';
+		}
+	}
+	applyFilter1(filterValue: string) {
+		this.dataSource.filter = filterValue.trim().toLowerCase();
+	}
+	applyFilter2(filterValue: string) {
+		this.dataSource2.filter = filterValue.trim().toLowerCase();
+	}
+	applyFilter3(filterValue: string) {
+		this.dataSource3.filter = filterValue.trim().toLowerCase();
+	}
+	resetFilters() {
+		this.reportFilterForm.patchValue({
+			'fee_value': '',
+			'from_date': '',
+			'to_date': '',
+			'hidden_value': '',
+			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
+			'filterReportBy': '',
+			'pageSize': '10',
+			'pageIndex': '0',
+			'admission_no': '',
+			'au_full_name': ''
+		});
+		this.valueLabel = 'Filter 1';
+		this.hiddenFieldLabel = 'Filter2';
+		this.hiddenFieldLabel2 = 'Filter3';
+		this.checkMultiple = false;
+	}
+	checkRowSpan(val, index) {
+		if (val && index === 0) {
+			return 11;
+		} else {
+			return '';
 		}
 	}
 }

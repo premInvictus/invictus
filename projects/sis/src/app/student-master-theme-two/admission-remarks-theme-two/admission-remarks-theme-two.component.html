@@ -15,8 +15,8 @@
                                 <p><input type="hidden" formControlName="equs_id"
                                         value="{{item.controls?.equs_id.value}}">
                                     <label><b>Q.{{i+1}}</b> {{item.controls?.equs_name.value}}</label></p>
-                                    <mat-form-field class="form-field" appearance="outline">
-                                            <mat-label>Write You Answer</mat-label>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Write You Answer</mat-label>
                                     <textarea matInput placeholder="Write Your Answer" formControlName="eqa_answer"
                                         value="{{item.controls?.eqa_answer.value}}" [readonly]="viewOnly"></textarea>
                                 </mat-form-field>
@@ -37,21 +37,26 @@
         <div class="row">
             <ng-container formArrayName="learn_array">
                 <ng-container *ngFor="let item of learnFields.controls; let i = index" [formGroupName]="i">
-                    <div class="col-6 margin-top-10">
-                        <mat-checkbox class="known-school-checkbox" checked={{item.controls.eqa_answer?.value}}
-                             [disabled]="viewOnly">
-                            {{item.controls.equs_name?.value}}</mat-checkbox>
-                    </div>
                     <div class="col-6">
-                            <mat-form-field class="form-field" appearance="outline">
+                        <div class="row">
+                            <div class="col-6 margin-top-10">
+                                <mat-checkbox class="known-school-checkbox" checked={{item.controls.eqa_answer?.value}}
+                                    [disabled]="viewOnly">
+                                    {{item.controls.equs_name?.value}}</mat-checkbox>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>From Whom</mat-label>
-                            <input class="text-capitalize" matInput placeholder="From Whom" formControlName="eqa_answer"
-                                value="{{item.controls.eqa_answer?.value}}" [readonly]="viewOnly">
-                        </mat-form-field>
+                                    <input class="text-capitalize" matInput placeholder="From Whom"
+                                        formControlName="eqa_answer" value="{{item.controls.eqa_answer?.value}}"
+                                        [readonly]="viewOnly">
+                                </mat-form-field>
+                            </div>
+                        </div>
                     </div>
                 </ng-container>
             </ng-container>
         </div>
-        <div  class="col-12 text-center" *ngIf="!(learnFields.controls.length > 0)">No Record Found</div>
+        <div class="col-12 text-center" *ngIf="!(learnFields.controls.length > 0)">No Record Found</div>
     </form>
 </div>

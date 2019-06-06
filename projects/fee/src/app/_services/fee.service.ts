@@ -221,6 +221,7 @@ export class FeeService {
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getPaymentMode');
 	}
 	insertFeeTransaction(value: any) {
+		this.service.startLoading();
 		if (this.processType.getProcesstype()) {
 			value.inv_process_type = this.processType.getProcesstype();
 		}
@@ -295,6 +296,22 @@ export class FeeService {
 	getMFRReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getMFRReport', value);
+	}
+	getFeeProjectionReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeProjectionReport', value);
+	}
+	getFeeReceiptReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeReceiptReport', value);
+	}
+	getFeeOutstanding(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeOutstanding', value);
+	}
+	getClassWiseFeeOutstanding(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getClassWiseFeeOutstanding', value);
 	}
 	printReceipt(value) {
 		this.service.startLoading();

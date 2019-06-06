@@ -3,7 +3,7 @@
     <div class="col-12 remove-col-padding">
       <mat-card class="card-content__container card-height-830 card-height-950">
         <mat-card-title>
-          
+
           <div class="row">
             <div class="col-6">
               <h1>Concession Group</h1>
@@ -12,57 +12,62 @@
         </mat-card-title>
         <mat-card-content>
           <div class="row">
-            <div class="col-4 remove-col-padding custom-col-27">
-                <form [formGroup]="conccesionCategoryForm">
-              <div class="row">
-                <div class="col-12 margin-top-25">
+            <div class="col-3 remove-col-padding custom-col-27">
+              <form [formGroup]="conccesionCategoryForm">
+                <div class="row">
+                  <div class="col-12 margin-top-25">
                     <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Concession Group Name</mat-label>
-                    <input matInput placeholder="Concession Group Name" formControlName="fcg_name" required
-                    [errorStateMatcher]="confirmValidParentMatcher">
-                  </mat-form-field>
+                      <mat-label>Concession Group Name</mat-label>
+                      <input matInput placeholder="Concession Group Name" formControlName="fcg_name" required
+                        [errorStateMatcher]="confirmValidParentMatcher">
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-12">
+                <div class="row">
+                  <div class="col-12">
                     <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Concession Category</mat-label>
-                    <mat-select placeholder="Concession Category" formControlName="fcgr_fcc_id" required multiple
-                    [errorStateMatcher]="confirmValidParentMatcher">
-                      <mat-option *ngFor="let item of concessionArray" [value]="item.fcc_id">{{item.fcc_name}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                      <mat-label>Concession Category</mat-label>
+                      <mat-select placeholder="Concession Category" formControlName="fcgr_fcc_id" required multiple
+                        [errorStateMatcher]="confirmValidParentMatcher">
+                        <mat-option *ngFor="let item of concessionArray" [value]="item.fcc_id">{{item.fcc_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-12">
+                <div class="row">
+                  <div class="col-12">
                     <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Description</mat-label>
-                    <textarea matInput placeholder="Description" formControlName="fcg_description"
-                    [errorStateMatcher]="confirmValidParentMatcher">{{conccesionCategoryForm.value.fcg_description}}</textarea>
-                  </mat-form-field>
+                      <mat-label>Description</mat-label>
+                      <textarea matInput placeholder="Description" formControlName="fcg_description"
+                        [errorStateMatcher]="confirmValidParentMatcher">{{conccesionCategoryForm.value.fcg_description}}</textarea>
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-12 text-center margin-top-25">
-                  <div class="inline-flex">
-                  <button *ngIf="!editFlag" mat-raised-button class="btn-primary btn-custom btn-success" (click)="submit()">Submit</button>
-                  <button *ngIf="editFlag" mat-raised-button class="btn-primary btn-custom btn-success" (click)="update()">Update</button>
-                <button mat-raised-button class="btn-primary btn-danger btn-custom btn-spacer" (click)="reset()">Reset</button>
-              </div>
+                <div class="row">
+                  <div class="col-12 text-center margin-top-25">
+                    <div class="inline-flex">
+                      <button *ngIf="!editFlag" mat-raised-button class="btn-primary btn-custom btn-success"
+                        (click)="submit()">Submit</button>
+                      <button *ngIf="editFlag" mat-raised-button class="btn-primary btn-custom btn-success"
+                        (click)="update()">Update</button>
+                      <button mat-raised-button class="btn-primary btn-danger btn-custom btn-spacer"
+                        (click)="reset()">Reset</button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </form>
+              </form>
             </div>
             <div class="col-1 fee-custom-col-8">
               <div class="vertical-line-divider"></div>
             </div>
-            <div class="col-7 remove-col-padding fee-custom-col-64">
+            <div class="col-8 remove-col-padding fee-custom-col-64">
               <div class="row remove-col-padding">
                 <div class="col-12 remove-col-padding">
-                  <div >
+                  <div>
                     <mat-form-field [hidden]="!(CONCESSION_GROUP_ELEMENT_DATA.length > 0)">
-                      <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)"
+                        placeholder="Filter">
                       <mat-icon matPrefix>filter_list</mat-icon>
 
                     </mat-form-field>
@@ -79,10 +84,11 @@
                       </ng-container>
 
                       <ng-container matColumnDef="category">
-                        <th mat-header-cell *matHeaderCellDef>Concession Category</th>
+                        <th mat-header-cell *matHeaderCellDef style="width: 36% !important">Concession Category</th>
                         <td mat-cell *matCellDef="let item" style="text-align: left !important">
                           <ng-container *ngFor="let element of item.con_categories"><b>
-                            {{element.fcc_name | capitalize}} ( {{element.fcrt_alias}} ) : {{element.fcc_amount | number}}</b>
+                              {{element.fcc_name | capitalize}} ( {{element.fcrt_alias}} ) :
+                              {{element.fcc_amount | number}}</b>
                             <div [innerHTML]="getTotalConcession(element.total_concession)"></div>
                           </ng-container>
                         </td>
@@ -97,25 +103,33 @@
                         <th mat-header-cell *matHeaderCellDef> Status </th>
                         <td mat-cell *matCellDef="let item">
                           <mat-slide-toggle [checked]="item.action.fcg_status === '1' ? true : false"
-                          (change)="changeStatus($event, item.action)"></mat-slide-toggle> </td>
+                            (change)="changeStatus($event, item.action)"></mat-slide-toggle>
+                        </td>
                       </ng-container>
                       <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef> Action </th>
-                        <td mat-cell *matCellDef="let item" class="inline-flex margin-top-10"> <i class="material-icons icon-edit" (click)="patchValue(item.action)">
-                            create
-                            </i> <i class="material-icons icon-danger icon-spacer" (click)="openDeleteDialog(item.action)">
-                                delete 
-                                </i> </td>
+                        <td mat-cell *matCellDef="let item">
+                          <ul class="inline-flex margin-top-10">
+                            <li><i class="material-icons icon-edit" (click)="patchValue(item.action)">
+                                create
+                              </i></li>
+                            <li><i class="material-icons icon-danger icon-spacer"
+                                (click)="openDeleteDialog(item.action)">
+                                delete
+                              </i></li>
+                          </ul>
+                        </td>
                       </ng-container>
                       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                       <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
                     </table>
                     <table class="table-100 text-center" style="margin-top:5px;">
-                        <tr *ngIf="CONCESSION_GROUP_ELEMENT_DATA.length == 0">
-                          <td colspan="12">No Record Found</td>
-                        </tr>
-                      </table>
-                    <mat-paginator #paginator [hidden]="!(CONCESSION_GROUP_ELEMENT_DATA.length > 0)" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                      <tr *ngIf="CONCESSION_GROUP_ELEMENT_DATA.length == 0">
+                        <td colspan="12">No Record Found</td>
+                      </tr>
+                    </table>
+                    <mat-paginator #paginator [hidden]="!(CONCESSION_GROUP_ELEMENT_DATA.length > 0)" [pageSize]="10"
+                      [pageSizeOptions]="[5, 10, 25, 100]">
                     </mat-paginator>
                   </div>
 
@@ -128,4 +142,5 @@
     </div>
   </div>
 </div>
-<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)"></app-delete-modal>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)">
+</app-delete-modal>

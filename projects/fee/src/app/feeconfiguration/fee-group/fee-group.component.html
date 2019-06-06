@@ -1,23 +1,27 @@
 <div class="fee-container-box__grey">
-    <div class="row">
-      <div class="col-12 remove-col-padding">
-        <mat-card class="card-content__container card-height-830 card-height-835">
-          <mat-card-title>
-            <div class="row">
-              <div class="col-6">
-                  <h1>Fee Group</h1>
-              </div>
-              <div class="col-6 text-right">
-                <div class="inline-flex"><h3>School</h3> <mat-slide-toggle  class="btn-spacer" [ngModel]="fs_is_hostel_fee === 1 ? 'checked' : ''"
-                  (change)="changeIsHostelFee($event)"></mat-slide-toggle><h3 class="btn-spacer">Hostel</h3></div>
-                
-              </div>
+  <div class="row">
+    <div class="col-12 remove-col-padding">
+      <mat-card class="card-content__container card-height-830 card-height-835">
+        <mat-card-title>
+          <div class="row">
+            <div class="col-6">
+              <h1>Fee Group</h1>
             </div>
-          </mat-card-title>
-          <mat-card-content>
-            <div class="row">
-              <div class="col-4 remove-col-padding custom-col-27">
-                <form [formGroup]="feegroupform" novalidate>
+            <div class="col-6 text-right">
+              <div class="inline-flex">
+                <h3>School</h3>
+                <mat-slide-toggle class="btn-spacer my-toggle" [ngModel]="fs_is_hostel_fee === 1 ? 'checked' : ''"
+                  (change)="changeIsHostelFee($event)"></mat-slide-toggle>
+                <h3 class="btn-spacer">Hostel</h3>
+              </div>
+
+            </div>
+          </div>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-3 remove-col-padding custom-col-27">
+              <form [formGroup]="feegroupform" novalidate>
                 <div class="row">
                   <div class="col-12 margin-top-25">
                     <mat-form-field class="form-field" appearance="outline">
@@ -29,105 +33,114 @@
                 <div class="row">
                   <div class="col-12">
                     <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Select Fee Head</mat-label> 
+                      <mat-label>Select Fee Head</mat-label>
                       <mat-select placeholder="Select Fee Heads" formControlName="fs_groups" multiple required>
-                          <mat-option *ngFor="let item of feeheadArray" [value]="item.fh_id">{{item.fh_name}}
-                          </mat-option>
+                        <mat-option *ngFor="let item of feeheadArray" [value]="item.fh_id">{{item.fh_name}}
+                        </mat-option>
                       </mat-select>
                     </mat-form-field>
-                  </div>                  
+                  </div>
                 </div>
-               
-                
                 <div class="row">
                   <div class="col-12">
                     <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Description</mat-label> 
-                      <textarea matInput placeholder="Description" formControlName="fs_description">{{feegroupform.value.fs_description}}</textarea>
+                      <mat-label>Description</mat-label>
+                      <textarea matInput placeholder="Description"
+                        formControlName="fs_description">{{feegroupform.value.fs_description}}</textarea>
                     </mat-form-field>
                   </div>
                 </div>
-                
-                
                 <div class="text-center margin-top-25">
-                    <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-success"
-                      (click)="saveForm()">Submit</button>
-                    <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-success"
-                      (click)="saveForm()">Update</button>
-                    <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="cancelForm()" >Cancel</button>
-                    <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="feegroupform.reset()" >Reset</button>
+                  <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-success"
+                    (click)="saveForm()">Submit</button>
+                  <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-success"
+                    (click)="saveForm()">Update</button>
+                  <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"
+                    (click)="cancelForm()">Cancel</button>
+                  <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"
+                    (click)="feegroupform.reset()">Reset</button>
                 </div>
               </form>
-              </div>
-              <div class="col-1 fee-custom-col-8">
-                <div class="vertical-line-divider"></div>
-              </div>
-              <div class="col-7 remove-col-padding fee-custom-col-64" >
-                <div class="row">
-                  <div class="col-12 remove-col-padding">
-                    <div>
-                      <mat-form-field [hidden]="ELEMENT_DATA.length < 1">
-                        <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                        <mat-icon matPrefix>filter_list</mat-icon>
-  
-                      </mat-form-field>
-                      <table class="table-100 text-center " mat-table [dataSource]="dataSource" matSort>
-  
-                        <ng-container matColumnDef="srno">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
-                          <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="groupname">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Group Name </th>
-                          <td mat-cell *matCellDef="let element"> {{element.groupname | capitalize}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="feehead">
-                          <th mat-header-cell *matHeaderCellDef> Fee Head </th>
-                          <td mat-cell style="text-align: left !important" *matCellDef="let element"> 
-                            <div [innerHTML]="element.feehead"></div>
-                          </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="description">
-                          <th mat-header-cell *matHeaderCellDef> Description </th>
-                          <td mat-cell *matCellDef="let element"> {{element.description | capitalize}} </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="status">
-                          <th mat-header-cell *matHeaderCellDef> Status </th>
-                          <td mat-cell *matCellDef="let element"> 
-                              <mat-slide-toggle [checked]="element.status" (change)="toggleFeeHeadStatus($event, element.action)" ></mat-slide-toggle>
-                            </td>
-                        </ng-container>
-  
-                        <ng-container matColumnDef="action">
-                          <th mat-header-cell *matHeaderCellDef> Action </th>
-                          <td mat-cell class="inline-flex margin-top-20" *matCellDef="let element"> <i class="material-icons icon-edit" (click)="editFeeGroup(element.action)" >
-                              create
-                              </i> <i class="material-icons icon-danger icon-spacer" (click)="openDeleteDialog(element.action)">
-                                  delete 
-                                  </i> </td>
-                        </ng-container>
-  
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
-                      </table>
-                      <div *ngIf="ELEMENT_DATA.length == 0" class="no-records">
-                        No records found
-                      </div>
-                      <mat-paginator [hidden]="ELEMENT_DATA.length < 1" #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
-                      </mat-paginator>
+            </div>
+            <div class="col-1 fee-custom-col-8">
+              <div class="vertical-line-divider"></div>
+            </div>
+            <div class="col-8 remove-col-padding fee-custom-col-64">
+              <div class="row">
+                <div class="col-12 remove-col-padding">
+                  <div>
+                    <mat-form-field [hidden]="ELEMENT_DATA.length < 1">
+                      <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)"
+                        placeholder="Filter">
+                      <mat-icon matPrefix>filter_list</mat-icon>
+
+                    </mat-form-field>
+                    <table class="table-100 text-center " mat-table [dataSource]="dataSource" matSort>
+
+                      <ng-container matColumnDef="srno">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="groupname">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Group Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.groupname | capitalize}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="feehead">
+                        <th mat-header-cell *matHeaderCellDef> Fee Head </th>
+                        <td mat-cell style="text-align: left !important" *matCellDef="let element">
+                          <div [innerHTML]="element.feehead"></div>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef> Description </th>
+                        <td mat-cell *matCellDef="let element"> {{element.description | capitalize}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                        <td mat-cell *matCellDef="let element">
+                          <mat-slide-toggle [checked]="element.status"
+                            (change)="toggleFeeHeadStatus($event, element.action)"></mat-slide-toggle>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Action </th>
+                        <td mat-cell *matCellDef="let element">
+                          <ul class="inline-flex margin-top-10">
+                            <li><i class="material-icons icon-edit" (click)="editFeeGroup(element.action)">
+                                create
+                              </i></li>
+                            <li><i class="material-icons icon-danger icon-spacer"
+                                (click)="openDeleteDialog(element.action)">
+                                delete
+                              </i></li>
+                          </ul>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+                    </table>
+                    <div *ngIf="ELEMENT_DATA.length == 0" class="no-records">
+                      No records found
                     </div>
-  
+                    <mat-paginator [hidden]="ELEMENT_DATA.length < 1" #paginator [pageSize]="10"
+                      [pageSizeOptions]="[5, 10, 25, 100]">
+                    </mat-paginator>
                   </div>
+
                 </div>
               </div>
             </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
-  <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)"></app-delete-modal>
+</div>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)">
+</app-delete-modal>

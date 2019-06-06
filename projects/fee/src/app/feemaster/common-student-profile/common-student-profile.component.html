@@ -29,7 +29,8 @@
           </div>
           <div class="col-4 custom-col-30 text-center remove-col-padding">
             <mat-form-field class="form-field text-center">
-              <input matInput class="adm-no-student-30 font-size-30" formControlName="au_enrollment_id"
+              <input matInput class="adm-no-student-30 font-size-30" 
+              id="blur_id" formControlName="au_enrollment_id"
                 (keydown.enter)="loadOnEnrollmentId($event)" (blur)="loadOnEnrollmentId($event)">
             </mat-form-field>
           </div>
@@ -48,20 +49,20 @@
       </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-8 margin-top-20">
-        <div class="row margin-top-10">
+      <div class="col-1 custom-fee-entry-col-8 ">
+        <div class="row margin-top-20">
           <div class="col-12 text-center">
-            <img class="student-profile-image-68" [src]="defaultsrc">
+            <img class="student-profile-image-68" [src]="defaultsrc"
+            onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
           </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-12 margin-top-20">
-        <div class="row margin-top-10">
+      <div class="col-1 custom-fee-entry-col-12 vertical-divider">
+        <div class="row margin-top-30">
           <div class="col-12 text-left">
             <span
-              class="font-size-16 font-bold">{{studentdetails.au_full_name ? (studentdetails.au_full_name | titlecase) : 'NA'}}</span><br>
-            <span class="font-size-14">Class : {{studentdetails.class_name ? studentdetails.class_name : 'NA'}} -
-              {{studentdetails.sec_name ? studentdetails.sec_name : 'NA'}}</span>
+              class="font-size-16 font-bold">{{studentdetails.au_full_name ? (studentdetails.au_full_name | titlecase) : '-'}}</span><br>
+            <span class="font-size-14">Class : {{class_sec}}</span>
           </div>
         </div>
       </div>
@@ -70,46 +71,46 @@
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Fee Outstanding</span><br>
             <span class="font-size-16 font-bold">{{studentdetails.fee_outstanding ? 
-              (studentdetails.fee_outstanding | number): 'NA'}}</span>
+              (studentdetails.fee_outstanding | number): '-'}}</span>
           </div>
           <div class="row margin-top-10">
             <div class="col-12 text-left tab-remove-padding">
               <span class="font-size-14 font-light">Concession</span><br>
               <span
-                class="font-size-16 font-bold">{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+                class="font-size-16 font-bold">{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : '-'}}</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-2 custom-fee-entry-col-12 ">
+      <div class="col-2 custom-fee-entry-col-12 vertical-divider">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Route </span><br>
             <span
-              class="font-size-16 font-bold">{{studentdetails.ead_bus_route ? (studentdetails.ead_bus_route | capitalize) : 'NA'}}</span>
+              class="font-size-16 font-bold">{{studentdetails.ead_bus_route ? (studentdetails.ead_bus_route | capitalize) : '-'}}</span>
           </div>
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Stoppage</span><br>
+            <span class="font-size-14 font-light">Stop</span><br>
             <span
-              class="font-size-16 font-bold">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize) : 'NA'}}</span>
+              class="font-size-16 font-bold">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize) : '-'}}</span>
           </div>
         </div>
       </div>
-      <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-5 tab-display-none ">
+      <!-- <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-5 tab-display-none ">
         <div class="row remove-top-margin">
           <div class="col-12 text-center">
             <div class="vertical-divider-fee-entry"></div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="col-2  custom-fee-entry-col-12 tab-col-14">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Parent Name </span><br>
+            <span class="font-size-14 font-light">{{parent_type_fun(studentdetails)}} </span><br>
             <span class="font-size-16 font-bold">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
-              (studentdetails.parentinfo[0].epd_parent_name | capitalize) : 'NA'}}</span>
+              (studentdetails.parentinfo[0].epd_parent_name | capitalize) : '-'}}</span>
           </div>
         </div>
 
@@ -117,23 +118,23 @@
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Contact No</span><br>
             <span
-              class="font-size-16 font-bold">{{studentdetails.parentinfo && studentdetails.parentinfo[0]? studentdetails.parentinfo[0].epd_contact_no : 'NA'}}</span>
+              class="font-size-16 font-bold">{{studentdetails.parentinfo && studentdetails.parentinfo[0]? studentdetails.parentinfo[0].epd_contact_no : '-'}}</span>
           </div>
         </div>
       </div>
       <div class="col-2  custom-fee-entry-col-12 tab-col-14">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Emg Contact Name </span><br>
+            <span class="font-size-14 font-light">Emergency Name </span><br>
             <span
-              class="font-size-16 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? (studentdetails.medicalinfo[0].mi_emergency_contact_name | capitalize) : 'NA'}}</span>
+              class="font-size-16 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? (studentdetails.medicalinfo[0].mi_emergency_contact_name | capitalize) : '-'}}</span>
           </div>
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Emg Contact No</span><br>
+            <span class="font-size-14 font-light">Emergency Contact No</span><br>
             <span
-              class="font-size-16 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails?.medicalinfo[0]?.mi_emergency_contact_no : 'NA'}}</span>
+              class="font-size-16 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? studentdetails?.medicalinfo[0]?.mi_emergency_contact_no : '-'}}</span>
           </div>
         </div>
       </div>

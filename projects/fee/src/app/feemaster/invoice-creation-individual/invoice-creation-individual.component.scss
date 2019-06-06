@@ -4,4 +4,26 @@
     align-items: center;
     justify-content: center;
     background: white;
-  }
+}
+.fa-rupee-sign{
+  font-size: 12px;
+}
+.cdk-column-select{
+  width: 2%!important;
+}
+.cdk-column-srno{
+    width: 4%!important;
+}
+.cdk-column-invoiceno{
+    width: 6%!important;
+}
+.cdk-column-feedue{
+  width: 10%!important;
+}
+td.mat-cell {
+  border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
+}
