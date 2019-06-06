@@ -33,11 +33,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	accountFlag = false;
 	tableFlag = false;
 	reportFlag = true;
+	checkMultiple = false;
 	reportTypeArray: any[] = [];
 	reportFilterForm: FormGroup;
 	REPORT_ELEMENT_DATA: any[] = [];
 	REPORT_ELEMENT_DATA2: any[] = [];
-	valueLabel: any = 'Value';
+	valueLabel: any = 'Filter 1';
 	totalRecords: any;
 	currentDate = new Date();
 	minDate: any;
@@ -45,7 +46,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	startMonth: any;
 	valueArray: any[] = [];
 	advSearchFlag = true;
-	hiddenFieldLabel: any = '';
+	hiddenFieldLabel: any = 'Filter 2';
 	@ViewChild('paginator') paginator: MatPaginator;
 	dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
 	dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
@@ -55,7 +56,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	hiddenValueArray3: any[] = [];
 	hiddenValueArray4: any[] = [];
 	hiddenValueArray5: any[] = [];
-	hiddenFieldLabel2: any = '';
+	hiddenFieldLabel2: any = 'Filter 3';
 	classDataArray: any[] = [];
 	pageEvent: PageEvent;
 	feeReportArray: any[] = [
@@ -439,7 +440,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.accountFlag = false;
 		this.advSearchFlag = true;
 		this.toggleSearch = false;
-		this.valueLabel = 'Value';
+		this.valueLabel = 'Filter 1';
+		this.hiddenFieldLabel = 'Filter2';
+		this.hiddenFieldLabel2 = 'Filter3';
+		this.checkMultiple = false;
 		this.reportFlag = true;
 		this.valueArray = [];
 		this.hiddenValueArray = [];
@@ -461,6 +465,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		});
 	}
 	changeReportType($event, type) {
+		this.checkMultiple = false;
 		this.reportFilterForm.patchValue({
 			'fee_value': '',
 			'from_date': '',
@@ -490,6 +495,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 		if ($event.value === 'headwise') {
 			this.valueLabel = 'Fee Heads';
+			this.checkMultiple = true;
 			this.getFeeHeads();
 			this.hiddenFieldLabel = 'Class';
 			this.getClass2();
@@ -498,17 +504,20 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		if ($event.value === 'classwise') {
 			this.hiddenValueArray = [];
 			this.valueLabel = 'Class';
+			this.checkMultiple = true;
 			this.hiddenFieldLabel = 'Section';
 			this.getClass();
 		}
 		if ($event.value === 'mfr') {
 			this.hiddenValueArray = [];
 			this.valueLabel = 'Class';
+			this.checkMultiple = true;
 			this.hiddenFieldLabel = 'Section';
 			this.getClass();
 		}
 		if ($event.value === 'modewise') {
 			this.valueLabel = 'Mode';
+			this.checkMultiple = true;
 			this.hiddenFieldLabel = 'Class';
 			this.getModes();
 			this.hiddenFieldLabel2 = 'Section';
@@ -516,6 +525,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 		if ($event.value === 'routewise') {
 			this.valueLabel = 'Route';
+			this.checkMultiple = true;
 			this.getRoutes();
 			this.hiddenFieldLabel = 'Class';
 			this.hiddenFieldLabel2 = 'Section';
@@ -672,7 +682,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
 		if ((Number(this.reportType) === 1 || Number(this.reportType) === 2)
 			&& this.reportFilterForm.value.report_type) {
-			if (this.reportFilterForm.value.report_type !== 'mfr') {
+			if (this.reportFilterForm.value.report_type !== '' &&
+			this.reportFilterForm.value.report_type !== 'mfr') {
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage(result.message, 'success');
@@ -687,10 +698,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							Object.keys(repoArray).forEach((keys: any) => {
 								const obj: any = {};
 								if (Number(keys) === 0) {
-									fee_head_data.push('srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name',
-										'stu_class_name', 'invoice_no', 'receipt_no');
-									fee_head_data_name.push('SNo.', 'Date', 'Enrollment No', 'Student Name',
-										'Class-Section', 'Invoice No.', 'Reciept No.');
+									fee_head_data.push('srno');
+									fee_head_data_name.push('SNo.');
 								}
 								if (repoArray[Number(keys)]['fee_head_data']) {
 									let k = 0;
@@ -716,7 +725,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 												obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
 													repoArray[Number(keys)]['rpt_id'] : '0';
 												obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
-													repoArray[Number(keys)]['receipt_no'] : 'NA';
+													repoArray[Number(keys)]['receipt_no'] : '-';
 												obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 													repoArray[Number(keys)]['stu_admission_no'] : '-';
 												obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
@@ -725,7 +734,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 												tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 												obj['total'] = new DecimalPipe('en-us').transform(tot);
 												obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
-													repoArray[Number(keys)]['pay_name'] : 'NA';
+													repoArray[Number(keys)]['pay_name'] : '-';
 												k++;
 											}
 										});
@@ -734,7 +743,11 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								i++;
 								this.REPORT_ELEMENT_DATA.push(obj);
 							});
+							fee_head_data.push('invoice_created_date', 'stu_admission_no', 'stu_full_name',
+								'stu_class_name', 'invoice_no', 'receipt_no');
 							fee_head_data.push('total', 'receipt_mode_name');
+							fee_head_data_name.push('Date', 'Enrollment No', 'Student Name',
+								'Class-Section', 'Invoice No.', 'Reciept No.');
 							fee_head_data_name.push('Total', 'Mode');
 							this.tableFlag = true;
 							this.finalTable.columnDef = fee_head_data;
@@ -751,7 +764,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 									repoArray[Number(index)]['invoice_id'] : '0';
 								obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-									repoArray[Number(index)]['receipt_no'] : 'NA';
+									repoArray[Number(index)]['receipt_no'] : '-';
 								obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 									repoArray[Number(index)]['rpt_id'] : '0';
 								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -780,7 +793,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 									repoArray[Number(index)]['invoice_id'] : '0';
 								obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-									repoArray[Number(index)]['receipt_no'] : 'NA';
+									repoArray[Number(index)]['receipt_no'] : '-';
 								obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 									repoArray[Number(index)]['rpt_id'] : '0';
 								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -792,9 +805,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									new DecimalPipe('en-us').transform(repoArray[Number(index)]['rpt_amount'])
 									: '-';
 								obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
-									repoArray[Number(index)]['fp_name'] : 'NA';
+									repoArray[Number(index)]['fp_name'] : '-';
 								obj['pay_name'] = repoArray[Number(index)]['pay_name'] ?
-									repoArray[Number(index)]['pay_name'] : 'NA';
+									repoArray[Number(index)]['pay_name'] : '-';
 								this.REPORT_ELEMENT_DATA.push(obj);
 								this.tableFlag = true;
 								index++;
@@ -811,7 +824,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 									repoArray[Number(index)]['invoice_id'] : '0';
 								obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-									repoArray[Number(index)]['receipt_no'] : 'NA';
+									repoArray[Number(index)]['receipt_no'] : '-';
 								obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 									repoArray[Number(index)]['rpt_id'] : '0';
 								obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
@@ -996,9 +1009,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						let feePeriod: any = '';
 						for (const period of repoArray[Number(index)]['inv_invoice_generated_status']) {
-							feePeriod = feePeriod + period.fm_name + '<br>';
+							feePeriod = feePeriod + period.fm_name + ',';
 						}
-						obj['fp_name'] = feePeriod ? feePeriod : 'NA';
+						feePeriod = feePeriod.substring(0, feePeriod.length - 1);
+						obj['fp_name'] = feePeriod ? feePeriod : '-';
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
 						index++;
@@ -1048,14 +1062,14 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
 							repoArray[Number(index)]['invoice_id'] : '-';
 						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-							repoArray[Number(index)]['receipt_no'] : 'NA';
+							repoArray[Number(index)]['receipt_no'] : '-';
 						obj['receipt_id'] = repoArray[Number(index)]['receipt_id'] ?
 							repoArray[Number(index)]['receipt_id'] : '-';
 						obj['receipt_amount'] = repoArray[Number(index)]['receipt_amount'] ?
 							new DecimalPipe('en-us').transform(repoArray[Number(index)]['receipt_amount'])
 							: '-';
 						obj['bank_name'] = repoArray[Number(index)]['bank_name'] ?
-							repoArray[Number(index)]['bank_name'] : 'NA';
+							repoArray[Number(index)]['bank_name'] : '-';
 						if (Number(repoArray[Number(index)]['status']) === 1) {
 							obj['status'] = 'Cleared';
 						} else if (Number(repoArray[Number(index)]['status']) === 2) {
@@ -1066,7 +1080,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['fcc_reason_id'] = repoArray[Number(index)]['fcc_reason_id'] ?
 							repoArray[Number(index)]['fcc_reason_id'] : '-';
 						obj['fcc_remarks'] = repoArray[Number(index)]['fcc_remarks'] ?
-							repoArray[Number(index)]['fcc_remarks'] : 'NA';
+							repoArray[Number(index)]['fcc_remarks'] : '-';
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
 						index++;
@@ -1287,7 +1301,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
 							obj['fs_name'] = repoArray[Number(index)]['fs_name'] ?
-								new CapitalizePipe().transform(repoArray[Number(index)]['fs_name']) : 'NA';
+								new CapitalizePipe().transform(repoArray[Number(index)]['fs_name']) : '-';
 							obj['class_name'] = item['class_name'] + '-' +
 								item['sec_name'];
 							obj['au_full_name'] = item['au_full_name'] ? new CapitalizePipe().transform(item['au_full_name']) : '-';
@@ -1572,11 +1586,11 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 							repoArray[Number(index)]['stu_sec_name'];
 						obj['route_name'] = repoArray[Number(index)]['route_name'] ?
-							repoArray[Number(index)]['route_name'] : 'NA';
+							repoArray[Number(index)]['route_name'] : '-';
 						obj['slab_name'] = repoArray[Number(index)]['slab_name'] ?
-							repoArray[Number(index)]['slab_name'] : 'NA';
+							repoArray[Number(index)]['slab_name'] : '-';
 						obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
-							repoArray[Number(index)]['stoppages_name'] : 'NA';
+							repoArray[Number(index)]['stoppages_name'] : '-';
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
 						index++;
@@ -1987,17 +2001,24 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			width: '80%',
 			data: {
 				invoiceNo: inv_id,
-				edit: edit
+				edit: edit,
+				paidStatus: 'paid'
 			},
 			hasBackdrop: true
 		});
 	}
 	checkEnable(report_id) {
 		if (Number(report_id) === 3 || Number(report_id) === 4 || Number(report_id) === 13
-		|| Number(report_id) === 14) {
+			|| Number(report_id) === 14) {
 			return 'report-card1 mat-card';
 		} else {
-		return 'report-card mat-card';
+			return 'report-card mat-card';
 		}
+	}
+	applyFilter1(filterValue: string) {
+		this.dataSource.filter = filterValue.trim().toLowerCase();
+	}
+	applyFilter2(filterValue: string) {
+		this.dataSource2.filter = filterValue.trim().toLowerCase();
 	}
 }

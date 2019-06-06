@@ -18,7 +18,7 @@
          </mat-card>
       </div>
    </div>
-   <div class="row margin-top-25">
+   <div class="row">
       <div class="col-12 remove-col-padding">
          <app-common-student-profile [loginId]="lastRecordId" (next2)="next($event)" (prev2)="prev($event)"
             (first2)="first($event)" (last2)="last($event)" (key2)="key($event)" (next)="next2($event)"
@@ -26,7 +26,7 @@
             (processTypeEmit)="checkEmit($event)" [feeRenderId]="feeRenderId"></app-common-student-profile>
       </div>
    </div>
-   <div [hidden]="!(invoiceArray.length > 0)" class="row margin-top-25 ">
+   <div [hidden]="!(invoiceArray.length > 0)" class="row ">
       <div class="col-12 remove-col-padding">
          <mat-card class="card-top-title__container">
             <div class="row">
@@ -80,7 +80,7 @@
          </mat-card>
       </div>
    </div>
-   <div class="row margin-top-25" *ngIf="!checkStatus()">
+   <div class="row" *ngIf="!checkStatus()">
       <div class="col-12 remove-col-padding">
          <mat-card class="card-top-form__container">
             <div class="text-center">
@@ -93,7 +93,7 @@
       </div>
    </div>
    <form [formGroup]="feeTransactionForm">
-      <div *ngIf="checkStatus()" class="row margin-top-25">
+      <div *ngIf="checkStatus()" class="row">
          <div class="col-6 remove-col-padding-left">
             <mat-card class="card-top-form__container card-height-605 card-height-720">
                <div class="row">

@@ -10,7 +10,7 @@
            </mat-card>
         </div>
      </div>
-    <div class="row margin-top-25">
+    <div class="row">
         <div class="col-12 remove-col-padding">
           <app-common-student-profile [loginId]="lastRecordId"
           (next)="next($event)"
@@ -21,19 +21,19 @@
           (processTypeEmit)="checkEmit($event)"></app-common-student-profile>
         </div>
       </div>
-  <div class="row margin-top-25">
+  <div class="row">
     <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container card-height-677 card-height-795">
         <div class="row margin-bottom-10">
           <div class="col-6 remove-col-padding-left">
             <!-- <span class="font-size-24 font-medium">Accounts</span> -->
           </div>
-          <div *ngIf="FEE_LEDGER_ELEMENT.length > 0" class="col-6 text-right">
+          <!-- <div *ngIf="FEE_LEDGER_ELEMENT.length > 0" class="col-6 text-right">
             <div class="inline-flex">
             <div><img style="cursor: pointer" src="/assets/images/xml.svg" (click)="exportAsExcel()"
               matTooltip="Export as excel"></div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="row">
           <div class="col-12">
