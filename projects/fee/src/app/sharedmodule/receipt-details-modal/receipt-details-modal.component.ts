@@ -26,6 +26,9 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	modificationFlag = false;
 	adjRemark: string;
 	checkChangedFieldsArray = [];
+	class_name: any;
+	section_name: any;
+	class_sec: any;
 	constructor(
 		public dialogRef: MatDialogRef<ReceiptDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -166,6 +169,13 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				if (result.data.length > 0) {
 					this.invoiceDetails = result.data[0];
+					this.class_name = this.invoiceDetails.class_name;
+					this.section_name = this.invoiceDetails.sec_name;
+					if(this.section_name != ' '){
+						this.class_sec = this.class_name +' - '+ this.section_name;
+					}else{
+						this.class_sec = this.class_name;
+					}
 					if (this.invoiceDetails.invoice_bifurcation.length > 0) {
 						this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
 						this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
