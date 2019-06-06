@@ -14,14 +14,16 @@
                         <mat-card [class]="checkEnable(item.report_id)" (click)="executeReport(item.report_id)">
                            <div class="report-card-container2">
                               <div [class]="item.main_text_class">
-                                 <img [class]="item.report_main_image_class" [src]="item.report_image" /><br />
-                                 <div class="margin-top-15">
-                                    <span class="font-dark-blue font-size-14 font-medium">{{item.report_name}}</span>
+                                 <img style="width:26px !important"
+                                 [class]="item.report_main_image_class" [src]="item.report_image" /><br />
+                                 <div class="margin-top-10 icon-spacer">
+                                    <span class="font-dark-blue font-size-14 font-medium" style="font-weight: 600 !important">{{item.report_name}}</span>
                                  </div>
                               </div>
                               <div [class]="item.report_middle_class">
-                                 <div class="margin-bottom-15"><i [class]="item.report_check_icon_class"></i></div>
-                                 <span class="font-white font-size-14 font-medium">{{item.report_name}}</span>
+                                 <div><i [class]="item.report_check_icon_class"></i></div>
+                                 <span *ngIf="item.report_check_icon_class !== ''" style="font-weight: 600 !important" 
+                                 class="font-white font-size-14 font-medium"> {{item.report_name}}</span>
                               </div>
                            </div>
                         </mat-card>
