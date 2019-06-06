@@ -12,8 +12,8 @@ td { padding-left: 10px; }
 .mat-header-row {
     background: #DFDFDF !important;
 }
-tr.mat-header-row {
-    height: 56px;
+::ng-deep tr.mat-header-row {
+    height: 40px!important;
 }
 .table-100 {
     width: 100%;
@@ -29,5 +29,5 @@ td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:
 } 
 
 tr.mat-footer-row, tr.mat-row {
-    height: 48px;
+    height: 35px;
 }
