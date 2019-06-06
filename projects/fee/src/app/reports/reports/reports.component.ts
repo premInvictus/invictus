@@ -33,6 +33,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	accountFlag = false;
 	tableFlag = false;
 	reportFlag = true;
+	checkMultiple = false;
 	reportTypeArray: any[] = [];
 	reportFilterForm: FormGroup;
 	REPORT_ELEMENT_DATA: any[] = [];
@@ -439,7 +440,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.accountFlag = false;
 		this.advSearchFlag = true;
 		this.toggleSearch = false;
-		this.valueLabel = 'Value';
+		this.valueLabel = 'Filter 1';
+		this.hiddenFieldLabel = 'Filter2';
+		this.hiddenFieldLabel2 = 'Filter3';
+		this.checkMultiple = false;
 		this.reportFlag = true;
 		this.valueArray = [];
 		this.hiddenValueArray = [];
@@ -461,6 +465,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		});
 	}
 	changeReportType($event, type) {
+		this.checkMultiple = false;
 		this.reportFilterForm.patchValue({
 			'fee_value': '',
 			'from_date': '',
@@ -490,6 +495,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 		if ($event.value === 'headwise') {
 			this.valueLabel = 'Fee Heads';
+			this.checkMultiple = true;
 			this.getFeeHeads();
 			this.hiddenFieldLabel = 'Class';
 			this.getClass2();
@@ -498,17 +504,20 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		if ($event.value === 'classwise') {
 			this.hiddenValueArray = [];
 			this.valueLabel = 'Class';
+			this.checkMultiple = true;
 			this.hiddenFieldLabel = 'Section';
 			this.getClass();
 		}
 		if ($event.value === 'mfr') {
 			this.hiddenValueArray = [];
 			this.valueLabel = 'Class';
+			this.checkMultiple = true;
 			this.hiddenFieldLabel = 'Section';
 			this.getClass();
 		}
 		if ($event.value === 'modewise') {
 			this.valueLabel = 'Mode';
+			this.checkMultiple = true;
 			this.hiddenFieldLabel = 'Class';
 			this.getModes();
 			this.hiddenFieldLabel2 = 'Section';
@@ -516,6 +525,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 		if ($event.value === 'routewise') {
 			this.valueLabel = 'Route';
+			this.checkMultiple = true;
 			this.getRoutes();
 			this.hiddenFieldLabel = 'Class';
 			this.hiddenFieldLabel2 = 'Section';
