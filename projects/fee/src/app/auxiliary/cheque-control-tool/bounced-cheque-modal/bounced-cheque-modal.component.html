@@ -3,20 +3,20 @@
       <i class="fas fa-times" (click)="closeModal()"></i>
   </div>
 <div class="row">
-  <div class="col-3 text-center">
-    <img class="student-image-bounce-modal" [src]="defaultSrc">
+  <div class="col-2 text-center">
+    <img class="student-image-bounce-modal" [src]="defaultsrc" onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
     <div class="row margin-top-8">
       <div class="col-12">
-          <span class="font-size-14 font-bold">{{studentDetails?.au_full_name}}</span><br>
+          <span class="font-size-14 font-bold">{{studentDetails?.au_full_name | capitalize}}</span><br>
           <span class="font-size-12 font-regular">Class: {{studentDetails?.class_name}}-{{studentDetails?.sec_name}}</span>
       </div>
     </div>
     
   </div>
-  <div class="col-2">
+  <div class="col-1">
     <div class="vertical-line-divider"></div>
   </div>
-  <div class="col-7">
+  <div class="col-9">
     <div class="row">
       <div class="col-6  ">
         <div class="row margin-top-10">
@@ -45,13 +45,13 @@
               <span class="font-size-16 font-light">Cheque no: </span><span class="font-size-14 font-regular">{{studentDetails?.cheque_no}}</span><br>
           </div>
         </div>
-        <div class="row">
-          <div class="col-12 margin-top-10">
+        <div class="row margin-top-10">
+          <div class="col-12 ">
               <span class="font-size-16 font-light">Bank Name: </span><span class="font-size-14 font-regular">{{studentDetails?.bank_name}}</span><br>
           </div>
         </div>
-        <div class="row">
-            <div class="col-12 margin-top-10">
+        <div class="row margin-top-10">
+            <div class="col-12 ">
                 <span class="font-size-16 font-light">Amount: </span><span class="font-size-14 font-regular">{{studentDetails?.receipt_amount}}</span><br>
             </div>
           </div>

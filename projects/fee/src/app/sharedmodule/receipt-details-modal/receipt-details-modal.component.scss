@@ -23,3 +23,17 @@ th.mat-header-cell {
     border: 1px solid #89A8C9 !important;
     border-collapse: collapse;
 } 
+.col-1 {
+    max-width: 2.333333%;
+}
+.col-3 {
+    flex: 0 0 30%;
+    max-width: 30%;
+}
+.print-receipt{
+    width: 8%!important;
+}
+.close-btn {
+    cursor: pointer!important;
+    margin-left: -10px;
+}
