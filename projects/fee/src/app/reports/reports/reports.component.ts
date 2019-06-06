@@ -38,6 +38,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	reportFilterForm: FormGroup;
 	REPORT_ELEMENT_DATA: any[] = [];
 	REPORT_ELEMENT_DATA2: any[] = [];
+	REPORT_ELEMENT_DATA3: any[] = [];
 	valueLabel: any = 'Filter 1';
 	totalRecords: any;
 	currentDate = new Date();
@@ -50,6 +51,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChild('paginator') paginator: MatPaginator;
 	dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
 	dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
+	dataSource3 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
 	feePeriod: any[] = [];
 	hiddenValueArray: any[] = [];
 	hiddenValueArray2: any[] = [];
@@ -438,6 +440,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	switchReport() {
 		this.accountFlag = false;
+		this.REPORT_ELEMENT_DATA = [];
+		this.REPORT_ELEMENT_DATA2 = [];
+		this.REPORT_ELEMENT_DATA3 = [];
 		this.advSearchFlag = true;
 		this.toggleSearch = false;
 		this.valueLabel = 'Filter 1';
@@ -680,10 +685,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
 		this.REPORT_ELEMENT_DATA2 = [];
 		this.dataSource2 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA2);
+		this.REPORT_ELEMENT_DATA3 = [];
+		this.dataSource3 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA3);
 		if ((Number(this.reportType) === 1 || Number(this.reportType) === 2)
 			&& this.reportFilterForm.value.report_type) {
 			if (this.reportFilterForm.value.report_type !== '' &&
-			this.reportFilterForm.value.report_type !== 'mfr') {
+				this.reportFilterForm.value.report_type !== 'mfr') {
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage(result.message, 'success');
@@ -698,8 +705,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							Object.keys(repoArray).forEach((keys: any) => {
 								const obj: any = {};
 								if (Number(keys) === 0) {
-									fee_head_data.push('srno');
-									fee_head_data_name.push('SNo.');
+									fee_head_data.push('srno', 'invoice_created_date', 'stu_admission_no', 'stu_full_name',
+										'stu_class_name', 'invoice_no', 'receipt_no');
+									fee_head_data_name.push('SNo.', 'Date', 'Enrollment No', 'Student Name',
+										'Class-Section', 'Invoice No.', 'Reciept No.');
 								}
 								if (repoArray[Number(keys)]['fee_head_data']) {
 									let k = 0;
@@ -716,7 +725,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											if (key2 === 'fh_id') {
 												obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 													(Number(keys) + 1);
-												obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
+												obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
 												obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '-';
 												obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
 													repoArray[Number(keys)]['invoice_no'] : '-';
@@ -743,11 +752,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								i++;
 								this.REPORT_ELEMENT_DATA.push(obj);
 							});
-							fee_head_data.push('invoice_created_date', 'stu_admission_no', 'stu_full_name',
-								'stu_class_name', 'invoice_no', 'receipt_no');
 							fee_head_data.push('total', 'receipt_mode_name');
-							fee_head_data_name.push('Date', 'Enrollment No', 'Student Name',
-								'Class-Section', 'Invoice No.', 'Reciept No.');
 							fee_head_data_name.push('Total', 'Mode');
 							this.tableFlag = true;
 							this.finalTable.columnDef = fee_head_data;
@@ -758,7 +763,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								const obj: any = {};
 								obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 									(index + 1);
-								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
+								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
 								obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 									repoArray[Number(index)]['invoice_no'] : '-';
 								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -787,7 +792,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								const obj: any = {};
 								obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 									(index + 1);
-								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
+								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
 								obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 									repoArray[Number(index)]['invoice_no'] : '-';
 								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -818,7 +823,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								const obj: any = {};
 								obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 									(index + 1);
-								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
+								obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
 								obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 									repoArray[Number(index)]['invoice_no'] : '-';
 								obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -1057,6 +1062,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) : '-';
 						obj['class_name'] = repoArray[Number(index)]['class_name'] + '-' +
 							repoArray[Number(index)]['sec_name'];
+						obj['cheque_no'] = repoArray[Number(index)]['cheque_no'] ?
+							repoArray[Number(index)]['cheque_no'] : '-';
 						obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 							repoArray[Number(index)]['invoice_no'] : '-';
 						obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -1112,13 +1119,36 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					repoArray = result.data.reportData;
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					let index = 0;
 					for (const item of repoArray) {
+						let obj2 = {};
+						let totAmt = 0;
+						let totCon = 0;
+						let totRec = 0;
+						let totBal = 0;
+						obj2 = {
+							newStudent: true,
+							class_name: '',
+							au_full_name: new CapitalizePipe().transform(item['au_full_name']) + ' (' + item['au_admission_no'] + ')' +
+								', ' + item['class_name'] + '-' +
+								item['sec_name'],
+							au_admission_no: '',
+							flgr_particulars: '',
+							flgr_created_date: '',
+							invoice_id: '',
+							flgr_invoice_type: '',
+							flgr_invoice_receipt_no: '',
+							flgr_concession: '',
+							flgr_receipt: '',
+							flgr_amount: '',
+							flgr_balance: ''
+						};
+						if (item.stu_ledger_arr.length > 0) {
+							this.REPORT_ELEMENT_DATA3.push(obj2);
+						}
 						for (const stu_arr of item.stu_ledger_arr) {
 							const obj: any = {};
-							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-								(++index);
-							obj['class_name'] = item['class_name'] + '-' +
+							obj['newStudent'] = false,
+								obj['class_name'] = item['class_name'] + '-' +
 								item['sec_name'];
 							obj['au_full_name'] = item['au_full_name'] ?
 								new CapitalizePipe().transform(item['au_full_name']) : '-';
@@ -1131,10 +1161,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								stu_arr['flgr_inv_id'] : '-';
 							obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
 							if (stu_arr['flgr_invoice_type'] === 'R') {
-								obj['flgr_invoice_receipt_no'] = 'R-#' + (stu_arr['flgr_invoice_receipt_no'] ?
+								obj['flgr_invoice_receipt_no'] = 'R-' + (stu_arr['flgr_invoice_receipt_no'] ?
 									stu_arr['flgr_invoice_receipt_no'] : '-');
 							} else {
-								obj['flgr_invoice_receipt_no'] = 'I-#' + (stu_arr['flgr_invoice_receipt_no'] ?
+								obj['flgr_invoice_receipt_no'] = 'I-' + (stu_arr['flgr_invoice_receipt_no'] ?
 									stu_arr['flgr_invoice_receipt_no'] : '-');
 							}
 							obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
@@ -1147,16 +1177,42 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['receipt_id'] = stu_arr['receipt_id'];
 							obj['flgr_balance'] = stu_arr['flgr_balance'] ?
 								new DecimalPipe('en-us').transform(stu_arr['flgr_balance']) : '-';
-							this.REPORT_ELEMENT_DATA.push(obj);
+							this.REPORT_ELEMENT_DATA3.push(obj);
+							totAmt = totAmt + (stu_arr['flgr_amount'] ?
+								Number(stu_arr['flgr_amount']) : 0);
+							totCon = totCon + (stu_arr['flgr_concession'] ?
+								Number(stu_arr['flgr_concession']) : 0);
+							totRec = totRec + (stu_arr['flgr_receipt'] ?
+								Number(stu_arr['flgr_receipt']) : 0);
+							totBal = totBal + (stu_arr['flgr_balance'] ?
+								Number(stu_arr['flgr_balance']) : 0);
+						}
+						if (item.stu_ledger_arr.length > 0) {
+							obj2 = {
+								newStudent: false,
+								class_name: '',
+								au_full_name: '',
+								au_admission_no: '',
+								flgr_particulars: '',
+								flgr_created_date: '',
+								invoice_id: '',
+								flgr_invoice_type: '',
+								flgr_invoice_receipt_no: '',
+								flgr_concession: '<b>' + new DecimalPipe('en-us').transform(totCon) + '</b>',
+								flgr_receipt: '<b>' + new DecimalPipe('en-us').transform(totRec) + '</b>',
+								flgr_amount: '<b>' + new DecimalPipe('en-us').transform(totAmt) + '</b>',
+								flgr_balance: ''
+							};
+							this.REPORT_ELEMENT_DATA3.push(obj2);
 						}
 						this.tableFlag = true;
 					}
-					this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
-					this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
-					this.dataSource.paginator = this.paginator;
+					this.dataSource3 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA3);
+					this.dataSource3.paginator.length = this.paginator.length = this.totalRecords;
+					this.dataSource3.paginator = this.paginator;
 				} else {
-					this.REPORT_ELEMENT_DATA = [];
-					this.dataSource = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA);
+					this.REPORT_ELEMENT_DATA3 = [];
+					this.dataSource3 = new MatTableDataSource<any>(this.REPORT_ELEMENT_DATA3);
 					this.tableFlag = true;
 				}
 			});
@@ -1705,10 +1761,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	exportAsExcel() {
 		// tslint:disable-next-line:max-line-length
 		let id: any;
-		if (this.reportFilterForm.value.report_type === 'mfr') {
+		if (this.reportFilterForm.value.report_type === 'mfr' && this.reportType !== '5') {
 			id = 'report_table2';
-		} else {
+		} else if (this.reportFilterForm.value.report_type !== 'mfr' && this.reportType !== '5') {
 			id = 'report_table';
+		} else {
+			id = 'report_table3';
 		}
 		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById(id)); // converts a DOM TABLE element to a worksheet
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
@@ -2020,5 +2078,36 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	applyFilter2(filterValue: string) {
 		this.dataSource2.filter = filterValue.trim().toLowerCase();
+	}
+	applyFilter3(filterValue: string) {
+		this.dataSource3.filter = filterValue.trim().toLowerCase();
+	}
+	resetFilters() {
+		this.reportFilterForm.patchValue({
+			'fee_value': '',
+			'from_date': '',
+			'to_date': '',
+			'hidden_value': '',
+			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
+			'filterReportBy': '',
+			'pageSize': '10',
+			'pageIndex': '0',
+			'admission_no': '',
+			'au_full_name': ''
+		});
+		this.valueLabel = 'Filter 1';
+		this.hiddenFieldLabel = 'Filter2';
+		this.hiddenFieldLabel2 = 'Filter3';
+		this.checkMultiple = false;
+	}
+	checkRowSpan(val, index) {
+		if (val && index === 0) {
+			return 11;
+		} else {
+			return '';
+		}
 	}
 }

@@ -73,7 +73,8 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left" *ngIf="reportFilterForm.value.report_type === 'mfr'">
+                           <div class="col-1 remove-col-padding-left"
+                              *ngIf="reportFilterForm.value.report_type === 'mfr'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>{{hiddenFieldLabel}}</mat-label>
                                  <mat-select formControlName="hidden_value" [placeholder]="hiddenFieldLabel"
@@ -143,9 +144,9 @@
                                  <mat-datepicker #picker1></mat-datepicker>
                               </mat-form-field>
                            </div>
+                           <i class="fas fa-power-off" matTooltip="Reset" (click)="resetFilters()"></i>
                            <div class="col-3 margin-top-15 text-center remove-col-padding-left">
-                              <button class="width-140 print-btn text-uppercase" mat-raised-button
-                                 (click)="switchReport()">
+                              <button class="change-bt" mat-raised-button (click)="switchReport()">
                                  change report
                               </button>
                               <button class="btn-success text-uppercase btn-spacer" mat-raised-button
@@ -154,15 +155,15 @@
                               </button>
                            </div>
                            <div class="col-1 margin-top-15 remove-col-padding-left" *ngIf="REPORT_ELEMENT_DATA.length > 0
-                                 || REPORT_ELEMENT_DATA2.length > 0">
+                                 || REPORT_ELEMENT_DATA2.length > 0  || REPORT_ELEMENT_DATA3.length > 0">
                               <div class="inline-flex">
                                  <div>
                                     <img style="cursor: pointer;width:30px !important" src="/assets/images/xml.svg"
                                        matTooltip="Export as excel" (click)="exportAsExcel()" />
                                  </div>
                                  <div class="btn-spacer">
-                                    <img style="cursor: pointer;width:30px !important" src="/assets/images/pdf.svg" matTooltip="Export as PDF"
-                                       (click)="exportAsPDF()" />
+                                    <img style="cursor: pointer;width:30px !important" src="/assets/images/pdf.svg"
+                                       matTooltip="Export as PDF" (click)="exportAsPDF()" />
                                  </div>
                               </div>
                            </div>
@@ -170,14 +171,14 @@
                      </form>
                      <div class="row overflow-auto">
                         <div class="col-12">
-                           <mat-form-field [hidden]="REPORT_ELEMENT_DATA.length < 1">
+                           <mat-form-field [hidden]="REPORT_ELEMENT_DATA.length === 0">
                               <input class="margin-left-10" matInput (keyup)="applyFilter1($event.target.value)"
                                  placeholder="Filter">
                               <mat-icon matPrefix>filter_list</mat-icon>
                            </mat-form-field>
                            <table mat-table [hidden]="!(tableFlag && 
-                           reportFilterForm.value.report_type !== 'mfr')" id="report_table" [dataSource]="dataSource"
-                              class="table-100 text-center">
+                           reportFilterForm.value.report_type !== 'mfr' && reportType !=='5')" id="report_table"
+                              [dataSource]="dataSource" class="table-100 text-center">
                               <ng-container *ngFor="let column of finalTable.columnDef;let i = index;">
                                  <ng-container [matColumnDef]="column">
                                     <th mat-header-cell *matHeaderCellDef>{{finalTable.colunmHeader[i]}}</th>
@@ -209,8 +210,54 @@
                               <tr mat-header-row *matHeaderRowDef="finalTable.columnDef"></tr>
                               <tr mat-row *matRowDef="let row; columns: finalTable.columnDef;"></tr>
                            </table>
+                           <mat-form-field [hidden]="REPORT_ELEMENT_DATA3.length === 0">
+                              <input class="margin-left-10" matInput (keyup)="applyFilter3($event.target.value)"
+                                 placeholder="Filter">
+                              <mat-icon matPrefix>filter_list</mat-icon>
+                           </mat-form-field>
+                           <table mat-table [hidden]="!(tableFlag && 
+                           reportFilterForm.value.report_type !== 'mfr' && reportType ==='5')" id="report_table3"
+                              [dataSource]="dataSource3" class="table-100 text-center">
+                              <ng-container *ngFor="let column of finalTable.columnDef;let i = index;">
+                                 <ng-container [matColumnDef]="column">
+                                    <th mat-header-cell *matHeaderCellDef>{{finalTable.colunmHeader[i]}}</th>
+                                    <td [attr.colspan]="checkRowSpan(item['newStudent'], i)"
+                                    mat-cell *matCellDef="let item">
+                                       <span [hidden]="item['newStudent']" 
+                                       *ngIf="column !== 'invoice_no' && column !== 'invoice_created_date'
+                                    && column !=='cheque_date' && column !== 'dishonor_date'
+                                    && column !== 'flgr_invoice_receipt_no' && column !== 'receipt_no' && !item['newStudent']">
+                                          <div [innerHTML]="item[column]"></div>
+                                       </span>
+                                       <span [hidden]="item['newStudent']" 
+                                       *ngIf="(column === 'invoice_created_date' || column === 'cheque_date'
+                                    || column === 'dishonor_date')">
+                                          {{item[column] ? (item[column] | date : 'd-MMM-y') : '-'}}
+                                       </span>
+                                       <span [hidden]="item['newStudent']" 
+                                       *ngIf="(column === 'invoice_no' || column === 'flgr_invoice_receipt_no')
+                                    && column !== 'invoice_created_date' && column !== 'receipt_no' && !item['newStudent']"
+                                          class="font-bold font-skyblue font-underline">
+                                          <a style="cursor: pointer;"
+                                             (click)="openDialog(item, false)">{{item[column]}}</a>
+                                       </span>
+                                       <span [hidden]="item['newStudent']" class="font-bold font-skyblue font-underline"
+                                          *ngIf="column === 'receipt_no' && !item['newStudent']">
+                                          <a style="cursor: pointer;" *ngIf="item[column] !== '-'"
+                                             (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a>
+                                          <p *ngIf="item[column] === '-' && !item['newStudent']">{{item[column]}}</p>
+                                       </span>
+                                       <div [hidden]="!item['newStudent']"  *ngIf="item['newStudent'] && i== 0" class="text-center">
+                                          <b>{{item['au_full_name']}}</b>
+                                       </div>
+                                    </td>
+                                 </ng-container>
+                              </ng-container>
+                              <tr mat-header-row *matHeaderRowDef="finalTable.columnDef"></tr>
+                              <tr mat-row *matRowDef="let row; columns: finalTable.columnDef;"></tr>
+                           </table>
                            <div class="float-right margin-top-20" [hidden]="!(tableFlag && 
-                           reportFilterForm.value.report_type === 'mfr')">
+                           reportFilterForm.value.report_type === 'mfr'  && reportType !=='5')">
                               <div class="text-center">
                                  <table>
                                     <tr>
@@ -234,7 +281,7 @@
                                  </table>
                               </div>
                            </div>
-                           <mat-form-field [hidden]="REPORT_ELEMENT_DATA2.length < 1">
+                           <mat-form-field [hidden]="REPORT_ELEMENT_DATA2.length === 0">
                               <input class="margin-left-10" matInput (keyup)="applyFilter2($event.target.value)"
                                  placeholder="Filter">
                               <mat-icon matPrefix>filter_list</mat-icon>
@@ -263,11 +310,15 @@
                            </table>
                            <table class="table-100 text-center" style="margin-top:5px;">
                               <tr *ngIf="REPORT_ELEMENT_DATA.length == 0 && tableFlag
-                              && reportFilterForm.value.report_type !== 'mfr'">
+                              && reportFilterForm.value.report_type !== 'mfr' && reportType !==  '5'">
                                  <td colspan="12">No Record Found</td>
                               </tr>
                               <tr *ngIf="REPORT_ELEMENT_DATA2.length == 0 && tableFlag
-                              && reportFilterForm.value.report_type === 'mfr'">
+                              && reportFilterForm.value.report_type === 'mfr' && reportType !==  '5'">
+                                 <td colspan="12">No Record Found</td>
+                              </tr>
+                              <tr *ngIf="REPORT_ELEMENT_DATA3.length == 0 && tableFlag
+                              && reportFilterForm.value.report_type !== 'mfr' && reportType ===  '5'">
                                  <td colspan="12">No Record Found</td>
                               </tr>
                            </table>
