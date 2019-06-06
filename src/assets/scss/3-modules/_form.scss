@@ -121,3 +121,7 @@
 //     top: 14px !important;
    
 // }
+
+mat-form-field.remove-form-field-bottom-margin .mat-form-field-wrapper {
+    padding-bottom: 0px !important;
+}

@@ -18,20 +18,19 @@
          </mat-card>
       </div>
    </div>
-   <div class="row margin-top-25">
+   <div class="row margin-top-10">
       <div class="col-12 remove-col-padding">
          <app-common-student-profile [loginId]="lastRecordId" (next2)="next($event)" (prev2)="prev($event)"
             (first2)="first($event)" (last2)="last($event)" (key2)="key($event)" (next)="next2($event)"
             (prev)="prev2($event)" (first)="first2($event)" (last)="last2($event)" (key)="key2($event)"
-            (processTypeEmit)="checkEmit($event)"
-            [feeRenderId]="feeRenderId"></app-common-student-profile>
+            (processTypeEmit)="checkEmit($event)" [feeRenderId]="feeRenderId"></app-common-student-profile>
       </div>
    </div>
-   <div [hidden]="!(invoiceArray.length > 0)" class="row margin-top-25 ">
+   <div [hidden]="!(invoiceArray.length > 0)" class="row margin-top-10 ">
       <div class="col-12 remove-col-padding">
          <mat-card class="card-top-title__container">
             <div class="row">
-               <div class="col-12">
+               <div class="col-12 remove-col-padding">
                   <table mat-table [dataSource]="dataSource" class="text-center table-100">
                      <!-- Position Column -->
                      <ng-container matColumnDef="srno">
@@ -41,7 +40,8 @@
                      <!-- Name Column -->
                      <ng-container matColumnDef="feehead">
                         <th mat-header-cell *matHeaderCellDef> Fee Head </th>
-                        <td mat-cell *matCellDef="let element" style="text-align: left !important;"> {{element.feehead}} </td>
+                        <td mat-cell *matCellDef="let element" style="text-align: left !important;"> {{element.feehead}}
+                        </td>
                      </ng-container>
                      <!-- Weight Column -->
                      <ng-container matColumnDef="feedue">
@@ -80,7 +80,7 @@
          </mat-card>
       </div>
    </div>
-   <div class="row margin-top-25" *ngIf="!checkStatus()">
+   <div class="row margin-top-10" *ngIf="!checkStatus()">
       <div class="col-12 remove-col-padding">
          <mat-card class="card-top-form__container">
             <div class="text-center">
@@ -93,11 +93,136 @@
       </div>
    </div>
    <form [formGroup]="feeTransactionForm">
-      <div *ngIf="checkStatus()" class="row margin-top-25">
+      <div *ngIf="checkStatus()" class="row margin-top-10">
          <div class="col-6 remove-col-padding-left">
+
             <mat-card class="card-top-form__container card-height-605 card-height-720">
-               <div class="row">
+               <table class=" table edit-request-table-modal">
+                  <tr class="custom-tr">
+                     <td class="custom-td">
+                        <span *ngIf="!(common.isExistUserAccessMenu('368'))"
+                           class="font-size-20 font-regular">{{currentDate | date: 'd-MMMM-y'}}</span>
+                        <mat-form-field [hidden]="!(common.isExistUserAccessMenu('368'))" appearance="outline"
+                           class="form-field-220 remove-form-field-bottom-margin">
+                           <mat-label>Select Date</mat-label>
+                           <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                              formControlName="ftr_transaction_date">
+                           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                           <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                     </td>
+                     <td class="custom-td">
+                        <mat-form-field appearance="outline" class="form-field-220 remove-form-field-bottom-margin">
+                           <mat-label>Entry Mode</mat-label>
+                           <mat-select (selectionChange)="getSelectedMode($event)" required placeholder="Select Mode"
+                              formControlName="ftr_emod_id" [(ngModel)]="selectedMode">
+                              <mat-option value="">Please Select</mat-option>
+                              <mat-option *ngFor="let mode of entryModes" [value]="mode.emod_id">{{mode.emod_name}}
+                              </mat-option>
+                           </mat-select>
+                        </mat-form-field>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td class="custom-td" *ngIf="invoiceArray.length > 0 && selectedMode === '1'">
+                        <table class=" table edit-request-table-modal">
+                           <tr>
+                              <td class="custom-td"><span class="font-size-16 font-regular">Invoice No: </span></td>
+                              <td class="custom-td"> <span class="font-size-16 font-bold font-skyblue font-underline">
+                                    <a style="cursor: pointer"
+                                       (click)="openDialog(invoice.inv_id, false)">{{invoice.inv_invoice_no}}</a></span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-regular">Invoice Type: </span>
+                              </td>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-bold">
+                                    {{getInvoiceTypeName(invoice.inv_calm_id)}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-regular">Fee Period: </span>
+                              </td>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-bold">
+                                    {{getFeePeriodName(invoice.inv_fp_id)}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-regular">Invoice Date: </span>
+
+                              </td>
+                              <td class="custom-td">
+                                 <span
+                                    class="font-size-16 font-bold">{{invoice.inv_invoice_date | date: 'd-MMM-y'}}</span>
+                              </td>
+                           </tr>
+                        </table>
+
+
+                     </td>
+                     <td class="custom-td" *ngIf="invoiceArray.length > 0 && selectedMode === '1'">
+                        <table class=" table edit-request-table-modal">
+                           <tr>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-regular">Due Date: </span>
+                              </td>
+                              <td class="custom-td"> <span class="font-size-16 font-bold">
+                                    {{invoice.inv_due_date | date: 'd-MMM-y'}}
+                                 </span></td>
+                           </tr>
+                           <tr>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-regular">Invoice Amount: </span>
+                              </td>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-bold">{{invoice.fee_amount | number}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-regular">Fines: </span>
+                              </td>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-bold">
+                                    {{invoice.late_fine_amt ? (invoice.late_fine_amt | number): 0}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-regular">Previous Balance: </span>
+
+                              </td>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-bold">
+                                    {{invoice.balance_amt ? (invoice.balance_amt | number): 0}}</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-regular">Total Amount: </span>
+
+                              </td>
+                              <td class="custom-td">
+                                 <span class="font-size-16 font-bold">
+                                    {{invoice.netPay | number}}</span>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
+
+
+
+
+               </table>
+               <!-- <div class="row">
                   <div class="col-6">
+                        
                      <div class="row">
                         <div class="col-12">
                            <span *ngIf="!(common.isExistUserAccessMenu('368'))"
@@ -200,12 +325,214 @@
                         </div>
                      </div>
                   </div>
-               </div>
+               </div> -->
             </mat-card>
          </div>
          <div class="col-6 remove-col-padding">
             <mat-card class="card-top-form__container card-height-605 card-height-720">
-               <div class="row">
+               <table class=" table edit-request-table-modal">
+                  <tr class="custom-tr">
+                     <td class="custom-td">
+                        <mat-form-field appearance="outline" class="form-field-220 remove-form-field-bottom-margin">
+                           <mat-label>Payment Mode</mat-label>
+                           <mat-select formControlName="ftr_pay_id" placeholder="Payment Mode"
+                              (selectionChange)="setPayAmount($event)">
+                              <mat-option value="">Please Select</mat-option>
+                              <mat-option *ngFor="let mode of payModes" [value]="mode.pay_id">{{mode.pay_name}}
+                              </mat-option>
+                           </mat-select>
+                        </mat-form-field>
+                     </td>
+                     <!-- <td>
+                        <table class=" table edit-request-table-modal">
+                           <tr>
+                              <td><mat-form-field appearance="outline" class="form-field-220 remove-form-field-bottom-margin">
+                                    <mat-label>Amount</mat-label>
+                                    <input matInput placeholder="Amount" type="number" formControlName="ftr_amount"
+                                       [readonly]="selectedMode === '1'" required>
+                                 </mat-form-field></td>
+                           </tr>
+                           <tr>
+                              <td>
+                                    <mat-form-field appearance="outline" class="form-field remove-form-field-bottom-margin">
+                                          <mat-label>Remarks</mat-label>
+                                          <textarea placeholder="Write your message" required formControlName="ftr_remark"
+                                             matInput rows="4"></textarea>
+                                       </mat-form-field>
+                              </td>
+                           </tr>
+                        </table>
+                     </td> -->
+                  </tr>
+                  <tr>
+                     <td *ngIf="((feeTransactionForm.value.ftr_pay_id === '1') || (feeTransactionForm.value.ftr_pay_id !== '2' 
+                     && feeTransactionForm.value.ftr_pay_id !== '3' && feeTransactionForm.value.ftr_pay_id !== ''))">
+                        <table class=" table edit-request-table-modal">
+                           <tr>
+                              <td><span class="font-size-16">Amount </span></td>
+                              <td>
+                                 <mat-form-field appearance="outline"
+                                    class="form-field-220 remove-form-field-bottom-margin">
+                                    <mat-label>Amount</mat-label>
+                                    <input matInput placeholder="Amount" type="number" formControlName="ftr_amount"
+                                       [readonly]="selectedMode === '1'" required>
+                                 </mat-form-field>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td><span class="font-size-16">Remarks </span></td>
+                              <td>
+                                 <mat-form-field appearance="outline"
+                                    class="form-field remove-form-field-bottom-margin">
+                                    <mat-label>Remarks</mat-label>
+                                    <textarea placeholder="Write your message" required formControlName="ftr_remark"
+                                       matInput rows="4"></textarea>
+                                 </mat-form-field>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                     <td *ngIf="feeTransactionForm.value.ftr_pay_id === '2'">
+                        <table class=" table edit-request-table-modal">
+                           <tr>
+                              <td><span class="font-size-16">Bank Name </span></td>
+                              <td>
+                                 <mat-form-field appearance="outline"
+                                    class="form-field-220 remove-form-field-bottom-margin">
+                                    <mat-label>Bank Name</mat-label>
+                                    <mat-select placeholder="Bank Name" formControlName="ftr_bnk_id" required>
+                                       <mat-option value="">Please Select</mat-option>
+                                       <mat-option *ngFor="let bank of banks" [value]="bank.bnk_id">{{bank.bank_name}}
+                                       </mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td><span class="font-size-16">Amount </span></td>
+                              <td>
+                                 <mat-form-field appearance="outline"
+                                    class="form-field-220 remove-form-field-bottom-margin">
+                                    <mat-label>Amount</mat-label>
+                                    <input matInput placeholder="Amount" type="number" formControlName="ftr_amount"
+                                       required>
+                                 </mat-form-field>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td><span class="font-size-16">Remarks </span></td>
+                              <td>
+                                 <mat-form-field appearance="outline"
+                                    class="form-field remove-form-field-bottom-margin">
+                                    <mat-label>Remarks</mat-label>
+                                    <textarea matInput placeholder="Write your message" formControlName="ftr_remark"
+                                       required rows="8"></textarea>
+                                 </mat-form-field>
+                              </td>
+                           </tr>
+                        </table>
+                     </td>
+                     <td *ngIf="feeTransactionForm.value.ftr_pay_id === '3'">
+                        <div class="row remove-top-margin">
+                           <div class="col-6 remove-col-padding">
+
+
+                              <table class=" table edit-request-table-modal">
+                                 <tr>
+
+                                    <td>
+                                       <mat-form-field appearance="outline" class="form-field-220 remove-form-field-bottom-margin">
+                                          <mat-label>Deposited Bank</mat-label>
+                                          <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id"
+                                             required>
+                                             <mat-option value="">Please Select</mat-option>
+                                             <mat-option *ngFor="let bank of banks" [value]="bank.bnk_id">
+                                                {{bank.bank_name}}
+                                             </mat-option>
+                                          </mat-select>
+                                       </mat-form-field>
+                                    </td>
+                                 </tr>
+                                 <tr>
+
+                                    <td>
+                                       <mat-form-field appearance="outline" class="form-field-220 remove-form-field-bottom-margin">
+                                          <mat-label>Cheque No.</mat-label>
+                                          <input type="number" matInput placeholder="Cheque No."
+                                             formControlName="ftr_cheque_no" required>
+                                       </mat-form-field>
+                                    </td>
+                                 </tr>
+                                 <tr>
+
+                                    <td>
+                                       <mat-form-field appearance="outline" class="form-field-220 remove-form-field-bottom-margin">
+                                          <mat-label>Bank Name</mat-label>
+                                          <mat-select placeholder="Bank Name" formControlName="ftr_bnk_id" required>
+                                             <mat-option value="">Please Select</mat-option>
+                                             <mat-option *ngFor="let bank of allBanks" [value]="bank.tb_id">
+                                                {{bank.tb_name}}
+                                             </mat-option>
+                                          </mat-select>
+                                       </mat-form-field>
+                                    </td>
+                                 </tr>
+                                 <tr>
+
+                                    <td>
+                                       <mat-form-field appearance="outline" class="form-field-220 remove-form-field-bottom-margin">
+                                          <mat-label>Branch</mat-label>
+                                          <input matInput placeholder="Bank Branch" formControlName="ftr_branch"
+                                             required>
+                                       </mat-form-field>
+                                    </td>
+                                 </tr>
+                              </table>
+                           </div>
+                           <div class="col-6 remove-col-padding">
+
+
+                                 <table class=" table edit-request-table-modal">
+                                    <tr>
+   
+                                       <td>
+                                             <mat-form-field appearance="outline" class="form-field-220 remove-form-field-bottom-margin">
+                                                   <mat-label>Amount Chargeable</mat-label>
+                                                   <input matInput placeholder="Amount Chargeable" type="number"
+                                                      formControlName="ftr_amount" required>
+                                                </mat-form-field>
+                                       </td>
+                                    </tr>
+                                    <tr>
+   
+                                       <td>
+                                             <mat-form-field appearance="outline" class="form-field-220 remove-form-field-bottom-margin">
+                                                   <mat-label>Cheque Date</mat-label>
+                                                   <input matInput [matDatepicker]="picker3" placeholder="Choose a date"
+                                                      formControlName="ftr_cheque_date" required>
+                                                   <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                                                   <mat-datepicker #picker3></mat-datepicker>
+                                                </mat-form-field>
+                                       </td>
+                                    </tr>
+                                    <tr>
+   
+                                       <td>
+                                             <mat-form-field appearance="outline" class="form-field remove-form-field-bottom-margin">
+                                                   <mat-label>Remarks</mat-label>
+                                                   <textarea placeholder="Write your message" matInput rows="6" required
+                                                      formControlName="ftr_remark"></textarea>
+                                                </mat-form-field>
+                                       </td>
+                                    </tr>
+                                    
+                                 </table>
+                              </div>
+                        </div>
+                     </td>
+                  </tr>
+               </table>
+               <!-- <div class="row">
                   <div class="col-3"></div>
                   <div class="col-6">
                      <mat-form-field appearance="outline" class="form-field ">
@@ -219,8 +546,8 @@
                      </mat-form-field>
                   </div>
                   <div class="col-3"></div>
-               </div>
-               <div *ngIf="((feeTransactionForm.value.ftr_pay_id === '1') || (feeTransactionForm.value.ftr_pay_id !== '2' 
+               </div> -->
+               <!-- <div *ngIf="((feeTransactionForm.value.ftr_pay_id === '1') || (feeTransactionForm.value.ftr_pay_id !== '2' 
            && feeTransactionForm.value.ftr_pay_id !== '3' && feeTransactionForm.value.ftr_pay_id !== ''))">
                   <div class="row">
                      <div class="col-3"></div>
@@ -288,7 +615,7 @@
                </div>
                <div *ngIf="feeTransactionForm.value.ftr_pay_id === '3'">
                   <div class="row">
-                     <div class="col-6">
+                     <div class="col-6 remove-col-padding">
                         <div class="row">
                            <div class="col-12">
                               <mat-form-field appearance="outline" class="form-field">
@@ -363,7 +690,7 @@
                         </div>
                      </div>
                   </div>
-               </div>
+               </div> -->
                <div class="row text-center">
                   <div class="col-12">
                      <button *ngIf="isExist('366')" mat-button class="text-uppercase btn-success"
