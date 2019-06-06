@@ -88,7 +88,7 @@ export class SchoolDashboardComponent implements OnInit {
 				type: 'pie',
 				height: '300px',
 				options3d: {
-					enabled: true,
+					enabled: false,
 					alpha: 45
 				}
 			},
@@ -289,7 +289,7 @@ export class SchoolDashboardComponent implements OnInit {
 				type: 'pie',
 				height: '300px',
 				options3d: {
-					enabled: true,
+					enabled: false,
 					alpha: 45
 				},
 				innerSize: '%'

@@ -24,7 +24,7 @@
     <div class="col-12 remove-col-padding">
       <div class="container-box__white">
         <div class="row">
-          <div class="col-1 text-center">
+          <div class="col-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 text-center">
             <label for="image" class="main-label-img margin-top-10">
               <img class="student-pic--imgone student-pic__circle sis-student-pic__size" [src]="defaultsrc">
               <img *ngIf="!viewOnly" class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
@@ -42,8 +42,8 @@
               </div>
             </div>
           </div>
-          <div class="col-2 remove-col-padding">
-            <div class="row">
+          <div class="col-12  col-sm-12 col-md-8 col-lg-2 col-xl-2 remove-col-padding">
+            <div class="row remove-margin">
               <div class="col-12 text-center margin-top-20">
                 <span class="font-size-16 font-medium">{{(belongToForm | capitalize) + ' No.'}}</span>
               </div>
@@ -80,21 +80,21 @@
           </div>
 
 
-          <div class="col-9">
+          <div class="col-12 col-sm-12 col-lg-9 col-md-12 col-xs-9">
             <div class="row remove-top-margin">
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12 ">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12 ">
                 <div class="liveadm-container__box">
                   <span class="livadm-text font-size-14">{{getLiveLabel()}} : {{studentdetails.livecount}}</span>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Full Name</mat-label>
                   <input class="text-capitalize" formControlName="au_full_name" matInput placeholder="Full Name"
                     required [readonly]="viewOnly">
                 </mat-form-field>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>{{classPlaceHolder}}</mat-label>
                   <mat-select formControlName="au_class_id" [placeholder]="classPlaceHolder" required
@@ -106,7 +106,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="!fieldEnableAtAdmission()">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="!fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Class Applied Forr</mat-label>
                   <mat-select formControlName="au_class_id" placeholder="Class Applied For" required
@@ -118,7 +118,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Section</mat-label>
                   <mat-select formControlName="au_sec_id" placeholder="Section" [disabled]="viewOnly">
@@ -129,7 +129,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>House Name</mat-label>
                   <mat-select formControlName="au_hou_id" placeholder="House Name" [disabled]="viewOnly">
@@ -140,7 +140,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_parent_name">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_parent_name">
                 <div [ngClass]="studentdetailsform.value.epd_parent_name? 'remove-col-padding' : 'remove-col-padding '">
                   <mat-form-field appearance="outline" class="form-field"
                     *ngIf="studentdetailsform.value.epd_parent_name">
@@ -150,7 +150,7 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_contact_no">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_contact_no">
                 <div [ngClass]="studentdetailsform.value.epd_contact_no? 'remove-col-padding' : 'remove-col-padding '">
                   <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_contact_no"
                     class="form-field">
@@ -160,7 +160,7 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_whatsapp_no">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_whatsapp_no">
                 <div [ngClass]="studentdetailsform.value.epd_whatsapp_no? 'remove-col-padding' : 'remove-col-padding '">
                   <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_whatsapp_no"
                     class="form-field">
@@ -170,7 +170,7 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12"
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12"
                 *ngIf="studentdetailsform.value.mi_emergency_contact_name">
                 <div
                   [ngClass]="studentdetailsform.value.mi_emergency_contact_name? 'remove-col-padding' : 'remove-col-padding '">
@@ -182,7 +182,7 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-6 col-12">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
                 <div
                   [ngClass]="studentdetailsform.value.mi_emergency_contact_no? 'remove-col-padding' : 'remove-col-padding '">
                   <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.mi_emergency_contact_no"
@@ -195,24 +195,28 @@
               </div>
             </div>
             <div class="row remove-top-margin">
-              <div class="col-2 sis-col-20" *ngIf="processtypeService.getProcesstype() !== '5' && stopFlag">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12 mb-10"
+                *ngIf="processtypeService.getProcesstype() !== '5' && stopFlag">
                 <div class="grey-container__box text-center">
                   <span><b>Route :</b> {{studentdetails.ead_bus_route ? studentdetails.ead_bus_route : '-'}}</span>
                 </div>
               </div>
-              <div class="col-2 sis-col-20" *ngIf="processtypeService.getProcesstype() !== '5' && stopFlag">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12 mb-10"
+                *ngIf="processtypeService.getProcesstype() !== '5' && stopFlag">
                 <div class="grey-container__box text-center">
                   <span><b>Stop :</b>
                     {{studentdetails.ead_pickup_point ? studentdetails.ead_pickup_point: '-'}}</span>
                 </div>
               </div>
-              <div class="col-2 sis-col-20" *ngIf="processtypeService.getProcesstype() !== '5'">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12 mb-10"
+                *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
                   <span><b>Fees O/S :</b> {{studentdetails.fee_outstanding ? 
                   (studentdetails.fee_outstanding | number): 'NA'}}</span>
                 </div>
               </div>
-              <div class="col-2 sis-col-20" *ngIf="processtypeService.getProcesstype() !== '5'">
+              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12 mb-10"
+                *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
                   <span><b>Concession
                       Grp:</b>{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
