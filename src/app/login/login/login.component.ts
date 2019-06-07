@@ -145,8 +145,8 @@ export class LoginComponent implements OnInit {
 							LN: user.login_id,
 							PF: user.Prefix
 						};
-						user.Prefix = this.model.username.split('-')[0];
-						user.username = this.model.username;
+						//user.Prefix = this.model.username.split('-')[0];
+						//user.username = this.model.username;
 						if (user) {
 							localStorage.setItem('currentUser', JSON.stringify(user));
 							this._cookieService.put('userData', JSON.stringify(tempJson));
