@@ -14,16 +14,17 @@
                         <mat-card [class]="checkEnable(item.report_id)" (click)="executeReport(item.report_id)">
                            <div class="report-card-container2">
                               <div [class]="item.main_text_class">
-                                 <img style="width:26px !important"
-                                 [class]="item.report_main_image_class" [src]="item.report_image" /><br />
+                                 <img style="width:26px !important" [class]="item.report_main_image_class"
+                                    [src]="item.report_image" /><br />
                                  <div class="margin-top-10 icon-spacer">
-                                    <span class="font-dark-blue font-size-14 font-medium" style="font-weight: 600 !important">{{item.report_name}}</span>
+                                    <span class="font-dark-blue font-size-14 font-medium"
+                                       style="font-weight: 600 !important">{{item.report_name}}</span>
                                  </div>
                               </div>
                               <div [class]="item.report_middle_class">
                                  <div><i [class]="item.report_check_icon_class"></i></div>
-                                 <span *ngIf="item.report_check_icon_class !== ''" style="font-weight: 600 !important" 
-                                 class="font-white font-size-14 font-medium"> {{item.report_name}}</span>
+                                 <span *ngIf="item.report_check_icon_class !== ''" style="font-weight: 600 !important"
+                                    class="font-white font-size-14 font-medium"> {{item.report_name}}</span>
                               </div>
                            </div>
                         </mat-card>
@@ -147,6 +148,14 @@
                               </mat-form-field>
                            </div>
                            <i class="fas fa-redo" matTooltip="Reset" (click)="resetFilters()"></i>
+                           <div *ngIf="checkIfShow(reportType)" class="col-1 margin-top-15 text-center remove-col-padding-left">
+                              <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
+                                 filter
+                              </button>
+                              <button class="sort-bt" mat-raised-button (click)="openSort()">
+                                 sort
+                              </button>
+                           </div>
                            <div class="col-3 margin-top-15 text-center remove-col-padding-left">
                               <button class="change-bt" mat-raised-button (click)="switchReport()">
                                  change report
@@ -201,11 +210,11 @@
                                              (click)="openDialog(item, false)">{{item[column]}}</a>
                                        </span>
                                        <span class="font-bold font-skyblue font-underline"
-                                          *ngIf="column === 'receipt_no'">
-                                          <a style="cursor: pointer;" *ngIf="item[column] !== '-'"
-                                             (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a>
-                                          <p *ngIf="item[column] === '-'">{{item[column]}}</p>
-                                       </span>
+                                          *ngIf="column === 'receipt_no' && item[column] !== '-'">
+                                          <a style="cursor: pointer;"
+                                             (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a></span>
+                                       <span
+                                          *ngIf="item[column] === '-' && column === 'receipt_no'">{{item[column]}}</span>
                                     </td>
                                  </ng-container>
                               </ng-container>
@@ -223,21 +232,20 @@
                               <ng-container *ngFor="let column of finalTable.columnDef;let i = index;">
                                  <ng-container [matColumnDef]="column">
                                     <th mat-header-cell *matHeaderCellDef>{{finalTable.colunmHeader[i]}}</th>
-                                    <td [attr.colspan]="checkRowSpan(item['newStudent'], i)"
-                                    mat-cell *matCellDef="let item">
-                                       <span [hidden]="item['newStudent']" 
-                                       *ngIf="column !== 'invoice_no' && column !== 'invoice_created_date'
+                                    <td [attr.colspan]="checkRowSpan(item['newStudent'], i)" mat-cell
+                                       *matCellDef="let item">
+                                       <span [hidden]="item['newStudent']"
+                                          *ngIf="column !== 'invoice_no' && column !== 'invoice_created_date'
                                     && column !=='cheque_date' && column !== 'dishonor_date'
                                     && column !== 'flgr_invoice_receipt_no' && column !== 'receipt_no' && !item['newStudent']">
                                           <div [innerHTML]="item[column]"></div>
                                        </span>
-                                       <span [hidden]="item['newStudent']" 
-                                       *ngIf="(column === 'invoice_created_date' || column === 'cheque_date'
+                                       <span [hidden]="item['newStudent']" *ngIf="(column === 'invoice_created_date' || column === 'cheque_date'
                                     || column === 'dishonor_date')">
                                           {{item[column] ? (item[column] | date : 'd-MMM-y') : '-'}}
                                        </span>
-                                       <span [hidden]="item['newStudent']" 
-                                       *ngIf="(column === 'invoice_no' || column === 'flgr_invoice_receipt_no')
+                                       <span [hidden]="item['newStudent']"
+                                          *ngIf="(column === 'invoice_no' || column === 'flgr_invoice_receipt_no')
                                     && column !== 'invoice_created_date' && column !== 'receipt_no' && !item['newStudent']"
                                           class="font-bold font-skyblue font-underline">
                                           <a style="cursor: pointer;"
@@ -249,7 +257,8 @@
                                              (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a>
                                           <p *ngIf="item[column] === '-' && !item['newStudent']">{{item[column]}}</p>
                                        </span>
-                                       <div [hidden]="!item['newStudent']"  *ngIf="item['newStudent'] && i== 0" class="text-center">
+                                       <div [hidden]="!item['newStudent']" *ngIf="item['newStudent'] && i== 0"
+                                          class="text-center">
                                           <b>{{item['au_full_name']}}</b>
                                        </div>
                                     </td>

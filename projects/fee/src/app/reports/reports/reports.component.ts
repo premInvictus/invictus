@@ -13,6 +13,8 @@ import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { reduce } from 'rxjs/operators';
 import { CapitalizePipe } from '../../_pipes';
+import { ReportFilterComponent } from '../reports-filter-sort/report-filter/report-filter.component';
+import { ReportSortComponent } from '../reports-filter-sort/report-sort/report-sort.component';
 @Component({
 	selector: 'app-reports',
 	templateUrl: './reports.component.html',
@@ -23,6 +25,7 @@ import { CapitalizePipe } from '../../_pipes';
 })
 export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 	reportsTable: any;
+	filterResult: any[] = [];
 	renderTable: any = {};
 	toggleSearch = false;
 	finalTable: any = {};
@@ -1252,8 +1255,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							repoArray[Number(index)]['inv_invoice_no'] : '-';
 						obj['invoice_id'] = repoArray[Number(index)]['inv_id'] ?
 							repoArray[Number(index)]['inv_id'] : '0';
-						obj['fp_name'] = this.getFeePeriodName(repoArray[Number(index)]['inv_fp_id']);
-						obj['inv_paid_status'] = item['inv_paid_status'];
+						obj['fp_name'] = repoArray[Number(index)]['fp_name'];
+						obj['inv_paid_status'] = new CapitalizePipe().transform(item['inv_paid_status']);
 						this.REPORT_ELEMENT_DATA.push(obj);
 						this.tableFlag = true;
 						index++;
@@ -1531,7 +1534,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							item['sec_name'];
 						obj['invoice_no'] = item['inv_invoice_no'];
 						obj['invoice_id'] = item['inv_id'];
-						obj['invoice_created_date'] = item['inv_created_date'];
+						obj['invoice_created_date'] = item['inv_invoice_date'];
 						obj['cheque_date'] = item['inv_due_date'];
 						obj['invg_fh_name'] = item['invg_fh_name'] ? item['invg_fh_name'] : '-';
 						obj['invg_fh_amount'] = item['invg_fh_amount'] ?
@@ -1542,6 +1545,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						obj['receipt_no'] = item['rpt_receipt_no'] ? item['rpt_receipt_no'] : '-';
 						obj['receipt_id'] = item['receipt_id'];
 						obj['dishonor_date'] = item['rpt_receipt_date'];
+						obj['pay_name'] = item['pay_name'] ? new CapitalizePipe().transform(item['pay_name']) : '-' ;
 						obj['inv_remark'] = item['inv_remark'] ? new CapitalizePipe().transform(item['inv_remark']) : '-';
 						index++;
 						this.REPORT_ELEMENT_DATA.push(obj);
@@ -2109,5 +2113,37 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		} else {
 			return '';
 		}
+	}
+	openFilterDialog() {
+		const dialogRefFilter = this.dialog.open(ReportFilterComponent, {
+			width: '70%',
+			height: '80%',
+			data: {
+				filterResult: this.filterResult,
+				pro_id: '3',
+			}
+		});
+		dialogRefFilter.afterClosed().subscribe(result => {
+		});
+		dialogRefFilter.componentInstance.filterResult.subscribe((data: any) => {
+			this.filterResult = data;
+		});
+	}
+	checkIfShow(report_type) {
+		if (Number(report_type) === 2 || Number(report_type) === 5 || Number(report_type) === 7
+			|| Number(report_type) === 8) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	openSort() {
+		const sortDialog = this.dialog.open(ReportSortComponent, {
+			width: '60vh',
+			height: '50vh',
+			data: {}
+		});
+		sortDialog.afterClosed().subscribe(result => {
+		});
 	}
 }
