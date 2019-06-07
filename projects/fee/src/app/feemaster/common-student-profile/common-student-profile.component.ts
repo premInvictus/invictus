@@ -69,7 +69,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	addOnly = true;
 	iddesabled = true;
 	backOnly = false;
-	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
@@ -96,6 +96,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	class_name: any;
 	section_name: any;
 	class_sec: any;
+	gender: any;
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },
@@ -175,10 +176,17 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						this.lastB = true;
 						this.previousB = true;
 						this.studentdetails = [];
-						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
 						if (result && result.data && result.data[0]) {
 							this.studentdetails = result.data[0];
 							this.previousLoginId = this.studentdetails.au_login_id;
+							this.gender = this.studentdetails.au_gender;
+							if(this.gender === 'M'){
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+							}else if(this.gender === 'F'){
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+							}else{
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+							}
 							this.class_name = this.studentdetails.class_name;
 							this.section_name = this.studentdetails.sec_name;
 							if(this.section_name != ' '){

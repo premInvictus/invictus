@@ -31,6 +31,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	class_name: any;
 	section_name: any;
 	class_sec: any;
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+	gender :any;
 	constructor(
 		public dialogRef: MatDialogRef<InvoiceDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -190,10 +192,27 @@ export class InvoiceDetailsModalComponent implements OnInit {
 						}else{
 							this.class_sec = this.class_name;
 						}
+						this.gender = this.invoiceDetails.au_gender;
+						if(this.gender === 'M'){
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+						}else if(this.gender === 'F'){
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+						}else{
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+						}
 						if (this.invoiceDetails.invoice_bifurcation.length > 0) {
 							this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
 							this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
 						}
+						this.adjustmentForm.patchValue({
+							au_profileimage: this.invoiceDetails.au_profileimage
+								? this.invoiceDetails.au_profileimage
+								: this.defaultsrc,
+						});
+						this.defaultsrc =
+							this.invoiceDetails.au_profileimage !== ''
+								? this.invoiceDetails.au_profileimage
+								: this.defaultsrc;
 
 					}
 				} else {
