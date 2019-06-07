@@ -107,8 +107,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		});
 		adj.remark = this.adjRemark;
 		// this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')
-		if (!(this.commonAPIService.isExistUserAccessMenu('357')
-		&& this.commonAPIService.isExistUserAccessMenu('364')) && this.adjRemark) {
+		if ((this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')) && this.adjRemark) {
 			this.feeService.invoiceAdjustmentRemark(adj).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
