@@ -69,7 +69,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '1',
 			report_name: 'Collection Report',
-			report_image: '/assets/images/Fee Reports/collection_report.svg',
+			report_image: '/assets/images/Fee Reports/collection_report.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -78,7 +78,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '2',
 			report_name: 'Fee Outstanding Report',
-			report_image: '/assets/images/Fee Reports/fee_defaulter_list.svg',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -87,7 +87,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '3',
 			report_name: 'Fee Projection Report',
-			report_image: '/assets/images/Fee Reports/fee_projection.svg',
+			report_image: '/assets/images/Fee Reports/fee_projection.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -96,7 +96,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '4',
 			report_name: 'Fee Transaction Report',
-			report_image: '/assets/images/Fee Reports/fee_transaction.svg',
+			report_image: '/assets/images/Fee Reports/fee_transaction.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -105,7 +105,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '5',
 			report_name: 'Fee Ledger Report',
-			report_image: '/assets/images/Fee Reports/fee_ledger.svg',
+			report_image: '/assets/images/Fee Reports/fee_ledger.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -115,7 +115,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '6',
 			report_name: 'Deleted Fee Transactions',
 			report_image:
-				'/assets/images/Fee Reports/deleted_fee_transaction.svg',
+				'/assets/images/Fee Reports/deleted_fee_transaction.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -124,7 +124,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '7',
 			report_name: 'Fee Adjustment Report',
-			report_image: '/assets/images/Fee Reports/fee_adjustment.svg',
+			report_image: '/assets/images/Fee Reports/fee_adjustment.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -133,7 +133,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '8',
 			report_name: 'Fee Concession Report',
-			report_image: '/assets/images/Fee Reports/fee_concession.svg',
+			report_image: '/assets/images/Fee Reports/fee_concession.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -143,7 +143,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '9',
 			report_name: 'Missing Fee Invoice',
 			report_image:
-				'/assets/images/Fee Reports/missing_fee_invoice.svg',
+				'/assets/images/Fee Reports/missing_fee_invoice.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -152,7 +152,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '10',
 			report_name: 'Fee Structure Report',
-			report_image: '/assets/images/Fee Reports/fee_structure.svg',
+			report_image: '/assets/images/Fee Reports/fee_structure.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -161,7 +161,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '11',
 			report_name: 'Cheque Clearance Report',
-			report_image: '/assets/images/Fee Reports/cheque_clearance.svg',
+			report_image: '/assets/images/Fee Reports/cheque_clearance.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -170,7 +170,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '12',
 			report_name: 'Advanced Security Deposit',
-			report_image: '/assets/images/Fee Reports/advanced_security.svg',
+			report_image: '/assets/images/Fee Reports/advanced_security.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -179,7 +179,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '13',
 			report_name: 'Online Transaction Details',
-			report_image: '/assets/images/Fee Reports/online_transaction.svg',
+			report_image: '/assets/images/Fee Reports/online_transaction.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -188,7 +188,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '14',
 			report_name: 'Dynamic Report',
-			report_image: '/assets/images/Fee Reports/dynamics.svg',
+			report_image: '/assets/images/Fee Reports/dynamics.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -197,7 +197,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		{
 			report_id: '15',
 			report_name: 'Transport Report',
-			report_image: '/assets/images/Fee Reports/transport_report.svg',
+			report_image: '/assets/images/Fee Reports/transport_report.png',
 			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -549,10 +549,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		if ($event.value === 'concessionAlloted') {
 			this.valueLabel = 'Class';
 			this.getClass();
+			this.hiddenFieldLabel2 = 'Section';
 		}
 		if ($event.value === 'feestructurealloted') {
 			this.valueLabel = 'Class';
 			this.getClass();
+			this.hiddenFieldLabel2 = 'Section';
 		}
 		if ($event.value === 'concession') {
 			this.advSearchFlag = false;
@@ -3180,6 +3182,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			'admission_no': '',
 			'au_full_name': ''
 		});
+		this.filterResult = [];
+		this.sortResult = [];
 	}
 	checkRowSpan(val, index) {
 		if (val && index === 0) {
@@ -3204,11 +3208,46 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		});
 	}
 	checkIfShow(report_type) {
-		if (Number(report_type) === 2 || Number(report_type) === 5 || Number(report_type) === 7
-			|| Number(report_type) === 8) {
+		if (Number(report_type) === 2 || Number(report_type) === 5 || Number(report_type) === 7) {
 			return true;
+		}
+		if (Number(report_type) === 10) {
+			if (this.reportFilterForm.value.report_type !== '' &&
+				this.reportFilterForm.value.report_type !== 'feestructure') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		if (Number(report_type) === 8) {
+			if (this.reportFilterForm.value.report_type !== '' &&
+				this.reportFilterForm.value.report_type !== 'concession') {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
+		}
+	}
+	checkForExistFilter(report_type) {
+		if (Number(report_type) === 10) {
+			if (this.reportFilterForm.value.report_type !== '' &&
+				this.reportFilterForm.value.report_type !== 'feestructure') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		if (Number(report_type) === 8) {
+			if (this.reportFilterForm.value.report_type !== '' &&
+				this.reportFilterForm.value.report_type !== 'concession') {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
 		}
 	}
 	openSort() {
