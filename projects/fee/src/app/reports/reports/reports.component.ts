@@ -629,7 +629,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		let filterData: any[] = [];
 		if (this.filterResult.length > 0) {
 			this.feeService.getStudentsForFilter({ filters: this.filterResult }).toPromise().then((resulte: any) => {
-				if (resulte && resulte.status === 'ok') {
+				if ((resulte && resulte.status === 'ok') || resulte.status === 'error') {
 					filterData = resulte.data;
 					if (Number(this.reportType) === 1) {
 						filterBy = 'collection';
