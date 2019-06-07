@@ -13,6 +13,8 @@ export class BouncedChequeModalComponent implements OnInit {
 	defaultSrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
 	bouncedForm: FormGroup;
 	reasonArray: any[] = [];
+	gender :any;
+	defaultsrc :any;
 	constructor(
 		public dialogRef: MatDialogRef<BouncedChequeModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -26,8 +28,15 @@ export class BouncedChequeModalComponent implements OnInit {
 		this.getReason();
 		this.studentDetails = {};
 		this.studentDetails = this.data;
-		console.log(this.studentDetails);
-		this.defaultSrc = this.studentDetails.au_profileimage ? this.studentDetails.au_profileimage : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+		this.gender = this.studentDetails.au_gender;
+		if(this.gender === 'M'){
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+		}else if(this.gender === 'F'){
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+		}else{
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+		}
+		this.defaultSrc = this.studentDetails.au_profileimage ? this.studentDetails.au_profileimage : this.defaultsrc;
 	}
 	buildForm() {
 		this.bouncedForm = this.fbuild.group({

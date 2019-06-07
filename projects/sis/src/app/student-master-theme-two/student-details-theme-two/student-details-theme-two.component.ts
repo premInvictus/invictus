@@ -41,7 +41,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	addOnly = true;
 	iddesabled = true;
 	backOnly = false;
-	defaultsrc = '/assets/images/student.png';
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
@@ -53,6 +53,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	studentdetailsflag = false;
 	lastRecordId;
 	classPlaceHolder: any;
+	gender: any;
 	@ViewChild('deleteModal') deleteModal;
 	openDeleteDialog = (data) => {
 		this.deleteModal.openModal(data);
@@ -154,7 +155,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			this.viewOnly = false;
 			this.deleteOnly = false;
 			this.studentdetailsform.reset();
-			this.defaultsrc = '/assets/images/student.png';
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 			this.enrolmentPlaceholder = 'New Enrollment Id';
 
 		}
@@ -241,10 +242,17 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 					this.firstB = true;
 					this.lastB = true;
 					this.previousB = true;
-					this.studentdetails = [];
-					this.defaultsrc = '/assets/images/student.png';
+					this.studentdetails = [];					
 					if (result && result.data && result.data[0]) {
 						this.studentdetails = result.data[0];
+						this.gender = this.studentdetails.au_gender;
+						if(this.gender === 'M'){
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+						}else if(this.gender === 'F'){
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+						}else{
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+						}
 					}
 					if (result && result.data && result.data[0].navigation[0]) {
 						this.navigation_record = result.data[0].navigation[0];
