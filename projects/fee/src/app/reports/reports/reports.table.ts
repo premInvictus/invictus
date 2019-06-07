@@ -86,9 +86,10 @@ export const reportTable = {
 			chequeControlList: {
 				tableHeader: 'Cheque Clearance Report',
 				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name',
-					'invoice_no', 'receipt_no', 'receipt_amount', 'bank_name', 'cheque_date', 'dishonor_date', 'status', 'fcc_reason_id', 'fcc_remarks'],
+					'invoice_no', 'receipt_no', 'receipt_amount', 'bank_name', 'cheque_date', 'cheque_no',
+					'dishonor_date', 'status', 'fcc_reason_id', 'fcc_remarks'],
 				colunmHeader: ['SNo', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Receipt No', 'Amount', 'Bank Name',
-					'Cheque Date', 'Dishonoured Date', 'Status', 'Reason', 'Remarks'],
+					'Cheque Date', 'Cheque No.', 'Dishonoured Date', 'Status', 'Reason', 'Remarks'],
 			}
 		}
 	},
@@ -162,10 +163,10 @@ export const reportTable = {
 			feeAdjustment: {
 				tableHeader: 'Fee Adjustment Report',
 				columnDef: ['srno', 'au_admission_no', 'au_full_name', 'class_name', 'invoice_no', 'invoice_created_date', 'receipt_no',
-					'dishonor_date', 'cheque_no' , 'cheque_date', 'invg_fh_name', 'invg_fh_amount', 'invg_fcc_name', 'invg_adj_amount',
+					'dishonor_date', 'cheque_date', 'invg_fh_name', 'invg_fh_amount', 'invg_fcc_name', 'invg_adj_amount', 'pay_name',
 					'inv_remark'],
 				colunmHeader: ['Sno.', 'Enrollment No.', 'Student Name', 'Class-Section', 'Invoice No.', 'Invoice Date', 'Reciept No',
-					'Receipt Date', 'Cheque No,' , 'Due Date', 'Fee Head', 'Amount', 'Concession', 'Adjustment',
+					'Receipt Date' , 'Due Date', 'Fee Head', 'Amount', 'Concession', 'Adjustment', 'Mode',
 					'Remarks'],
 			}
 		}
