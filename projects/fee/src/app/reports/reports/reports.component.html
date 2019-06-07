@@ -14,7 +14,7 @@
                         <mat-card [class]="checkEnable(item.report_id)" (click)="executeReport(item.report_id)">
                            <div class="report-card-container2">
                               <div [class]="item.main_text_class">
-                                 <img style="width:26px !important" [class]="item.report_main_image_class"
+                                 <img style="width:57px !important; height: 44px !important" [class]="item.report_main_image_class"
                                     [src]="item.report_image" /><br />
                                  <div class="margin-top-10 icon-spacer">
                                     <span class="font-dark-blue font-size-14 font-medium"
@@ -58,7 +58,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left">
+                           <div *ngIf="checkForExistFilter(reportType)" class="col-1 remove-col-padding-left">
                               <mat-form-field *ngIf="checkMultiple" appearance="outline" class="form-field">
                                  <mat-label>{{valueLabel}}</mat-label>
                                  <mat-select formControlName="fee_value" [placeholder]="valueLabel" multiple
@@ -91,7 +91,10 @@
                            reportFilterForm.value.report_type === 'modewise' ||
                            reportFilterForm.value.report_type === 'routewise' ||
                            reportFilterForm.value.report_type === 'headwise' ||
-                           reportFilterForm.value.report_type === 'mfr')">
+                           reportFilterForm.value.report_type === 'mfr' || (reportType === '8' &&
+                           (reportFilterForm.value.report_type === '' || reportFilterForm.value.report_type === 'concession')) ||
+                           (reportType === '10' &&
+                           (reportFilterForm.value.report_type === '' || reportFilterForm.value.report_type === 'feeStructure')))">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>{{hiddenFieldLabel2}}</mat-label>
                                  <mat-select formControlName="hidden_value2" [placeholder]="hiddenFieldLabel2">
@@ -129,7 +132,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left">
+                           <div class="col-1 remove-col-padding-left" *ngIf="checkForExistFilter(reportType)">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>From Date</mat-label>
                                  <input matInput [matDatepicker]="picker" placeholder="Choose a date"
@@ -138,7 +141,7 @@
                                  <mat-datepicker #picker></mat-datepicker>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left">
+                           <div class="col-1 remove-col-padding-left" *ngIf="checkForExistFilter(reportType)">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>To Date</mat-label>
                                  <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
@@ -148,7 +151,7 @@
                               </mat-form-field>
                            </div>
                            <i class="fas fa-redo" matTooltip="Reset" (click)="resetFilters()"></i>
-                           <div *ngIf="checkIfShow(reportType)" class="col-1 margin-top-15 text-center remove-col-padding-left">
+                           <div *ngIf="checkIfShow(reportType)" class="col-1 col-sm-2 col-md-2 margin-top-15 text-center remove-col-padding-left">
                               <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
                                  filter
                               </button>
@@ -156,7 +159,7 @@
                                  sort
                               </button>
                            </div>
-                           <div class="col-3 margin-top-15 text-center remove-col-padding-left">
+                           <div class="col-3 col-sm-4 col-md-4 margin-top-15 text-center remove-col-padding-left">
                               <button class="change-bt" mat-raised-button (click)="switchReport()">
                                  change report
                               </button>

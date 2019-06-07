@@ -74,6 +74,7 @@ export class ReportSortComponent implements OnInit {
 				});
 			}
 		}
+		this.dialogRef.close(this.sortByItemArray);
 	}
 	addSortBy() {
 		this.sortByItemArray.push({
@@ -83,6 +84,6 @@ export class ReportSortComponent implements OnInit {
 		});
 	}
 	gobacktodynamicreport() {
-		this.dialogRef.close();
+		this.dialogRef.close(this.sortByItemArray);
 	}
 }
