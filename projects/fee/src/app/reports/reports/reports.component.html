@@ -1,7 +1,6 @@
 <div class="fee-container-box__grey">
    <div class="row">
-      <div class="col-12 col-lg-12 col-md-12 col-sm-12
-      col-xs-12 remove-col-padding">
+      <div class="col-12 col-lg-12 col-md-12 col-sm-12 remove-col-padding">
          <mat-accordion>
             <mat-expansion-panel [expanded]="reportFlag" [disabled]="accountFlag">
                <mat-expansion-panel-header class="report-panel-header">
@@ -11,7 +10,7 @@
                </mat-expansion-panel-header>
                <div class="report-card__container">
                   <div class="row margin-top-20">
-                     <div *ngFor="let item of feeReportArray" class="col-2 col-lg-2 col-md-4 col-sm-4 col-xs-6">
+                     <div *ngFor="let item of feeReportArray" class="col-12 col-lg-2 col-md-6 col-sm-6">
                         <mat-card [class]="checkEnable(item.report_id)" (click)="executeReport(item.report_id)">
                            <div class="report-card-container2">
                               <div [class]="item.main_text_class">
@@ -45,7 +44,7 @@
                   <div class="report-card__container">
                      <form [formGroup]="reportFilterForm">
                         <div class="row">
-                           <div class="col-1 col-lg-1 col-md-2 col-sm-2 
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 
                            remove-col-padding-left" *ngIf="reportType === '1'
                            || reportType === '2'
                            || reportType === '8' || reportType === '10'">
@@ -59,7 +58,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div *ngIf="checkForExistFilter(reportType)" class="col-1 col-lg-1 col-md-2 col-sm-2 remove-col-padding-left">
+                           <div *ngIf="checkForExistFilter(reportType)" class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left">
                               <mat-form-field *ngIf="checkMultiple" appearance="outline" class="form-field">
                                  <mat-label>{{valueLabel}}</mat-label>
                                  <mat-select formControlName="fee_value" [placeholder]="valueLabel" multiple
@@ -77,7 +76,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 col-lg-1 col-md-2 col-sm-2 remove-col-padding-left"
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left"
                               *ngIf="reportFilterForm.value.report_type === 'mfr'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>{{hiddenFieldLabel}}</mat-label>
@@ -88,7 +87,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 col-lg-1 col-md-2 col-sm-2 remove-col-padding-left" *ngIf="!(reportFilterForm.value.report_type === 'classwise' ||
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="!(reportFilterForm.value.report_type === 'classwise' ||
                            reportFilterForm.value.report_type === 'modewise' ||
                            reportFilterForm.value.report_type === 'routewise' ||
                            reportFilterForm.value.report_type === 'headwise' ||
@@ -104,7 +103,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 col-lg-1 col-md-2 col-sm-2 remove-col-padding-left" *ngIf="reportType === '15'">
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="reportType === '15'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Route</mat-label>
                                  <mat-select formControlName="hidden_value3">
@@ -113,7 +112,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 col-lg-1 col-md-2 col-sm-2 remove-col-padding-left" *ngIf="reportType === '15'">
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="reportType === '15'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Slab</mat-label>
                                  <mat-select formControlName="hidden_value4">
@@ -123,7 +122,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 col-lg-1 col-md-2 col-sm-2 remove-col-padding-left" *ngIf="reportType === '15'">
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="reportType === '15'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Stoppages</mat-label>
                                  <mat-select formControlName="hidden_value5">
@@ -133,7 +132,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 col-lg-1 col-md-2 col-sm-2 remove-col-padding-left" *ngIf="checkForExistFilter(reportType)">
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="checkForExistFilter(reportType)">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>From Date</mat-label>
                                  <input matInput [matDatepicker]="picker" placeholder="Choose a date"
@@ -142,7 +141,7 @@
                                  <mat-datepicker #picker></mat-datepicker>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 col-lg-1 col-md-2 col-sm-2 remove-col-padding-left" *ngIf="checkForExistFilter(reportType)">
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="checkForExistFilter(reportType)">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>To Date</mat-label>
                                  <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
@@ -152,7 +151,7 @@
                               </mat-form-field>
                            </div>
                            <i class="fas fa-redo" matTooltip="Reset" (click)="resetFilters()"></i>
-                           <div *ngIf="checkIfShow(reportType)" class="col-2 col-lg-2 col-sm-4 col-md-4 margin-top-15 text-center remove-col-padding-left">
+                           <div *ngIf="checkIfShow(reportType)" class="col-12 col-lg-2 col-sm-6 col-md-6 margin-top-15 text-center remove-col-padding-left">
                               <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
                                  filter
                               </button>
@@ -160,7 +159,7 @@
                                  sort
                               </button>
                            </div>
-                           <div class="col-3 col-sm-6 col-md-3 margin-top-15 text-center remove-col-padding-left">
+                           <div class="col-12 col-lg-3 col-sm-6 col-md-6 margin-top-15 text-center remove-col-padding-left">
                               <button class="change-bt" mat-raised-button (click)="switchReport()">
                                  change report
                               </button>
@@ -169,7 +168,7 @@
                                  generate
                               </button>
                            </div>
-                           <div class="col-1 col-lg-1 col-md-2 col-sm-2 margin-top-15 remove-col-padding-left" *ngIf="REPORT_ELEMENT_DATA.length > 0
+                           <div class="col-12 col-lg-1 col-md-6 col-sm-6 margin-top-15 remove-col-padding-left" *ngIf="REPORT_ELEMENT_DATA.length > 0
                                  || REPORT_ELEMENT_DATA2.length > 0  || REPORT_ELEMENT_DATA3.length > 0">
                               <div class="inline-flex">
                                  <div>
