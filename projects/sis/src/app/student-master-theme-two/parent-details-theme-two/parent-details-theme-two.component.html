@@ -307,76 +307,62 @@
                      </div>
                   </div>
                   <form [formGroup]="formGroupArray[i].ea_office_address">
-                     <div style="display: none">
-                        <div *ngIf="checkIfFieldExist('ea_address2')" class="row">
-                           <div class="col-12">
-                              <mat-form-field class="form-field" appearance="outline">
-                                 <mat-label>Address Line 2</mat-label>
-                                 <input class="text-capitalize" matInput placeholder="Address Line 2"
-                                    [readonly]="viewOnly" formControlName="ea_address2" />
-                              </mat-form-field>
-                           </div>
+                     <div class="row">
+                        <div *ngIf="checkIfFieldExist('ea_city')" class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                           <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>City</mat-label>
+                              <input type="text" matInput placeholder="City" formControlName="ea_city" required
+                                 [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
+                                 [matAutocomplete]="autoGroup" (keyup)="filterCityStateCountry($event)">
+                              <mat-autocomplete #autoGroup="matAutocomplete">
+                                 <mat-option (click)="getCityPerId(item, i)" *ngFor="let item of cityCountryArray"
+                                    [value]="item.cit_id">{{item.cit_name}} -
+                                    {{item.sta_name}} - {{item.cou_name}}</mat-option>
+                              </mat-autocomplete>
+                              <mat-error>
+                                 This field is required
+                              </mat-error>
+                           </mat-form-field>
                         </div>
-                        <div class="row">
-                           <div *ngIf="checkIfFieldExist('ea_city')" class="col-4">
-                              <mat-form-field class="form-field" appearance="outline">
-                                 <mat-label>City</mat-label>
-                                 <input type="text" matInput placeholder="City" formControlName="ea_city" required
-                                    [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
-                                    [matAutocomplete]="autoGroup" (keyup)="filterCityStateCountry($event)">
-                                 <mat-autocomplete #autoGroup="matAutocomplete">
-                                    <mat-option (click)="getCityPerId(item, i)" *ngFor="let item of cityCountryArray"
-                                       [value]="item.cit_id">{{item.cit_name}} -
-                                       {{item.sta_name}} - {{item.cou_name}}</mat-option>
-                                 </mat-autocomplete>
-                                 <mat-error>
-                                    This field is required
-                                 </mat-error>
-                              </mat-form-field>
-                           </div>
-                           <div *ngIf="checkIfFieldExist('ea_state')" class="col-4">
-                              <mat-form-field class="form-field" appearance="outline">
-                                 <mat-label>State</mat-label>
-                                 <mat-select placeholder="State" disabled="true" formControlName="ea_state">
-                                    <mat-option value="">Please Select</mat-option>
-                                    <mat-option *ngFor="let item of stateArray" [value]="item.sta_id">{{item.sta_name}}
-                                    </mat-option>
-                                 </mat-select>
-                              </mat-form-field>
-                           </div>
-                           <div *ngIf="checkIfFieldExist('ea_country')" class="col-4">
-                              <mat-form-field class="form-field" appearance="outline">
-                                 <mat-label>Country</mat-label>
-                                 <mat-select placeholder="Country" disabled="true" formControlName="ea_country">
-                                    <mat-option value="">Please Select</mat-option>
-                                    <mat-option *ngFor="let item of countryArray" [value]="item.cou_id">
-                                       {{item.cou_name}}
-                                    </mat-option>
-                                 </mat-select>
-                                 <mat-error>
-                                    Please select country
-                                 </mat-error>
-                              </mat-form-field>
-                           </div>
+                        <div *ngIf="checkIfFieldExist('ea_state')" class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                           <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>State</mat-label>
+                              <mat-select placeholder="State" disabled="true" formControlName="ea_state">
+                                 <mat-option *ngFor="let item of stateArray" [value]="item.sta_id">{{item.sta_name}}
+                                 </mat-option>
+                              </mat-select>
+                           </mat-form-field>
                         </div>
-                        <div class="row">
-                           <div *ngIf="checkIfFieldExist('ea_pincode')" class="col-4">
-                              <mat-form-field class="form-field" appearance="outline">
-                                 <mat-label>PIN</mat-label>
-                                 <input class="text-capitalize" mask="000 000" matInput placeholder="PIN"
-                                    [readonly]="viewOnly" minlength="6" maxlength="7" formControlName="ea_pincode"
-                                    pattern="[0-9]*">
-                              </mat-form-field>
-                           </div>
+                        <div *ngIf="checkIfFieldExist('ea_country')"
+                           class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                           <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Country</mat-label>
+                              <mat-select placeholder="Country" disabled="true" formControlName="ea_country">
+                                 <mat-option *ngFor="let item of countryArray" [value]="item.cou_id">
+                                    {{item.cou_name}}
+                                 </mat-option>
+                              </mat-select>
+                              <mat-error>
+                                 Please select country
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                        <div *ngIf="checkIfFieldExist('ea_pincode')"
+                           class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                           <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>PIN</mat-label>
+                              <input class="text-capitalize" mask="000 000" matInput placeholder="PIN"
+                                 [readonly]="viewOnly" minlength="6" maxlength="7" formControlName="ea_pincode"
+                                 pattern="[0-9]*">
+                           </mat-form-field>
                         </div>
                      </div>
                   </form>
                </form>
                <form [formGroup]="formGroupArray[i].ea_res_address">
                   <div *ngIf="checkIfFieldExist('ea_same_residential_address')" class="row">
-                     <div class="col-12">
-                        <span>Whether the residential address is different from the one
-                           mentioned above?</span>
+                     <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 margin-top-15">
+                        <span>Whether the residential address is different?</span>
                         <mat-slide-toggle class="btn-spacer" formControlName="ea_same_residential_address"
                            (change)="checkAddressStatus(i,$event)" [disabled]="viewOnly"
                            [ngModel]="addressStatus[i] === 'No' ? false: true">{{addressStatus[i]}}</mat-slide-toggle>
@@ -393,19 +379,9 @@
                            </mat-form-field>
                         </div>
                      </div>
-                     <div *ngIf="checkIfFieldExist('ea_address2') && checkIfFieldExist('ea_same_residential_address')"
-                        class="row">
-                        <div class="col-12">
-                           <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Address Line 2.</mat-label>
-                              <input class="text-capitalize" matInput placeholder="Address Line 2" [readonly]="viewOnly"
-                                 formControlName="ea_address2" [errorStateMatcher]="confirmValidParentMatcher" />
-                           </mat-form-field>
-                        </div>
-                     </div>
                      <div class="row">
                         <div *ngIf="checkIfFieldExist('ea_city') && checkIfFieldExist('ea_same_residential_address')"
-                           class="col-4">
+                           class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>City</mat-label>
                               <input type="text" matInput placeholder="City" formControlName="ea_city" required
@@ -423,7 +399,7 @@
                            </mat-form-field>
                         </div>
                         <div *ngIf="checkIfFieldExist('ea_state') && checkIfFieldExist('ea_same_residential_address')"
-                           class="col-4">
+                           class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>State</mat-label>
                               <mat-select placeholder="State" disabled="true"
@@ -435,7 +411,7 @@
                            </mat-form-field>
                         </div>
                         <div *ngIf="checkIfFieldExist('ea_country') && checkIfFieldExist('ea_same_residential_address')"
-                           class="col-4">
+                           class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Country</mat-label>
                               <mat-select placeholder="Country" disabled="true"
@@ -446,10 +422,8 @@
                               </mat-select>
                            </mat-form-field>
                         </div>
-                     </div>
-                     <div class="row">
                         <div *ngIf="checkIfFieldExist('ea_pincode') && checkIfFieldExist('ea_same_residential_address')"
-                           class="col-4">
+                           class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>PIN</mat-label>
                               <input class="text-capitalize" mask="000 000" matInput placeholder="PIN"
