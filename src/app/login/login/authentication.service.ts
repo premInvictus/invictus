@@ -8,9 +8,7 @@ export class AuthenticationService {
 
 		login(username: string, password: any) {
 				this.loaderService.startLoading();
-				let prefixOptions = {
-					'Prefix': "indes"
-			};;
+				let prefixOptions;
 				if(username.match(/-/g)){
 					const userParam = username.split('-');
 					 prefixOptions = {
