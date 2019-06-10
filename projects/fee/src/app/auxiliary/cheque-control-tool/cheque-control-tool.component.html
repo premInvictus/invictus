@@ -108,10 +108,9 @@
                 <td mat-cell *matCellDef="let item"> {{item.srno}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="invoiceno">
-                <th mat-header-cell *matHeaderCellDef> Invoice No </th>
-                <td mat-cell *matCellDef="let item"> <a class="font-skyblue text-link font-size-14"
-                    (click)="openDialog(item.action.invoice_id, false)">{{item.invoiceno}}</a> </td>
+              <ng-container matColumnDef="class_name">
+                <th mat-header-cell *matHeaderCellDef> Class </th>
+                <td mat-cell *matCellDef="let item"> {{item.class_name}} </td>
               </ng-container>
               <ng-container matColumnDef="chequeno">
                 <th mat-header-cell *matHeaderCellDef> Cheque No </th>
@@ -135,15 +134,19 @@
                 <td mat-cell *matCellDef="let item"> {{item.amount | number}} </td>
               </ng-container>
               <ng-container matColumnDef="bankname">
-                <th mat-header-cell *matHeaderCellDef> Bank Name </th>
+                <th mat-header-cell *matHeaderCellDef> Deposit at Bank </th>
                 <td mat-cell *matCellDef="let item"> {{item.bankname}} </td>
               </ng-container>
               <ng-container matColumnDef="recieptdate">
                 <th mat-header-cell *matHeaderCellDef> Reciept Date </th>
                 <td mat-cell *matCellDef="let item"> {{item.recieptdate}} </td>
               </ng-container>
+              <ng-container matColumnDef="bankdeposite">
+                <th mat-header-cell *matHeaderCellDef> Date of Deposit</th>
+                <td mat-cell *matCellDef="let item"> {{item.bankdeposite}} </td>
+              </ng-container>
               <ng-container matColumnDef="processingdate">
-                <th mat-header-cell *matHeaderCellDef> Processing Date </th>
+                <th mat-header-cell *matHeaderCellDef> Date of Clearence</th>
                 <td mat-cell *matCellDef="let item">
                   <form [formGroup]="formGroupArray[item.srno - 1].formGroup">
                     <mat-form-field  appearance="outline" [hidden]="item.action.status === '1' || item.action.status === '2'"

@@ -46,6 +46,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	feePeriods: any[];
 	invoiceTotal: any;
 	feeLoginId: any;
+	class_name: any;
+	section_name: any;
+	class_sec: any;
 	constructor(private router: Router,
 		private route: ActivatedRoute,
 		private sisService: SisService,
@@ -358,6 +361,13 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 					this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 					this.invoice = {};
 					this.invoice = result.data[0];
+					this.class_name = this.invoice.class_name;
+					this.section_name = this.invoice.sec_name;
+					if (this.section_name !== ' ') {
+						this.class_sec = this.class_name + ' - ' + this.section_name;
+					} else {
+						this.class_sec = this.class_name;
+					}
 					this.feeLoginId = this.invoice.login_id;
 					this.invoice.netPay = this.invoice.late_fine_amt ?
 						Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :

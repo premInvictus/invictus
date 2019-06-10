@@ -37,8 +37,11 @@
     }
     }
     ::ng-deep.my-toggle > label > div > div > div.mat-slide-toggle-thumb {
-        background-color: #1aed11 !important;
-      }
-      ::ng-deep.my-toggle > label > div.mat-slide-toggle-bar {
-        background-color: #1aed11 !important;
-      }
+    background-color: #1aed11 !important;
+    }
+    ::ng-deep.my-toggle > label > div.mat-slide-toggle-bar {
+    background-color: #1aed11 !important;
+    }
+    .fieldset_invoice{
+        margin-left: 20px;
+    }

@@ -480,11 +480,11 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	}
 	parent_type_fun(type) {
 		if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'F') {
-			return 'Father Name';
+			return 'Father\'s Name';
 		} else if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'M') {
-			return 'Mother Name';
-		} else if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'G') {
-			return 'Guardian Name';
+			return 'Mother\'s Name';
+		} else if (type.parentinfo[0] &&  type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'G') {
+			return 'Guardian\'s Name';
 		} else {
 			return 'Active Parent Name';
 		}

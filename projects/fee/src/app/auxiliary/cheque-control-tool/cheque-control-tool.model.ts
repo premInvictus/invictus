@@ -1,6 +1,5 @@
 export interface ChequeToolElement {
 	srno: any;
-	invoiceno: any;
 	chequeno: any;
 	admno: any;
 	studentname: any;
@@ -8,6 +7,9 @@ export interface ChequeToolElement {
 	amount: any;
 	bankname: any;
 	recieptdate: any;
+	bankdeposite: any;	
 	processingdate: any;
 	action: any;
+	class_name: any;
+
 }
