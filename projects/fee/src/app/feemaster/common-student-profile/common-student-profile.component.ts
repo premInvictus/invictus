@@ -180,18 +180,18 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 							this.studentdetails = result.data[0];
 							this.previousLoginId = this.studentdetails.au_login_id;
 							this.gender = this.studentdetails.au_gender;
-							if(this.gender === 'M'){
+							if (this.gender === 'M') {
 								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
-							}else if(this.gender === 'F'){
+							} else if (this.gender === 'F') {
 								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
-							}else{
+							} else {
 								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 							}
 							this.class_name = this.studentdetails.class_name;
 							this.section_name = this.studentdetails.sec_name;
-							if(this.section_name != ' '){
-								this.class_sec = this.class_name +' - '+ this.section_name;
-							}else{
+							if (this.section_name !== ' ') {
+								this.class_sec = this.class_name + ' - ' + this.section_name;
+							} else {
 								this.class_sec = this.class_name;
 							}
 							if (Number(this.processType) === 4) {
@@ -483,7 +483,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 			return 'Father Name';
 		} else if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'M') {
 			return 'Mother Name';
-		} else if (type.parentinfo[0] &&  type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'G') {
+		} else if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'G') {
 			return 'Guardian Name';
 		} else {
 			return 'Active Parent Name';

@@ -868,6 +868,125 @@
           }
         }
       }
+    },
+    "smart": {
+      "root": "projects/smart/",
+      "sourceRoot": "projects/smart/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/smart",
+            "index": "projects/smart/src/index.html",
+            "main": "projects/smart/src/main.ts",
+            "polyfills": "projects/smart/src/polyfills.ts",
+            "tsConfig": "projects/smart/tsconfig.app.json",
+            "assets": [
+              "projects/smart/src/favicon.ico",
+              "projects/smart/src/assets"
+            ],
+            "styles": [
+              "projects/smart/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/smart/src/environments/environment.ts",
+                  "with": "projects/smart/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "smart:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "smart:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "smart:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/smart/src/test.ts",
+            "polyfills": "projects/smart/src/polyfills.ts",
+            "tsConfig": "projects/smart/tsconfig.spec.json",
+            "karmaConfig": "projects/smart/karma.conf.js",
+            "styles": [
+              "projects/smart/src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/smart/src/favicon.ico",
+              "projects/smart/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/smart/tsconfig.app.json",
+              "projects/smart/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "smart-e2e": {
+      "root": "projects/smart-e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/smart-e2e/protractor.conf.js",
+            "devServerTarget": "smart:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "smart:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/smart-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "invictus"
