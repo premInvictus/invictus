@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import {UserAccessMenuService} from '../../_services/index';
+import { UserAccessMenuService } from '../../_services/index';
 import { AccordionConfig } from 'ngx-bootstrap/accordion';
 import { Router } from '@angular/router';
 export function getAccordionConfig(): AccordionConfig {
@@ -36,26 +36,28 @@ export class SideNavComponent implements OnInit, OnChanges {
 		this.getUserAccessMenu(this.projectId);
 	}
 
-moveToDashboard() {
-	if (this.currentUser.role_id === '1') {
-		this.router.navigateByUrl('admin');
-	} else if (this.currentUser.role_id === '2') {
-		if (localStorage.getItem('project')) {
-		const url = JSON.parse(localStorage.getItem('project')).pro_url;
-		if (url === 'axiom') {
-			this.router.navigateByUrl('axiom/school');
-		} else if (url === 'sis') {
-			this.router.navigateByUrl('sis/school');
-		} else if (url === 'fees') {
-			this.router.navigateByUrl('fees/school');
+	moveToDashboard() {
+		if (this.currentUser.role_id === '1') {
+			this.router.navigateByUrl('admin');
+		} else if (this.currentUser.role_id === '2') {
+			if (localStorage.getItem('project')) {
+				const url = JSON.parse(localStorage.getItem('project')).pro_url;
+				if (url === 'axiom') {
+					this.router.navigateByUrl('axiom/school');
+				} else if (url === 'sis') {
+					this.router.navigateByUrl('sis/school');
+				} else if (url === 'fees') {
+					this.router.navigateByUrl('fees/school');
+				} else if (url === 'smart') {
+					this.router.navigateByUrl('smart/school');
+				}
+			}
+		} else if (this.currentUser.role_id === '3') {
+			this.router.navigateByUrl('axiom/teacher');
+		} else {
+			this.router.navigateByUrl('student');
 		}
-		}
-	} else if (this.currentUser.role_id === '3') {
-		this.router.navigateByUrl('axiom/teacher');
-	} else {
-		this.router.navigateByUrl('student');
 	}
-}
 
 	getUserAccessMenu(pro_id) {
 		// this is used to render side nav as per project id
@@ -66,44 +68,46 @@ moveToDashboard() {
 			param.login_id = this.currentUser.login_id;
 			param.role_id = this.currentUser.role_id;
 			param.pro_id = pro_id;
-				this.userAccessMenuService.getUserAccessMenu(param).subscribe(
-				(result: any) =>  {
-						if (result.status === 'ok') {
-							this.userAccessMenuService.setUserAccessMenu(result.data);
-							this.userAccessMenuArray = result.data;
-							localStorage.setItem('userAccessMenu', JSON.stringify({menus: this.userAccessMenuArray}));
-							const morStatusEnabledArray: any[] = [];
-							for (const item of this.userAccessMenuArray) {
-								if (item.mor_status === '1') {
+			this.userAccessMenuService.getUserAccessMenu(param).subscribe(
+				(result: any) => {
+					if (result.status === 'ok') {
+						this.userAccessMenuService.setUserAccessMenu(result.data);
+						this.userAccessMenuArray = result.data;
+						localStorage.setItem('userAccessMenu', JSON.stringify({ menus: this.userAccessMenuArray }));
+						const morStatusEnabledArray: any[] = [];
+						for (const item of this.userAccessMenuArray) {
+							if (item.mor_status === '1') {
 								morStatusEnabledArray.push(item);
-								}
-							}
-							for (const level0 of morStatusEnabledArray) {
-								let menu: any = {};
-								if (level0.mod_level === '0') {
-									menu = level0;
-									menu.submenu = [];
-									for (const level1 of morStatusEnabledArray) {
-										if (level1.mod_parent_id === level0.mod_id) {
-											menu.submenu.push(level1);
-										}
-									}
-									this.menuSubmenuArray.push(menu);
-								}
 							}
 						}
-					});
-			} else if (Number(this.currentUser.role_id) === 2) {
+						for (const level0 of morStatusEnabledArray) {
+							let menu: any = {};
+							if (level0.mod_level === '0') {
+								menu = level0;
+								menu.submenu = [];
+								for (const level1 of morStatusEnabledArray) {
+									if (level1.mod_parent_id === level0.mod_id) {
+										menu.submenu.push(level1);
+									}
+								}
+								this.menuSubmenuArray.push(menu);
+							}
+						}
+					} else {
+						this.menuSubmenuArray = [];
+					}
+				});
+		} else if (Number(this.currentUser.role_id) === 2) {
 			const param: any = {};
 			param.login_id = this.currentUser.login_id;
 			param.role_id = this.currentUser.role_id;
 			param.pro_id = pro_id;
 			this.userAccessMenuService.getUserAccessMenu(param).subscribe(
-			(result: any) =>  {
+				(result: any) => {
 					if (result.status === 'ok') {
 						this.userAccessMenuService.setUserAccessMenu(result.data);
 						this.userAccessMenuArray = result.data;
-						localStorage.setItem('userAccessMenu', JSON.stringify({menus: this.userAccessMenuArray}));
+						localStorage.setItem('userAccessMenu', JSON.stringify({ menus: this.userAccessMenuArray }));
 						for (const level0 of this.userAccessMenuArray) {
 							let menu: any = {};
 							if (level0.mod_level === '0') {
@@ -117,7 +121,9 @@ moveToDashboard() {
 								this.menuSubmenuArray.push(menu);
 							}
 						}
-						}
+					} else {
+						this.menuSubmenuArray = [];
+					}
 				}
 			);
 		} else if (Number(this.currentUser.role_id) === 3) {
@@ -125,61 +131,65 @@ moveToDashboard() {
 			param.login_id = this.currentUser.login_id;
 			param.role_id = this.currentUser.role_id;
 			param.pro_id = pro_id;
-		this.userAccessMenuService.getUserAccessMenu(param).subscribe(
-		(result: any) =>  {
-				if (result.status === 'ok') {
-					this.userAccessMenuService.setUserAccessMenu(result.data);
-					this.userAccessMenuArray = result.data;
-					localStorage.setItem('userAccessMenu', JSON.stringify({menus: this.userAccessMenuArray}));
-					for (const level0 of this.userAccessMenuArray) {
-						let menu: any = {};
-						if (level0.mod_level === '0') {
-							menu = level0;
-							menu.submenu = [];
-							for (const level1 of this.userAccessMenuArray) {
-								if (level1.mod_parent_id === level0.mod_id) {
-									menu.submenu.push(level1);
+			this.userAccessMenuService.getUserAccessMenu(param).subscribe(
+				(result: any) => {
+					if (result.status === 'ok') {
+						this.userAccessMenuService.setUserAccessMenu(result.data);
+						this.userAccessMenuArray = result.data;
+						localStorage.setItem('userAccessMenu', JSON.stringify({ menus: this.userAccessMenuArray }));
+						for (const level0 of this.userAccessMenuArray) {
+							let menu: any = {};
+							if (level0.mod_level === '0') {
+								menu = level0;
+								menu.submenu = [];
+								for (const level1 of this.userAccessMenuArray) {
+									if (level1.mod_parent_id === level0.mod_id) {
+										menu.submenu.push(level1);
+									}
 								}
+								this.menuSubmenuArray.push(menu);
 							}
-							this.menuSubmenuArray.push(menu);
 						}
-					}
-					}
-			}
-		);
-	} else if (Number(this.currentUser.role_id) === 4) {
-		const studentMenuArray: any[] = [];
-		const param: any = {};
-		param.role_id = this.currentUser.role_id;
-	this.userAccessMenuService.getUserAccessMenu(param).subscribe(
-	(result: any) =>  {
-			if (result.status === 'ok') {
-				this.userAccessMenuService.setUserAccessMenu(result.data);
-				this.userAccessMenuArray = result.data;
-				localStorage.setItem('userAccessMenu', JSON.stringify({menus: this.userAccessMenuArray}));
-				for (const level0 of this.userAccessMenuArray) {
-					const findex = studentMenuArray.findIndex(f => Number(f.menu_mod_id) === Number(level0.menu_mod_id));
-					if (findex === -1) {
-						studentMenuArray.push(level0);
+					} else {
+						this.menuSubmenuArray = [];
 					}
 				}
-				for (const level0 of studentMenuArray) {
-				let menu: any = {};
-				if (level0.mod_level === '0') {
-					menu = level0;
-					menu.submenu = [];
-					for (const level1 of this.userAccessMenuArray) {
-						if (level1.mod_parent_id === level0.mod_id) {
-							menu.submenu.push(level1);
+			);
+		} else if (Number(this.currentUser.role_id) === 4) {
+			const studentMenuArray: any[] = [];
+			const param: any = {};
+			param.role_id = this.currentUser.role_id;
+			this.userAccessMenuService.getUserAccessMenu(param).subscribe(
+				(result: any) => {
+					if (result.status === 'ok') {
+						this.userAccessMenuService.setUserAccessMenu(result.data);
+						this.userAccessMenuArray = result.data;
+						localStorage.setItem('userAccessMenu', JSON.stringify({ menus: this.userAccessMenuArray }));
+						for (const level0 of this.userAccessMenuArray) {
+							const findex = studentMenuArray.findIndex(f => Number(f.menu_mod_id) === Number(level0.menu_mod_id));
+							if (findex === -1) {
+								studentMenuArray.push(level0);
+							}
 						}
+						for (const level0 of studentMenuArray) {
+							let menu: any = {};
+							if (level0.mod_level === '0') {
+								menu = level0;
+								menu.submenu = [];
+								for (const level1 of this.userAccessMenuArray) {
+									if (level1.mod_parent_id === level0.mod_id) {
+										menu.submenu.push(level1);
+									}
+								}
+								this.menuSubmenuArray.push(menu);
+							}
+						}
+					} else {
+						this.menuSubmenuArray = [];
 					}
-					this.menuSubmenuArray.push(menu);
 				}
-			}
-				}
+			);
 		}
-	);
-	}
 	}
 	activateDiv(index) {
 		this.showSubmenuArray[index] = true;

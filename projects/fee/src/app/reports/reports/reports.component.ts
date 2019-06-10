@@ -904,7 +904,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								if (result && result.status === 'ok') {
 									this.common.showSuccessErrorMessage(result.message, 'success');
 									repoArray = result.data.reportData;
-									this.totalRecords = Number(result.data.totalRecords);
+									this.totalRecords = Number(repoArray.length);
 									localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 									let index = 0;
 									let qindex = 1;
@@ -1959,7 +1959,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						if (result && result.status === 'ok') {
 							this.common.showSuccessErrorMessage(result.message, 'success');
 							repoArray = result.data.reportData;
-							this.totalRecords = Number(result.data.totalRecords);
+							this.totalRecords = Number(repoArray.length);
 							localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 							let index = 0;
 							let qindex = 1;

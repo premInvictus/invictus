@@ -53,6 +53,13 @@
     "../projects/admin-app/src/app/question/question.module.ts",
     "../projects/admin-app/src/app/secondaryreview/secondaryreview.module.ts",
     "../projects/admin-app/src/app/admin-user-type/admin-user-type.module.ts",
+    "../projects/smart/src/app/smartusertype/smartusertype.module.ts",
+    "../projects/smart/src/app/smart-shared/smart-shared.module.ts",
+    "../projects/smart/src/app/syllabus/syllabus.module.ts",
+    "../projects/smart/src/app/logentry/logentry.module.ts",
+    "../projects/smart/src/app/assignment/assignment.module.ts",
+    "../projects/smart/src/app/auxillaries/auxillaries.module.ts",
+    "../projects/smart/src/app/reports/reports.module.ts",
   ]
 }
 
