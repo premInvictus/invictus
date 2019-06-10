@@ -212,14 +212,13 @@
                 *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
                   <span><b>Fees O/S :</b> {{studentdetails.fee_outstanding ? 
-                  (studentdetails.fee_outstanding | number): 'NA'}}</span>
+                  (studentdetails.fee_outstanding | number): '0'}}</span>
                 </div>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12 mb-10"
                 *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
-                  <span><b>Concession
-                      Grp:</b>{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+                  <span><b>Concession:</b>{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : '-'}}</span>
                 </div>
               </div>
             </div>
