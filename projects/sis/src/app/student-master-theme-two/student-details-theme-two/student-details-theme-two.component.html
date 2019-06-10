@@ -35,7 +35,7 @@
             <div>
               <div
                 [ngClass]="studentdetails?.prevStep?.process_name ? 'registration-container__box':'registration-container__box'"
-                *ngIf="divFlag && studentdetails.prevStep.process_name && studentdetails.prevStep.process_no">
+                *ngIf="divFlag && studentdetails?.prevStep?.process_name && studentdetails?.prevStep?.process_no">
                 <span class="regno-title font-size-14 font-white"
                   *ngIf="studentdetails?.prevStep?.process_name">{{studentdetails.prevStep.process_name}}:
                   {{studentdetails.prevStep.process_no}}</span>

@@ -389,8 +389,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				this.getClass();
 			}
 			this.previousIndex = findex;
-			this.reportFlag = false;
-			this.accountFlag = true;
+			setTimeout(() => this.reportFlag = false, 300);
+			setTimeout(() => this.accountFlag = true, 300);
 		}
 	}
 	getHiddenFieldValue($event, type) {
