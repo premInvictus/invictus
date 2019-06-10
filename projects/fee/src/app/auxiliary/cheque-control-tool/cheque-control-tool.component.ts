@@ -16,7 +16,8 @@ import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details
 export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	displayedColumns: string[] =
-		['srno', 'invoiceno', 'chequeno', 'admno', 'studentname', 'recieptno', 'amount', 'bankname', 'recieptdate', 'processingdate', 'action'];
+		['srno', 'class_name','chequeno', 'admno', 'studentname', 'recieptno', 'amount', 'bankname', 'recieptdate',
+		'bankdeposite', 'processingdate', 'action'];
 	CHEQUE_ELEMENT_DATA: ChequeToolElement[] = [];
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 	formGroupArray: any[] = [];
@@ -89,7 +90,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: pos,
-						invoiceno: item.invoice_no ? item.invoice_no : 'NA',
+						class_name: item.sec_name ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
@@ -97,6 +98,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						amount: item.receipt_amount,
 						bankname: item.bank_name,
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
+						bankdeposite: item.fcc_deposite_date ? new DatePipe('en-in').transform(item.fcc_deposite_date, 'd-MMM-y') : '-',
 						processingdate: '',
 						action: item
 					});
@@ -148,14 +150,15 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: pos,
-						invoiceno: item.invoice_no ? item.invoice_no : 'NA',
+						class_name: item.class_name +' '+ item.sec_name,
 						chequeno: item.cheque_no,
-						admno: item.inv_process_usr_no,
+						admno: item.inv_process_usr_no, 
 						studentname: item.au_full_name,
 						recieptno: item.receipt_id,
 						amount: item.receipt_amount,
 						bankname: item.bank_name,
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
+						bankdeposite: new DatePipe('en-in').transform(item.fcc_deposite_date, 'd-MMM-y'),
 						processingdate: '',
 						action: item
 					});
