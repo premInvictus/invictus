@@ -325,4 +325,16 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/transportstoppages/getTransportSlabPerStoppages', value);
 	}
+	addSchoolBank(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeSetup/addSchoolBank', value);
+	}
+	updateSchoolBank(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeSetup/updateSchoolBank', value);
+	}
+	deleteBank(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeSetup/deleteSchoolBank', value);
+	}
 }
