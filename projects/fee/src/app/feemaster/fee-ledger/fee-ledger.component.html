@@ -105,7 +105,7 @@
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              <tr mat-footer-row *matFooterRowDef="displayedColumns;"></tr>
+              <tr mat-footer-row *matFooterRowDef="displayedColumns;" [hidden]="FEE_LEDGER_ELEMENT.length == 0"></tr>
             </table>
             <!-- <table class="table-100 text-center" style="margin-top:5px;">
               <tr *ngIf="FEE_LEDGER_ELEMENT.length > 0">
