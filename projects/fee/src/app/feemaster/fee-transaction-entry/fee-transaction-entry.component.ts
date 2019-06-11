@@ -536,7 +536,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: invoiceNo,
+				inv_invoice_no: invoiceNo,
 				edit: edit,
 				paidStatus: 'paid'
 			},
