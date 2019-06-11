@@ -1,0 +1,50 @@
+<div class="filter-header-container">
+  <div class="row">
+    <div class="col-6 margin-top-10">
+      <h4>Sort</h4>
+    </div>
+    <div class="col-6">
+      <div class="float-right">
+        <button mat-raised-button class="btn-setting btn-spacer" (click)="addsortParam()">Add</button>
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="sortbyform" novalidate>
+    <div class="filter-body-white-container" formArrayName="sort_param">
+      <div class="row" *ngFor="let item of sortParam.controls; let spindex=index" [formGroupName]="spindex">
+        <div class="col-12 ">
+          <span *ngIf="spindex == 0"><b>Sort By</b></span>
+          <span *ngIf="spindex != 0"><b>Then By</b></span>
+        </div>
+        <div class="col-5 margin-top-15">
+          <mat-form-field class="form-field">
+            <mat-select placeholder="Select Sort By" formControlName="sortname">
+              <mat-option value="">Select Sort By</mat-option>
+              <mat-option *ngFor="let item of filterArray" [value]="item">
+                {{item.ff_label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-5 margin-top-15">
+          <mat-radio-group formControlName="sortorder">
+            <mat-radio-button value="asc">Ascending</mat-radio-button><br>
+            <mat-radio-button value="desc">Descending</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="col-2 margin-top-15" *ngIf="spindex != 0">
+          <i class="material-icons icon-danger"
+          (click)="deletesortParam(spindex)">delete</i>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="filter-body-white-container">
+    <div class="row">
+      <div class="col-12 text-center">
+        <button mat-raised-button class="btn-success" (click)="sortbyOk()">Ok</button>
+        <button mat-raised-button class="btn-danger btn-spacer" (click)="gobacktodynamicreport()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

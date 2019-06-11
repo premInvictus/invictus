@@ -1,6 +1,6 @@
 <div class="fee-container-box__grey">
    <div class="row">
-      <div class="col-12 remove-col-padding">
+      <div class="col-12 col-lg-12 col-md-12 col-sm-12 remove-col-padding">
          <mat-accordion>
             <mat-expansion-panel [expanded]="reportFlag" [disabled]="accountFlag">
                <mat-expansion-panel-header class="report-panel-header">
@@ -10,18 +10,20 @@
                </mat-expansion-panel-header>
                <div class="report-card__container">
                   <div class="row margin-top-20">
-                     <div *ngFor="let item of feeReportArray" class="col-2">
+                     <div *ngFor="let item of feeReportArray" class="col-12 col-lg-2 col-md-6 col-sm-6">
                         <mat-card [class]="checkEnable(item.report_id)" (click)="executeReport(item.report_id)">
                            <div class="report-card-container2">
                               <div [class]="item.main_text_class">
-                                 <img [class]="item.report_main_image_class" [src]="item.report_image" /><br />
-                                 <div class="margin-top-15">
+                                 <img style="width:57px !important; height: 50px !important" [class]="item.report_main_image_class"
+                                    [src]="item.report_image" />
+                                 <div  style="margin-left: -2px !important; margin-top: 15px !important">
                                     <span class="font-dark-blue font-size-14 font-medium">{{item.report_name}}</span>
                                  </div>
                               </div>
                               <div [class]="item.report_middle_class">
-                                 <div class="margin-bottom-15"><i [class]="item.report_check_icon_class"></i></div>
-                                 <span class="font-white font-size-14 font-medium">{{item.report_name}}</span>
+                                 <div><i [class]="item.report_check_icon_class"></i></div>
+                                 <span *ngIf="item.report_check_icon_class !== ''"
+                                    class="font-white font-size-14 font-medium"> {{item.report_name}}</span>
                               </div>
                            </div>
                         </mat-card>
@@ -42,7 +44,8 @@
                   <div class="report-card__container">
                      <form [formGroup]="reportFilterForm">
                         <div class="row">
-                           <div class="col-1 remove-col-padding-left" *ngIf="reportType === '1'
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 
+                           remove-col-padding-left" *ngIf="reportType === '1'
                            || reportType === '2'
                            || reportType === '8' || reportType === '10'">
                               <mat-form-field appearance="outline" class="form-field">
@@ -55,7 +58,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left">
+                           <div *ngIf="checkForExistFilter(reportType)" class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left">
                               <mat-form-field *ngIf="checkMultiple" appearance="outline" class="form-field">
                                  <mat-label>{{valueLabel}}</mat-label>
                                  <mat-select formControlName="fee_value" [placeholder]="valueLabel" multiple
@@ -73,7 +76,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left"
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left"
                               *ngIf="reportFilterForm.value.report_type === 'mfr'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>{{hiddenFieldLabel}}</mat-label>
@@ -84,11 +87,14 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left" *ngIf="!(reportFilterForm.value.report_type === 'classwise' ||
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="!(reportFilterForm.value.report_type === 'classwise' ||
                            reportFilterForm.value.report_type === 'modewise' ||
                            reportFilterForm.value.report_type === 'routewise' ||
                            reportFilterForm.value.report_type === 'headwise' ||
-                           reportFilterForm.value.report_type === 'mfr')">
+                           reportFilterForm.value.report_type === 'mfr' || (reportType === '8' &&
+                           (reportFilterForm.value.report_type === '' || reportFilterForm.value.report_type === 'concession')) ||
+                           (reportType === '10' &&
+                           (reportFilterForm.value.report_type === '' || reportFilterForm.value.report_type === 'feeStructure')))">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>{{hiddenFieldLabel2}}</mat-label>
                                  <mat-select formControlName="hidden_value2" [placeholder]="hiddenFieldLabel2">
@@ -97,7 +103,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left" *ngIf="reportType === '15'">
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="reportType === '15'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Route</mat-label>
                                  <mat-select formControlName="hidden_value3">
@@ -106,7 +112,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left" *ngIf="reportType === '15'">
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="reportType === '15'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Slab</mat-label>
                                  <mat-select formControlName="hidden_value4">
@@ -116,7 +122,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left" *ngIf="reportType === '15'">
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="reportType === '15'">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Stoppages</mat-label>
                                  <mat-select formControlName="hidden_value5">
@@ -126,7 +132,7 @@
                                  </mat-select>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left">
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="checkForExistFilter(reportType)">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>From Date</mat-label>
                                  <input matInput [matDatepicker]="picker" placeholder="Choose a date"
@@ -135,7 +141,7 @@
                                  <mat-datepicker #picker></mat-datepicker>
                               </mat-form-field>
                            </div>
-                           <div class="col-1 remove-col-padding-left">
+                           <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left" *ngIf="checkForExistFilter(reportType)">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>To Date</mat-label>
                                  <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
@@ -145,7 +151,15 @@
                               </mat-form-field>
                            </div>
                            <i class="fas fa-redo" matTooltip="Reset" (click)="resetFilters()"></i>
-                           <div class="col-3 margin-top-15 text-center remove-col-padding-left">
+                           <div *ngIf="checkIfShow(reportType)" class="col-12 col-lg-2 col-sm-6 col-md-6 margin-top-15 text-center remove-col-padding-left">
+                              <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
+                                 filter
+                              </button>
+                              <button class="sort-bt" mat-raised-button (click)="openSort()">
+                                 sort
+                              </button>
+                           </div>
+                           <div class="col-12 col-lg-3 col-sm-6 col-md-6 margin-top-15 text-center remove-col-padding-left">
                               <button class="change-bt" mat-raised-button (click)="switchReport()">
                                  change report
                               </button>
@@ -154,7 +168,7 @@
                                  generate
                               </button>
                            </div>
-                           <div class="col-1 margin-top-15 remove-col-padding-left" *ngIf="REPORT_ELEMENT_DATA.length > 0
+                           <div class="col-12 col-lg-1 col-md-6 col-sm-6 margin-top-15 remove-col-padding-left" *ngIf="REPORT_ELEMENT_DATA.length > 0
                                  || REPORT_ELEMENT_DATA2.length > 0  || REPORT_ELEMENT_DATA3.length > 0">
                               <div class="inline-flex">
                                  <div>
@@ -199,11 +213,11 @@
                                              (click)="openDialog(item, false)">{{item[column]}}</a>
                                        </span>
                                        <span class="font-bold font-skyblue font-underline"
-                                          *ngIf="column === 'receipt_no'">
-                                          <a style="cursor: pointer;" *ngIf="item[column] !== '-'"
-                                             (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a>
-                                          <p *ngIf="item[column] === '-'">{{item[column]}}</p>
-                                       </span>
+                                          *ngIf="column === 'receipt_no' && item[column] !== '-'">
+                                          <a style="cursor: pointer;"
+                                             (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a></span>
+                                       <span
+                                          *ngIf="item[column] === '-' && column === 'receipt_no'">{{item[column]}}</span>
                                     </td>
                                  </ng-container>
                               </ng-container>
@@ -221,21 +235,20 @@
                               <ng-container *ngFor="let column of finalTable.columnDef;let i = index;">
                                  <ng-container [matColumnDef]="column">
                                     <th mat-header-cell *matHeaderCellDef>{{finalTable.colunmHeader[i]}}</th>
-                                    <td [attr.colspan]="checkRowSpan(item['newStudent'], i)"
-                                    mat-cell *matCellDef="let item">
-                                       <span [hidden]="item['newStudent']" 
-                                       *ngIf="column !== 'invoice_no' && column !== 'invoice_created_date'
+                                    <td [attr.colspan]="checkRowSpan(item['newStudent'], i)" mat-cell
+                                       *matCellDef="let item">
+                                       <span [hidden]="item['newStudent']"
+                                          *ngIf="column !== 'invoice_no' && column !== 'invoice_created_date'
                                     && column !=='cheque_date' && column !== 'dishonor_date'
                                     && column !== 'flgr_invoice_receipt_no' && column !== 'receipt_no' && !item['newStudent']">
                                           <div [innerHTML]="item[column]"></div>
                                        </span>
-                                       <span [hidden]="item['newStudent']" 
-                                       *ngIf="(column === 'invoice_created_date' || column === 'cheque_date'
+                                       <span [hidden]="item['newStudent']" *ngIf="(column === 'invoice_created_date' || column === 'cheque_date'
                                     || column === 'dishonor_date')">
                                           {{item[column] ? (item[column] | date : 'd-MMM-y') : '-'}}
                                        </span>
-                                       <span [hidden]="item['newStudent']" 
-                                       *ngIf="(column === 'invoice_no' || column === 'flgr_invoice_receipt_no')
+                                       <span [hidden]="item['newStudent']"
+                                          *ngIf="(column === 'invoice_no' || column === 'flgr_invoice_receipt_no')
                                     && column !== 'invoice_created_date' && column !== 'receipt_no' && !item['newStudent']"
                                           class="font-bold font-skyblue font-underline">
                                           <a style="cursor: pointer;"
@@ -247,7 +260,8 @@
                                              (click)="openDialogReceipt(item['receipt_id'], false)">{{item[column]}}</a>
                                           <p *ngIf="item[column] === '-' && !item['newStudent']">{{item[column]}}</p>
                                        </span>
-                                       <div [hidden]="!item['newStudent']"  *ngIf="item['newStudent'] && i== 0" class="text-center">
+                                       <div [hidden]="!item['newStudent']" *ngIf="item['newStudent'] && i== 0"
+                                          class="text-center">
                                           <b>{{item['au_full_name']}}</b>
                                        </div>
                                     </td>

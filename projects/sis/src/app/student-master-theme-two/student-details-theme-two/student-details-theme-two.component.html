@@ -35,7 +35,7 @@
             <div>
               <div
                 [ngClass]="studentdetails?.prevStep?.process_name ? 'registration-container__box':'registration-container__box'"
-                *ngIf="divFlag && studentdetails.prevStep.process_name && studentdetails.prevStep.process_no">
+                *ngIf="divFlag && studentdetails?.prevStep?.process_name && studentdetails?.prevStep?.process_no">
                 <span class="regno-title font-size-14 font-white"
                   *ngIf="studentdetails?.prevStep?.process_name">{{studentdetails.prevStep.process_name}}:
                   {{studentdetails.prevStep.process_no}}</span>
@@ -212,14 +212,13 @@
                 *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
                   <span><b>Fees O/S :</b> {{studentdetails.fee_outstanding ? 
-                  (studentdetails.fee_outstanding | number): 'NA'}}</span>
+                  (studentdetails.fee_outstanding | number): '0'}}</span>
                 </div>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12 mb-10"
                 *ngIf="processtypeService.getProcesstype() !== '5'">
                 <div class="grey-container__box text-center">
-                  <span><b>Concession
-                      Grp:</b>{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : 'NA'}}</span>
+                  <span><b>Concession:</b>{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : '-'}}</span>
                 </div>
               </div>
             </div>

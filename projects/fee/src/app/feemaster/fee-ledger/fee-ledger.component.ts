@@ -24,11 +24,17 @@ export interface PeriodicElement {
 })
 export class FeeLedgerComponent implements OnInit {
 
-	displayedColumns: string[] = ['srno', 'date', 'invoiceno', 'particular', 'amount', 'concession', 'reciept', 'balance'];
+	displayedColumns: string[] = ['srno', 'date', 'invoiceno', 'feeperiod', 'particular', 'amount', 'concession', 'reciept', 'balance'];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
 	dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
+	recordArray: any[] = [];
 	lastRecordId: any;
 	loginId: any;
+	footerRecord: any = {
+		feeduetotal: 0,
+		concessiontotal: 0,
+		receipttotal: 0
+	};
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('table') table: ElementRef;
 	constructor(private sisService: SisService,
@@ -39,18 +45,25 @@ export class FeeLedgerComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		this.recordArray = [];
 		this.FEE_LEDGER_ELEMENT = [];
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
 			if (data.adm_no && data.login_id) {
 				this.lastRecordId = data.adm_no;
 				this.loginId = data.login_id;
+				this.recordArray = [];
+				this.FEE_LEDGER_ELEMENT = [];
+				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				this.getFeeLedger(this.loginId);
 			} else {
 				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 					if (result.status === 'ok') {
 						this.lastRecordId = result.data[0].last_record;
 						this.loginId = result.data[0].au_login_id;
+						this.recordArray = [];
+						this.FEE_LEDGER_ELEMENT = [];
+						this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 						this.getFeeLedger(this.loginId);
 					}
 				});
@@ -64,6 +77,7 @@ export class FeeLedgerComponent implements OnInit {
 				if (result.status === 'ok') {
 					this.lastRecordId = result.data[0].last_record;
 					this.loginId = result.data[0].au_login_id;
+					this.recordArray = [];
 					this.FEE_LEDGER_ELEMENT = [];
 					this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 					this.getFeeLedger(this.loginId);
@@ -72,24 +86,39 @@ export class FeeLedgerComponent implements OnInit {
 		}
 	}
 	getFeeLedger(login_id) {
+		let element: any = {};
 		this.FEE_LEDGER_ELEMENT = [];
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.feeService.getFeeLedger({ login_id: login_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
+				this.recordArray = [];
+				this.FEE_LEDGER_ELEMENT = [];
+				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				let pos = 1;
-				for (const item of result.data) {
-					this.FEE_LEDGER_ELEMENT.push({
+				this.footerRecord = {
+					feeduetotal: 0,
+					concessiontotal: 0,
+					receipttotal: 0
+				};
+				this.recordArray = result.data;
+				for (const item of this.recordArray) {
+					element = {
 						srno: pos,
 						date: new DatePipe('en-in').transform(item.flgr_created_date, 'd-MMM-y'),
 						invoiceno: item.flgr_invoice_receipt_no ? item.flgr_invoice_receipt_no : '-',
+						feeperiod: item.flgr_fp_months ? item.flgr_fp_months : '-',
 						particular: item.flgr_particulars ? item.flgr_particulars : '-',
 						amount: item.flgr_amount ? item.flgr_amount : '0',
 						concession: item.flgr_concession ? item.flgr_concession : '0',
 						reciept: item.flgr_receipt ? item.flgr_receipt : '0',
 						balance: item.flgr_balance ? item.flgr_balance : '0',
 						action: item
-					});
+					};
+					this.FEE_LEDGER_ELEMENT.push(element);
 					pos++;
+					this.footerRecord.feeduetotal += Number(element.amount);
+					this.footerRecord.concessiontotal += Number(element.concession);
+					this.footerRecord.receipttotal += Number(element.reciept);
 				}
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			}
@@ -100,6 +129,9 @@ export class FeeLedgerComponent implements OnInit {
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
 		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.recordArray = [];
+			this.FEE_LEDGER_ELEMENT = [];
+			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
 		} else {
 			this.getFeeLedger(this.loginId);
@@ -110,8 +142,14 @@ export class FeeLedgerComponent implements OnInit {
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
 		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.recordArray = [];
+			this.FEE_LEDGER_ELEMENT = [];
+			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
 		} else {
+			this.recordArray = [];
+			this.FEE_LEDGER_ELEMENT = [];
+			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
 		}
 	}
@@ -120,8 +158,14 @@ export class FeeLedgerComponent implements OnInit {
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
 		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.recordArray = [];
+			this.FEE_LEDGER_ELEMENT = [];
+			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
 		} else {
+			this.recordArray = [];
+			this.FEE_LEDGER_ELEMENT = [];
+			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
 		}
 	}
@@ -130,8 +174,14 @@ export class FeeLedgerComponent implements OnInit {
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
 		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.recordArray = [];
+			this.FEE_LEDGER_ELEMENT = [];
+			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
 		} else {
+			this.recordArray = [];
+			this.FEE_LEDGER_ELEMENT = [];
+			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
 		}
 	}
@@ -140,8 +190,14 @@ export class FeeLedgerComponent implements OnInit {
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.loginId = admno;
 		if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
+			this.recordArray = [];
+			this.FEE_LEDGER_ELEMENT = [];
+			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
 		} else {
+			this.recordArray = [];
+			this.FEE_LEDGER_ELEMENT = [];
+			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
 		}
 	}

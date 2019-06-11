@@ -20,9 +20,9 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	@Input() configSetting: any;
 	cropIndex: any;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
-	formArray: any[] = [{ formId: 1, formHeader: 'Father', formInfo: 'Father' },
-	{ formId: 2, formHeader: 'Mother', formInfo: 'Mother' },
-	{ formId: 3, formHeader: 'Guardian', formInfo: 'Guardian' }];
+	formArray: any[] = [{ formId: 1, formHeader: 'Father\'s', formInfo: 'Father\'s' },
+	{ formId: 2, formHeader: 'Mother\'s', formInfo: 'Mother\'s' },
+	{ formId: 3, formHeader: 'Guardian\'s', formInfo: 'Guardian\'s' }];
 	showHideGuardianField = false;
 	showSiblingDiv = false;
 	aluminiStatusArray: any[] = [false, false, false];
@@ -83,8 +83,9 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
 		this.buildForm();
-		this.profileImageArray = ['/assets/images/student.png', '/assets/images/student.png',
-			'/assets/images/student.png'];
+		this.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg',
+								'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
+								'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
 		this.getQualifications();
 		this.getAnnualIncome();
 		this.getOccupationType();
@@ -585,7 +586,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 				} else {
 					this.staffStatus[i] = 'Yes';
 				}
-				this.profileImageArray[i] = value[i].epd_profile_image ? value[i].epd_profile_image : '/assets/images/student.png';
+				this.profileImageArray[i] = value[i].epd_profile_image ? value[i].epd_profile_image : this.profileImageArray[i];
 				if (this.picker) {
 					this.picker._dateAdapter.locale = 'en-in';
 				}
@@ -817,8 +818,9 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.addressStatus = ['No', 'No', 'No'];
 			this.aluminiStatusArray = [false, false, false];
 			this.showHideGuardianField = false;
-			this.profileImageArray = ['/assets/images/student.png', '/assets/images/student.png',
-				'/assets/images/student.png'];
+			this.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg',
+			 						'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
 		}
 	}
 	getCityPerId(item: any, index) {

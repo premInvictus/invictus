@@ -9165,3 +9165,37 @@ a.link {
 
   }
 }
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) { 
+
+.main-label-img{  margin: 0 !important;}
+.margin-top-20[_ngcontent-c14] {
+    margin-top: 0;
+}
+.liveadm-container__box[_ngcontent-c14]{
+  margin: 0;
+  margin-bottom: 5px;
+}
+.mat-form-field-wrapper {
+    padding-bottom: 0;
+}
+.mat-tab-label .mat-tab-label-content{
+    font-size: 14px !important;
+}
+.functional-button-four[_ngcontent-c14] {
+  z-index: 11111;
+  position: fixed;
+  top: 370px !important;
+  right: 20px;
+}
+.mat-tab-label.mat-tab-label-active {
+    font-size: 14px !important;
+}
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) {
+
+
+ }

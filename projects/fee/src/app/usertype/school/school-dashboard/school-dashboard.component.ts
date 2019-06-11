@@ -295,7 +295,7 @@ export class SchoolDashboardComponent implements OnInit {
 				innerSize: '%'
 			},
 			title: {
-				text: '<b>' + ( new DecimalPipe('en-in').transform(this.totalreceipt)) + '<b><br><b>Total Recipt <b>',
+				text: '<b>' + ( new DecimalPipe('en-in').transform(this.totalreceipt)) + '<b><br><b>Total Receipt <b>',
 				align: 'center',
 				verticalAlign: 'middle',
 				y: 25

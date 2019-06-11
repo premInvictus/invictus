@@ -8,8 +8,7 @@
   </div>
   <div class="row">
     <div class="col-2 text-center">
-      <img class="student-profile-image-popup"
-        [src]="invoiceDetails?.au_profileimage ? invoiceDetails.au_profileimage : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
+      <img class="student-profile-image-popup" [src]="defaultsrc">
       <div class="">
         <div>
           <span class="font-size-16 font-bold">{{invoiceDetails?.process_name}} {{invoiceDetails?.au_admission_no}} </span>
@@ -165,7 +164,7 @@
     <div class="col-12">
       <div class="grey-box ">
         <div class="margin-right-50"><span class="font-size-16 ">Amount in Words : </span><span
-            class="font-size-16 font-medium">Rupees {{invoiceTotal | numberToWord | titlecase}} </span><span
+            class="font-size-16 font-medium">Rupees {{invoiceTotal | numberToWord | titlecase}} Only</span><span
             class="float-right"><span class="font-size-16">Grand Total : </span><span
               class="font-size-16 font-medium">{{invoiceTotal | number}} </span></span></div>
       </div>

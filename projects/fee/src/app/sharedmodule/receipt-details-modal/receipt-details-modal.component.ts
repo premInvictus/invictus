@@ -29,6 +29,8 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	class_name: any;
 	section_name: any;
 	class_sec: any;
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+	gender: any;
 	constructor(
 		public dialogRef: MatDialogRef<ReceiptDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -149,7 +151,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 				concession: Number(item.invg_fcc_amount),
 				adjustment: Number(item.invg_adj_amount),
 				netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount)
-				- (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+					- (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
 				invg_id: item.invg_id
 			};
 			this.invoiceTotal += element.netpay;
@@ -161,9 +163,9 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		this.invoiceBifurcationArray = [];
 		let recieptJSON = {};
 		if (this.data.from) {
-			recieptJSON = {inv_id : invoiceNo};
+			recieptJSON = { inv_id: invoiceNo };
 		} else {
-			recieptJSON = {flgr_invoice_receipt_no: invoiceNo };
+			recieptJSON = { flgr_invoice_receipt_no: invoiceNo };
 		}
 		this.feeService.getReceiptBifurcation(recieptJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -171,21 +173,39 @@ export class ReceiptDetailsModalComponent implements OnInit {
 					this.invoiceDetails = result.data[0];
 					this.class_name = this.invoiceDetails.class_name;
 					this.section_name = this.invoiceDetails.sec_name;
-					if(this.section_name != ' '){
-						this.class_sec = this.class_name +' - '+ this.section_name;
-					}else{
+					if (this.section_name !== ' ') {
+						this.class_sec = this.class_name + ' - ' + this.section_name;
+					} else {
 						this.class_sec = this.class_name;
+					}
+					this.gender = this.invoiceDetails.au_gender;
+					if (this.gender === 'M') {
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+					} else if (this.gender === 'F') {
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+					} else {
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 					}
 					if (this.invoiceDetails.invoice_bifurcation.length > 0) {
 						this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
 						this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
 					}
 
+					this.adjustmentForm.patchValue({
+						au_profileimage: this.invoiceDetails.au_profileimage
+							? this.invoiceDetails.au_profileimage
+							: this.defaultsrc,
+					});
+					this.defaultsrc =
+						this.invoiceDetails.au_profileimage !== ''
+							? this.invoiceDetails.au_profileimage
+							: this.defaultsrc;
+
 				}
 			}
 		});
 	}
-	editConfirm() {}
+	editConfirm() { }
 	printReceipt() {
 		this.feeService.printReceipt({ receipt_id: [this.data.invoiceNo] }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {

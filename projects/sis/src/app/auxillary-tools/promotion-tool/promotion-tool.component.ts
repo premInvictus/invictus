@@ -281,7 +281,8 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 					pmap_class_id: this.promoteForm.value.new_class_id,
 					pmap_sec_id: item.action.sec_id,
 					pmap_hou_id: item.action.hou_id,
-					pmap_ses_id: this.demoteSessionId
+					pmap_ses_id: this.demoteSessionId,
+					pmap_enrollment_type: this.promoteForm.value.enrollment_type
 				}]
 			}).subscribe((result: any) => {
 				if (result.status === 'ok') {
@@ -303,6 +304,8 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 			students: [{
 				pmap_login_id: item.action.au_login_id,
 				pmap_id: item.action.pmap_id,
+				pmap_enrollment_type: this.demoteForm.value.enrollment_type,
+				pmap_ses_id: this.demoteSessionId,
 			}]
 		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -359,7 +362,8 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 					pmap_class_id: this.promoteForm.value.new_class_id,
 					pmap_sec_id: titem.item.sec_id,
 					pmap_hou_id: titem.item.hou_id,
-					pmap_ses_id: this.demoteSessionId
+					pmap_ses_id: this.demoteSessionId,
+					pmap_enrollment_type: this.promoteForm.value.enrollment_type
 				});
 			}
 			if (promoteBulkArray.length > 0) {
@@ -389,7 +393,9 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 			for (const titem of this.toBeDemotedList) {
 				demoteBulkArray.push({
 					pmap_login_id: titem.item.au_login_id,
-					pmap_id: titem.item.pmap_id
+					pmap_id: titem.item.pmap_id,
+					pmap_enrollment_type: this.demoteForm.value.enrollment_type,
+					pmap_ses_id: this.demoteSessionId
 				});
 			}
 			if (demoteBulkArray.length > 0) {

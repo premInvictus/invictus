@@ -164,31 +164,6 @@
                       </mat-form-field>
                     </div>
                   </div>
-                  <div *ngIf="invoiceArray.length > 0 && selectedMode === '1'" class="row">
-                    <div class="col-12">
-                      <div class="row">
-                        <div class="col-12">
-                          <span class="font-size-16 font-regular">Invoice No: </span><span
-                            class="font-size-16 font-bold font-skyblue font-underline">
-                            <a style="cursor: pointer"
-                              (click)="openDialog(invoice.inv_id, false)">{{invoice.inv_invoice_no}}</a></span>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-12">
-                          <span class="font-size-16 font-regular">Fee Period: </span><span
-                            class="font-size-16 font-bold">
-                            {{invoice.fp_months}}</span>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-12">
-                          <span class="font-size-16 font-regular">Invoice Date: </span>
-                          <span class="font-size-16 font-bold">{{invoice.inv_invoice_date | date: 'd-MMM-y'}}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
                 <div class="col-6">
                   <div class="row">
@@ -200,44 +175,89 @@
                       </mat-form-field>
                     </div>
                   </div>
-                  <div *ngIf="invoiceArray.length > 0 && selectedMode === '1'" class="row">
-                    <div class="col-12">
-                      <div class="row">
-                        <div class="col-12">
-                          <span class="font-size-16 font-regular">Due Date: </span><span class="font-size-16 font-bold">
-                            {{invoice.inv_due_date | date: 'd-MMM-y'}}
-                          </span>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-12">
-                          <span class="font-size-16 font-regular">Invoice Amount: </span><span
-                            class="font-size-16 font-bold">{{invoice.fee_amount | number}}</span>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-12">
-                          <span class="font-size-16 font-regular">Fine: </span><span class="font-size-16 font-bold">
-                            {{invoice.late_fine_amt ? (invoice.late_fine_amt | number): 0}}</span>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-12">
-                          <span class="font-size-16 font-regular">Previous Balance: </span><span
-                            class="font-size-16 font-bold">
-                            {{invoice.balance_amt ? (invoice.balance_amt | number): 0}}</span>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-12">
-                          <span class="font-size-16 font-regular">Total Amount: </span><span
-                            class="font-size-16 font-bold">
-                            {{invoice.netPay | number}}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
+                <fieldset class="col-12 fieldset_invoice" *ngIf="invoiceArray.length > 0 && selectedMode === '1'">
+                  <div class="row margin-top-0 remove-padding">
+                     <legend class="invoice_legend">Invoice Details</legend>
+                     <div class="col-6 border_right">
+                        <div class="row">
+                            <div class="font-size-16 font-regular col-sm">Student Name</div>
+                            <div class="font-size-16 font-bold  col-sm">
+                               : {{invoice.au_full_name | capitalize}}
+                            </div>
+                         </div>
+                         <div class="row">
+                            <div class="font-size-16 font-regular col-sm">Class</div>
+                            <div class="font-size-16 font-bold  col-sm">
+                               : {{class_sec}}
+                            </div>
+                         </div>
+                        <div class="row">
+                           <div class="font-size-16 font-regular col-sm">Invoice No</div>
+                           <div class="font-size-16 font-bold  col-sm">
+                              : <a style="cursor: pointer;" class="font-skyblue font-underline"
+                                 (click)="openDialog(invoice.inv_invoice_no, false)">
+                                 {{invoice.inv_invoice_no}}
+                              </a>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="font-size-16 font-regular col-sm">Fee Period: </div>
+                           <div class="font-size-16 font-bold col-sm">
+                              : {{invoice.fp_months}}
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="font-size-16 font-regular col-sm">Invoice Date: </div>
+                           <div class="font-size-16 font-bold col-sm">
+                              : {{invoice.inv_invoice_date | date: 'd-MMM-y'}}
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="font-size-16 font-regular col-sm">Due Date </div>
+                           <div class="font-size-16 font-bold col-sm">
+                              : {{invoice.inv_due_date | date: 'd-MMM-y'}}
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-6">
+                        <div class="row">
+                            <div class="font-size-16 font-regular col-sm">Admission No.</div>
+                            <div class="font-size-16 font-bold col-sm">
+                               : {{invoice.au_admission_no}}
+                            </div>
+                         </div>
+ 
+                        <div class="row">
+                           <div class="font-size-16 font-regular col-sm">Invoice Amount</div>
+                           <div class="font-size-16 font-bold col-sm">
+                              : {{invoice.fee_amount | number}}
+                           </div>
+                        </div>
+
+                        <div class="row">
+                           <div class="font-size-16 font-regular col-sm">Previous Balance: </div>
+                           <div class="font-size-16 font-bold col-sm">
+                              : {{invoice.balance_amt ? (invoice.balance_amt | number): 0}}
+                           </div>
+                        </div>
+
+                        <div class="row">
+                           <div class="font-size-16 font-regular col-sm">Fine & Penalties: </div>
+                           <div class="font-size-16 font-bold col-sm">
+                              : {{invoice.late_fine_amt ? (invoice.late_fine_amt | number): 0}}
+                           </div>
+                        </div>
+
+                        <div class="row">
+                           <div class="font-size-16 font-regular col-sm">Total Amount: </div>
+                           <div class="font-size-16 font-bold col-sm">
+                              : {{invoice.netPay | number}}
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </fieldset>
               </div>
             </mat-card>
           </div>
