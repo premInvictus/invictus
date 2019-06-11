@@ -155,7 +155,7 @@
                   <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_contact_no"
                     class="form-field">
                     <mat-label>Contact No.</mat-label>
-                    <input class="margin-left-10" formControlName="epd_contact_no" matInput readonly>
+                    <input class="margin-left-10" formControlName="epd_contact_no" mask="00000 00000" matInput readonly>
                     <i class="fas fa-phone call-field-icon" matPrefix></i>
                   </mat-form-field>
                 </div>
@@ -165,7 +165,7 @@
                   <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_whatsapp_no"
                     class="form-field">
                     <mat-label>WhatsApp No.</mat-label>
-                    <input class="margin-left-10" formControlName="epd_whatsapp_no" matInput readonly>
+                    <input class="margin-left-10" formControlName="epd_whatsapp_no" mask="00000 00000" matInput readonly>
                     <i class="fab fa-whatsapp whatsapp-field-icon" matPrefix></i>
                   </mat-form-field>
                 </div>
@@ -177,8 +177,8 @@
                   <mat-form-field appearance="outline" class="form-field"
                     *ngIf="studentdetailsform.value.mi_emergency_contact_name">
                     <mat-label>Emergency Contact Name</mat-label>
-                    <input class="text-capitalize" formControlName="mi_emergency_contact_name" matInput
-                      placeholder="Emergency Contact Name" readonly>
+                    <input class="text-capitalize" formControlName="mi_emergency_contact_name"  matInput
+                      placeholder="Emergency Contact Name"  readonly>
                   </mat-form-field>
                 </div>
               </div>
@@ -188,7 +188,7 @@
                   <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.mi_emergency_contact_no"
                     class="form-field">
                     <mat-label>Emergency Contact No</mat-label>
-                    <input formControlName="mi_emergency_contact_no" matInput placeholder="Emergency Contact No."
+                    <input formControlName="mi_emergency_contact_no" mask="00000 00000" matInput placeholder="Emergency Contact No."
                       readonly>
                   </mat-form-field>
                 </div>
