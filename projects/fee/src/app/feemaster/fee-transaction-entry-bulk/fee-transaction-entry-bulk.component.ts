@@ -351,7 +351,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 		this.invoiceArray = [];
 		const invoiceJSON: any = {
-			inv_id: inv_number
+			inv_invoice_no: inv_number
 		};
 		if (inv_number) {
 			document.getElementById('inv_num').blur();
