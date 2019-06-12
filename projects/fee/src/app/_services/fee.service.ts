@@ -337,4 +337,12 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeSetup/deleteSchoolBank', value);
 	}
+	updateSchoolSettings(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeSetup/updateSchoolSettings', value);
+	}
+	getSchoolSettings() {
+		this.service.startLoading();
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getSchoolSettings');
+	}
 }
