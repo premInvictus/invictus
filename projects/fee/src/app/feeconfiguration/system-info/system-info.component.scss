@@ -1,0 +1,116 @@
+.add-question-content {
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 8px;
+    margin-bottom: 20px;
+  }
+  .white-box {
+    background-color: #ffffff;
+  }
+  .white-box-content {
+    padding: 20px;
+    margin-bottom: 40px;
+  }
+  .white-box-content-title {
+    font-size: 18px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .left-parameter-content {
+    margin-top: 20px;
+  }
+  
+  .left-side-box {
+    background-color: #000;
+  }
+  .left-side-box-content {
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    padding-right: 20px;
+    background-color: #f6f7f9;
+  }
+  
+  .left-side-box-content-title-divider {
+    margin-bottom: 1.7rem;
+    border-top: 1px solid transparent;
+  }
+  .left-side-box-content-title {
+    font-weight: 500;
+  }
+  .top-right-box-content-title {
+    font-weight: 500;
+  }
+  .top-right-box-content {
+    padding-top: 30px
+  }  
+  .remove-col-modal-padding {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+  }
+  .mat-table.specific-table {
+    overflow-x: scroll !important;
+    overflow-y: scroll !important;
+  }
+  mat-table.table-main-structure {
+    overflow-x: hidden !important;
+  }
+  .table-main-structure {
+    margin: 20px;
+    border: 1px solid #f1f1f1;
+  }  
+  .mat-header-row {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #e6e5df;
+  }
+  tr.mat-row:nth-child(even) {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #f1f4f7!important;
+  }
+
+tr.mat-row:nth-child(odd) {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #ffffff!important;
+}
+.table-box {
+  background-color: #ffffff;
+  border: 1px solid #fe756d;
+  margin-left: 20px;
+  margin-right:20px;
+  margin-top:20px;
+  padding-bottom: 1px;
+}
+.mob-table-box {
+  margin-bottom: 40px !important;
+}
+.table-filter {
+  margin-bottom: -20px;
+  margin-left: 25px;
+  margin-top: 10px;
+}
+.table-delete-icon {
+  font-size: 16px;
+  color: #fe756d;
+  cursor: pointer;
+}
+.table-edit-icon {
+  font-size: 16px;
+  color: #A0E1D4;
+  cursor: pointer;
+}
+td.mat-cell {
+  border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
+}
+.mat-column-counter{
+  width: 2% !important;
+}
+
