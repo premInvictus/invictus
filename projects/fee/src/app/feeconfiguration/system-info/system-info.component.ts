@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroupDirective, FormControl, NgForm } from '@angular/forms';
+import { FormBuilder, FormGroupDirective, FormControl, NgForm, FormGroup } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@angular/material';
 import { ConfigElement } from './system-info.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
@@ -28,7 +28,11 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	secondHeaderArray: any[] = ['Branch'];
 	configFlag = false;
 	updateFlag = false;
+	formatFlag = false;
+	printForm: FormGroup;
+	settings: any = {};
 	allBanks: any[] = [];
+	ckeConfig: any = {};
 	constructor(private fbuild: FormBuilder,
 		public feeService: FeeService,
 		private commonService: CommonAPIService) { }
@@ -36,6 +40,23 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getAllBanks();
+		this.getSchoolSettings();
+		this.ckeConfig = {
+			allowedContent: true,
+			pasteFromWordRemoveFontStyles: false,
+			contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
+			disallowedContent: 'm:omathpara',
+			height: '300',
+			width: '100%',
+			// tslint:disable-next-line:max-line-length
+			extraPlugins: '',
+			scayt_multiLanguageMod: true,
+			toolbar: [
+				// tslint:disable-next-line:max-line-length
+				['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates']
+			],
+			removeDialogTabs: 'image:advanced;image:Link'
+		};
 	}
 	ngAfterViewInit() {
 		this.configDataSource.sort = this.sort;
@@ -52,14 +73,27 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				bnk_status: ''
 			})
 		}];
+		this.printForm = this.fbuild.group({
+			'spt_id': '',
+			'spt_print_format': '',
+			'spt_invoice_format': '',
+			'spt_receipt_format': '',
+			'spt_header_template': '',
+			'spt_footer_template': ''
+
+
+		});
 	}
 	loadConfiguration($event) {
 		this.configFlag = false;
+		this.formatFlag = false;
 		this.updateFlag = false;
 		this.configValue = $event.value;
 		if (Number(this.configValue) === 1) {
 			this.getBankAll(this);
 			this.configFlag = true;
+		} else if (Number(this.configValue) === 2) {
+			this.formatFlag = true;
 		}
 	}
 	getActiveStatus(value: any) {
@@ -189,5 +223,51 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				this.allBanks = result.data;
 			}
 		});
+	}
+	getSchoolSettings() {
+		this.feeService.getSchoolSettings().subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.settings = result.data[0];
+				this.printForm.patchValue({
+					'spt_id': this.settings.spt_id,
+					'spt_print_format': this.settings.spt_print_format,
+					'spt_invoice_format': this.settings.spt_invoice_format,
+					'spt_receipt_format': this.settings.spt_receipt_format,
+					'spt_header_template': this.settings.spt_header_template,
+					'spt_footer_template': this.settings.spt_footer_template
+				});
+			}
+		});
+	}
+	updateSettings() {
+		this.feeService.updateSchoolSettings(this.printForm.value).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonService.showSuccessErrorMessage(result.message, 'success');
+				this.getSchoolSettings();
+			} else {
+				this.commonService.showSuccessErrorMessage(result.message, 'error');
+				this.getSchoolSettings();
+			}
+		});
+	}
+	resetSettings() {
+		if (this.settings) {
+			this.printForm.patchValue({
+				'spt_id': this.settings.spt_id,
+				'spt_print_format': this.settings.spt_print_format,
+				'spt_invoice_format': this.settings.spt_invoice_format,
+				'spt_receipt_format': this.settings.spt_receipt_format,
+				'spt_header_template': this.settings.spt_header_template,
+				'spt_footer_template': this.settings.spt_footer_template
+			});
+		} else {
+			this.printForm.patchValue({
+				'spt_print_format': '',
+				'spt_invoice_format': '',
+				'spt_receipt_format': '',
+				'spt_header_template': '',
+				'spt_footer_template': ''
+			});
+		}
 	}
 }

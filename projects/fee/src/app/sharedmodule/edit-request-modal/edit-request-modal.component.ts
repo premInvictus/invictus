@@ -35,7 +35,7 @@ export class EditRequestModalComponent implements OnInit {
 		this.getFormFields();
 		this.formfieldValueArray = this.inputData.data;
 		this.dialogRef = this.dialog.open(this.editModal, {
-			'height': '100vh',
+			'height': '80vh',
 			'width': '100vw',
 			disableClose: true,
 			position: {

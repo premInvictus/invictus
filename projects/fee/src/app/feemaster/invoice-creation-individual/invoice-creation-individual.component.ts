@@ -398,7 +398,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-			console.log('The dialog was closed');
+			this.getInvoice({ inv_process_usr_no: this.currentAdmno });
 
 		});
 	}
