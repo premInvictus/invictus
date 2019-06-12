@@ -6,6 +6,7 @@ import { LoadingModule } from 'ngx-loading';
 import { AddSyllabusComponent } from './add-syllabus/add-syllabus.component';
 import { ReviewSyllabusComponent } from './review-syllabus/review-syllabus.component';
 import { BrowseSyllabusComponent } from './browse-syllabus/browse-syllabus.component';
+import { SyllabusManagementComponent } from './syllabus-management/syllabus-management.component';
 
 @NgModule({
 	imports: [
@@ -14,6 +15,6 @@ import { BrowseSyllabusComponent } from './browse-syllabus/browse-syllabus.compo
 		LoadingModule,
 		SmartSharedModule,
 	],
-	declarations: [AddSyllabusComponent, ReviewSyllabusComponent, BrowseSyllabusComponent]
+	declarations: [AddSyllabusComponent, ReviewSyllabusComponent, BrowseSyllabusComponent, SyllabusManagementComponent]
 })
 export class SyllabusModule { }

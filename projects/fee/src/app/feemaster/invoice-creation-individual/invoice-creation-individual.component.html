@@ -17,7 +17,7 @@
       </mat-card>
     </div>
   </div>
-  <div class="row">
+  <div class="row margin-top-10">
     <div class="col-12 remove-col-padding">
       <app-common-student-profile [feeRenderId]="feeRenderId" [loginId]="lastRecordAdmno" (next)="next($event)"
         (prev)="prev($event)" (first)="first($event)" (last)="last($event)" (key)="key($event)" (next2)="next2($event)"
@@ -27,7 +27,7 @@
     </div>
   </div>
   <form [formGroup]="invoiceCreationForm" novalidate>
-    <div class="row">
+    <div class="row margin-top-10">
       <div class="col-12 remove-col-padding">
         <mat-card style="padding-bottom: 0px !important" class="card-top-title__container">
           <div class="text-center" *ngIf="!checkStatus()">
@@ -37,16 +37,19 @@
             </span>
           </div>
           <div class="row" *ngIf="checkStatus()">
-            <div class="col-2">
-              <mat-form-field appearance="outline" class="form-field">
+            <div class="col-12 remove-col-padding">
+
+            
+            <div class="inline-flex margin-left-15">
+              <mat-form-field appearance="outline" class="form-field-220">
                 <mat-label>Fee Period</mat-label>
                 <mat-select placeholder="Fee Period" multiple formControlName="inv_fm_id" required>
                   <mat-option *ngFor="let item of feePeriod" [value]="item.fm_id">{{item.fm_name}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-2">
-              <mat-form-field appearance="outline" class="form-field">
+            <div class="inline-flex margin-left-15">
+              <mat-form-field appearance="outline" class="form-field-220">
                 <mat-label>Invoice Date</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Invoice Date" formControlName="inv_invoice_date"
                   required>
@@ -54,8 +57,8 @@
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
             </div>
-            <div class="col-2">
-              <mat-form-field appearance="outline" class="form-field">
+            <div class="inline-flex margin-left-15">
+              <mat-form-field appearance="outline" class="form-field-220">
                 <mat-label>Due Date</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Due Date" formControlName="inv_due_date"
                   required>
@@ -63,22 +66,32 @@
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
             </div>
-            <div class="col-2 remove-col-padding-right margin-top-15">
+            <div class="inline-flex margin-left-15">
+                <button *ngIf="commonAPIService.isExistUserAccessMenu('359')" mat-raised-button
+                class="btn-primary  btn-width-164 btn-success" (click)="insertInvoice()">Generate Invoice</button>
+              <button mat-raised-button style="margin-left: 15px; background-color: #e11022" class="print-btn"
+                (click)="invoiceCreationForm.reset()">Reset</button>
+            </div>
+          </div>
+          </div>
+          <div class="row" *ngIf="checkStatus()">
+            <div class="col-12">
               <mat-checkbox formControlName="recalculation_flag"><span class="font-size-16 font-medium">Recalulate All
                   Unpaid Invoices</span></mat-checkbox>
             </div>
-            <div class="col-3 margin-top-15">
+
+            <!-- <div class="col-6 text-right">
               <button *ngIf="commonAPIService.isExistUserAccessMenu('359')" mat-raised-button
                 class="btn-primary  btn-width-164 btn-success" (click)="insertInvoice()">Generate Invoice</button>
               <button mat-raised-button style="margin-left: 10px; background-color: #e11022" class="print-btn"
                 (click)="invoiceCreationForm.reset()">Reset</button>
-            </div>
+            </div> -->
           </div>
         </mat-card>
       </div>
     </div>
   </form>
-  <div class="row">
+  <div class="row margin-top-10 ">
     <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container card-height-440 card-height-560 ">
         <div class="row">
