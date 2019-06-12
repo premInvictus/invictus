@@ -311,7 +311,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-
+			this.getInvoice(this.invoiceSearchForm.value);
 		});
 	}
 
