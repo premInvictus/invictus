@@ -19,7 +19,7 @@
               <div class="col-12 remove-col-padding">
                 <div class="float-right">
                   <span class="font-size-16 font-medium">
-                    <i class="fas fa-search">&nbsp;Advanced Search</i>
+                    <i class="fas fa-search"></i>&nbsp;Advanced Search
                   </span>&nbsp;
                   <span>
                     <mat-slide-toggle matTooltip="Click to enable advanced search" (change)="enableSearch($event)">
@@ -30,29 +30,32 @@
             </div>
             <form *ngIf="toggleSearch" [formGroup]="filterForm">
               <div class="row margin-top-5">
-                <div class="col-2 custom-col-15">
-                  <mat-form-field appearance="outline" class="form-field">
+                <div class="col-12 remove-col-padding">
+
+                
+                <div class="inline-flex margin-left-15">
+                  <mat-form-field appearance="outline" class="form-field-220">
                     <mat-label>Enrollment No.</mat-label>
                     <input matInput placeholder="Enrollment No." formControlName="inv_process_usr_no">
 
                   </mat-form-field>
                 </div>
-                <div class="col-2 custom-col-15 ">
-                  <mat-form-field appearance="outline" class="form-field">
+                <div class="inline-flex margin-left-15 ">
+                  <mat-form-field appearance="outline" class="form-field-220">
                     <mat-label>Student Name</mat-label>
                     <input matInput placeholder="Student Name" formControlName="au_full_name">
 
                   </mat-form-field>
                 </div>
-                <div class="col-2 custom-col-15 ">
-                  <mat-form-field appearance="outline" class="form-field">
+                <div class="inline-flex margin-left-15 ">
+                  <mat-form-field appearance="outline" class="form-field-220">
                     <mat-label>Invoice No.</mat-label>
                     <input matInput placeholder="Invoice No." formControlName="invoice_no">
 
                   </mat-form-field>
                 </div>
-                <div class="col-2 custom-col-15 ">
-                  <mat-form-field appearance="outline" class="form-field">
+                <div class="inline-flex margin-left-15 ">
+                  <mat-form-field appearance="outline" class="form-field-220">
                     <mat-label>From</mat-label>
                     <input matInput [matDatepicker]="picker4" placeholder="From" formControlName="from_date">
                     <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
@@ -60,8 +63,8 @@
 
                   </mat-form-field>
                 </div>
-                <div class="col-2 custom-col-15  ">
-                  <mat-form-field appearance="outline" class="form-field">
+                <div class="inline-flex margin-left-15  ">
+                  <mat-form-field appearance="outline" class="form-field-220">
                     <mat-label>To</mat-label>
                     <input matInput [matDatepicker]="picker5" placeholder="To" formControlName="to_date">
                     <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
@@ -69,8 +72,8 @@
 
                   </mat-form-field>
                 </div>
-                <div class="col-2 custom-col-15 remove-col-padding-left">
-                  <mat-form-field appearance="outline" class="form-field">
+                <div class="inline-flex margin-left-15">
+                  <mat-form-field appearance="outline" class="form-field-220">
                     <mat-label>Status</mat-label>
                     <mat-select placeholder="Status" formControlName="status">
                       <mat-option value="">Please Select</mat-option>
@@ -79,13 +82,14 @@
 
                   </mat-form-field>
                 </div>
-                <div class="col-6 fee-custom-col-10">
-                  <span><button mat-raised-button class="apply-btn margin-top-10"
+                <div class="inline-flex margin-left-15">
+                  <span><button mat-raised-button class="apply-btn"
                       (click)="getFilteredValue()">Apply</button></span> &nbsp;
                   <span>
-                    <button mat-raised-button class="rst-btn margin-top-10" (click)="reset()">Reset</button>
+                    <button mat-raised-button class="rst-btn " (click)="reset()">Reset</button>
                   </span>
                 </div>
+              </div>
               </div>
             </form>
           </div>
@@ -100,7 +104,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12 remove-col-padding">
+          <div class="col-12">
             <table mat-table [dataSource]="dataSource" class="fee-table-100 text-center">
 
               <ng-container matColumnDef="srno">

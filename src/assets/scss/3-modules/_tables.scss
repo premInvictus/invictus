@@ -368,3 +368,11 @@ tr.mat-header-row {
 tr.mat-row {
     height: 35px!important;
 }
+
+.table thead th {
+    vertical-align: middle !important;
+}
+
+.table td {
+    vertical-align: middle !important;
+}
