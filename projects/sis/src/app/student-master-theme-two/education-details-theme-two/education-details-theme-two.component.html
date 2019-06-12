@@ -14,7 +14,7 @@
       </div>
       <div *ngIf="checkIfFieldExist('eed_current_class')" class="col-2 sis-col-20">
         <mat-form-field class="form-field" appearance="outline">
-          <mat-label>Current Class</mat-label>
+          <mat-label>Current Class</mat-label> 
           <mat-select formControlName="eed_current_class" required [errorStateMatcher]="confirmValidParentMatcher"
             placeholder="Present Class" [disabled]="viewOnly">
             <mat-option>Please Select</mat-option>
