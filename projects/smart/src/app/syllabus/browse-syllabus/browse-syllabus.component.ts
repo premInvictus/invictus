@@ -21,6 +21,17 @@ export class BrowseSyllabusComponent implements OnInit {
     });
   }
 
+  openDialog() {
+    const dialogRef = this.dialog.open(UnpublishModal, {
+      height: '550px',
+      width: '550px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
   ngOnInit() {
   }
 
