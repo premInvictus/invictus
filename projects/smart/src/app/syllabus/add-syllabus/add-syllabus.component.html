@@ -11,14 +11,22 @@
         </div>
       </div>
       <div class="row">
+        
         <div class="col-2 col-ver-line-divider">
+            <form [formGroup]="parameterform" novalidate>
           <div class="row">
             <div class="col-12 remove-col-padding">
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Class</mat-label>
-                <mat-select placeholder="Class" required>
-                  <mat-option></mat-option>
-                </mat-select>
+
+                <mat-select formControlName="class_id"
+                  (selectionChange)="getSubjectsByClass()" required
+                  placeholder="Select Class">
+                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                    {{item.class_name}}
+                  </mat-option>
+              </mat-select>
+
               </mat-form-field>
             </div>
           </div>
@@ -26,8 +34,10 @@
             <div class="col-12 remove-col-padding">
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Subject</mat-label>
-                <mat-select placeholder="Subject" required>
-                  <mat-option></mat-option>
+                <mat-select formControlName="sub_id" required  placeholder="Select Subject">
+                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                      {{item.sub_name}}
+                    </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -36,8 +46,10 @@
             <div class="col-12 remove-col-padding">
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Term</mat-label>
-                <mat-select placeholder="Term" required>
-                  <mat-option></mat-option>
+                <mat-select formControlName="term_id" required  placeholder="Select Term">
+                    <mat-option *ngFor="let item of termArray" [value]="item.term_id">
+                      {{item.term_name}}
+                    </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -47,7 +59,10 @@
               <button mat-raised-button class="btn-add">Add</button>
             </div>
           </div>
+        </form>
         </div>
+        
+
         <div class="col-10">
           <div class="row">
             <div class="col-12 remove-col-padding">
