@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-classwork-update',
@@ -7,9 +8,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ClassworkUpdateComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) {}
+
+  openReviewClasswork() {
+    const dialogRef = this.dialog.open(ReviewClasswork, {
+      height: '600px',
+      width: '950px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
   ngOnInit() {
   }
 
 }
+
+@Component({
+  selector: 'review-classwork',
+  templateUrl: 'review-classwork.html',
+})
+export class ReviewClasswork {}
