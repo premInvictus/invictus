@@ -9,14 +9,14 @@ import {FormGroup, FormArray, FormBuilder} from '@angular/forms';
 export class ClassworkUpdateComponent implements OnInit {
 
 	classworkForm: FormGroup;
-  noOfPeriods = 8;
-  periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
+	noOfPeriods = 8;
+	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 	constructor(
 		private fbuild: FormBuilder
 	) { }
 
 	ngOnInit() {
-    this.buildForm();
+		this.buildForm();
 	}
 	buildForm() {
 		this.classworkForm = this.fbuild.group({
@@ -49,3 +49,8 @@ export class ClassworkUpdateComponent implements OnInit {
 	}
 
 }
+
+@Component({
+	selector: 'review-classwork',
+	templateUrl: 'review-classwork.html',
+})
