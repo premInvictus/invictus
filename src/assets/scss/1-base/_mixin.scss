@@ -113,6 +113,9 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
     .card-height-950 {
         min-height: 950px;
     }
+    .card-height-960 {
+        min-height: 960px;
+    }
     .card-height-835 {
         min-height: 835px;
     }
@@ -161,9 +164,17 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         width: 120px;
         height: 120px;
     }
+    .smart-col-5 {
+        max-width: 5% !important;
+        flex: 0 0 5% !important;
+    }
 }
 
 @include respond-between(lg, xl) {
+    .smart-col-5 {
+        max-width: 5% !important;
+        flex: 0 0 5% !important;
+    }
     mat-header-row.header-normal {
         width: 100% !important;
     }
@@ -246,6 +257,10 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
 
     .card-height-860-lp {
         min-height: 860px
+    }
+
+    .card-height-850-lp {
+        min-height: 850px
     }
 
     .card-height-470-lp {

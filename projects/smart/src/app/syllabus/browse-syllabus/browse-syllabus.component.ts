@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-browse-syllabus',
@@ -7,9 +8,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BrowseSyllabusComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) {}
+
+  openUnpublishModal() {
+    const dialogRef = this.dialog.open(UnpublishModal, {
+      height: '550px',
+      width: '550px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
   ngOnInit() {
   }
 
 }
+
+@Component({
+  selector: 'unpublish-modal',
+  templateUrl: 'unpublish-modal.html',
+})
+export class UnpublishModal {}

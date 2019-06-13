@@ -62,11 +62,15 @@
 }
 
 .form-field-220 {
-    max-width: 220px;
+    max-width: 220px !important;
+}
+
+.form-field-400 {
+    max-width: 400px !important;
 }
 
 .form-field-150 {
-    max-width: 150px;
+    max-width: 150px !important;
 }
 
 // .mat-form-field-appearance-legacy .mat-form-field-label {
