@@ -59,7 +59,7 @@
                               <mat-label>Contact No.</mat-label>
                               <input matInput placeholder="Contact No." formControlName="epd_contact_no" minlength="10"
                                  maxlength="10" pattern="[0-9]*" [readonly]="viewOnly"
-                                 [errorStateMatcher]="confirmValidParentMatcher" mask="00000 00000">
+                                 [errorStateMatcher]="confirmValidParentMatcher">
                               <mat-error>
                                  Please enter contact number
                               </mat-error>
@@ -71,7 +71,7 @@
                               <mat-label>Whatsapp No</mat-label>
                               <input matInput placeholder="Whatsapp No." formControlName="epd_whatsapp_no"
                                  minlength="10" maxlength="10" pattern="[0-9]*" [readonly]="viewOnly"
-                                 [errorStateMatcher]="confirmValidParentMatcher" mask="00000 00000">
+                                 [errorStateMatcher]="confirmValidParentMatcher">
                            </mat-form-field>
                         </div>
                         <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 "
