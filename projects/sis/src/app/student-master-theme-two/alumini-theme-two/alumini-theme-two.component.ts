@@ -115,7 +115,7 @@ export class AluminiThemeTwoComponent implements OnInit, OnDestroy {
 		this.commonAPIService.tabChange.next({ 'currrentTab': this.tabSelectedIndex });
 	}
 	getLastRecord() {
-		if (this.studentRecord.id && this.studentRecord.process_type) {
+		if (this.studentRecord.id && this.studentRecord.process_type === '5') {
 			this.commonAPIService.studentSearchByName.next(this.studentRecord.id);
 				for (let i = 0; i < this.formname.length; i++) {
 					this.formEnabledTwoService.setFormEnabled(i);

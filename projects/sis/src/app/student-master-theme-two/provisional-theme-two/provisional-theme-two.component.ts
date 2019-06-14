@@ -116,7 +116,7 @@ export class ProvisionalThemeTwoComponent implements OnInit, OnDestroy {
 	}
 
 	getLastRecord() {
-		if (this.studentRecord.id && this.studentRecord.process_type) {
+		if (this.studentRecord.id && this.studentRecord.process_type === '3') {
 			this.commonAPIService.studentSearchByName.next(this.studentRecord.id);
 			for (let i = 0; i < this.formname.length; i++) {
 				this.formEnabledTwoService.setFormEnabled(i);
