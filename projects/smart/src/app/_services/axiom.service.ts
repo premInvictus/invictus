@@ -20,7 +20,8 @@ export class AxiomService {
 		}
 		if (subject_id) {
 			param.sub_id = subject_id;
-		}
+        }
+        console.log(param);
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param);
 	}
