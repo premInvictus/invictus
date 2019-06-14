@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonAPIService } from '../../_services';
 import { SyllabusserviceService } from './../syllabusservice.service';
 @Component({
 	selector: 'app-add-syllabus',
@@ -11,25 +12,28 @@ export class AddSyllabusComponent implements OnInit {
 			modalForm: FormGroup;
 			public classArray: any[];
 			public termArray: any[];
+			public ctrArray: any[];
 			currentUser: any;
 			public subjectArray: any[];
 			constructor(
 				private fbuild: FormBuilder,
 				private syllabusservice: SyllabusserviceService,
+				public common: CommonAPIService,
 			) { }
 
 			ngOnInit() {
 				this.buildForm();
 				this.getClass();
 				this.getTermList();
-				
+				this.ctrList();
+
 			}
 
 			buildForm() {
 				this.parameterform = this.fbuild.group({
-						class_id: '',
-						sub_id: '',
-						term_id: ''
+						syl_class_id: '',
+						syl_sub_id: '',
+						syl_term_id: ''
 				});
 				this.modalForm = this.fbuild.group({
 						qus_unpublish_remark: ['', Validators.required],
@@ -48,14 +52,14 @@ export class AddSyllabusComponent implements OnInit {
 		}
 
 		getSubjectsByClass(): void {
-			this.syllabusservice.getSubjectsByClass(this.parameterform.value.class_id)
+			this.syllabusservice.getSubjectsByClass(this.parameterform.value.syl_class_id)
 					.subscribe(
 							(result: any) => {
 									if (result && result.status === 'ok') {
 											this.subjectArray = result.data;
 									} else {
 											this.subjectArray = [];
-											//this.notif.showSuccessErrorMessage('No Record Found', 'error');
+											this.common.showSuccessErrorMessage('No Record Found', 'error');
 									}
 							}
 					);
@@ -69,5 +73,24 @@ export class AddSyllabusComponent implements OnInit {
 										}
 								}
 						);
+		}
+		ctrList() {
+			this.syllabusservice.ctrList()
+					.subscribe(
+							(result: any) => {
+									if (result && result.status === 'ok') {
+											this.ctrArray = result.data;
+									}
+							}
+					);
+		}
+
+		submit() {
+			if (this.parameterform.valid) {
+				this.syllabusservice.insertSyllabus(this.parameterform.value).subscribe((result: any) => {
+				});
+			} else {
+				this.common.showSuccessErrorMessage('Please fill all required field', 'error');
+			}
 		}
 }
