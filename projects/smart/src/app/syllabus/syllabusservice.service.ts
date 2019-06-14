@@ -43,5 +43,8 @@ export class SyllabusserviceService {
 			insertSyllabus(value) {
 				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/insert', value);
 			}
+			getSyllabus(value) {
+				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/get_syllabus', value);
+			}
 
 }
