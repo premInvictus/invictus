@@ -54,3 +54,5 @@ export class ClassworkUpdateComponent implements OnInit {
 	selector: 'review-classwork',
 	templateUrl: 'review-classwork.html',
 })
+
+export class ReviewClasswork { }
