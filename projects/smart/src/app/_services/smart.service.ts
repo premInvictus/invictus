@@ -23,4 +23,8 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/classwork/insert', value);
 	}
+	ctrList() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSmartUrl + '/smtsyllabus/ctrList');
+	}
 }
