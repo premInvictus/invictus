@@ -1008,4 +1008,8 @@ export class SisService {
 		value.download = true;
 		return this.http.post(environment.apiFeeUrl + '/invoice/insertInvoice', value);
 	}
+	getStudentDataPerName(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentDataPerName', value);
+	}
 }

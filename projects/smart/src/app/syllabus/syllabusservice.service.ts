@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { of } from 'rxjs';
 import { LoaderService, CommonAPIService, SisService } from '../_services';
- import { environment } from '../../../src/environments/environment';
+import { environment } from '../../../src/environments/environment';
 @Injectable()
 export class SyllabusserviceService {
 			currentUser: any = {};
@@ -36,5 +36,12 @@ export class SyllabusserviceService {
 				this.loaderService.startLoading();
 				return this._http.get(environment.apiSmartUrl + '/smtsyllabus/getTermList');
 			}
-  
+			ctrList() {
+				this.loaderService.startLoading();
+				return this._http.get(environment.apiSmartUrl + '/smtsyllabus/ctrList');
+			}
+			insertSyllabus(value) {
+				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/insert', value);
+			}
+
 }
