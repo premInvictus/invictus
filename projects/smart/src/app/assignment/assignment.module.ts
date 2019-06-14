@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AssignmentRoutingModule } from './assignment-routing.module';
 import { LoadingModule } from 'ngx-loading';
 import { SmartSharedModule } from '../smart-shared/smart-shared.module';
-import { AssignmentReviewComponent } from './assignment-review/assignment-review.component';
+import { AssignmentReviewComponent, EditAssignment } from './assignment-review/assignment-review.component';
 import { PastAssignmentsComponent } from './past-assignments/past-assignments.component';
 
 @NgModule({
@@ -14,6 +14,7 @@ import { PastAssignmentsComponent } from './past-assignments/past-assignments.co
 		LoadingModule,
 		SmartSharedModule,
 	],
-	declarations: [AssignmentReviewComponent, PastAssignmentsComponent]
+	declarations: [AssignmentReviewComponent, PastAssignmentsComponent, EditAssignment],
+	entryComponents: [EditAssignment]
 })
 export class AssignmentModule { }
