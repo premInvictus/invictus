@@ -1,5 +1,5 @@
 export const environment = {
-	production: false,
+	production: true,
 	apiAxiomUrl: 'http://dev-api-axiom.invictusprojects.in',
 	apiSisUrl: 'http://dev-api-sis.invictusprojects.in',
 	apiFeeUrl: 'http://dev-api-fee.invictusprojects.in',

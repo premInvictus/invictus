@@ -9,7 +9,7 @@ import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifi
 import { CookieModule } from 'ngx-cookie';
 import { LoadingModule } from 'ngx-loading';
 import { AuthGuard } from './_guards';
-import { LoaderService, CommonAPIService, SisService } from './_services';
+import { LoaderService, CommonAPIService, SisService, AxiomService, SmartService } from './_services';
 import { SmartusertypeService } from './smartusertype/smartusertype.service';
 import { SyllabusserviceService } from './syllabus/syllabusservice.service';
 
@@ -19,6 +19,8 @@ const providers = [NotificationsService,
 	CommonAPIService,
 	SmartusertypeService,
 	SisService,
+	AxiomService,
+	SmartService,
 	SyllabusserviceService];
 @NgModule({
 	declarations: [
