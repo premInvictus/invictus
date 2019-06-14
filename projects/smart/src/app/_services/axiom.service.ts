@@ -4,7 +4,7 @@ import { CommonAPIService } from '../_services/commonAPI.service';
 import { environment } from '../../../../../src/environments/environment';
 import { of } from 'rxjs';
 @Injectable()
-export class SmartService {
+export class AxiomService {
 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 	// fetch subtopic
