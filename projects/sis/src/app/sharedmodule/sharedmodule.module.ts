@@ -70,6 +70,7 @@ import { CapitalizePipe } from '../_pipes';
 import { SafePipe } from '../_pipes/safe.pipe';
 import { AccountDetailsThemeTwoComponent } from '../student-master-theme-two/account-details-theme-two/account-details-theme-two.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
+import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -131,7 +132,8 @@ export const MY_FORMATS = {
 		StudentDetailsThemeTwoComponent, ChildDetailsThemeTwoComponent, ParentDetailsThemeTwoComponent,
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent, AccountDetailsThemeTwoComponent,
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
-		ManagementRemarksThemeTwoComponent, AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent],
+		ManagementRemarksThemeTwoComponent,
+		AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent, SearchViaNameComponent],
 	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
 		MatSlideToggleModule,
@@ -182,7 +184,8 @@ export const MY_FORMATS = {
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent,
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
 		ManagementRemarksThemeTwoComponent, AccountDetailsThemeTwoComponent,
-		AdmissionRemarksThemeTwoComponent, ImageViewerComponent],
+		AdmissionRemarksThemeTwoComponent, ImageViewerComponent,
+		SearchViaNameComponent],
 	providers: [StudentFormConfigService, FormEnabledService, StudentFormConfigTwoService, FormEnabledTwoService, ManageUsersService,
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 

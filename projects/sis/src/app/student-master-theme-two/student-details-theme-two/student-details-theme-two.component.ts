@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import { SearchViaNameComponent } from '../../sharedmodule/search-via-name/search-via-name.component';
 
 @Component({
 	selector: 'app-student-details-theme-two',
@@ -58,6 +60,10 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	openDeleteDialog = (data) => {
 		this.deleteModal.openModal(data);
 	}
+	getStuData = (data) => {
+		console.log('yes');
+		this.getStudentDetailsByAdmno(data);
+	}
 
 	constructor(
 		private fbuild: FormBuilder,
@@ -65,7 +71,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		private route: ActivatedRoute,
 		private router: Router,
 		private commonAPIService: CommonAPIService,
-		public processtypeService: ProcesstypeService
+		public processtypeService: ProcesstypeService,
+		public dialog: MatDialog
 	) {
 	}
 	ngOnInit() {
@@ -100,6 +107,11 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			}
 			this.setActionControls(data);
 		});
+		this.commonAPIService.studentSearchByName.subscribe((data: any) => {
+			if (data) {
+				this.getStudentDetailsByAdmno(data);
+			}
+		});
 
 		if (localStorage.getItem('suspension_last_state')) {
 			this.backOnly = true;
@@ -117,7 +129,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			this.backOnly = true;
 		}
 		if (this.processtypeService.getProcesstype() === '1' ||
-		this.processtypeService.getProcesstype() === '2') {
+			this.processtypeService.getProcesstype() === '2') {
 			this.classPlaceHolder = 'Class Applied For';
 		} else {
 			this.classPlaceHolder = 'Class';
@@ -236,21 +248,21 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	getStudentInformation(au_login_id) {
 		if (au_login_id && this.studentdetailsflag) {
 			this.studentdetailsflag = false;
-			this.sisService.getStudentInformation({ au_login_id: au_login_id}).subscribe((result: any) => {
+			this.sisService.getStudentInformation({ au_login_id: au_login_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.nextB = true;
 					this.firstB = true;
 					this.lastB = true;
 					this.previousB = true;
-					this.studentdetails = [];					
+					this.studentdetails = [];
 					if (result && result.data && result.data[0]) {
 						this.studentdetails = result.data[0];
 						this.gender = this.studentdetails.au_gender;
-						if(this.gender === 'M'){
+						if (this.gender === 'M') {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
-						}else if(this.gender === 'F'){
+						} else if (this.gender === 'F') {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
-						}else{
+						} else {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 						}
 					}
@@ -568,13 +580,49 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			this.backOnly = false;
 		}
 	}
-	parent_type_fun(type){
-		if(type === 'F'){
+	parent_type_fun(type) {
+		if (type === 'F') {
 			return 'Father Name';
-		} else if(type === 'M'){
+		} else if (type === 'M') {
 			return 'Mother Name';
-		}else{
+		} else {
 			return 'Guardian Name';
 		}
+	}
+	openSearchDialog() {
+		const diaogRef = this.dialog.open(SearchViaNameComponent, {
+			width: '80vh',
+			height: '90vh',
+			position: {
+				top: '20px'
+			},
+			data: {}
+		});
+		diaogRef.afterClosed().subscribe((result: any) => {
+			if (result) {
+				let url = '';
+				if (Number(result.process_type) === 1) {
+					url = 'enquiry';
+				} else if (Number(result.process_type) === 2) {
+					url = 'registration';
+				} else if (Number(result.process_type) === 3) {
+					url = 'provisional';
+				} else if (Number(result.process_type) === 4) {
+					url = 'admission';
+				} else if (Number(result.process_type) === 5) {
+					url = 'alumini';
+				}
+				this.commonAPIService.setStudentData(result.adm_no, result.process_type);
+				if ((Number(result.process_type) === 1 && this.route.snapshot.routeConfig.path === 'enquiry')
+					|| (Number(result.process_type) === 2 && this.route.snapshot.routeConfig.path === 'registration')
+					|| (Number(result.process_type) === 3 && this.route.snapshot.routeConfig.path === 'provisional')
+					|| (Number(result.process_type) === 4 && this.route.snapshot.routeConfig.path === 'admission')
+					|| (Number(result.process_type) === 5 && this.route.snapshot.routeConfig.path === 'alumini')) {
+					this.getStudentDetailsByAdmno(result.adm_no);
+				} else {
+					this.router.navigate(['../' + url], {relativeTo: this.route});
+				}
+			}
+		});
 	}
 }
