@@ -118,7 +118,9 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		};
 		this.sisService.addAdditionalDetails(tabTwoJSON).subscribe((result: any) => {
 			if (result.status === 'ok') {
+				if (this.common.isExistUserAccessMenuByLabel(this.parentId, 'Accounts')) {
 				this.account.submit();
+				}
 				this.common.showSuccessErrorMessage('Additional Details Added Successfully', 'success');
 				const invoiceJSON = { login_id: [this.context.studentdetails.studentdetailsform.value.au_login_id] };
 				if (this.processtypeService.getProcesstype() === '2' ||
@@ -132,7 +134,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				}
 				if (this.processtypeService.getProcesstype() === '1' ||
 					this.processtypeService.getProcesstype() === '2' || this.processtypeService.getProcesstype() === '5') {
-					this.common.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
+						this.common.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 				} else {
 					this.common.renderTab.next({ tabMove: true });
 				}
@@ -196,7 +198,11 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		}
 		this.sisService.addAdditionalDetails(tabTwoJSON).subscribe((result1: any) => {
 			if (result1.status === 'ok') {
+				if (this.accountDetails && this.common.isExistUserAccessMenuByLabel(this.parentId, 'Accounts')) {
 				this.account.update();
+				} else if (!this.accountDetails && this.common.isExistUserAccessMenuByLabel(this.parentId, 'Accounts')) {
+					this.account.submit();
+				}
 				this.common.showSuccessErrorMessage(result1.data, 'success');
 				this.editOnly = false;
 				this.getAdditionalDetails(this.context.studentdetails.studentdetailsform.value.au_login_id);
