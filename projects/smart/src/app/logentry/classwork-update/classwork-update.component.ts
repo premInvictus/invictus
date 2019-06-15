@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormArray, FormBuilder, Validators} from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
+import { MatDialog } from '@angular/material/dialog';
+import { ReviewClassworkComponent } from './review-classwork/review-classwork.component';
+import {AssignmentAttachmentDialogComponent } from '../../smart-shared/assignment-attachment-dialog/assignment-attachment-dialog.component';
 
 @Component({
 	selector: 'app-classwork-update',
@@ -26,6 +29,7 @@ export class ClassworkUpdateComponent implements OnInit {
 		private sisService: SisService,
 		private smartService: SmartService,
 		private commonAPIService: CommonAPIService,
+		private dialog: MatDialog
 	) { }
 
 	ngOnInit() {
@@ -105,7 +109,7 @@ export class ClassworkUpdateComponent implements OnInit {
 	}
 	getSubjectByTeacherId() {
 		this.subjectArray = [];
-		this.smartService.getSubjectByTeacherId({teacher_id: this.teacherId}).subscribe((result: any) => {
+		this.smartService.getSubjectByTeacherId({ teacher_id: this.teacherId }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
 			} else {
@@ -119,20 +123,22 @@ export class ClassworkUpdateComponent implements OnInit {
 		const eachPeriodFG = this.Periods.controls[i];
 		console.log(eachPeriodFG);
 		this.classArray[i] = [];
-		this.smartService.getClassByTeacherIdSubjectId({teacher_id: this.teacherId, sub_id: eachPeriodFG.value.cw_sub_id}).subscribe(
+		this.smartService.getClassByTeacherIdSubjectId({ teacher_id: this.teacherId, sub_id: eachPeriodFG.value.cw_sub_id }).subscribe(
 			(result: any) => {
-			if (result && result.status === 'ok') {
-				this.classArray[i] = result.data;
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-			}
-		});
+				if (result && result.status === 'ok') {
+					this.classArray[i] = result.data;
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
 	}
 	getSectionByTeacherIdSubjectIdClassId(i) {
 		this.sectiontArray[i] = [];
 		const eachPeriodFG = this.Periods.controls[i];
-		this.smartService.getSectionByTeacherIdSubjectIdClassId({teacher_id: this.teacherId, sub_id: eachPeriodFG.value.cw_sub_id,
-		class_id: eachPeriodFG.value.cw_class_id}).subscribe((result: any) => {
+		this.smartService.getSectionByTeacherIdSubjectIdClassId({
+			teacher_id: this.teacherId, sub_id: eachPeriodFG.value.cw_sub_id,
+			class_id: eachPeriodFG.value.cw_class_id
+		}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.sectiontArray[i] = result.data;
 			} else {
@@ -175,23 +181,50 @@ export class ClassworkUpdateComponent implements OnInit {
 	cancelForm() {
 		console.log(this.classworkForm);
 		console.log(this.classworkForm.value);
+	}
+	classworkInsert() {
+
+	}
+	openReviewClasswork() {
 		if (this.classworkForm.valid) {
-			this.smartService.classworkInsert(this.classworkForm.value).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+			const dialogRef = this.dialog.open(ReviewClassworkComponent, {
+				width: '1000px',
+				height: '50%',
+				data: this.reviewClasswork
+			});
+			dialogRef.afterClosed().subscribe(dresult => {
+				console.log('The dialog was closed');
+				console.log(dresult);
+				if (dresult && dresult.data) {
+					console.log('submitting form');
+					if (this.classworkForm.valid) {
+						this.smartService.classworkInsert(this.classworkForm.value).subscribe((result: any) => {
+							if (result && result.status === 'ok') {
+								this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+								this.resetClasswork();
+							}
+						});
+					}
 				}
 			});
 		}
+
 	}
-	classworkInsert() {
-		
+	resetClasswork() {
+		this.classworkForm.reset();
+		this.reviewClasswork = [];
+	}
+
+	attachmentDialog() {
+		const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
+			width: '1000px',
+			height: '50%',
+			data: {}
+		});
+		dialogRef.afterClosed().subscribe(dresult => {
+			console.log('clossing dialog');
+			console.log(dresult);
+		});
 	}
 
 }
-
-@Component({
-	selector: 'review-classwork',
-	templateUrl: 'review-classwork.html',
-})
-
-export class ReviewClasswork { }
