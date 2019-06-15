@@ -38,13 +38,13 @@ export class SearchViaNameComponent implements OnInit {
 	}
 	getProcessType(type) {
 		if (Number(type) === 1) {
-			return 'Enquiry';
+			return 'Enq';
 		} else if (Number(type) === 2) {
-			return 'Registration';
+			return 'Reg';
 		} else if (Number(type) === 3) {
-			return 'Provisional';
+			return 'Prov Adm';
 		} else if (Number(type) === 4) {
-			return 'Admission';
+			return 'Adm';
 		} else {
 			return 'Alumini';
 		}
