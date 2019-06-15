@@ -28,6 +28,7 @@ import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/inv
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditRequestModalComponent } from './edit-request-modal/edit-request-modal.component';
 import { LayoutModule } from '@angular/cdk/layout';
+declare var CKEDITOR: any;
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -139,4 +140,31 @@ export const MY_FORMATS = {
 		{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
 	]
 })
-export class SmartSharedModule { }
+export class SmartSharedModule { 
+	constructor() {
+		const script: any = document.createElement('script');
+		if (!(CKEDITOR.type === '10')) {
+			CKEDITOR.type = '10';
+			script.type = 'text/javascript';
+			script[('innerHTML')] = CKEDITOR.plugins.addExternal('html5audio', '/assets/js/html5audio/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('html5video', '/assets/js/html5video/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('pramukhime', '/assets/js/pramukhime/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('pastefromword', '/assets/js/pastefromword/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('clipboard', '/assets/js/clipboard/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('uploadfile', '/assets/js/uploadfile/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('uploadimage', '/assets/js/uploadimage/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('uploadwidget', '/assets/js/uploadwidget/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('filetools', '/assets/js/filetools/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('notificationaggregator', '/assets/js/notificationaggregator/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('notification', '/assets/js/notification/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('simpleImageUpload', '/assets/js/simpleImageUpload/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('simpleVideoUpload', '/assets/js/simpleVideoUpload/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('simpleAudioUpload', '/assets/js/simpleAudioUpload/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('keystrokes', '/assets/js/keystrokes/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('eqneditor', '/assets/js/eqneditor/', 'plugin.js') +
+				CKEDITOR.plugins.addExternal('videoembed', '/assets/js/videoembed/', 'plugin.js');
+				CKEDITOR.plugins.addExternal('strinsert', '/assets/js/strinsert/', 'plugin.js');
+			document.getElementsByTagName('head')[0].appendChild(script);
+		}
+	}
+}

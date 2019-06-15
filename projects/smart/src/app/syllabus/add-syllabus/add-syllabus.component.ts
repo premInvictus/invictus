@@ -26,6 +26,7 @@ export class AddSyllabusComponent implements OnInit {
 			syl_result: any;
 			subtopicArray: any;
 			sub_id: any;
+			ckeConfig: any = {};
 			public subjectArray: any[];
 			syllabus_flag = true;
 			details_flag = false;
@@ -44,6 +45,22 @@ export class AddSyllabusComponent implements OnInit {
 				this.getClass();
 				this.getTermList();
 				this.ctrList();
+				this.ckeConfig = {
+					allowedContent: true,
+					pasteFromWordRemoveFontStyles: false,
+					contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
+					disallowedContent: 'm:omathpara',
+					height: '150',
+					width: '100%',
+					// tslint:disable-next-line:max-line-length
+					extraPlugins: '',
+					scayt_multiLanguageMod: true,
+					toolbar: [
+						// tslint:disable-next-line:max-line-length
+						['Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates']
+					],
+					removeDialogTabs: 'image:advanced;image:Link'
+				};
 			}
 
 			buildForm() {
