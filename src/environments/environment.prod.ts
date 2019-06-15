@@ -3,6 +3,7 @@ export const environment = {
 	apiAxiomUrl: 'https://apiaxiom.invictusdigisoft.com',
 	apiSisUrl: 'https://apisis.invictusdigisoft.com',
 	apiFeeUrl: 'https://apifee.invictusdigisoft.com',
+	apiSmartUrl: 'http://localhost:2145/smartbackend',
 	logoutUrl: 'https://login.invictusdigisoft.com',
 	socketUrl: 'https://sockets.invictusdigisoft.com',
 	testInitiateCode : 'T100',
