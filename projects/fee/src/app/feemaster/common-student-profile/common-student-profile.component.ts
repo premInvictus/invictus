@@ -440,6 +440,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.getStudentInformation(admno);
 	}
 	nextId(admno) {
+		console.log(admno);
 		this.nextFlag = false;
 		this.prevFlag = false;
 		this.firstFlag = false;
@@ -494,7 +495,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	openSearchDialog() {
 		const diaogRef = this.dialog.open(SearchViaStudentComponent, {
 			width: '20%',
-			height: '20%',
+			height: '30%',
 			position: {
 				top: '10%'
 			},
@@ -504,7 +505,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 			if (result) {
 				this.processType = result.process_type ;
 				this.processtypeService.setProcesstype(result.process_type);
-				this.getStudentDetailsByAdmno(result.adm_no);
+				this.nextId(result.adm_no);
 			}
 		});
 	}
