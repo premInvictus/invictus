@@ -173,17 +173,16 @@
           </div>
           <div class="row">
             <div class="col-12 remove-col-padding">
-                <ckeditor [config]="ckeConfig" formControlName="sd_desc"></ckeditor>
-              <!-- <mat-form-field class="form-field"  appearance="outline">
-                <mat-label>Description</mat-label>
-                
-                 <textarea rows="5" matInput  formControlName="sd_desc" placeholder="Write Description Here"></textarea> 
-              </mat-form-field> -->
+                <ckeditor [config]="ckeConfig" formControlName="sd_desc"></ckeditor>              
             </div>
           </div>
           <div class="row">
             <div class="col-12 remove-col-padding text-center">
-              <button mat-raised-button class="btn-add" (click)="addDetailsList()">Add</button>
+              <button *ngIf="!syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
+               (click)="addDetailsList()">Add
+               to list</button>
+            <button *ngIf="syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
+               (click)="updateSyllabussList()">Update</button>
               <button mat-raised-button class="btn-reset margin-left-10">Reset</button>
             </div>
           </div>
@@ -216,30 +215,40 @@
                         <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
                            <ng-container>
                               <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
-                                 <td *ngIf="j == 0" class="custom-td" [attr.rowspan]="item.details.length">{{i+1}}</td>
-                                 <td class="custom-td" *ngIf="j == 0"
-                                    [attr.rowspan]="item.details.length">{{getTopicName(item.sd_topic_id)}}</td>
-                                 <td class="custom-td">
-                                 ss
+                                 <!-- <td *ngIf="j == 0" class="custom-td" [attr.rowspan]="item.details.length">{{i+1}}</td> -->
+                                 <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">{{getTopicName(item.sd_topic_id)}}</td>                                
+                                 <td class="custom-td" *ngIf="det.sd_ctr_id == 1" >
+                                   {{getSubTopicName(det.sd_st_id)}}
                                  </td>
-                                 <td class="custom-td" *ngIf="checkIfFieldExist('eaw_authority')">
-                                    sss
+                                 <td class="custom-td" *ngIf="det.sd_ctr_id == 2" >
+                                    Test
+                                  </td>
+                                  <td class="custom-td" *ngIf="det.sd_ctr_id == 3" >
+                                      Revision
+                                    </td>
+                                 <td class="custom-td" >
+                                    <div [innerHTML]="det.sd_desc"></div>
                                  </td>
-                                 <td class="custom-td" *ngIf="checkIfFieldExist('eaw_level_of_interest')">
-                                    ssss
+                                 <td class="custom-td" >
+                                    {{det.sd_period_teacher}}
                                  </td>
-                                 <td class="custom-td" *ngIf="checkIfFieldExist('eaw_event_level')">
-                                   sssssss
+                                 <td class="custom-td" >
+                                    {{det.sd_period_test}}
+      
                                  </td>
-                                 <td class="custom-td" *ngIf="checkIfFieldExist('eaw_teacher_remark')">
-                                    sssssss
+                                 <td class="custom-td" >
+                                    {{det.sd_period_revision}}
+      
+                                 </td>
+                                 <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length" >
+                                    {{item.total}}
       
                                  </td>
                                  <td *ngIf="!viewOnly" class="custom-td">
-                                    <i class="far fa-edit modify-icon" (click)="editAwardsList(i , j)" style="cursor:pointer"
+                                    <i class="far fa-edit modify-icon" (click)="editSyllabusList(i , j)" style="cursor:pointer"
                                        title="Edit"></i>&nbsp;
                                     <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                                       (click)="deleteAwardList(i , j)" style="cursor:pointer" title="Delete"></i>
+                                       (click)="deleteSyllabusList(i , j)" style="cursor:pointer" title="Delete"></i>
                                  </td>
                               </tr>
                            </ng-container>
