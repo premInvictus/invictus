@@ -493,10 +493,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	}
 	openSearchDialog() {
 		const diaogRef = this.dialog.open(SearchViaStudentComponent, {
-			width: '80vh',
-			height: '90vh',
+			width: '20%',
+			height: '20%',
 			position: {
-				top: '20px'
+				top: '10%'
 			},
 			data: {}
 		});

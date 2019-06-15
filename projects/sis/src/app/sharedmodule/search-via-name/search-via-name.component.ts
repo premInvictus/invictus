@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { SisService } from '../../_services/sis.service';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 @Component({
 	selector: 'app-search-via-name',
 	templateUrl: './search-via-name.component.html',
@@ -8,9 +8,13 @@ import { MatDialogRef } from '@angular/material';
 })
 export class SearchViaNameComponent implements OnInit {
 	searchStudent = false;
+	shouldSizeUpdate: boolean;
 	studentArrayByName: any[] = [];
 	constructor(private sisService: SisService,
-		public dialogRef: MatDialogRef<SearchViaNameComponent>) { }
+		public dialogRef: MatDialogRef<SearchViaNameComponent>,
+		@Inject(MAT_DIALOG_DATA) data: any) {
+			this.shouldSizeUpdate = data.shouldSizeUpdate;
+		 }
 
 	ngOnInit() {
 	}
@@ -21,6 +25,13 @@ export class SearchViaNameComponent implements OnInit {
 					this.studentArrayByName = [];
 					this.studentArrayByName = result.data;
 					this.searchStudent = true;
+					this.updateSizeForData();
+					document.getElementById('search').blur();
+				}  else {
+					this.searchStudent = true;
+					this.studentArrayByName = [];
+					this.updateSizeForNoData();
+					document.getElementById('search').blur();
 				}
 			});
 		}
@@ -44,5 +55,12 @@ export class SearchViaNameComponent implements OnInit {
 	closeDialog() {
 		this.dialogRef.close();
 	}
+	updateSizeForData() {
+		this.dialogRef.updateSize('60%', '60vh');
+	}
+	updateSizeForNoData() {
+		this.dialogRef.updateSize('60%', '40vh');
+	}
+
 
 }
