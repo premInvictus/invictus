@@ -28,6 +28,7 @@ import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/inv
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditRequestModalComponent } from './edit-request-modal/edit-request-modal.component';
 import { LayoutModule } from '@angular/cdk/layout';
+import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dialog/assignment-attachment-dialog.component';
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -90,12 +91,14 @@ export const MY_FORMATS = {
 		ImageViewerComponent,
 		NumberToWordPipe,
 		ZerodashPipe,
+		AssignmentAttachmentDialogComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
 		ImagecropComponent,
 		ImageViewerComponent,
 		EditRequestModalComponent,
+		AssignmentAttachmentDialogComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -131,7 +134,8 @@ export const MY_FORMATS = {
 		EditRequestModalComponent,
 		NumberToWordPipe,
 		ZerodashPipe,
-		CommonDynamicChartComponent
+		CommonDynamicChartComponent,
+		AssignmentAttachmentDialogComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
