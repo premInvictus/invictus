@@ -27,3 +27,23 @@ ul {
 .cdk-column-studentname{
     width: 23%;
 }
+.my-filter-btn.mat-raised-button {
+    color: white !important;
+    background-color: #757b85 !important;
+    text-transform: uppercase;
+    margin-left: 25px !important;
+    width: 126px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+.my-filter-btn.mat-raised-button:hover {
+  color:#757b85 !important;
+  background-color: white !important ;
+  margin-left: 25px !important;
+  border: 2px solid  #757b85;
+  text-transform: uppercase;
+  width: 126px;
+  height: 32px;
+  font-size: 13px;
+}
