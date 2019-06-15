@@ -1,3 +1,182 @@
-<p>
-  time-table works!
-</p>
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-4">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">TimeTable</span>
+          </div>
+
+        </div>
+        <div class="col-8 text-right">
+          <div class="top-card-title">
+              <button mat-raised-button class="btn-success-green margin-right-20"><i class="fas fa-plus"></i>  Add New</button>
+            <span class="font-size-24 font-medium">Class Wise</span><span
+              class="margin-left-10 ver-line-divider"></span><span class="font-size-24 font-medium">Teacher Wise</span>
+          </div>
+        </div>
+      </div>
+
+    </mat-card>
+  </div>
+</div>
+
+<div class="row margin-top-15">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-4">
+          <span class="font-size-20 font-bold">Class Wise Time Table</span>
+        </div>
+        <div class="col-8 text-right">
+          <mat-form-field class="form-field-150" appearance="outline">
+            <mat-label>Class</mat-label>
+            <mat-select>
+              <mat-option></mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+            <mat-label>Section</mat-label>
+            <mat-select>
+              <mat-option></mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+            <mat-label>Subject</mat-label>
+            <mat-select>
+              <mat-option></mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row margin-top-10">
+        <div class="col-12">
+          <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Periods</th>
+                <th class="custom-th">Monday</th>
+                <th class="custom-th">Tuesday</th>
+                <th class="custom-th">Wednesday</th>
+                <th class="custom-th">Thursday</th>
+                <th class="custom-th">Friday</th>
+                <th class="custom-th">Saturday</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="custom-tr">
+                <td class="custom-td"><i class="margin-right-10"></i> 1st</td>
+                <td class="custom-td"><i class="fas fa-circle color-green margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Library</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Arts & Craft</td>
+                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Music</td>
+                <td class="custom-td"><i class="fas fa-circle color-grey margin-right-10"></i> Library</td>
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td"><i class="margin-right-10"></i> 2nd</td>
+                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-purple  margin-right-10"></i> Library</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Arts & Craft</td>
+                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Music</td>
+                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Library</td>
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td"><i class=" margin-right-10"></i> 3rd</td>
+                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle  color-purple  margin-right-10"></i> Library</td>
+                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Arts & Craft</td>
+                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-grey margin-right-10"></i> Music</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Library</td>
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td"><i class="margin-right-10"></i> 4th</td>
+                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Library</td>
+                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Arts & Craft</td>
+                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-purple  margin-right-10"></i> Music</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Library</td>
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td"><i class="margin-right-10"></i> 5th</td>
+                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-yellow   margin-right-10"></i> Library</td>
+                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Arts & Craft</td>
+                <td class="custom-td"><i class="fas fa-circle color-grey margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Music</td>
+                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Library</td>
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td"><i class="margin-right-10"></i> 6th</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-grey margin-right-10"></i> Library</td>
+                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Arts & Craft</td>
+                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Music</td>
+                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Library</td>
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td"><i class="margin-right-10"></i> 7th</td>
+                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Library</td>
+                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Arts & Craft</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Music</td>
+                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Library</td>
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td"><i class=" margin-right-10"></i> 8th</td>
+                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Library</td>
+                <td class="custom-td"><i class="fas fa-circle margin-right-10"></i> Arts & Craft</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Math</td>
+                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Music</td>
+                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Library</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row margin-top-15">
+          <div class="col-4">
+            <span class="font-size-20 font-bold">Subject Wise Breakup</span>
+          </div>
+        </div>
+        <div class="row margin-top-10">
+            <div class="col-12">
+              <table class="table table-borderd table-stripped custom-table">
+                <thead class="table-skill__head text-center">
+                  <tr class="custom-tr">
+                    <th class="custom-th"></th>
+                    <th class="custom-th background-color-red">English</th>
+                    <th class="custom-th background-color-yellow">Science</th>
+                    <th class="custom-th background-color-green">Maths</th>
+                    <th class="custom-th background-color-grey">Computer</th>
+                    <th class="custom-th background-color-blue">Art & Craft</th>
+                    <th class="custom-th background-color-purple">Social Studies</th>
+                    <th class="custom-th background-color-tealgreen">Hindi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="custom-tr">
+                    <td class="custom-td">No. of Periods</td>
+                    <td class="custom-td">08</td>
+                    <td class="custom-td">07</td>
+                    <td class="custom-td">08</td>
+                    <td class="custom-td">04</td>
+                    <td class="custom-td">02</td>
+                    <td class="custom-td">06</td>
+                    <td class="custom-td">06</td>
+                  </tr>
+                </tbody>
+                </table>
+              </div>
+            </div>
+    </mat-card>
+  </div>
+</div>

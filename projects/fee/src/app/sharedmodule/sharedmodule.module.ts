@@ -36,6 +36,7 @@ import { NumberToWordPipe } from '../_pipes/number-to-word.pipe';
 import { ZerodashPipe } from '../_pipes/zerodash.pipe';
 import { ReceiptDetailsModalComponent } from './receipt-details-modal/receipt-details-modal.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
+import { SearchViaStudentComponent } from './search-via-student/search-via-student.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -102,7 +103,8 @@ export const MY_FORMATS = {
 		InvoiceDetailsModalComponent,
 		NumberToWordPipe,
 		ZerodashPipe,
-		ReceiptDetailsModalComponent
+		ReceiptDetailsModalComponent,
+		SearchViaStudentComponent
 	],
 	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
@@ -150,7 +152,8 @@ export const MY_FORMATS = {
 		ImageViewerComponent,
 		EditRequestModalComponent,
 		InvoiceDetailsModalComponent,
-		ReceiptDetailsModalComponent
+		ReceiptDetailsModalComponent,
+		SearchViaStudentComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

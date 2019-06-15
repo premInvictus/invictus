@@ -77,7 +77,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	}
 
 	ngOnInit() {
-		this.dobDate.setFullYear(this.dobDate.getFullYear() - 3);
+		this.dobDate.setFullYear(this.dobDate.getFullYear() - 1);
 		this.buildForm();
 		this.getNationality();
 		this.getGender();

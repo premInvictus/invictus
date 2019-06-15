@@ -345,4 +345,8 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getSchoolSettings');
 	}
+	getStudentDataPerName(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentDataPerName', value);
+	}
 }

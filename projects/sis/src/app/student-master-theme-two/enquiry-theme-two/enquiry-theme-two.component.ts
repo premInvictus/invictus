@@ -1,17 +1,18 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { StudentFormConfigTwoService } from '../../sharedmodule/dynamic-content-theme-two/student-form-config-two.service';
 import { FormEnabledTwoService } from '../../sharedmodule/dynamic-content-theme-two/formEnabledTwo.service';
 // import { StudentDetailsThemeTwoComponent } from '../student-details-theme-two/student-details-theme-two.component';
 import { DynamicContentThemeTwoComponent } from '../../sharedmodule/dynamic-content-theme-two/dynamic-content-theme-two.component';
 import { ActivatedRoute } from '@angular/router';
 import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
+import { StudentDetailsThemeTwoComponent } from '../student-details-theme-two/student-details-theme-two.component';
 @Component({
 	selector: 'app-enquiry-theme-two',
 	templateUrl: './enquiry-theme-two.component.html',
 	styleUrls: ['./enquiry-theme-two.component.scss']
 })
-export class EnquiryThemeTwoComponent implements OnInit, OnDestroy {
-	@ViewChild('studentdetails') studentdetails;
+export class EnquiryThemeTwoComponent implements OnInit, AfterViewInit , OnDestroy {
+	@ViewChild(StudentDetailsThemeTwoComponent) stu2: StudentDetailsThemeTwoComponent;
 	public formname = 'enquiry';
 	public config: any = { login_id: '', form_action: '' };
 	tabSelectedIndex = 0;
@@ -19,6 +20,7 @@ export class EnquiryThemeTwoComponent implements OnInit, OnDestroy {
 	settingsArray: any[] = [];
 	reRenderFormSubscription: any;
 	reRenderTabSubscription: any;
+	studentRecord: any = {};
 	constructor(
 		private studentFormConfigTwoService: StudentFormConfigTwoService,
 		public formEnabledTwoService: FormEnabledTwoService,
@@ -30,6 +32,7 @@ export class EnquiryThemeTwoComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.getTabBifurcation();
+		this.studentRecord = this.commonAPIService.getStudentData();
 		this.processtypeService.setProcesstype('1');
 		this.formEnabledTwoService.resetFromEnable();
 		this.formsTab = this.studentFormConfigTwoService.getForm(this.formname);
@@ -75,6 +78,8 @@ export class EnquiryThemeTwoComponent implements OnInit, OnDestroy {
 
 		this.getConfigureSetting();
 	}
+	ngAfterViewInit() {
+	}
 	getConfigureSetting() {
 		this.sisService.getConfigureSetting({
 			cos_process_type: this.processtypeService.getProcesstype()
@@ -85,17 +90,6 @@ export class EnquiryThemeTwoComponent implements OnInit, OnDestroy {
 				if (this.settingsArray) {
 					this.getLastRecord();
 				}
-
-				/* for (const item of this.savedSettingsArray) {
-         if (item.cos_tb_id === '2') {
-         this.settingsArray.push({
-           cos_tb_id: item.cos_tb_id,
-           cos_ff_id: item.cos_ff_id,
-           cos_status: item.cos_status,
-           ff_field_name: item.ff_field_name
-         });
-        }
-       } */
 			}
 		});
 	}
@@ -122,17 +116,20 @@ export class EnquiryThemeTwoComponent implements OnInit, OnDestroy {
 		this.tabSelectedIndex = value;
 		this.commonAPIService.tabChange.next({ 'currrentTab': this.tabSelectedIndex });
 	}
-	// getSelectedIndex(selectedIndex) {
-	//   return this.config.form_action = 'view' ? 0 : this.formEnabledTwoService.getLastValue();
-	// }
 
 	getLastRecord() {
-		this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-			this.commonAPIService.studentData.next(result.data[0]);
-			// this.commonAPIService.reRenderForm.next({ viewMode: true, addMode: false, editMode: false, deleteMode: false });
-			for (let i = 0; i < this.formname.length; i++) {
-				this.formEnabledTwoService.setFormEnabled(i);
-			}
-		});
+		if (this.studentRecord.id && this.studentRecord.process_type === '1') {
+				this.commonAPIService.studentSearchByName.next(this.studentRecord.id);
+				for (let i = 0; i < this.formname.length; i++) {
+					this.formEnabledTwoService.setFormEnabled(i);
+				}
+		} else {
+			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				this.commonAPIService.studentData.next(result.data[0]);
+				for (let i = 0; i < this.formname.length; i++) {
+					this.formEnabledTwoService.setFormEnabled(i);
+				}
+			});
+		}
 	}
 }

@@ -45,7 +45,11 @@
           <div class="col-12  col-sm-12 col-md-8 col-lg-2 col-xl-2 remove-col-padding">
             <div class="row remove-margin">
               <div class="col-12 text-center margin-top-20">
-                <span class="font-size-16 font-medium">{{(belongToForm | capitalize) + ' No.'}}</span>
+                <span class="font-size-16 font-medium">{{(belongToForm | capitalize) + ' No.'}}</span>&nbsp;
+                <span class="font-size-16">
+                  <i style="cursor: pointer;" class="fas fa-search" matTooltip="Search Students"
+                  (click)="openSearchDialog()"></i>
+                </span>
               </div>
             </div>
             <div class="row remove-top-margin">

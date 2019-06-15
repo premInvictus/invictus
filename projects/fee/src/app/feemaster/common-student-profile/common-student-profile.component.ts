@@ -25,8 +25,9 @@ import {
 	NavigationEnd,
 	RouterStateSnapshot
 } from '@angular/router';
-import { ErrorStateMatcher } from '@angular/material';
+import { ErrorStateMatcher, MatDialog } from '@angular/material';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
+import { SearchViaStudentComponent } from '../../sharedmodule/search-via-student/search-via-student.component';
 
 @Component({
 	selector: 'app-common-student-profile',
@@ -111,7 +112,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
 		public processtypeService: ProcesstypeFeeService,
-		public studentRouteMoveStoreService: StudentRouteMoveStoreService
+		public studentRouteMoveStoreService: StudentRouteMoveStoreService,
+		public dialog: MatDialog
 	) { }
 
 	ngOnInit() {
@@ -478,15 +480,32 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.processtypeService.setProcesstype(this.processType);
 		this.processTypeEmit.emit(this.processType);
 	}
-	parent_type_fun(type) {
-		if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'F') {
+	parent_type_fun(type: any) {
+		if (type.parentinfo && type.parentinfo.length > 0  && type.parentinfo[0].epd_parent_type === 'F') {
 			return 'Father\'s Name';
-		} else if (type.parentinfo[0] && type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'M') {
+		} else if (type.parentinfo && type.parentinfo.length > 0  && type.parentinfo[0].epd_parent_type === 'M') {
 			return 'Mother\'s Name';
-		} else if (type.parentinfo[0] &&  type.parentinfo[0].epd_parent_type && type.parentinfo[0].epd_parent_type === 'G') {
+		} else if (type.parentinfo && type.parentinfo.length > 0  && type.parentinfo[0].epd_parent_type === 'G') {
 			return 'Guardian\'s Name';
 		} else {
 			return 'Active Parent Name';
 		}
+	}
+	openSearchDialog() {
+		const diaogRef = this.dialog.open(SearchViaStudentComponent, {
+			width: '80vh',
+			height: '90vh',
+			position: {
+				top: '20px'
+			},
+			data: {}
+		});
+		diaogRef.afterClosed().subscribe((result: any) => {
+			if (result) {
+				this.processType = result.process_type ;
+				this.processtypeService.setProcesstype(result.process_type);
+				this.getStudentDetailsByAdmno(result.adm_no);
+			}
+		});
 	}
 }
