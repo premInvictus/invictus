@@ -180,7 +180,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	}
 	insertInvoice($event) {
 		this.feeTransactionForm.value.inv_invoice_no = $event.srcElement.value;
-		if ($event.code !== 'NumpadEnter') {
+		if ($event.code !== 'NumpadEnter' || $event.code !== 'Enter') {
 			const index = this.invoiceArray.indexOf($event.srcElement.value);
 			if (index === -1) {
 				this.invoiceArray.push(this.feeTransactionForm.value.inv_invoice_no);
