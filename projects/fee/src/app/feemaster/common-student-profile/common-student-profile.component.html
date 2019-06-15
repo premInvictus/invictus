@@ -10,10 +10,10 @@
                 <mat-option *ngFor="let item of processTypeArray" [value]="item.id">{{item.name}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <span class="font-size-16">
+            <!-- <span class="font-size-16">
                 <i style="cursor: pointer;" class="fas fa-search" matTooltip="Search Students"
                 (click)="openSearchDialog()"></i>
-              </span>
+              </span> -->
           </div>
         </div>
         <div class="row margin-top-ve25">
@@ -65,7 +65,8 @@
         <div class="row margin-top-30">
           <div class="col-12 text-left">
             <span
-              class="font-size-16 font-bold">{{studentdetails.au_full_name ? (studentdetails.au_full_name | titlecase) : '-'}}</span><br>
+              class="font-size-16 font-bold">{{studentdetails.au_full_name ? (studentdetails.au_full_name | titlecase) : '-'}}</span><i style="cursor: pointer;" class="fas fa-search margin-left-10" matTooltip="Search Students"
+              (click)="openSearchDialog()"></i><br>
             <span class="font-size-14">Class : {{class_sec}}</span>
           </div>
         </div>
