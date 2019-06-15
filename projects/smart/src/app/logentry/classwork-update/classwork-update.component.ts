@@ -184,8 +184,8 @@ export class ClassworkUpdateComponent implements OnInit {
 		}
 	}
 	classworkInsert() {
-		
 	}
+	openReviewClasswork() {}
 
 }
 
@@ -194,4 +194,4 @@ export class ClassworkUpdateComponent implements OnInit {
 	templateUrl: 'review-classwork.html',
 })
 
-export class ReviewClasswork { }
+export class ReviewClassworkComponent { }
