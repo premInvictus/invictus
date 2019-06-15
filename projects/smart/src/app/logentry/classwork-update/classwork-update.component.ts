@@ -215,15 +215,34 @@ export class ClassworkUpdateComponent implements OnInit {
 		this.reviewClasswork = [];
 	}
 
-	attachmentDialog() {
+	attachmentDialog(currentAttachmentIndex) {
+		const eachPeriodFG = this.Periods.controls[currentAttachmentIndex];
 		const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
 			width: '1000px',
 			height: '50%',
-			data: {}
+			data: {
+				page: 'classwork',
+				title: 'Assignment',
+				edit: false,
+				currentAttachmentIndex: currentAttachmentIndex,
+				attachments: eachPeriodFG.value.cw_attachment ? eachPeriodFG.value.cw_attachment : [],
+				class_id: eachPeriodFG.value.cw_class_id,
+				sec_id: eachPeriodFG.value.cw_sec_id,
+				sub_id: eachPeriodFG.value.cw_sub_id,
+				topic_id: eachPeriodFG.value.cw_topic_id,
+				st_id: eachPeriodFG.value.cw_st_id,
+				assignment_desc: eachPeriodFG.value.cw_assignment_desc
+			}
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
 			console.log('clossing dialog');
 			console.log(dresult);
+			if (dresult && dresult.attachments) {
+				eachPeriodFG.patchValue({
+					cw_attachment: dresult.attachments
+				});
+			}
+			console.log('eachPeriodFG', eachPeriodFG);
 		});
 	}
 

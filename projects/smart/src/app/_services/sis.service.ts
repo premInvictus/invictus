@@ -512,7 +512,7 @@ export class SisService {
 	}
 	uploadDocuments(value) {
 		this.service.startLoading();
-		return this.http.post('/documents/uploadDocuments', value);
+		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
 	}
 	getDocumentRequired() {
 		this.service.startLoading();
