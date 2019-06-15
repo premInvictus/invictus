@@ -20,7 +20,9 @@ export class CommonAPIService {
 		private _cookieService: CookieService) {
 	}
 	UserAccessMenu: any[] = [];
+	studentDataStore: any = {};
 	showLoading = new Subject();
+	studentSearchByName = new Subject();
 	studentData = new Subject();
 	reRenderForm = new Subject();
 	renderTab = new Subject();
@@ -198,6 +200,12 @@ export class CommonAPIService {
 			}
 			return false;
 		}
+	}
+	setStudentData(id , process_type) {
+		this.studentDataStore = {id : id , process_type: process_type};
+	}
+	getStudentData() {
+		return this.studentDataStore;
 	}
 
 }

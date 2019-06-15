@@ -21,6 +21,7 @@ export class ProvisionalThemeTwoComponent implements OnInit, OnDestroy {
 	settingsArray: any[] = [];
 	reRenderFormSubscription: any;
 	reRenderTabSubscription: any;
+	studentRecord: any = {};
 	constructor(
 		private studentFormConfigTwoService: StudentFormConfigTwoService,
 		public formEnabledTwoService: FormEnabledTwoService,
@@ -32,6 +33,7 @@ export class ProvisionalThemeTwoComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.getTabBifurcation();
+		this.studentRecord = this.commonAPIService.getStudentData();
 		this.processtypeService.setProcesstype('3');
 		this.formEnabledTwoService.resetFromEnable();
 		this.formsTab = this.studentFormConfigTwoService.getForm(this.formname);
@@ -82,19 +84,10 @@ export class ProvisionalThemeTwoComponent implements OnInit, OnDestroy {
 			cos_process_type: this.processtypeService.getProcesstype()
 		}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				// this.savedSettingsArray = result.data;
 				this.settingsArray = result.data;
-				this.getLastRecord();
-				/* for (const item of this.savedSettingsArray) {
-         if (item.cos_tb_id === '2') {
-         this.settingsArray.push({
-           cos_tb_id: item.cos_tb_id,
-           cos_ff_id: item.cos_ff_id,
-           cos_status: item.cos_status,
-           ff_field_name: item.ff_field_name
-         });
-        }
-       } */
+				if (this.settingsArray) {
+					this.getLastRecord();
+				}
 			}
 		});
 	}
@@ -121,17 +114,20 @@ export class ProvisionalThemeTwoComponent implements OnInit, OnDestroy {
 		this.tabSelectedIndex = value;
 		this.commonAPIService.tabChange.next({ 'currrentTab': this.tabSelectedIndex });
 	}
-	// getSelectedIndex(selectedIndex) {
-	//   return this.config.form_action = 'view' ? 0 : this.formEnabledTwoService.getLastValue();
-	// }
 
 	getLastRecord() {
-		this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-			this.commonAPIService.studentData.next(result.data[0]);
-			// this.commonAPIService.reRenderForm.next({ viewMode: true, addMode: false, editMode: false, deleteMode: false });
+		if (this.studentRecord.id && this.studentRecord.process_type === '3') {
+			this.commonAPIService.studentSearchByName.next(this.studentRecord.id);
 			for (let i = 0; i < this.formname.length; i++) {
 				this.formEnabledTwoService.setFormEnabled(i);
 			}
-		});
+		} else {
+			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				this.commonAPIService.studentData.next(result.data[0]);
+				for (let i = 0; i < this.formname.length; i++) {
+					this.formEnabledTwoService.setFormEnabled(i);
+				}
+			});
+		}
 	}
 }

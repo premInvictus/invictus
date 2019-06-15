@@ -20,6 +20,7 @@ export class AdmissionThemeTwoComponent implements OnInit, OnDestroy {
 	settingsArray: any[] = [];
 	reRenderFormSubscription: any;
 	reRenderTabSubscription: any;
+	studentRecord: any = {};
 	constructor(
 		private studentFormConfigTwoService: StudentFormConfigTwoService,
 		public formEnabledTwoService: FormEnabledTwoService,
@@ -31,6 +32,7 @@ export class AdmissionThemeTwoComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.getTabBifurcation();
+		this.studentRecord = this.commonAPIService.getStudentData();
 		this.processtypeService.setProcesstype('4');
 		this.formEnabledTwoService.resetFromEnable();
 		this.formsTab = this.studentFormConfigTwoService.getForm(this.formname);
@@ -83,17 +85,9 @@ export class AdmissionThemeTwoComponent implements OnInit, OnDestroy {
 			if (result && result.status === 'ok') {
 				// this.savedSettingsArray = result.data;
 				this.settingsArray = result.data;
-				this.getLastRecord();
-				/* for (const item of this.savedSettingsArray) {
-         if (item.cos_tb_id === '2') {
-         this.settingsArray.push({
-           cos_tb_id: item.cos_tb_id,
-           cos_ff_id: item.cos_ff_id,
-           cos_status: item.cos_status,
-           ff_field_name: item.ff_field_name
-         });
-        }
-       } */
+				if (this.settingsArray) {
+					this.getLastRecord();
+				}
 			}
 		});
 	}
@@ -125,12 +119,18 @@ export class AdmissionThemeTwoComponent implements OnInit, OnDestroy {
 	// }
 
 	getLastRecord() {
-		this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-			this.commonAPIService.studentData.next(result.data[0]);
-			// this.commonAPIService.reRenderForm.next({ viewMode: true, addMode: false, editMode: false, deleteMode: false });
+		if (this.studentRecord.id && this.studentRecord.process_type === '4') {
+			this.commonAPIService.studentSearchByName.next(this.studentRecord.id);
 			for (let i = 0; i < this.formname.length; i++) {
 				this.formEnabledTwoService.setFormEnabled(i);
 			}
-		});
+		} else {
+			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				this.commonAPIService.studentData.next(result.data[0]);
+				for (let i = 0; i < this.formname.length; i++) {
+					this.formEnabledTwoService.setFormEnabled(i);
+				}
+			});
+		}
 	}
 }

@@ -32,7 +32,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	section_name: any;
 	class_sec: any;
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
-	gender :any;
+	gender: any;
 	constructor(
 		public dialogRef: MatDialogRef<InvoiceDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -70,7 +70,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	}
 	changeAdjAmt(invg_id, $event) {
 		const invg_id_idx = this.invoiceBifurcationArray.findIndex(item => item.invg_id === invg_id);
-		if (invg_id_idx !== -1 && $event.target.value > -1) {
+		if ($event.target.value) {
 			this.checkChangedFieldsArray.push({
 				rff_where_id: 'invg_id',
 				rff_where_value: invg_id,
@@ -102,7 +102,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		this.getInvoiceBifurcation(this.invoiceDetails.inv_id);
 	}
 	updateInvoice() {
-		const adj: any = { inv_id: '', adjustment: [], remark: '', login_id: this.invoiceDetails.login_id};
+		const adj: any = { inv_id: '', adjustment: [], remark: '', login_id: this.invoiceDetails.login_id };
 		adj.inv_id = this.invoiceDetails.inv_id;
 		this.invoiceBifurcationArray.forEach(item => {
 			adj.adjustment.push({ invg_id: item.invg_id, invg_adj_amount: item.invg_adj_amount });
@@ -186,17 +186,17 @@ export class InvoiceDetailsModalComponent implements OnInit {
 						this.invoiceDetails = result.data[0];
 						this.class_name = this.invoiceDetails.class_name;
 						this.section_name = this.invoiceDetails.sec_name;
-						if(this.section_name != ' '){
-							this.class_sec = this.class_name +' - '+ this.section_name;
-						}else{
+						if (this.section_name !== ' ') {
+							this.class_sec = this.class_name + ' - ' + this.section_name;
+						} else {
 							this.class_sec = this.class_name;
 						}
 						this.gender = this.invoiceDetails.au_gender;
-						if(this.gender === 'M'){
+						if (this.gender === 'M') {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
-						}else if(this.gender === 'F'){
+						} else if (this.gender === 'F') {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
-						}else{
+						} else {
 							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 						}
 						if (this.invoiceDetails.invoice_bifurcation.length > 0) {

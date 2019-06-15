@@ -4,7 +4,7 @@ import { CommonAPIService } from '../_services/commonAPI.service';
 import { environment } from '../../../../../src/environments/environment';
 import { of } from 'rxjs';
 @Injectable()
-export class SmartService {
+export class AxiomService {
 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 	// fetch subtopic
@@ -20,7 +20,8 @@ export class SmartService {
 		}
 		if (subject_id) {
 			param.sub_id = subject_id;
-		}
+        }
+        console.log(param);
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param);
 	}
