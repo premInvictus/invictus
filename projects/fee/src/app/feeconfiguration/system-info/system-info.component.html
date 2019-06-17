@@ -185,7 +185,7 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-6">
-                                      <mat-radio-group formControlName="spt_print_format">
+                                      <mat-radio-group formControlName="spt_print_format" (change)="enableHeaderFooter($event)">
                                         <mat-radio-button value="1">Pre-Printed</mat-radio-button>
                                         <mat-radio-button class="margin-left-5" value="2">Stationary</mat-radio-button>
                                       </mat-radio-group>
@@ -225,7 +225,7 @@
                                   </div>
                                 </div>
                               </div>
-                              <div class="row">
+                              <div *ngIf="headerFooterFlag" class="row">
                                 <div class="col-lg-6 col-mobile-view-add-ques">
                                   <div class="row">
                                     <div class="text-center">
