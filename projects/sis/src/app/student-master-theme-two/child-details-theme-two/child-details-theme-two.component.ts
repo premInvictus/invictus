@@ -2,9 +2,6 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Input, OnChang
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { FormEnabledTwoService } from '../../sharedmodule/dynamic-content-theme-two/formEnabledTwo.service';
 import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { DatePipe } from '@angular/common';
-import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 
 @Component({
 	selector: 'app-child-details-theme-two',

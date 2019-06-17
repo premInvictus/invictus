@@ -103,8 +103,7 @@
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Date of Birth</mat-label>
                               <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
-                                 placeholder="Date of Birth" formControlName="epd_parent_dob"
-                                 (dateChange)="addEvent('change', $event,i)" />
+                                 placeholder="Date of Birth" formControlName="epd_parent_dob"/>
                               <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker"></mat-datepicker-toggle>
                               <mat-datepicker tabindex="-1" [disabled]="viewOnly" #picker></mat-datepicker>
                               <mat-error>
