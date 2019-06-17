@@ -754,8 +754,9 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		this.parentDetails.addressStatus = ['No', 'No', 'No'];
 		this.parentDetails.aluminiStatusArray = [false, false, false];
 		this.parentDetails.showHideGuardianField = false;
-		this.parentDetails.profileImageArray = ['/assets/images/student.png', '/assets/images/student.png',
-			'/assets/images/student.png'];
+		this.parentDetails.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg',
+		'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
+		'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
 	}
 
 	isExistUserAccessMenu(actionT) {

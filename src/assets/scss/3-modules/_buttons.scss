@@ -689,3 +689,13 @@ button.mat-button:hover .right-text {
     text-transform: uppercase;
     font-size: 13px !important;
 }
+
+.scheduler-circle {
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 32px !important;
+}
+
+button.scheduler-circle .mat-button-wrapper {
+    padding: 0px 0px !important;
+}

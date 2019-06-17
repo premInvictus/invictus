@@ -87,7 +87,7 @@
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Assignment</mat-label>
                   <input matInput formControlName="cw_assignment_desc" (blur)="reviewElementAssignment(i,$event)">
-                  <mat-icon matSuffix>attachment</mat-icon>
+                  <mat-icon matSuffix style="cursor: pointer" (click)="attachmentDialog(i)" >attachment</mat-icon>
                 </mat-form-field>
               </div>
 

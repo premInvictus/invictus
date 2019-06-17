@@ -17,6 +17,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
+	headerFooterFlag = false;
 	configValue: any;
 	vaccinationArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
@@ -228,6 +229,11 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		this.feeService.getSchoolSettings().subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.settings = result.data[0];
+				if (Number(this.settings.spt_print_format) === 2) {
+					this.headerFooterFlag = true;
+				} else {
+					this.headerFooterFlag = false;
+				}
 				this.printForm.patchValue({
 					'spt_id': this.settings.spt_id,
 					'spt_print_format': this.settings.spt_print_format,
@@ -268,6 +274,13 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				'spt_header_template': '',
 				'spt_footer_template': ''
 			});
+		}
+	}
+	enableHeaderFooter($event) {
+		if (Number($event.value) === 2) {
+			this.headerFooterFlag = true;
+		} else {
+			this.headerFooterFlag = false;
 		}
 	}
 }

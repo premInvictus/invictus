@@ -127,9 +127,9 @@
         </ng-container>
         <ng-container matColumnDef="adjustment">
           <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" >
             <ng-template [ngIf]="modificationFlag" [ngIfElse]="elseContaint">
-              <mat-form-field class="margin-top-10" appearance="outline">
+              <mat-form-field class="margin-top-10 form-field-50">
                 <input matInput type="number" [value]="element.adjustment"
                   (change)="changeAdjAmt(element.invg_id, $event)">
               </mat-form-field>

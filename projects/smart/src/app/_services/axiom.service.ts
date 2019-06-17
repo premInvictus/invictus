@@ -26,4 +26,12 @@ export class AxiomService {
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param);
 	}
+	getSubjectsByClass(value) {
+		const param: any = {};
+		if (value.class_id) {
+			param.class_id = value.class_id;
+		}
+		this.service.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/setupdetail/getSubjectsByClass', param);
+	}
 }
