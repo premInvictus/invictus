@@ -591,10 +591,10 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	}
 	openSearchDialog() {
 		const diaogRef = this.dialog.open(SearchViaNameComponent, {
-			width: '80vh',
-			height: '90vh',
+			width: '20%',
+			height: '30%',
 			position: {
-				top: '20px'
+				top: '10%'
 			},
 			data: {}
 		});

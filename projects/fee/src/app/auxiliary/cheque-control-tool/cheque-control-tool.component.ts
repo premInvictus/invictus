@@ -16,8 +16,8 @@ import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details
 export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	displayedColumns: string[] =
-		['srno', 'class_name','chequeno', 'admno', 'studentname', 'recieptno', 'amount', 'bankname', 'recieptdate',
-		'bankdeposite', 'processingdate', 'action'];
+		['srno', 'class_name', 'chequeno', 'admno', 'studentname', 'recieptno', 'amount', 'bankname', 'recieptdate',
+			'bankdeposite', 'processingdate', 'action'];
 	CHEQUE_ELEMENT_DATA: ChequeToolElement[] = [];
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 	formGroupArray: any[] = [];
@@ -41,6 +41,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getChequeControlListAll();
+		const filterModal = document.getElementById('formFlag');
+		filterModal.style.display = 'none';
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -94,7 +96,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
-						recieptno: item.receipt_id,
+						recieptno: item.receipt_no,
 						amount: item.receipt_amount,
 						bankname: item.bank_name,
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
@@ -106,6 +108,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						formGroup: this.fbuild.group({
 							'fcc_ftr_id': '',
 							'fcc_process_date': '',
+							'fcc_deposite_date': '',
 							'fcc_status': 'c',
 							'fcc_inv_id': ''
 						})
@@ -121,16 +124,19 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	clearCheck(index: any, value: any) {
 		this.formGroupArray[Number(index) - 1].formGroup.value.fcc_process_date = new DatePipe('en-in').
 			transform(this.formGroupArray[Number(index) - 1].formGroup.value.fcc_process_date, 'yyyy-MM-dd');
+		this.formGroupArray[Number(index) - 1].formGroup.value.fcc_deposite_date = new DatePipe('en-in').
+			transform(this.formGroupArray[Number(index) - 1].formGroup.value.fcc_deposite_date, 'yyyy-MM-dd');
 		this.formGroupArray[Number(index) - 1].formGroup.value.fcc_ftr_id = value.fee_transaction_id;
 		this.formGroupArray[Number(index) - 1].formGroup.value.fcc_inv_id = value.invoice_id;
-		if (this.formGroupArray[Number(index) - 1].formGroup.value.fcc_process_date) {
+		if (this.formGroupArray[Number(index) - 1].formGroup.value.fcc_process_date
+			&& this.formGroupArray[Number(index) - 1].formGroup.value.fcc_deposite_date) {
 			this.feeService.addCheckControlTool(this.formGroupArray[Number(index) - 1].formGroup.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.getChequeControlListAll();
 				}
 			});
 		} else {
-			this.common.showSuccessErrorMessage('Please choose date for cleareance', 'error');
+			this.common.showSuccessErrorMessage('Please choose date for cleareance and deposit', 'error');
 		}
 	}
 	getFilteredValue() {
@@ -150,15 +156,15 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: pos,
-						class_name: item.class_name +' '+ item.sec_name,
+						class_name: item.class_name + ' ' + item.sec_name,
 						chequeno: item.cheque_no,
-						admno: item.inv_process_usr_no, 
+						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
-						recieptno: item.receipt_id,
+						recieptno: item.receipt_no,
 						amount: item.receipt_amount,
 						bankname: item.bank_name,
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
-						bankdeposite: new DatePipe('en-in').transform(item.fcc_deposite_date, 'd-MMM-y'),
+						bankdeposite: item.fcc_deposite_date ? new DatePipe('en-in').transform(item.fcc_deposite_date, 'd-MMM-y') : '-',
 						processingdate: '',
 						action: item
 					});
@@ -167,6 +173,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 							'fcc_ftr_id': '',
 							'fcc_process_date': '',
 							'fcc_status': 'c',
+							'fcc_deposite_date': '',
 							'fcc_inv_id': ''
 						})
 					});
@@ -177,11 +184,13 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
-	enableSearch($event) {
-		if ($event.checked) {
-			this.toggleSearch = true;
+	enableSearch() {
+		const filter = document.getElementById('formFlag');
+		if (filter.style.display === 'none') {
+			filter.style.display = 'block';
 		} else {
-			this.toggleSearch = false;
+			filter.style.display = 'none';
+			this.reset();
 		}
 	}
 	openDialog(invoiceNo, edit): void {

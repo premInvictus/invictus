@@ -1,8 +1,9 @@
 <div class="row">
   <div class="col-lg-12">
-    <div class="close-button-content">
-      <button mat-icon-button class="close-button" (click)="closeDialog()"><img
-          src="/assets/images/clear-button.svg"></button>
+    <div class="col-12 text-right">
+      <a class="close-btn" (click)="closeDialog()"><i class="material-icons">
+          clear
+        </i></a>
     </div>
   </div>
 </div>
@@ -17,8 +18,9 @@
         </div>
         <div class="row">
           <div class="col-lg-12">
-            <mat-form-field appearance="outline" class="form-field">
-              <input matInput placeholder="Search" (keydown.enter)="searchStudentByName($event.target.value)"
+            <mat-form-field appearance="outline">
+              <input id="search" matInput placeholder="Search"
+                (keydown.enter)="searchStudentByName($event.target.value)"
                 (blur)="searchStudentByName($event.target.value)">
             </mat-form-field>
           </div>
@@ -30,26 +32,35 @@
                 <div class="row">
                   <div class="col-lg-12 col-remove-padding">
                     <div>
-                      <table class="table-100 text-center">
+                      <table class="table-fixed table-100 text-center">
                         <thead>
                           <tr>
-                            <th>S.No</th>
-                            <th>Enrollment No</th>
-                            <th>Name</th>
+                            <th style="width: 5%">S.No</th>
+                            <th style="width: 13%">Enrollment No</th>
+                            <th style="width: 60%">Name</th>
                             <th>Class</th>
                             <th>Section</th>
-                            <th>Process Type</th>
+                            <th>Process</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr *ngFor="let item of studentArrayByName let i = index">
                             <td>{{i+1}}</td>
                             <td><a style="color: #007bff !important; cursor: pointer !important"
-                                (click)="setId(item.au_admission_no, item.au_process_type)">{{item.au_admission_no}}</a></td>
-                            <td>{{item.au_full_name}}</td>
+                                (click)="setId(item.au_admission_no, item.au_process_type)">{{item.au_admission_no}}</a>
+                            </td>
+                            <td style="text-align: left">
+                              <span class="icon-spacer">{{item.au_full_name}}
+                              </span>
+                            </td>
                             <td>{{item.class_name}}</td>
                             <td>{{item.sec_name}}</td>
                             <td>{{getProcessType(item.au_process_type)}}</td>
+                          </tr>
+                          <tr *ngIf="studentArrayByName.length === 0">
+                            <td colspan="6">
+                              No Records Found
+                            </td>
                           </tr>
                         </tbody>
                       </table>
