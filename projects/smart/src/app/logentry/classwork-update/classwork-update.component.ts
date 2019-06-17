@@ -13,6 +13,7 @@ import {AssignmentAttachmentDialogComponent } from '../../smart-shared/assignmen
 export class ClassworkUpdateComponent implements OnInit {
 
 	classworkForm: FormGroup;
+	classworkforForm: FormGroup;
 	noOfPeriods = 2;
 	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 	reviewClasswork: any[] = [];
@@ -23,6 +24,9 @@ export class ClassworkUpdateComponent implements OnInit {
 	topicArray: any[] = [];
 	subtopicArray: any[] = [];
 	teacherId = '';
+	currentUser: any;
+	session: any;
+	entry_date = new Date();
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -33,7 +37,8 @@ export class ClassworkUpdateComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.teacherId = '1239';
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.teacherId = this.currentUser.login_id;
 		this.buildForm();
 		this.getSubjectByTeacherId();
 		this.ctrList();
@@ -42,8 +47,13 @@ export class ClassworkUpdateComponent implements OnInit {
 		this.classworkForm = this.fbuild.group({
 			periods: this.fbuild.array([])
 		});
+		this.classworkforForm = this.fbuild.group({
+			cw_teacher_id: '',
+			teacher_name: '',
+			cw_entry_date: this.entry_date
+		});
 		for (let i = 0; i < this.noOfPeriods; i++) {
-			this.addPeriods(i + 1, '2', '1625');
+			this.addPeriods(i + 1, this.teacherId);
 			this.reviewClasswork.push({
 				period: i + 1,
 				subjectName: '',
@@ -52,7 +62,8 @@ export class ClassworkUpdateComponent implements OnInit {
 				sectionName: '',
 				topicName: '',
 				subtopicName: '',
-				assignment: ''
+				assignment: '',
+				attachments: 0
 			});
 		}
 
@@ -62,7 +73,7 @@ export class ClassworkUpdateComponent implements OnInit {
 		return this.classworkForm.get('periods') as FormArray;
 	}
 
-	addPeriods(period, sesId, teacherId) {
+	addPeriods(period, teacherId) {
 		this.Periods.push(this.fbuild.group({
 			cw_teacher_id: teacherId,
 			cw_period_id: period,
@@ -72,7 +83,6 @@ export class ClassworkUpdateComponent implements OnInit {
 			cw_sec_id: ['', Validators.required],
 			cw_topic_id: ['', Validators.required],
 			cw_st_id: ['', Validators.required],
-			cw_ses_id: sesId,
 			cw_assignment_desc: '',
 			cw_entry_date: '',
 			cw_attachment: []
@@ -113,7 +123,7 @@ export class ClassworkUpdateComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
 			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 
@@ -198,6 +208,22 @@ export class ClassworkUpdateComponent implements OnInit {
 				if (dresult && dresult.data) {
 					console.log('submitting form');
 					if (this.classworkForm.valid) {
+						if (this.currentUser.role_id !== '3') {
+							this.Periods.controls.forEach((eachFormGroup: FormGroup) => {
+								Object.keys(eachFormGroup.controls).forEach(key => {
+									if (key === 'cw_entry_date') {
+										eachFormGroup.patchValue({
+											cw_entry_date: this.commonAPIService.dateConvertion(this.classworkforForm.value.cw_entry_date)
+										});
+									}
+									if (key === 'cw_teacher_id') {
+										eachFormGroup.patchValue({
+											cw_teacher_id: this.classworkforForm.value.cw_teacher_id
+										});
+									}
+								});
+							});
+						}
 						this.smartService.classworkInsert(this.classworkForm.value).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -241,8 +267,29 @@ export class ClassworkUpdateComponent implements OnInit {
 				eachPeriodFG.patchValue({
 					cw_attachment: dresult.attachments
 				});
+				this.reviewClasswork[currentAttachmentIndex].attachments = dresult.attachments.length;
 			}
 			console.log('eachPeriodFG', eachPeriodFG);
+		});
+	}
+
+	getTeacherInfo(event) {
+		console.log(event.target.value);
+		this.teacherId = event.target.value;
+		this.axiomService.getAllTeacher({login_id: event.target.value, role_id: '3', status: '1'}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log(result.data);
+				this.classworkforForm.patchValue({
+					teacher_name : result.data[0].au_full_name
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+				this.classworkforForm.patchValue({
+					cw_teacher_id: '',
+					teacher_name : ''
+				});
+				this.classworkForm.reset();
+			}
 		});
 	}
 
