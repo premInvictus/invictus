@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" *ngIf="syllabus_flag">
   <div class="col-12">
     <mat-card class="card-height-850-lp card-height-960">
       <div class="row">
@@ -100,7 +100,8 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row" *ngIf="details_flag">
+    
   <div class="col-12">
     <mat-card class="card-height-850-lp card-height-960">
       <div class="row">
@@ -109,23 +110,28 @@
           
         </div>
         <div class="col-4">
-            <span class="font-size-20 margin-left-10 font-light">Class: </span><span class="font-size-20 font-bold">Vth</span><span
-            class="ver-line-divider margin-left-10"></span><span class="font-size-20 font-light">Subject: </span><span
-            class="font-size-20 font-bold">Science</span><span class="ver-line-divider margin-left-10"></span><span
-            class="font-size-20 font-light">Term: </span><span class="font-size-20 font-bold">1st</span>
+            <span class="font-size-20 margin-left-10 font-light">Class: </span>
+            <span class="font-size-20 font-bold">{{getSyllabusClass(parameterform.value.syl_class_id)}}</span>
+            <span class="ver-line-divider margin-left-10"></span> <span class="font-size-20 font-light">Subject: </span>
+            <span class="font-size-20 font-bold">{{getSyllabusSubject(parameterform.value.syl_sub_id)}}</span>
+            <span class="ver-line-divider margin-left-10"></span><span class="font-size-20 font-light">Term: </span>
+            <span class="font-size-20 font-bold">{{getSyllabusTerm(parameterform.value.syl_term_id)}}</span>
         </div>
         <div class="col-6 text-right">
           <span class="font-size-16 font-regular font-color-gray ">No. of Period Available</span><button mat-mini-fab
             class="btn-blue margin-left-10"><span class="font-white font-size-16">-</span></button>
         </div>
       </div>
+      
       <div class="row">
+       
         <div class="col-2 col-ver-line-divider">
+            <form [formGroup]="parameterform2" novalidate>
           <div class="row">
             <div class="col-12 remove-col-padding">
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Category (CTR)</mat-label>
-                <mat-select formControlName="syl_term_id" required  placeholder="Category (CTR)">
+                <mat-select formControlName="sd_ctr_id" (selectionChange)="getTopicByClassSubject()" required  placeholder="Category (CTR)">
                   <mat-option *ngFor="let item of ctrArray" [value]="item.ctr_id">
                     {{item.ctr_name}}
                   </mat-option>
@@ -137,19 +143,23 @@
             <div class="col-12 remove-col-padding">
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Topic</mat-label>
-                <mat-select placeholder="Topic" required>
-                  <mat-option></mat-option>
-                </mat-select>
+                <mat-select formControlName="sd_topic_id" (selectionChange)="getSubtopicByTopic()" required  placeholder="Topic">
+                  <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
+                    {{item.topic_name}}
+                  </mat-option>
+              </mat-select>                
               </mat-form-field>
             </div>
           </div>
-          <div class="row">
+          <div class="row" *ngIf="parameterform2.value.sd_ctr_id === '1'">
             <div class="col-12 remove-col-padding">
-              <mat-form-field class="form-field" appearance="outline">
+              <mat-form-field class="form-field" appearance="outline" >
                 <mat-label>Subtopic</mat-label>
-                <mat-select placeholder="Subtopic" required>
-                  <mat-option></mat-option>
-                </mat-select>
+                <mat-select formControlName="sd_st_id"   placeholder="Subtopic">
+                    <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
+                      {{item.st_name}}
+                    </mat-option>
+                </mat-select> 
               </mat-form-field>
             </div>
           </div>
@@ -157,27 +167,30 @@
             <div class="col-12 remove-col-padding">
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Period Required</mat-label>
-                <mat-select placeholder="Period Required" required>
-                  <mat-option></mat-option>
-                </mat-select>
+                <input matInput placeholder="Period Required" type="number" formControlName="sd_period_req" required>               
               </mat-form-field>
             </div>
           </div>
           <div class="row">
             <div class="col-12 remove-col-padding">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Description</mat-label>
-                <textarea rows="5" matInput placeholder="Write Description Here"></textarea>
-              </mat-form-field>
+                <ckeditor [config]="ckeConfig" formControlName="sd_desc"></ckeditor>              
             </div>
           </div>
           <div class="row">
             <div class="col-12 remove-col-padding text-center">
-              <button mat-raised-button class="btn-add">Add</button>
+              <button *ngIf="!syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
+               (click)="addDetailsList()">Add
+               to list</button>
+            <button *ngIf="syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
+               (click)="updateSyllabussList()">Update</button>
               <button mat-raised-button class="btn-reset margin-left-10">Reset</button>
             </div>
           </div>
+        </form>
         </div>
+        
+       
+      
         <div class="col-10">
           <div class="row">
             <div class="col-12 remove-col-padding">
@@ -198,194 +211,63 @@
                   </tr>
                 </thead>
                 <tbody class="text-center">
-
-
-                  <tr class="custom-tr">
-                    <td class="custom-td" rowspan="5">Health & Hygiene</td>
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td" rowspan="5">c</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                    
-                  </tr>
-
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-
-                  <tr class="custom-tr">
-                    <td class="custom-td" rowspan="8">Solid, Liquid & Gases</td>
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td" rowspan="8">c</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr">
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr class="custom-tr ">
-                    <td class="custom-td grand-total-row"></td>
-                    <td colspan="2" class="custom-td grand-total-row text-left font-bold">Grand Total</td>
-                    <td class="custom-td grand-total-row">26</td>
-                    <td class="custom-td grand-total-row">6</td>
-                    <td class="custom-td grand-total-row">3</td>
-                    <td class="custom-td grand-total-row">35</td>
-                    <td class="custom-td grand-total-row"></td>
-                  </tr>
-
-
-                </tbody>
+                    <ng-container *ngFor="let item of finalSpannedArray;let i=index">
+                        <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
+                           <ng-container>
+                              <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
+                                 <!-- <td *ngIf="j == 0" class="custom-td" [attr.rowspan]="item.details.length">{{i+1}}</td> -->
+                                 <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">{{getTopicName(item.sd_topic_id)}}</td>                                
+                                 <td class="custom-td" *ngIf="det.sd_ctr_id == 1" >
+                                   {{getSubTopicName(det.sd_st_id)}}
+                                 </td>
+                                 <td class="custom-td" *ngIf="det.sd_ctr_id == 2" >
+                                    Test
+                                  </td>
+                                  <td class="custom-td" *ngIf="det.sd_ctr_id == 3" >
+                                      Revision
+                                    </td>
+                                 <td class="custom-td" >
+                                    <div [innerHTML]="det.sd_desc"></div>
+                                 </td>
+                                 <td class="custom-td" >
+                                    {{det.sd_period_teacher}}
+                                 </td>
+                                 <td class="custom-td" >
+                                    {{det.sd_period_test}}
+      
+                                 </td>
+                                 <td class="custom-td" >
+                                    {{det.sd_period_revision}}
+      
+                                 </td>
+                                 <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length" >
+                                    {{item.total}}
+      
+                                 </td>
+                                 <td *ngIf="!viewOnly" class="custom-td">
+                                    <i class="far fa-edit modify-icon" (click)="editSyllabusList(i , j)" style="cursor:pointer"
+                                       title="Edit"></i>&nbsp;
+                                    <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
+                                       (click)="deleteSyllabusList(i , j)" style="cursor:pointer" title="Delete"></i>
+                                 </td>
+                              </tr>
+                           </ng-container> 
+                        </ng-container>
+                     </ng-container>
+                    </tbody>
               </table>
             </div>
           </div>
           <div class="row margin-top-20">
             <div class="col-12 text-center">
-                <button mat-raised-button class="btn-success-green">Submit</button>
+                <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
                 <button mat-raised-button class="btn-reset margin-left-10">cancel</button>
             </div>
           </div>
-        </div>
+        </div>          
       </div>
+    
     </mat-card>
   </div>
+ 
 </div>

@@ -81,7 +81,7 @@ export class SkillsAwardsThemeTwoComponent implements OnInit, OnChanges {
 							cos_tb_id: item.cos_tb_id,
 							cos_ff_id: item.cos_ff_id,
 							cos_status: item.cos_status,
-							ff_field_name: item.ff_field_name
+							ff_field_name: item.ff_field_name 
 						});
 					}
 				}
@@ -210,6 +210,7 @@ export class SkillsAwardsThemeTwoComponent implements OnInit, OnChanges {
 		} else {
 			this.notif.showSuccessErrorMessage('Please fill all required fields', 'error');
 		}
+		console.log(this.finalAwardArray);
 	}
 	editAwardsList(value1, value2) {
 		this.awardUpdateFlag = true;
