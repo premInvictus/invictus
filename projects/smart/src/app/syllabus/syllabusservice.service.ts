@@ -43,5 +43,26 @@ export class SyllabusserviceService {
 			insertSyllabus(value) {
 				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/insert', value);
 			}
+			getSyllabus(value) {
+				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/get_syllabus', value);
+			}
+			insertSyllabusDetails(value: any) {
+				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/insertSyllabusDetails', value);
+			}
+			getSylIdByClassSubject(class_id: any, sub_id: any) {
+				const param: any = {};
+				param.syl_class_id = class_id;
+				param.syl_sub_id = sub_id;
+				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/getSylIdByClassSubject', param);
+			}
+			getSyllabusDetails(value: any) {
+				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/getSyllabusDetails', value);
+			}
+			deleteSyllabusDetails(value: any) {
+				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/updateSyllabusDetails', value);
+			}
+			getSyllabusDetailsEdit(value: any) {
+				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/getSyllabusDetailsEdit', value);
+			}
 
 }
