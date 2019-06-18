@@ -17,6 +17,7 @@ export class AddSyllabusComponent implements OnInit {
 	syllabusvalue2: any;
 	modalForm: FormGroup;
 	public classArray: any[];
+	public subjectArray: any[];
 	public termArray: any[];
 	public ctrArray: any[];
 	public topicArray: any[];
@@ -33,7 +34,6 @@ export class AddSyllabusComponent implements OnInit {
 	subtopicArray: any;
 	sub_id: any;
 	ckeConfig: any = {};
-	public subjectArray: any[];
 	syllabus_flag = true;
 	details_flag = false;
 	editRequestFlag = false;
@@ -311,6 +311,7 @@ export class AddSyllabusComponent implements OnInit {
 				'sd_period_req': '',
 				'sd_desc': ''
 			});
+		console.log(this.finalSpannedArray);
 		} else {
 			this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
 		}
@@ -432,7 +433,9 @@ export class AddSyllabusComponent implements OnInit {
 				}
 				this.syllabusservice.insertSyllabusDetails(this.finalSubmitArray).subscribe((result1: any) => {
 					if (result1 && result1.status === 'ok') {
-
+						this.finalSpannedArray = [];
+						this.finalSubmitArray = [];
+						this.resetForm();
 					}
 				});
 				console.log(this.finalSubmitArray);
