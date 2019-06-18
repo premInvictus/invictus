@@ -19,7 +19,7 @@ export class DeleteModalComponent implements OnInit {
 	openModal(data) {
 		this.inputData = data;
 		this.dialogRef = this.dialog.open(this.deleteModal, {
-			'height': '35vh',
+			'height': '30vh',
 			position: {
 				'top': '20%'
 			}
