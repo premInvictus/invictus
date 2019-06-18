@@ -526,15 +526,6 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 				}
 			});
 	}
-	addEvent(type: string, event: MatDatepickerInputEvent<Date>, index) {
-		this.events.push(`${type}: ${event.value}`);
-		this.picker._dateAdapter.locale = 'en-in';
-		const datePipe = new DatePipe('en-in');
-		const convertedDate = datePipe.transform(this.formGroupArray[index].formGroup.value.epd_parent_dob, 'yyyy-MM-dd');
-		this.formGroupArray[index].formGroup.patchValue({
-			'epd_parent_dob': convertedDate
-		});
-	}
 	getParentDetails(value: any[]) {
 		if (value.length > 0) {
 			let j = 0;
