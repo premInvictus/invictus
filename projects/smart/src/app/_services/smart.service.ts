@@ -15,6 +15,22 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/classwork/getClassByTeacherIdSubjectId', value);
 	}
+	getClassByTeacherId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/classwork/getClassByTeacherId', value);
+	}
+	getSubjectByTeacherIdClassId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/classwork/getSubjectByTeacherIdClassId', value);
+	}
+	getSectionByTeacherIdClassId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/classwork/getSectionByTeacherIdClassId', value);
+	}
+	getSubjectByTeacherIdClassIdSectionId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/classwork/getSubjectByTeacherIdClassIdSectionId', value);
+	}
 	getSectionByTeacherIdSubjectIdClassId(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/classwork/getSectionByTeacherIdSubjectIdClassId', value);
