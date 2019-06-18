@@ -167,7 +167,7 @@ export class CommonAPIService {
 		return this.http.post(environment.apiSisUrl + '/dashboard/getProjectList', param);
 	}
 
-	dateConvertion(value, format) {
+	dateConvertion(value, format= 'yyyy-MM-dd') {
 		const datePipe = new DatePipe('en-US');
 		return datePipe.transform(value, format);
 	}

@@ -1,25 +1,34 @@
 <div class="row">
   <div class="col-12 ">
     <mat-card class="remove-card-padding">
-      <div class="row">
-        <div class="col-6">
-          <div class="top-card-title">
-            <span class="font-size-24 font-medium">Classwork Update</span>
-          </div>
+      <form [formGroup]="classworkforForm">
+        <div class="row">
+          <div class="col-6">
+            <div class="top-card-title">
+              <span class="font-size-24 font-medium">Classwork Update</span>
+            </div>
 
+          </div>
+          <div class="col-6 text-right">
+            <div class="top-card-title-form">
+              <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
+                <mat-label>Teacher Id</mat-label>
+                <input matInput formControlName="cw_teacher_id" (blur)="getTeacherInfo($event);getSubjectByTeacherId()">
+              </mat-form-field>
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
+                <mat-label>Teacher Name</mat-label>
+                <input matInput formControlName="teacher_name">
+              </mat-form-field>
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
+                <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="cw_entry_date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
         </div>
-        <!-- <div class="col-6 text-right">
-          <div class="top-card-title-form">
-            <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
-              <mat-label>Class</mat-label>
-              <mat-select>
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div> -->
-      </div>
-
+      </form>
     </mat-card>
   </div>
 </div>
@@ -38,7 +47,8 @@
               <div class="col-2">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Subject</mat-label>
-                  <mat-select formControlName="cw_sub_id" (selectionChange)="getClassByTeacherIdSubjectId(i);reviewElementSubject(i,$event)">
+                  <mat-select formControlName="cw_sub_id"
+                    (selectionChange)="getClassByTeacherIdSubjectId(i);reviewElementSubject(i,$event)">
                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -46,7 +56,7 @@
               <div class="col-1">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Category</mat-label>
-                  <mat-select formControlName="cw_ctr_id" (selectionChange)="reviewElementCategory(i,$event)" >
+                  <mat-select formControlName="cw_ctr_id" (selectionChange)="reviewElementCategory(i,$event)">
                     <mat-option *ngFor="let item of categoryArray" [value]="item.ctr_id">{{item.ctr_name}}</mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -54,8 +64,10 @@
               <div class="col-1">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Class</mat-label>
-                  <mat-select formControlName="cw_class_id" (selectionChange)="getSectionByTeacherIdSubjectIdClassId(i);getTopicByClassSubject(i);reviewElementClass(i,$event)" >
-                    <mat-option *ngFor="let item of classArray[i]" [value]="item.class_id">{{item.class_name}}</mat-option>
+                  <mat-select formControlName="cw_class_id"
+                    (selectionChange)="getSectionByTeacherIdSubjectIdClassId(i);getTopicByClassSubject(i);reviewElementClass(i,$event)">
+                    <mat-option *ngFor="let item of classArray[i]" [value]="item.class_id">{{item.class_name}}
+                    </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -63,15 +75,18 @@
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Section</mat-label>
                   <mat-select formControlName="cw_sec_id" (selectionChange)="reviewElementSection(i,$event)">
-                    <mat-option *ngFor="let item of sectiontArray[i]" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+                    <mat-option *ngFor="let item of sectiontArray[i]" [value]="item.sec_id">{{item.sec_name}}
+                    </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
               <div class="col-2">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Topic</mat-label>
-                  <mat-select formControlName="cw_topic_id" (selectionChange)="getSubtopicByTopic(i);reviewElementTopic(i,$event)" >
-                    <mat-option *ngFor="let item of topicArray[i]" [value]="item.topic_id">{{item.topic_name}}</mat-option>
+                  <mat-select formControlName="cw_topic_id"
+                    (selectionChange)="getSubtopicByTopic(i);reviewElementTopic(i,$event)">
+                    <mat-option *ngFor="let item of topicArray[i]" [value]="item.topic_id">{{item.topic_name}}
+                    </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -79,7 +94,8 @@
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>SubTopic</mat-label>
                   <mat-select formControlName="cw_st_id" (selectionChange)="reviewElementSubtopic(i,$event)">
-                    <mat-option *ngFor="let item of subtopicArray[i]" [value]="item.st_id">{{item.st_name}}</mat-option>>
+                    <mat-option *ngFor="let item of subtopicArray[i]" [value]="item.st_id">{{item.st_name}}</mat-option>
+                    >
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -87,7 +103,7 @@
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Assignment</mat-label>
                   <input matInput formControlName="cw_assignment_desc" (blur)="reviewElementAssignment(i,$event)">
-                  <mat-icon matSuffix style="cursor: pointer" (click)="attachmentDialog(i)" >attachment</mat-icon>
+                  <mat-icon matSuffix style="cursor: pointer" (click)="attachmentDialog(i)">attachment</mat-icon>
                 </mat-form-field>
               </div>
 
@@ -98,8 +114,8 @@
       </form>
       <div class="row margin-top-20">
         <div class="col-12 text-center">
-            <button mat-raised-button class="btn-success-green" (click)="openReviewClasswork()">Review</button>
-            <button mat-raised-button class="btn-reset margin-left-10" (click)="cancelForm()" >cancel</button>
+          <button mat-raised-button class="btn-success-green" (click)="openReviewClasswork()">Review</button>
+          <button mat-raised-button class="btn-reset margin-left-10" (click)="cancelForm()">cancel</button>
         </div>
       </div>
     </mat-card>
