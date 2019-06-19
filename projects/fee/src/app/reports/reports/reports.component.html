@@ -171,11 +171,11 @@
                               <div class="inline-flex">
                                  <div>
                                     <img style="cursor: pointer;width:30px !important" src="/assets/images/xml.svg"
-                                       matTooltip="Export as excel" (click)="exportAsExcel()" />
+                                       matTooltip="Export as excel" (click)="exportAsExcel(reportFilterForm.value)" />
                                  </div>
                                  <div class="btn-spacer">
                                     <img style="cursor: pointer;width:30px !important" src="/assets/images/pdf.svg"
-                                       matTooltip="Export as PDF" (click)="exportAsPDF()" />
+                                       matTooltip="Export as PDF" (click)="exportAsPDF(reportFilterForm.value)" />
                                  </div>
                               </div>
                            </div>
