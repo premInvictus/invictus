@@ -70,7 +70,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '1',
 			report_name: 'Collection Report',
 			report_image: '/assets/images/Fee Reports/collection_report.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -79,7 +79,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '2',
 			report_name: 'Fee Outstanding Report',
 			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -88,7 +88,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '3',
 			report_name: 'Fee Projection Report',
 			report_image: '/assets/images/Fee Reports/fee_projection.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -97,7 +97,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '4',
 			report_name: 'Fee Transaction Report',
 			report_image: '/assets/images/Fee Reports/fee_transaction.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -106,7 +106,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '5',
 			report_name: 'Fee Ledger Report',
 			report_image: '/assets/images/Fee Reports/fee_ledger.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -116,7 +116,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_name: 'Deleted Fee Transactions',
 			report_image:
 				'/assets/images/Fee Reports/deleted_fee_transaction.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -125,7 +125,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '7',
 			report_name: 'Fee Adjustment Report',
 			report_image: '/assets/images/Fee Reports/fee_adjustment.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -134,7 +134,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '8',
 			report_name: 'Fee Concession Report',
 			report_image: '/assets/images/Fee Reports/fee_concession.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -144,7 +144,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_name: 'Missing Fee Invoice',
 			report_image:
 				'/assets/images/Fee Reports/missing_fee_invoice.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -153,7 +153,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '10',
 			report_name: 'Fee Structure Report',
 			report_image: '/assets/images/Fee Reports/fee_structure.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -162,7 +162,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '11',
 			report_name: 'Cheque Clearance Report',
 			report_image: '/assets/images/Fee Reports/cheque_clearance.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -171,7 +171,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '12',
 			report_name: 'Advanced Security Deposit',
 			report_image: '/assets/images/Fee Reports/advanced_security.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -180,7 +180,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '13',
 			report_name: 'Online Transaction Details',
 			report_image: '/assets/images/Fee Reports/online_transaction.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -189,7 +189,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '14',
 			report_name: 'Dynamic Report',
 			report_image: '/assets/images/Fee Reports/dynamics.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -198,7 +198,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_id: '15',
 			report_name: 'Transport Report',
 			report_image: '/assets/images/Fee Reports/transport_report.png',
-			main_text_class: 'text-left inline-flex margin-top-10 icon-spacer',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
@@ -274,7 +274,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			'au_full_name': ''
 		});
 		if (this.previousIndex >= 0) {
-			this.feeReportArray[this.previousIndex].main_text_class = 'text-left inline-flex margin-top-10 icon-spacer';
+			this.feeReportArray[this.previousIndex].main_text_class = 'text-left inline-flex margin-top-5 icon-spacer';
 			this.feeReportArray[this.previousIndex].report_main_image_class = '';
 			this.feeReportArray[this.previousIndex].report_middle_class = 'inline-flex';
 			this.feeReportArray[this.previousIndex].report_check_icon_class = '';
@@ -311,7 +311,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						report_type: 'routewise', report_name: 'Route Wise'
 					},
 					{
-						report_type: 'mfr', report_name: 'MFR Report'
+						report_type: 'mfr', report_name: 'Monthly Fee Report (MFR)'
 					});
 			}
 			if (Number(report_id) === 2) {
@@ -320,9 +320,6 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 				},
 					{
 						report_type: 'classwise', report_name: 'Class Wise'
-					},
-					{
-						report_type: 'modewise', report_name: 'Mode Wise'
 					},
 					{
 						report_type: 'routewise', report_name: 'Route Wise'
@@ -904,7 +901,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								if (result && result.status === 'ok') {
 									this.common.showSuccessErrorMessage(result.message, 'success');
 									repoArray = result.data.reportData;
-									this.totalRecords = Number(repoArray.length);
+									this.totalRecords = Number(result.data.totalRecords);
 									localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 									let index = 0;
 									let qindex = 1;
@@ -1464,6 +1461,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									obj['fcc_class_id'] =
 										this.getClassName(repoArray[Number(index)]['fcc_class_id']);
 									obj['fcrt_name'] = repoArray[Number(index)]['fcrt_name'];
+									obj['fp_name'] = repoArray[Number(index)]['fp_name'];
 									obj['fcc_amount'] =
 										new DecimalPipe('en-us').transform(repoArray[Number(index)]['fcc_amount']);
 									this.REPORT_ELEMENT_DATA.push(obj);
@@ -1512,6 +1510,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 										obj['fee_amount'] = cons['invg_fh_amount'] ?
 											new DecimalPipe('en-us').transform(cons['invg_fh_amount']) : '-';
 										obj['concession_cat'] = cons['invg_fcc_name'] ? cons['invg_fcc_name'] : '-';
+										obj['inv_fp_name'] =  cons['inv_fp_name'] ? cons['inv_fp_name'] : '-';
 										obj['con_amount'] = cons['invg_fcc_amount'] ?
 											new DecimalPipe('en-us').transform(cons['invg_fcc_amount']) : '-';
 										this.REPORT_ELEMENT_DATA.push(obj);
@@ -1712,7 +1711,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					'to_date': value.to_date,
 					'pageSize': value.pageSize,
 					'pageIndex': value.pageIndex,
-					'filterReportBy': filterBy
+					'filterReportBy': filterBy,
+					'orderBy': this.sortResult.length > 0 ? [this.sortResult] : ''
 				};
 			}
 			if (this.reportFilterForm.value.report_type === 'classwise') {
@@ -1726,7 +1726,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					'to_date': value.to_date,
 					'pageSize': value.pageSize,
 					'pageIndex': value.pageIndex,
-					'filterReportBy': filterBy
+					'filterReportBy': filterBy,
+					'orderBy': this.sortResult.length > 0 ? [this.sortResult] : ''
 				};
 			}
 			if (this.reportFilterForm.value.report_type === 'modewise') {
@@ -1742,7 +1743,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					'secId': value.hidden_value2,
 					'pageIndex': value.pageIndex,
 					'modeId': value.fee_value,
-					'filterReportBy': filterBy
+					'filterReportBy': filterBy,
+					'orderBy': this.sortResult.length > 0 ? [this.sortResult] : ''
 				};
 			}
 			if (this.reportFilterForm.value.report_type === 'routewise') {
@@ -1757,7 +1759,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 					'admission_no': value.admission_no,
 					'secId': value.hidden_value2,
 					'studentName': value.au_full_name,
-					'filterReportBy': filterBy
+					'filterReportBy': filterBy,
+					'orderBy': this.sortResult.length > 0 ? [this.sortResult] : ''
 				};
 			}
 			let repoArray: any[] = [];
@@ -1959,7 +1962,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 						if (result && result.status === 'ok') {
 							this.common.showSuccessErrorMessage(result.message, 'success');
 							repoArray = result.data.reportData;
-							this.totalRecords = Number(repoArray.length);
+							this.totalRecords = Number(result.data.totalRecords);
 							localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 							let index = 0;
 							let qindex = 1;
@@ -1967,13 +1970,14 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							columnHeaderData.push('SNo', 'Enrollment No.', 'Student Name', 'Class');
 							for (const item of repoArray) {
 								const obj: any = {};
-								obj['fp_id'] = item.inv_fp_id;
+								obj['fp_id'] = item.inv_fp_id ? item.inv_fp_id : '';
 								obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 									(index + 1);
 								obj['au_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 									repoArray[Number(index)]['stu_admission_no'] : '-';
 								obj['au_full_name'] = repoArray[Number(index)]['stu_full_name'] ?
-									new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) : '-';
+									'<div class="float-left icon-spacer">' +
+									new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']) + '</div>' : '-';
 								obj['class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 									repoArray[Number(index)]['stu_sec_name'];
 								for (const titem of item['inv_invoice_generated_status']) {
@@ -1984,10 +1988,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											qindex++;
 											columnHeaderData.push(titem[key]);
 										} else if (key === 'fm_name' && index === 0 &&
-											Number(item.inv_fp_id) === 1) {
+											(Number(item.inv_fp_id) === 1 || (!item.inv_fp_id))) {
 											columnData.push('Q' + qindex);
 											qindex++;
-											columnHeaderData.push(titem[key]);
+											columnHeaderData.push(titem[key].substring(0, 3));
 										} else if (key === 'fm_name' && index === 0 &&
 											Number(item.inv_fp_id) === 3) {
 											columnData.push('Q' + qindex);
@@ -2010,7 +2014,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											obj['inv_id3'] = item['inv_invoice_generated_status'][2]['invoice_id'];
 											obj['inv_id4'] = item['inv_invoice_generated_status'][3]['invoice_id'];
 										} else if (key === 'fm_name' &&
-											Number(item.inv_fp_id) === 1) {
+											(Number(item.inv_fp_id) === 1 || (!item.inv_fp_id))) {
 											obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
 											obj['Q2'] = item['inv_invoice_generated_status'][1]['invoice_paid_status'];
 											obj['Q3'] = item['inv_invoice_generated_status'][2]['invoice_paid_status'];
@@ -2519,6 +2523,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 							obj['fcc_class_id'] =
 								this.getClassName(repoArray[Number(index)]['fcc_class_id']);
 							obj['fcrt_name'] = repoArray[Number(index)]['fcrt_name'];
+							obj['fp_name'] = repoArray[Number(index)]['fp_name'];
 							obj['fcc_amount'] =
 								new DecimalPipe('en-us').transform(repoArray[Number(index)]['fcc_amount']);
 							this.REPORT_ELEMENT_DATA.push(obj);
@@ -2565,6 +2570,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 								obj['fee_amount'] = cons['invg_fh_amount'] ?
 									new DecimalPipe('en-us').transform(cons['invg_fh_amount']) : '-';
 								obj['concession_cat'] = cons['invg_fcc_name'] ? cons['invg_fcc_name'] : '-';
+								obj['inv_fp_name'] =  cons['inv_fp_name'] ? cons['inv_fp_name'] : '-';
 								obj['con_amount'] = cons['invg_fcc_amount'] ?
 									new DecimalPipe('en-us').transform(cons['invg_fcc_amount']) : '-';
 								this.REPORT_ELEMENT_DATA.push(obj);

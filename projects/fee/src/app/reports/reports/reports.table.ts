@@ -144,15 +144,18 @@ export const reportTable = {
 		dataReport: {
 			concession: {
 				tableHeader: 'Fee Concession Report',
-				columnDef: ['srno', 'fcc_name', 'fcc_head_type', 'fh_name', 'fcc_class_id', 'fcrt_name',
+				columnDef: ['srno', 'fcc_name', 'fcc_head_type', 'fh_name', 'fcc_class_id', 'fcrt_name', 'fp_name',
 					'fcc_amount'],
-				colunmHeader: ['Sno.', 'Concession Category', 'Type', 'Fee Head', 'Class', 'Concession Type',
+				colunmHeader: ['Sno.', 'Concession Category', 'Type', 'Fee Head', 'Class', 'Concession Type', 'Fee Period',
 					'Concession Amount'],
 			},
 			concessionAlloted: {
 				tableHeader: 'Fee Concession Alloted Report',
-				columnDef: ['srno', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'fee_amount', 'concession_cat', 'con_amount'],
-				colunmHeader: ['Sno.', 'Enrollment No.', 'Student Name', 'Class-Section', 'Fee Amount', 'Concession', 'Concession Amount'],
+				columnDef: ['srno', 'stu_admission_no', 'stu_full_name', 'stu_class_name', 'fee_amount', 'inv_fp_name',
+				'concession_cat', 'con_amount'],
+				colunmHeader: ['Sno.', 'Enrollment No.', 'Student Name', 'Class-Section', 'Fee Amount', 'Fee Period' ,
+				'Concession',
+				'Concession Amount'],
 			}
 		}
 	},
