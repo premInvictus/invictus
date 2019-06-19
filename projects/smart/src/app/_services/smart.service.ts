@@ -35,9 +35,21 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/classwork/getSectionByTeacherIdSubjectIdClassId', value);
 	}
+	getSubtopicCountAndDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/topicwise/getSubtopicCountAndDetail', value);
+	}
+	getTopicwiseCTR(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/topicwise/getTopicwiseCTR', value);
+	}
 	classworkInsert(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/classwork/insert', value);
+	}
+	topicwiseInsert(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/topicwise/insert', value);
 	}
 	ctrList() {
 		this.service.startLoading();
