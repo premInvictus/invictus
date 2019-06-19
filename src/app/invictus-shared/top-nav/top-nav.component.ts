@@ -6,7 +6,8 @@ import { CookieService } from 'ngx-cookie';
 import { environment } from 'src/environments/environment';
 import { UserTypeService } from 'projects/fee/src/app/usertype/usertype.service';
 import { SisService } from 'projects/fee/src/app/_services';
-import { CommonAPIService, NotificationService } from 'projects/axiom/src/app/_services/index';
+import { NotificationService } from 'projects/axiom/src/app/_services/index';
+import {CommonAPIService} from '../../_services/index';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
 import { LoaderService } from 'projects/fee/src/app/_services/loader.service';
@@ -167,7 +168,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 	}
 	getSession() {
-		this.sisService.getSession().subscribe((result2: any) => {
+		this.commonAPIService.getSession().subscribe((result2: any) => {
 			if (result2.status === 'ok') {
 				this.sessionArray = result2.data;
 				this.getSchool();
