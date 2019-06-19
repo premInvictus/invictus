@@ -23,6 +23,8 @@ export class ReviewSyllabusComponent implements OnInit {
 	editRequestFlag = false;
 	finaldivflag = true;
 	param: any = {};
+	param1: any = {};
+	currentUser: any;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -30,7 +32,9 @@ export class ReviewSyllabusComponent implements OnInit {
 		public common: CommonAPIService,
 		public axiomService: AxiomService,
 		public sisService: SisService,
-	) { }
+	) {
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+	 }
 
 	openDialog(sd_id) {
 		// tslint:disable-next-line: no-use-before-declare
@@ -53,7 +57,8 @@ export class ReviewSyllabusComponent implements OnInit {
 		this.deleteModal.openModal(this.param);
 	}
 	openPublish(syl_id) {
-		this.publishModal.openpublishModal();
+		// this.param1.syl_id = syl_id;
+		this.publishModal.openpublishModal(syl_id);
 	}
 	buildForm() {
 		this.reviewform = this.fbuild.group({
@@ -143,6 +148,26 @@ export class ReviewSyllabusComponent implements OnInit {
 					});
 		}
 	}
+	insertPublishSyllabus($event) {
+		if ($event) {
+			console.log('event', $event);
+			const param: any = {};
+			param.mod_review_row_id = $event;
+			param.mod_review_by = this.currentUser.login_id;
+			param.mod_review_status = '1';
+			param.mod_title = '1';
+			console.log('param', param);
+			this.syllabusservice.insertPublishSyllabus(param)
+				.subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.fetchSyllabusDetails();
+							this.common.showSuccessErrorMessage('Syllabus Publish Successfully', 'success');
+						}
+					});
+		}
+	}
+
 	fetchSyllabusDetails() {
 		this.finaldivflag = false;
 		this.syllabusservice.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
@@ -219,7 +244,7 @@ export class ReviewSyllabusComponent implements OnInit {
 														sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
 														details: spannArray,
 														total: this.finalSyllabusArray[i].sd_period_req,
-														syl_id: this.syl_id
+														syl_id: this.syl_id[0].syl_id
 													});
 												} else {
 													// tslint:disable-next-line: max-line-length
