@@ -23,7 +23,7 @@ export class ReviewSyllabusComponent implements OnInit {
 	editRequestFlag = false;
 	finaldivflag = true;
 	param: any = {};
-	param1: any = {};
+	publishParam: any = {};
 	currentUser: any;
 	constructor(
 		public dialog: MatDialog,
@@ -34,7 +34,7 @@ export class ReviewSyllabusComponent implements OnInit {
 		public sisService: SisService,
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-	 }
+	}
 
 	openDialog(sd_id) {
 		// tslint:disable-next-line: no-use-before-declare
@@ -56,9 +56,10 @@ export class ReviewSyllabusComponent implements OnInit {
 		this.param.sd_id = sd_id;
 		this.deleteModal.openModal(this.param);
 	}
-	openPublish(syl_id) {
-		// this.param1.syl_id = syl_id;
-		this.publishModal.openpublishModal(syl_id);
+	openPublish(syl_id, topic_id) {
+		this.publishParam.syl_id = syl_id;
+		this.publishParam.topic_id = topic_id;
+		this.publishModal.openpublishModal(this.publishParam);
 	}
 	buildForm() {
 		this.reviewform = this.fbuild.group({
@@ -150,19 +151,27 @@ export class ReviewSyllabusComponent implements OnInit {
 	}
 	insertPublishSyllabus($event) {
 		if ($event) {
-			console.log('event', $event);
-			const param: any = {};
-			param.mod_review_row_id = $event;
-			param.mod_review_by = this.currentUser.login_id;
-			param.mod_review_status = '1';
-			param.mod_title = '1';
-			console.log('param', param);
-			this.syllabusservice.insertPublishSyllabus(param)
+			const param2: any = {};
+			param2.sd_syl_id = this.publishParam.syl_id;
+			param2.sd_topic_id = this.publishParam.topic_id;
+			param2.sd_status = '1';
+			this.syllabusservice.updatePublishStatus(param2)
 				.subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
-							this.fetchSyllabusDetails();
-							this.common.showSuccessErrorMessage('Syllabus Publish Successfully', 'success');
+							const param: any = {};
+							param.mod_review_row_id = param2.sd_syl_id + '-' + param2.sd_topic_id;
+							param.mod_review_by = this.currentUser.login_id;
+							param.mod_review_status = '1';
+							param.mod_title = '1';
+							this.syllabusservice.insertPublishSyllabus(param)
+								.subscribe(
+									(result: any) => {
+										if (result && result.status === 'ok') {
+											this.fetchSyllabusDetails();
+											this.common.showSuccessErrorMessage('Syllabus Publish Successfully', 'success');
+										}
+									});
 						}
 					});
 		}
@@ -175,9 +184,11 @@ export class ReviewSyllabusComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.getTopicByClassSubject();
-						this.syl_id = result.data;
-						if (this.syl_id !== '') {
-							this.syllabusservice.getSyllabusDetails(this.syl_id)
+						const param: any = {};
+						param.syl_id = result.data[0].syl_id;
+						param.sd_status = 0;
+						if (param.syl_id !== '') {
+							this.syllabusservice.getSyllabusDetails(param)
 								.subscribe(
 									(result1: any) => {
 										if (result1 && result1.status === 'ok') {
@@ -244,13 +255,13 @@ export class ReviewSyllabusComponent implements OnInit {
 														sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
 														details: spannArray,
 														total: this.finalSyllabusArray[i].sd_period_req,
-														syl_id: this.syl_id[0].syl_id
+														syl_id: param.syl_id
 													});
 												} else {
 													// tslint:disable-next-line: max-line-length
 													this.finalSpannedArray[findex].total = Number(this.finalSpannedArray[findex].total) + Number(this.finalSyllabusArray[i].sd_period_req);
 												}
-												console.log('finalSpannedArray', this.finalSpannedArray);
+												console.log('finalSpannedArray', this.finalSpannedArray); 
 											}
 										} else {
 											this.finalSyllabusArray = [];

@@ -11,57 +11,58 @@
         </div>
       </div>
       <div class="row">
-        
-        <div class="col-2 col-ver-line-divider">
-            <form [formGroup]="parameterform" novalidate>
-          <div class="row">
-            <div class="col-12 remove-col-padding">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Class</mat-label>
-                <mat-select formControlName="syl_class_id" (selectionChange)="getSubjectsByClass()" required  placeholder="Select Class">
-                    <mat-option value="">Please select</mat-option> 
-                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                    {{item.class_name}}
-                  </mat-option>
-              </mat-select>
 
-              </mat-form-field>
+        <div class="col-2 col-ver-line-divider">
+          <form [formGroup]="parameterform" novalidate>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Class</mat-label>
+                  <mat-select formControlName="syl_class_id" (selectionChange)="getSubjectsByClass()" required
+                    placeholder="Select Class">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                      {{item.class_name}}
+                    </mat-option>
+                  </mat-select>
+
+                </mat-form-field>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12 remove-col-padding">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Subject</mat-label>
-                <mat-select formControlName="syl_sub_id" required  placeholder="Select Subject">
-                    <mat-option value="">Please select</mat-option> 
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Subject</mat-label>
+                  <mat-select formControlName="syl_sub_id" required placeholder="Select Subject">
+                    <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                       {{item.sub_name}}
                     </mat-option>
-                </mat-select>
-              </mat-form-field>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12 remove-col-padding">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Term</mat-label>
-                <mat-select formControlName="syl_term_id" required  placeholder="Select Term">
-                    <mat-option value="">Please select</mat-option> 
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Term</mat-label>
+                  <mat-select formControlName="syl_term_id" required placeholder="Select Term">
+                    <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of termArray" [value]="item.term_id">
                       {{item.term_name}}
                     </mat-option>
-                </mat-select>
-              </mat-form-field>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12 remove-col-padding text-center">
-              <button mat-raised-button class="btn-add" (click)="submit()">Add</button>
+            <div class="row">
+              <div class="col-12 remove-col-padding text-center">
+                <button mat-raised-button class="btn-add" (click)="submit()">Add</button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
         </div>
-        
+
 
         <div class="col-10">
           <div class="row">
@@ -85,7 +86,11 @@
                 </thead>
                 <tbody>
                   <tr class="text-center">
-                    <td colspan="9"><span class="font-size-20 font-bold font-color-brown">No Data
+                    <td colspan="9">
+                      <img
+                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                      <br><br><br>
+                      <span class="font-size-20 font-bold font-color-brown">No Data
                         Available</span><br><span class="font-size-20 font-light font-color-brown">Please Update
                         Syllabus on Click of Add Button</span></td>
                   </tr>
@@ -100,98 +105,100 @@
 </div>
 
 <div class="row" *ngIf="details_flag">
-    
+
   <div class="col-12">
     <mat-card class="card-height-850-lp card-height-960">
       <div class="row">
         <div class="col-2">
-            <span class="font-size-24 font-medium">Add Syllabus</span>
-          
+          <span class="font-size-24 font-medium">Add Syllabus</span>
+
         </div>
         <div class="col-4">
-            <span class="font-size-20 margin-left-10 font-light">Class: </span>
-            <span class="font-size-20 font-bold">{{getSyllabusClass(parameterform.value.syl_class_id)}}</span>
-            <span class="ver-line-divider margin-left-10"></span> <span class="font-size-20 font-light">Subject: </span>
-            <span class="font-size-20 font-bold">{{getSyllabusSubject(parameterform.value.syl_sub_id)}}</span>
-            <span class="ver-line-divider margin-left-10"></span><span class="font-size-20 font-light">Term: </span>
-            <span class="font-size-20 font-bold">{{getSyllabusTerm(parameterform.value.syl_term_id)}}</span>
+          <span class="font-size-20 margin-left-10 font-light">Class: </span>
+          <span class="font-size-20 font-bold">{{getSyllabusClass(parameterform.value.syl_class_id)}}</span>
+          <span class="ver-line-divider margin-left-10"></span> <span class="font-size-20 font-light">Subject: </span>
+          <span class="font-size-20 font-bold">{{getSyllabusSubject(parameterform.value.syl_sub_id)}}</span>
+          <span class="ver-line-divider margin-left-10"></span><span class="font-size-20 font-light">Term: </span>
+          <span class="font-size-20 font-bold">{{getSyllabusTerm(parameterform.value.syl_term_id)}}</span>
         </div>
         <div class="col-6 text-right">
           <span class="font-size-16 font-regular font-color-gray ">No. of Period Available</span><button mat-mini-fab
             class="btn-blue margin-left-10"><span class="font-white font-size-16">-</span></button>
         </div>
       </div>
-      
+
       <div class="row">
-       
+
         <div class="col-2 col-ver-line-divider">
-            <form [formGroup]="parameterform2" novalidate>
-          <div class="row">
-            <div class="col-12 remove-col-padding">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Category (CTR)</mat-label>
-                <mat-select formControlName="sd_ctr_id" (selectionChange)="getTopicByClassSubject()" required  placeholder="Category (CTR)">
-                  <mat-option value="">Please select</mat-option> 
-                  <mat-option *ngFor="let item of ctrArray" [value]="item.ctr_id">
-                    {{item.ctr_name}}
-                  </mat-option>
-              </mat-select>
-            </mat-form-field>
+          <form [formGroup]="parameterform2" novalidate>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Category (CTR)</mat-label>
+                  <mat-select formControlName="sd_ctr_id" (selectionChange)="getTopicByClassSubject()" required
+                    placeholder="Category (CTR)">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of ctrArray" [value]="item.ctr_id">
+                      {{item.ctr_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12 remove-col-padding">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Topic</mat-label>
-                <mat-select formControlName="sd_topic_id" (selectionChange)="getSubtopicByTopic()" required  placeholder="Topic">
-                  <mat-option value="">Please select</mat-option> 
-                  <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
-                    {{item.topic_name}}
-                  </mat-option>
-              </mat-select>                
-              </mat-form-field>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Topic</mat-label>
+                  <mat-select formControlName="sd_topic_id" (selectionChange)="getSubtopicByTopic()" required
+                    placeholder="Topic">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
+                      {{item.topic_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
-          <div class="row" *ngIf="parameterform2.value.sd_ctr_id === '1'">
-            <div class="col-12 remove-col-padding">
-              <mat-form-field class="form-field" appearance="outline" >
-                <mat-label>Subtopic</mat-label>
-                <mat-select formControlName="sd_st_id"   placeholder="Subtopic">
-                  <mat-option value="">Please select</mat-option> 
-                  <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
+            <div class="row" *ngIf="parameterform2.value.sd_ctr_id === '1'">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Subtopic</mat-label>
+                  <mat-select formControlName="sd_st_id" placeholder="Subtopic">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
                       {{item.st_name}}
                     </mat-option>
-                </mat-select> 
-              </mat-form-field>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12 remove-col-padding">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Period Required</mat-label>
-                <input matInput placeholder="Period Required" type="number" formControlName="sd_period_req" required>               
-              </mat-form-field>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Period Required</mat-label>
+                  <input matInput placeholder="Period Required" type="number" formControlName="sd_period_req" required>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12 remove-col-padding">
-                <ckeditor [config]="ckeConfig" formControlName="sd_desc"></ckeditor>              
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <ckeditor [config]="ckeConfig" formControlName="sd_desc"></ckeditor>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12 remove-col-padding text-center">
-              <button *ngIf="!syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
-               (click)="addDetailsList()">Add
-               to list</button>
-            <button *ngIf="syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
-               (click)="updateSyllabussList()">Update</button>
-              <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()" >Reset</button>
+            <div class="row">
+              <div class="col-12 remove-col-padding text-center">
+                <button *ngIf="!syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
+                  (click)="addDetailsList()">Add
+                  to list</button>
+                <button *ngIf="syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
+                  (click)="updateSyllabussList()">Update</button>
+                <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>
+              </div>
             </div>
-          </div>
-        </form>
-        </div>  
-       
-      
+          </form>
+        </div>
+
+
         <div class="col-10">
           <div class="row">
             <div class="col-12 remove-col-padding">
@@ -212,71 +219,76 @@
                   </tr>
                 </thead>
                 <tbody class="text-center">
-                    <ng-container *ngFor="let item of finalSpannedArray;let i=index">
-                        <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
-                           <ng-container>
-                              <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
-                                 <!-- <td *ngIf="j == 0" class="custom-td" [attr.rowspan]="item.details.length">{{i+1}}</td> -->
-                                 <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">{{getTopicName(item.sd_topic_id)}}</td>                                
-                                 <td class="custom-td" *ngIf="det.sd_ctr_id == 1" >
-                                   {{getSubTopicName(det.sd_st_id)}}
-                                 </td>
-                                 <td class="custom-td" *ngIf="det.sd_ctr_id == 2" >
-                                    Test
-                                  </td>
-                                  <td class="custom-td" *ngIf="det.sd_ctr_id == 3" >
-                                      Revision
-                                    </td>
-                                 <td class="custom-td" >
-                                    <div [innerHTML]="det.sd_desc"></div>
-                                 </td>
-                                 <td class="custom-td" >
-                                    {{det.sd_period_teacher}}
-                                 </td>
-                                 <td class="custom-td" >
-                                    {{det.sd_period_test}}
-      
-                                 </td>
-                                 <td class="custom-td" >
-                                    {{det.sd_period_revision}}
-      
-                                 </td>
-                                 <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length" >
-                                    {{item.total}}
-      
-                                 </td>
-                                 <td *ngIf="!viewOnly" class="custom-td">
-                                    <i class="far fa-edit modify-icon" (click)="editSyllabusList(i , j)" style="cursor:pointer"
-                                       title="Edit"></i>&nbsp;
-                                    <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                                       (click)="deleteSyllabusList(i , j)" style="cursor:pointer" title="Delete"></i>
-                                 </td>
-                              </tr>
-                           </ng-container> 
-                        </ng-container>
-                     </ng-container>
-                    </tbody>
-                    <tbody>
-                        <tr class="text-center" *ngIf="finaldivflag">
-                            <td colspan="9"><span class="font-size-20 font-bold font-color-brown">No Data
-                                Available</span><br><span class="font-size-20 font-light font-color-brown">Please Update
-                                Syllabus on Click of Add Button</span>
-                            </td>        
+                  <ng-container *ngFor="let item of finalSpannedArray;let i=index">
+                    <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
+                      <ng-container>
+                        <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
+                          <!-- <td *ngIf="j == 0" class="custom-td" [attr.rowspan]="item.details.length">{{i+1}}</td> -->
+                          <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                            {{getTopicName(item.sd_topic_id)}}</td>
+                          <td class="custom-td" *ngIf="det.sd_ctr_id == 1">
+                            {{getSubTopicName(det.sd_st_id)}}
+                          </td>
+                          <td class="custom-td" *ngIf="det.sd_ctr_id == 2">
+                            Test
+                          </td>
+                          <td class="custom-td" *ngIf="det.sd_ctr_id == 3">
+                            Revision
+                          </td>
+                          <td class="custom-td">
+                            <div [innerHTML]="det.sd_desc"></div>
+                          </td>
+                          <td class="custom-td">
+                            {{det.sd_period_teacher}}
+                          </td>
+                          <td class="custom-td">
+                            {{det.sd_period_test}}
+
+                          </td>
+                          <td class="custom-td">
+                            {{det.sd_period_revision}}
+
+                          </td>
+                          <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                            {{item.total}}
+
+                          </td>
+                          <td *ngIf="!viewOnly" class="custom-td">
+                            <i class="far fa-edit modify-icon" (click)="editSyllabusList(i , j)" style="cursor:pointer"
+                              title="Edit"></i>&nbsp;
+                            <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
+                              (click)="deleteSyllabusList(i , j)" style="cursor:pointer" title="Delete"></i>
+                          </td>
                         </tr>
-                    </tbody>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </tbody>
+                <tbody *ngIf="finaldivflag">
+                  <tr class="text-center">
+                    <td colspan="9">
+                      <img
+                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                      <br><br><br>
+                      <span class="font-size-20 font-bold font-color-brown">No Datas
+                        Available</span><br><span class="font-size-20 font-light font-color-brown">Please Update
+                        Syllabus on Click of Add Button</span>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
-          <div class="row margin-top-20">
+          <div class="row margin-top-20" *ngIf="finalSubmitdivflag">
             <div class="col-12 text-center">
-                <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
-                <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
+              <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
+              <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
             </div>
           </div>
-        </div>          
+        </div>
       </div>
-    
+
     </mat-card>
   </div>
- 
+
 </div>
