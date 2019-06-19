@@ -196,37 +196,189 @@ padding-left: 10px;
 .color-red {
     color: #EB4D4B !important;
     font-size: 10px !important;
+    border-radius: 50%;
+}
+
+.color-red:hover {
+    animation: ripple 0.7s linear infinite;
+    cursor: pointer;
+  }
+
+  @keyframes ripple {
+    0% {
+      box-shadow: 0 0 0 0 rgba(#EB4D4B, 0.3),
+                  0 0 0 0.5em rgba(#EB4D4B, 0.3),
+                  0 0 0 1em rgba(#EB4D4B, 0.3),
+                  0 0 0 1.5em rgba(#EB4D4B, 0.3);
+    }
+    100% {
+      box-shadow: 0 0 0 0.5em rgba(#EB4D4B, 0.3),
+                  0 0 0 0.75em rgba(#EB4D4B, 0.3),
+                  0 0 0 1em rgba(#EB4D4B, 0.3),
+                  0 0 0 1.25em rgba(#EB4D4B, 0);
+    }
+  }
+
+.color-red {
+    color: #EB4D4B !important;
+    font-size: 10px !important;
 }
 
 .color-yellow {
     color: #F9CA24 !important;
     font-size: 10px !important;
+    border-radius: 50%;
 }
 
-.color-purple {
+.color-yellow:hover {
+    animation: rippleone 0.7s linear infinite;
+    cursor: pointer;
+  }
+
+  @keyframes rippleone {
+    0% {
+      box-shadow: 0 0 0 0 rgba(#F9CA24, 0.3),
+                  0 0 0 0.5em rgba(#F9CA24, 0.3),
+                  0 0 0 1em rgba(#F9CA24, 0.3),
+                  0 0 0 1.5em rgba(#F9CA24, 0.3);
+    }
+    100% {
+      box-shadow: 0 0 0 0.5em rgba(#F9CA24, 0.3),
+                  0 0 0 0.75em rgba(#F9CA24, 0.3),
+                  0 0 0 1em rgba(#F9CA24, 0.3),
+                  0 0 0 1.25em rgba(#F9CA24, 0);
+    }
+  }
+
+.color-green {
     color: #6AB04C !important;
     font-size: 10px !important;
+    border-radius: 50%;
 }
+
+.color-green:hover {
+    animation: rippletwo 0.7s linear infinite;
+    cursor: pointer;
+  }
+
+  @keyframes rippletwo {
+    0% {
+      box-shadow: 0 0 0 0 rgba(#6AB04C, 0.3),
+                  0 0 0 0.5em rgba(#6AB04C, 0.3),
+                  0 0 0 1em rgba(#6AB04C, 0.3),
+                  0 0 0 1.5em rgba(#6AB04C, 0.3);
+    }
+    100% {
+      box-shadow: 0 0 0 0.5em rgba(#6AB04C, 0.3),
+                  0 0 0 0.75em rgba(#6AB04C, 0.3),
+                  0 0 0 1em rgba(#6AB04C, 0.3),
+                  0 0 0 1.25em rgba(#6AB04C, 0);
+    }
+  }
 
 .color-grey {
     color: #95AFC0 !important;
     font-size: 10px !important;
+    border-radius: 50%;
 }
+
+.color-grey:hover {
+    animation: ripplethree 0.7s linear infinite;
+    cursor: pointer;
+  }
+
+  @keyframes ripplethree {
+    0% {
+      box-shadow: 0 0 0 0 rgba(#95AFC0, 0.3),
+                  0 0 0 0.5em rgba(#95AFC0, 0.3),
+                  0 0 0 1em rgba(#95AFC0, 0.3),
+                  0 0 0 1.5em rgba(#95AFC0, 0.3);
+    }
+    100% {
+      box-shadow: 0 0 0 0.5em rgba(#95AFC0, 0.3),
+                  0 0 0 0.75em rgba(#95AFC0, 0.3),
+                  0 0 0 1em rgba(#95AFC0, 0.3),
+                  0 0 0 1.25em rgba(#95AFC0, 0);
+    }
+  }
 
 .color-blue {
     color: #4834D4 !important;
     font-size: 10px !important;
+    border-radius: 50%;
 }
+
+.color-blue:hover {
+    animation: ripplefour 0.7s linear infinite;
+    cursor: pointer;
+  }
+
+  @keyframes ripplefour {
+    0% {
+      box-shadow: 0 0 0 0 rgba(#4834D4, 0.3),
+                  0 0 0 0.5em rgba(#4834D4, 0.3),
+                  0 0 0 1em rgba(#4834D4, 0.3),
+                  0 0 0 1.5em rgba(#4834D4, 0.3);
+    }
+    100% {
+      box-shadow: 0 0 0 0.5em rgba(#4834D4, 0.3),
+                  0 0 0 0.75em rgba(#4834D4, 0.3),
+                  0 0 0 1em rgba(#4834D4, 0.3),
+                  0 0 0 1.25em rgba(#4834D4, 0);
+    }
+  }
 
 .color-purple {
     color: #7D5FFF !important;
     font-size: 10px !important;
+    border-radius: 50%;
 }
+
+.color-purple:hover {
+    animation: ripplefive 0.7s linear infinite;
+    cursor: pointer;
+  }
+
+  @keyframes ripplefive {
+    0% {
+      box-shadow: 0 0 0 0 rgba(#7D5FFF, 0.3),
+                  0 0 0 0.5em rgba(#7D5FFF, 0.3),
+                  0 0 0 1em rgba(#7D5FFF, 0.3),
+                  0 0 0 1.5em rgba(#7D5FFF, 0.3);
+    }
+    100% {
+      box-shadow: 0 0 0 0.5em rgba(#7D5FFF, 0.3),
+                  0 0 0 0.75em rgba(#7D5FFF, 0.3),
+                  0 0 0 1em rgba(#7D5FFF, 0.3),
+                  0 0 0 1.25em rgba(#7D5FFF, 0);
+    }
+  }
 
 .color-tealgreen {
     color: #22A6B3 !important;
     font-size: 10px !important;
+    border-radius: 50%;
 }
+
+.color-tealgreen:hover {
+    animation: ripplesix 0.7s linear infinite;
+    cursor: pointer;
+  }
+
+  @keyframes ripplesix {
+    0% {
+      box-shadow: 0 0 0 0 rgba(#22A6B3, 0.3),
+                  0 0 0 0.5em rgba(#22A6B3, 0.3),
+                  0 0 0 1em rgba(#22A6B3, 0.3),
+                  0 0 0 1.5em rgba(#22A6B3, 0.3);
+    }
+    100% {
+      box-shadow: 0 0 0 0.5em rgba(#22A6B3, 0.3),
+                  0 0 0 0.75em rgba(#22A6B3, 0.3),
+                  0 0 0 1em rgba(#22A6B3, 0.3),
+                  0 0 0 1.25em rgba(#22A6B3, 0);
+    }
+  }
 
 .overflow-hidden {
     overflow: hidden !important;
