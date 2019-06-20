@@ -1,0 +1,60 @@
+<ng-template #UnpublishModal>
+<div class="modal-custom-cotainer">
+  <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+          <div class="modal-title-box">
+              <span class="font-size-20 font-white font-regular">Unpublish Syllabus</span><span
+                  class="float-right margin-top-5">
+                  <a (click)="closeDialog()"> <i class="far fa-times-circle font-white cursor-pointer font-size-24"></i></a></span>
+          </div>
+      </div>
+  </div>
+  <div class="row margin-top-20">
+      <div class="col-12 text-center">
+          <span class="font-size-24 font-regular"> Do you wish to </span><span
+              class="font-size-24 font-bold">Unpublish?</span>
+      </div>
+  </div>
+  <div class="row margin-top-20 unpublishDiv" *ngIf="unpublishDiv">
+      <div class="col-12 text-center">
+          <button mat-raised-button class="btn-success-green" (click)="closeunpublishDiv()">Yes</button>
+          <button mat-raised-button class="btn-reset margin-left-10" (click)="closeDialog()">No</button>
+      </div>
+  </div>
+  <div class ="reasonDiv" *ngIf="reasonDiv" >
+  <form [formGroup]="unPublishForm"> 
+  <div class="row" >
+      <div class="col-12">
+
+     
+  <div class="row margin-top-20">
+      <div class="col-12 text-center">
+          <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Reason of Unpublishing ?</mat-label>
+              <mat-select placeholder="Choose reasons" formControlName="req_reason" required>
+                  <mat-option value="">Please select</mat-option> 
+                    <mat-option *ngFor="let item of reasonsArray" [value]="item.reason_id">{{item.reason_title}}</mat-option>
+                  </mat-select>
+          </mat-form-field>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-12 text-center">
+          <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Report Issue</mat-label>
+              <textarea rows="7" matInput placeholder="Report Issue" formControlName="req_reason_text"></textarea>
+          </mat-form-field>
+      </div>
+  </div>
+</div>
+</div>
+</form>
+  <div class="row margin-top-20">
+      <div class="col-12 text-center">
+          <button mat-raised-button class="btn-success-green" (click)="unpublish()">Submit</button>
+          <button mat-raised-button class="btn-reset margin-left-10" (click)="closeDialog()">Cancel</button>
+      </div>
+  </div>
+</div>
+</div>
+</ng-template>

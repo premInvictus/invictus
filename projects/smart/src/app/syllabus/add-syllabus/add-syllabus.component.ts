@@ -10,9 +10,11 @@ import { SyllabusserviceService } from './../syllabusservice.service';
 export class AddSyllabusComponent implements OnInit {
 	public parameterform: FormGroup;
 	public parameterform2: FormGroup;
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png';
 	activityUpdateFlag = false;
 	syllabusUpdateFlag = false;
 	finaldivflag = true;
+	finalSubmitdivflag = false;
 	requiredFeild = false;
 	syllabusvalue1: any;
 	syllabusvalue2: any;
@@ -236,7 +238,8 @@ export class AddSyllabusComponent implements OnInit {
 	finalCancel() {
 		this.finalSpannedArray = [];
 		this.finalSubmitArray = [];
-		this.finaldivflag = false;
+		this.finaldivflag = true;
+		this.finalSubmitdivflag = false; 
 		this.syllabus_flag = true;
 		this.details_flag = false;
 		this.parameterform .patchValue({
@@ -244,17 +247,27 @@ export class AddSyllabusComponent implements OnInit {
 			'syl_sub_id': '',
 			'syl_term_id': ''
 		});
+	this.resetForm();
 	}
 	submit() {
 		if (this.parameterform.valid) {
-			this.syllabus_flag = false;
-			this.details_flag = true;
+			this.syllabusservice.getSylIdByClassSubject(this.parameterform.value.syl_class_id, this.parameterform.value.syl_sub_id)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage('Syllabus Already Added', 'error');
+					} else {
+						this.syllabus_flag = false;
+						this.details_flag = true;
+					}
+			});
 		} else {
 			this.common.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
 	}
 	addDetailsList() {
 		this.finaldivflag = false;
+		this.finalSubmitdivflag = true;
 		if (!this.editRequestFlag) {
 			this.finalSpannedArray = [];
 		}

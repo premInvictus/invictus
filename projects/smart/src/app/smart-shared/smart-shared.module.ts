@@ -31,6 +31,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 declare var CKEDITOR: any;
 import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dialog/assignment-attachment-dialog.component';
 import { PublishModalComponent } from './publish-modal/publish-modal.component';
+import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.component';
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -95,6 +96,8 @@ export const MY_FORMATS = {
 		ZerodashPipe,
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
+		UnpublishModalComponent,
+		UnpublishModalComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -102,7 +105,8 @@ export const MY_FORMATS = {
 		ImageViewerComponent,
 		EditRequestModalComponent,
 		AssignmentAttachmentDialogComponent,
-		PublishModalComponent
+		PublishModalComponent,
+		UnpublishModalComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -133,7 +137,7 @@ export const MY_FORMATS = {
 		ImageViewerModule,
 		CKEditorModule,
 		MatSortModule,
-		RouterModule, DeleteModalComponent, ImagecropComponent, PublishModalComponent,
+		RouterModule, DeleteModalComponent, ImagecropComponent, PublishModalComponent, UnpublishModalComponent,
 		NgxMaskModule, CapitalizePipe, DateformatPipe, SafePipe, ImageViewerComponent,
 		EditRequestModalComponent,
 		NumberToWordPipe,
