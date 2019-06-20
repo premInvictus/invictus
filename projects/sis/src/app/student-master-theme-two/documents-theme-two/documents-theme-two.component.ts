@@ -75,7 +75,7 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		});
 	}
-	fileChangeEvent(fileInput, doc_req_id) {
+	fileChangeEvent(fileInput, doc_req_id) { 
 		this.multipleFileArray = [];
 		this.counter = 0;
 		this.currentFileChangeEvent = fileInput;

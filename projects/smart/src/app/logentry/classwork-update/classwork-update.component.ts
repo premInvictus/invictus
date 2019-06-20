@@ -133,6 +133,7 @@ export class ClassworkUpdateComponent implements OnInit {
 		const eachPeriodFG = this.Periods.controls[i];
 		console.log(eachPeriodFG);
 		this.classArray[i] = [];
+		this.resetClassworkFormForSubjectChange(i);
 		this.smartService.getClassByTeacherIdSubjectId({ teacher_id: this.teacherId, sub_id: eachPeriodFG.value.cw_sub_id }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
@@ -169,6 +170,9 @@ export class ClassworkUpdateComponent implements OnInit {
 	getTopicByClassSubject(i) {
 		this.topicArray[i] = [];
 		const eachPeriodFG = this.Periods.controls[i];
+		eachPeriodFG.patchValue({
+			cw_st_id: ''
+		});
 		this.axiomService.getTopicByClassSubject(eachPeriodFG.value.cw_class_id, eachPeriodFG.value.cw_sub_id).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.topicArray[i] = result.data;
@@ -237,7 +241,7 @@ export class ClassworkUpdateComponent implements OnInit {
 
 	}
 	resetClasswork() {
-		this.classworkForm.reset();
+		this.resetClassworkForm();
 		this.reviewClasswork = [];
 	}
 
@@ -282,15 +286,40 @@ export class ClassworkUpdateComponent implements OnInit {
 				this.classworkforForm.patchValue({
 					teacher_name : result.data[0].au_full_name
 				});
+				console.log(this.classworkForm.value);
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 				this.classworkforForm.patchValue({
 					cw_teacher_id: '',
 					teacher_name : ''
 				});
-				this.classworkForm.reset();
+				this.resetClassworkForm();
 			}
 		});
+	}
+	resetClassworkForm() {
+		this.Periods.controls.forEach((eachFormGroup: FormGroup) => {
+			Object.keys(eachFormGroup.controls).forEach(key => {
+				if (key === 'cw_period_id' || key === 'cw_teacher_id') {
+				} else {
+					eachFormGroup.controls[key].reset();
+				}
+			});
+		});
+		console.log(this.classworkForm.value);
+	}
+	resetClassworkFormForSubjectChange(i) {
+		const eachPeriodFG = <FormGroup> this.Periods.controls[i];
+			Object.keys(eachPeriodFG.controls).forEach(key => {
+				if (key === 'cw_period_id' || key === 'cw_teacher_id' || key === 'cw_sub_id') {
+				} else {
+					eachPeriodFG.controls[key].reset();
+				}
+			});
+			this.sectiontArray[i] = [];
+			this.topicArray[i] = [];
+			this.subtopicArray[i] = [];
+		console.log(this.classworkForm.value);
 	}
 
 }

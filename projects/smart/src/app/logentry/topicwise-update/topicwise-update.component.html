@@ -1,119 +1,127 @@
-<div class="row">
-  <div class="col-12 ">
-    <mat-card class="remove-card-padding">
-      <div class="row">
-        <div class="col-6">
-          <div class="top-card-title">
-            <span class="font-size-24 font-medium">Classwork Update</span>
+<form [formGroup]="topicwiseforForm">
+  <div class="row">
+    <div class="col-12 ">
+      <mat-card class="remove-card-padding">
+        <div class="row">
+          <div class="col-6">
+            <div class="top-card-title">
+              <span class="font-size-24 font-medium">Classwork Update</span>
+            </div>
           </div>
-
-        </div>
-        <div class="col-6 text-right">
-          <div class="top-card-title-form">
-            <mat-form-field class="form-field-220 remove-form-field-bottom-margin" appearance="outline">
-              <mat-label>Teacher ID</mat-label>
-              <mat-select>
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-              <mat-label>Teacher Name</mat-label>
-              <mat-select>
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-              <mat-label>Class</mat-label>
-              <mat-select>
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-              <mat-label>Subject</mat-label>
-              <mat-select>
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
+          <div class="col-6 text-right">
+            <div class="top-card-title-form">
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+                appearance="outline">
+                <mat-label>Teacher Name</mat-label>
+                <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
+                  [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
+                    (onSelectionChange)="setTeacherId(item)">
+                    <span>{{item.au_full_name}}</span> ,
+                    <small>Id: {{item.au_login_id}}</small>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10"
+                appearance="outline">
+                <mat-label>Class</mat-label>
+                <mat-select formControlName="tw_class_id"
+                  (selectionChange)="getSubjectByTeacherIdClassIdSectionId($event)">
+                  <mat-option *ngFor="let item of classSectionArray" [value]="item.cs_id">{{item.cs_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+                appearance="outline">
+                <mat-label>Subject</mat-label>
+                <mat-select formControlName="tw_sub_id" (selectionChange)="getTopicwiseDetails()">
+                  <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
           </div>
         </div>
-      </div>
 
-    </mat-card>
+      </mat-card>
+    </div>
   </div>
-</div>
+</form>
 
 <div class="row margin-top-15">
   <div class="col-12">
     <mat-card>
       <div class="row">
-          <div class="col-4">
-              <mat-form-field appearance="a">
-                  <input class="margin-left-10" matInput placeholder="Filter">
-                  <mat-icon matPrefix>filter_list</mat-icon>
-                </mat-form-field>
-          </div>
-        <div class="col-8 text-right">
+        <div class="col-4">
+          <mat-form-field appearance="a">
+            <input class="margin-left-10" matInput placeholder="Filter">
+            <mat-icon matPrefix>filter_list</mat-icon>
+          </mat-form-field>
+        </div>
+        <!-- <div class="col-8 text-right">
           <span class="font-size-20 font-color-gray font-light">Teacher ID: </span><span class="font-size-20 font-bold">235945</span><span class="margin-left-10 ver-line-divider"></span>
           <span class="font-size-20 font-color-gray font-light">Teacher Name: </span><span class="font-size-20 font-bold">Aarti Kumari</span><span class="margin-left-10 ver-line-divider"></span>
           <span class="font-size-20 font-color-gray font-light">Class: </span><span class="font-size-20 font-bold">XIth</span><span class="margin-left-10 ver-line-divider"></span>
           <span class="font-size-20 font-color-gray font-light">Subject: </span><span class="font-size-20 font-bold">Science</span>
-        </div>
+        </div> -->
       </div>
       <div class="row margin-top-10">
         <div class="col-12">
-            <table class="table table-borderd table-stripped custom-table">
-                <thead class="table-skill__head text-center">
-                    <tr class="custom-tr">
-                        <th class="custom-th">Topic</th>
-                        <th class="custom-th">Subtopic</th>
-                        <th class="custom-th">Course Completed</th>
-                        <th class="custom-th">Revision Done</th>
-                        <th class="custom-th">Test Conducted</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="custom-tr">
-                        <td rowspan="3" class="custom-td text-left">Health & Hygenie</td>
-                        <td class="custom-td text-left">Introduction of Food</td>
-                        <td rowspan="3" class="custom-td"><i class="fas fa-check-circle font-size-40 font-color-green"></i><br><span class="font-size-12 font-regular">Update On: </span><span class="font-size-12 font-bold">5-Jun-2019</span></td>
-                        <td rowspan="3" class="custom-td"></td>
-                        <td rowspan="3" class="custom-td"><i class="fas fa-check-circle font-size-40 font-color-green"></i><br><span class="font-size-12 font-regular">Update On: </span><span class="font-size-12 font-bold">5-Jun-2019</span></td>
-                    </tr>
-                    <tr class="custom-tr">
-                        <td class="custom-td text-left">Type of Nutrient</td>
-                    </tr>
-                    <tr class="custom-tr">
-                        <td class="custom-td text-left">Groups of Food item & nutrients</td>
-                    </tr>
-                    <tr class="custom-tr">
-                        <td rowspan="5" class="custom-td text-left">Health & Hygenie</td>
-                        <td class="custom-td text-left">Introduction of Food</td>
-                        <td rowspan="5" class="custom-td"></td>
-                        <td rowspan="5" class="custom-td"><i class="fas fa-check-circle font-size-40 font-color-green"></i><br><span class="font-size-12 font-regular">Update On: </span><span class="font-size-12 font-bold">5-Jun-2019</span></td>
-                        <td rowspan="5" class="custom-td"></td>
-                    </tr>
-                    <tr class="custom-tr">
-                        <td class="custom-td text-left">Type of Nutrient</td>
-                    </tr>
-                    <tr class="custom-tr">
-                        <td class="custom-td text-left">Groups of Food item & nutrients</td>
-                    </tr>
-                    <tr class="custom-tr">
-                        <td class="custom-td text-left">Groups of Food item & nutrients</td>
-                    </tr>
-                    <tr class="custom-tr">
-                        <td class="custom-td text-left">Groups of Food item & nutrients</td>
-                    </tr>
-                </tbody>
-            </table>
+          <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Topic</th>
+                <th class="custom-th">Subtopic</th>
+                <th class="custom-th">Course Completed</th>
+                <th class="custom-th">Revision Done</th>
+                <th class="custom-th">Test Conducted</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let topic of topicsubtopicDetailsArray; let i=index">
+                <ng-container *ngFor="let subtopic of topic.subtopics; let j=index">
+                  <tr class="custom-tr" *ngIf="j == 0">
+                    <td [attr.rowspan]="topic.subtopicCount" class="custom-td text-left">{{topic.topic_name}}</td>
+                    <td class="custom-td text-left">{{subtopic.st_name}}</td>
+                    <td [attr.rowspan]="topic.subtopicCount" class="custom-td" (click)="toggleStatus(i,1,topic.courseCompleted)">
+                      <ng-container *ngIf="topic.courseCompleted">
+                        <i class="fas fa-check-circle font-size-40 font-color-green"></i><br>
+                        <span class="font-size-12 font-regular">Update On: </span>
+                        <span
+                          class="font-size-12 font-bold">{{topic.courseCompleted.tw_entry_date | date:'dd MMM, yyyy'}}</span>
+                      </ng-container>
+                    </td>
+                    <td [attr.rowspan]="topic.subtopicCount" class="custom-td" (click)="toggleStatus(i,3,topic.revisionDone)">
+                      <ng-container *ngIf="topic.revisionDone">
+                        <i class="fas fa-check-circle font-size-40 font-color-green"></i><br>
+                        <span class="font-size-12 font-regular">Updated On: </span>
+                        <span
+                          class="font-size-12 font-bold">{{topic.revisionDone.tw_entry_date | date:'dd MMM, yyyy'}}</span>
+                      </ng-container>
+                    </td>
+                    <td [attr.rowspan]="topic.subtopicCount" class="custom-td" (click)="toggleStatus(i,2,topic.testConducted)">
+                      <ng-container *ngIf="topic.testConducted">
+                        <i class="fas fa-check-circle font-size-40 font-color-green"></i><br>
+                        <span class="font-size-12 font-regular">Update On: </span>
+                        <span
+                          class="font-size-12 font-bold">{{topic.testConducted.tw_entry_date | date:'dd MMM, yyyy'}}</span>
+                      </ng-container>
+                    </td>
+                  </tr>
+                  <tr class="custom-tr" *ngIf="j != 0">
+                    <td class="custom-td text-left">{{subtopic.st_name}}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+            </tbody>
+          </table>
         </div>
       </div>
       <div class="row margin-top-20">
-          <div class="col-12 text-center">
-              <button mat-raised-button class="btn-success-green" (click)="openUpdateConfirmation()">Submit</button>
-              <button mat-raised-button class="btn-reset margin-left-10">cancel</button>
-          </div>
+        <div class="col-12 text-center">
+          <button mat-raised-button class="btn-success-green">Submit</button>
+          <button mat-raised-button class="btn-reset margin-left-10">cancel</button>
         </div>
+      </div>
     </mat-card>
   </div>
 </div>

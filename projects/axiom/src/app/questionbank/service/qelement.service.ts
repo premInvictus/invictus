@@ -98,7 +98,7 @@ export class QelementService {
 			param.sub_id = subject_id;
 		}
 		this.loaderService.startLoading();
-		return this._http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param);
+		return this._http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param); 
 	}
 	getQuestionsReview(qst_id, class_id, subject_id, topic_id, st_id, from_date, to_date) {
 		// tslint:disable-next-line:max-line-length
