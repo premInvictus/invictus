@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
 
 @Component({
@@ -10,24 +10,36 @@ import * as moment from 'moment';
 export class UpdateConfirmationComponent implements OnInit {
 
 	step1Flag = true;
-	step2Flag = false;
+	step2Flag = false; 	// for publich or checked
+	step3Flag = false;  // for unpublish or uncheck
 	tw_entry_date = moment(new Date());
+	mod_review_remark = '';
+	ckeConfig: any;
 	constructor(
-		private dialogRef: MatDialogRef<UpdateConfirmationComponent>
+		private dialogRef: MatDialogRef<UpdateConfirmationComponent>,
+		@Inject(MAT_DIALOG_DATA) public data
 	) { }
 
 	ngOnInit() {
+		console.log(this.data);
 	}
 
 	closeDialog() {
 		this.dialogRef.close();
 	}
-	goToStep2() {
-		this.step1Flag = false;
-		this.step2Flag = true;
+	goToNext() {
+		if (this.data.tw_status === '1') {
+			this.step1Flag = false;
+			this.step2Flag = true;
+			this.step3Flag = false;
+		} else {
+			this.step1Flag = false;
+			this.step2Flag = false;
+			this.step3Flag = true;
+		}
 	}
 	submitUpdate() {
-		this.dialogRef.close({update: true, tw_entry_date: this.tw_entry_date.toDate()});
+		this.dialogRef.close({update: true, tw_entry_date: this.tw_entry_date.toDate(), mod_review_remark: this.mod_review_remark});
 	}
 
 }

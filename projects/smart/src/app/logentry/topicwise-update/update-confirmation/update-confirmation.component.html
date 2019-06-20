@@ -16,8 +16,8 @@
   </div>
   <div class="row margin-top-20" *ngIf="step1Flag">
     <div class="col-12 text-center">
-      <button mat-raised-button class="btn-success-green" (click)="goToStep2()">Yes</button>
-      <button mat-raised-button class="btn-reset margin-left-10">No</button>
+      <button mat-raised-button class="btn-success-green" (click)="goToNext()">Yes</button>
+      <button mat-raised-button class="btn-reset margin-left-10" (click)="closeDialog()">No</button>
     </div>
   </div>
   <div class="row margin-top-20" *ngIf="step2Flag">
@@ -30,7 +30,16 @@
       </mat-form-field>
     </div>
   </div>
-  <div class="row margin-top-20" *ngIf="step2Flag">
+  <div class="row margin-top-20" *ngIf="step3Flag">
+    <div class="col-12 text-center">
+      <!-- <ckeditor [config]="ckeConfig" [(ngModel)]="mod_review_remark"></ckeditor> -->
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Assignment</mat-label>
+        <textarea rows="9" matInput [(ngModel)]="mod_review_remark"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row margin-top-20" *ngIf="step2Flag || step3Flag">
     <div class="col-12 text-center">
       <button mat-raised-button class="btn-success-green" (click)="submitUpdate()">Submit</button>
       <button mat-raised-button class="btn-reset margin-left-10" (click)="closeDialog()">cancel</button>

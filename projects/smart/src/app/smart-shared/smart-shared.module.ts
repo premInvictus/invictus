@@ -31,6 +31,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 declare var CKEDITOR: any;
 import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dialog/assignment-attachment-dialog.component';
 import { PublishModalComponent } from './publish-modal/publish-modal.component';
+import { NoDataComponent } from './no-data/no-data.component';
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -95,6 +96,7 @@ export const MY_FORMATS = {
 		ZerodashPipe,
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
+		NoDataComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -139,7 +141,8 @@ export const MY_FORMATS = {
 		NumberToWordPipe,
 		ZerodashPipe,
 		CommonDynamicChartComponent,
-		AssignmentAttachmentDialogComponent
+		AssignmentAttachmentDialogComponent,
+		NoDataComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
