@@ -32,6 +32,7 @@ declare var CKEDITOR: any;
 import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dialog/assignment-attachment-dialog.component';
 import { PublishModalComponent } from './publish-modal/publish-modal.component';
 import { NoDataComponent } from './no-data/no-data.component';
+import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.component';
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -97,6 +98,7 @@ export const MY_FORMATS = {
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
 		NoDataComponent,
+		UnpublishModalComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -104,7 +106,8 @@ export const MY_FORMATS = {
 		ImageViewerComponent,
 		EditRequestModalComponent,
 		AssignmentAttachmentDialogComponent,
-		PublishModalComponent
+		PublishModalComponent,
+		UnpublishModalComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -135,7 +138,7 @@ export const MY_FORMATS = {
 		ImageViewerModule,
 		CKEditorModule,
 		MatSortModule,
-		RouterModule, DeleteModalComponent, ImagecropComponent, PublishModalComponent,
+		RouterModule, DeleteModalComponent, ImagecropComponent, PublishModalComponent, UnpublishModalComponent,
 		NgxMaskModule, CapitalizePipe, DateformatPipe, SafePipe, ImageViewerComponent,
 		EditRequestModalComponent,
 		NumberToWordPipe,
@@ -150,7 +153,7 @@ export const MY_FORMATS = {
 		{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
 	]
 })
-export class SmartSharedModule { 
+export class SmartSharedModule {
 	constructor() {
 		const script: any = document.createElement('script');
 		if (!(CKEDITOR.type === '10')) {

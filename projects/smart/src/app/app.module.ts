@@ -11,7 +11,6 @@ import { LoadingModule } from 'ngx-loading';
 import { AuthGuard } from './_guards';
 import { LoaderService, CommonAPIService, SisService, AxiomService, SmartService } from './_services';
 import { SmartusertypeService } from './smartusertype/smartusertype.service';
-import { SyllabusserviceService } from './syllabus/syllabusservice.service';
 
 const providers = [NotificationsService,
 	AuthGuard,
@@ -20,8 +19,7 @@ const providers = [NotificationsService,
 	SmartusertypeService,
 	SisService,
 	AxiomService,
-	SmartService,
-	SyllabusserviceService];
+	SmartService];
 @NgModule({
 	declarations: [
 		AppComponent

@@ -1,135 +1,137 @@
 <div class="row">
-  <div class="col-12 ">
-    <mat-card class="remove-card-padding">
-      <div class="row">
-        <div class="col-6">
-          <div class="top-card-title">
-            <span class="font-size-24 font-medium">Review Syllabus</span>
-          </div>
-        </div>
-
-        <div class="col-6 text-right">
-          <form [formGroup]="reviewform" novalidate>
-            <div class="top-card-title-form">
-              <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
-                <mat-label>Class</mat-label>
-                <mat-select formControlName="syl_class_id" (selectionChange)="getSubjectsByClass()" required
-                  placeholder="Select Class">
-                  <mat-option value="">Please select</mat-option> 
-                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">                                       
-                    {{item.class_name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field class="form-field-220 margin-left-10 remove-form-field-bottom-margin"
-                appearance="outline">
-                <mat-label>Subject</mat-label>
-                <mat-select formControlName="syl_sub_id" (selectionChange)="fetchSyllabusDetails()" required
-                  placeholder="Select Subject">
-                  <mat-option value="">Please select</mat-option> 
-                  <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
-                    {{item.sub_name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+    <div class="col-12 ">
+        <mat-card class="remove-card-padding">
+            <div class="row">
+                <div class="col-6">
+                    <div class="top-card-title">
+                        <span class="font-size-24 font-medium">Review Syllabus</span>
+                    </div>
+                </div>
+                <div class="col-6 text-right">
+                    <form [formGroup]="reviewForm" novalidate>
+                        <div class="top-card-title-form">
+                            <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
+                                <mat-label>Class</mat-label>
+                                <mat-select formControlName="syl_class_id" (selectionChange)="getSubjectsByClass()" required placeholder="Select Class">
+                                    <mat-option value="">Please select</mat-option>
+                                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                        {{item.class_name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="form-field-220 margin-left-10 remove-form-field-bottom-margin" appearance="outline">
+                                <mat-label>Subject</mat-label>
+                                <mat-select formControlName="syl_sub_id" (selectionChange)="fetchSyllabusDetails()" required placeholder="Select Subject">
+                                    <mat-option value="">Please select</mat-option>
+                                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                        {{item.sub_name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </form>
-        </div>
-      </div>
 
-    </mat-card>
-  </div>
+        </mat-card>
+    </div>
 </div>
 <div class="row margin-top-15">
-  <div class="col-12">
-    <mat-card>
-      <div class="row remove-top-margin">
+    <div class="col-12">
+        <mat-card>
+            <!-- <div class="row remove-top-margin">
         <div class="col-4">
           <mat-form-field appearance="a">
             <input class="margin-left-10" matInput placeholder="Filter">
             <mat-icon matPrefix>filter_list</mat-icon>
           </mat-form-field>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <table class="table table-borderd table-stripped custom-table">
-            <thead class="table-skill__head text-center">
-              <tr class="custom-tr">
-                <th class="custom-th" rowspan="2">Topic</th>
-                <th class="custom-th" rowspan="2">SubTopic</th>
-                <th class="custom-th" rowspan="2">Description</th>
-                <th class="custom-th" colspan="3">No. of Person Required</th>
-                <th class="custom-th" rowspan="2">Total</th>
-                <th class="custom-th" rowspan="2">Action</th>
-                <th class="custom-th" rowspan="2">Publish</th>
-              </tr>
-              <tr class="custom-tr">
-                <th class="custom-th">Teaching</th>
-                <th class="custom-th">Test</th>
-                <th class="custom-th">Revision</th>
-              </tr>
-            </thead>
-            <tbody class="text-center" >
-              <ng-container *ngFor="let item of finalSpannedArray;let i=index">
-                <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
-                  <ng-container>
-                    <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
-                        {{getTopicName(item.sd_topic_id)}}</td>
-                      <td class="custom-td" *ngIf="det.sd_ctr_id == 1">
-                        {{det.sd_st_name}}
-                      </td>
-                      <td class="custom-td" *ngIf="det.sd_ctr_id == 2">
-                        Test
-                      </td>
-                      <td class="custom-td" *ngIf="det.sd_ctr_id == 3">
-                        Revision
-                      </td>
-                      <td class="custom-td">
-                        <div [innerHTML]="det.sd_desc"></div>
-                      </td>
-                      <td class="custom-td">
-                        {{det.sd_period_teacher}}
-                      </td>
-                      <td class="custom-td">
-                        {{det.sd_period_test}}
+      </div> -->
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-borderd table-stripped custom-table">
+                        <thead class="table-skill__head text-center">
+                            <tr class="custom-tr">
+                                <th class="custom-th" rowspan="2">Topic</th>
+                                <th class="custom-th" rowspan="2">SubTopic</th>
+                                <th class="custom-th" rowspan="2">Description</th>
+                                <th class="custom-th" colspan="3">No. of Person Required</th>
+                                <th class="custom-th" rowspan="2">Total</th>
+                                <th class="custom-th" rowspan="2">Action</th>
+                                <th class="custom-th" rowspan="2">Publish</th>
+                            </tr>
+                            <tr class="custom-tr">
+                                <th class="custom-th">Teaching</th>
+                                <th class="custom-th">Test</th>
+                                <th class="custom-th">Revision</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <ng-container *ngFor="let item of finalSpannedArray;let i=index">
+                                <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
+                                    <ng-container>
+                                        <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
+                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                                {{getTopicName(item.sd_topic_id)}}</td>
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 1">
+                                                {{det.sd_st_name}}
+                                            </td>
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 2">
+                                                Test
+                                            </td>
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 3">
+                                                Revision
+                                            </td>
+                                            <td class="custom-td">
+                                                <div [innerHTML]="det.sd_desc"></div>
+                                            </td>
+                                            <td class="custom-td">
+                                                {{det.sd_period_teacher}}
+                                            </td>
+                                            <td class="custom-td">
+                                                {{det.sd_period_test}}
 
-                      </td>
-                      <td class="custom-td">
-                        {{det.sd_period_revision}}
+                                            </td>
+                                            <td class="custom-td">
+                                                {{det.sd_period_revision}}
 
-                      </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
-                        {{item.total}}
+                                            </td>
+                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                                {{item.total}}
 
-                      </td>
-                      <td *ngIf="!viewOnly" class="custom-td">
-                        <i class="far fa-edit modify-icon" (click)="openDialog(det.sd_id)" style="cursor:pointer"
-                          title="Edit"></i>&nbsp;
-                        <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" 
-                          (click)="openModal(i ,j ,det.sd_id)" style="cursor:pointer" title="Delete"></i>
-                      </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
-                        <i class="fas fa-thumbs-up font-color-green cursor-pointer font-size-16"(click)="openPublish(item.syl_id)"></i></td>
-                    </tr>
-                  </ng-container>
-                </ng-container>
-              </ng-container>
-            </tbody>
+                                            </td>
+                                            <td *ngIf="!viewOnly" class="custom-td">
+                                                <i class="far fa-edit modify-icon" (click)="openEditDialog(det.sd_id)" style="cursor:pointer" title="Edit"></i>&nbsp;
+                                                <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="openModal(i ,j ,det.sd_id)" style="cursor:pointer" title="Delete"></i>
+                                            </td>
+                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                                <i class="fas fa-thumbs-up font-color-green cursor-pointer font-size-16" (click)="openPublish(item.syl_id, item.sd_topic_id)"></i></td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </tbody>
 
-            <tbody>
-                <tr class="text-center" *ngIf="finaldivflag">
-                  <td colspan="9"><span class="font-size-20 font-bold font-color-brown">No Data
-                      Available</span><br><span class="font-size-20 font-light font-color-brown">Please Choose 
-                     Class and Subject</span></td>
-                </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </mat-card>
-  </div>
+                        <tbody>
+                            <tr class="text-center" *ngIf="finalDivFlag">
+                                <td colspan="9">
+                                    <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                                    <br><br><br>                                         
+                                    <span class="font-size-20 font-bold font-color-brown">
+                                      No Data Available
+                                    </span>
+                                    <br><span class="font-size-20 font-light font-color-brown">
+                                      Please Update Syllabus on Click of Add Button
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </mat-card>
+    </div>
 </div>
-<app-delete-modal #deleteModal (deleteOk)="deleteSyllabusList($event)" ></app-delete-modal>
-<app-publish-modal #publishModal (publishOk)="insertPublishSyllabus($event)" ></app-publish-modal>
+<app-delete-modal #deleteModal (deleteOk)="deleteSyllabusList($event)"></app-delete-modal>
+<app-publish-modal #publishModal (publishOk)="insertPublishSyllabus($event)"></app-publish-modal>
+<app-edit-syllabus #editModal (editOk)="updateSyllabussEdit($event)"></app-edit-syllabus>
