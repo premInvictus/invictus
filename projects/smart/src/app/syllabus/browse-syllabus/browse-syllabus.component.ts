@@ -1,8 +1,7 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonAPIService, SisService, AxiomService } from '../../_services';
-import { SyllabusserviceService } from './../syllabusservice.service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-browse-syllabus',
@@ -11,24 +10,24 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 })
 export class BrowseSyllabusComponent implements OnInit {
 	@ViewChild('UnpublishModal') UnpublishModal;
+	public reviewform: FormGroup;
 	public classArray: any[];
 	public subjectArray: any[];
 	public finalSyllabusArray: any[];
-	finalSpannedArray: any[] = [];
 	public topicArray: any[];
-	syl_id: any;
-	sd_status: any;
-	public reviewform: FormGroup;
+	finalSpannedArray: any[] = [];
 	editRequestFlag = false;
 	finaldivflag = true;
+	syl_id: any;
+	sd_status: any;
 	param: any = {};
 	currentUser: any;
 	UnpublishParam: any = {};
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
-		private syllabusservice: SyllabusserviceService,
-		public common: CommonAPIService,
+		private syllabusService: SmartService,
+		public commonService: CommonAPIService,
 		public axiomService: AxiomService,
 		public sisService: SisService,
 	) {
@@ -50,9 +49,14 @@ export class BrowseSyllabusComponent implements OnInit {
 		this.UnpublishParam.topic_id = topic_id;
 		this.UnpublishModal.openunpublishModal(this.UnpublishParam);
 	}
+
+	//  Get Class List function
 	getClass() {
 		this.finalSpannedArray = [];
-		this.syllabusservice.getClass()
+		const classParam: any = {};
+		classParam.role_id = this.currentUser.role_id;
+		classParam.login_id = this.currentUser.login_id;
+		this.sisService.getClass(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -64,20 +68,26 @@ export class BrowseSyllabusComponent implements OnInit {
 			'syl_sub_id': ''
 		});
 	}
+
+	//  Get Subject By Class function
 	getSubjectsByClass(): void {
 		this.finalSpannedArray = [];
-		this.syllabusservice.getSubjectsByClass(this.reviewform.value.syl_class_id)
+		const subjectParam: any = {};
+		subjectParam.class_id = this.reviewform.value.syl_class_id;
+		this.axiomService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.subjectArray = result.data;
 					} else {
 						this.subjectArray = [];
-						this.common.showSuccessErrorMessage('No Record Found', 'error');
+						this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 					}
 				}
 			);
 	}
+
+	//  Get Topic List function
 	getTopicByClassSubject() {
 		this.axiomService.getTopicByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
 			.subscribe(
@@ -90,13 +100,16 @@ export class BrowseSyllabusComponent implements OnInit {
 				}
 			);
 	}
+
+	//  Get Topic Name from existion Array for details table
 	getTopicName(value) {
-		for (const item of this.topicArray) {
-			if (item.topic_id === value) {
-				return item.topic_name;
-			}
+		const topIndex = this.topicArray.findIndex(f => Number(f.topic_id) === Number(value));
+		if (topIndex !== -1) {
+			return this.topicArray[topIndex].topic_name;
 		}
 	}
+
+	//  Get Sub Topic Name
 	getSubTopicName(value): void {
 		this.axiomService.getSubtopicByTopic(value)
 			.subscribe(
@@ -106,6 +119,8 @@ export class BrowseSyllabusComponent implements OnInit {
 					}
 				});
 	}
+
+	// function for unpublish Syllabus list
 	unpublishSyllabus($event) {
 		if ($event) {
 			const param2: any = {};
@@ -115,7 +130,7 @@ export class BrowseSyllabusComponent implements OnInit {
 			param2.sd_unpublish_remark = this.UnpublishParam.req_reason_text;
 			param2.sd_unpublish_by_user_id = this.currentUser.login_id;
 			param2.sd_status = '0';
-			this.syllabusservice.updatePublishStatus(param2)
+			this.syllabusService.updatePublishStatus(param2)
 				.subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
@@ -126,21 +141,23 @@ export class BrowseSyllabusComponent implements OnInit {
 							param.mod_review_reason_id = param2.sd_unpublish_reason_id;
 							param.mod_review_status = '2';
 							param.mod_title = '1';
-							this.syllabusservice.insertPublishSyllabus(param)
+							this.syllabusService.insertPublishSyllabus(param)
 								.subscribe(
-									(result: any) => {
-										if (result && result.status === 'ok') {
+									(updateResult: any) => {
+										if (updateResult && updateResult.status === 'ok') {
 											this.fetchSyllabusDetails();
-											this.common.showSuccessErrorMessage('Syllabus Unpublish Successfully', 'success');
+											this.commonService.showSuccessErrorMessage('Syllabus Unpublish Successfully', 'success');
 										}
 									});
 						}
 					});
 		}
 	}
+
+	// fetch syllabus details for table
 	fetchSyllabusDetails() {
 		this.finaldivflag = false;
-		this.syllabusservice.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
+		this.syllabusService.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -149,7 +166,7 @@ export class BrowseSyllabusComponent implements OnInit {
 						param.syl_id = result.data[0].syl_id;
 						param.sd_status = 1;
 						if (param.syl_id !== '') {
-							this.syllabusservice.getSyllabusDetails(param)
+							this.syllabusService.getSyllabusDetails(param)
 								.subscribe(
 									(result1: any) => {
 										if (result1 && result1.status === 'ok') {
@@ -222,11 +239,11 @@ export class BrowseSyllabusComponent implements OnInit {
 													// tslint:disable-next-line: max-line-length
 													this.finalSpannedArray[findex].total = Number(this.finalSpannedArray[findex].total) + Number(this.finalSyllabusArray[i].sd_period_req);
 												}
-												console.log('finalSpannedArray', this.finalSpannedArray);
 											}
 										} else {
-											this.finalSyllabusArray = [];
-											this.common.showSuccessErrorMessage('No Record Found', 'error');
+											this.finalSpannedArray = [];
+											this.finaldivflag = true;
+											this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 										}
 									});
 						}

@@ -1,8 +1,7 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonAPIService, SisService, AxiomService } from '../../_services';
-import { SyllabusserviceService } from './../syllabusservice.service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-review-syllabus',
@@ -10,59 +9,57 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 	styleUrls: ['./review-syllabus.component.css']
 })
 export class ReviewSyllabusComponent implements OnInit {
+	@ViewChild('editModal') editModal;
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('publishModal') publishModal;
+	public reviewForm: FormGroup;
 	public classArray: any[];
 	public subjectArray: any[];
 	public finalSyllabusArray: any[];
-	finalSpannedArray: any[] = [];
 	public topicArray: any[];
 	public subtopicArray: any[];
-	syl_id: any;
-	public reviewform: FormGroup;
+	finalSpannedArray: any[] = [];
 	editRequestFlag = false;
-	finaldivflag = true;
+	finalDivFlag = true;
 	param: any = {};
 	publishParam: any = {};
+	editParam: any = {};
+	syl_id: any;
 	currentUser: any;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
-		private syllabusservice: SyllabusserviceService,
-		public common: CommonAPIService,
+		private syllabusService: SmartService,
+		public commonService: CommonAPIService,
 		public axiomService: AxiomService,
 		public sisService: SisService,
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 	}
 
-	openDialog(sd_id) {
-		// tslint:disable-next-line: no-use-before-declare
-		const dialogRef = this.dialog.open(EditSyllabus, {
-			height: '550px',
-			width: '700px',
-			data: { sd_id: sd_id }
-		});
-
-		dialogRef.afterClosed().subscribe(result => {
-			if (result) {
-				this.fetchSyllabusDetails();
-			}
-		});
+	// Edit dialod open modal function
+	openEditDialog(sd_id) {
+		this.editParam.sd_id = sd_id;
+		this.editModal.openEditModal(this.editParam);
 	}
+
+	// delete dialog open modal function
 	openModal(i, j, sd_id) {
 		this.param.indexi = i;
 		this.param.indexj = j;
 		this.param.sd_id = sd_id;
+		this.param.text = 'Delete';
 		this.deleteModal.openModal(this.param);
 	}
+
+	// Publish dialog open modal function
 	openPublish(syl_id, topic_id) {
 		this.publishParam.syl_id = syl_id;
 		this.publishParam.topic_id = topic_id;
 		this.publishModal.openpublishModal(this.publishParam);
 	}
 	buildForm() {
-		this.reviewform = this.fbuild.group({
+		this.reviewForm = this.fbuild.group({
 			syl_class_id: '',
 			syl_sub_id: ''
 		});
@@ -72,9 +69,13 @@ export class ReviewSyllabusComponent implements OnInit {
 		this.getClass();
 	}
 
+	//  Get Class List function
 	getClass() {
 		this.finalSpannedArray = [];
-		this.syllabusservice.getClass()
+		const classParam: any = {};
+		classParam.role_id = this.currentUser.role_id;
+		classParam.login_id = this.currentUser.login_id;
+		this.sisService.getClass(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -82,26 +83,32 @@ export class ReviewSyllabusComponent implements OnInit {
 					}
 				}
 			);
-		this.reviewform.patchValue({
+		this.reviewForm.patchValue({
 			'syl_sub_id': ''
 		});
 	}
+
+	//  Get Subject By Class function
 	getSubjectsByClass(): void {
 		this.finalSpannedArray = [];
-		this.syllabusservice.getSubjectsByClass(this.reviewform.value.syl_class_id)
+		const subjectParam: any = {};
+		subjectParam.class_id = this.reviewForm.value.syl_class_id;
+		this.axiomService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.subjectArray = result.data;
 					} else {
 						this.subjectArray = [];
-						this.common.showSuccessErrorMessage('No Record Found', 'error');
+						this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 					}
 				}
 			);
 	}
+
+	//  Get Topic List function
 	getTopicByClassSubject() {
-		this.axiomService.getTopicByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
+		this.axiomService.getTopicByClassSubject(this.reviewForm.value.syl_class_id, this.reviewForm.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -112,13 +119,16 @@ export class ReviewSyllabusComponent implements OnInit {
 				}
 			);
 	}
+
+	//  Get Topic Name from existion Array for details table
 	getTopicName(value) {
-		for (const item of this.topicArray) {
-			if (item.topic_id === value) {
-				return item.topic_name;
-			}
+		const topIndex = this.topicArray.findIndex(f => Number(f.topic_id) === Number(value));
+		if (topIndex !== -1) {
+			return this.topicArray[topIndex].topic_name;
 		}
 	}
+
+	//  Get Sub Topic Name
 	getSubTopicName(value): void {
 		this.axiomService.getSubtopicByTopic(value)
 			.subscribe(
@@ -128,6 +138,8 @@ export class ReviewSyllabusComponent implements OnInit {
 					}
 				});
 	}
+
+	// delete syllabus list from database function 
 	deleteSyllabusList($event) {
 		if ($event) {
 			if (this.finalSpannedArray[this.param.indexi].details.length > 1) {
@@ -139,37 +151,39 @@ export class ReviewSyllabusComponent implements OnInit {
 			const param: any = {};
 			param.sd_id = this.param.sd_id;
 			param.sd_status = '5';
-			this.syllabusservice.deleteSyllabusDetails(param)
+			this.syllabusService.deleteSyllabusDetails(param)
 				.subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
 							this.fetchSyllabusDetails();
-							this.common.showSuccessErrorMessage('Syllabus List Deleted Successfully', 'success');
+							this.commonService.showSuccessErrorMessage('Syllabus List Deleted Successfully', 'success');
 						}
 					});
 		}
 	}
+
+	// publish syllabus list
 	insertPublishSyllabus($event) {
 		if ($event) {
-			const param2: any = {};
-			param2.sd_syl_id = this.publishParam.syl_id;
-			param2.sd_topic_id = this.publishParam.topic_id;
-			param2.sd_status = '1';
-			this.syllabusservice.updatePublishStatus(param2)
+			const publishParam: any = {};
+			publishParam.sd_syl_id = this.publishParam.syl_id;
+			publishParam.sd_topic_id = this.publishParam.topic_id;
+			publishParam.sd_status = '1';
+			this.syllabusService.updatePublishStatus(publishParam)
 				.subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
 							const param: any = {};
-							param.mod_review_row_id = param2.sd_syl_id + '-' + param2.sd_topic_id;
+							param.mod_review_row_id = publishParam.sd_syl_id + '-' + publishParam.sd_topic_id;
 							param.mod_review_by = this.currentUser.login_id;
 							param.mod_review_status = '1';
 							param.mod_title = '1';
-							this.syllabusservice.insertPublishSyllabus(param)
+							this.syllabusService.insertPublishSyllabus(param)
 								.subscribe(
-									(result: any) => {
-										if (result && result.status === 'ok') {
+									(publishResult: any) => {
+										if (publishResult && publishResult.status === 'ok') {
 											this.fetchSyllabusDetails();
-											this.common.showSuccessErrorMessage('Syllabus Publish Successfully', 'success');
+											this.commonService.showSuccessErrorMessage('Syllabus Publish Successfully', 'success');
 										}
 									});
 						}
@@ -177,9 +191,28 @@ export class ReviewSyllabusComponent implements OnInit {
 		}
 	}
 
+	// updtae syllabus list function
+	updateSyllabussEdit($event) {
+		if ($event) {
+			const param: any = {};
+			param.sd_id = this.editParam.sd_id;
+			param.sd_period_req = this.editParam.sd_period_req;
+			param.sd_desc = this.editParam.sd_desc;
+			this.syllabusService.updateSyllabusEditDetails(param)
+				.subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.fetchSyllabusDetails();
+							this.commonService.showSuccessErrorMessage('Syllabus List Updated Successfully', 'success');
+						}
+					});
+		}
+	}
+
+	// fetch syllabus details for table
 	fetchSyllabusDetails() {
-		this.finaldivflag = false;
-		this.syllabusservice.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
+		this.finalDivFlag = false;
+		this.syllabusService.getSylIdByClassSubject(this.reviewForm.value.syl_class_id, this.reviewForm.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -188,7 +221,7 @@ export class ReviewSyllabusComponent implements OnInit {
 						param.syl_id = result.data[0].syl_id;
 						param.sd_status = 0;
 						if (param.syl_id !== '') {
-							this.syllabusservice.getSyllabusDetails(param)
+							this.syllabusService.getSyllabusDetails(param)
 								.subscribe(
 									(result1: any) => {
 										if (result1 && result1.status === 'ok') {
@@ -261,11 +294,11 @@ export class ReviewSyllabusComponent implements OnInit {
 													// tslint:disable-next-line: max-line-length
 													this.finalSpannedArray[findex].total = Number(this.finalSpannedArray[findex].total) + Number(this.finalSyllabusArray[i].sd_period_req);
 												}
-												console.log('finalSpannedArray', this.finalSpannedArray); 
 											}
 										} else {
-											this.finalSyllabusArray = [];
-											this.common.showSuccessErrorMessage('No Record Found', 'error');
+											this.finalSpannedArray = [];
+											this.finalDivFlag = true;
+											this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 										}
 									});
 						}
@@ -276,93 +309,4 @@ export class ReviewSyllabusComponent implements OnInit {
 	}
 
 
-}
-
-@Component({
-	selector: 'edit-syllabus',
-	templateUrl: 'edit-syllabus.html',
-})
-// tslint:disable-next-line: component-class-suffix
-export class EditSyllabus {
-	public editArray: any[] = [];
-	public revieweditform: FormGroup;
-	ckeConfig: any = {};
-	constructor(
-		private fbuild: FormBuilder,
-		private syllabusservice: SyllabusserviceService,
-		public common: CommonAPIService,
-		public dialogRef: MatDialogRef<EditSyllabus>,
-		@Inject(MAT_DIALOG_DATA) public data: any
-	) { }
-	buildForm() {
-		this.revieweditform = this.fbuild.group({
-			class_name: '',
-			sub_name: '',
-			term_name: '',
-			topic_name: '',
-			subtopic_name: '',
-			ctr_name: '',
-			sd_period_req: '',
-			sd_desc: '',
-			sd_id: ''
-		});
-	}
-	// tslint:disable-next-line: use-life-cycle-interface
-	ngOnInit() {
-		this.buildForm();
-		this.getSyllabusDetailsEdit(this.data);
-		this.ckeConfig = {
-			allowedContent: true,
-			pasteFromWordRemoveFontStyles: false,
-			contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
-			disallowedContent: 'm:omathpara',
-			height: '140',
-			width: '100%',
-			// tslint:disable-next-line:max-line-length
-			extraPlugins: '',
-			scayt_multiLanguageMod: true,
-			toolbar: [
-				// tslint:disable-next-line:max-line-length
-				['Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates']
-			],
-			removeDialogTabs: 'image:advanced;image:Link'
-		};
-	}
-	getSyllabusDetailsEdit(value: any) {
-		console.log(value);
-		this.syllabusservice.getSyllabusDetailsEdit(value)
-			.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.revieweditform.patchValue({
-							'class_name': result.data[0].class_name,
-							'sub_name': result.data[0].sub_name,
-							'term_name': result.data[0].term_name,
-							'topic_name': result.data[0].topic_name,
-							'subtopic_name': result.data[0].st_name,
-							'ctr_name': result.data[0].ctr_name,
-							'sd_desc': result.data[0].sd_desc,
-							'sd_period_req': result.data[0].sd_period_req,
-							'sd_id': result.data[0].sd_id
-						});
-					}
-				});
-	}
-	updateSyllabussEdit() {
-		const param: any = {};
-		param.sd_id = this.revieweditform.value.sd_id;
-		param.sd_period_req = this.revieweditform.value.sd_period_req;
-		param.sd_desc = this.revieweditform.value.sd_desc;
-		this.syllabusservice.updateSyllabusEditDetails(param)
-			.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage('Syllabus List Updated Successfully', 'success');
-						this.dialogRef.close(true);
-					}
-				});
-	}
-	closeDialog() {
-		this.dialogRef.close(false);
-	}
 }

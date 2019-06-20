@@ -1,5 +1,31 @@
 <ng-template #deleteModal>
-    <div class="modal-main-box">
+      <div class="modal-custom-cotainer">
+            <div class="row remove-top-margin">
+                <div class="col-12 remove-col-padding">
+                    <div class="modal-title-box">
+                        <span class="font-size-20 font-white font-regular">{{inputData.text}} Syllabus</span><span
+                            class="float-right margin-top-5">
+                            <a (click)="closeDialog()">  <i class="far fa-times-circle font-white cursor-pointer font-size-24"></i></a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row margin-top-20">
+                <div class="col-12 text-center">
+                    <span class="font-size-24 font-regular"> Do you wish to </span><span
+                        class="font-size-24 font-bold">{{inputData.text}}?</span>
+                </div>
+            </div>
+            <div class="row margin-top-20">
+                <div class="col-12 text-center">
+                    <button mat-raised-button class="btn-success-green" (click)="delete();closeDialog()">Yes</button>
+                    <button mat-raised-button class="btn-reset margin-left-10" (click)="closeDialog()">No</button>
+                </div>
+            </div>    
+        </div>
+
+
+
+    <!-- <div class="modal-main-box">
        <div>
           <div>
              <div class="row">
@@ -14,7 +40,7 @@
              <div class="row">
                 <div class="col-lg-12">
                    <div>
-                      <h6 class="text-center"><b>Confirmation Message</b></h6>
+                      <h6 class="text-center"><b>Confirmation Message{{inputData.sd_id}}</b></h6>
                    </div>
                 </div>
              </div>
@@ -28,5 +54,5 @@
              <button mat-raised-button class="btn-danger" (click)="closeDialog()">No</button>
           </div>
        </div>
-    </div>
+    </div> -->
  </ng-template>
