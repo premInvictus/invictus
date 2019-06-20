@@ -85,7 +85,7 @@
                     <td [attr.rowspan]="topic.subtopicCount" class="custom-td" (click)="toggleStatus(i,1,topic.courseCompleted)">
                       <ng-container *ngIf="topic.courseCompleted">
                         <i class="fas fa-check-circle font-size-40 font-color-green"></i><br>
-                        <span class="font-size-12 font-regular">Update On: </span>
+                        <span class="font-size-12 font-regular">Updated On: </span>
                         <span
                           class="font-size-12 font-bold">{{topic.courseCompleted.tw_entry_date | date:'dd MMM, yyyy'}}</span>
                       </ng-container>
@@ -101,7 +101,7 @@
                     <td [attr.rowspan]="topic.subtopicCount" class="custom-td" (click)="toggleStatus(i,2,topic.testConducted)">
                       <ng-container *ngIf="topic.testConducted">
                         <i class="fas fa-check-circle font-size-40 font-color-green"></i><br>
-                        <span class="font-size-12 font-regular">Update On: </span>
+                        <span class="font-size-12 font-regular">Updated On: </span>
                         <span
                           class="font-size-12 font-bold">{{topic.testConducted.tw_entry_date | date:'dd MMM, yyyy'}}</span>
                       </ng-container>

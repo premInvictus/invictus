@@ -155,6 +155,11 @@ export class TopicwiseUpdateComponent implements OnInit {
 		}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
+				/* if (this.subjectArray.length === 1) {
+					this.topicwiseforForm.patchValue({
+						tw_sub_id: this.subjectArray[0].sub_id
+					});
+				} */
 			} else {
 				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
