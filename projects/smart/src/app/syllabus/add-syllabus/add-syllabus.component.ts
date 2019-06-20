@@ -1,65 +1,60 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoaderService, CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
-import { SyllabusserviceService } from './../syllabusservice.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
 @Component({
 	selector: 'app-add-syllabus',
 	templateUrl: './add-syllabus.component.html',
 	styleUrls: ['./add-syllabus.component.css']
 })
 export class AddSyllabusComponent implements OnInit {
-	public parameterform: FormGroup;
-	public parameterform2: FormGroup;
-	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png';
+	@ViewChild('deleteModal') deleteModal;
 	activityUpdateFlag = false;
 	syllabusUpdateFlag = false;
 	finaldivflag = true;
 	finalSubmitdivflag = false;
-	requiredFeild = false;
-	syllabusvalue1: any;
-	syllabusvalue2: any;
-	modalForm: FormGroup;
+	requiredField = false;
+	syllabus_flag = true;
+	details_flag = false;
+	periodDivFlag = false;
+	editRequestFlag = false;
+	public syllabusForm: FormGroup;
+	public syllabusDetailForm: FormGroup;
 	public classArray: any[];
 	public subjectArray: any[];
-	public termArray: any[];
 	public ctrArray: any[];
 	public topicArray: any[];
 	finalSyllabusArray: any[] = [];
 	finalSpannedArray: any[] = [];
 	finalSubmitArray: any[] = [];
+	syllabusValue1: any;
+	syllabusValue2: any;
 	currentUser: any;
 	session: any;
 	syl_id: any;
 	syl_class_id: any;
 	syl_sub_id: any;
-	syl_term_id: any;
 	syl_result: any = {};
 	subtopicArray: any;
 	sub_id: any;
 	ckeConfig: any = {};
-	syllabus_flag = true;
-	details_flag = false;
-	editRequestFlag = false;
-	totalByTopic: any[] = [{
-		topic_id: '',
-		total: 0
-	}];
+	submitParam: any = {};
+	subTopicJson: any[] = [];
+	add = 'Add';
 	constructor(
 		private fbuild: FormBuilder,
-		private syllabusservice: SyllabusserviceService,
-		public common: CommonAPIService,
+		private syllabusService: SmartService,
+		public commonService: CommonAPIService,
 		public axiomService: AxiomService,
 		public sisService: SisService,
 
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
-	 }
+	}
 
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
-		this.getTermList();
 		this.ctrList();
 		this.ckeConfig = {
 			allowedContent: true,
@@ -68,11 +63,9 @@ export class AddSyllabusComponent implements OnInit {
 			disallowedContent: 'm:omathpara',
 			height: '150',
 			width: '100%',
-			// tslint:disable-next-line:max-line-length
 			extraPlugins: '',
 			scayt_multiLanguageMod: true,
 			toolbar: [
-				// tslint:disable-next-line:max-line-length
 				['Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates']
 			],
 			removeDialogTabs: 'image:advanced;image:Link'
@@ -80,12 +73,11 @@ export class AddSyllabusComponent implements OnInit {
 	}
 
 	buildForm() {
-		this.parameterform = this.fbuild.group({
+		this.syllabusForm = this.fbuild.group({
 			syl_class_id: '',
 			syl_sub_id: '',
-			syl_term_id: ''
 		});
-		this.parameterform2 = this.fbuild.group({
+		this.syllabusDetailForm = this.fbuild.group({
 			sd_ctr_id: '',
 			sd_topic_id: '',
 			sd_st_id: '',
@@ -93,8 +85,13 @@ export class AddSyllabusComponent implements OnInit {
 			sd_desc: ''
 		});
 	}
+
+	//  Get Class List function
 	getClass() {
-		this.syllabusservice.getClass()
+		const classParam: any = {};
+		classParam.role_id = this.currentUser.role_id;
+		classParam.login_id = this.currentUser.login_id;
+		this.sisService.getClass(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -103,34 +100,33 @@ export class AddSyllabusComponent implements OnInit {
 				}
 			);
 	}
+	//  Open Final Submit Modal function
 
+	openSubmitModal() {
+		this.submitParam.text = 'Add';
+		this.deleteModal.openModal(this.submitParam);
+	}
+
+	//  Get Subject By Class function
 	getSubjectsByClass(): void {
-		this.syllabusservice.getSubjectsByClass(this.parameterform.value.syl_class_id)
+		const subjectParam: any = {};
+		subjectParam.class_id = this.syllabusForm.value.syl_class_id;
+		this.axiomService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.subjectArray = result.data;
 					} else {
 						this.subjectArray = [];
-						this.common.showSuccessErrorMessage('No Record Found', 'error');
+						this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 					}
 				}
 			);
 	}
 
-	getTermList() {
-		this.syllabusservice.getTermList()
-			.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.termArray = result.data;
-					}
-				}
-			);
-	}
-
+	//  Get CTR List function
 	ctrList() {
-		this.syllabusservice.ctrList()
+		this.syllabusService.ctrList()
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -140,8 +136,9 @@ export class AddSyllabusComponent implements OnInit {
 			);
 	}
 
+	//  Get Topic List function
 	getTopicByClassSubject() {
-		this.axiomService.getTopicByClassSubject(this.parameterform.value.syl_class_id, this.parameterform.value.syl_sub_id)
+		this.axiomService.getTopicByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -153,127 +150,134 @@ export class AddSyllabusComponent implements OnInit {
 			);
 	}
 
+	//  Get Subtopic List function
 	getSubtopicByTopic(): void {
-		this.axiomService.getSubtopicByTopic(this.parameterform2.value.sd_topic_id)
+		this.axiomService.getSubtopicByTopic(this.syllabusDetailForm.value.sd_topic_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.subtopicArray = result.data;
+						if (this.subTopicJson.length > 1) {
+							const subTopindex = this.subTopicJson.findIndex(f => Number(f.st_id) === Number(this.subtopicArray.st_id));
+							if (subTopindex === -1) {
+								for (let i = 0; i < this.subtopicArray.length; i++) {
+									this.subTopicJson.push({
+										st_id: this.subtopicArray[i].st_id,
+										st_name: this.subtopicArray[i].st_name,
+									});
+								}
+							}
+						} else {
+							this.subTopicJson = this.subtopicArray;
+						}
 					} else {
 						this.subtopicArray = [];
-						this.common.showSuccessErrorMessage('No Record Found', 'error');
+						this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 					}
 				}
 			);
 	}
-
-	// getSyllabus(value) {
-	// 	this.syllabusservice.getSyllabus(value)
-	// 		.subscribe(
-	// 			(result: any) => {
-	// 				if (result && result.status === 'ok') {
-	// 					this.syl_result = result.data[0];
-	// 					this.getTopicByClassSubject(this.syl_result.syl_class_id, this.syl_result.syl_sub_id);
-	// 				}
-	// 			}
-	// 		);
-	// }
-
+	
+	//  Get Class Name from existion Array for details table
 	getSyllabusClass(class_id) {
 		const cindex = this.classArray.findIndex(f => Number(f.class_id) === Number(class_id));
 		if (cindex !== -1) {
 			return this.classArray[cindex].class_name;
 		}
 	}
+
+	//  Get Subject Name from existion Array for details table
 	getSyllabusSubject(sub_id) {
 		const sindex = this.subjectArray.findIndex(f => Number(f.sub_id) === Number(sub_id));
 		if (sindex !== -1) {
 			return this.subjectArray[sindex].sub_name;
 		}
 	}
-	getSyllabusTerm(term_id) {
-		const tindex = this.termArray.findIndex(f => Number(f.term_id) === Number(term_id));
-		if (tindex !== -1) {
-			return this.termArray[tindex].term_name;
-		}
-	}
+
+	//  Get Ctr Name from existion Array for details table
 	getCtrName(value) {
-		for (const item of this.ctrArray) {
-			if (item.ctr_id === value) {
-				return item.ctr_name;
-			}
+		const ctrIndex = this.ctrArray.findIndex(f => Number(f.ctr_id) === Number(value));
+		if (ctrIndex !== -1) {
+			return this.ctrArray[ctrIndex].ctr_name;
 		}
 	}
+
+	//  Get Topic Name from existion Array for details table
 	getTopicName(value) {
-		for (const item of this.topicArray) {
-			if (item.topic_id === value) {
-				return item.topic_name;
-			}
+		const topIndex = this.topicArray.findIndex(f => Number(f.topic_id) === Number(value));
+		if (topIndex !== -1) {
+			return this.topicArray[topIndex].topic_name;
 		}
 	}
-	getSubtopicRequired($event) {
-		this.requiredFeild = false;
-		if (Number($event.value) === 1) {
-			this.requiredFeild = true;
-		} else {
-			this.requiredFeild = false;
-		}
-	}
+
+	//  Get Sub Topic Name from existion Array for details table
 	getSubTopicName(value) {
-		for (const item of this.subtopicArray) {
-			if (Number(item.st_id) === Number(value)) {
-				return item.st_name;
-			}
+		const subIndex = this.subTopicJson.findIndex(f => Number(f.st_id) === Number(value));
+		if (subIndex !== -1) {
+			return this.subTopicJson[subIndex].st_name;
 		}
 	}
+
+	// Reset Syllabus Details form 
 	resetForm() {
-		this.parameterform2.patchValue({
+		this.syllabusDetailForm.patchValue({
 			'sd_ctr_id': '',
-			'sd_topic_id': '', 
+			'sd_topic_id': '',
 			'sd_st_id': '',
 			'sd_period_req': '',
 			'sd_desc': ''
 		});
 	}
+
+	// Function for cancel the perfor action and back to add class and subject
 	finalCancel() {
 		this.finalSpannedArray = [];
 		this.finalSubmitArray = [];
 		this.finaldivflag = true;
-		this.finalSubmitdivflag = false; 
+		this.finalSubmitdivflag = false;
 		this.syllabus_flag = true;
 		this.details_flag = false;
-		this.parameterform .patchValue({
+		this.syllabusForm.patchValue({
 			'syl_class_id': '',
-			'syl_sub_id': '',
-			'syl_term_id': ''
+			'syl_sub_id': ''
 		});
-	this.resetForm();
+		this.resetForm();
 	}
+
+	// add class and subject form submit function
 	submit() {
-		if (this.parameterform.valid) {
-			this.syllabusservice.getSylIdByClassSubject(this.parameterform.value.syl_class_id, this.parameterform.value.syl_sub_id)
-			.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage('Syllabus Already Added', 'error');
-					} else {
-						this.syllabus_flag = false;
-						this.details_flag = true;
-					}
-			});
+		if (this.syllabusForm.valid) {
+			this.syllabusService.getSylIdByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
+				.subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.commonService.showSuccessErrorMessage('Syllabus Already Added', 'error');
+						} else {
+							this.syllabus_flag = false;
+							this.details_flag = true;
+						}
+					});
 		} else {
-			this.common.showSuccessErrorMessage('Please fill all required field', 'error');
+			this.commonService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
 	}
+
+	// Add syllabus list function
 	addDetailsList() {
 		this.finaldivflag = false;
 		this.finalSubmitdivflag = true;
+		this.periodDivFlag = false;
 		if (!this.editRequestFlag) {
 			this.finalSpannedArray = [];
 		}
-		if (this.parameterform2.valid) {
-			this.finalSyllabusArray.push(this.parameterform2.value);
-
+		if (this.syllabusDetailForm.valid) {
+			if (this.syllabusDetailForm.value.sd_period_req === 0) {
+				this.finaldivflag = true;
+				this.finalSubmitdivflag = false;
+				this.periodDivFlag = true;
+				return false;
+			}
+			this.finalSyllabusArray.push(this.syllabusDetailForm.value);
 			for (let i = 0; i < this.finalSyllabusArray.length; i++) {
 				let sd_period_teacher: any = '';
 				let sd_period_test: any = '';
@@ -332,20 +336,22 @@ export class AddSyllabusComponent implements OnInit {
 					this.finalSpannedArray[findex].total = this.finalSpannedArray[findex].total + this.finalSyllabusArray[i].sd_period_req;
 				}
 			}
-			this.parameterform2.patchValue({
+			this.syllabusDetailForm.patchValue({
 				'sd_st_id': '',
 				'sd_period_req': '',
 				'sd_desc': ''
 			});
 		} else {
-			this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
+			this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
 		}
 	}
+
+	// Edit syllabus list function
 	editSyllabusList(value1, value2) {
 		this.syllabusUpdateFlag = true;
-		this.syllabusvalue1 = value1;
-		this.syllabusvalue2 = value2;
-		this.parameterform2.patchValue({
+		this.syllabusValue1 = value1;
+		this.syllabusValue2 = value2;
+		this.syllabusDetailForm.patchValue({
 			'sd_ctr_id': this.finalSpannedArray[value1].details[value2].sd_ctr_id,
 			'sd_topic_id': this.finalSpannedArray[value1].sd_topic_id,
 			'sd_st_id': this.finalSpannedArray[value1].details[value2].sd_st_id,
@@ -353,79 +359,82 @@ export class AddSyllabusComponent implements OnInit {
 			'sd_desc': this.finalSpannedArray[value1].details[value2].sd_desc,
 		});
 	}
+
+	// Update syllabus list function
 	updateSyllabussList() {
-		console.log(this.finalSpannedArray);
-		const findex = this.finalSyllabusArray.findIndex(f => f.sd_topic_id === this.finalSpannedArray[this.syllabusvalue1].sd_topic_id
-			&& f.sd_ctr_id === this.finalSpannedArray[this.syllabusvalue1].details[this.syllabusvalue2].sd_ctr_id
-			&& f.sd_period_req === this.finalSpannedArray[this.syllabusvalue1].details[this.syllabusvalue2].sd_period_req);
-		this.finalSyllabusArray[findex] = this.parameterform2.value;
+		const findex = this.finalSyllabusArray.findIndex(f => f.sd_topic_id === this.finalSpannedArray[this.syllabusValue1].sd_topic_id
+			&& f.sd_ctr_id === this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_ctr_id
+			&& f.sd_period_req === this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_period_req);
+		this.finalSyllabusArray[findex] = this.syllabusDetailForm.value;
 		const spannArray: any[] = [];
 		let sd_period_teacher2: any = '';
 		let sd_period_test2: any = '';
 		let sd_period_revision2: any = '';
-		if (this.parameterform2.value.sd_ctr_id === '1') {
-			sd_period_teacher2 = this.parameterform2.value.sd_period_req;
-		} else if (this.parameterform2.value.sd_ctr_id === '2') {
-			sd_period_test2 = this.parameterform2.value.sd_period_req;
+		if (this.syllabusDetailForm.value.sd_ctr_id === '1') {
+			sd_period_teacher2 = this.syllabusDetailForm.value.sd_period_req;
+		} else if (this.syllabusDetailForm.value.sd_ctr_id === '2') {
+			sd_period_test2 = this.syllabusDetailForm.value.sd_period_req;
 		} else {
-			sd_period_revision2 = this.parameterform2.value.sd_period_req;
+			sd_period_revision2 = this.syllabusDetailForm.value.sd_period_req;
 		}
 		// tslint:disable-next-line: max-line-length
-		this.finalSpannedArray[this.syllabusvalue1].total = this.finalSpannedArray[this.syllabusvalue1].total - this.finalSpannedArray[this.syllabusvalue1].details[this.syllabusvalue2].sd_period_req;
-		if (this.parameterform2.value.sd_topic_id === this.finalSpannedArray[this.syllabusvalue1].sd_topic_id) {
-			this.finalSpannedArray[this.syllabusvalue1].sd_topic_id = this.parameterform2.value.sd_topic_id;
-			this.finalSpannedArray[this.syllabusvalue1].details[this.syllabusvalue2] = this.parameterform2.value;
-			this.finalSpannedArray[this.syllabusvalue1].details[this.syllabusvalue2].sd_period_teacher = sd_period_teacher2;
-			this.finalSpannedArray[this.syllabusvalue1].details[this.syllabusvalue2].sd_period_test = sd_period_test2;
-			this.finalSpannedArray[this.syllabusvalue1].details[this.syllabusvalue2].sd_period_revision = sd_period_revision2;
+		this.finalSpannedArray[this.syllabusValue1].total = this.finalSpannedArray[this.syllabusValue1].total - this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_period_req;
+		if (this.syllabusDetailForm.value.sd_topic_id === this.finalSpannedArray[this.syllabusValue1].sd_topic_id) {
+			this.finalSpannedArray[this.syllabusValue1].sd_topic_id = this.syllabusDetailForm.value.sd_topic_id;
+			this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2] = this.syllabusDetailForm.value;
+			this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_period_teacher = sd_period_teacher2;
+			this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_period_test = sd_period_test2;
+			this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_period_revision = sd_period_revision2;
 			// tslint:disable-next-line: max-line-length
-			this.finalSpannedArray[this.syllabusvalue1].total = this.finalSpannedArray[this.syllabusvalue1].total + this.parameterform2.value.sd_period_req;
+			this.finalSpannedArray[this.syllabusValue1].total = this.finalSpannedArray[this.syllabusValue1].total + this.syllabusDetailForm.value.sd_period_req;
 		} else {
 			// tslint:disable-next-line: no-shadowed-variable
 			const spannArray: any[] = [];
 			spannArray.push({
-				sd_ctr_id: this.parameterform2.value.sd_ctr_id,
-				sd_topic_id: this.parameterform2.value.sd_topic_id,
-				sd_period_req: this.parameterform2.value.sd_period_req,
+				sd_ctr_id: this.syllabusDetailForm.value.sd_ctr_id,
+				sd_topic_id: this.syllabusDetailForm.value.sd_topic_id,
+				sd_period_req: this.syllabusDetailForm.value.sd_period_req,
 				sd_period_teacher: sd_period_teacher2,
 				sd_period_test: sd_period_test2,
 				sd_period_revision: sd_period_revision2,
-				sd_st_id: this.parameterform2.value.sd_st_id,
-				sd_desc: this.parameterform2.value.sd_desc,
+				sd_st_id: this.syllabusDetailForm.value.sd_st_id,
+				sd_desc: this.syllabusDetailForm.value.sd_desc,
 			});
 			if (this.finalSpannedArray.length > 0) {
-				this.finalSpannedArray[this.syllabusvalue1].details.splice(this.syllabusvalue2, 1);
-				if (this.finalSpannedArray[this.syllabusvalue1].details.length === 0) {
-					this.finalSpannedArray.splice(this.syllabusvalue1, 1);
+				this.finalSpannedArray[this.syllabusValue1].details.splice(this.syllabusValue2, 1);
+				if (this.finalSpannedArray[this.syllabusValue1].details.length === 0) {
+					this.finalSpannedArray.splice(this.syllabusValue1, 1);
 				}
 			} else {
-				this.finalSpannedArray.splice(this.syllabusvalue1, 1);
+				this.finalSpannedArray.splice(this.syllabusValue1, 1);
 			}
-			const rindex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.parameterform2.value.sd_topic_id);
+			const rindex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.syllabusDetailForm.value.sd_topic_id);
 			if (rindex === -1) {
 				this.finalSpannedArray.push({
-					sd_topic_id: this.parameterform2.value.sd_topic_id,
+					sd_topic_id: this.syllabusDetailForm.value.sd_topic_id,
 					details: spannArray,
-					total: this.parameterform2.value.sd_period_req
+					total: this.syllabusDetailForm.value.sd_period_req
 				});
 			} else {
 				this.finalSpannedArray[rindex].details.push({
-					sd_ctr_id: this.parameterform2.value.sd_ctr_id,
-					sd_topic_id: this.parameterform2.value.sd_topic_id,
-					sd_period_req: this.parameterform2.value.sd_period_req,
+					sd_ctr_id: this.syllabusDetailForm.value.sd_ctr_id,
+					sd_topic_id: this.syllabusDetailForm.value.sd_topic_id,
+					sd_period_req: this.syllabusDetailForm.value.sd_period_req,
 					sd_period_teacher: sd_period_teacher2,
 					sd_period_test: sd_period_test2,
 					sd_period_revision: sd_period_revision2,
-					sd_st_id: this.parameterform2.value.sd_st_id,
-					sd_desc: this.parameterform2.value.sd_desc,
+					sd_st_id: this.syllabusDetailForm.value.sd_st_id,
+					sd_desc: this.syllabusDetailForm.value.sd_desc,
 				});
-				this.finalSpannedArray[rindex].total = this.finalSpannedArray[rindex].total + this.parameterform2.value.sd_period_req;
+				this.finalSpannedArray[rindex].total = this.finalSpannedArray[rindex].total + this.syllabusDetailForm.value.sd_period_req;
 			}
 		}
-		this.common.showSuccessErrorMessage('Syllabus List Updated', 'success');
+		this.commonService.showSuccessErrorMessage('Syllabus List Updated', 'success');
 		this.resetForm();
 		this.syllabusUpdateFlag = false;
 	}
+
+	// Delete syllabus list function
 	deleteSyllabusList(value1, value2) {
 		if (this.finalSpannedArray[value1].details.length > 1) {
 			this.finalSpannedArray[value1].details.splice(value2, 1);
@@ -435,35 +444,41 @@ export class AddSyllabusComponent implements OnInit {
 		this.finalSyllabusArray.splice(value1, 1);
 		this.resetForm();
 	}
-	finalSubmit() {
-		this.syllabusservice.insertSyllabus(this.parameterform.value).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.syl_id = result.data ;
-				for (const item of this.finalSpannedArray) {
-					for (const fetch of item.details) {
-						if (fetch.sd_st_id === '') {
-							fetch.sd_st_id = '0';
+
+	// final submit function 
+	// In this function database entry occur
+	finalSubmit($event) {
+		if ($event) {
+			this.syllabusService.insertSyllabus(this.syllabusForm.value).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.syl_id = result.data;
+					for (const item of this.finalSpannedArray) {
+						for (const fetch of item.details) {
+							if (fetch.sd_st_id === '') {
+								fetch.sd_st_id = '0';
+							}
+							this.finalSubmitArray.push({
+								sd_syl_id: this.syl_id,
+								sd_ses_id: this.session.ses_id,
+								sd_created_by: this.currentUser.login_id,
+								sd_ctr_id: fetch.sd_ctr_id,
+								sd_topic_id: fetch.sd_topic_id,
+								sd_period_req: fetch.sd_period_req,
+								sd_st_id: fetch.sd_st_id,
+								sd_desc: fetch.sd_desc
+							});
 						}
-						this.finalSubmitArray.push({
-							sd_syl_id: this.syl_id,
-							sd_ses_id: this.session.ses_id,
-							sd_created_by: this.currentUser.login_id,
-							sd_ctr_id: fetch.sd_ctr_id,
-							sd_topic_id: fetch.sd_topic_id,
-							sd_period_req: fetch.sd_period_req,
-							sd_st_id: fetch.sd_st_id,
-							sd_desc: fetch.sd_desc
-						});
 					}
+					this.syllabusService.insertSyllabusDetails(this.finalSubmitArray).subscribe((result1: any) => {
+						if (result1 && result1.status === 'ok') {
+							this.finalSpannedArray = [];
+							this.finalSubmitArray = [];
+							this.resetForm();
+						}
+					});
 				}
-				this.syllabusservice.insertSyllabusDetails(this.finalSubmitArray).subscribe((result1: any) => {
-					if (result1 && result1.status === 'ok') {
-						this.finalSpannedArray = [];
-						this.finalSubmitArray = [];
-						this.resetForm();
-					}
-				});
-			}
-		});
+			});
+		}
 	}
 }
+ 

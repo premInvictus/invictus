@@ -20,8 +20,8 @@ export class PublishModalComponent implements OnInit {
 	openpublishModal(data) {
 		this.inputData = data;
 		this.dialogRef = this.dialog.open(this.publishModal, {
-      'height': '30vh',
-      'width': '60vh',
+			'height': '25vh',
+			'width': '60vh',
 			position: {
 				'top': '15%'
 			}

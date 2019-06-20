@@ -4,9 +4,10 @@ import { SyllabusRoutingModule } from './syllabus-routing.module';
 import { SmartSharedModule } from '../smart-shared/smart-shared.module';
 import { LoadingModule } from 'ngx-loading';
 import { AddSyllabusComponent } from './add-syllabus/add-syllabus.component';
-import { ReviewSyllabusComponent, EditSyllabus } from './review-syllabus/review-syllabus.component';
+import { ReviewSyllabusComponent } from './review-syllabus/review-syllabus.component';
 import { BrowseSyllabusComponent } from './browse-syllabus/browse-syllabus.component';
 import { SyllabusManagementComponent } from './syllabus-management/syllabus-management.component';
+import { EditSyllabusComponent } from './edit-syllabus/edit-syllabus.component';
 
 @NgModule({
 	imports: [
@@ -15,7 +16,6 @@ import { SyllabusManagementComponent } from './syllabus-management/syllabus-mana
 		LoadingModule,
 		SmartSharedModule,
 	],
-	declarations: [AddSyllabusComponent, ReviewSyllabusComponent, BrowseSyllabusComponent, SyllabusManagementComponent, EditSyllabus],
-	entryComponents: [EditSyllabus]
+	declarations: [AddSyllabusComponent, ReviewSyllabusComponent, BrowseSyllabusComponent, SyllabusManagementComponent, EditSyllabusComponent]
 })
 export class SyllabusModule { }
