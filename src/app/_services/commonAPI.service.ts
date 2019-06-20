@@ -20,6 +20,8 @@ export class CommonAPIService {
 			(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
 	}
 	UserAccessMenu: any[] = [];
+	question_type: any[] = [];
+	question_subtype: any[] = [];
 	showLoading = new Subject();
 	studentData = new Subject();
 	reRenderForm = new Subject();
@@ -199,10 +201,35 @@ export class CommonAPIService {
 		}
 	}
 	getSession() {
-		return this.http.get(environment.apiSisUrl + '/siSetup/session');
+		return this.http.get(environment.apiSisUrl + '/siSetup/session/1');
 	}
 	getSchool() {
 		return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
+	}
+
+	getQTypeFromApi() {
+		return this.http.get('/setup/question_type/1');
+	}
+	setQType(value) {
+		this.question_type = [];
+		this.question_type = value;
+	}
+	getQtype() {
+		if (this.question_type.length > 0) {
+			return of(this.question_type);
+		}
+		return of(this.question_type);
+	}
+	getQsubtype(qt_id) {
+		let tempdata: any = null;
+		if (this.question_type.length > 0) {
+			this.question_type.forEach(element => {
+				if (Number(element.qt_id) === Number(qt_id)) {
+					tempdata = element.qst_id;
+				}
+			});
+		}
+		return of(tempdata);
 	}
 
 }

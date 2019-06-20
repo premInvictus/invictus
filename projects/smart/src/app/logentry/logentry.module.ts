@@ -7,6 +7,7 @@ import { ClassworkUpdateComponent } from './classwork-update/classwork-update.co
 import { TopicwiseUpdateComponent } from './topicwise-update/topicwise-update.component';
 import { ReviewClassworkComponent } from './classwork-update/review-classwork/review-classwork.component';
 import { UpdateConfirmationComponent } from './topicwise-update/update-confirmation/update-confirmation.component';
+import { ViewClassworkComponent } from './view-classwork/view-classwork.component';
 
 @NgModule({
 	imports: [
@@ -15,7 +16,7 @@ import { UpdateConfirmationComponent } from './topicwise-update/update-confirmat
 		LoadingModule,
 		SmartSharedModule,
 	],
-	declarations: [ClassworkUpdateComponent, TopicwiseUpdateComponent, ReviewClassworkComponent, UpdateConfirmationComponent],
+	declarations: [ClassworkUpdateComponent, TopicwiseUpdateComponent, ReviewClassworkComponent, UpdateConfirmationComponent, ViewClassworkComponent],
 	entryComponents: [ReviewClassworkComponent, UpdateConfirmationComponent]
 })
 export class LogentryModule { }

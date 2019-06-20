@@ -26,6 +26,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	sub_id;
 	topic_id;
 	assignment_desc;
+	ckeConfig: any = {};
 
 	constructor(
 		public dialogRef: MatDialogRef<AssignmentAttachmentDialogComponent>,
@@ -44,6 +45,22 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		this.topic_id = this.data.topic_id;
 		this.assignment_desc = this.data.assignment_desc;
 		this.getClass();
+		this.ckeConfig = {
+			allowedContent: true,
+			pasteFromWordRemoveFontStyles: false,
+			contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
+			disallowedContent: 'm:omathpara',
+			height: '150',
+			width: '100%',
+			// tslint:disable-next-line:max-line-length
+			extraPlugins: '',
+			scayt_multiLanguageMod: true,
+			toolbar: [
+				// tslint:disable-next-line:max-line-length
+				['Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates']
+			],
+			removeDialogTabs: 'image:advanced;image:Link'
+		};
 	}
 	getClass() {
 		this.classArray = [];
@@ -133,7 +150,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 
 	submitAttachment() {
-		this.dialogRef.close({attachments: this.imageArray});
+		this.dialogRef.close({attachments: this.imageArray, assignment_desc: this.assignment_desc});
 	}
 	closeDialog() {
 		this.dialogRef.close();

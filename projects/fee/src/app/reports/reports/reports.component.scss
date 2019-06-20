@@ -166,3 +166,15 @@ td.mat-cell {
 .font-size-14 {
   font-size: 16px !important;
 }
+::ng-deep.mfrrepo.mat-header-cell {
+  min-width: 28px !important;
+}
+th.mfrrepo.mat-header-cell.cdk-column-au_admission_no {
+  width: 10% !important;
+}
+th.mfrrepo.mat-header-cell.cdk-column-au_full_name {
+  width: 20%;
+}
+th.mfrrepo.mat-header-cell.cdk-column-class_name {
+  width: 5%;
+}
