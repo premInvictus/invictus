@@ -12,6 +12,7 @@ export class AddSyllabusComponent implements OnInit {
 	public parameterform2: FormGroup;
 	activityUpdateFlag = false;
 	syllabusUpdateFlag = false;
+	finaldivflag = true;
 	requiredFeild = false;
 	syllabusvalue1: any;
 	syllabusvalue2: any;
@@ -226,13 +227,24 @@ export class AddSyllabusComponent implements OnInit {
 	resetForm() {
 		this.parameterform2.patchValue({
 			'sd_ctr_id': '',
-			'sd_topic_id': '',
+			'sd_topic_id': '', 
 			'sd_st_id': '',
 			'sd_period_req': '',
 			'sd_desc': ''
 		});
 	}
-
+	finalCancel() {
+		this.finalSpannedArray = [];
+		this.finalSubmitArray = [];
+		this.finaldivflag = false;
+		this.syllabus_flag = true;
+		this.details_flag = false;
+		this.parameterform .patchValue({
+			'syl_class_id': '',
+			'syl_sub_id': '',
+			'syl_term_id': ''
+		});
+	}
 	submit() {
 		if (this.parameterform.valid) {
 			this.syllabus_flag = false;
@@ -242,6 +254,7 @@ export class AddSyllabusComponent implements OnInit {
 		}
 	}
 	addDetailsList() {
+		this.finaldivflag = false;
 		if (!this.editRequestFlag) {
 			this.finalSpannedArray = [];
 		}
@@ -311,7 +324,6 @@ export class AddSyllabusComponent implements OnInit {
 				'sd_period_req': '',
 				'sd_desc': ''
 			});
-		console.log(this.finalSpannedArray);
 		} else {
 			this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
 		}
@@ -438,7 +450,6 @@ export class AddSyllabusComponent implements OnInit {
 						this.resetForm();
 					}
 				});
-				console.log(this.finalSubmitArray);
 			}
 		});
 	}

@@ -61,8 +61,14 @@ export class SyllabusserviceService {
 			deleteSyllabusDetails(value: any) {
 				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/updateSyllabusDetails', value);
 			}
+			updateSyllabusEditDetails(value: any) {
+				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/updateSyllabusDetails', value);
+			}
 			getSyllabusDetailsEdit(value: any) {
 				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/getSyllabusDetailsEdit', value);
+			}
+			insertPublishSyllabus(value: any) {
+				return this._http.post(environment.apiSmartUrl + '/smtsyllabus/insertPublishSyllabus', value);
 			}
 
 }

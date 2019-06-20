@@ -15,7 +15,8 @@
                 <mat-label>Class</mat-label>
                 <mat-select formControlName="syl_class_id" (selectionChange)="getSubjectsByClass()" required
                   placeholder="Select Class">
-                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                  <mat-option value="">Please select</mat-option> 
+                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">                                       
                     {{item.class_name}}
                   </mat-option>
                 </mat-select>
@@ -25,6 +26,7 @@
                 <mat-label>Subject</mat-label>
                 <mat-select formControlName="syl_sub_id" (selectionChange)="fetchSyllabusDetails()" required
                   placeholder="Select Subject">
+                  <mat-option value="">Please select</mat-option> 
                   <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                     {{item.sub_name}}
                   </mat-option>
@@ -68,7 +70,7 @@
                 <th class="custom-th">Revision</th>
               </tr>
             </thead>
-            <tbody class="text-center" *ngIf="finaldivflag">
+            <tbody class="text-center" >
               <ng-container *ngFor="let item of finalSpannedArray;let i=index">
                 <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
                   <ng-container>
@@ -105,45 +107,29 @@
                       <td *ngIf="!viewOnly" class="custom-td">
                         <i class="far fa-edit modify-icon" (click)="openDialog(det.sd_id)" style="cursor:pointer"
                           title="Edit"></i>&nbsp;
-                        <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                          (click)="deleteSyllabusList(i , j, det.sd_id)" style="cursor:pointer" title="Delete"></i>
+                        <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" 
+                          (click)="openModal(i ,j ,det.sd_id)" style="cursor:pointer" title="Delete"></i>
                       </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length"><i
-                          class="fas fa-thumbs-up font-color-green cursor-pointer font-size-16"></i></td>
+                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                        <i class="fas fa-thumbs-up font-color-green cursor-pointer font-size-16"(click)="openPublish(item.syl_id)"></i></td>
                     </tr>
                   </ng-container>
                 </ng-container>
               </ng-container>
             </tbody>
 
-            <!-- <tbody class="text-center">
-    
-    
-                  <tr class="custom-tr">
-
-                    <td class="custom-td" rowspan="5">Health & Hygiene</td>
-                    <td class="custom-td">Introduction of Food</td>
-                    <td class="custom-td">Making chart showing all status of matter</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">5</td>
-                    <td class="custom-td">6</td>
-                    <td class="custom-td" rowspan="5">c</td>
-                    <td class="custom-td">
-                      <i class="far fa-edit font-size-16 font-color-gray cursor-pointer" (click)="openDialog()"></i><span
-                        class="margin-left-10 ver-line-divider"></span><i
-                        class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                    </td>
-
-                    <td class="custom-td" rowspan="5"><i
-                        class="fas fa-thumbs-up font-color-green cursor-pointer font-size-16"></i></td>
-                  </tr>
-    
-                 
-    
-                </tbody> -->
+            <tbody>
+                <tr class="text-center" *ngIf="finaldivflag">
+                  <td colspan="9"><span class="font-size-20 font-bold font-color-brown">No Data
+                      Available</span><br><span class="font-size-20 font-light font-color-brown">Please Choose 
+                     Class and Subject</span></td>
+                </tr>
+            </tbody>
           </table>
         </div>
       </div>
     </mat-card>
   </div>
 </div>
+<app-delete-modal #deleteModal (deleteOk)="deleteSyllabusList($event)" ></app-delete-modal>
+<app-publish-modal #publishModal (publishOk)="insertPublishSyllabus($event)" ></app-publish-modal>

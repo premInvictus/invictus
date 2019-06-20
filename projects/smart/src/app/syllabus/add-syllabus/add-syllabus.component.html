@@ -18,10 +18,8 @@
             <div class="col-12 remove-col-padding">
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Class</mat-label>
-
-                <mat-select formControlName="syl_class_id"
-                  (selectionChange)="getSubjectsByClass()" required
-                  placeholder="Select Class">
+                <mat-select formControlName="syl_class_id" (selectionChange)="getSubjectsByClass()" required  placeholder="Select Class">
+                    <mat-option value="">Please select</mat-option> 
                   <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                     {{item.class_name}}
                   </mat-option>
@@ -35,6 +33,7 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Subject</mat-label>
                 <mat-select formControlName="syl_sub_id" required  placeholder="Select Subject">
+                    <mat-option value="">Please select</mat-option> 
                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                       {{item.sub_name}}
                     </mat-option>
@@ -47,6 +46,7 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Term</mat-label>
                 <mat-select formControlName="syl_term_id" required  placeholder="Select Term">
+                    <mat-option value="">Please select</mat-option> 
                     <mat-option *ngFor="let item of termArray" [value]="item.term_id">
                       {{item.term_name}}
                     </mat-option>
@@ -72,7 +72,7 @@
                     <th class="custom-th" rowspan="2">Topic</th>
                     <th class="custom-th" rowspan="2">SubTopic</th>
                     <th class="custom-th" rowspan="2">Description</th>
-                    <th class="custom-th" colspan="3">No. of Person Required</th>
+                    <th class="custom-th" colspan="3">No. of Period Required</th>
                     <th class="custom-th" rowspan="2">Total</th>
                     <th class="custom-th" rowspan="2">Action</th>
                     <th class="custom-th" rowspan="2">Publish</th>
@@ -88,7 +88,6 @@
                     <td colspan="9"><span class="font-size-20 font-bold font-color-brown">No Data
                         Available</span><br><span class="font-size-20 font-light font-color-brown">Please Update
                         Syllabus on Click of Add Button</span></td>
-
                   </tr>
                 </tbody>
               </table>
@@ -132,6 +131,7 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Category (CTR)</mat-label>
                 <mat-select formControlName="sd_ctr_id" (selectionChange)="getTopicByClassSubject()" required  placeholder="Category (CTR)">
+                  <mat-option value="">Please select</mat-option> 
                   <mat-option *ngFor="let item of ctrArray" [value]="item.ctr_id">
                     {{item.ctr_name}}
                   </mat-option>
@@ -144,6 +144,7 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Topic</mat-label>
                 <mat-select formControlName="sd_topic_id" (selectionChange)="getSubtopicByTopic()" required  placeholder="Topic">
+                  <mat-option value="">Please select</mat-option> 
                   <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
                     {{item.topic_name}}
                   </mat-option>
@@ -156,7 +157,8 @@
               <mat-form-field class="form-field" appearance="outline" >
                 <mat-label>Subtopic</mat-label>
                 <mat-select formControlName="sd_st_id"   placeholder="Subtopic">
-                    <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
+                  <mat-option value="">Please select</mat-option> 
+                  <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
                       {{item.st_name}}
                     </mat-option>
                 </mat-select> 
@@ -183,12 +185,11 @@
                to list</button>
             <button *ngIf="syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
                (click)="updateSyllabussList()">Update</button>
-              <button mat-raised-button class="btn-reset margin-left-10">Reset</button>
+              <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()" >Reset</button>
             </div>
           </div>
         </form>
-        </div>
-        
+        </div>  
        
       
         <div class="col-10">
@@ -255,13 +256,21 @@
                         </ng-container>
                      </ng-container>
                     </tbody>
+                    <tbody>
+                        <tr class="text-center" *ngIf="finaldivflag">
+                            <td colspan="9"><span class="font-size-20 font-bold font-color-brown">No Data
+                                Available</span><br><span class="font-size-20 font-light font-color-brown">Please Update
+                                Syllabus on Click of Add Button</span>
+                            </td>        
+                        </tr>
+                    </tbody>
               </table>
             </div>
           </div>
           <div class="row margin-top-20">
             <div class="col-12 text-center">
                 <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
-                <button mat-raised-button class="btn-reset margin-left-10">cancel</button>
+                <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
             </div>
           </div>
         </div>          

@@ -157,7 +157,8 @@ export class ProcessAdmissionComponent implements OnInit, AfterViewInit {
 		const inputJson = {
 			'login_id': event.au_login_id,
 			'process_type_from': '2',
-			'doc_verify_status': event.score.documentStatus
+			'doc_verify_status': event.score.documentStatus,
+			'processDate': new DatePipe('en-in').transform(event.processDate, 'yyyy-MM-dd')
 		};
 		if (event.score.documentStatus) {
 			this.processType.setProcesstype('4');
