@@ -56,6 +56,13 @@ export class ClassworkUpdateComponent implements OnInit {
 		});
 		for (let i = 0; i < this.noOfPeriods; i++) {
 			this.addPeriods(i + 1, this.teacherId);
+		}
+		this.generateReviewArray();
+
+	}
+	generateReviewArray() {
+		this.reviewClasswork = [];
+		for (let i = 0; i < this.noOfPeriods; i++) {
 			this.reviewClasswork.push({
 				period: i + 1,
 				subjectName: '',
@@ -68,7 +75,6 @@ export class ClassworkUpdateComponent implements OnInit {
 				attachments: 0
 			});
 		}
-
 	}
 
 	get Periods() {
@@ -211,7 +217,8 @@ export class ClassworkUpdateComponent implements OnInit {
 			cw_st_id: ''
 		});
 		const csArray = eachPeriodFG.value.cw_class_id.split('-');
-		this.axiomService.getTopicByClassSubject(csArray[0], eachPeriodFG.value.cw_sub_id).subscribe((result: any) => {
+		const param = {class_id: csArray[0], sub_id: eachPeriodFG.value.cw_sub_id};
+		this.smartService.getTopicByClassIdSubjectId(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.topicArray[i] = result.data;
 			} else {
@@ -222,7 +229,7 @@ export class ClassworkUpdateComponent implements OnInit {
 	getSubtopicByTopic(i) {
 		this.subtopicArray[i] = [];
 		const eachPeriodFG = this.Periods.controls[i];
-		this.axiomService.getSubtopicByTopic(eachPeriodFG.value.cw_topic_id).subscribe((result: any) => {
+		this.smartService.getSubtopicByTopicId({topic_id: eachPeriodFG.value.cw_topic_id}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subtopicArray[i] = result.data;
 			} else {
@@ -287,7 +294,7 @@ export class ClassworkUpdateComponent implements OnInit {
 	}
 	resetClasswork() {
 		this.resetClassworkForm();
-		this.reviewClasswork = [];
+		this.generateReviewArray();
 	}
 
 	attachmentDialog(currentAttachmentIndex) {
