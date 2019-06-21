@@ -39,6 +39,14 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/classwork/getSectionByTeacherIdSubjectIdClassId', value);
 	}
+	getTopicByClassIdSubjectId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/classwork/getTopicByClassIdSubjectId', value);
+	}
+	getSubtopicByTopicId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/classwork/getSubtopicByTopicId', value);
+	}
 	getSubtopicCountAndDetail(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/topicwise/getSubtopicCountAndDetail', value);
@@ -50,6 +58,10 @@ export class SmartService {
 	classworkInsert(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/classwork/insert', value);
+	}
+	getClasswork(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/classwork/getClasswork', value);
 	}
 
 	//////////////////////// Syllabus Service Function //////////////////////
