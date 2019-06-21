@@ -65,7 +65,7 @@
             <mat-label>Assignment</mat-label>            
             <textarea rows="9" matInput [disabled]="!editFlag" [(value)]="assignment_desc">{{assignment_desc}}</textarea>
           </mat-form-field> -->
-          <ckeditor [config]="ckeConfig" [(value)]="assignment_desc">{{assignment_desc}}</ckeditor>
+          <ckeditor [config]="ckeConfig" [(ngModel)]="assignment_desc">{{assignment_desc}}</ckeditor>
         </div>
       </div>
 

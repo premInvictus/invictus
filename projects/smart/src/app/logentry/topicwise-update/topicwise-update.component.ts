@@ -23,6 +23,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 	topicsubtopicArray: any[] = [];
 	topicCTRArray: any[] = [];
 	topicsubtopicDetailsArray: any[] = [];
+	noDataFlag = true;
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -35,14 +36,24 @@ export class TopicwiseUpdateComponent implements OnInit {
 	openUpdateConfirmation(param) {
 		const dialogRef = this.dialog.open(UpdateConfirmationComponent, {
 			height: '400px',
-			width: '550px'
+			width: '550px',
+			data: {
+				tw_status: param.tw_status
+			}
 		});
 
 		dialogRef.afterClosed().subscribe(dresult => {
 			console.log(dresult);
-			if (dresult && dresult.tw_entry_date) {
-				param.tw_entry_date = this.commonAPIService.dateConvertion(dresult.tw_entry_date);
-				this.topicwiseInsert(param);
+			if (dresult) {
+				if  (dresult.tw_entry_date) {
+					param.tw_entry_date = this.commonAPIService.dateConvertion(dresult.tw_entry_date);
+				}
+				if  (dresult.mod_review_remark) {
+					param.mod_review_remark = dresult.mod_review_remark;
+				}
+				if (dresult.update) {
+					this.topicwiseInsert(param);
+				}
 			}
 		});
 	}
@@ -54,7 +65,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 		this.topicwiseforForm = this.fbuild.group({
 			tw_teacher_id: '',
 			teacher_name: '',
-			tw_class_id: '',
+			tw_class_sec_id: '',
 			tw_sub_id: ''
 		});
 	}
@@ -79,7 +90,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 					this.topicwiseforForm.patchValue({
 						teacher_name: '',
 						tw_teacher_id: '',
-						tw_class_id: '',
+						tw_class_sec_id: '',
 						tw_sub_id: ''
 					});
 				}
@@ -90,9 +101,10 @@ export class TopicwiseUpdateComponent implements OnInit {
 		this.topicwiseforForm.patchValue({
 			teacher_name: teacherDetails.au_full_name,
 			tw_teacher_id: teacherDetails.au_login_id,
-			tw_class_id: '',
+			tw_class_sec_id: '',
 			tw_sub_id: ''
 		});
+		this.noDataFlag = true;
 		this.teacherId = teacherDetails.au_login_id;
 		this.getClassByTeacherId();
 	}
@@ -132,13 +144,22 @@ export class TopicwiseUpdateComponent implements OnInit {
 		const csArray = event.value.split('-');
 		console.log(csArray);
 		this.subjectArray = [];
-
+		this.topicwiseforForm.patchValue({
+			tw_sub_id: ''
+		});
+		this.noDataFlag = true;
+		this.topicsubtopicDetailsArray = [];
 		this.smartService.getSubjectByTeacherIdClassIdSectionId({
 			teacher_id: this.teacherId,
 			class_id: csArray[0], sec_id: csArray[1]
 		}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
+				/* if (this.subjectArray.length === 1) {
+					this.topicwiseforForm.patchValue({
+						tw_sub_id: this.subjectArray[0].sub_id
+					});
+				} */
 			} else {
 				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -159,12 +180,15 @@ export class TopicwiseUpdateComponent implements OnInit {
 		}
 	}
 	getTopicwiseDetails() {
-		if (this.topicwiseforForm.value.tw_class_id && this.topicwiseforForm.value.tw_sub_id) {
+		if (this.topicwiseforForm.value.tw_class_sec_id && this.topicwiseforForm.value.tw_sub_id) {
+			const csArray = this.topicwiseforForm.value.tw_class_sec_id.split('-');
 			const param: any = {};
-			param.class_id = this.topicwiseforForm.value.tw_class_id;
+			param.class_id = csArray[0];
+			param.sec_id = csArray[1];
 			param.sub_id = this.topicwiseforForm.value.tw_sub_id;
 			this.smartService.getSubtopicCountAndDetail(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.noDataFlag = false;
 					console.log('result', result.data);
 					this.topicsubtopicArray = result.data;
 					Object.assign(this.topicsubtopicDetailsArray, result.data);
@@ -186,17 +210,23 @@ export class TopicwiseUpdateComponent implements OnInit {
 							console.log(this.topicsubtopicDetailsArray);
 						}
 					});
+				} else {
+					this.noDataFlag = true;
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 				}
 			});
 		}
 	}
 
 	toggleStatus(i, ctr, ctrStatus) {
+		const csArray = this.topicwiseforForm.value.tw_class_sec_id.split('-');
 		const param: any = {};
 		param.tw_teacher_id = this.topicwiseforForm.value.tw_teacher_id;
+		param.tw_class_id = csArray[0];
+		param.tw_sec_id = csArray[1];
 		param.tw_topic_id = this.topicsubtopicDetailsArray[i].topic_id;
 		param.tw_ctr_id = ctr;
-		if (ctrStatus) {
+		if (ctrStatus && ctrStatus.tw_status === '1') {
 			console.log('calling unpublish');
 			param.tw_status = '0';
 		} else {

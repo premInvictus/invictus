@@ -11,13 +11,26 @@
           </div>
           <div class="col-6 text-right">
             <div class="top-card-title-form">
-              <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
+              <!-- <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
                 <mat-label>Teacher Id</mat-label>
                 <input matInput formControlName="cw_teacher_id" (blur)="getTeacherInfo($event);getSubjectByTeacherId()">
               </mat-form-field>
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
                 <mat-label>Teacher Name</mat-label>
                 <input matInput formControlName="teacher_name">
+              </mat-form-field> -->
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin"
+                appearance="outline">
+                <mat-label>Teacher Name</mat-label>
+                <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
+                  [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
+                    (onSelectionChange)="setTeacherId(item)">
+                    <span>{{item.au_full_name}}</span> ,
+                    <small>Id: {{item.au_login_id}}</small>
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
                 <mat-label>Date</mat-label>
@@ -48,7 +61,7 @@
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Subject</mat-label>
                   <mat-select formControlName="cw_sub_id"
-                    (selectionChange)="getClassByTeacherIdSubjectId(i);reviewElementSubject(i,$event)">
+                    (selectionChange)="getClassSectionByTeacherIdSubjectId(i);reviewElementSubject(i,$event)">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
                   </mat-select>
@@ -65,16 +78,16 @@
               </div>
               <div class="col-1">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
-                  <mat-label>Class</mat-label>
+                  <mat-label>Class & Section</mat-label>
                   <mat-select formControlName="cw_class_id"
-                    (selectionChange)="getSectionByTeacherIdSubjectIdClassId(i);getTopicByClassSubject(i);reviewElementClass(i,$event)">
+                    (selectionChange)="getTopicByClassSubject(i);reviewElementClass(i,$event)">
                     <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of classArray[i]" [value]="item.class_id">{{item.class_name}}
+                    <mat-option *ngFor="let item of classSectionArray[i]" [value]="item.cs_id">{{item.cs_name}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-1">
+              <!-- <div class="col-1">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Section</mat-label>
                   <mat-select formControlName="cw_sec_id" (selectionChange)="reviewElementSection(i,$event)">
@@ -83,8 +96,8 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
-              </div>
-              <div class="col-2">
+              </div> -->
+              <div class="col-3">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Topic</mat-label>
                   <mat-select formControlName="cw_topic_id"
@@ -95,7 +108,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-2">
+              <div class="col-3">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>SubTopic</mat-label>
                   <mat-select formControlName="cw_st_id" (selectionChange)="reviewElementSubtopic(i,$event)">
@@ -104,12 +117,13 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-2">
-                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+              <div class="col-1">
+                <!-- <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Assignment</mat-label>
                   <input matInput formControlName="cw_assignment_desc" (blur)="reviewElementAssignment(i,$event)">
                   <mat-icon matSuffix style="cursor: pointer" (click)="attachmentDialog(i)">attachment</mat-icon>
-                </mat-form-field>
+                </mat-form-field> -->
+                <button mat-raised-button class="btn-primary-100" (click)="attachmentDialog(i)">Add Attachment</button>
               </div>
 
             </div>

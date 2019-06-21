@@ -31,6 +31,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 declare var CKEDITOR: any;
 import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dialog/assignment-attachment-dialog.component';
 import { PublishModalComponent } from './publish-modal/publish-modal.component';
+import { NoDataComponent } from './no-data/no-data.component';
 import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.component';
 const moment = _moment;
 
@@ -96,8 +97,8 @@ export const MY_FORMATS = {
 		ZerodashPipe,
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
-		UnpublishModalComponent,
-		UnpublishModalComponent,
+		NoDataComponent,
+		UnpublishModalComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -143,7 +144,8 @@ export const MY_FORMATS = {
 		NumberToWordPipe,
 		ZerodashPipe,
 		CommonDynamicChartComponent,
-		AssignmentAttachmentDialogComponent
+		AssignmentAttachmentDialogComponent,
+		NoDataComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
@@ -151,7 +153,7 @@ export const MY_FORMATS = {
 		{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
 	]
 })
-export class SmartSharedModule { 
+export class SmartSharedModule {
 	constructor() {
 		const script: any = document.createElement('script');
 		if (!(CKEDITOR.type === '10')) {

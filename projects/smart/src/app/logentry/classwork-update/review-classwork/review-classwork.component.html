@@ -28,10 +28,10 @@
             <td class="custom-td">{{item.period}}{{periodSup[item.period-1]}}</td>
             <td class="custom-td">{{item.subjectName}}</td>
             <td class="custom-td">{{item.categoryName}}</td>
-            <td class="custom-td">{{item.className}} - {{item.sectionName}}</td>
+            <td class="custom-td">{{item.className}}</td>
             <td class="custom-td">{{item.topicName}}</td>
             <td class="custom-td">{{item.subtopicName}}</td>
-            <td class="custom-td">{{item.assignment}}</td>
+            <td class="custom-td"><div [innerHtml]="item.assignment"></div></td>
             <td class="custom-td text-center"><button mat-mini-fab class="btn-blue"><span
                   class="font-white font-size-16">{{item.attachments}}</span></button>
             </td>
