@@ -176,6 +176,18 @@
                               <button *ngIf="syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral" (click)="updateSyllabussList()">Update</button>
                               <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>
                           </div>
+                          <input type="file"  id ="file" style="display: none !important;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx">
+                          <span style="float:right; padding-right: 10px;font-size:12px;">
+                            Have already syllabus?&nbsp;&nbsp;
+                            <label for="file">  <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i> </label>
+                            &nbsp;&nbsp;Upload File
+                        </span>
+                          <br>
+                          <br>
+                          <span style="float:right; padding-right: 10px; font-size:10px;">
+                            <a ng-href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/uploadSyllabus.xlsx"><img style="cursor: pointer" src="/assets/images/xml.svg" 
+                            matTooltip="Click to Download"></a>&nbsp;&nbsp;Sample Excel Sheet
+                        </span>
                       </div>
                   </form>
               </div>
@@ -271,4 +283,6 @@
       </mat-card>
   </div>
 </div>
+
+
 <app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)"></app-delete-modal>

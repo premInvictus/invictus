@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
+import * as XLSX from 'xlsx';
 @Component({
 	selector: 'app-add-syllabus',
 	templateUrl: './add-syllabus.component.html',
@@ -22,10 +23,14 @@ export class AddSyllabusComponent implements OnInit {
 	public classArray: any[];
 	public subjectArray: any[];
 	public ctrArray: any[];
-	public topicArray: any[];
+	public topicArray: any[] = [];
 	finalSyllabusArray: any[] = [];
 	finalSpannedArray: any[] = [];
 	finalSubmitArray: any[] = [];
+	finalXlslArray: any[] = [];
+	XlslArray: any[] = [];
+	arrayBuffer: any;
+	file: File;
 	syllabusValue1: any;
 	syllabusValue2: any;
 	currentUser: any;
@@ -35,6 +40,8 @@ export class AddSyllabusComponent implements OnInit {
 	syl_sub_id: any;
 	syl_result: any = {};
 	subtopicArray: any;
+	subtopic_id_string: any = '';
+	topic_id_string: any = '';
 	sub_id: any;
 	ckeConfig: any = {};
 	submitParam: any = {};
@@ -86,6 +93,76 @@ export class AddSyllabusComponent implements OnInit {
 		});
 	}
 
+	incomingfile(event) {
+		this.file = event.target.files[0];
+		this.Upload();
+	}
+
+	Upload() {
+		const fileReader = new FileReader();
+		fileReader.onload = (e) => {
+			this.arrayBuffer = fileReader.result;
+			const data = new Uint8Array(this.arrayBuffer);
+			const arr = new Array();
+			// tslint:disable-next-line: curly
+			for (let i = 0; i !== data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+			const bstr = arr.join('');
+			const workbook = XLSX.read(bstr, { type: 'binary' });
+			const first_sheet_name = workbook.SheetNames[0];
+			const worksheet = workbook.Sheets[first_sheet_name];
+			this.XlslArray = XLSX.utils.sheet_to_json(worksheet, { raw: true });
+			for (let i = 0; i < this.XlslArray.length; i++) {
+				this.finalXlslArray.push({
+					sd_ctr_id: this.XlslArray[i].Category,
+					sd_topic_id: this.XlslArray[i].Topic,
+					sd_period_req: this.XlslArray[i].Period,
+					sd_st_id: this.XlslArray[i].Subtopic,
+					sd_desc: this.XlslArray[i].Description,
+				});
+				if (i === (this.XlslArray.length - 1)) {
+					this.subtopic_id_string = this.subtopic_id_string + this.XlslArray[i].Subtopic;
+					this.topic_id_string = this.topic_id_string + this.XlslArray[i].Topic;
+				} else {
+					this.subtopic_id_string = this.subtopic_id_string + this.XlslArray[i].Subtopic + ',';
+					this.topic_id_string = this.topic_id_string + this.XlslArray[i].Topic + ',';
+				}
+			}
+			this.getTopicNameById(this.topic_id_string);
+			this.getSubTopicNameById(this.subtopic_id_string);
+		};
+		fileReader.readAsArrayBuffer(this.file);
+
+	}
+
+	// get topic name by topic Id
+	getTopicNameById(topic_id) {
+		const topicParam: any = {};
+		topicParam.topic_id = topic_id;
+		this.syllabusService.getTopicNameById(topicParam)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.topicArray = result.data;
+						this.addxlslDetailsList(this.finalXlslArray);
+					}
+				}
+			);
+	}
+
+	// get Subtopic name by Subtopic Id
+	getSubTopicNameById(subTopic_id) {
+		const subTopicParam: any = {};
+		subTopicParam.st_id = subTopic_id;
+		this.syllabusService.getSubTopicNameById(subTopicParam)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.subTopicJson = result.data;
+					}
+				}
+			);
+	}
+
 	//  Get Class List function
 	getClass() {
 		const classParam: any = {};
@@ -100,8 +177,8 @@ export class AddSyllabusComponent implements OnInit {
 				}
 			);
 	}
-	//  Open Final Submit Modal function
 
+	//  Open Final Submit Modal function
 	openSubmitModal() {
 		this.submitParam.text = 'Add';
 		this.deleteModal.openModal(this.submitParam);
@@ -138,6 +215,7 @@ export class AddSyllabusComponent implements OnInit {
 
 	//  Get Topic List function
 	getTopicByClassSubject() {
+		console.log(this.topicArray);
 		this.axiomService.getTopicByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
@@ -177,7 +255,7 @@ export class AddSyllabusComponent implements OnInit {
 				}
 			);
 	}
-	
+
 	//  Get Class Name from existion Array for details table
 	getSyllabusClass(class_id) {
 		const cindex = this.classArray.findIndex(f => Number(f.class_id) === Number(class_id));
@@ -261,7 +339,6 @@ export class AddSyllabusComponent implements OnInit {
 			this.commonService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
 	}
-
 	// Add syllabus list function
 	addDetailsList() {
 		this.finaldivflag = false;
@@ -346,14 +423,96 @@ export class AddSyllabusComponent implements OnInit {
 		}
 	}
 
+
+
+	// Add syllabus list function
+	addxlslDetailsList(xlsl_array) {
+		this.finaldivflag = false;
+		this.finalSubmitdivflag = true;
+		this.periodDivFlag = false;
+		if (!this.editRequestFlag) {
+			this.finalSpannedArray = [];
+		}
+		if (xlsl_array.length > 0) {
+			this.finalSyllabusArray = xlsl_array;
+			for (let i = 0; i < this.finalSyllabusArray.length; i++) {
+				let sd_period_teacher: any = '';
+				let sd_period_test: any = '';
+				let sd_period_revision: any = '';
+				if (Number(this.finalSyllabusArray[i].sd_ctr_id) === 1) {
+					sd_period_teacher = this.finalSyllabusArray[i].sd_period_req;
+				} else if (Number(this.finalSyllabusArray[i].sd_ctr_id) === 2) {
+					sd_period_test = this.finalSyllabusArray[i].sd_period_req;
+				} else {
+					sd_period_revision = this.finalSyllabusArray[i].sd_period_req;
+				}
+				const spannArray: any[] = [];
+				spannArray.push({
+					sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
+					sd_st_id: this.finalSyllabusArray[i].sd_st_id,
+					sd_period_req: this.finalSyllabusArray[i].sd_period_req,
+					sd_period_teacher: sd_period_teacher,
+					sd_period_test: sd_period_test,
+					sd_period_revision: sd_period_revision,
+					sd_ctr_id: this.finalSyllabusArray[i].sd_ctr_id,
+					sd_desc: this.finalSyllabusArray[i].sd_desc,
+				});
+				for (let j = i + 1; j < this.finalSyllabusArray.length; j++) {
+					let sd_period_teacher1: any = '';
+					let sd_period_test1: any = '';
+					let sd_period_revision1: any = '';
+					if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id) {
+						if (Number(this.finalSyllabusArray[j].sd_ctr_id) === 1) {
+							sd_period_teacher1 = this.finalSyllabusArray[j].sd_period_req;
+						} else if (Number(this.finalSyllabusArray[j].sd_ctr_id) === 2) {
+							sd_period_test1 = this.finalSyllabusArray[j].sd_period_req;
+						} else {
+							sd_period_revision1 = this.finalSyllabusArray[j].sd_period_req;
+						}
+						spannArray.push({
+							sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
+							sd_st_id: this.finalSyllabusArray[j].sd_st_id,
+							sd_period_req: this.finalSyllabusArray[j].sd_period_req,
+							sd_period_teacher: sd_period_teacher1,
+							sd_period_test: sd_period_test1,
+							sd_period_revision: sd_period_revision1,
+							sd_ctr_id: this.finalSyllabusArray[j].sd_ctr_id,
+							sd_desc: this.finalSyllabusArray[j].sd_desc,
+						});
+					}
+				}
+				const findex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.finalSyllabusArray[i].sd_topic_id);
+				if (findex === -1) {
+					this.finalSpannedArray.push({
+						sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
+						details: spannArray,
+						total: this.finalSyllabusArray[i].sd_period_req
+					});
+				} else {
+					this.finalSpannedArray[findex].total = this.finalSpannedArray[findex].total + this.finalSyllabusArray[i].sd_period_req;
+				}
+			}
+			this.syllabusDetailForm.patchValue({
+				'sd_st_id': '',
+				'sd_period_req': '',
+				'sd_desc': ''
+			});
+		} else {
+			this.commonService.showSuccessErrorMessage('Please fill all required fields in Excel', 'error');
+		}
+	}
+
 	// Edit syllabus list function
 	editSyllabusList(value1, value2) {
+		console.log(value1);
+		console.log(this.finalSpannedArray[value1].details[value2].sd_ctr_id);
+		console.log(this.finalSpannedArray);
 		this.syllabusUpdateFlag = true;
 		this.syllabusValue1 = value1;
 		this.syllabusValue2 = value2;
 		this.syllabusDetailForm.patchValue({
-			'sd_ctr_id': this.finalSpannedArray[value1].details[value2].sd_ctr_id,
-			'sd_topic_id': this.finalSpannedArray[value1].sd_topic_id,
+			'sd_ctr_id': this.finalSpannedArray[value1].details[value2].sd_ctr_id.toString(),
+			'sd_topic_id': this.finalSpannedArray[value1].sd_topic_id.toString(),
 			'sd_st_id': this.finalSpannedArray[value1].details[value2].sd_st_id,
 			'sd_period_req': this.finalSpannedArray[value1].details[value2].sd_period_req,
 			'sd_desc': this.finalSpannedArray[value1].details[value2].sd_desc,
@@ -362,6 +521,9 @@ export class AddSyllabusComponent implements OnInit {
 
 	// Update syllabus list function
 	updateSyllabussList() {
+		this.syllabusDetailForm.value.sd_topic_id = Number(this.syllabusDetailForm.value.sd_topic_id);
+		this.syllabusDetailForm.value.sd_ctr_id = Number(this.syllabusDetailForm.value.sd_ctr_id);
+		console.log(this.syllabusDetailForm.value);
 		const findex = this.finalSyllabusArray.findIndex(f => f.sd_topic_id === this.finalSpannedArray[this.syllabusValue1].sd_topic_id
 			&& f.sd_ctr_id === this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_ctr_id
 			&& f.sd_period_req === this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_period_req);
@@ -370,9 +532,9 @@ export class AddSyllabusComponent implements OnInit {
 		let sd_period_teacher2: any = '';
 		let sd_period_test2: any = '';
 		let sd_period_revision2: any = '';
-		if (this.syllabusDetailForm.value.sd_ctr_id === '1') {
+		if (this.syllabusDetailForm.value.sd_ctr_id.toString() === '1') {
 			sd_period_teacher2 = this.syllabusDetailForm.value.sd_period_req;
-		} else if (this.syllabusDetailForm.value.sd_ctr_id === '2') {
+		} else if (this.syllabusDetailForm.value.sd_ctr_id.toString() === '2') {
 			sd_period_test2 = this.syllabusDetailForm.value.sd_period_req;
 		} else {
 			sd_period_revision2 = this.syllabusDetailForm.value.sd_period_req;
@@ -481,4 +643,3 @@ export class AddSyllabusComponent implements OnInit {
 		}
 	}
 }
- 

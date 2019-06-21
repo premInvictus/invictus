@@ -100,7 +100,8 @@
 
                                             </td>
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
-                                                <i class="fas fa-thumbs-down font-color-red cursor-pointer font-size-16" (click)="openunPublish(item.syl_id, item.sd_topic_id)"></i></td>
+                                                <i class="fas fa-thumbs-down font-color-red cursor-pointer font-size-16" matTooltip="Unpublish"
+                                                 (click)="openunPublish(item.syl_id, item.sd_topic_id)"></i></td>
                                         </tr>
                                     </ng-container>
                                 </ng-container>

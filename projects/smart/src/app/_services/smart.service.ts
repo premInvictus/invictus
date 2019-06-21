@@ -104,4 +104,12 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/updatePublishStatus', value);
 	}
+	getTopicNameById(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getTopicNameById', value);
+	}
+	getSubTopicNameById(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getSubTopicNameById', value);
+	}
 }
