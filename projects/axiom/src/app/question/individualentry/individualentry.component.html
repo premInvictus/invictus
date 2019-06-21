@@ -35,35 +35,40 @@
                              <span class="left-side-box-content-title">Question Entry Option</span>
                              <hr class="left-side-box-content-title-divider">
                              <form [formGroup]="ind_entry_form1" novalidate>
-                                <mat-form-field class="form-field">
+                                <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>Select Board</mat-label>
                                    <mat-select formControlName="qus_board_id" required placeholder="Select Board">
                                       <mat-option [value]="schoolinfoArray.school_board_id">
                                          {{schoolinfoArray.school_board}}
                                       </mat-option>
                                    </mat-select>
                                 </mat-form-field>
-                                <mat-form-field class="form-field">
+                                <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Select Class</mat-label>
                                    <mat-select formControlName="qus_class_id" (selectionChange)="getSubjectsByClass()" required placeholder="Select Class">
                                       <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                                       {{item.class_name}}
                                       </mat-option>
                                    </mat-select>
                                 </mat-form-field>
-                                <mat-form-field class="form-field">
+                                <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Select Subject</mat-label>
                                    <mat-select formControlName="qus_sub_id" (selectionChange)="getTopicByClassSubject()" required placeholder="Select Subject">
                                       <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                       {{item.sub_name}}
                                       </mat-option>
                                    </mat-select>
                                 </mat-form-field>
-                                <mat-form-field class="form-field">
+                                <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Select Topic</mat-label>
                                    <mat-select formControlName="qus_topic_id" (selectionChange)="getSubtopicByTopic()" required placeholder="Select Topic">
                                       <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
                                       {{item.topic_name}}
                                       </mat-option>
                                    </mat-select>
                                 </mat-form-field>
-                                <mat-form-field class="form-field">
+                                <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Select Sub Topic</mat-label>
                                    <mat-select formControlName="qus_st_id" required placeholder="Select Sub-Topic">
                                       <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
                                       {{item.st_name}}
@@ -92,7 +97,8 @@
                                       <form [formGroup]="ind_entry_form2" novalidate>
                                          <div class="row">
                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                               <mat-form-field class="form-field">
+                                               <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Question type</mat-label>
                                                   <mat-select formControlName="qus_qt_id" (selectionChange)="getQuestionSubtypeDataByQuestiontype();getEssayDialog()" required placeholder="Select Question Type">
                                                      <mat-option *ngFor="let item of questionTypeArray" [value]="item.qt_id">
                                                      {{item.qt_name}}
@@ -101,7 +107,8 @@
                                                </mat-form-field>
                                             </div>
                                             <div class="col-lg-2 fin-tab-col-16  col-mobile-view-add-ques">
-                                               <mat-form-field class="form-field">
+                                               <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Question Sub type</mat-label>
                                                   <mat-select formControlName="qus_qst_id" (ngModelChange)="loadQsubtype($event);showQuesDetail()" required placeholder="Select Question Subtype">
                                                      <mat-option *ngFor="let item of questionSubtypeArray" [value]="item.qst_id">
                                                      {{item.qst_name}}
@@ -110,7 +117,8 @@
                                                </mat-form-field>
                                             </div>
                                             <div class="col-lg-2 fin-tab-col-16  col-mobile-view-add-ques">
-                                               <mat-form-field class="form-field">
+                                               <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Select Skill</mat-label>
                                                   <mat-select formControlName="qus_skill_id" required placeholder="Select Skill">
                                                      <mat-option *ngFor="let item of skillTypeArray" [value]="item.skill_id">
                                                      {{item.skill_name}}
@@ -119,7 +127,8 @@
                                                </mat-form-field>
                                             </div>
                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                               <mat-form-field class="form-field">
+                                               <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Select Level of Difficulty</mat-label>
                                                   <mat-select formControlName="qus_dl_id" placeholder="Select Difficulty Level">
                                                      <mat-option *ngFor="let item of lodArray" [value]="item.dl_id">
                                                      {{item.dl_name}}
@@ -128,7 +137,8 @@
                                                </mat-form-field>
                                             </div>
                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                               <mat-form-field class="form-field">
+                                               <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Select Question Marks</mat-label>
                                                   <mat-select formControlName="qus_marks" required placeholder="Select Question Marks">
                                                      <mat-option *ngFor="let marksvalue of marksArray" [value]="marksvalue">
                                                      {{marksvalue}}
@@ -137,7 +147,8 @@
                                                </mat-form-field>
                                             </div>
                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                               <mat-form-field class="form-field">
+                                               <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Select Negative marks</mat-label>
                                                   <mat-select formControlName="qus_negative_marks" placeholder="Select Negative Marks">
                                                      <mat-option *ngFor="let negativemarksvalue of negativemarksArray" [value]="negativemarksvalue">
                                                      {{negativemarksvalue}}
@@ -148,7 +159,8 @@
                                          </div>
                                          <div class="row">
                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                               <mat-form-field class="form-field">
+                                               <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Select Time Alloted</mat-label>
                                                   <mat-select formControlName="qus_time_alloted" placeholder="Select Time Alloted">
                                                      <mat-option *ngFor="let timealloted of timeallotedArray" [value]="timealloted">
                                                      {{timealloted}}
@@ -157,7 +169,8 @@
                                                </mat-form-field>
                                             </div>
                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                               <mat-form-field class="form-field">
+                                               <mat-form-field class="form-field"  appearance="outline">
+                                <mat-label>Select Historical Reference</mat-label>
                                                   <input matInput placeholder="Reference" formControlName="qus_historical_reference">
                                                </mat-form-field>
                                             </div>

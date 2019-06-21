@@ -44,7 +44,8 @@
                                  <div class="col-lg-12 remove-col-padding col-mobile-view-add-ques">
                                     <form [formGroup]="parameterform" novalidate>
                                        <div class="row">
-                                          <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                       <div class="col-12">
+                                          <div class="inline-flex margin-left-15">
                                              <mat-form-field appearance="outline" class="form-field">
                                                 <mat-select formControlName="qt_id"
                                                    (selectionChange)="getQuestionSubtypeDataByQuestiontype()" required
@@ -57,7 +58,7 @@
                                              </mat-form-field>
                                           </div>
                                           <div *ngIf="!essayFlag"
-                                             class="col-lg-2 fin-tab-col-16  col-mobile-view-add-ques">
+                                             class="inline-flex margin-left-15">
                                              <mat-form-field appearance="outline" class="form-field">
                                                 <mat-select formControlName="qst_id"
                                                    (ngModelChange)="loadListTemp($event)" required
@@ -69,7 +70,7 @@
                                                 </mat-select>
                                              </mat-form-field>
                                           </div>
-                                          <div class="col-lg-2 fin-tab-col-16  col-mobile-view-add-ques">
+                                          <div class="inline-flex margin-left-15">
                                              <mat-form-field appearance="outline" class="form-field">
                                                 <mat-select formControlName="class_id"
                                                    (selectionChange)="getSubjectsByClass()" required
@@ -80,7 +81,7 @@
                                                 </mat-select>
                                              </mat-form-field>
                                           </div>
-                                          <div class="col-lg-2 fin-tab-col-16  col-mobile-view-add-ques">
+                                          <div class="inline-flex margin-left-15">
                                              <mat-form-field appearance="outline" class="form-field">
                                                 <mat-select formControlName="sub_id"
                                                    (selectionChange)="getTopicByClassSubject()" required
@@ -91,7 +92,7 @@
                                                 </mat-select>
                                              </mat-form-field>
                                           </div>
-                                          <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                          <div class="inline-flex margin-left-15">
                                              <mat-form-field appearance="outline" class="form-field">
                                                 <mat-select formControlName="topic_id"
                                                    (selectionChange)="getSubtopicByTopic()" required
@@ -102,7 +103,7 @@
                                                 </mat-select>
                                              </mat-form-field>
                                           </div>
-                                          <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                          <div class="inline-flex margin-left-15">
                                              <mat-form-field appearance="outline" class="form-field">
                                                 <mat-select formControlName="st_id" (selectionChange)="getEssay()"
                                                    placeholder="Select SubTopic">
@@ -113,7 +114,7 @@
                                              </mat-form-field>
                                           </div>
                                           <div *ngIf="essayFlag"
-                                             class="col-lg-16 fin-tab-col-15 col-mobile-view-add-ques">
+                                             class="inline-flex margin-left-15">
                                              <mat-form-field appearance="outline" class="form-field">
                                                 <mat-select formControlName="ess_id" placeholder="Select Essay">
                                                    <mat-option *ngFor="let item of essayArray" [value]="item.ess_id">
@@ -122,13 +123,8 @@
                                                 </mat-select>
                                              </mat-form-field>
                                           </div>
-                                       </div>
-                                    </form>
-                                 </div>
-                              </div>
-                              <div class="row row-remove-top-margin">
-                                 <div class="col-lg-12 col-mobile-view-add-ques">
-                                    <div class="add-question-button-collection">
+                                          <div class="inline-flex margin-left-15">
+                                          <div class="">
                                        <div class="button-row">
                                           <button mat-raised-button class="text-uppercase btn-success"
                                              (click)="getQuestionsReview()">Apply</button>
@@ -136,8 +132,13 @@
                                              (click)="resetquestion()">Reset</button>
                                        </div>
                                     </div>
+                                          </div>
+                                          </div>
+                                       </div>
+                                    </form>
                                  </div>
                               </div>
+                             
                            </div>
                         
             </div>
