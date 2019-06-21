@@ -105,7 +105,8 @@
                                                 <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="openModal(i ,j ,det.sd_id)" style="cursor:pointer" title="Delete"></i>
                                             </td>
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
-                                                <i class="fas fa-thumbs-up font-color-green cursor-pointer font-size-16" (click)="openPublish(item.syl_id, item.sd_topic_id)"></i></td>
+                                                <i class="fas fa-thumbs-up font-color-green cursor-pointer font-size-16"  matTooltip="Publish"
+                                                 (click)="openPublish(item.syl_id, item.sd_topic_id)"></i></td>
                                         </tr>
                                     </ng-container>
                                 </ng-container>
