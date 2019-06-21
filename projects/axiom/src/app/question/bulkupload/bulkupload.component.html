@@ -34,7 +34,7 @@
                       <div class="left-parameter-content">
                          <div class="left-side-box">
                             <form method="post" action="#" id="#">
-                               <div class="bulk-left-side-box-content">
+                               <div class="bulk-left-side-box-content height-411">
                                   <span class="bulk-left-side-box-content-title">Upload File</span>
                                   <hr class="left-side-box-content-title-divider">
                                   <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i>
@@ -63,28 +63,32 @@
                                      <form [formGroup]="bulkuploadform" novalidate>
                                         <div class="row row-remove-top-margin">
                                            <div class="col-lg-6 fin-tab-col-50 col-mobile-view-add-ques">
-                                              <mat-form-field class="form-field">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                              <mat-label>Select Board</mat-label>
                                                  <mat-select formControlName="qus_board_id" required placeholder="Select Board">
                                                     <mat-option [value]="schoolinfoArray.school_board_id">
                                                        {{schoolinfoArray.school_board}}
                                                     </mat-option>
                                                  </mat-select>
                                               </mat-form-field>
-                                              <mat-form-field class="form-field">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                              <mat-label>Select Class</mat-label>
                                                  <mat-select formControlName="qus_class_id" (selectionChange)="getSubjectsByClass()" required placeholder="Select Class">
                                                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                                                     {{item.class_name}}
                                                     </mat-option>
                                                  </mat-select>
                                               </mat-form-field>
-                                              <mat-form-field class="form-field">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                              <mat-label>Select Subject</mat-label>
                                                  <mat-select formControlName="qus_sub_id" (selectionChange)="getTopicByClassSubject()" required placeholder="Select Subject">
                                                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                                     {{item.sub_name}}
                                                     </mat-option>
                                                  </mat-select>
                                               </mat-form-field>
-                                              <mat-form-field class="form-field">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                              <mat-label>Select Topic</mat-label>
                                                  <mat-select formControlName="qus_topic_id" (selectionChange)="getSubtopicByTopic()" required placeholder="Select Topic">
                                                     <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
                                                     {{item.topic_name}}
@@ -93,28 +97,32 @@
                                               </mat-form-field>
                                            </div>
                                            <div class="col-lg-6 fin-tab-col-50 col-mobile-view-add-ques">
-                                              <mat-form-field class="form-field">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                              <mat-label>Select Subtopic</mat-label>
                                                  <mat-select formControlName="qus_st_id" required placeholder="Select Sub-Topic">
                                                     <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
                                                     {{item.st_name}}
                                                     </mat-option>
                                                  </mat-select>
                                               </mat-form-field>
-                                              <mat-form-field class="form-field">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                              <mat-label>Select Question Type</mat-label>
                                                  <mat-select formControlName="qus_qt_id" (selectionChange)="getQuestionSubtypeDataByQuestiontype()" required placeholder="Select Question Type">
                                                     <mat-option *ngFor="let item of questionTypeArray" [value]="item.qt_id">
                                                     {{item.qt_name}}
                                                     </mat-option>
                                                  </mat-select>
                                               </mat-form-field>
-                                              <mat-form-field class="form-field">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                              <mat-label>Select Question Subtype</mat-label>
                                                  <mat-select formControlName="qus_qst_id" required placeholder="Select Question SubType">
                                                     <mat-option *ngFor="let item of questionSubtypeArray" [value]="item.qst_id">
                                                     {{item.qst_name}}
                                                     </mat-option>
                                                  </mat-select>
                                               </mat-form-field>
-                                              <mat-form-field class="form-field">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                              <mat-label>Select Skills</mat-label>
                                                  <mat-select formControlName="qus_skill_id" required placeholder="Select Skill">
                                                     <mat-option *ngFor="let item of skillTypeArray" [value]="item.skill_id">
                                                     {{item.skill_name}}
@@ -126,10 +134,9 @@
                                         <div class="row">
                                            <div class="col-lg-12 col-mobile-view-add-ques">
                                               <div class="row row-remove-top-margin">
-                                                 <div class="col-lg-3 col-mobile-view-add-ques">
-                                                 </div>
-                                                 <div class="col-lg-3 tab-col-lg-100 col-mobile-view-add-ques">
-                                                    <div class="add-question-button-collection tab-add-ques-collection">
+                                                 <div class="col-12 text-center col-mobile-view-add-ques">
+                                                 
+                                                    <div class="tab-add-ques-collection">
                                                        <div class="button-row">
                                                           <button mat-raised-button class="submit-button" (click)="generateExcel()">Generate</button>
                                                        </div>
