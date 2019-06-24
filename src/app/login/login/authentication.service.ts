@@ -4,86 +4,88 @@ import { CommonAPIService } from '../../_services/index';
 import { environment } from '../../../environments/environment';
 @Injectable()
 export class AuthenticationService {
-		constructor(private http: HttpClient, private loaderService: CommonAPIService) { }
+	constructor(private http: HttpClient, private loaderService: CommonAPIService) { }
 
-		login(username: string, password: any) {
-				this.loaderService.startLoading();
-				let prefixOptions;
-				if(username.match(/-/g)){
-					const userParam = username.split('-');
-					 prefixOptions = {
-							'Prefix': userParam[0]
-					};
-				}
-				const headers = new HttpHeaders(prefixOptions);
-				
+	login(username: string, password: any) {
+		this.loaderService.startLoading();
+		let prefixOptions;
+		if (username.match(/-/g)) {
+			const userParam = username.split('-');
+			prefixOptions = {
+				'Prefix': userParam[0]
+			};
+		}
+		const headers = new HttpHeaders(prefixOptions);
+		// tslint:disable-next-line:max-line-length
+		if (this.loaderService.getUserPrefix()) {
+			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password });
+		} else {
+			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password }, { headers: headers });
+		}
+	}
 
-				// tslint:disable-next-line:max-line-length
-				return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password }, { headers: headers });
-		}
+	logout() {
 
-		logout() {
+		localStorage.removeItem('currentUser');
+	}
+	getOTP(value: any) {
+		let prefixOptions;
+		if (value.username.match(/-/g)) {
+			const userParam = value.username.split('-');
+			prefixOptions = {
+				'Prefix': userParam[0]
+			};
+		}
+		const headers = new HttpHeaders(prefixOptions);
+		return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
+	}
+	sendMail(value: any) {
+		let prefixOptions;
+		if (value.username.match(/-/g)) {
+			const userParam = value.username.split('-');
+			prefixOptions = {
+				'Prefix': userParam[0]
+			};
+		}
+		const headers = new HttpHeaders(prefixOptions);
+		return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
+	}
+	validateOTP(value: any) {
+		let prefixOptions;
+		if (value.username.match(/-/g)) {
+			const userParam = value.username.split('-');
+			prefixOptions = {
+				'Prefix': userParam[0]
+			};
+		}
+		const headers = new HttpHeaders(prefixOptions);
+		return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
+	}
+	resetPassword(value: any) {
+		let prefixOptions;
+		if (value.username.match(/-/g)) {
+			const userParam = value.username.split('-');
+			prefixOptions = {
+				'Prefix': userParam[0]
+			};
+		}
+		const headers = new HttpHeaders(prefixOptions);
+		return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
+	}
 
-				localStorage.removeItem('currentUser');
+	getUserProjectDetail(value: any) {
+		this.loaderService.startLoading();
+		let prefixOptions;
+		if (value.username.match(/-/g)) {
+			const userParam = value.username.split('-');
+			prefixOptions = {
+				'Prefix': userParam[0]
+			};
 		}
-		getOTP(value: any) {
-				let prefixOptions ;
-				if(value.username.match(/-/g)){
-					const userParam = value.username.split('-');
-					 prefixOptions = {
-							'Prefix': userParam[0]
-					};
-				}
-				const headers = new HttpHeaders(prefixOptions);
-				return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
-		}
-		sendMail(value: any) {
-				let prefixOptions ;
-				if(value.username.match(/-/g)){
-					const userParam = value.username.split('-');
-					 prefixOptions = {
-							'Prefix': userParam[0]
-					};
-				}
-				const headers = new HttpHeaders(prefixOptions);
-				return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
-		}
-		validateOTP(value: any) {
-				let prefixOptions ;
-				if(value.username.match(/-/g)){
-					const userParam = value.username.split('-');
-					 prefixOptions = {
-							'Prefix': userParam[0]
-					};
-				}
-				const headers = new HttpHeaders(prefixOptions);
-				return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
-		}
-		resetPassword(value: any) {
-				let prefixOptions ;
-				if(value.username.match(/-/g)){
-					const userParam = value.username.split('-');
-					 prefixOptions = {
-							'Prefix': userParam[0]
-					};
-				}
-				const headers = new HttpHeaders(prefixOptions);
-				return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
-		}
-
-		getUserProjectDetail(value: any) {
-				this.loaderService.startLoading();
-				let prefixOptions ;
-				if(value.username.match(/-/g)){
-					const userParam = value.username.split('-');
-					 prefixOptions = {
-							'Prefix': userParam[0]
-					};
-				}
-				const headers = new HttpHeaders(prefixOptions);
-				const inputJson = { login_id: value.login_id };
-				return this.http.post(environment.apiSisUrl + '/users/getUserProject', inputJson, { headers: headers });
-		}
+		const headers = new HttpHeaders(prefixOptions);
+		const inputJson = { login_id: value.login_id };
+		return this.http.post(environment.apiSisUrl + '/users/getUserProject', inputJson, { headers: headers });
+	}
 
 
 }
