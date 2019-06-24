@@ -26,6 +26,7 @@ export class CommonAPIService {
 	studentData = new Subject();
 	reRenderForm = new Subject();
 	renderTab = new Subject();
+	userPrefix: any = '';
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
 		tmp.innerHTML = html;
@@ -230,6 +231,12 @@ export class CommonAPIService {
 			});
 		}
 		return of(tempdata);
+	}
+	setUserPrefix(prefix) {
+		this.userPrefix = prefix;
+	}
+	getUserPrefix() {
+		return this.userPrefix;
 	}
 
 }
