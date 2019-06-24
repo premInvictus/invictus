@@ -263,6 +263,17 @@ border:none !important;
 .mat-card.card-zoom:hover {
   z-index: 99;
 }
+.mat-tab-body {
+    top: inherit !important;
+    left: inherit !important;
+    right: inherit !important;
+    bottom: inherit !important;
+    position: absolute;
+    display: block;
+    overflow: visible;
+    flex-basis: 100%;
+}
+
 @media (min-width: 720px) {
   .axiom-navbar-show-small {
     display: none;
