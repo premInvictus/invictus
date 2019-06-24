@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
+import { EditClassworkModalComponent } from './edit-classwork-modal/edit-classwork-modal.component';
 
 @Component({
 	selector: 'app-view-classwork',
@@ -23,6 +25,7 @@ export class ViewClassworkComponent implements OnInit {
 		private sisService: SisService,
 		private smartService: SmartService,
 		private commonAPIService: CommonAPIService,
+		public dialog: MatDialog
 	) { }
 
 	ngOnInit() {
@@ -39,6 +42,20 @@ export class ViewClassworkComponent implements OnInit {
 		this.buildForm();
 	}
 
+	openEditClassworkModal(value) {
+		const dialogRef = this.dialog.open(EditClassworkModalComponent, {
+			width: '600px',
+			height: '50%',
+			data: value
+		});
+		dialogRef.afterClosed().subscribe(dresult => {
+			if (dresult && dresult.update) {
+				if (dresult.update === 'success') {
+					this.getClasswork();
+				}
+			}
+		});
+	}
 	buildForm() {
 		this.paramForm = this.fbuild.group({
 			teacher_name: '',
@@ -123,8 +140,8 @@ export class ViewClassworkComponent implements OnInit {
 				}
 			});
 		} else {
-      this.commonAPIService.showSuccessErrorMessage('Please select teacher name', 'error');
-    }
+			this.commonAPIService.showSuccessErrorMessage('Please select teacher name', 'error');
+		}
 	}
 
 }
