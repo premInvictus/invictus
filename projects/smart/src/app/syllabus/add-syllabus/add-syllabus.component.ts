@@ -30,7 +30,7 @@ export class AddSyllabusComponent implements OnInit {
 	finalXlslArray: any[] = [];
 	XlslArray: any[] = [];
 	arrayBuffer: any;
-	file: File;
+	file: any;
 	syllabusValue1: any;
 	syllabusValue2: any;
 	currentUser: any;
@@ -93,12 +93,17 @@ export class AddSyllabusComponent implements OnInit {
 		});
 	}
 
+	// function to get excel data in file varaible
 	incomingfile(event) {
+		this.file = '';
 		this.file = event.target.files[0];
 		this.Upload();
 	}
 
+	// function to read excel data and assigned to final array for manipulation
 	Upload() {
+		this.XlslArray = [];
+		this.finalXlslArray = [];
 		const fileReader = new FileReader();
 		fileReader.onload = (e) => {
 			this.arrayBuffer = fileReader.result;
@@ -111,12 +116,22 @@ export class AddSyllabusComponent implements OnInit {
 			const first_sheet_name = workbook.SheetNames[0];
 			const worksheet = workbook.Sheets[first_sheet_name];
 			this.XlslArray = XLSX.utils.sheet_to_json(worksheet, { raw: true });
+			if (this.XlslArray.length === 0) {
+				this.commonService.showSuccessErrorMessage('Execel is blank. Please Choose another excel.', 'error');
+				return false;
+			}
+			const xlslHeader = Object.keys(this.XlslArray[0]);
+			if (xlslHeader[0] !== 'Topic' || xlslHeader[1] !== 'Subtopic' || xlslHeader[2] !== 'Period'
+			|| xlslHeader[3] !== 'Category' ||  xlslHeader[4] !== 'Description') {
+				this.commonService.showSuccessErrorMessage('Excel heading should be same as Sample excel heading.', 'error');
+				return false;
+			}
 			for (let i = 0; i < this.XlslArray.length; i++) {
 				this.finalXlslArray.push({
 					sd_ctr_id: this.XlslArray[i].Category,
 					sd_topic_id: this.XlslArray[i].Topic,
 					sd_period_req: this.XlslArray[i].Period,
-					sd_st_id: this.XlslArray[i].Subtopic,
+					sd_st_id: this.XlslArray[i].Subtopic,  
 					sd_desc: this.XlslArray[i].Description,
 				});
 				if (i === (this.XlslArray.length - 1)) {
@@ -215,7 +230,6 @@ export class AddSyllabusComponent implements OnInit {
 
 	//  Get Topic List function
 	getTopicByClassSubject() {
-		console.log(this.topicArray);
 		this.axiomService.getTopicByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
@@ -504,9 +518,6 @@ export class AddSyllabusComponent implements OnInit {
 
 	// Edit syllabus list function
 	editSyllabusList(value1, value2) {
-		console.log(value1);
-		console.log(this.finalSpannedArray[value1].details[value2].sd_ctr_id);
-		console.log(this.finalSpannedArray);
 		this.syllabusUpdateFlag = true;
 		this.syllabusValue1 = value1;
 		this.syllabusValue2 = value2;
@@ -523,7 +534,6 @@ export class AddSyllabusComponent implements OnInit {
 	updateSyllabussList() {
 		this.syllabusDetailForm.value.sd_topic_id = Number(this.syllabusDetailForm.value.sd_topic_id);
 		this.syllabusDetailForm.value.sd_ctr_id = Number(this.syllabusDetailForm.value.sd_ctr_id);
-		console.log(this.syllabusDetailForm.value);
 		const findex = this.finalSyllabusArray.findIndex(f => f.sd_topic_id === this.finalSpannedArray[this.syllabusValue1].sd_topic_id
 			&& f.sd_ctr_id === this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_ctr_id
 			&& f.sd_period_req === this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_period_req);
@@ -560,7 +570,7 @@ export class AddSyllabusComponent implements OnInit {
 				sd_period_test: sd_period_test2,
 				sd_period_revision: sd_period_revision2,
 				sd_st_id: this.syllabusDetailForm.value.sd_st_id,
-				sd_desc: this.syllabusDetailForm.value.sd_desc,
+				sd_desc: this.syllabusDetailForm.value.sd_desc, 
 			});
 			if (this.finalSpannedArray.length > 0) {
 				this.finalSpannedArray[this.syllabusValue1].details.splice(this.syllabusValue2, 1);
