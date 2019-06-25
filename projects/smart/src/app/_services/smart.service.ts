@@ -132,4 +132,20 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getSubTopicNameById', value);
 	}
+	assignmentInsert(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/assignment/insert', value);
+	}
+	assignmentUpdate(value: any) {
+		this.service.startLoading();
+		return this.http.put(environment.apiSmartUrl + '/assignment/update', value);
+	}
+	assignmentDelete(value: any) {
+		this.service.startLoading();
+		return this.http.delete(environment.apiSmartUrl + '/assignment/delete', value);
+	}
+	getAssignment(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/assignment/getAssignment', value);
+	}
 }
