@@ -59,6 +59,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/classwork/insert', value);
 	}
+	updateClasswork(value) {
+		this.service.startLoading();
+		return this.http.put(environment.apiSmartUrl + '/classwork/updateClasswork', value);
+	}
 	getClasswork(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/classwork/getClasswork', value);

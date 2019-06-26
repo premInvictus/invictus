@@ -11,7 +11,7 @@ import { CookieService } from 'ngx-cookie';
 import { LoaderService } from 'projects/axiom/src/app/_services/loader.service';
 import { Router } from '@angular/router';
 import { ProcesstypeService } from 'projects/sis/src/app/_services';
-import {ProcesstypeFeeService} from 'projects/fee/src/app/_services';
+import { ProcesstypeFeeService } from 'projects/fee/src/app/_services';
 @Injectable()
 export class SuccessErrorInterceptor implements HttpInterceptor {
 	constructor(private service: CommonAPIService, private cookieService: CookieService,
@@ -22,9 +22,14 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		const session = JSON.parse(localStorage.getItem('session'));
 		const cookieData: any = this.service.getCokkieData();
+		if (this.service.getUserPrefix()) {
+			request = request.clone({ headers: request.headers.set('Prefix', this.service.getUserPrefix()) });
+		}
 		if (cookieData) {
 			if (cookieData['PF']) {
-				request = request.clone({ headers: request.headers.set('Prefix', cookieData['PF']) });
+				if (!this.service.getUserPrefix()) {
+					request = request.clone({ headers: request.headers.set('Prefix', cookieData['PF']) });
+				}
 				request = request.clone({ headers: request.headers.set('Loginid', cookieData['LN']) });
 				request = request.clone({ headers: request.headers.set('Token', cookieData['AN']) });
 				request = request.clone({ headers: request.headers.set('CID', cookieData['CID']) });
@@ -33,13 +38,13 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 				request = request.clone({ headers: request.headers.set('Sessionid', session.ses_id) });
 			}
 			if (this.processtypeService.getProcesstype() &&
-			localStorage.getItem('project') &&
-			(JSON.parse(localStorage.getItem('project')).pro_url === 'sis')) {
+				localStorage.getItem('project') &&
+				(JSON.parse(localStorage.getItem('project')).pro_url === 'sis')) {
 				request = request.clone({ headers: request.headers.set('Processtype', this.processtypeService.getProcesstype()) });
 			}
 			if (this.processtypeFeeService.getProcesstype() &&
-			localStorage.getItem('project') &&
-			(JSON.parse(localStorage.getItem('project')).pro_url === 'fees')) {
+				localStorage.getItem('project') &&
+				(JSON.parse(localStorage.getItem('project')).pro_url === 'fees')) {
 				request = request.clone({ headers: request.headers.set('Processtype', this.processtypeFeeService.getProcesstype()) });
 			}
 		}
@@ -48,7 +53,7 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 				if (event instanceof HttpResponse) {
 					if (event.body.status === 'error' &&
 						(event.body.data === 'Token Expired' || event.body.data === 'Logout Successfully' ||
-						event.body.data === 'Token Not Matched')) {
+							event.body.data === 'Token Not Matched')) {
 						localStorage.clear();
 						this.cookieService.removeAll();
 						this.router.navigate(['/login']);

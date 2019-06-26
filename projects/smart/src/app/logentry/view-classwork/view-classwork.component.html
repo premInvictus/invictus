@@ -93,6 +93,7 @@
                   <td class="custom-td">{{item1.class_name}} - {{item1.sec_name}}</td>
                   <td class="custom-td text-left">{{item1.topic_name}}</td>
                   <td class="custom-td text-left">{{item1.st_name}}</td>
+                  <!-- *ngIf="item1.edit_flag == '1'" -->
                   <td class="custom-td text-left"><i *ngIf="item1.edit_flag == '1'" class="material-icons icon-edit" (click)="openEditClassworkModal(item1)">create</i></td>
                 <tr>
               </tbody>

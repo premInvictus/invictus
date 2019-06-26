@@ -18,6 +18,9 @@
     flex: 0 0 74%;
 
 }
+.height-394 {
+    height: 394px !important;
+}
 
 .jee-main-no-container {
     height: 270px;
@@ -2885,11 +2888,10 @@ th {
 }
 
 .left-side-box-content-title-divider {
-    margin-bottom: 1.7rem;
+    margin-bottom: 0.5rem;
     border-top: 1px solid transparent;
+    margin-top: 0.5rem;
 }
-
-
 
 .question-subtype-col-div {
     padding-left: 0px !important;
@@ -2907,7 +2909,6 @@ th {
     flex: 0 0 100%;
     width: 100%;
 }
-
 
 .question-subtype-answer-button {
     background-color: #ececec;
@@ -7203,4 +7204,3 @@ td.tdTone2 {
 
 
 }
-
