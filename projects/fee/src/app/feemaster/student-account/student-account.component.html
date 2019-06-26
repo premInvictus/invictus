@@ -10,7 +10,7 @@
          <div class="col-12 remove-col-padding">
 
 
-            <div class="inline-flex margin-left-15">
+            <div class="inline-flex">
                <mat-form-field appearance="outline" class="form-field" appearance="outline">
                   <mat-label>Other Category</mat-label>
                   <mat-select placeholder="Other Category" [disabled]="viewOnly" formControlName="accd_fo_id"
@@ -21,7 +21,7 @@
                   </mat-select>
                </mat-form-field>
             </div>
-            <div class="inline-flex margin-left-15">
+            <div class="inline-flex">
                <mat-form-field appearance="outline" class="form-field">
                   <mat-label>Fee Structure</mat-label>
                   <mat-select placeholder="Applicable Fee Structure" [disabled]="viewOnly" formControlName="accd_fs_id"
@@ -41,7 +41,7 @@
       </div>
       <div class="row">
          <div class="col-12 remove-col-padding">
-            <div class="inline-flex margin-left-15">
+            <div class="inline-flex">
                <mat-form-field appearance="outline" class="form-field-225">
                   <mat-label>Concession Group</mat-label>
                   <mat-select placeholder="Concession Group" [disabled]="viewOnly" formControlName="accd_fcg_id"
@@ -51,11 +51,11 @@
                   </mat-select>
                </mat-form-field>
             </div>
-            <div class="inline-flex margin-left-15">
+            <div class="inline-flex">
                <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_transport"
                   (change)="enableTransport($event)">Whether the child has opted for Transport facility</mat-checkbox>
             </div>
-            <div class="inline-flex margin-left-15">
+            <div class="inline-flex">
                <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_hostel"
                   (change)="enableHostel($event)">Whether the child has opted for Hostel facility.</mat-checkbox>
             </div>
@@ -178,7 +178,7 @@
              </mat-form-field>
           </div>
        </div> -->
-      <mat-checkbox *ngIf="modeFlag && transportFlag" class="font-size-16 margin-left-15" [disabled]="viewOnly"
+      <mat-checkbox *ngIf="modeFlag && transportFlag" class="font-size-16" [disabled]="viewOnly"
          (change)="terminate($event)" formControlName="accd_is_terminate">{{terminateStatus}}</mat-checkbox>
       <div *ngIf="hostelFlag" class="row">
          <div class="col-12 ">

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { QbankService } from '../../questionbank/service/qbank.service';
 import { QelementService } from '../../questionbank/service/qelement.service';
-import {AdminService} from '../../user-type/admin/services/admin.service';
+import { AdminService } from '../../user-type/admin/services/admin.service';
 import { appConfig } from '../../app.config';
 import { ActivatedRoute } from '@angular/router';
 import { BreadCrumbService, NotificationService, CommonAPIService } from '../../_services/index';
@@ -105,34 +105,36 @@ export class BulkuploadComponent implements OnInit {
 	getSubjectsByClass(): void {
 		if (this.currentUser.role_id === '1') {
 			// tslint:disable-next-line:max-line-length
-			this.adminService.getUserAccessSubject({login_id: this.currentUser.login_id, class_id: this.bulkuploadform.value.qus_class_id}).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
-						this.subjectArray = result.data;
-					} else {
-						this.subjectArray = [];
-						this.notif.showSuccessErrorMessage('No Record Found', 'error');
-					}
-				});
-	} else {
-		this.qelementService.getSubjectsByClass(this.bulkuploadform.value.qus_class_id).subscribe(
-			(result: any) => {
+			this.adminService.getUserAccessSubject({ login_id: this.currentUser.login_id, class_id: this.bulkuploadform.value.qus_class_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
 				} else {
 					this.subjectArray = [];
 					this.notif.showSuccessErrorMessage('No Record Found', 'error');
 				}
-			}
-		);
+			});
+		} else {
+			this.qelementService.getSubjectsByClass(this.bulkuploadform.value.qus_class_id).subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.subjectArray = result.data;
+					} else {
+						this.subjectArray = [];
+						this.notif.showSuccessErrorMessage('No Record Found', 'error');
+					}
+				}
+			);
 		}
-		this.bulkuploadform.patchValue({qus_topic_id: '', qus_st_id: '', qus_sub_id: '',
-				qus_qt_id: '', qus_qst_id: '', qus_skill_id: '', qus_dl_id: '1'});
+		this.bulkuploadform.patchValue({
+			qus_topic_id: '', qus_st_id: '', qus_sub_id: '',
+			qus_qt_id: '', qus_qst_id: '', qus_skill_id: '', qus_dl_id: '1'
+		});
 	}
 
 	getTopicByClassSubject(): void {
 		if (this.currentUser.role_id === '1') {
 			// tslint:disable-next-line:max-line-length
-			this.adminService.getUserAccessTopic({login_id: this.currentUser.login_id, class_id: this.bulkuploadform.value.qus_class_id, sub_id: this.bulkuploadform.value.qus_sub_id}).subscribe((result: any) => {
+			this.adminService.getUserAccessTopic({ login_id: this.currentUser.login_id, class_id: this.bulkuploadform.value.qus_class_id, sub_id: this.bulkuploadform.value.qus_sub_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.topicArray = result.data;
 				} else {
@@ -140,18 +142,18 @@ export class BulkuploadComponent implements OnInit {
 				}
 			});
 		} else {
-		this.qelementService.getTopicByClassSubject(this.bulkuploadform.value.qus_class_id, this.bulkuploadform.value.qus_sub_id).subscribe(
-			(result: any) => {
-				if (result && result.status === 'ok') {
-					this.topicArray = result.data;
-				} else {
-					this.topicArray = [];
-					this.notif.showSuccessErrorMessage('No Record Found', 'error');
+			this.qelementService.getTopicByClassSubject(this.bulkuploadform.value.qus_class_id, this.bulkuploadform.value.qus_sub_id).subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.topicArray = result.data;
+					} else {
+						this.topicArray = [];
+						this.notif.showSuccessErrorMessage('No Record Found', 'error');
+					}
 				}
-			}
-		);
+			);
 		}
-		this.bulkuploadform.patchValue({qus_topic_id: '', qus_st_id: '', qus_qt_id: '', qus_qst_id: '', qus_skill_id: '', qus_dl_id: '1'});
+		this.bulkuploadform.patchValue({ qus_topic_id: '', qus_st_id: '', qus_qt_id: '', qus_qst_id: '', qus_skill_id: '', qus_dl_id: '1' });
 	}
 
 	getSubtopicByTopic(): void {
@@ -163,7 +165,7 @@ export class BulkuploadComponent implements OnInit {
 					this.subtopicArray = [];
 					this.notif.showSuccessErrorMessage('No Record Found', 'error');
 				}
-				this.bulkuploadform.patchValue({qus_qt_id: '', qus_qst_id: '', qus_skill_id: '', qus_dl_id: '1'});
+				this.bulkuploadform.patchValue({ qus_qt_id: '', qus_qst_id: '', qus_skill_id: '', qus_dl_id: '1' });
 			}
 		);
 	}
@@ -190,7 +192,7 @@ export class BulkuploadComponent implements OnInit {
 					this.questionSubtypeArray = [];
 					this.notif.showSuccessErrorMessage('No Record Found', 'error');
 				}
-				this.bulkuploadform.patchValue({qus_qst_id: '', qus_skill_id: '', qus_dl_id: '1'});
+				this.bulkuploadform.patchValue({ qus_qst_id: '', qus_skill_id: '', qus_dl_id: '1' });
 			}
 		);
 	}

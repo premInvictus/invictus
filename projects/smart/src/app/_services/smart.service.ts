@@ -148,4 +148,12 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/assignment/getAssignment', value);
 	}
+	insertTimetable(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/Smttimetable/insertTimetable', value);
+	}
+	insertTimetableDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/Smttimetable/insertTimetableDetails', value);
+	}
 }
