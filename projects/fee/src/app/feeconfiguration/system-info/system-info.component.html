@@ -27,7 +27,7 @@
                       <form [formGroup]="formGroupArray[configValue-1].formGroup">
                         <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Bank Name</mat-label>
-                          <mat-select placeholder="Select bank name.." formControlName="bnk_id" [disabled]="updateFlag"
+                          <mat-select placeholder="Select bank name.." formControlName="bnk_gid" [disabled]="updateFlag"
                             [errorStateMatcher]="confirmValidParentMatcher" required>
                             <mat-option *ngFor="let bnk of allBanks" [value]="bnk.tb_id">{{bnk.tb_name}}</mat-option>
                           </mat-select>
