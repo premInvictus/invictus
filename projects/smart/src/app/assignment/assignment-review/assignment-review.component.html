@@ -11,42 +11,43 @@
           </div>
           <div class="col-7 text-right">
             <div class="top-card-title-form">
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
-                appearance="outline">
+              <!-- <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+                appearance="outline" [hidden]="true">
                 <mat-label>From</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from"
                   (dateChange)="setMinTo($event)">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
+              </mat-form-field> -->
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
                 appearance="outline">
-                <mat-label>To</mat-label>
+                <mat-label>As on</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to"
-                  [min]="toMin">
-                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  [min]="toMin" readonly>
+                <mat-datepicker-toggle matSuffix [for]="picker1" disabled></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
               <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10"
-                appearance="outline">
+                appearance="outline" *ngIf="!this.isTeacher">
                 <mat-label>Class</mat-label>
-                <mat-select formControlName="class_id" (selectionChange)="getSubjectsByClass()">
+                <mat-select formControlName="class_id" (selectionChange)="getSubjectsByClass(); getAssignment()">
                   <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
                 </mat-select>
               </mat-form-field>
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
-                appearance="outline">
+                appearance="outline" *ngIf="!this.isTeacher">
                 <mat-label>Subject</mat-label>
-                <mat-select formControlName="sub_id">
+                <mat-select formControlName="sub_id" (selectionChange)="getAssignment()">
                   <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
           </div>
-          <div class="col-1 text-right">
-            <div class="top-card-title-form">
-              <button mat-raised-button class="btn-primary-100" style="margin-top: 10px;"
-                (click)="getAssignment()">Submit</button>
+          <div class="col-1" *ngIf="!isTeacher">
+            <div class="top-card-title-form" >
+                <i class="material-icons" tooltip="Reset" style="margin-top: 15px; color: #0d7c9e; font-size: 40px;cursor: pointer;" (click)="reserParam()">replay</i>
+              <!-- <button mat-raised-button class="btn-primary-100" style="margin-top: 10px;"
+                (click)="getAssignment()">Submit</button> -->
             </div>
           </div>
         </div>
@@ -65,8 +66,9 @@
             <mat-icon matPrefix>filter_list</mat-icon>
           </mat-form-field>
         </div>
-        <div class="col-8 text-right margin-top-5">
-          <button mat-raised-button class="btn-success-green"><i class="fas fa-location-arrow"></i> Send</button>
+        <div class="col-8 text-right margin-top-5" *ngIf="!nodataFlag">
+          <button mat-raised-button class="btn-success-green" *ngIf="!isTeacher"><i class="fas fa-location-arrow"></i> Send</button>
+          <button mat-raised-button class="btn-success-blue margin-left-10" (click)="openAddAttachmentDialog()">Add Assignment</button>
         </div>
       </div>
       <div class="row margin-top-10">
@@ -106,7 +108,7 @@
             </tbody>
           </table> -->
           <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
-            <ng-container matColumnDef="select">
+            <ng-container matColumnDef="select" *ngIf="!isTeacher">
               <!-- <th mat-header-cell *matHeaderCellDef class="select-checkbox">
                 <mat-checkbox 
                   (change)="$event ? masterToggle() : null"
@@ -142,7 +144,7 @@
               <td mat-cell *matCellDef="let element"><div [innerHtml]="element.assignment"></div></td>
             </ng-container>
             <ng-container matColumnDef="entrydate">
-              <th mat-header-cell *matHeaderCellDef > Published On</th>
+              <th mat-header-cell *matHeaderCellDef > Assigned On</th>
               <td mat-cell *matCellDef="let element"> {{element.entryDate | date: 'd-MMM-y'}} </td>
             </ng-container>
             <ng-container matColumnDef="assignedby">
@@ -157,11 +159,11 @@
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef> Action </th>
               <td mat-cell *matCellDef="let element" class="tab-display-flex">
-                <i class="fas fa-location-arrow font-size-16 font-color-green cursor-pointer"></i><span
+                <i class="fas fa-location-arrow font-size-16 font-color-green cursor-pointer" *ngIf="!isTeacher"></i><span
                   class="margin-left-10 ver-line-divider"></span>
                   <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"
                   (click)="attachmentDialog(element.action)"></i><span class="margin-left-10 ver-line-divider"></span>
-                  <i class="fas fa-trash font-size-16 font-color-red cursor-pointer" (click)="openModal(element.action)"></i>
+                  <i *ngIf="!isTeacher" class="fas fa-trash font-size-16 font-color-red cursor-pointer" (click)="openModal(element.action)"></i>
               </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -171,7 +173,7 @@
           <div *ngIf="nodataFlag" class="no-records" style="text-align: center">
               <app-no-data
               [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-              [noDataText]="'No Data Available'"></app-no-data>
+              [noDataText]="'No Data Available'" [subText]="'please select class and subject'"></app-no-data>
           </div>
         </div>
       </div>

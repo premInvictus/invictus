@@ -2,7 +2,7 @@ td.mat-cell {
     border: 1px solid #89A8C9 !important;
     height: 30px;
     color: #222F3E;
-    padding: .7rem;
+    padding: .25rem;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 13px;
 }
@@ -12,7 +12,7 @@ th.mat-header-cell {
     background: #C8D6E5;
     font-weight: bold;
     color: #222F3E;
-    padding: .7rem;
+    padding: .25rem;
     font-family: Helvetica, Arial, sans-serif;
 }
 td:nth-child(3) {
