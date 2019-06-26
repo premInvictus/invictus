@@ -178,9 +178,12 @@ export class ProcessAdmissionComponent implements OnInit, AfterViewInit {
 						const length = result2.data.split('/').length;
 						saveAs(result2.data, result2.data.split('/')[length - 1]);
 						this.getProcessAdmissionData();
+					} else {
+						this.getProcessAdmissionData();
 					}
 				});
 			} else {
+				this.getProcessAdmissionData();
 				this.notif.showSuccessErrorMessage('Error While Admitting Student', 'error');
 			}
 		});

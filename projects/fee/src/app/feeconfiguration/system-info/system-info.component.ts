@@ -68,6 +68,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		this.formGroupArray = [{
 			formGroup: this.fbuild.group({
 				bnk_id: '',
+				bnk_gid: '',
 				bnk_branch: '',
 				bnk_account_no: '',
 				bnk_ifsc: '',
@@ -170,6 +171,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.updateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				bnk_id: value.bnk_id,
+				bnk_gid: value.bnk_gid,
 				bnk_branch: value.bnk_branch,
 				bnk_account_no: value.bnk_account_no,
 				bnk_ifsc: value.bnk_ifsc,
