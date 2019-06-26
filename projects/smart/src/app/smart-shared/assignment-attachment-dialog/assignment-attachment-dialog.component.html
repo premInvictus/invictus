@@ -42,8 +42,8 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="addattachment">
-          <!-- <button mat-raised-button class="btn-primary-100">Add Attachment</button> -->
+          <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="addattachment" style="display: none">
+           <button mat-raised-button class="btn-primary-100"><label class="cursor-pointer" for="addattachment">Add Attachment</label></button> 
         </div>
       </div>
 

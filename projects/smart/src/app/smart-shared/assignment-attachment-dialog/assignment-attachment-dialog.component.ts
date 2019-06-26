@@ -37,6 +37,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		console.log(this.data);
 		this.editFlag = this.data.edit;
 		this.imageArray = this.data.attachments;
 		this.class_id = this.data.class_id;

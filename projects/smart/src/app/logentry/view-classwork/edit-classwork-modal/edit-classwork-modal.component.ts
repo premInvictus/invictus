@@ -161,7 +161,9 @@ export class EditClassworkModalComponent implements OnInit {
 					this.dialogRef.close({ update: 'success' });
 				}
 			});
-		}
+		} else {
+      this.commonAPIService.showSuccessErrorMessage('Please select required field', 'success');
+    }
 
 
 	}

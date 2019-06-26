@@ -142,7 +142,7 @@ export class SmartService {
 	}
 	assignmentDelete(value: any) {
 		this.service.startLoading();
-		return this.http.delete(environment.apiSmartUrl + '/assignment/delete', value);
+		return this.http.post(environment.apiSmartUrl + '/assignment/deleteAssignment', value);
 	}
 	getAssignment(value: any) {
 		this.service.startLoading();

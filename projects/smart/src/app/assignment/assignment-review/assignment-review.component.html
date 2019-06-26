@@ -107,14 +107,15 @@
           </table> -->
           <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
             <ng-container matColumnDef="select">
-              <th mat-header-cell *matHeaderCellDef class="select-checkbox">
+              <!-- <th mat-header-cell *matHeaderCellDef class="select-checkbox">
                 <mat-checkbox 
                   (change)="$event ? masterToggle() : null"
                   [checked]="selection.hasValue() && isAllSelected()"
                   [indeterminate]="selection.hasValue() && !isAllSelected()" 
                   [aria-label]="checkboxLabel()">
                 </mat-checkbox>
-              </th>
+              </th> -->
+              <th mat-header-cell *matHeaderCellDef>Select</th>
               <td mat-cell *matCellDef="let row" class="select-checkbox">
                 <mat-checkbox 
                   (click)="$event.stopPropagation()"
@@ -125,31 +126,31 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="class">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Class </th>
+              <th mat-header-cell *matHeaderCellDef > Class </th>
               <td mat-cell *matCellDef="let element"> {{element.class}} </td>
             </ng-container>
             <ng-container matColumnDef="subject">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Subject </th>
+              <th mat-header-cell *matHeaderCellDef > Subject </th>
               <td mat-cell *matCellDef="let element"> {{element.subject | titlecase}} </td>
             </ng-container>
             <ng-container matColumnDef="topic">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Topic </th>
+              <th mat-header-cell *matHeaderCellDef > Topic </th>
               <td mat-cell *matCellDef="let element"> {{element.topic}} </td>
             </ng-container>
             <ng-container matColumnDef="assignment">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Assignment </th>
+              <th mat-header-cell *matHeaderCellDef > Assignment </th>
               <td mat-cell *matCellDef="let element"><div [innerHtml]="element.assignment"></div></td>
             </ng-container>
             <ng-container matColumnDef="entrydate">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Published On</th>
+              <th mat-header-cell *matHeaderCellDef > Published On</th>
               <td mat-cell *matCellDef="let element"> {{element.entryDate | date: 'd-MMM-y'}} </td>
             </ng-container>
             <ng-container matColumnDef="assignedby">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Assigned By </th>
+              <th mat-header-cell *matHeaderCellDef > Assigned By </th>
               <td mat-cell *matCellDef="let element"> {{element.assignedBy}} </td>
             </ng-container>
             <ng-container matColumnDef="attachment">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Attachment </th>
+              <th mat-header-cell *matHeaderCellDef > Attachment </th>
               <td mat-cell *matCellDef="let element"> <button mat-mini-fab class="btn-blue margin-left-10"><span
                 class="font-white font-size-16">{{element.attachment | zerodash}}</span></button></td>
             </ng-container>
@@ -160,14 +161,14 @@
                   class="margin-left-10 ver-line-divider"></span>
                   <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"
                   (click)="attachmentDialog(element.action)"></i><span class="margin-left-10 ver-line-divider"></span>
-                  <i class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
+                  <i class="fas fa-trash font-size-16 font-color-red cursor-pointer" (click)="openModal(element.action)"></i>
               </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;">
             </tr>
           </table>
-          <div *ngIf="ELEMENT_DATA.length == 0" class="no-records" style="text-align: center">
+          <div *ngIf="nodataFlag" class="no-records" style="text-align: center">
               <app-no-data
               [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
               [noDataText]="'No Data Available'"></app-no-data>
@@ -177,3 +178,6 @@
     </mat-card>
   </div>
 </div>
+<!-- Delete Modal -->
+<app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete '" (deleteOk)="deleteAssignment($event)">
+</app-delete-modal>
