@@ -146,7 +146,6 @@ export class ClassworkUpdateComponent implements OnInit {
 				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
-
 	}
 	getClassByTeacherIdSubjectId(i) {
 		console.log(this.Periods);

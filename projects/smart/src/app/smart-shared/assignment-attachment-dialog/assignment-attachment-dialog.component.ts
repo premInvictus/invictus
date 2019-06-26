@@ -37,6 +37,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		console.log(this.data);
 		this.editFlag = this.data.edit;
 		this.imageArray = this.data.attachments;
 		this.class_id = this.data.class_id;
@@ -66,9 +67,9 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		this.classArray = [];
 		this.sisService.getClass({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-        this.classArray = result.data;
-        this.getSectionsByClass();
-        this.getSubjectsByClass();
+				this.classArray = result.data;
+				this.getSectionsByClass();
+				this.getSubjectsByClass();
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -76,7 +77,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 	getSectionsByClass() {
 		this.sectionArray = [];
-		this.sisService.getSectionsByClass({class_id: this.class_id}).subscribe((result: any) => {
+		this.sisService.getSectionsByClass({ class_id: this.class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.sectionArray = result.data;
 			} else {
@@ -86,10 +87,10 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 	getSubjectsByClass() {
 		this.subjectArray = [];
-		this.axiomService.getSubjectsByClass({class_id: this.class_id}).subscribe((result: any) => {
+		this.axiomService.getSubjectsByClass({ class_id: this.class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-        this.subjectArray = result.data;
-        this.getTopicByClassSubject();
+				this.subjectArray = result.data;
+				this.getTopicByClassSubject();
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -150,7 +151,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 
 	submitAttachment() {
-		this.dialogRef.close({attachments: this.imageArray, assignment_desc: this.assignment_desc});
+		this.dialogRef.close({ attachments: this.imageArray, assignment_desc: this.assignment_desc });
 	}
 	closeDialog() {
 		this.dialogRef.close();
