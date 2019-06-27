@@ -158,6 +158,9 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 						if (result2.data && result2.status === 'ok') {
 							const length = result2.data.split('/').length;
 							saveAs(result2.data, result2.data.split('/')[length - 1]);
+							this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
+						} else {
+							this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 						}
 					});
 				}
