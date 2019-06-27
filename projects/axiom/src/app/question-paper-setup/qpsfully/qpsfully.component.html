@@ -1,5 +1,5 @@
 <!--Here Goes Breadcrumb-->
-<div class="breadcrumb-section">
+<!-- <div class="breadcrumb-section">
    <div class="row">
       <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
          <a [routerLink]="[homeUrl]">
@@ -19,115 +19,112 @@
          </div>
       </div>
    </div>
-</div>
+</div> -->
 <!-- Breadcrumb Ends Here-->
+<div class="row">
+   <div class="col-12">
+      <mat-card>
+         <mat-card-title>
+            <h1 class="remove-bottom-margin font-size-24">Fully Automated Mechanism</h1>
+         </mat-card-title>
+      </mat-card>
+   </div>
+</div>
 <div class="row" id="qpsfully">
-   <div class="col-lg-12">
-      <div class="white-box">
-         <div class="white-box-content top-middle-box-content">
-            <div *ngIf="selectParameter">
-               <div class="row">
-                  <div class="col-lg-12">
-                     <div class="white-box-content-title top-right-box-content col-mobile-view-add-ques">
-                        <span>Fully Automated Mechanism</span>
-                     </div>
-                  </div>
-               </div>
-               <div class="row">
-                  <div class="col-lg-12 remove-col-modal-padding">
-                     <div class="top-right-parameter white-box top-middle-parameter">
-                        <div class="top-right-box top-middle-box-content">
-                           <div class="top-right-box-content top-middle-box-content">
-                              <div class="top-right-box-content-title top-profile-image">
-                                 <div class="row">
-                                    <div class="col-lg-12  col-mobile-view-add-ques">
-                                       <span><b class="step-title">Step I :</b> <b>Select Parameters</b></span>
-                                    </div>
+   <div class="col-12">
+      <mat-card>
+         <mat-card-content>
+            <div class="row" *ngIf="selectParameter">
+               <div class="col-lg-12 remove-col-modal-padding">
+                  <div class="top-right-parameter white-box top-middle-parameter">
+                     <div class="top-right-box top-middle-box-content">
+                        <div class="top-right-box-content top-middle-box-content">
+                           <div class="top-right-box-content-title">
+                              <div class="row">
+                                 <div class="col-lg-12  col-mobile-view-add-ques text-center">
+                                    <span>
+                                       <b class="step-title">Step I :</b>
+                                       <b>Select Parameters</b>
+                                    </span>
                                  </div>
-                                 <div class="row">
-                                    <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
-                                       <form [formGroup]="qpsfully_form" novalidate>
-                                          <div class="row">
-                                             <div
-                                                class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                                <mat-form-field class="form-field">
-                                                   <mat-select formControlName="qp_class_id"
-                                                      (selectionChange)="getSectionsByClass();getSubjectsByClass();"
-                                                      placeholder="Class" required>
-                                                      <mat-option *ngFor="let item of classArray"
-                                                         [value]="item.class_id">
-                                                         {{item.class_name}}
-                                                      </mat-option>
-                                                   </mat-select>
-                                                </mat-form-field>
-                                             </div>
-                                             <div
-                                                class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                                <mat-form-field class="form-field">
-                                                   <mat-select formControlName="qp_sec_id" placeholder="Section"
-                                                      required>
-                                                      <mat-option *ngFor="let item of sectionArray"
-                                                         [value]="item.sec_id">
-                                                         {{item.sec_name}}
-                                                      </mat-option>
-                                                   </mat-select>
-                                                </mat-form-field>
-                                             </div>
-                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                                <mat-form-field class="form-field">
-                                                   <mat-select formControlName="qp_sub_id" placeholder="Subject"
-                                                      (selectionChange)="getTopicByClassSubject();getAllSpecificList();"
-                                                      required>
-                                                      <mat-option *ngFor="let item of subjectArray"
-                                                         [value]="item.sub_id">
-                                                         {{item.sub_name}}
-                                                      </mat-option>
-                                                   </mat-select>
-                                                </mat-form-field>
-                                             </div>
-                                             <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                                <mat-form-field class="form-field">
-                                                   <mat-select formControlName="qp_tp_id" placeholder="Select Template"
-                                                      required>
-                                                      <mat-option *ngFor="let template of templateArray"
-                                                         [value]="template.tp_id">
-                                                         {{template.tp_name}}
-                                                      </mat-option>
-                                                   </mat-select>
-                                                </mat-form-field>
-                                             </div>
-                                             <div
-                                                class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                                <mat-form-field class="form-field">
-                                                   <input matInput [value]="qpsfully_form.value.qp_name | titlecase"
-                                                      placeholder="Test Name" formControlName="qp_name" required>
-                                                </mat-form-field>
-                                             </div>
-                                             <div
-                                                class="col-lg-1 fin-tab-col-10 col-mobile-view-add-que breadcrumb-section">
-                                                <span>
-                                                   <button mat-button [hidden]="!qpsfully_form.value.qp_name"
-                                                      (click)="openDialog()">
-                                                      <i class="fas fa-eye view-eye-icon"
-                                                         matTooltip="View Selected Question Template"></i>
-                                                   </button>
-                                                </span>
-                                             </div>
-                                             <br>
-                                             <div class="col-lg-1 fin-tab-col-20 tab-col-lg-genrate-btn">
-                                                <div class="button-content">
-                                                   <mat-chip-list>
-                                                      <mat-chip class="ongoing-test-detail-section generate-button"
-                                                         (click)="getFilters()">
-                                                         <i class="fas fa-file generate-button-icon"></i> &nbsp;&nbsp;
-                                                         <span class="axiom-icon-button">Generate</span>
-                                                      </mat-chip>
-                                                   </mat-chip-list>
-                                                </div>
-                                             </div>
+                              </div>
+                              <div class="row">
+                                 <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
+                                    <form [formGroup]="qpsfully_form" novalidate>
+                                       <div class="row row-remove-top-margin">
+                                          <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Class</mat-label>
+                                                <mat-select formControlName="qp_class_id"
+                                                   (selectionChange)="getSectionsByClass();getSubjectsByClass();"
+                                                   placeholder="Class" required>
+                                                   <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                      {{item.class_name}}
+                                                   </mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
                                           </div>
-                                       </form>
-                                    </div>
+                                          <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Section</mat-label>
+                                                <mat-select formControlName="qp_sec_id" placeholder="Section" required>
+                                                   <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                                      {{item.sec_name}}
+                                                   </mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
+                                          </div>
+                                          <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Subject</mat-label>
+                                                <mat-select formControlName="qp_sub_id" placeholder="Subject"
+                                                   (selectionChange)="getTopicByClassSubject();getAllSpecificList();"
+                                                   required>
+                                                   <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                                      {{item.sub_name}}
+                                                   </mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
+                                          </div>
+                                          <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Select Template</mat-label>
+                                                <mat-select formControlName="qp_tp_id" placeholder="Select Template"
+                                                   required>
+                                                   <mat-option *ngFor="let template of templateArray"
+                                                      [value]="template.tp_id">
+                                                      {{template.tp_name}}
+                                                   </mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
+                                          </div>
+                                          <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Test Name</mat-label>
+                                                <input matInput [value]="qpsfully_form.value.qp_name | titlecase"
+                                                   placeholder="Test Name" formControlName="qp_name" required>
+                                             </mat-form-field>
+                                          </div>
+                                          <div class="col-lg-2 fin-tab-col-10 col-mobile-view-add-que">
+                                             <span [hidden]="!qpsfully_form.value.qp_name" class="mt-3 span_button">
+                                                <button mat-button [hidden]="!qpsfully_form.value.qp_name"
+                                                   (click)="openDialog()">
+                                                   <i class="fas fa-eye view-eye-icon"
+                                                      matTooltip="View Selected Question Template"></i>
+                                                </button>
+                                             </span>
+                                             <span class="mt-3 span_button">
+                                                <mat-chip-list>
+                                                   <mat-chip class="ongoing-test-detail-section generate-button"
+                                                      (click)="getFilters()">
+                                                      <i class="fas fa-file generate-button-icon"></i> &nbsp;&nbsp;
+                                                      <span class="axiom-icon-button">Generate</span>
+                                                   </mat-chip>
+                                                </mat-chip-list>
+                                             </span>
+                                          </div>
+                                       </div>
+                                    </form>
                                  </div>
                               </div>
                            </div>
@@ -136,84 +133,82 @@
                   </div>
                </div>
             </div>
-            <br>
             <div *ngIf="reviewQuestion">
-               <div class="row row-remove-top-margin">
-                  <div class="col-lg-12 col-mobile-view-add-ques">
+               <div class="row">
+                  <div class="col-lg-12 col-mobile-view-add-ques pd_left pd_right">
                      <div class="row row-remove-top-margin">
-                        <div class="col-lg-12 col-mobile-view-add-ques">
-                           <div class="row row-remove-top-margin">
-                              <div class="col-lg-2 fin-tab-col-15 text-left">
-                                 <button mat-icon-button matTooltip="Go to Step I & II - Select Parameter"
-                                    (click)="movebackParameter()" class="arrow-button">
-                                    <i class="fas fa-angle-double-left" aria-hidden="true"></i>
-                                 </button>
+                        <div class="col-lg-2 fin-tab-col-15 text-left">
+                           <button mat-icon-button matTooltip="Go to Step I & II - Select Parameter"
+                              (click)="movebackParameter()" class="arrow-button">
+                              <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+                           </button>
+                        </div>
+                        <div class="col-lg-8 fin-tab-col-7 add-option-radio">
+                           <span><b class="step-title">Step II - </b></span>
+                           <span><b>Review Questions</b></span>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="col-lg-2 fin-tab-col-15 text-right">
+                           <button mat-icon-button matTooltip="Review Questions"
+                              (click)="gotoReview();reviewQuestionPaper()" class="arrow-button">
+                              <i class="fas fa-angle-double-right " aria-hidden="true"></i>
+                           </button>
+                        </div>
+                     </div>
+                     <div class="row row-remove-top-margin text-center" *ngIf="bannerdiv">
+                        <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
+                           <form [formGroup]="qpsfully_form" novalidate>
+                              <div class="row row-remove-top-margin">
+                                 <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Class</mat-label>
+                                       <mat-select formControlName="qp_class_id" placeholder="Class" disabled>
+                                          <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                             {{item.class_name}}
+                                          </mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Section</mat-label>
+                                       <mat-select formControlName="qp_sec_id" placeholder="Section" disabled>
+                                          <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                             {{item.sec_name}}
+                                          </mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Subject</mat-label>
+                                       <mat-select formControlName="qp_sub_id" placeholder="Subject" disabled>
+                                          <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                             {{item.sub_name}}
+                                          </mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Select Template</mat-label>
+                                       <mat-select formControlName="qp_tp_id" placeholder="Select Template" disabled>
+                                          <mat-option *ngFor="let template of templateArray" [value]="template.tp_id">
+                                             {{template.tp_name}}
+                                          </mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                                 <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Test Name</mat-label>
+                                       <input matInput [value]="qpsfully_form.value.qp_name | titlecase"
+                                          placeholder="Test Name" formControlName="qp_name" readonly>
+                                    </mat-form-field>
+                                 </div>
                               </div>
-                              <div class="col-lg-8 fin-tab-col-7 add-option-radio">
-                                 <span><b class="step-title">STEP II - </b></span>
-                                 <span><b> REVIEW QUESTIONS</b></span>
-                              </div>
-                              <br>
-                              <br>
-                              <div class="col-lg-2 fin-tab-col-15 text-right">
-                                 <button mat-icon-button matTooltip="Review Questions"
-                                    (click)="gotoReview();reviewQuestionPaper()" class="arrow-button">
-                                    <i class="fas fa-angle-double-right " aria-hidden="true"></i>
-                                 </button>
-                              </div>
-                           </div>
-                           <div class="row row-remove-top-margin text-center" *ngIf="bannerdiv">
-                              <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
-                                 <form [formGroup]="qpsfully_form" novalidate>
-                                    <div class="row">
-                                       <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                          <mat-form-field class="form-field">
-                                             <mat-select formControlName="qp_class_id" placeholder="Class" disabled>
-                                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                                                   {{item.class_name}}
-                                                </mat-option>
-                                             </mat-select>
-                                          </mat-form-field>
-                                       </div>
-                                       <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                          <mat-form-field class="form-field">
-                                             <mat-select formControlName="qp_sec_id" placeholder="Section" disabled>
-                                                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
-                                                   {{item.sec_name}}
-                                                </mat-option>
-                                             </mat-select>
-                                          </mat-form-field>
-                                       </div>
-                                       <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                          <mat-form-field class="form-field">
-                                             <mat-select formControlName="qp_sub_id" placeholder="Subject" disabled>
-                                                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
-                                                   {{item.sub_name}}
-                                                </mat-option>
-                                             </mat-select>
-                                          </mat-form-field>
-                                       </div>
-                                       <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                          <mat-form-field class="form-field">
-                                             <mat-select formControlName="qp_tp_id" placeholder="Select Template"
-                                                disabled>
-                                                <mat-option *ngFor="let template of templateArray"
-                                                   [value]="template.tp_id">
-                                                   {{template.tp_name}}
-                                                </mat-option>
-                                             </mat-select>
-                                          </mat-form-field>
-                                       </div>
-                                       <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                          <mat-form-field class="form-field">
-                                             <input matInput [value]="qpsfully_form.value.qp_name | titlecase"
-                                                placeholder="Test Name" formControlName="qp_name" readonly>
-                                          </mat-form-field>
-                                       </div>
-                                    </div>
-                                 </form>
-                              </div>
-                           </div>
+                           </form>
                         </div>
                      </div>
                   </div>
@@ -236,7 +231,7 @@
                               <!--Tab 1 start-->
                               <div *ngIf="filter.tf_qst_id == 1 && filter.tf_qt_id == 2">
                                  <br>
-                                 <div class="example-container mat-elevation-z8  detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterMCQ($event.target.value)"
@@ -246,7 +241,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="mcqdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="position">
@@ -324,14 +319,15 @@
                                     </mat-table>
                                     <mat-paginator (page)="pageEvent=getPageEvent1($event)" #paginator [pageSize]="10"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
-                                       [length]="lengthArrayMCQ[i]"></mat-paginator>
+                                       [length]="lengthArrayMCQ[i]">
+                                    </mat-paginator>
                                  </div>
                               </div>
                               <!--Tab 2 start-->
                               <div *ngIf="filter.tf_qst_id == 2 && filter.tf_qt_id == 2">
                                  <br>
                                  <!-- Table for multiple chioce Question with multiple response Ends here -->
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8 ">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterMultiMCQ($event.target.value)"
@@ -341,7 +337,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="multimcqdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionMulti">
@@ -420,13 +416,14 @@
                                     </mat-table>
                                     <mat-paginator #paginator2 (page)="pageEvent=getPageEvent2($event)" [pageSize]="10"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
-                                       [length]="lengthArrayMCQMR[i]"></mat-paginator>
+                                       [length]="lengthArrayMCQMR[i]">
+                                    </mat-paginator>
                                  </div>
                               </div>
                               <!--Tab 3 start -->
                               <div *ngIf="filter.tf_qst_id == 3 && filter.tf_qt_id == 2">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterTF($event.target.value)"
@@ -436,7 +433,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="tfdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionTF">
@@ -515,13 +512,14 @@
                                     </mat-table>
                                     <mat-paginator #paginator3 [pageSize]="10" (page)="pageEvent=getPageEvent3($event)"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
-                                       [length]="lengthArrayTF[i]"></mat-paginator>
+                                       [length]="lengthArrayTF[i]">
+                                    </mat-paginator>
                                  </div>
                               </div>
                               <!--Tab 4 start -->
                               <div *ngIf="filter.tf_qst_id == 4 && filter.tf_qt_id == 2">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterMatch($event.target.value)"
@@ -531,7 +529,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="matchdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionMatch">
@@ -610,13 +608,14 @@
                                     </mat-table>
                                     <mat-paginator #paginator4 [pageSize]="10" (page)="pageEvent=getPageEvent4($event)"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
-                                       [length]="lengthArrayMTF[i]"></mat-paginator>
+                                       [length]="lengthArrayMTF[i]">
+                                    </mat-paginator>
                                  </div>
                               </div>
                               <!--Tab 5 start-->
                               <div *ngIf="filter.tf_qst_id == 5 && filter.tf_qt_id == 2">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterMatrix($event.target.value)"
@@ -626,7 +625,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="matrixmatchdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionMatrixMatch">
@@ -646,7 +645,8 @@
                                           <mat-cell *matCellDef="let item">
                                              <div matTooltip="{{htmlToText(item.showHoverMatrixMatch)}}"
                                                 class="changeTableMultiMCQ imgClassExpress"
-                                                [MathJax]="item.optionsMatrixMatch"></div>
+                                                [MathJax]="item.optionsMatrixMatch">
+                                             </div>
                                           </mat-cell>
                                        </ng-container>
                                        <!-- Explanations Name Column -->
@@ -705,7 +705,8 @@
                                     </mat-table>
                                     <mat-paginator #paginator5 [pageSize]="10" (page)="pageEvent=getPageEvent5($event)"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
-                                       [length]="lengthArrayMatrix[i]"></mat-paginator>
+                                       [length]="lengthArrayMatrix[i]">
+                                    </mat-paginator>
                                  </div>
                                  <!-- Table for match the following Ends here -->
                               </div>
@@ -713,7 +714,7 @@
                               <!--MATRIX 4 * 5-->
                               <div *ngIf="filter.tf_qst_id == 13 && filter.tf_qt_id == 2">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterMatrix45($event.target.value)"
@@ -723,7 +724,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="matrixmatch45dataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionMatrixMatch">
@@ -743,7 +744,8 @@
                                           <mat-cell *matCellDef="let item">
                                              <div matTooltip="{{htmlToText(item.showHoverMatrixMatch)}}"
                                                 class="changeTableMultiMCQ imgClassExpress"
-                                                [MathJax]="item.optionsMatrixMatch"></div>
+                                                [MathJax]="item.optionsMatrixMatch">
+                                             </div>
                                           </mat-cell>
                                        </ng-container>
                                        <!-- Explanations Name Column -->
@@ -809,7 +811,7 @@
                               <!--Single Integer-->
                               <div *ngIf="filter.tf_qst_id == 14 && filter.tf_qt_id == 2">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8 ">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterSingleInteger($event.target.value)"
@@ -819,7 +821,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="singledataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="position">
@@ -904,7 +906,7 @@
                               <!--Double Integer-->
                               <div *ngIf="filter.tf_qst_id == 15 && filter.tf_qt_id == 2">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8 ">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterDoubleInteger($event.target.value)"
@@ -914,7 +916,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="doubledataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="position">
@@ -999,7 +1001,7 @@
                               <!--Tab 6 start-->
                               <div *ngIf="filter.tf_qst_id == 6 && filter.tf_qt_id == 1">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterFill($event.target.value)"
@@ -1009,7 +1011,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="filldataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
@@ -1086,13 +1088,14 @@
                                     </mat-table>
                                     <mat-paginator #paginator6 [pageSize]="10" (page)="pageEvent=getPageEvent6($event)"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
-                                       [length]="lengthArrayFill[i]"></mat-paginator>
+                                       [length]="lengthArrayFill[i]">
+                                    </mat-paginator>
                                  </div>
                               </div>
                               <!--Tab 7 start-->
                               <div *ngIf="filter.tf_qst_id == 7 && filter.tf_qt_id == 1">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterIdentify($event.target.value)"
@@ -1102,7 +1105,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="identifydataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
@@ -1185,7 +1188,7 @@
                               <!--Tab 8 start-->
                               <div *ngIf="filter.tf_qst_id == 8 && filter.tf_qt_id == 1">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterOne($event.target.value)"
@@ -1195,7 +1198,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="onedataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
@@ -1272,13 +1275,14 @@
                                     </mat-table>
                                     <mat-paginator #paginator8 [pageSize]="10" (page)="pageEvent=getPageEvent8($event)"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
-                                       [length]="lengthArrayOne[i]"></mat-paginator>
+                                       [length]="lengthArrayOne[i]">
+                                    </mat-paginator>
                                  </div>
                               </div>
                               <!--Tab 9 start-->
                               <div *ngIf="filter.tf_qst_id == 9 && filter.tf_qt_id == 1">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterVeryShort($event.target.value)"
@@ -1288,7 +1292,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="veryshortdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
@@ -1371,7 +1375,7 @@
                               <!--Tab 10 start-->
                               <div *ngIf="filter.tf_qst_id == 10 && filter.tf_qt_id == 1">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterShort($event.target.value)"
@@ -1381,7 +1385,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="shortdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
@@ -1458,13 +1462,14 @@
                                     </mat-table>
                                     <mat-paginator #paginator10 [pageSize]="10"
                                        (page)="pageEvent=getPageEvent10($event)" [pageSizeOptions]="[10,20,30]"
-                                       [showFirstLastButtons]="true" [length]="lengthArrayShort[i]"></mat-paginator>
+                                       [showFirstLastButtons]="true" [length]="lengthArrayShort[i]">
+                                    </mat-paginator>
                                  </div>
                               </div>
                               <!--Tab 11 start-->
                               <div *ngIf="filter.tf_qst_id == 11 && filter.tf_qt_id == 1">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterLong($event.target.value)"
@@ -1474,7 +1479,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="longdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
@@ -1551,13 +1556,14 @@
                                     </mat-table>
                                     <mat-paginator #paginator11 [pageSize]="10"
                                        (page)="pageEvent=getPageEvent11($event)" [pageSizeOptions]="[10,20,30]"
-                                       [showFirstLastButtons]="true" [length]="lengthArrayLong[i]"></mat-paginator>
+                                       [showFirstLastButtons]="true" [length]="lengthArrayLong[i]">
+                                    </mat-paginator>
                                  </div>
                               </div>
                               <!--Tab 12 start-->
                               <div *ngIf="filter.tf_qst_id == 12 && filter.tf_qt_id == 1">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterVeryLong($event.target.value)"
@@ -1567,7 +1573,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="verylongdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
@@ -1650,7 +1656,7 @@
                               <!--Tab 12 start-->
                               <div *ngIf="filter.tf_qt_id == 3">
                                  <br>
-                                 <div class="example-container mat-elevation-z8 detail-question-box ">
+                                 <div class="example-container mat-elevation-z8">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterVeryLong($event.target.value)"
@@ -1660,7 +1666,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="essayquestionDatasource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="position">
@@ -1781,20 +1787,19 @@
                                           </button>
                                        </div>
                                        <div class="col-lg-8 fin-tab-col-7 add-option-radio">
-                                          <label class="question-subtype-content-title-expanation"><b
-                                                class="step-title">STEP III - </b></label>
-                                          <label> REVIEW SELECTION</label>
+                                          <span><b class="step-title">Step III - </b></span>
+                                          <span><b>Review Selection</b></span>
                                        </div>
-                                       <div class="col-lg-2 fin-tab-col-15"></div>
                                     </div>
                                  </div>
                               </div>
                               <div class="row" *ngIf="bannerdiv">
                                  <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
                                     <form [formGroup]="qpsfully_form" novalidate>
-                                       <div class="row">
+                                       <div class="row row-remove-top-margin">
                                           <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                             <mat-form-field class="form-field">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Class</mat-label>
                                                 <mat-select formControlName="qp_class_id" placeholder="Class" disabled>
                                                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                                                       {{item.class_name}}
@@ -1803,7 +1808,8 @@
                                              </mat-form-field>
                                           </div>
                                           <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                             <mat-form-field class="form-field">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Section</mat-label>
                                                 <mat-select formControlName="qp_sec_id" placeholder="Section" disabled>
                                                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
                                                       {{item.sec_name}}
@@ -1812,7 +1818,8 @@
                                              </mat-form-field>
                                           </div>
                                           <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                             <mat-form-field class="form-field">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Subject</mat-label>
                                                 <mat-select formControlName="qp_sub_id" placeholder="Subject" disabled>
                                                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                                       {{item.sub_name}}
@@ -1821,7 +1828,8 @@
                                              </mat-form-field>
                                           </div>
                                           <div class="col-lg-2 fin-tab-col-16 col-mobile-view-add-ques">
-                                             <mat-form-field class="form-field">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Select Template</mat-label>
                                                 <mat-select formControlName="qp_tp_id" placeholder="Select Template"
                                                    disabled>
                                                    <mat-option *ngFor="let template of templateArray"
@@ -1832,19 +1840,22 @@
                                              </mat-form-field>
                                           </div>
                                           <div class="col-lg-2 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                             <mat-form-field class="form-field">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Test Name</mat-label>
                                                 <input matInput [value]="qpsfully_form.value.qp_name | titlecase"
                                                    placeholder="Test Name" formControlName="qp_name" readonly>
                                              </mat-form-field>
                                           </div>
                                           <div class="col-lg-1 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                             <mat-form-field class="form-field">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Marks</mat-label>
                                                 <input type="number" (change)="setMarks($event)" matInput
                                                    placeholder="Marks" formControlName="qp_marks">
                                              </mat-form-field>
                                           </div>
                                           <div class="col-lg-1 fin-tab-col-16 top-opt-title col-mobile-view-add-ques">
-                                             <mat-form-field class="form-field">
+                                             <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Negative Marks</mat-label>
                                                 <input type="number" (change)="setNmarks($event)" matInput
                                                    placeholder="Negative Marks" formControlName="qp_negative_marks">
                                              </mat-form-field>
@@ -1855,11 +1866,10 @@
                               </div>
                            </div>
                         </div>
-                        <br>
-                        <div class="row">
+                        <div class="row row-remove-top-margin">
                            <div class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques ">
-                              <div class="white-box add-margin-review detail-question-box">
-                                 <div class="white-box-content remove-col-modal-padding">
+                              <div class="add-margin-review">
+                                 <div class="remove-col-modal-padding">
                                     <div class="example-header">
                                        <mat-form-field class="fully-filter-table labelPercentage">
                                           <input matInput (keyup)="applyFilterReview($event.target.value)"
@@ -1870,7 +1880,7 @@
                                        </mat-form-field>
                                     </div>
                                     <!-- <div class="user-table"><table class="table table-bordered table-striped" cellspacing="0"><thead><tr class="text-center"><th style="width: 3%;">S.No</th><th style="width: 25%;">Question</th><th style="width: 20%;">Answer</th><th style="width: 10%;">Topic</th><th style="width: 10%;">SubTopic</th><th style="width: 5%;">LOD</th><th style="width: 5%;">Skill</th><th style="width: 5%;">Marks</th><th style="width: 5%;">Negative Marks</th><th style="width: 5%;">Action</th></tr></thead><tbody><tr *ngFor="let item of reviewQuestionArray; let i = index"><td class="text-center">{{item.qpq_qus_position}}</td><td><div class="imgClassExpress" [innerHTML]="item.qus_info.qus_name"></div></td><td><div *ngFor="let option of item.qus_info.options"><div *ngIf="option.qopt_answer==1"><div  class="imgClassExpress" [innerHTML]="option.qopt_options"></div></div></div><div *ngIf="item.qus_info.qopt_answer"><div class="imgClassExpress" [innerHTML]="item.qus_info.qopt_answer"></div></div></td><td class="text-center">{{item.qus_info.topic_name}}</td><td class="text-center">{{item.qus_info.st_name}}</td><td class="text-center">{{item.qus_info.skill_name}}</td><td class="text-center">{{item.qus_info.dl_name}}</td><td class="text-center"><textarea class="form-control form-control-sm" id="custom_marks" rows="1" (blur)="update(item.qpq_marks)">{{item.qus_info.qus_marks}}</textarea></td><td class="text-center">{{item.qus_info.qus_negative_marks}}</td><td class="text-center"><i class="fa fa-trash fa-delete fa-lg" data-toggle="tooltip" data-placement="top" title="Delete" aria-hidden="true" (click)="deleteQuestionList(i)"></i></td></tr><tr ><td colspan="6"></td><td><b>Total Marks</b></td><td class="text-center"><b>{{total}}</b></td><td></td></tr></tbody></table></div> -->
-                                    <mat-table class="specific-table ques-review-table table-main-structure" #table
+                                    <mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="reviewdatasource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="position">
@@ -1954,7 +1964,7 @@
                                           <div class="col-lg-3 fin-tab-col-7 bread-link">
                                              <textarea
                                                 class="form-control form-control-sm text-primary question-paper-marks"
-                                                [value]="total" disabled="disabled"></textarea>
+                                                [value]="total" disabled="disabled" style="resize: none;"></textarea>
                                           </div>
                                        </div>
                                     </div>
@@ -1978,7 +1988,7 @@
                </div>
             </div>
             <!--Review Question Ends -->
-         </div>
-      </div>
+         </mat-card-content>
+      </mat-card>
    </div>
 </div>
