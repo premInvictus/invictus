@@ -122,13 +122,16 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	getSubjectsByClass() {
 		this.subjectArray = [];
 		if (this.isTeacher) {
-			if(this.sec_id) {
+			if (this.sec_id) {
 				this.smartService.getSubjectByTeacherIdClassIdSectionId({
 					teacher_id: this.currentUser.login_id,
 					class_id: this.class_id, sec_id: this.sec_id
 				}).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.subjectArray = result.data;
+						if (this.sub_id) {
+							this.getTopicByClassIdSubjectId();
+						}
 					} else {
 						this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 					}

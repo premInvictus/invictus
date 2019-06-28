@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { ReviewClassworkComponent } from './review-classwork/review-classwork.component';
@@ -29,19 +30,27 @@ export class ClassworkUpdateComponent implements OnInit {
 	currentUser: any;
 	session: any;
 	entry_date = new Date();
+	noDataFlag = true;
+	isTeacher = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
 		private sisService: SisService,
 		private smartService: SmartService,
 		private commonAPIService: CommonAPIService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		public router: Router,
+		public route: ActivatedRoute
 	) { }
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.teacherId = this.currentUser.login_id;
 		this.buildForm();
+		if (this.currentUser.role_id === '3') {
+			this.isTeacher = true;
+			this.noDataFlag = false;
+		}
 		this.getSubjectByTeacherId();
 		this.ctrList();
 	}
@@ -216,7 +225,7 @@ export class ClassworkUpdateComponent implements OnInit {
 			cw_st_id: ''
 		});
 		const csArray = eachPeriodFG.value.cw_class_id.split('-');
-		const param = {class_id: csArray[0], sub_id: eachPeriodFG.value.cw_sub_id};
+		const param = { class_id: csArray[0], sub_id: eachPeriodFG.value.cw_sub_id };
 		this.smartService.getTopicByClassIdSubjectId(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.topicArray[i] = result.data;
@@ -228,7 +237,7 @@ export class ClassworkUpdateComponent implements OnInit {
 	getSubtopicByTopic(i) {
 		this.subtopicArray[i] = [];
 		const eachPeriodFG = this.Periods.controls[i];
-		this.smartService.getSubtopicByTopicId({topic_id: eachPeriodFG.value.cw_topic_id}).subscribe((result: any) => {
+		this.smartService.getSubtopicByTopicId({ topic_id: eachPeriodFG.value.cw_topic_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subtopicArray[i] = result.data;
 			} else {
@@ -256,14 +265,19 @@ export class ClassworkUpdateComponent implements OnInit {
 				if (dresult && dresult.data) {
 					console.log('submitting form');
 					if (this.classworkForm.valid) {
-						if (this.currentUser.role_id !== '3') {
-							this.Periods.controls.forEach((eachFormGroup: FormGroup) => {
-								Object.keys(eachFormGroup.controls).forEach(key => {
-									if (key === 'cw_class_id') {
-										const csArray = eachFormGroup.value.cw_class_id.split('-');
+						this.Periods.controls.forEach((eachFormGroup: FormGroup) => {
+							Object.keys(eachFormGroup.controls).forEach(key => {
+								if (key === 'cw_class_id') {
+									const csArray = eachFormGroup.value.cw_class_id.split('-');
+									eachFormGroup.patchValue({
+										cw_class_id: csArray[0],
+										cw_sec_id: csArray[1]
+									});
+								}
+								if (!this.isTeacher) {
+									if (key === 'cw_teacher_id') {
 										eachFormGroup.patchValue({
-											cw_class_id: csArray[0],
-											cw_sec_id: csArray[1]
+											cw_teacher_id: this.classworkforForm.value.cw_teacher_id
 										});
 									}
 									if (key === 'cw_entry_date') {
@@ -271,18 +285,27 @@ export class ClassworkUpdateComponent implements OnInit {
 											cw_entry_date: this.commonAPIService.dateConvertion(this.classworkforForm.value.cw_entry_date)
 										});
 									}
+								} else {
 									if (key === 'cw_teacher_id') {
 										eachFormGroup.patchValue({
-											cw_teacher_id: this.classworkforForm.value.cw_teacher_id
+											cw_teacher_id: this.teacherId
 										});
 									}
-								});
+									if (key === 'cw_entry_date') {
+										eachFormGroup.patchValue({
+											cw_entry_date: ''
+										});
+									}
+								}
 							});
-						}
+						});
 						this.smartService.classworkInsert(this.classworkForm.value).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-								this.resetClasswork();
+								// this.resetClasswork();
+								this.router.navigate(['../view-classwork'], { relativeTo: this.route });
+							} else {
+								this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 							}
 						});
 					}
@@ -298,37 +321,40 @@ export class ClassworkUpdateComponent implements OnInit {
 
 	attachmentDialog(currentAttachmentIndex) {
 		const eachPeriodFG = this.Periods.controls[currentAttachmentIndex];
-		const csArray = eachPeriodFG.value.cw_class_id.split('-');
-		const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
-			width: '1000px',
-			height: '50%',
-			data: {
-				page: 'classwork',
-				title: 'Assignment',
-				edit: false,
-				currentAttachmentIndex: currentAttachmentIndex,
-				attachments: eachPeriodFG.value.cw_attachment ? eachPeriodFG.value.cw_attachment : [],
-				class_id: csArray[0],
-				sec_id: csArray[1],
-				sub_id: eachPeriodFG.value.cw_sub_id,
-				topic_id: eachPeriodFG.value.cw_topic_id,
-				st_id: eachPeriodFG.value.cw_st_id,
-				assignment_desc: eachPeriodFG.value.cw_assignment_desc
-			}
-		});
-		dialogRef.afterClosed().subscribe(dresult => {
-			console.log('clossing dialog');
-			console.log(dresult);
-			if (dresult && dresult.assignment_desc) {
-				eachPeriodFG.patchValue({
-					cw_assignment_desc: dresult.assignment_desc,
-					cw_attachment: dresult.attachments
-				});
-				this.reviewElementAssignment(currentAttachmentIndex, dresult.assignment_desc);
-				this.reviewClasswork[currentAttachmentIndex].attachments = dresult.attachments.length;
-			}
-			console.log('eachPeriodFG', eachPeriodFG);
-		});
+		if (eachPeriodFG.valid) {
+			const csArray = eachPeriodFG.value.cw_class_id.split('-');
+			const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
+				width: '1000px',
+				height: '50%',
+				data: {
+					page: 'classwork',
+					title: 'Add Assignment',
+					edit: false,
+					currentAttachmentIndex: currentAttachmentIndex,
+					attachments: eachPeriodFG.value.cw_attachment ? eachPeriodFG.value.cw_attachment : [],
+					class_id: csArray[0],
+					sec_id: csArray[1],
+					sub_id: eachPeriodFG.value.cw_sub_id,
+					topic_id: eachPeriodFG.value.cw_topic_id,
+					st_id: eachPeriodFG.value.cw_st_id,
+					assignment_desc: eachPeriodFG.value.cw_assignment_desc
+				}
+			});
+			dialogRef.afterClosed().subscribe(dresult => {
+				console.log('clossing dialog');
+				console.log(dresult);
+				if (dresult && dresult.assignment_desc) {
+					eachPeriodFG.patchValue({
+						cw_assignment_desc: dresult.assignment_desc,
+						cw_attachment: dresult.attachments
+					});
+					this.reviewElementAssignment(currentAttachmentIndex, dresult.assignment_desc);
+					this.reviewClasswork[currentAttachmentIndex].attachments = dresult.attachments.length;
+				}
+				console.log('eachPeriodFG', eachPeriodFG);
+			});
+
+		}
 	}
 	getTeacherInfo(event) {
 		console.log(event.target.value);
@@ -350,12 +376,14 @@ export class ClassworkUpdateComponent implements OnInit {
 		}
 	}
 	setTeacherId(teacherDetails) {
+		this.noDataFlag = false;
 		this.classworkforForm.patchValue({
 			teacher_name: teacherDetails.au_full_name,
 			cw_teacher_id: teacherDetails.au_login_id
 		});
 		this.teacherId = teacherDetails.au_login_id;
 		this.getSubjectByTeacherId();
+
 	}
 
 	/* getTeacherInfo(event) {

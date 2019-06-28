@@ -11,19 +11,6 @@
           </div>
           <div class="col-5 text-right">
             <div class="top-card-title-form">
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin" appearance="outline"
-                *ngIf="currentUser.role_id != '3'">
-                <mat-label>Teacher Name</mat-label>
-                <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
-                  [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
-                    (onSelectionChange)="setTeacherId(item)">
-                    <span>{{item.au_full_name}}</span> ,
-                    <small>Id: {{item.au_login_id}}</small>
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
                 appearance="outline">
                 <mat-label>From</mat-label>
@@ -39,6 +26,19 @@
                   [min]="toMin">
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin" appearance="outline"
+                *ngIf="currentUser.role_id != '3'">
+                <mat-label>Teacher Name</mat-label>
+                <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
+                  [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
+                    (onSelectionChange)="setTeacherId(item)">
+                    <small>Id: {{item.au_login_id}}</small>,&nbsp;
+                    <small>{{item.au_full_name}}</small>
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
             </div>
           </div>
@@ -81,18 +81,18 @@
             <ng-container *ngFor="let item of classworkArray; let i=index">
               <thead>
                 <tr class="custom-tr">
-                  <th colspan="7" class="custom-th text-center">Add on date :
+                  <th colspan="7" class="custom-th text-center">As on date :
                     {{item.cw_entry_date | date:'dd MMM, yyyy'}}</th>
                 <tr>
               </thead>
               <tbody>
                 <tr class="custom-tr" *ngFor="let item1 of item.cw_array">
                   <td class="custom-td">{{item1.cw_period_id}}{{periodSup[item1.cw_period_id - 1]}}</td>
-                  <td class="custom-td text-left">{{item1.sub_name}}</td>
-                  <td class="custom-td text-left">{{item1.ctr_name}}</td>
+                  <td class="custom-td text-left">{{item1.sub_name | capitalize}}</td>
+                  <td class="custom-td text-left">{{item1.ctr_name | capitalize}}</td>
                   <td class="custom-td">{{item1.class_name}} - {{item1.sec_name}}</td>
-                  <td class="custom-td text-left">{{item1.topic_name}}</td>
-                  <td class="custom-td text-left">{{item1.st_name}}</td>
+                  <td class="custom-td text-left">{{item1.topic_name | capitalize}}</td>
+                  <td class="custom-td text-left">{{item1.st_name | capitalize}}</td>
                   <!-- *ngIf="item1.edit_flag == '1'" -->
                   <td class="custom-td text-left"><i *ngIf="item1.edit_flag == '1'" class="material-icons icon-edit" (click)="openEditClassworkModal(item1)">create</i></td>
                 <tr>

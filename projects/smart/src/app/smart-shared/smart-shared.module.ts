@@ -21,7 +21,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
-import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe } from '../_pipes';
+import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from '../_pipes';
 import { NgxMaskModule } from 'ngx-mask';
 import * as _moment from 'moment';
 import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/invictus-shared.module';
@@ -33,6 +33,7 @@ import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dia
 import { PublishModalComponent } from './publish-modal/publish-modal.component';
 import { NoDataComponent } from './no-data/no-data.component';
 import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.component';
+import { PreviewDocumentComponent } from './preview-document/preview-document.component';
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -90,6 +91,7 @@ export const MY_FORMATS = {
 		ImagecropComponent,
 		EditRequestModalComponent,
 		CapitalizePipe,
+		TruncatetextPipe,
 		DateformatPipe,
 		SafePipe,
 		ImageViewerComponent,
@@ -98,7 +100,8 @@ export const MY_FORMATS = {
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
 		NoDataComponent,
-		UnpublishModalComponent
+		UnpublishModalComponent,
+		PreviewDocumentComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -107,7 +110,8 @@ export const MY_FORMATS = {
 		EditRequestModalComponent,
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
-		UnpublishModalComponent
+		UnpublishModalComponent,
+		PreviewDocumentComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -139,13 +143,13 @@ export const MY_FORMATS = {
 		CKEditorModule,
 		MatSortModule,
 		RouterModule, DeleteModalComponent, ImagecropComponent, PublishModalComponent, UnpublishModalComponent,
-		NgxMaskModule, CapitalizePipe, DateformatPipe, SafePipe, ImageViewerComponent,
+		NgxMaskModule, CapitalizePipe, TruncatetextPipe, DateformatPipe, SafePipe, ImageViewerComponent,
 		EditRequestModalComponent,
 		NumberToWordPipe,
 		ZerodashPipe,
 		CommonDynamicChartComponent,
 		AssignmentAttachmentDialogComponent,
-		NoDataComponent
+		NoDataComponent, PreviewDocumentComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

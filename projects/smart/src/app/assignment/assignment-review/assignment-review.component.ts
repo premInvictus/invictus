@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
@@ -6,13 +6,14 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
 import { AssignmentModel } from './assignment-review.model';
 import { AssignmentAttachmentDialogComponent } from '../../smart-shared/assignment-attachment-dialog/assignment-attachment-dialog.component';
-
+import { PreviewDocumentComponent } from '../../smart-shared/preview-document/preview-document.component';
 @Component({
 	selector: 'app-assignment-review',
 	templateUrl: './assignment-review.component.html',
-	styleUrls: ['./assignment-review.component.css']
+	styleUrls: ['./assignment-review.component.css'],
+	encapsulation: ViewEncapsulation.Emulated
 })
-export class AssignmentReviewComponent implements OnInit {
+export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 
 	paramForm: FormGroup;
 	classArray: any[] = [];
@@ -25,8 +26,15 @@ export class AssignmentReviewComponent implements OnInit {
 	selection = new SelectionModel<AssignmentModel>(true, []);
 	nodataFlag = true;
 	@ViewChild('deleteModalRef') deleteModalRef;
+	@ViewChild('sendModalRef') sendModalRef;
+	@ViewChild(MatPaginator) paginator: MatPaginator;
 	currentUser: any = {};
 	isTeacher = false;
+	pageLength: number;
+	pageSize = 10;
+	pageSizeOptions = [5, 10, 25, 100];
+	limit = this.pageSize;
+	offset = 0;
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -53,9 +61,12 @@ export class AssignmentReviewComponent implements OnInit {
 		} else {
 			this.displayedColumns = ['select', 'class', 'subject', 'topic', 'assignment', 'entrydate', 'assignedby', 'attachment', 'action'];
 		}
-		
 		this.getClass();
 		this.getSubject();
+	}
+
+	ngAfterViewInit() {
+		this.dataSource.paginator = this.paginator;
 	}
 	buildForm() {
 		this.paramForm = this.fbuild.group({
@@ -105,6 +116,7 @@ export class AssignmentReviewComponent implements OnInit {
 		this.toMin = event.value;
 	}
 	getAssignment() {
+		this.selection.clear();
 		if (this.paramForm.valid) {
 			this.assignmentArray = [];
 			this.ELEMENT_DATA = [];
@@ -116,6 +128,10 @@ export class AssignmentReviewComponent implements OnInit {
 			if (param.to) {
 				param.to = this.commonAPIService.dateConvertion(param.to);
 			} */
+			param.as_status = '0'; // not published or not sent
+			param.withDate = false;
+			/* param.limit = this.limit;
+			param.offset = this.offset; */
 			this.smartService.getAssignment(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.assignmentArray = result.data;
@@ -132,6 +148,7 @@ export class AssignmentReviewComponent implements OnInit {
 							}
 							const each: any = {};
 							each.srno = ++i;
+							each.as_id = item.as_id;
 							each.class = item.class_name + ' - ' + item.sec_name;
 							each.subject = item.sub_name;
 							each.topic = item.topic_name;
@@ -143,6 +160,8 @@ export class AssignmentReviewComponent implements OnInit {
 							this.ELEMENT_DATA.push(each);
 						});
 						this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+						this.dataSource.paginator = this.paginator;
+						this.pageLength = this.ELEMENT_DATA.length;
 						console.log(this.ELEMENT_DATA);
 
 					}
@@ -175,7 +194,7 @@ export class AssignmentReviewComponent implements OnInit {
 	}
 	attachmentDialog(currentAttachment) {
 		const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
-			width: '800px',
+			width: '1000px',
 			height: '50%',
 			data: {
 				page: 'assignment',
@@ -210,7 +229,7 @@ export class AssignmentReviewComponent implements OnInit {
 	}
 	openAddAttachmentDialog() {
 		const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
-			width: '800px',
+			width: '1000px',
 			height: '50%',
 			data: {
 				page: 'assignment',
@@ -238,12 +257,16 @@ export class AssignmentReviewComponent implements OnInit {
 			class_id: '',
 			sub_id: ''
 		});
+		this.assignmentArray = [];
+		this.ELEMENT_DATA = [];
+		this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+		this.nodataFlag = true;
 		this.getSubject();
 	}
 	deleteAssignment(value) {
 		console.log('deleteAssignment', value);
 		if (value.as_id) {
-			this.smartService.assignmentDelete({as_id: value.as_id}).subscribe((result: any) => {
+			this.smartService.assignmentDelete({ as_id: value.as_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.getAssignment();
@@ -253,6 +276,63 @@ export class AssignmentReviewComponent implements OnInit {
 			});
 		}
 	}
-	openModal = (data) => this.deleteModalRef.openModal(data);
+	openModal = (data) => {
+		data.text = 'Delete';
+		this.deleteModalRef.openModal(data);
+	}
+	openSendModal = (data) => {
+		data.text = 'Send';
+		this.sendModalRef.openModal(data);
+	}
+
+	previewDocuments(attachmentArray) {
+		if (attachmentArray && attachmentArray.length > 0) {
+			const dialogRef = this.dialog.open(PreviewDocumentComponent, {
+				height: '80%',
+				width: '1000px',
+				data: {
+					index: '',
+					images: attachmentArray
+				}
+			});
+		}
+	}
+
+	sendAssignment(asIdArray) {
+		console.log(asIdArray);
+		this.smartService.sendAssignment({ as_id: asIdArray }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log(result.data);
+				this.getAssignment();
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+	assignmentSend(valuel) {
+		const asIdArray = [];
+		if (valuel.as_id) {
+			asIdArray.push(valuel.as_id);
+		} else {
+			if (this.selection.selected.length > 0) {
+				this.selection.selected.forEach(item => {
+					asIdArray.push(item.as_id);
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please select assignment', 'error');
+			}
+		}
+		if (asIdArray.length > 0) {
+			this.sendAssignment(asIdArray);
+		}
+	}
+	doAssignmentFilter(value: string) {
+		this.dataSource.filter = value.trim();
+	}
+	changePage(pageEvent: PageEvent) {
+		console.log(pageEvent);
+		// this.paginator.length = 100;
+	}
 
 }
