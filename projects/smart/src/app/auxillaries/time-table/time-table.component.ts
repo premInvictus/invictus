@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
 import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
 	selector: 'app-time-table',
@@ -9,6 +10,7 @@ import * as XLSX from 'xlsx';
 	styleUrls: ['./time-table.component.css']
 })
 export class TimeTableComponent implements OnInit {
+	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 	sampleTimeTableFlag = false;
 	excelFlag = false;
 	uploadTimeTableFlag = true;
@@ -62,6 +64,25 @@ export class TimeTableComponent implements OnInit {
 			no_of_period: '',
 		});
 	}
+
+	// Reset Syllabus Details form 
+	resetForm() {
+		this.uploadTimeTableForm.patchValue({
+			'tt_class_id': '',
+			'tt_section_id': '',
+			'no_of_day': '',
+			'no_of_period': ''
+		});
+	}
+
+	// Function for cancel the perfor action and back to add class and subject
+	finalCancel() {
+		this.finalXlslArray = [];
+		this.excelFlag = false;
+		this.resetForm();
+	}
+
+
 	//  Get Class List function
 	getClass() {
 		const classParam: any = {};
@@ -76,6 +97,8 @@ export class TimeTableComponent implements OnInit {
 				}
 			);
 	}
+
+	// get section list according to selected class
 	getSectionsByClass() {
 		const sectionParam: any = {};
 		sectionParam.class_id = this.uploadTimeTableForm.value.tt_class_id;
@@ -88,9 +111,6 @@ export class TimeTableComponent implements OnInit {
 				}
 			);
 	}
-
-
-
 
 	// function to get excel data in file varaible
 	incomingfile(event) {
@@ -125,7 +145,6 @@ export class TimeTableComponent implements OnInit {
 			const first_sheet_name = workbook.SheetNames[0];
 			const worksheet = workbook.Sheets[first_sheet_name];
 			this.XlslArray = XLSX.utils.sheet_to_json(worksheet, { raw: true });
-			// console.log(this.XlslArray);
 			for (let i = 0; i < this.XlslArray.length; i++) {
 				this.monday = this.XlslArray[i].Monday ? this.XlslArray[i].Monday.split('-') : '-';
 				this.tuesday = this.XlslArray[i].Tuesday ? this.XlslArray[i].Tuesday.split('-') : '-';
@@ -150,28 +169,23 @@ export class TimeTableComponent implements OnInit {
 					sunday: this.sunday[1],
 					sunday_id: this.sunday[0],
 				});
-				// console.log(this.finalXlslArray);
 			}
-
-
-			// if (this.XlslArray.length === 0) {
-			// 	this.commonService.showSuccessErrorMessage('Execel is blank. Please Choose another excel.', 'error');
-			// 	return false;
-			// }
-			// const xlslHeader = Object.keys(this.XlslArray[0]);
-			// console.log(xlslHeader);
-			// if (xlslHeader[0] !== 'Monday' || xlslHeader[1] !== 'Tuesday' || xlslHeader[2] !== 'Wednesday'
-			// || xlslHeader[3] !== 'Thursday' ||  xlslHeader[4] !== 'Friday') {
-			// 	this.commonService.showSuccessErrorMessage('Excel heading should be same as Sample excel heading.', 'error');
-			// 	return false;
-			// }
-
+			if (this.XlslArray.length === 0) {
+				this.commonService.showSuccessErrorMessage('Execel is blank. Please Choose another excel.', 'error');
+				return false;
+			}
 		};
 		fileReader.readAsArrayBuffer(this.file);
 
 	}
+
+	// download sample time table excel
 	sampleTimeTable() {
 		if (this.uploadTimeTableForm.valid) {
+			if (this.uploadTimeTableForm.value.no_of_period > 15) {
+				this.commonService.showSuccessErrorMessage('Number of Periods should not more than 15.', 'error');
+				return false;
+			}
 			this.sampleTimeTableFlag = true;
 			this.noOFPeriod = this.uploadTimeTableForm.value.no_of_period;
 			for (let i = 0; i < this.noOFPeriod; i++) {
@@ -180,17 +194,33 @@ export class TimeTableComponent implements OnInit {
 					monday: '',
 				});
 			}
+			const param: any = {};
+			param.class_id = this.uploadTimeTableForm.value.tt_class_id;
+			param.no_of_days = this.uploadTimeTableForm.value.no_of_day;
+			this.syllabusService.downloadTimeTableExcel(param)
+				.subscribe(
+					(excel_r: any) => {
+						if (excel_r && excel_r.status === 'ok') {
+							const length = excel_r.data.split('/').length;
+							saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+							this.resetForm();
+						}
+					});
+
 		} else {
 			this.commonService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
 	}
+	// TimeTable details insert in database
 	finalSubmit() {
+		//console.log(this.uploadTimeTableForm.value.no_of_day);
 		for (let i = 0; i < this.finalXlslArray.length; i++) {
 			if (this.finalXlslArray[i].monday_id !== '') {
 				this.finalSubmitArray.push({
 					day: 'Monday',
 					day_id: 1,
 					subject_id: this.finalXlslArray[i].monday_id,
+					subject_name: this.finalXlslArray[i].monday,
 					no_of_period: i,
 				});
 			}
@@ -199,6 +229,7 @@ export class TimeTableComponent implements OnInit {
 					day: 'Tuesday',
 					day_id: 2,
 					subject_id: this.finalXlslArray[i].tuesday_id,
+					subject_name: this.finalXlslArray[i].tuesday,
 					no_of_period: i,
 				});
 			}
@@ -207,6 +238,7 @@ export class TimeTableComponent implements OnInit {
 					day: 'Wednesday',
 					day_id: 3,
 					subject_id: this.finalXlslArray[i].wednesday_id,
+					subject_name: this.finalXlslArray[i].wednesday,
 					no_of_period: i,
 				});
 			}
@@ -215,6 +247,7 @@ export class TimeTableComponent implements OnInit {
 					day: 'Thursday',
 					day_id: 4,
 					subject_id: this.finalXlslArray[i].thursday_id,
+					subject_name: this.finalXlslArray[i].thursday,
 					no_of_period: i,
 				});
 			}
@@ -223,24 +256,31 @@ export class TimeTableComponent implements OnInit {
 					day: 'Friday',
 					day_id: 5,
 					subject_id: this.finalXlslArray[i].friday_id,
+					subject_name: this.finalXlslArray[i].friday,
 					no_of_period: i,
 				});
 			}
-			if (this.finalXlslArray[i].saturday_id !== '') {
-				this.finalSubmitArray.push({
-					day: 'Saturday',
-					day_id: 6,
-					subject_id: this.finalXlslArray[i].saturday_id,
-					no_of_period: i,
-				});
+			if (Number(this.uploadTimeTableForm.value.no_of_day) === 6 || Number(this.uploadTimeTableForm.value.no_of_day === 7 )) {
+				if (this.finalXlslArray[i].saturday_id !== '') {
+					this.finalSubmitArray.push({
+						day: 'Saturday',
+						day_id: 6,
+						subject_id: this.finalXlslArray[i].saturday_id,
+						subject_name: this.finalXlslArray[i].saturday,
+						no_of_period: i,
+					});
+				}
 			}
-			if (this.finalXlslArray[i].sunday_id !== '') {
-				this.finalSubmitArray.push({
-					day: 'Sunday',
-					day_id: 7,
-					subject_id: this.finalXlslArray[i].sunday_id,
-					no_of_period: i,
-				});
+			if (Number(this.uploadTimeTableForm.value.no_of_day) === 7) {
+				if (this.finalXlslArray[i].sunday_id !== '') {
+					this.finalSubmitArray.push({
+						day: 'Sunday',
+						day_id: 7,
+						subject_id: this.finalXlslArray[i].sunday_id,
+						subject_name: this.finalXlslArray[i].sunday,
+						no_of_period: i,
+					});
+				}
 			}
 			// console.log(this.finalSubmitArray);
 		}
@@ -251,6 +291,7 @@ export class TimeTableComponent implements OnInit {
 				no_of_period: this.finalSubmitArray[i].no_of_period,
 				day_id: this.finalSubmitArray[i].day_id,
 				subject_id: this.finalSubmitArray[i].subject_id,
+				subject_name: this.finalSubmitArray[i].subject_name,
 				day: this.finalSubmitArray[i].day,
 			});
 			for (let j = i + 1; j < this.finalSubmitArray.length; j++) {
@@ -259,6 +300,7 @@ export class TimeTableComponent implements OnInit {
 						no_of_period: this.finalSubmitArray[i].no_of_period,
 						day_id: this.finalSubmitArray[j].day_id,
 						subject_id: this.finalSubmitArray[j].subject_id,
+						subject_name: this.finalSubmitArray[j].subject_name,
 						day: this.finalSubmitArray[j].day,
 					});
 				}
@@ -272,30 +314,37 @@ export class TimeTableComponent implements OnInit {
 			}
 
 		}
-		this.syllabusService.insertTimetable(this.uploadTimeTableForm.value).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.tt_id = result.data;
-				for (const item of this.finalperiodArray) {
-					this.finalTimeTableArray.push({
-						td_tt_id: this.tt_id,
-						td_no_of_day: JSON.stringify(item.details),
-						td_no_of_period: item.no_of_period + 1,
-						td_created_by: this.currentUser.login_id
-					});
-				}
-				this.syllabusService.insertTimetableDetails(this.finalTimeTableArray).subscribe((result1: any) => {
-					if (result1 && result1.status === 'ok') {
-						// this.finalSpannedArray = [];
-						// this.finalSubmitArray = [];
-						// this.resetForm();
+		const timetableparam: any = {};
+		timetableparam.tt_class_id = this.uploadTimeTableForm.value.tt_class_id;
+		timetableparam.tt_section_id = this.uploadTimeTableForm.value.tt_section_id;
+		this.syllabusService.getTimeTableId(timetableparam)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.commonService.showSuccessErrorMessage('Timetable Already added for the Class and Section', 'error');
+					} else {
+						this.syllabusService.insertTimetable(this.uploadTimeTableForm.value).subscribe((timetable_r: any) => {
+							if (timetable_r && timetable_r.status === 'ok') {
+								this.tt_id = timetable_r.data;
+								for (const item of this.finalperiodArray) {
+									this.finalTimeTableArray.push({
+										td_tt_id: this.tt_id,
+										td_no_of_day: JSON.stringify(item.details),
+										td_no_of_period: item.no_of_period + 1,
+										td_created_by: this.currentUser.login_id
+									});
+								}
+								this.syllabusService.insertTimetableDetails(this.finalTimeTableArray).subscribe((details_r: any) => {
+									if (details_r && details_r.status === 'ok') {
+										this.finalXlslArray = [];
+										this.excelFlag = false;
+										this.resetForm();
+									}
+								});
+							}
+						});
+
 					}
 				});
-				console.log(this.finalTimeTableArray);
-			}
-		});
-		
 	}
-
-
-
 }

@@ -246,7 +246,12 @@ export class BrowseSyllabusComponent implements OnInit {
 											this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 										}
 									});
+						} else {
+							this.finalSpannedArray = [];
+							this.finaldivflag = true;
+							this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 						}
+
 					}
 				}
 			);
