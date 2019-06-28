@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { SisService, AxiomService, CommonAPIService } from '../../_services';
+import { SisService, AxiomService, CommonAPIService, SmartService } from '../../_services';
 
 @Component({
 	selector: 'app-assignment-attachment-dialog',
@@ -27,16 +27,25 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	topic_id;
 	assignment_desc;
 	ckeConfig: any = {};
+	currentUser: any = {};
+	isTeacher = false;
 
 	constructor(
 		public dialogRef: MatDialogRef<AssignmentAttachmentDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
 		private sisService: SisService,
 		private commonAPIService: CommonAPIService,
-		private axiomService: AxiomService
+		private axiomService: AxiomService,
+		private smartService: SmartService
 	) { }
 
 	ngOnInit() {
+		console.log(this.data);
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		if (this.currentUser.role_id === '3') {
+			this.isTeacher = true;
+		}
+		this.getClass();
 		this.editFlag = this.data.edit;
 		this.imageArray = this.data.attachments;
 		this.class_id = this.data.class_id;
@@ -44,13 +53,12 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		this.sub_id = this.data.sub_id;
 		this.topic_id = this.data.topic_id;
 		this.assignment_desc = this.data.assignment_desc;
-		this.getClass();
 		this.ckeConfig = {
 			allowedContent: true,
 			pasteFromWordRemoveFontStyles: false,
 			contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
 			disallowedContent: 'm:omathpara',
-			height: '150',
+			height: '170',
 			width: '100%',
 			// tslint:disable-next-line:max-line-length
 			extraPlugins: '',
@@ -64,40 +72,84 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-        this.classArray = result.data;
-        this.getSectionsByClass();
-        this.getSubjectsByClass();
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-			}
-		});
+		if (this.isTeacher) {
+			this.smartService.getClassByTeacherId({ teacher_id: this.currentUser.login_id }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.classArray = result.data;
+					if (this.class_id) {
+						this.getSectionsByClass();
+						this.getSubjectsByClass();
+					}
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		} else {
+			this.sisService.getClass({}).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.classArray = result.data;
+					if (this.class_id) {
+						this.getSectionsByClass();
+						this.getSubjectsByClass();
+					}
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		}
 	}
 	getSectionsByClass() {
 		this.sectionArray = [];
-		this.sisService.getSectionsByClass({class_id: this.class_id}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.sectionArray = result.data;
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-			}
-		});
+		if (this.isTeacher) {
+			this.smartService.getSectionByTeacherIdClassId({ teacher_id: this.currentUser.login_id, class_id: this.class_id })
+				.subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.sectionArray = result.data;
+					} else {
+						this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+					}
+				});
+		} else {
+			this.sisService.getSectionsByClass({ class_id: this.class_id }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.sectionArray = result.data;
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		}
 	}
 	getSubjectsByClass() {
 		this.subjectArray = [];
-		this.axiomService.getSubjectsByClass({class_id: this.class_id}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-        this.subjectArray = result.data;
-        this.getTopicByClassSubject();
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+		if (this.isTeacher) {
+			if(this.sec_id) {
+				this.smartService.getSubjectByTeacherIdClassIdSectionId({
+					teacher_id: this.currentUser.login_id,
+					class_id: this.class_id, sec_id: this.sec_id
+				}).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.subjectArray = result.data;
+					} else {
+						this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+					}
+				});
 			}
-		});
+		} else {
+			this.axiomService.getSubjectsByClass({ class_id: this.class_id }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.subjectArray = result.data;
+					if (this.sub_id) {
+						this.getTopicByClassIdSubjectId();
+					}
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		}
 	}
-	getTopicByClassSubject() {
+	getTopicByClassIdSubjectId() {
 		this.topicArray = [];
-		this.axiomService.getTopicByClassSubject(this.class_id, this.sub_id).subscribe((result: any) => {
+		this.smartService.getTopicByClassIdSubjectId({ class_id: this.class_id, sub_id: this.sub_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.topicArray = result.data;
 			} else {
@@ -147,12 +199,37 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 
 	resetAttachment() {
 		this.imageArray = [];
+		this.assignment_desc = '';
 	}
 
 	submitAttachment() {
-		this.dialogRef.close({attachments: this.imageArray, assignment_desc: this.assignment_desc});
+		this.dialogRef.close({ attachments: this.imageArray, assignment_desc: this.assignment_desc });
 	}
 	closeDialog() {
 		this.dialogRef.close();
+	}
+	addAttachment() {
+		console.log('addAttachment');
+		if (this.class_id && this.sec_id && this.sub_id && this.topic_id && this.assignment_desc) {
+			const param: any = {};
+			param.as_class_id = this.class_id;
+			param.as_sec_id = this.sec_id;
+			param.as_sub_id = this.sub_id;
+			param.as_topic_id = this.topic_id;
+			param.as_assignment_desc = this.assignment_desc;
+			param.as_attachment = this.imageArray;
+			this.smartService.assignmentInsert(param).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+					this.dialogRef.close({ added: true });
+				}
+			});
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please enter all required fields', 'error');
+		}
+	}
+	resetAddAttachment() {
+		console.log('resetAddAttachment');
+
 	}
 }

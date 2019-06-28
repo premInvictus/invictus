@@ -1,7 +1,7 @@
 <mat-card class="card-content__container card-height-605 card-height-730">
    <form [formGroup]="accountsForm" novalidate>
       <div class="row">
-         <div class="col-12">
+         <div class="col-12 remove-col-padding">
             <span class="font-size-20 font-medium">Fee Details</span>
          </div>
       </div>
@@ -21,7 +21,7 @@
                   </mat-select>
                </mat-form-field>
             </div>
-            <div class="inline-flex">
+            <div class="inline-flex margin-left-15">
                <mat-form-field appearance="outline" class="form-field">
                   <mat-label>Fee Structure</mat-label>
                   <mat-select placeholder="Applicable Fee Structure" [disabled]="viewOnly" formControlName="accd_fs_id"
@@ -35,7 +35,7 @@
          </div>
       </div>
       <div class="row remove-top-margin">
-         <div class="col-12">
+         <div class="col-12 remove-col-padding">
             <span class="font-size-20 font-medium">Concession</span>
          </div>
       </div>
@@ -51,24 +51,24 @@
                   </mat-select>
                </mat-form-field>
             </div>
-            <div class="inline-flex">
+            <div class="inline-flex margin-left-15">
                <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_transport"
                   (change)="enableTransport($event)">Whether the child has opted for Transport facility</mat-checkbox>
             </div>
-            <div class="inline-flex">
+            <div class="inline-flex margin-left-15">
                <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_hostel"
                   (change)="enableHostel($event)">Whether the child has opted for Hostel facility.</mat-checkbox>
             </div>
          </div>
       </div>
       <div *ngIf="transportFlag" class="row remove-top-margin">
-         <div class="col-12">
+         <div class="col-12 remove-col-padding">
             <span class="font-size-20 font-medium">Transport Details</span>
          </div>
       </div>
       <div *ngIf="transportFlag" class="row">
          <div class="col-12 remove-col-padding">
-            <div class="inline-flex margin-left-15">
+            <div class="inline-flex">
                <mat-form-field appearance="outline" class="form-field-220">
                   <mat-label>Mode</mat-label>
                   <mat-select placeholder="Mode" [disabled]="viewOnly" (ngModelChange)="enableMode($event)"
@@ -180,13 +180,13 @@
        </div> -->
       <mat-checkbox *ngIf="modeFlag && transportFlag" class="font-size-16" [disabled]="viewOnly"
          (change)="terminate($event)" formControlName="accd_is_terminate">{{terminateStatus}}</mat-checkbox>
-      <div *ngIf="hostelFlag" class="row">
-         <div class="col-12 ">
+      <div *ngIf="hostelFlag" class="row remove-top-margin">
+         <div class="col-12 remove-col-padding">
             <span class="font-size-20 font-medium">Hostel Details</span>
          </div>
       </div>
       <div *ngIf="hostelFlag" class="row">
-         <div class="col-12">
+         <div class="col-12 remove-col-padding">
          <div class="inline-flex">
             <mat-form-field appearance="outline" class="form-field-220">
                <mat-label>Hostel Fee</mat-label>
@@ -222,7 +222,7 @@
          </div>
       </div>
       </div>
-      <mat-checkbox *ngIf="hostelFlag" [disabled]="viewOnly" class="font-size-16 margin-left-15" (change)="hostel($event)"
+      <mat-checkbox *ngIf="hostelFlag" [disabled]="viewOnly" class="font-size-16" (change)="hostel($event)"
          formControlName="accd_is_hostel_terminate">{{hostelStatus}}</mat-checkbox>
       <br>
       <div class="text-center margin-top-35 ">

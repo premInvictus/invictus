@@ -60,4 +60,9 @@ export class AxiomService {
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/users/getAllTeacher', param);
 	}
+	getSubject() {
+		this.service.startLoading();
+		return this.http.get(environment.apiAxiomUrl + '/setup/subject/1');
+
+	}
 }

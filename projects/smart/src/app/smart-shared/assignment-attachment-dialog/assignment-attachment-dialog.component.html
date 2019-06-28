@@ -11,16 +11,24 @@
   <div class="row">
     <div class="col-6">
       <div class="row">
-        <div class="col-12">
+        <div class="col-6">
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Class</mat-label>
-            <mat-select [disabled]="!editFlag" [(value)]="class_id" (selectionChange)="getSectionsByClass();getSubjectsByClass()">
+            <mat-select [disabled]="!editFlag" [(value)]="class_id" (selectionChange)="getSectionsByClass();getSubjectsByClass()" required>
                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
+        <div class="col-6">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Section</mat-label>
+            <mat-select [disabled]="!editFlag" [(value)]="sec_id" (selectionChange)="getSubjectsByClass()">
+                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-12">
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Section</mat-label>
@@ -29,26 +37,17 @@
             </mat-select>
           </mat-form-field>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col-12">
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Subject</mat-label>
-            <mat-select [disabled]="!editFlag" [(value)]="sub_id" (selectionChange)="getTopicByClassSubject()">
+            <mat-select [disabled]="!editFlag" [(value)]="sub_id" (selectionChange)="getTopicByClassIdSubjectId()">
                 <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="addattachment">
-          <!-- <button mat-raised-button class="btn-primary-100">Add Attachment</button> -->
-        </div>
-      </div>
-
-    </div>
-    <div class="col-6">
       <div class="row">
         <div class="col-12">
           <mat-form-field class="form-field" appearance="outline">
@@ -59,6 +58,15 @@
           </mat-form-field>
         </div>
       </div>
+      <div class="row">
+        <div class="col-12">
+          <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="addattachment" style="display: none">
+           <button mat-raised-button class="btn-primary-100"><label class="cursor-pointer" for="addattachment">Add Attachment</label></button> 
+        </div>
+      </div>
+
+    </div>
+    <div class="col-6">
       <div class="row">
         <div class="col-12">
           <!-- <mat-form-field class="form-field" appearance="outline">
@@ -97,7 +105,9 @@
   </div>
   <div class="row margin-top-20">
     <div class="col-12 text-center">
-      <button mat-raised-button class="btn-success-green" (click)="submitAttachment()" >Submit</button>
-      <button mat-raised-button class="btn-reset margin-left-10" (click)="resetAttachment()" >Reset</button>
+      <button *ngIf="!editFlag" mat-raised-button class="btn-success-green" (click)="submitAttachment()" >Submit</button>
+      <button *ngIf="!editFlag" mat-raised-button class="btn-reset margin-left-10" (click)="resetAttachment()" >Reset</button>
+      <button *ngIf="editFlag" mat-raised-button class="btn-success-green" (click)="addAttachment()" >Submit</button>
+      <button *ngIf="editFlag" mat-raised-button class="btn-reset margin-left-10" (click)="resetAddAttachment()" >Reset</button>
     </div>
   </div>
