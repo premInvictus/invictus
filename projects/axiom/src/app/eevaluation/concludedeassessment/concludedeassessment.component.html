@@ -1,174 +1,135 @@
-<!-- Breadcrumb-->
-<div class="breadcrumb-section">
-  <div class="row">
-    <div class="bread-col-1 col-lg-1">
-      <a [routerLink]="[homeUrl]">
-        <i class="breadcrumb-icon fas fa-home"></i>
-      </a>
-    </div>
-    <div class="bread-col-1 col-lg-1">
-      <div class="vertical-line"></div>
-    </div>
-    <div class="col-lg-10 first-breadcrumb-title-col">
-      <div class="first-breadcrumb-title">
-        <span class="bread-title">E-Evaluation</span>
-        <span class="bread-divider">-</span>
-        <span class="bread-link">Concluded E-Assessment</span>
-      </div>
-    </div>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <mat-card-title>
+        <h1 class="remove-bottom-margin font-size-24">Concluded E-assessment</h1>
+      </mat-card-title>
+    </mat-card>
   </div>
 </div>
-<!-- Breadcrumb ends-->
-<div class="add-question-content">
-  <div class="row row-remove-top-margin">
-    <div class="col-lg-12 col-mobile-view-add-ques">
-      <div class="white-box">
-        <div class="white-box-content">
-          <div class="row">
-            <div class="col-lg-12 col-mobile-view-add-ques">
-              <div class="white-box-content-title">
-                <span>Concluded E-assessment</span>
-              </div>
-            </div>
-          </div>
-          <div class="row row-remove-top-margin">
-            <div class="col-lg-12 col-mobile-view-add-ques">
-              <div class="top-right-parameter top-middle-parameter">
-                <div class="top-right-box top-blue-box">
-                  <div class="top-right-box-content top-middle-box-content">
-                    <div class="top-right-box-content-title">
-                      <div class="row">
-                        <div class="col-lg-12 col-mobile-view-add-ques">
-                          <span>Select Parameters</span>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-lg-12 col-mobile-view-add-ques">
-                          <form [formGroup]="Conclude_Form" novalidate>
-                            <div class="row">
-                              <div class="col-lg-12">
-                                <div class="row">
-                                  <div class="col-lg-2 fin-tab-col-25">
-                                    <mat-form-field class="form-field">
-                                      <mat-select placeholder="Class" formControlName="es_class_id"
-                                        (selectionChange)="getSubjectsByClass()" required>
-                                        <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                                          {{item.class_name}}
-                                        </mat-option>
-                                      </mat-select>
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-lg-2 fin-tab-col-25">
-                                    <mat-form-field class="form-field">
-                                      <mat-select placeholder="Subject" formControlName="es_sub_id" required>
-                                        <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
-                                          {{item.sub_name}}
-                                        </mat-option>
-                                      </mat-select>
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-lg-2 fin-tab-col-25">
-                                    <button mat-raised-button class="submit-button"
-                                      (click)="getScheduleExam()">Apply</button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <mat-card-content>
+        <div class="row row-remove-top-margin">
+          <div class="col-lg-12 col-mobile-view-add-ques">
+            <form [formGroup]="Conclude_Form" novalidate>
+              <div class="row row-remove-top-margin">
+                <div class="col-lg-12 pd_left pd_right">
+                  <div class="row">
+                    <div class="col-lg-2 fin-tab-col-25">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Class</mat-label>
+                        <mat-select placeholder="Class" formControlName="es_class_id"
+                          (selectionChange)="getSubjectsByClass()" required>
+                          <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                            {{item.class_name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-lg-2 fin-tab-col-25">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Subject</mat-label>
+                        <mat-select placeholder="Subject" formControlName="es_sub_id" required>
+                          <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                            {{item.sub_name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-lg-2 fin-tab-col-25">
+                      <div class="mt-3">
+                        <button mat-raised-button class="submit-button" (click)="getScheduleExam()">Apply</button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
-          <br>
-          <div class="row">
-            <div class="col-lg-12 col-mobile-view-add-ques">
-              <div class="table-box" *ngIf="tableCollection" id="pagination">
-                <div class="example-container table-box-main">
-                  <div class="example-header table-filter">
-                    <mat-form-field>
-                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                      <span matPrefix>
-                        <i class="fa fa-sliders table-filter-icon" aria-hidden="true"></i>&nbsp;&nbsp; </span>
-                    </mat-form-field>
-                  </div>
-                  <mat-table class="specific-table table-100" #table [dataSource]="dataSource" matSort>
-                    <!-- Position Column -->
-                    <ng-container matColumnDef="position">
-                      <mat-header-cell *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
-                      <mat-cell *matCellDef="let item"> {{item.position}} </mat-cell>
-                    </ng-container>
-                    <!-- Template Name Column -->
-                    <ng-container matColumnDef="name">
-                      <mat-header-cell *matHeaderCellDef mat-sort-header>Test Name</mat-header-cell>
-                      <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
-                    </ng-container>
-                    <!-- Class Column -->
-                    <ng-container matColumnDef="class">
-                      <mat-header-cell *matHeaderCellDef mat-sort-header>Class </mat-header-cell>
-                      <mat-cell *matCellDef="let item"> {{item.class}}-{{item.section}} </mat-cell>
-                    </ng-container>
-                    <!-- Subject Column -->
-                    <ng-container matColumnDef="subject">
-                      <mat-header-cell *matHeaderCellDef mat-sort-header> Subject </mat-header-cell>
-                      <mat-cell *matCellDef="let item"> {{item.subject}} </mat-cell>
-                    </ng-container>
-                    <!--Test Date Column -->
-                    <ng-container matColumnDef="Test Date">
-                      <mat-header-cell *matHeaderCellDef>Test Date </mat-header-cell>
-                      <mat-cell *matCellDef="let item">{{item. detail_date | date:'dd-MM-yyyy'}}</mat-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="Time">
-                      <mat-header-cell *matHeaderCellDef>Time </mat-header-cell>
-                      <mat-cell *matCellDef="let item">{{item.detail_time}}</mat-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="Duration">
-                      <mat-header-cell *matHeaderCellDef>Duration </mat-header-cell>
-                      <mat-cell *matCellDef="let item">{{item.detail_alloted}}</mat-cell>
-                    </ng-container>
-                    <!-- Action Column -->
-                    <ng-container matColumnDef="Maximum marks">
-                      <mat-header-cell *matHeaderCellDef>Maximum marks</mat-header-cell>
-                      <mat-cell *matCellDef="let item">{{item.info_marks}}</mat-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="Student Appeared">
-                      <mat-header-cell *matHeaderCellDef>Students Appeared</mat-header-cell>
-                      <mat-cell *matCellDef="let item">{{item.info_app}}</mat-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="action">
-                      <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-                      <mat-cell *matCellDef="let item">
-                        <a *ngIf="isExistUserAccessMenu('66')"
-                          [routerLink]="['../view_concluded_test',item.action.es_id]">
-                          <i class="fas fa-eye view-eye-icon" data-toggle="tooltip" data-placement="top"
-                            matTooltip="View Test" aria-hidden="true"></i>
-                        </a>
-                        <a *ngIf="isExistUserAccessMenu('67')"
-                          [routerLink]="['../student_wise_evaluation',item.action.es_id]">
-                          <i class="fab fa-searchengin evaluate-test-icon" data-toggle="tooltip" data-placement="top"
-                            matTooltip="Evaluate Test" aria-hidden="true"></i>
-                        </a>
-                        <i *ngIf="isExistUserAccessMenu('68')" class="far fa-thumbs-up table-publish-icon"
-                          data-toggle="tooltip" data-placement="top" matTooltip="Publish Test" aria-hidden="true"
-                          (click)="publishTest(item.action.es_id)"></i>
-                      </mat-cell>;
-                    </ng-container>
-                    <mat-header-row class="top_header" *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                  </mat-table>
-                  <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]"
-                    [showFirstLastButtons]="true"></mat-paginator>
+        </div>
+        <div class="row row-remove-top-margin">
+          <div class="col-lg-12 col-mobile-view-add-ques">
+            <div *ngIf="tableCollection" id="pagination">
+              <div class="example-container">
+                <div class="col-2">
+                  <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                    <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                  </mat-form-field>
                 </div>
+                <mat-table class="specific-table table-100" #table [dataSource]="dataSource" matSort>
+                  <!-- Position Column -->
+                  <ng-container matColumnDef="position">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
+                    <mat-cell *matCellDef="let item"> {{item.position}} </mat-cell>
+                  </ng-container>
+                  <!-- Template Name Column -->
+                  <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Test Name</mat-header-cell>
+                    <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
+                  </ng-container>
+                  <!-- Class Column -->
+                  <ng-container matColumnDef="class">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Class </mat-header-cell>
+                    <mat-cell *matCellDef="let item"> {{item.class}}-{{item.section}} </mat-cell>
+                  </ng-container>
+                  <!-- Subject Column -->
+                  <ng-container matColumnDef="subject">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Subject </mat-header-cell>
+                    <mat-cell *matCellDef="let item"> {{item.subject}} </mat-cell>
+                  </ng-container>
+                  <!--Test Date Column -->
+                  <ng-container matColumnDef="Test Date">
+                    <mat-header-cell *matHeaderCellDef>Test Date </mat-header-cell>
+                    <mat-cell *matCellDef="let item">{{item. detail_date | date:'dd-MM-yyyy'}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="Time">
+                    <mat-header-cell *matHeaderCellDef>Time </mat-header-cell>
+                    <mat-cell *matCellDef="let item">{{item.detail_time}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="Duration">
+                    <mat-header-cell *matHeaderCellDef>Duration </mat-header-cell>
+                    <mat-cell *matCellDef="let item">{{item.detail_alloted}}</mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Maximum marks">
+                    <mat-header-cell *matHeaderCellDef>Maximum marks</mat-header-cell>
+                    <mat-cell *matCellDef="let item">{{item.info_marks}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="Student Appeared">
+                    <mat-header-cell *matHeaderCellDef>Students Appeared</mat-header-cell>
+                    <mat-cell *matCellDef="let item">{{item.info_app}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let item">
+                      <a *ngIf="isExistUserAccessMenu('66')"
+                        [routerLink]="['../view_concluded_test',item.action.es_id]">
+                        <i class="fas fa-eye view-eye-icon" data-toggle="tooltip" data-placement="top"
+                          matTooltip="View Test" aria-hidden="true"></i>
+                      </a>
+                      <a *ngIf="isExistUserAccessMenu('67')"
+                        [routerLink]="['../student_wise_evaluation',item.action.es_id]">
+                        <i class="fab fa-searchengin evaluate-test-icon" data-toggle="tooltip" data-placement="top"
+                          matTooltip="Evaluate Test" aria-hidden="true"></i>
+                      </a>
+                      <i *ngIf="isExistUserAccessMenu('68')" class="far fa-thumbs-up table-publish-icon"
+                        data-toggle="tooltip" data-placement="top" matTooltip="Publish Test" aria-hidden="true"
+                        (click)="publishTest(item.action.es_id)"></i>
+                    </mat-cell>;
+                  </ng-container>
+                  <mat-header-row class="top_header" *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+                <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true">
+                </mat-paginator>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>
-<br>
-<br>
