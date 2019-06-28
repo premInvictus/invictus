@@ -2792,11 +2792,6 @@ th {
     width: 100%;
 }
 
-.question-paper-table td,
-.question-paper-table th {
-    border-top: none;
-}
-
 .ques-paper-table {
     font-size: 14px;
 }
