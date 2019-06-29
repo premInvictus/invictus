@@ -1,8 +1,8 @@
 export const environment = {
 	production: false,
-	apiAxiomUrl: 'http://dev-api-axiom.invictusprojects.in',
-	apiSisUrl: 'http://dev-api-sis.invictusprojects.in',
-	apiFeeUrl: 'http://dev-api-fee.invictusprojects.in',
+	apiAxiomUrl: 'http://localhost/axiom-backend/index.php',
+	apiSisUrl: 'http://localhost/SIS-backend/index.php',
+	apiFeeUrl: 'http://localhost/feesmanagementbackend-local/index.php',
 	logoutUrl: 'http://devlogin.invictusprojects.in',
 	socketUrl: 'http://13.234.2.36:8081',
 	testInitiateCode : 'T100',
