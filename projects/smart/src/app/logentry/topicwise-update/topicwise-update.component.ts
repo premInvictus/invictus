@@ -23,7 +23,9 @@ export class TopicwiseUpdateComponent implements OnInit {
 	topicsubtopicArray: any[] = [];
 	topicCTRArray: any[] = [];
 	topicsubtopicDetailsArray: any[] = [];
+	currentUser: any;
 	noDataFlag = true;
+	isTeacher = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -60,6 +62,12 @@ export class TopicwiseUpdateComponent implements OnInit {
 
 	ngOnInit() {
 		this.buildForm();
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.teacherId = this.currentUser.login_id;
+		if (this.currentUser.role_id === '3') {
+			this.isTeacher = true;
+			this.getClassByTeacherId();
+		}
 	}
 	buildForm() {
 		this.topicwiseforForm = this.fbuild.group({

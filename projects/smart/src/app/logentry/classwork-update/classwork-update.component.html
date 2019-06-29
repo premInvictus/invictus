@@ -19,24 +19,24 @@
                 <mat-label>Teacher Name</mat-label>
                 <input matInput formControlName="teacher_name">
               </mat-form-field> -->
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin"
-                appearance="outline">
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
+                <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="cw_entry_date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+                appearance="outline" *ngIf="!isTeacher">
                 <mat-label>Teacher Name</mat-label>
                 <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
                   [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
                 <mat-autocomplete #auto="matAutocomplete">
                   <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
                     (onSelectionChange)="setTeacherId(item)">
-                    <span>{{item.au_full_name}}</span> ,
-                    <small>Id: {{item.au_login_id}}</small>
+                    <small>Id: {{item.au_login_id}}</small>,&nbsp;
+                    <small>{{item.au_full_name | capitalize}}</small>
                   </mat-option>
                 </mat-autocomplete>
-              </mat-form-field>
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-                <mat-label>Date</mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="cw_entry_date">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
             </div>
           </div>
@@ -49,7 +49,7 @@
 <div class="row">
   <div class="col-12">
     <mat-card>
-      <form [formGroup]="classworkForm">
+      <form [formGroup]="classworkForm" *ngIf="!noDataFlag">
         <ng-container formArrayName="periods">
           <ng-container *ngFor="let item of Periods.controls; let i = index" [formGroupName]="i">
             <div class="row">
@@ -63,7 +63,7 @@
                   <mat-select formControlName="cw_sub_id"
                     (selectionChange)="getClassSectionByTeacherIdSubjectId(i);reviewElementSubject(i,$event)">
                     <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name | capitalize}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -72,7 +72,7 @@
                   <mat-label>Category</mat-label>
                   <mat-select formControlName="cw_ctr_id" (selectionChange)="reviewElementCategory(i,$event)">
                       <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of categoryArray" [value]="item.ctr_id">{{item.ctr_name}}</mat-option>
+                    <mat-option *ngFor="let item of categoryArray" [value]="item.ctr_id">{{item.ctr_name | capitalize}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -103,7 +103,7 @@
                   <mat-select formControlName="cw_topic_id"
                     (selectionChange)="getSubtopicByTopic(i);reviewElementTopic(i,$event)">
                     <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of topicArray[i]" [value]="item.topic_id">{{item.topic_name}}
+                    <mat-option *ngFor="let item of topicArray[i]" [value]="item.topic_id">{{item.topic_name | capitalize}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -113,7 +113,7 @@
                   <mat-label>SubTopic</mat-label>
                   <mat-select formControlName="cw_st_id" (selectionChange)="reviewElementSubtopic(i,$event)">
                       <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of subtopicArray[i]" [value]="item.st_id">{{item.st_name}}</mat-option>
+                    <mat-option *ngFor="let item of subtopicArray[i]" [value]="item.st_id">{{item.st_name | capitalize}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -123,7 +123,7 @@
                   <input matInput formControlName="cw_assignment_desc" (blur)="reviewElementAssignment(i,$event)">
                   <mat-icon matSuffix style="cursor: pointer" (click)="attachmentDialog(i)">attachment</mat-icon>
                 </mat-form-field> -->
-                <button mat-raised-button class="btn-primary-100" (click)="attachmentDialog(i)">Add Attachment</button>
+                <button mat-raised-button class="btn-primary-100" (click)="attachmentDialog(i)">Add Assignment</button>
               </div>
 
             </div>
@@ -131,7 +131,11 @@
           </ng-container>
         </ng-container>
       </form>
-      <div class="row margin-top-20">
+      <div *ngIf="noDataFlag" class="text-center"><app-no-data 
+        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+        [noDataText]="'No Data Available'"
+        [subText]="'Please select teacher'"></app-no-data></div>
+      <div class="row margin-top-20" *ngIf="!noDataFlag">
         <div class="col-12 text-center">
           <button mat-raised-button class="btn-success-green" (click)="openReviewClasswork()">Review</button>
           <button mat-raised-button class="btn-reset margin-left-10" (click)="cancelForm()">cancel</button>
