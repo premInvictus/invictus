@@ -20,7 +20,7 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 	assignmentArray: any[] = [];
 	toMin = new Date();
 	ELEMENT_DATA: AssignmentModel[] = [];
-	displayedColumns = ['srno', 'class', 'subject', 'topic', 'assignment', 'entrydate', 'assignedby', 'attachment'];
+	displayedColumns = ['srno', 'class', 'subject', 'topic', 'assignment', 'entrydate', 'assignedby', 'publishedby', 'attachment'];
 	dataSource = new MatTableDataSource<AssignmentModel>(this.ELEMENT_DATA);
 	nodataFlag = true;
 	@ViewChild('deleteModalRef') deleteModalRef;
@@ -148,6 +148,7 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 							each.assignment = item.as_assignment_desc;
 							each.entryDate = item.as_entry_date;
 							each.assignedBy = item.au_full_name;
+							each.publishedBy = item.published_by;
 							each.attachment = item.as_attachment.length;
 							each.action = item;
 							this.ELEMENT_DATA.push(each);

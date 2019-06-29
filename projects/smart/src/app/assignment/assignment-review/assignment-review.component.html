@@ -73,40 +73,6 @@
       </div>
       <div class="row margin-top-10">
         <div class="col-12">
-          <!-- <table class="table table-borderd table-stripped custom-table">
-            <thead class="table-skill__head text-center">
-              <tr class="custom-tr">
-                <th class="custom-th">Select</th>
-                <th class="custom-th">Class</th>
-                <th class="custom-th">Subject</th>
-                <th class="custom-th">Topic</th>
-                <th class="custom-th">Assignment</th>
-                <th class="custom-th">Published On</th>
-                <th class="custom-th">Assignment By</th>
-                <th class="custom-th">Attachment</th>
-                <th class="custom-th">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="custom-tr">
-                <td class="custom-td">
-                  <mat-checkbox></mat-checkbox>
-                </td>
-                <td class="custom-td">XI-A</td>
-                <td class="custom-td text-left">Science</td>
-                <td class="custom-td text-left">Health & Hygenie</td>
-                <td class="custom-td text-left">Make a chart showing all the status of matter</td>
-                <td class="custom-td">30-Apr-2019</td>
-                <td class="custom-td">Amit Kumar</td>
-                <td class="custom-td"><button mat-mini-fab class="btn-blue margin-left-10"><span
-                      class="font-white font-size-16">-</span></button></td>
-                <td class="custom-td"><i class="fas fa-location-arrow font-size-16 font-color-green cursor-pointer"></i><span
-                  class="margin-left-10 ver-line-divider"></span><i class="far fa-edit font-size-16 font-color-gray cursor-pointer" (click)="openEditAssignment()"></i><span
-                    class="margin-left-10 ver-line-divider"></span><i
-                    class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i></td>
-              </tr>
-            </tbody>
-          </table> -->
           <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
             <ng-container matColumnDef="select" *ngIf="!isTeacher">
               <th mat-header-cell *matHeaderCellDef class="select-checkbox">
@@ -178,10 +144,15 @@
           [showFirstLastButtons] = "true"
           (page)="changePage($event)">
           </mat-paginator>
-          <div *ngIf="nodataFlag" class="no-records" style="text-align: center">
+          <div *ngIf="nodataFlag && !isTeacher" class="no-records" style="text-align: center">
             <app-no-data
               [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-              [noDataText]="'No Data Available'" [subText]="'Please select class and subject'"></app-no-data>
+              [noDataText]="'No Data Available'" [subText]="'Please select class or subject'"></app-no-data>
+          </div>
+          <div *ngIf="nodataFlag && isTeacher" class="no-records" style="text-align: center">
+            <app-no-data
+              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+              [noDataText]="'No Data Available'"></app-no-data>
           </div>
         </div>
       </div>

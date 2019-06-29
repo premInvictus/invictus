@@ -1,106 +1,3 @@
-<!-- <div class="row">
-    <div class="col-12 ">
-      <mat-card class="remove-card-padding">
-        <div class="row">
-          <div class="col-4">
-            <div class="top-card-title">
-              <span class="font-size-24 font-medium">Assignment Review</span>
-            </div>
-  
-          </div>
-          <div class="col-8 text-right">
-            <div class="top-card-title-form">
-              <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
-                <mat-label>From Date</mat-label>
-                <input matInput [matDatepicker]="picker1" placeholder="Choose a date">
-                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                <mat-datepicker #picker1></mat-datepicker>
-              </mat-form-field>
-              <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-                <mat-label>To Date</mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="Choose a date">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-              <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-                <mat-label>Class</mat-label>
-                <mat-select>
-                  <mat-option></mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-                <mat-label>Section</mat-label>
-                <mat-select>
-                  <mat-option></mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-                <mat-label>Subject</mat-label>
-                <mat-select>
-                  <mat-option></mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-  
-      </mat-card>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-12">
-      <mat-card>
-        <div class="row">
-          <div class="col-4">
-            <mat-form-field appearance="a">
-              <input class="margin-left-10" matInput placeholder="Filter">
-              <mat-icon matPrefix>filter_list</mat-icon>
-            </mat-form-field>
-          </div>
-          <div class="col-8 text-right margin-top-5">
-            <button mat-raised-button class="btn-success-green"><i class="fas fa-location-arrow"></i> Send</button>
-          </div>
-        </div>
-        <div class="row margin-top-10">
-          <div class="col-12">
-            <table class="table table-borderd table-stripped custom-table">
-              <thead class="table-skill__head text-center">
-                <tr class="custom-tr">
-                  <th class="custom-th">Select</th>
-                  <th class="custom-th">Class</th>
-                  <th class="custom-th">Subject</th>
-                  <th class="custom-th">Topic</th>
-                  <th class="custom-th">Assignment</th>
-                  <th class="custom-th">Published On</th>
-                  <th class="custom-th">Assignment By</th>
-                  <th class="custom-th">Attachment</th>
-                  
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="custom-tr">
-                  <td class="custom-td">
-                    <mat-checkbox></mat-checkbox>
-                  </td>
-                  <td class="custom-td">XI-A</td>
-                  <td class="custom-td text-left">Science</td>
-                  <td class="custom-td text-left">Health & Hygenie</td>
-                  <td class="custom-td text-left">Make a chart showing all the status of matter</td>
-                  <td class="custom-td">30-Apr-2019</td>
-                  <td class="custom-td">Amit Kumar</td>
-                  <td class="custom-td"><button mat-mini-fab class="btn-blue margin-left-10"><span
-                        class="font-white font-size-16">-</span></button></td>
-                  
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </mat-card>
-    </div>
-  </div> -->
-
 <div class="row">
   <div class="col-12 ">
     <mat-card class="remove-card-padding">
@@ -114,14 +11,6 @@
           </div>
           <div class="col-8 text-right">
             <div class="top-card-title-form">
-              <!-- <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
-                  appearance="outline" [hidden]="true">
-                  <mat-label>From</mat-label>
-                  <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from"
-                    (dateChange)="setMinTo($event)">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field> -->
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
                 appearance="outline">
                 <mat-label>As on</mat-label>
@@ -200,6 +89,10 @@
               <th mat-header-cell *matHeaderCellDef> Assigned By </th>
               <td mat-cell *matCellDef="let element"> {{element.assignedBy}} </td>
             </ng-container>
+            <ng-container matColumnDef="publishedby">
+              <th mat-header-cell *matHeaderCellDef> Approved By </th>
+              <td mat-cell *matCellDef="let element"> {{element.publishedBy}} </td>
+            </ng-container>
             <ng-container matColumnDef="attachment">
               <th mat-header-cell *matHeaderCellDef> Attachment </th>
               <td mat-cell *matCellDef="let element"> <button mat-mini-fab class="btn-blue margin-left-10"
@@ -216,7 +109,7 @@
           <div *ngIf="nodataFlag && !isTeacher" class="no-records" style="text-align: center">
             <app-no-data
               [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-              [noDataText]="'No Data Available'" [subText]="'Please select class and subject'"></app-no-data>
+              [noDataText]="'No Data Available'" [subText]="'Please select class or subject'"></app-no-data>
           </div>
           <div *ngIf="nodataFlag && isTeacher" class="no-records" style="text-align: center">
             <app-no-data
