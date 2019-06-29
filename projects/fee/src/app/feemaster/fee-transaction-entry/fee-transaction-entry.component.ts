@@ -172,9 +172,21 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
 					Number(this.invoice.fee_amount);
 
+				
 				if (this.invoice.balance_amt) {
+					this.invoice.balance_amt = Number(this.invoice.balance_amt);
 					this.invoice.netPay += Number(this.invoice.balance_amt);
 				}
+				if (this.invoice.prev_balance) {
+					this.invoice.netPay += Number(this.invoice.prev_balance);
+					this.invoice.balance_amt += Number(this.invoice.prev_balance);
+				}
+
+				if (this.invoice.netPay < 0) {
+					this.invoice.netPay = 0;
+					
+				}
+				
 				this.invoiceArray = this.invoice.invoice_bifurcation;
 				this.feeTransactionForm.patchValue({
 					'ftr_amount': this.invoice.netPay,
@@ -598,9 +610,10 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		return this.common.isExistUserAccessMenu(mod_id);
 	}
 	setPayAmount(event) {
-		if (event.value !== '1') {
+		if (event.value === '2') {
+			let $netAmount = parseInt(this.invoice.fee_amount,10) + parseInt(this.invoice.inv_fine_amount,10) + parseInt(this.invoice.inv_prev_balance,10) + parseInt(this.invoice.inv_opening_balance,10);
 			this.feeTransactionForm.patchValue({
-				'ftr_amount': this.invoice.fee_amount,
+				'ftr_amount': $netAmount,
 				'ftr_pay_id': event.value
 			});
 		} else {

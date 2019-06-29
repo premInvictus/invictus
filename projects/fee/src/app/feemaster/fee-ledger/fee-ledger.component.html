@@ -51,11 +51,11 @@
               <ng-container matColumnDef="invoiceno">
                 <th mat-header-cell *matHeaderCellDef> Invoice No. </th>
                 <td  mat-cell *matCellDef="let item">
-                  <span *ngIf="item.action.flgr_invoice_type === 'I'"
+                  <span *ngIf="item.action.flgr_invoice_type === 'I' && item.invoiceno != '0'"
                   class="pointer font-bold font-skyblue font-underline">
                   <a (click)="openDialog(item.action.flgr_inv_id, false)">I-#{{item.invoiceno}}</a>
                 </span>
-                <span *ngIf="item.action.flgr_invoice_type === 'R'"
+                <span *ngIf="item.action.flgr_invoice_type === 'R'  && item.invoiceno != '0'"
                 class="pointer font-bold font-skyblue font-underline">
                 <a (click)="openReceiptDialog(item.action.flgr_invoice_receipt_no, false)">R-#{{item.invoiceno}}</a>
               </span>
