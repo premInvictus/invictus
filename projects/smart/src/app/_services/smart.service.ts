@@ -160,4 +160,17 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/Smttimetable/insertTimetableDetails', value);
 	}
+	downloadTimeTableExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/excelimportexport/downloadTimeTableExcel', value);
+	}
+	getTimeTableId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/Smttimetable/getTimeTableId', value);
+	}
+	getClasswiseDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/Smttimetable/getClasswiseDetails', value);
+	}
+	
 }

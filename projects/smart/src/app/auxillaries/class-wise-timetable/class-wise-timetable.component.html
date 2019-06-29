@@ -1,159 +1,101 @@
-<div class="row margin-top-15" *ngIf="classWiseFlag">
-  <div class="col-12">
-    <mat-card> 
-      <div class="row">
-        <div class="col-4">
-          <span class="font-size-20 font-bold">Class Wise Time Table</span>
-        </div>
-        <div class="col-8 text-right">
-          <mat-form-field class="form-field-150" appearance="outline">
-            <mat-label>Class</mat-label>
-            <mat-select>
-              <mat-option></mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
-            <mat-label>Section</mat-label>
-            <mat-select>
-              <mat-option></mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
-            <mat-label>Subject</mat-label>
-            <mat-select>
-              <mat-option></mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row margin-top-10">
-        <div class="col-12">
-          <table class="table table-borderd table-stripped custom-table">
-            <thead class="table-skill__head text-center">
-              <tr class="custom-tr">
-                <th class="custom-th">Periods</th>
-                <th class="custom-th">Monday</th>
-                <th class="custom-th">Tuesday</th>
-                <th class="custom-th">Wednesday</th>
-                <th class="custom-th">Thursday</th>
-                <th class="custom-th">Friday</th>
-                <th class="custom-th">Saturday</th>
+<div class="row margin-top-15">
+    <div class="col-12">
+        <mat-card>
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-size-20 font-bold">Class Wise Time Table</span>
+                </div>
 
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="custom-tr">
-                <td class="custom-td"><i class="margin-right-10"></i> 1st</td>
-                <td class="custom-td"><i class="fas fa-circle color-green margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Library</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Arts & Craft</td>
-                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Music</td>
-                <td class="custom-td"><i class="fas fa-circle color-grey margin-right-10"></i> Library</td>
-              </tr>
-              <tr class="custom-tr">
-                <td class="custom-td"><i class="margin-right-10"></i> 2nd</td>
-                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-purple  margin-right-10"></i> Library</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Arts & Craft</td>
-                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Music</td>
-                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Library</td>
-              </tr>
-              <tr class="custom-tr">
-                <td class="custom-td"><i class=" margin-right-10"></i> 3rd</td>
-                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle  color-purple  margin-right-10"></i> Library</td>
-                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Arts & Craft</td>
-                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-grey margin-right-10"></i> Music</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Library</td>
-              </tr>
-              <tr class="custom-tr">
-                <td class="custom-td"><i class="margin-right-10"></i> 4th</td>
-                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Library</td>
-                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Arts & Craft</td>
-                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-purple  margin-right-10"></i> Music</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Library</td>
-              </tr>
-              <tr class="custom-tr">
-                <td class="custom-td"><i class="margin-right-10"></i> 5th</td>
-                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-yellow   margin-right-10"></i> Library</td>
-                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Arts & Craft</td>
-                <td class="custom-td"><i class="fas fa-circle color-grey margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Music</td>
-                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Library</td>
-              </tr>
-              <tr class="custom-tr">
-                <td class="custom-td"><i class="margin-right-10"></i> 6th</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-grey margin-right-10"></i> Library</td>
-                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Arts & Craft</td>
-                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Music</td>
-                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Library</td>
-              </tr>
-              <tr class="custom-tr">
-                <td class="custom-td"><i class="margin-right-10"></i> 7th</td>
-                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Library</td>
-                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Arts & Craft</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Music</td>
-                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Library</td>
-              </tr>
-              <tr class="custom-tr">
-                <td class="custom-td"><i class=" margin-right-10"></i> 8th</td>
-                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Library</td>
-                <td class="custom-td"><i class="fas fa-circle margin-right-10"></i> Arts & Craft</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-red margin-right-10"></i> Music</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Library</td>
-              </tr>
+                <div class="col-8 text-right">
+                    <form [formGroup]="classwiseForm" novalidate>
+                        <mat-form-field class="form-field-150" appearance="outline">
+                            <mat-label>Class</mat-label>
+                            <mat-select formControlName="tt_class_id" (selectionChange)="getSectionsByClass()" required placeholder="Select Class">
+                                <mat-option value="">Please select</mat-option>
+                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                    {{item.class_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+                            <mat-label>Section</mat-label>
+                            <mat-select formControlName="tt_section_id" (selectionChange)="getclasswisedetails()" required placeholder="Select Section">
+                                <mat-option value="">Please select</mat-option>
+                                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                    {{item.sec_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+                            <mat-label>Subject</mat-label>
+                            <mat-select formControlName="tt_subject_id" required placeholder="Select Subject">
+                                <mat-option value="">Please select</mat-option>
+                                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                    {{item.sub_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </form>
+                </div>
 
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="row margin-top-15">
-        <div class="col-4">
-          <span class="font-size-20 font-bold">Subject Wise Breakup</span>
-        </div>
-      </div>
-      <div class="row margin-top-10">
-        <div class="col-12">
-          <table class="table table-borderd table-stripped custom-table">
-            <thead class="table-skill__head text-center">
-              <tr class="custom-tr">
-                <th class="custom-th"></th>
-                <th class="custom-th background-color-red">English</th>
-                <th class="custom-th background-color-yellow">Science</th>
-                <th class="custom-th background-color-green">Maths</th>
-                <th class="custom-th background-color-grey">Computer</th>
-                <th class="custom-th background-color-blue">Art & Craft</th>
-                <th class="custom-th background-color-purple">Social Studies</th>
-                <th class="custom-th background-color-tealgreen">Hindi</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="custom-tr">
-                <td class="custom-td">No. of Periods</td>
-                <td class="custom-td">08</td>
-                <td class="custom-td">07</td>
-                <td class="custom-td">08</td>
-                <td class="custom-td">04</td>
-                <td class="custom-td">02</td>
-                <td class="custom-td">06</td>
-                <td class="custom-td">06</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </mat-card>
-  </div>
+            </div>
+            <div class="row margin-top-10">
+                <div class="col-12">
+                    <table class="table table-borderd table-stripped custom-table">
+                        <thead class="table-skill__head text-center">
+                            <tr class="custom-tr">
+                                <th class="custom-th">Periods</th>
+                                <th class="custom-th">Monday</th>
+                                <th class="custom-th">Tuesday</th>
+                                <th class="custom-th">Wednesday</th>
+                                <th class="custom-th">Thursday</th>
+                                <th class="custom-th">Friday</th>
+                                <th class="custom-th" *ngIf="noOfDay === '6' || noOfDay === '7'">Saturday</th>
+                                <th class="custom-th" *ngIf="noOfDay === '7'">Saturday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="custom-tr" *ngFor="let det of classwisetableArray;let j = index">
+                                <td class="custom-td">{{j+ 1}}<sup>{{periodSup[j]}}</sup></td>
+                                <ng-container *ngFor="let item of det.classwise;let i=index">
+                                  <td class="custom-td" *ngIf="item.subject_id !== '-'"><i class="fas fa-circle margin-right-10 sha" [ngClass]="'color-' + item.subject_id"></i> {{item.subject_name}}</td>
+                                  <td class="custom-td" *ngIf="item.subject_id === '-'">-</td>
+                                </ng-container>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row margin-top-15" *ngIf="subjectwiseFlag">
+                <div class="col-4">
+                    <span class="font-size-20 font-bold">Subject Wise Breakup</span>
+                </div>
+            </div>
+            <div class="row margin-top-10" *ngIf="subjectwiseFlag">
+                <div class="col-12">
+                    <table class="table table-borderd table-stripped custom-table">
+                        <thead class="table-skill__head text-center">
+                            <tr class="custom-tr" >
+                                <th class="custom-th">Subjects</th>
+                                <ng-container *ngFor="let item of subjectArray;let i=index">
+                                <th class="custom-th" [ngClass]="'background-color-' + item.sub_id">{{item.sub_name}}</th>
+                              </ng-container>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="custom-tr">
+                                    <td class="custom-td">No. of Periods</td>
+                                    <ng-container *ngFor="let item of subjectArray;let i=index">
+                                        <td class="custom-td ss" *ngIf="finalCountArray[item.sub_name] !== 'undefined'">{{finalCountArray[item.sub_name]}}</td>
+                                        <td class="custom-td" *ngIf="finalCountArray[item.sub_name] === 'undefined'">-</td>
+                                   
+                                    </ng-container>
+                            
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </mat-card>
+    </div>
 </div>

@@ -12,8 +12,12 @@
           <div class="top-card-title">
             <button mat-raised-button class="btn-success-green margin-right-20"><i class="fas fa-plus"></i> Add
               New</button>
-            <span class="font-size-24 font-medium">Class Wise</span><span
-              class="margin-left-10 ver-line-divider"></span><span class="font-size-24 font-medium">Teacher Wise</span>
+              <a [routerLink]="['../classwise-table']">
+                <span class="font-size-24 font-medium">Class Wise</span>
+                </a>
+              <span class="margin-left-10 ver-line-divider"></span>
+              <a [routerLink]="['../teacherwise-table']">
+              <span class="font-size-24 font-medium">Teacher Wise</span></a>
           </div>
         </div>
       </div>
@@ -86,7 +90,7 @@
             <div class="col-12">
               <button mat-raised-button class="btn-primary-100" (click)="sampleTimeTable()">Download Template</button>
             </div>
-            <input type="file"  id ="file" style="display: none !important;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx">
+            <input type="file"  id ="file" style="display: none !important;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xls">
             <span style="float:right; padding-right: 10px;font-size:12px;">
               Have already syllabus?&nbsp;&nbsp;
               <label for="file">  <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i> </label>
@@ -113,7 +117,7 @@
                 </thead>
                 <tbody>
                   <tr class="custom-tr" *ngFor="let det of sampleTimeTableArray;">
-                    <td class="custom-td"><i class="margin-right-10"></i> {{det.count + 1}}</td>
+                    <td class="custom-td"><i class="margin-right-10"></i> {{det.count + 1}}<sup>{{periodSup[det.count]}}</sup></td>
                     <td class="custom-td">- </td>
                     <td class="custom-td">- </td>
                     <td class="custom-td">- </td>
@@ -147,15 +151,23 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="custom-tr" *ngFor="let det of finalXlslArray;">
-                  <td class="custom-td"><i class="margin-right-10"></i> 1st</td>
-                  <td class="custom-td"> {{det.monday}}</td>
-                  <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> {{det.tuesday}}</td>
-                  <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> {{det.wednesday}}</td>
-                  <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> {{det.thursday}}</td>
-                  <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> {{det.friday}}</td>
-                  <td class="custom-td" *ngIf="uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7'"><i class="fas fa-circle color-grey margin-right-10"></i> {{det.saturday}}</td>
-                  <td class="custom-td" *ngIf="uploadTimeTableForm.value.no_of_day === '7'"><i class="fas fa-circle color-grey margin-right-10"></i> {{det.sunday}}</td>
+                <tr class="custom-tr" *ngFor="let det of finalXlslArray;let j = index">
+                  <td class="custom-td"><i class="margin-right-10"></i> {{j + 1}}<sup>{{periodSup[j]}}</sup></td>
+                  <td class="custom-td" *ngIf="det.monday_id !== '-'"><i class="fas fa-circle color-purple margin-right-10" ></i> {{det.monday}}</td>
+                  <td class="custom-td" *ngIf="det.monday_id === '-'">-</td>
+                  <td class="custom-td" *ngIf="det.tuesday_id !== '-'"><i class="fas fa-circle color-purple margin-right-10" ></i> {{det.tuesday}}</td>
+                  <td class="custom-td" *ngIf="det.tuesday_id === '-'">-</td>
+                  <td class="custom-td" *ngIf="det.wednesday_id !== '-'"><i class="fas fa-circle color-blue margin-right-10"></i> {{det.wednesday}}</td>
+                  <td class="custom-td" *ngIf="det.wednesday_id === '-'">-</td>
+                  <td class="custom-td" *ngIf="det.thursday_id !== '-'"><i class="fas fa-circle color-tealgreen margin-right-10"></i> {{det.thursday}}</td>
+                  <td class="custom-td" *ngIf="det.thursday_id === '-'">-</td>
+                  <td class="custom-td" *ngIf="det.friday_id !== '-'"><i class="fas fa-circle color-yellow margin-right-10"></i> {{det.friday}}</td>
+                  <td class="custom-td" *ngIf="det.friday_id === '-'">-</td>
+                  <td class="custom-td" *ngIf="(uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7') && det.saturday_id !== '-' ">
+                    <i class="fas fa-circle color-grey margin-right-10"></i> {{det.saturday}}</td>
+                  <td class="custom-td" *ngIf="(uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7') && det.saturday_id === '-' ">-</td>
+                  <td class="custom-td" *ngIf="uploadTimeTableForm.value.no_of_day === '7' && det.sunday_id !== '-'"><i class="fas fa-circle color-grey margin-right-10"></i> {{det.sunday}}</td>
+                  <td class="custom-td" *ngIf="uploadTimeTableForm.value.no_of_day === '7' && det.sunday_id === '-'">-</td>
                 </tr>
               </tbody>
             </table>
@@ -164,7 +176,7 @@
         <div class="row margin-top-20">
             <div class="col-12 text-center">
                 <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Upload</button>
-                <button mat-raised-button class="btn-reset margin-left-10">cancel</button>
+                <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
             </div>
         </div>
       </div>
