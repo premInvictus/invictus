@@ -748,7 +748,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 														if (key2 === 'fh_id') {
 															obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 																(Number(keys) + 1);
-															obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
+															obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(keys)]['ftr_transaction_date'] :
+																repoArray[Number(keys)]['invoice_date'];
 															obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '-';
 															obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
 																repoArray[Number(keys)]['invoice_no'] : '-';
@@ -786,7 +787,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											const obj: any = {};
 											obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 												(index + 1);
-											obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+											obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+												repoArray[Number(index)]['invoice_date'];
 											obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 												repoArray[Number(index)]['invoice_no'] : '-';
 											obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -815,7 +817,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											const obj: any = {};
 											obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 												(index + 1);
-											obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+											obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+												repoArray[Number(index)]['invoice_date'];
 											obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 												repoArray[Number(index)]['invoice_no'] : '-';
 											obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -846,7 +849,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											const obj: any = {};
 											obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 												(index + 1);
-											obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+											obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+												repoArray[Number(index)]['invoice_date'];
 											obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 												repoArray[Number(index)]['invoice_no'] : '-';
 											obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -1809,7 +1813,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 												if (key2 === 'fh_id') {
 													obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 														(Number(keys) + 1);
-													obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
+													obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(keys)]['ftr_transaction_date'] :
+														repoArray[Number(keys)]['invoice_date'];
 													obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '-';
 													obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
 														repoArray[Number(keys)]['invoice_no'] : '-';
@@ -1847,7 +1852,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									const obj: any = {};
 									obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 										(index + 1);
-									obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+									obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+										repoArray[Number(index)]['invoice_date'];
 									obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 										repoArray[Number(index)]['invoice_no'] : '-';
 									obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -1876,7 +1882,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									const obj: any = {};
 									obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 										(index + 1);
-									obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+									obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+										repoArray[Number(index)]['invoice_date'];
 									obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 										repoArray[Number(index)]['invoice_no'] : '-';
 									obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -1907,7 +1914,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									const obj: any = {};
 									obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 										(index + 1);
-									obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+									obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+										repoArray[Number(index)]['invoice_date'];
 									obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 										repoArray[Number(index)]['invoice_no'] : '-';
 									obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -2982,7 +2990,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 														if (key2 === 'fh_id') {
 															obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 																(Number(keys) + 1);
-															obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
+															obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(keys)]['ftr_transaction_date'] :
+																repoArray[Number(keys)]['invoice_date'];
 															obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '-';
 															obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
 																repoArray[Number(keys)]['invoice_no'] : '-';
@@ -3020,7 +3029,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											const obj: any = {};
 											obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 												(index + 1);
-											obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+											obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+												repoArray[Number(index)]['invoice_date'];
 											obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 												repoArray[Number(index)]['invoice_no'] : '-';
 											obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -3049,7 +3059,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											const obj: any = {};
 											obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 												(index + 1);
-											obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+											obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+												repoArray[Number(index)]['invoice_date'];
 											obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 												repoArray[Number(index)]['invoice_no'] : '-';
 											obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -3080,7 +3091,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											const obj: any = {};
 											obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 												(index + 1);
-											obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+											obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+												repoArray[Number(index)]['invoice_date'];
 											obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 												repoArray[Number(index)]['invoice_no'] : '-';
 											obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -4057,7 +4069,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 												if (key2 === 'fh_id') {
 													obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 														(Number(keys) + 1);
-													obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
+													obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(keys)]['ftr_transaction_date'] :
+														repoArray[Number(keys)]['invoice_date'];
 													obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '-';
 													obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
 														repoArray[Number(keys)]['invoice_no'] : '-';
@@ -4095,7 +4108,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									const obj: any = {};
 									obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 										(index + 1);
-									obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+									obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+										repoArray[Number(index)]['invoice_date'];
 									obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 										repoArray[Number(index)]['invoice_no'] : '-';
 									obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -4124,7 +4138,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									const obj: any = {};
 									obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 										(index + 1);
-									obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+									obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+										repoArray[Number(index)]['invoice_date'];
 									obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 										repoArray[Number(index)]['invoice_no'] : '-';
 									obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -4155,7 +4170,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									const obj: any = {};
 									obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 										(index + 1);
-									obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+									obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+										repoArray[Number(index)]['invoice_date'];
 									obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 										repoArray[Number(index)]['invoice_no'] : '-';
 									obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -5171,7 +5187,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 														if (key2 === 'fh_id') {
 															obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 																(Number(keys) + 1);
-															obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
+															obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(keys)]['ftr_transaction_date'] :
+																repoArray[Number(keys)]['invoice_date'];
 															obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '-';
 															obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
 																repoArray[Number(keys)]['invoice_no'] : '-';
@@ -5209,7 +5226,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											const obj: any = {};
 											obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 												(index + 1);
-											obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+											obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+												repoArray[Number(index)]['invoice_date'];
 											obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 												repoArray[Number(index)]['invoice_no'] : '-';
 											obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -5238,7 +5256,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 											const obj: any = {};
 											obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 												(index + 1);
-											obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+											obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+												repoArray[Number(index)]['invoice_date'];
 											obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 												repoArray[Number(index)]['invoice_no'] : '-';
 											obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -6246,7 +6265,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 												if (key2 === 'fh_id') {
 													obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 														(Number(keys) + 1);
-													obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
+													obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(keys)]['ftr_transaction_date'] :
+														repoArray[Number(keys)]['invoice_date'];
 													obj[key2 + k] = titem['fh_amt'] ? new DecimalPipe('en-us').transform(titem['fh_amt']) : '-';
 													obj['invoice_no'] = repoArray[Number(keys)]['invoice_no'] ?
 														repoArray[Number(keys)]['invoice_no'] : '-';
@@ -6284,7 +6304,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									const obj: any = {};
 									obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 										(index + 1);
-									obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+									obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+										repoArray[Number(index)]['invoice_date'];
 									obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 										repoArray[Number(index)]['invoice_no'] : '-';
 									obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -6313,7 +6334,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									const obj: any = {};
 									obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 										(index + 1);
-									obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+									obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+										repoArray[Number(index)]['invoice_date'];
 									obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 										repoArray[Number(index)]['invoice_no'] : '-';
 									obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
@@ -6344,7 +6366,8 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 									const obj: any = {};
 									obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 										(index + 1);
-									obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
+									obj['invoice_created_date'] = Number(this.reportType) === 1 ? repoArray[Number(index)]['ftr_transaction_date'] :
+										repoArray[Number(index)]['invoice_date'];
 									obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 										repoArray[Number(index)]['invoice_no'] : '-';
 									obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
