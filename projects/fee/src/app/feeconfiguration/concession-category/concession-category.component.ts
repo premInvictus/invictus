@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, ErrorStateMatcher, MatSort, MatPaginator } from '@angular/material';
-import { FormGroup, FormBuilder, FormGroupDirective, NgForm, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormGroupDirective, NgForm, FormControl, Validators } from '@angular/forms';
 import { ConCatElement } from '../concession-category/concession-category.model';
 import { FeeService, SisService, CommonAPIService } from '../../_services/index';
 import { ConfirmValidParentMatcher } from '../../_validationclass/confirmValidParentMatcher.class';
@@ -25,6 +25,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	classDataArray: any[] = [];
 	amountPlaceHolder: any = 'Concession';
 	editFlag = false;
+	schoolFlag = true;
 	concessionAmountFlag = true;
 	feeBifurcationArray: any = [{ fcc_head_type: 'fees', name: 'School' },
 	{ fcc_head_type: 'hostel', name: 'Hostel' },
@@ -54,11 +55,11 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		this.conccesionCategoryForm = this.fbuild.group({
 			fcc_id: '',
 			fcc_name: '',
-			fcc_fh_id: '',
+			fcc_fh_id: [Validators.required, ''],
 			fcc_head_type: '',
 			fcc_class_id: [],
 			fcc_fcrt_id: '',
-			fcc_amount: '',
+			fcc_amount:  [Validators.required, ''],
 			fcc_status: '1'
 		});
 	}
@@ -85,6 +86,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 					});
 					this.concessionAmountFlag = true;
 					this.amountPlaceHolder = 'Concession';
+					this.schoolFlag = true;
 				} else {
 					this.common.showSuccessErrorMessage(result.data, 'error');
 				}
@@ -102,6 +104,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 			fcc_amount: '',
 			fcc_status: '1'
 		});
+		this.schoolFlag = true;
 		this.conccesionCategoryForm.markAsPristine();
 		this.conccesionCategoryForm.markAsUntouched();
 		this.conccesionCategoryForm.updateValueAndValidity();
@@ -123,12 +126,14 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	}
 	disableConcessionAmount(event) {
 		if (event.value === '4') {
+			this.conccesionCategoryForm.controls['fcc_amount'].clearValidators();
 			this.concessionAmountFlag = false;
 			this.conccesionCategoryForm.patchValue({
 				fcc_amount: 0
 			});
 		} else {
 			this.concessionAmountFlag = true;
+			this.conccesionCategoryForm.controls['fcc_amount'].setValidators([Validators.required]);
 		}
 		if (event.value === '3') {
 			this.amountPlaceHolder = 'Amount Chargeable';
@@ -174,11 +179,13 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getFeeHeadName(id) {
-		if (id) {
+		if (id && Number(id) !== 0) {
 			const findex = this.feeheadArray.findIndex(f => f.fh_id === id);
 			if (findex !== -1) {
 				return this.feeheadArray[findex].fh_name;
 			}
+		} if (id && Number(id) === 0) {
+			return '-';
 		} else {
 			return '-';
 		}
@@ -229,12 +236,25 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	}
 	patchValue(value: any) {
 		this.editFlag = true;
-		this.conccesionCategoryForm.patchValue({
-			fcc_fh_id: value.fcc_fh_id
-		});
-		this.patchClassBasedOnFeeHead(value.fcc_fh_id);
+		if (value.fcc_head_type === 'fees') {
+			this.schoolFlag = true;
+			this.conccesionCategoryForm.controls['fcc_fh_id'].setValidators([Validators.required]);
+			this.conccesionCategoryForm.patchValue({
+				fcc_fh_id: value.fcc_fh_id
+			});
+			this.patchClassBasedOnFeeHead(value.fcc_fh_id);
+		} else {
+			this.schoolFlag = false;
+			this.conccesionCategoryForm.controls['fcc_fh_id'].clearValidators();
+			this.classDataArray = [];
+			this.classDataArray = this.classArray;
+		}
 		if (value.fcc_fcrt_id === '4') {
+			this.conccesionCategoryForm.controls['fcc_amount'].clearValidators();
 			this.concessionAmountFlag = false;
+		} else {
+			this.concessionAmountFlag = true;
+			this.conccesionCategoryForm.controls['fcc_amount'].setValidators([Validators.required]);
 		}
 		this.conccesionCategoryForm.patchValue({
 			fcc_id: value.fcc_id,
@@ -248,6 +268,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	}
 	update() {
 		if (!this.conccesionCategoryForm.valid) {
+			this.common.showSuccessErrorMessage('Please fill required fields', 'error');
 			this.conccesionCategoryForm.markAsDirty();
 		} else {
 			this.conccesionCategoryForm.markAsPristine();
@@ -288,6 +309,15 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 			});
 	}
 	changeType($event) {
+		if ($event.value === 'hostel' || $event.value === 'transport') {
+			this.conccesionCategoryForm.controls['fcc_fh_id'].clearValidators();
+			this.classDataArray = [];
+			this.classDataArray = this.classArray;
+			this.schoolFlag = false;
+		} else {
+			this.conccesionCategoryForm.controls['fcc_fh_id'].setValidators([Validators.required]);
+			this.schoolFlag = true;
+		}
 		this.conccesionCategoryForm.patchValue({
 			'fcc_head_type': $event.value
 		});
