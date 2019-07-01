@@ -1,10 +1,159 @@
-.period_req{
-    color:red;
+.color-1 {
+    color: aqua;
 }
-.upload-icon-bulk {
-    margin-top: 15px;
-    font-size: 100%;
-    position: relative;
-    color: #007bff;
-    cursor: pointer;
+.color-2 {
+    color: aquamarine;
 }
+.color-3{
+    color: chocolate;
+}
+.color-4 {
+    color: peru;
+}
+.color-5 {
+    color: crimson;
+}
+.color-6{
+    color: rebeccapurple;
+}
+.color-7 {
+    color: red;
+}
+.color-8 {
+    color: rosybrown;
+}
+.color-9{
+    color: royalblue;
+}
+.color-10 {
+    color: yellow;
+}
+.color-11 {
+    color: yellowgreen;
+}
+.color-12{
+    color: gold;
+}
+.color-13 {
+    color: goldenrod;
+}
+.color-14 {
+    color: gray;
+}
+.color-15{
+    color: green;
+}
+.color-16 {
+    color: greenyellow;
+}
+.color-17 {
+    color: grey;
+}
+.color-18{
+    color: royalblue;
+}
+.color-19 {
+    color: blue;
+}
+.color-20{
+    color: black;
+}
+.color-21 {
+    color: blueviolet;
+}
+.color-22 {
+    color: brown;
+}
+.color-23{
+    color: coral;
+}
+.color-24 {
+    color: olive;
+}
+.color-25 {
+    color: orange;
+}
+.color-26{
+    color: orchid;
+}
+.background-color-1 {
+    background-color: aqua;
+}
+.background-color-2 {
+    background-color: aquamarine;
+}
+.background-color-3{
+    background-color: chocolate;
+}
+.background-color-4 {
+    background-color: peru;
+}
+.background-color-5 {
+    background-color: crimson;
+}
+.background-color-6{
+    background-color: rebeccapurple;
+}
+.background-color-7 {
+    background-color: red;
+}
+.background-color-8 {
+    background-color: rosybrown;
+}
+.background-color-9{
+    background-color: royalblue;
+}
+.background-color-10 {
+    background-color: yellow;
+}
+.background-color-11 {
+    background-color: yellowgreen;
+}
+.background-color-12{
+    background-color: gold;
+}
+.background-color-13 {
+    background-color: goldenrod;
+}
+.background-color-14 {
+    background-color: gray;
+}
+.background-color-15{
+    background-color: green;
+}
+.background-color-16 {
+    background-color: greenyellow;
+}
+.background-color-17 {
+    background-color: grey;
+}
+.background-color-18{
+    background-color: royalblue;
+}
+.background-color-19 {
+    background-color: blue;
+}
+.background-color-20{
+    background-color: black;
+}
+.background-color-21 {
+    background-color: blueviolet;
+}
+.background-color-22 {
+    background-color: brown;
+}
+.background-color-23{
+    background-color: coral;
+}
+.background-color-24 {
+    background-color: olive;
+}
+.background-color-25 {
+    background-color: orange;
+}
+.background-color-26{
+    background-color: orchid;
+}
+/* .sha{
+    -webkit-animation: rippleone 0.7s linear infinite;
+} */
