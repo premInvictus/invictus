@@ -221,7 +221,7 @@
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Amount</mat-label>
                                  <input matInput placeholder="Amount" type="number" formControlName="ftr_amount"
-                                    [readonly]="selectedMode === '1'" required>
+                                 required>
                               </mat-form-field>
                            </div>
                         </div>
@@ -248,8 +248,8 @@
                            <div class="col-6">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Amount</mat-label>
-                                 <input matInput placeholder="Amount" type="number" formControlName="ftr_amount"
-                                    required>
+                                 <input matInput placeholder="Amount" type="number" formControlName="ftr_amount" 
+                                 required>
                               </mat-form-field>
                            </div>
                            <div class="col-6">
@@ -294,7 +294,7 @@
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Amount</mat-label>
                                  <input matInput placeholder="Amount" type="number" formControlName="ftr_amount"
-                                    required>
+                                 [readonly]="selectedMode === '1'" required>
                               </mat-form-field>
                            </div>
                         </div>

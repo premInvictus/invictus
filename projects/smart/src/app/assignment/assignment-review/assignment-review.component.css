@@ -15,7 +15,14 @@ th.mat-header-cell {
     padding: .25rem;
     font-family: Helvetica, Arial, sans-serif;
 }
-td:nth-child(3) {
+.reset_ass {
+    color: #0d7c9e;
+    font-size: 40px;
+    cursor: pointer;
+    position: relative;
+    top: 10px;
+}
+/* td:nth-child(3) {
     text-align: left !important;
 }
 td:nth-child(4) {
@@ -23,4 +30,4 @@ td:nth-child(4) {
 }
 td:nth-child(5) {
     text-align: left !important;
-}
+} */

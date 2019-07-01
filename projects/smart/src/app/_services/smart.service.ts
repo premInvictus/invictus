@@ -9,43 +9,43 @@ export class SmartService {
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 	getSubjectByTeacherId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/classwork/getSubjectByTeacherId', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getSubjectByTeacherId', value);
 	}
 	getClassByTeacherIdSubjectId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/classwork/getClassByTeacherIdSubjectId', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getClassByTeacherIdSubjectId', value);
 	}
 	getClassSectionByTeacherIdSubjectId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/classwork/getClassSectionByTeacherIdSubjectId', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getClassSectionByTeacherIdSubjectId', value);
 	}
 	getClassByTeacherId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/classwork/getClassByTeacherId', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getClassByTeacherId', value);
 	}
 	getSubjectByTeacherIdClassId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/classwork/getSubjectByTeacherIdClassId', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getSubjectByTeacherIdClassId', value);
 	}
 	getSectionByTeacherIdClassId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/classwork/getSectionByTeacherIdClassId', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getSectionByTeacherIdClassId', value);
 	}
 	getSubjectByTeacherIdClassIdSectionId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/classwork/getSubjectByTeacherIdClassIdSectionId', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getSubjectByTeacherIdClassIdSectionId', value);
 	}
 	getSectionByTeacherIdSubjectIdClassId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/classwork/getSectionByTeacherIdSubjectIdClassId', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getSectionByTeacherIdSubjectIdClassId', value);
 	}
 	getTopicByClassIdSubjectId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/classwork/getTopicByClassIdSubjectId', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getTopicByClassIdSubjectId', value);
 	}
 	getSubtopicByTopicId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/classwork/getSubtopicByTopicId', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getSubtopicByTopicId', value);
 	}
 	getSubtopicCountAndDetail(value) {
 		this.service.startLoading();
@@ -148,6 +148,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/assignment/getAssignment', value);
 	}
+	sendAssignment(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/assignment/sendAssignment', value);
+	}
 	insertTimetable(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/Smttimetable/insertTimetable', value);
@@ -155,5 +159,21 @@ export class SmartService {
 	insertTimetableDetails(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/Smttimetable/insertTimetableDetails', value);
+	}
+	downloadTimeTableExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/excelimportexport/downloadTimeTableExcel', value);
+	}
+	getTimeTableId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/Smttimetable/getTimeTableId', value);
+	}
+	getClasswiseDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/Smttimetable/getClasswiseDetails', value);
+	}
+	getTeacherwiseTableDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/Smttimetable/getTeacherwiseTableDetails', value);
 	}
 }

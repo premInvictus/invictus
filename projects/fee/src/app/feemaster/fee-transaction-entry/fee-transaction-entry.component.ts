@@ -172,9 +172,21 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
 					Number(this.invoice.fee_amount);
 
+				
 				if (this.invoice.balance_amt) {
+					this.invoice.balance_amt = Number(this.invoice.balance_amt);
 					this.invoice.netPay += Number(this.invoice.balance_amt);
 				}
+				if (this.invoice.prev_balance) {
+					this.invoice.netPay += Number(this.invoice.prev_balance);
+					this.invoice.balance_amt += Number(this.invoice.prev_balance);
+				}
+
+				if (this.invoice.netPay < 0) {
+					this.invoice.netPay = 0;
+					
+				}
+				
 				this.invoiceArray = this.invoice.invoice_bifurcation;
 				this.feeTransactionForm.patchValue({
 					'ftr_amount': this.invoice.netPay,
@@ -363,6 +375,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		if (this.invoice.late_fine_amt) {
 			this.feeTransactionForm.value.lateFeeAmt = this.invoice.late_fine_amt;
 		}
+		if (this.invoice.balance_amt) {
+			this.feeTransactionForm.value.ftr_prev_balance = this.invoice.balance_amt;
+		}
 		this.feeTransactionForm.value.login_id = this.feeLoginId;
 		this.feeTransactionForm.value.inv_id = [this.invoice.inv_id];
 		this.feeTransactionForm.value.inv_invoice_no = [this.invoice.inv_invoice_no];
@@ -382,18 +397,18 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		}
 		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1) {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
-				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_remark)) {
+				this.feeTransactionForm.value.ftr_remark)) {
 				validateFlag = false;
 			}
 		} else if (Number(this.feeTransactionForm.value.ftr_pay_id) === 2) {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
-				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_bnk_id
+				this.feeTransactionForm.value.ftr_bnk_id
 				&& this.feeTransactionForm.value.ftr_remark)) {
 				validateFlag = false;
 			}
 		} else if (Number(this.feeTransactionForm.value.ftr_pay_id) === 3) {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
-				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_bnk_id
+				this.feeTransactionForm.value.ftr_bnk_id
 				&& this.feeTransactionForm.value.ftr_remark
 				&& this.feeTransactionForm.value.ftr_cheque_date && this.feeTransactionForm.value.ftr_cheque_no
 				&& this.feeTransactionForm.value.ftr_deposit_bnk_id && this.feeTransactionForm.value.ftr_branch)) {
@@ -401,7 +416,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			}
 		} else {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
-				this.feeTransactionForm.value.ftr_amount && this.feeTransactionForm.value.ftr_transaction_id &&
+				this.feeTransactionForm.value.ftr_transaction_id &&
 				this.feeTransactionForm.value.ftr_remark)) {
 				validateFlag = false;
 			}
@@ -426,6 +441,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		const datePipe = new DatePipe('en-in');
 		if (this.invoice.late_fine_amt) {
 			this.feeTransactionForm.value.lateFeeAmt = this.invoice.late_fine_amt;
+		}
+		if (this.invoice.balance_amt) {
+			this.feeTransactionForm.value.ftr_prev_balance = this.invoice.balance_amt;
 		}
 		this.feeTransactionForm.patchValue({
 			'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
@@ -598,9 +616,10 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		return this.common.isExistUserAccessMenu(mod_id);
 	}
 	setPayAmount(event) {
-		if (event.value !== '1') {
+		if (event.value === '2') {
+			let $netAmount = parseInt(this.invoice.fee_amount,10) + parseInt(this.invoice.inv_fine_amount,10) + parseInt(this.invoice.inv_prev_balance,10) + parseInt(this.invoice.inv_opening_balance,10);
 			this.feeTransactionForm.patchValue({
-				'ftr_amount': this.invoice.fee_amount,
+				'ftr_amount': $netAmount,
 				'ftr_pay_id': event.value
 			});
 		} else {

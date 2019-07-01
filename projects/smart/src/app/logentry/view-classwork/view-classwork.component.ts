@@ -29,6 +29,7 @@ export class ViewClassworkComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		this.buildForm();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		if (this.currentUser.role_id === '3') {
 			this.teacherId = this.currentUser.login_id;
@@ -37,9 +38,6 @@ export class ViewClassworkComponent implements OnInit {
 			});
 			this.getClasswork();
 		}
-
-
-		this.buildForm();
 	}
 
 	openEditClassworkModal(value) {

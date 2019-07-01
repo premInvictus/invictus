@@ -13,25 +13,25 @@
       <table class="table table-borderd table-stripped custom-table">
         <thead class="table-skill__head text-center">
           <tr class="custom-tr">
-            <th class="custom-th">Period</th>
-            <th class="custom-th">Subject</th>
-            <th class="custom-th">Category</th>
-            <th class="custom-th">Class</th>
-            <th class="custom-th">Topic</th>
-            <th class="custom-th">Subtopic</th>
-            <th class="custom-th">Assignment</th>
-            <th class="custom-th">Attachment</th>
+            <th class="custom-th" width="8%">Period</th>
+            <th class="custom-th" width="8%">Subject</th>
+            <th class="custom-th" width="8%">Category</th>
+            <th class="custom-th" width="8%">Class</th>
+            <th class="custom-th" width="15%">Topic</th>
+            <th class="custom-th" width="15%">Subtopic</th>
+            <th class="custom-th" width="30%">Assignment</th>
+            <th class="custom-th" width="8%">Attachment</th>
           </tr>
         </thead>
         <tbody>
           <tr class="custom-tr" *ngFor="let item of reviewArray">
             <td class="custom-td">{{item.period}}{{periodSup[item.period-1]}}</td>
-            <td class="custom-td">{{item.subjectName}}</td>
-            <td class="custom-td">{{item.categoryName}}</td>
-            <td class="custom-td">{{item.className}}</td>
-            <td class="custom-td">{{item.topicName}}</td>
-            <td class="custom-td">{{item.subtopicName}}</td>
-            <td class="custom-td"><div [innerHtml]="item.assignment"></div></td>
+            <td class="custom-td">{{item.subjectName | capitalize}}</td>
+            <td class="custom-td">{{item.categoryName | capitalize}}</td>
+            <td class="custom-td">{{item.className | capitalize}}</td>
+            <td class="custom-td">{{item.topicName | capitalize}}</td>
+            <td class="custom-td">{{item.subtopicName | capitalize}}</td>
+            <td class="custom-td text-left"><div [innerHtml]="item.assignment | capitalize | truncatetext:100"></div></td>
             <td class="custom-td text-center"><button mat-mini-fab class="btn-blue"><span
                   class="font-white font-size-16">{{item.attachments}}</span></button>
             </td>

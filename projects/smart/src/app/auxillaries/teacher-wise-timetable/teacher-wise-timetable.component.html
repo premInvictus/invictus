@@ -1,30 +1,35 @@
-<div class="row margin-top-15" *ngIf="teacherWiseFlag">
+<div class="row margin-top-15">
   <div class="col-12">
     <mat-card>
-      <div class="row">
+      <div class="row">        
         <div class="col-4">
           <span class="font-size-20 font-bold">Teacher Wise Time Table</span>
         </div>
+        
         <div class="col-8 text-right">
-          <mat-form-field class="form-field-150" appearance="outline">
-            <mat-label>Teacher ID</mat-label>
-            <mat-select>
-              <mat-option></mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
-            <mat-label>Teacher Name</mat-label>
-            <mat-select>
-              <mat-option></mat-option>
-            </mat-select>
+            <form [formGroup]="teacherwiseForm" novalidate>
+            <mat-form-field class="form-field-220 remove-form-field-bottom-margin"  appearance="outline">
+              <mat-label>Teacher Name</mat-label>
+              <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
+                [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
+                  (onSelectionChange)="setTeacherId(item)">
+                  <span>{{item.au_full_name}}</span> ,
+                  <small>Id: {{item.au_login_id}}</small>
+                </mat-option>
+              </mat-autocomplete>
           </mat-form-field>
           <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
             <mat-label>Subject</mat-label>
-            <mat-select>
-              <mat-option></mat-option>
+            <mat-select formControlName="subject_name"  placeholder="Select Subject">
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
             </mat-select>
           </mat-form-field>
+        </form>
         </div>
+     
       </div>
       <div class="row margin-top-10">
         <div class="col-12">
@@ -37,20 +42,20 @@
                 <th class="custom-th">Wednesday</th>
                 <th class="custom-th">Thursday</th>
                 <th class="custom-th">Friday</th>
-                <th class="custom-th">Saturday</th>
-
+                <th class="custom-th" *ngIf="noOfDay === '6' || noOfDay === '7'">Saturday</th>
+                <th class="custom-th" *ngIf="noOfDay === '7'">Saturday</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="custom-tr">
-                <td class="custom-td"><i class="margin-right-10"></i> 1st</td>
-                <td class="custom-td"><i class="fas fa-circle color-green margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-purple margin-right-10"></i> Library</td>
-                <td class="custom-td"><i class="fas fa-circle color-blue margin-right-10"></i> Arts & Craft</td>
-                <td class="custom-td"><i class="fas fa-circle color-tealgreen margin-right-10"></i> Math</td>
-                <td class="custom-td"><i class="fas fa-circle color-yellow margin-right-10"></i> Music</td>
-                <td class="custom-td"><i class="fas fa-circle color-grey margin-right-10"></i> Library</td>
-              </tr>
+              <tr class="custom-tr" *ngFor="let det of teacherwiseArray;let j = index">
+                <td class="custom-td">{{j+ 1}}<sup>{{periodSup[j]}}</sup></td>
+                <ng-container *ngFor="let item of det;let i=index">
+                  <td class="custom-td" *ngIf="item.subject_id !== '-'">
+                    <i class="fas fa-circle margin-right-10 sha" [ngClass]="'color-' + item.subject_id"></i> 
+                    {{item.subject_name}}  {{item.class_name}} - {{item.sec_name}}</td>
+                  <td class="custom-td" *ngIf="item.subject_id === '-'">-</td>
+                </ng-container>
+            </tr>
             </tbody>
           </table>
         </div>
