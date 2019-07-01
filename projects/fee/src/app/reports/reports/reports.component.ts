@@ -15,6 +15,8 @@ import { reduce } from 'rxjs/operators';
 import { CapitalizePipe } from '../../_pipes';
 import { ReportFilterComponent } from '../reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from '../reports-filter-sort/report-sort/report-sort.component';
+import { Column, GridOption } from 'angular-slickgrid';
+import {TranslateService} from '@ngx-translate/core';
 @Component({
 	selector: 'app-reports',
 	templateUrl: './reports.component.html',
@@ -204,11 +206,23 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 			report_check_icon_class: ''
 		}
 	];
+
+	columnDefinitions1: Column[];
+	columnDefinitions2: Column[];
+	gridOptions1: GridOption;
+	gridOptions2: GridOption;
+	dataset1: any[];
+	dataset2: any[];
+	initgrid = false;
+	columnDefinitions: Column[] = [];
+  gridOptions: GridOption = {};
+  dataset: any[] = [];
 	constructor(private fbuild: FormBuilder,
 		private feeService: FeeService,
 		private common: CommonAPIService,
 		private sisService: SisService,
-		public dialog: MatDialog) { }
+		public dialog: MatDialog,
+		translate: TranslateService) { }
 
 	ngOnInit() {
 		this.getFeePeriod();
@@ -220,6 +234,42 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.getStoppages();
 		this.getSlabs();
 		this.reportsTable = reportTable;
+
+		this.columnDefinitions = [
+			{ id: 'title', name: 'Title', field: 'title', sortable: true },
+			{ id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true },
+			{ id: '%', name: '% Complete', field: 'percentComplete', sortable: true },
+			{ id: 'start', name: 'Start', field: 'start' },
+			{ id: 'finish', name: 'Finish', field: 'finish' },
+			{ id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', sortable: true }
+		  ];
+		  this.gridOptions = {
+			enableAutoResize: true,       // true by default
+			
+		  };
+	  
+		  // fill the dataset with your data
+		  // VERY IMPORTANT, Angular-Slickgrid uses Slickgrid DataView which REQUIRES a unique "id" and it has to be lowercase "id" and be part of the dataset
+		  this.dataset = [];
+	  
+		  // for demo purpose, let's mock a 1000 lines of data
+		  for (let i = 0; i < 1000; i++) {
+			const randomYear = 2000 + Math.floor(Math.random() * 10);
+			const randomMonth = Math.floor(Math.random() * 11);
+			const randomDay = Math.floor((Math.random() * 28));
+			const randomPercent = Math.round(Math.random() * 100);
+	  
+			this.dataset[i] = {
+			  id: i, // again VERY IMPORTANT to fill the "id" with unique values
+			  title: 'Task ' + i,
+			  duration: Math.round(Math.random() * 100) + '',
+			  percentComplete: randomPercent,
+			  start: `${randomMonth}/${randomDay}/${randomYear}`,
+			  finish: `${randomMonth}/${randomDay}/${randomYear}`,
+			  effortDriven: (i % 5 === 0)
+			};
+		  }
+
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;

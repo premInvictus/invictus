@@ -28,7 +28,12 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.js",
-              "node_modules/ng2-image-viewer/imageviewer.js"
+              "node_modules/ng2-image-viewer/imageviewer.js",
+              "node_modules/jquery/dist/jquery.js",
+              "node_modules/jquery-ui-dist/jquery-ui.min.js",
+              "node_modules/slickgrid/lib/jquery.event.drag-2.3.0.js",
+              "node_modules/bootstrap/dist/js/bootstrap.js",
+              "node_modules/angular-slickgrid/lib/multiple-select/multiple-select.js"
             ]
           },
           "configurations": {

@@ -6,13 +6,19 @@ import { SharedmoduleModule } from '../sharedmodule/sharedmodule.module';
 import { ReportFilterComponent } from './reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from './reports-filter-sort/report-sort/report-sort.component';
 
+import { AngularSlickgridModule } from 'angular-slickgrid';
+import { TranslateService} from '@ngx-translate/core';
+
+
 @NgModule({
 	imports: [
 		CommonModule,
 		ReportsRoutingModule,
-		SharedmoduleModule
+		SharedmoduleModule,
+		AngularSlickgridModule.forRoot()
 	],
 	declarations: [ReportsComponent, ReportFilterComponent, ReportSortComponent],
-	entryComponents: [ReportFilterComponent, ReportSortComponent]
+	entryComponents: [ReportFilterComponent, ReportSortComponent],
+	providers: [TranslateService],
 })
 export class ReportsModule { }
