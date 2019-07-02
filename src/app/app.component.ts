@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
 	Event,
 	NavigationCancel,
@@ -8,7 +8,7 @@ import {
 	Router
 } from '@angular/router';
 import { CommonAPIService } from './_services/commonAPI.service';
-import { HttpRequest, HttpHeaders } from '@angular/common/http';
+import { HttpRequest } from '@angular/common/http';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -23,7 +23,30 @@ export class AppComponent implements OnInit {
 		timeOut: 3000,
 		lastOnBottom: true
 	};
-	constructor(private router: Router, private loaderService: CommonAPIService) {}
+	showLoadingFlag;
+	constructor(private router: Router, private loaderService: CommonAPIService) {
+		this.loaderService.showLoading.subscribe((flag: boolean) => {
+			this.showLoadingFlag = flag;
+		});
+		this.router.events.subscribe((event: Event) => {
+			switch (true) {
+				case event instanceof NavigationStart: {
+					this.showLoadingFlag = true;
+					break;
+				}
+
+				case event instanceof NavigationEnd:
+				case event instanceof NavigationCancel:
+				case event instanceof NavigationError: {
+					this.showLoadingFlag = false;
+					break;
+				}
+				default: {
+					break;
+				}
+			}
+		});
+	}
 
 	ngOnInit() {
 		this.getCurrentUrl();

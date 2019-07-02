@@ -2,6 +2,7 @@
 @import "./assets/scss1/app.scss";
 @import './assets/css/testengine.css';
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '../node_modules/angular-slickgrid/styles/sass/slickgrid-theme-bootstrap.scss';
 
 /* Css for Main navigation start here*/
 
@@ -5738,6 +5739,72 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 
 /** Shikar Css **/
 
+.slickgrid-container .slick-header-columns {
+  background: #c8d6e5 !important;
+  height:40px !important;
+}
+.slick-column-name {
+  color: #5b636a !important;
+}
+.slick-row {
+  height:35px !important;
+}
+.slick-row.odd {
+  background: #f1f4f7 !important;
+}
+.slick-preheader-panel .ui-droppable .slick-dropped-grouping, .slick-preheader-panel .ui-droppable-hover .slick-dropped-grouping {
+  background: #0e7d9e;
+  padding: 2px !important;
+  border-radius: 14px !important;
+  padding-left: 13px !important;
+  font-size: 14px !important;
+  color: white !important;
+  margin-right: 5px !important;
+}
+.slick-preheader-panel .ui-droppable .slick-groupby-remove, .slick-preheader-panel .ui-droppable-hover .slick-groupby-remove {
+  color: #ffffff;
+  padding-left: 5px;
+}
+.slick-preheader-panel .ui-droppable, .slick-preheader-panel .ui-droppable-hover {
+  border: 1px solid #0e7d9e !important;
+}
+.slick-preheader-panel .ui-droppable .slick-placeholder, .slick-preheader-panel .ui-droppable-hover .slick-placeholder {
+  font-style: italic;
+  color:#5a636a;
+  font-size: 14px;
+}
+.receipt_collection_report a {
+  color: #007bff;
+  font-weight: bold;
+  cursor: pointer !important;
+  text-decoration: underline !important;
+}
+.receipt_collection_report {
+  color: #007bff;
+  font-weight: bold;
+}
+.slick-cell {
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
+  font-size: 16px !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  text-align: left;
+}
+.slick-group-title span {
+  color: #0e7d9e !important;
+}
+b.total-footer-report {
+  color: black !important;
+}
+.slick-gridmenu-button {
+  font-size: 18px !important;
+    color: #0e7d9e !important;
+}
+.slick-header-column {
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse; 
+}
 td.tdTone2 {
   width: 250px !important;
 }

@@ -8,6 +8,8 @@ import { ReportSortComponent } from './reports-filter-sort/report-sort/report-so
 
 import { AngularSlickgridModule } from 'angular-slickgrid';
 import { TranslateService} from '@ngx-translate/core';
+import { Reports2Component } from './reports2/reports2.component';
+import { CollectionReportComponent } from './reports2/collection-report/collection-report.component';
 
 
 @NgModule({
@@ -17,7 +19,7 @@ import { TranslateService} from '@ngx-translate/core';
 		SharedmoduleModule,
 		AngularSlickgridModule.forRoot()
 	],
-	declarations: [ReportsComponent, ReportFilterComponent, ReportSortComponent],
+	declarations: [ReportsComponent, ReportFilterComponent, ReportSortComponent, Reports2Component, CollectionReportComponent],
 	entryComponents: [ReportFilterComponent, ReportSortComponent],
 	providers: [TranslateService],
 })
