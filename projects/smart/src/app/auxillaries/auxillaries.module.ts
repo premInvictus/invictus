@@ -9,6 +9,9 @@ import { SubjectPeriodCounterComponent } from './subject-period-counter/subject-
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import { TeacherWiseTimetableComponent } from './teacher-wise-timetable/teacher-wise-timetable.component';
 import { ClassWiseTimetableComponent } from './class-wise-timetable/class-wise-timetable.component';
+import { SchedulerListViewComponent } from './scheduler/scheduler-list-view/scheduler-list-view.component';
+import { SchedulerCalenderViewComponent } from './scheduler/scheduler-calender-view/scheduler-calender-view.component';
+import { AddSchedulerComponent } from './scheduler/add-scheduler/add-scheduler.component';
 
 @NgModule({
 	imports: [
@@ -17,6 +20,16 @@ import { ClassWiseTimetableComponent } from './class-wise-timetable/class-wise-t
 		LoadingModule,
 		SmartSharedModule,
 	],
-	declarations: [TimeTableComponent, SubjectPeriodCounterComponent, SchedulerComponent, TeacherWiseTimetableComponent, ClassWiseTimetableComponent]
+	declarations: [
+		TimeTableComponent,
+		SubjectPeriodCounterComponent,
+		SchedulerComponent,
+		TeacherWiseTimetableComponent,
+		ClassWiseTimetableComponent,
+		SchedulerListViewComponent,
+		SchedulerCalenderViewComponent,
+		AddSchedulerComponent
+	],
+	entryComponents: [AddSchedulerComponent]
 })
 export class AuxillariesModule { }
