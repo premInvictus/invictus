@@ -112,6 +112,35 @@ export class TimeTableComponent implements OnInit {
 			);
 	}
 
+	getPeriodDayByClass() {
+		const dayParam: any = {};
+		dayParam.class_id = this.uploadTimeTableForm.value.tt_class_id;
+		this.syllabusService.getPeriodDayByClass(dayParam)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						console.log(result.data);
+						this.uploadTimeTableForm.patchValue({
+							'no_of_day': result.data[0].no_of_day.toString(),
+							'no_of_period': result.data[0].no_of_period.toString(),
+						});
+					} else {
+						this.commonService.showSuccessErrorMessage('Please add day and period for class.', 'error');
+					}
+				});
+	}
+
+	addPeriod(event) {
+		if (event.checked) {
+			this.uploadTimeTableForm.patchValue({
+				no_of_period: Number(this.uploadTimeTableForm.value.no_of_period) + 1,
+			});
+		} else {
+			this.uploadTimeTableForm.patchValue({
+				no_of_period: Number(this.uploadTimeTableForm.value.no_of_period) - 1,
+			});
+		}
+	}
 	// function to get excel data in file varaible
 	incomingfile(event) {
 		this.file = '';
@@ -197,6 +226,7 @@ export class TimeTableComponent implements OnInit {
 			const param: any = {};
 			param.class_id = this.uploadTimeTableForm.value.tt_class_id;
 			param.no_of_days = this.uploadTimeTableForm.value.no_of_day;
+			param.no_of_period = this.uploadTimeTableForm.value.no_of_period;
 			this.syllabusService.downloadTimeTableExcel(param)
 				.subscribe(
 					(excel_r: any) => {
@@ -260,7 +290,7 @@ export class TimeTableComponent implements OnInit {
 					no_of_period: i,
 				});
 			}
-			if (Number(this.uploadTimeTableForm.value.no_of_day) === 6 || Number(this.uploadTimeTableForm.value.no_of_day === 7 )) {
+			if (Number(this.uploadTimeTableForm.value.no_of_day) === 6 || Number(this.uploadTimeTableForm.value.no_of_day === 7)) {
 				if (this.finalXlslArray[i].saturday_id !== '') {
 					this.finalSubmitArray.push({
 						day: 'Saturday',

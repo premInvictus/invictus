@@ -27,7 +27,6 @@ export class EditSyllabusComponent implements OnInit {
 		this.revieweditform = this.fbuild.group({
 			class_name: '',
 			sub_name: '',
-			term_name: '',
 			topic_name: '',
 			subtopic_name: '',
 			ctr_name: '',
@@ -72,7 +71,6 @@ export class EditSyllabusComponent implements OnInit {
 						this.revieweditform.patchValue({
 							'class_name': result.data[0].class_name,
 							'sub_name': result.data[0].sub_name,
-							'term_name': result.data[0].term_name,
 							'topic_name': result.data[0].topic_name,
 							'subtopic_name': result.data[0].st_name,
 							'ctr_name': result.data[0].ctr_name,

@@ -12,6 +12,7 @@ import { AuthGuard } from './_guards';
 import { LoaderService, CommonAPIService, SisService, AxiomService, SmartService } from './_services';
 import { SmartusertypeService } from './smartusertype/smartusertype.service';
 
+
 const providers = [NotificationsService,
 	AuthGuard,
 	LoaderService,
@@ -22,7 +23,7 @@ const providers = [NotificationsService,
 	SmartService];
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
 	],
 	imports: [
 		BrowserModule,
