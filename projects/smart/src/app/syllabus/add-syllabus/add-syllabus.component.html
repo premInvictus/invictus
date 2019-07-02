@@ -176,7 +176,7 @@
                               <button *ngIf="syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral" (click)="updateSyllabussList()">Update</button>
                               <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>
                           </div>
-                          <input type="file"  id ="file" style="display: none !important;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx">
+                          <input type="file"  id ="file" style="display: none !important;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xls">
                           <span style="float:right; padding-right: 10px;font-size:12px;">
                             Have already syllabus?&nbsp;&nbsp;
                             <label for="file">  <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i> </label>
@@ -185,9 +185,9 @@
                           <br>
                           <br>
                           <span style="float:right; padding-right: 10px; font-size:10px;">
-                            <a href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/uploadSyllabus.xlsx">
-                                <img style="cursor: pointer" src="/assets/images/xml.svg" 
-                            matTooltip="Click to Download"></a>&nbsp;&nbsp;Sample Excel Sheet
+                                <img style="cursor: pointer" src="/assets/images/xml.svg" (click)="excelDownload()"
+                            matTooltip="Click to Download">                        
+                        &nbsp;&nbsp;Sample Excel Sheet
                         </span>
                       </div>
                   </form>

@@ -126,11 +126,11 @@ export class SmartService {
 	}
 	getTopicNameById(value: any) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getTopicNameById', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getTopicNameById', value);
 	}
 	getSubTopicNameById(value: any) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getSubTopicNameById', value);
+		return this.http.post(environment.apiSmartUrl + '/common/getSubTopicNameById', value);
 	}
 	assignmentInsert(value: any) {
 		this.service.startLoading();
@@ -154,26 +154,30 @@ export class SmartService {
 	}
 	insertTimetable(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/Smttimetable/insertTimetable', value);
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/insertTimetable', value);
 	}
 	insertTimetableDetails(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/Smttimetable/insertTimetableDetails', value);
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/insertTimetableDetails', value);
 	}
 	downloadTimeTableExcel(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/excelimportexport/downloadTimeTableExcel', value);
 	}
+	downloadSyllabusExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/excelimportexport/downloadSyllabusExcel', value);
+	}
 	getTimeTableId(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/Smttimetable/getTimeTableId', value);
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getTimeTableId', value);
 	}
 	getClasswiseDetails(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/Smttimetable/getClasswiseDetails', value);
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getClasswiseDetails', value);
 	}
 	getTeacherwiseTableDetails(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/Smttimetable/getTeacherwiseTableDetails', value);
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getTeacherwiseTableDetails', value);
 	}
 }
