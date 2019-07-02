@@ -23,30 +23,7 @@ export class AppComponent implements OnInit {
 		timeOut: 3000,
 		lastOnBottom: true
 	};
-	showLoadingFlag;
-	constructor(private router: Router, private loaderService: CommonAPIService) {
-		this.loaderService.showLoading.subscribe((flag: boolean) => {
-			this.showLoadingFlag = flag;
-		});
-		this.router.events.subscribe((event: Event) => {
-			switch (true) {
-				case event instanceof NavigationStart: {
-					this.showLoadingFlag = true;
-					break;
-				}
-
-				case event instanceof NavigationEnd:
-				case event instanceof NavigationCancel:
-				case event instanceof NavigationError: {
-					this.showLoadingFlag = false;
-					break;
-				}
-				default: {
-					break;
-				}
-			}
-		});
-	}
+	constructor(private router: Router, private loaderService: CommonAPIService) {}
 
 	ngOnInit() {
 		this.getCurrentUrl();
