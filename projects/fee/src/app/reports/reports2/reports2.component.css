@@ -96,16 +96,23 @@ th.mat-header-cell {
   font-size: 16px !important;
 }
 button.change-bt{
-  color: white !important;
-  background-color: #005AAB !important;
-  height: 33px !important;
-  text-transform: uppercase;
-  width: 145px !important;
-}
-button.change-bt:hover{
   color: #005AAB !important;
   background-color: white !important ;
-  border: 2px solid  #005AAB;
-  height: 33px;
+  height: 33px !important;
+  text-transform: uppercase;
+  font-weight: bold;
   width: 145px !important;
+}
+button.change-bt:hover {
+  color: white !important;
+  background-color: #005AAB !important;
+  border: 2px solid #005AAB;
+  height: 33px !important;
+  font-weight: bold;
+  padding: 0px;
+  width: 145px !important;
+}
+.change-report-button {
+  float: right !important;
+  margin-right: 10px;
 }

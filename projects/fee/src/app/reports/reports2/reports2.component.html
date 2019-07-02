@@ -40,13 +40,15 @@
               <mat-panel-title>
                 <span class="text-uppercase font-size-16 font-white">{{reportHeader | uppercase}}</span>
               </mat-panel-title>
+              <div class="change-report-button">
+                <button class="change-bt btn-spacer" mat-raised-button (click)="switchReport()">
+                  change report
+                </button>
+              </div>
             </mat-expansion-panel-header>
             <div class="row">
               <div class="col-12">
                 <div class="text-center">
-                  <button class="change-bt btn-spacer" mat-raised-button (click)="switchReport()">
-                    change report
-                  </button>
                 </div>
               </div>
             </div>
