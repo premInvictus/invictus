@@ -178,6 +178,7 @@ export class ReviewSyllabusComponent implements OnInit {
 							param.mod_review_by = this.currentUser.login_id;
 							param.mod_review_status = '1';
 							param.mod_title = '1';
+							param.mod_project_id = '4';
 							this.syllabusService.insertPublishSyllabus(param)
 								.subscribe(
 									(publishResult: any) => {

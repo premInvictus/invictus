@@ -141,6 +141,7 @@ export class BrowseSyllabusComponent implements OnInit {
 							param.mod_review_reason_id = param2.sd_unpublish_reason_id;
 							param.mod_review_status = '2';
 							param.mod_title = '1';
+							param.mod_project_id = '4';
 							this.syllabusService.insertPublishSyllabus(param)
 								.subscribe(
 									(updateResult: any) => {

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
 import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-add-syllabus',
 	templateUrl: './add-syllabus.component.html',
@@ -46,6 +47,9 @@ export class AddSyllabusComponent implements OnInit {
 	ckeConfig: any = {};
 	submitParam: any = {};
 	subTopicJson: any[] = [];
+	category_id: any;
+	topic_id: any;
+	subtopic_id: any;
 	add = 'Add';
 	constructor(
 		private fbuild: FormBuilder,
@@ -120,26 +124,23 @@ export class AddSyllabusComponent implements OnInit {
 				this.commonService.showSuccessErrorMessage('Execel is blank. Please Choose another excel.', 'error');
 				return false;
 			}
-			const xlslHeader = Object.keys(this.XlslArray[0]);
-			if (xlslHeader[0] !== 'Topic' || xlslHeader[1] !== 'Subtopic' || xlslHeader[2] !== 'Period'
-			|| xlslHeader[3] !== 'Category' ||  xlslHeader[4] !== 'Description') {
-				this.commonService.showSuccessErrorMessage('Excel heading should be same as Sample excel heading.', 'error');
-				return false;
-			}
 			for (let i = 0; i < this.XlslArray.length; i++) {
+				this.category_id = this.XlslArray[i].CATEGORY ? this.XlslArray[i].CATEGORY.split('-') : '0';
+				this.topic_id = this.XlslArray[i].TOPIC ? this.XlslArray[i].TOPIC.split('-') : '0';
+				this.subtopic_id = this.XlslArray[i].SUBTOPIC ? this.XlslArray[i].SUBTOPIC.split('-') : '0';
 				this.finalXlslArray.push({
-					sd_ctr_id: this.XlslArray[i].Category,
-					sd_topic_id: this.XlslArray[i].Topic,
-					sd_period_req: this.XlslArray[i].Period,
-					sd_st_id: this.XlslArray[i].Subtopic,  
-					sd_desc: this.XlslArray[i].Description,
+					sd_ctr_id: this.category_id[0],
+					sd_topic_id: this.topic_id[0],
+					sd_period_req: this.XlslArray[i].PERIOD,
+					sd_st_id: this.subtopic_id[0],
+					sd_desc: this.XlslArray[i].DESCRIPTION,
 				});
 				if (i === (this.XlslArray.length - 1)) {
-					this.subtopic_id_string = this.subtopic_id_string + this.XlslArray[i].Subtopic;
-					this.topic_id_string = this.topic_id_string + this.XlslArray[i].Topic;
+					this.subtopic_id_string = this.subtopic_id_string + this.subtopic_id[0];
+					this.topic_id_string = this.topic_id_string + this.topic_id[0];
 				} else {
-					this.subtopic_id_string = this.subtopic_id_string + this.XlslArray[i].Subtopic + ',';
-					this.topic_id_string = this.topic_id_string + this.XlslArray[i].Topic + ',';
+					this.subtopic_id_string = this.subtopic_id_string + this.subtopic_id[0] + ',';
+					this.topic_id_string = this.topic_id_string + this.topic_id[0] + ',';
 				}
 			}
 			this.getTopicNameById(this.topic_id_string);
@@ -436,9 +437,20 @@ export class AddSyllabusComponent implements OnInit {
 			this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
 		}
 	}
-
-
-
+	excelDownload() {
+		const param: any = {};
+		param.class_id = this.syllabusForm.value.syl_class_id;;
+		param.sub_id = this.syllabusForm.value.syl_sub_id;
+		this.syllabusService.downloadSyllabusExcel(param)
+			.subscribe(
+				(excel_r: any) => {
+					if (excel_r && excel_r.status === 'ok') {
+						const length = excel_r.data.split('/').length;
+						saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+						this.resetForm();
+					}
+				});
+	}
 	// Add syllabus list function
 	addxlslDetailsList(xlsl_array) {
 		this.finaldivflag = false;
@@ -570,7 +582,7 @@ export class AddSyllabusComponent implements OnInit {
 				sd_period_test: sd_period_test2,
 				sd_period_revision: sd_period_revision2,
 				sd_st_id: this.syllabusDetailForm.value.sd_st_id,
-				sd_desc: this.syllabusDetailForm.value.sd_desc, 
+				sd_desc: this.syllabusDetailForm.value.sd_desc,
 			});
 			if (this.finalSpannedArray.length > 0) {
 				this.finalSpannedArray[this.syllabusValue1].details.splice(this.syllabusValue2, 1);
