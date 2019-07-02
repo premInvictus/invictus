@@ -91,90 +91,90 @@
                </div>
             </form>
             <div *ngIf="tableCollection">
-               <div class="row" *ngIf="!essayFlag">
-                  <div class="col-lg-12 col-mobile-view-add-ques">
+               <div class="row row-remove-top-margin" *ngIf="!essayFlag">
+                  <div class="col-lg-12">
                      <div *ngIf="tableCollection">
                         <div *ngIf="tableCollectionMCQ">
-                           <div class="example-container table-box-main" *ngIf="listtemp==1">
-                              <div class="example-header table-filter">
-                                 <mat-form-field>
+                           <div *ngIf="listtemp==1">
+                              <div class="col-sm-12 col-md-2 col-lg-2 col-xl-2 pd_left">
+                                 <mat-form-field class="form-field">
                                     <input matInput (keyup)="applyFilterMCQ($event.target.value)" placeholder="Filter">
                                     <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp;
                                     </span>
                                  </mat-form-field>
                               </div>
-                              <mat-table class="specific-table question-management-table-main-structure" #table
-                                 [dataSource]="mcqdataSource" matSort>
-                                 <!-- Position Column -->
-                                 <ng-container matColumnDef="position">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-position">S No.
-                                    </mat-header-cell>
-                                    <mat-cell class="mcq-position" *matCellDef="let item">Q-{{item.position}}
-                                    </mat-cell>
-                                 </ng-container>
-                                 <!-- Questions Name Column -->
-                                 <ng-container matColumnDef="question">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-question"> Questions
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mcq-question">
-                                       <div class="imgClassExpress" [MathJax]="item.question"></div>
-                                    </mat-cell>
-                                 </ng-container>
-                                 <!-- Options Name Column -->
-                                 <ng-container matColumnDef="options">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-options">Options
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mcq-options">
-                                       <div class="changeTableMCQ imgClassExpress" [MathJax]="item.options"></div>
-                                    </mat-cell>
-                                 </ng-container>
-                                 <!-- Explanation Name Column -->
-                                 <ng-container matColumnDef="explanations">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-explanation">
-                                       Explanations
-                                    </mat-header-cell>
-                                    <mat-cell class="mcq-explanation" *matCellDef="let item">
-                                       <div [MathJax]="item.explanations"></div>
-                                    </mat-cell>
-                                 </ng-container>
-                                 <!-- Class Name Column -->
-                                 <ng-container matColumnDef="class">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-class">Class
-                                    </mat-header-cell>
-                                    <mat-cell class="mcq-class" *matCellDef="let item">{{item.class}} </mat-cell>
-                                 </ng-container>
-                                 <!-- Topic Name Column -->
-                                 <ng-container matColumnDef="topic">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-topic">Topic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mcq-topic">{{item.topic}}</mat-cell>
-                                 </ng-container>
-                                 <!-- Subtopic Name Column -->
-                                 <ng-container matColumnDef="subtopic" class="mcq-subtopic">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>SubTopic</mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mcq-subtopic">{{item.subtopic}}</mat-cell>
-                                 </ng-container>
-                                 <!-- Details Name Column -->
-                                 <ng-container matColumnDef="details">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-details"> Details
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mcq-details">
-                                       <div [innerHTML]="item.details"></div>
-                                    </mat-cell>
-                                 </ng-container>
-                                 <!-- Action Column -->
-                                 <ng-container matColumnDef="action">
-                                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="padding">
-                                       <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
-                                          data-placement="top" matTooltip="UnPublish" aria-hidden="true"
-                                          (click)="openModal(template);getCurrentUnpublishedQues(item.action)"></i>
-                                    </mat-cell>
-                                 </ng-container>
-                                 <mat-header-row class="top_header" *matHeaderRowDef="mcqdisplayedColumns">
-                                 </mat-header-row>
-                                 <mat-row *matRowDef="let row; columns: mcqdisplayedColumns;"></mat-row>
-                              </mat-table>
+                              <div class="over_flow">
+                                 <table mat-table class="specific-table" [dataSource]="mcqdataSource" matSort>
+                                    <!-- Position Column -->
+                                    <ng-container matColumnDef="position">
+                                       <th mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-position">S No.
+                                       </th>
+                                       <td mat-cell class="mcq-position" *matCellDef="let item">Q-{{item.position}}</td>
+                                    </ng-container>
+                                    <!-- Questions Name Column -->
+                                    <ng-container matColumnDef="question">
+                                       <th mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-question">
+                                          Questions </th>
+                                       <td mat-cell *matCellDef="let item" class="mcq-question">
+                                          <div class="imgClassExpress" [MathJax]="item.question"></div>
+                                       </td>
+                                    </ng-container>
+                                    <!-- Options Name Column -->
+                                    <ng-container matColumnDef="options">
+                                       <th mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-options">Options
+                                       </th>
+                                       <td mat-cell *matCellDef="let item" class="mcq-options">
+                                          <div class="changeTableMCQ imgClassExpress" [MathJax]="item.options"></div>
+                                       </td>
+                                    </ng-container>
+                                    <!-- Explanation Name Column -->
+                                    <ng-container matColumnDef="explanations">
+                                       <th mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-explanation">
+                                          Explanations</th>
+                                       <td mat-cell class="mcq-explanation" *matCellDef="let item">
+                                          <div [MathJax]="item.explanations"></div>
+                                       </td>
+                                    </ng-container>
+                                    <!-- Class Name Column -->
+                                    <ng-container matColumnDef="class">
+                                       <th mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-class">Class
+                                       </th>
+                                       <td mat-cell class="mcq-class" *matCellDef="let item">{{item.class}} </td>
+                                    </ng-container>
+                                    <!-- Topic Name Column -->
+                                    <ng-container matColumnDef="topic">
+                                       <th mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-topic">Topic
+                                       </th>
+                                       <td mat-cell *matCellDef="let item" class="mcq-topic">{{item.topic}}</td>
+                                    </ng-container>
+                                    <!-- Subtopic Name Column -->
+                                    <ng-container matColumnDef="subtopic" class="mcq-subtopic">
+                                       <th mat-header-cell *matHeaderCellDef mat-sort-header>SubTopic</th>
+                                       <td mat-cell *matCellDef="let item" class="mcq-subtopic">{{item.subtopic}}</td>
+                                    </ng-container>
+                                    <!-- Details Name Column -->
+                                    <ng-container matColumnDef="details">
+                                       <th mat-header-cell *matHeaderCellDef mat-sort-header class="mcq-details">
+                                          Details
+                                       </th>
+                                       <td mat-cell *matCellDef="let item" class="mcq-details">
+                                          <div [innerHTML]="item.details"></div>
+                                       </td>
+                                    </ng-container>
+                                    <!-- Action Column -->
+                                    <ng-container matColumnDef="action">
+                                       <th mat-header-cell *matHeaderCellDef> Action </th>
+                                       <td mat-cell *matCellDef="let item" class="padding">
+                                          <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
+                                             data-placement="top" matTooltip="UnPublish" aria-hidden="true"
+                                             (click)="openModal(template);getCurrentUnpublishedQues(item.action)"></i>
+                                       </td>
+                                    </ng-container>
+                                    <tr class="top_header" mat-header-row *matHeaderRowDef="mcqdisplayedColumns">
+                                    </tr>
+                                    <tr mat-row *matRowDef="let row; columns: mcqdisplayedColumns;"></tr>
+                                 </table>
+                              </div>
                            </div>
                            <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]"
                               [showFirstLastButtons]="true">
@@ -283,75 +283,75 @@
                                  [dataSource]="multimcqdataSource" matSort>
                                  <!-- Position Column -->
                                  <ng-container matColumnDef="positionMulti">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-position">S No.
-                                    </mat-header-cell>
-                                    <mat-cell class="multi-mcq-position" *matCellDef="let item">Q-{{item.positionMulti}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="multi-mcq-position">S No.
+                                    </th>
+                                    <td class="multi-mcq-position" *matCellDef="let item">Q-{{item.positionMulti}}
+                                    </td>
                                  </ng-container>
                                  <!-- Questions Name Column -->
                                  <ng-container matColumnDef="questionMulti">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-question">
+                                    <th *matHeaderCellDef mat-sort-header class="multi-mcq-question">
                                        Questions
-                                    </mat-header-cell>
-                                    <mat-cell class="multi-mcq-question" *matCellDef="let item">
+                                    </th>
+                                    <td class="multi-mcq-question" *matCellDef="let item">
                                        <div class="imgClassExpress" [MathJax]="item.questionMulti"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Options Name Column -->
                                  <ng-container matColumnDef="optionsMulti">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-options">Options
-                                    </mat-header-cell>
-                                    <mat-cell class="multi-mcq-options" *matCellDef="let item">
+                                    <th *matHeaderCellDef mat-sort-header class="multi-mcq-options">Options
+                                    </th>
+                                    <td class="multi-mcq-options" *matCellDef="let item">
                                        <div class="changeTableMultiMCQ imgClassExpress" [MathJax]="item.optionsMulti">
                                        </div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Explanations Name Column -->
                                  <ng-container matColumnDef="explanationsMulti">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-explanation">
+                                    <th *matHeaderCellDef mat-sort-header class="multi-mcq-explanation">
                                        Explanations
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="multi-mcq-explanation">
+                                    </th>
+                                    <td *matCellDef="let item" class="multi-mcq-explanation">
                                        <div [MathJax]="item.explanationsMulti"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <ng-container matColumnDef="classMulti">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-class">Class
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="multi-mcq-class">{{item.classMulti}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="multi-mcq-class">Class
+                                    </th>
+                                    <td *matCellDef="let item" class="multi-mcq-class">{{item.classMulti}}
+                                    </td>
                                  </ng-container>
                                  <ng-container matColumnDef="topicMulti">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-topic">Topic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="multi-mcq-topic">{{item.topicMulti}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="multi-mcq-topic">Topic
+                                    </th>
+                                    <td *matCellDef="let item" class="multi-mcq-topic">{{item.topicMulti}}
+                                    </td>
                                  </ng-container>
                                  <ng-container matColumnDef="subtopicMulti">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-subtopic">
+                                    <th *matHeaderCellDef mat-sort-header class="multi-mcq-subtopic">
                                        SubTopic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="multi-mcq-subtopic">{{item.subtopicMulti}}
-                                    </mat-cell>
+                                    </th>
+                                    <td *matCellDef="let item" class="multi-mcq-subtopic">{{item.subtopicMulti}}
+                                    </td>
                                  </ng-container>
                                  <!-- Details Name Column -->
                                  <ng-container matColumnDef="detailsMulti">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="multi-mcq-detials">
+                                    <th *matHeaderCellDef mat-sort-header class="multi-mcq-detials">
                                        Details
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="multi-mcq-detials">
+                                    </th>
+                                    <td *matCellDef="let item" class="multi-mcq-detials">
                                        <div [innerHTML]="item.detailsMulti"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Action Column -->
                                  <ng-container matColumnDef="actionMulti">
-                                    <mat-header-cell *matHeaderCellDef class="multi-mcq-detials"> Action
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="multi-mcq-detials">
+                                    <th *matHeaderCellDef class="multi-mcq-detials"> Action
+                                    </th>
+                                    <td *matCellDef="let item" class="multi-mcq-detials">
                                        <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="UnPublish" aria-hidden="true"
                                           (click)="openModal(template);getCurrentUnpublishedQues(item.actionMulti)"></i>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <mat-header-row class="top_header" *matHeaderRowDef="multimcqdisplayedColumns">
                                  </mat-header-row>
@@ -374,70 +374,70 @@
                                  [dataSource]="tfdataSource" matSort>
                                  <!-- Position Column -->
                                  <ng-container matColumnDef="positionTF">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-position">S No.
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="tf-position">Q-{{item.positionTF}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="tf-position">S No.
+                                    </th>
+                                    <td *matCellDef="let item" class="tf-position">Q-{{item.positionTF}}
+                                    </td>
                                  </ng-container>
                                  <!-- Questions Name Column -->
                                  <ng-container matColumnDef="questionTF">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-question"> Questions
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="tf-question">
+                                    <th *matHeaderCellDef mat-sort-header class="tf-question"> Questions
+                                    </th>
+                                    <td *matCellDef="let item" class="tf-question">
                                        <div class="imgClassExpress" [MathJax]="item.questionTF"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Options Name Column -->
                                  <ng-container matColumnDef="optionsTF">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-options">Options
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="tf-options">
+                                    <th *matHeaderCellDef mat-sort-header class="tf-options">Options
+                                    </th>
+                                    <td *matCellDef="let item" class="tf-options">
                                        <div class="changeTableTF" [innerHTML]="item.optionsTF"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Options Name Column -->
                                  <ng-container matColumnDef="explanationsTF">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-explanation">
+                                    <th *matHeaderCellDef mat-sort-header class="tf-explanation">
                                        Explanations
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="tf-explanation">
+                                    </th>
+                                    <td *matCellDef="let item" class="tf-explanation">
                                        <div [MathJax]="item.explanationsTF"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- class Column -->
                                  <ng-container matColumnDef="classTF">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-class">Class
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="tf-class">{{item.classTF}} </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="tf-class">Class
+                                    </th>
+                                    <td *matCellDef="let item" class="tf-class">{{item.classTF}} </td>
                                  </ng-container>
                                  <!-- topic Column -->
                                  <ng-container matColumnDef="topicTF">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-topic">Topic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="tf-topic">{{item.topicTF}} </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="tf-topic">Topic
+                                    </th>
+                                    <td *matCellDef="let item" class="tf-topic">{{item.topicTF}} </td>
                                  </ng-container>
                                  <!-- subtopic Column -->
                                  <ng-container matColumnDef="subtopicTF">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-subtopic">SubTopic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="tf-subtopic">{{item.subtopicTF}} </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="tf-subtopic">SubTopic
+                                    </th>
+                                    <td *matCellDef="let item" class="tf-subtopic">{{item.subtopicTF}} </td>
                                  </ng-container>
                                  <!-- Details Name Column -->
                                  <ng-container matColumnDef="detailsTF">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tf-details"> Details
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="tf-details">
+                                    <th *matHeaderCellDef mat-sort-header class="tf-details"> Details
+                                    </th>
+                                    <td *matCellDef="let item" class="tf-details">
                                        <div [innerHTML]="item.detailsTF"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Action Column -->
                                  <ng-container matColumnDef="actionTF">
-                                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-                                    <mat-cell *matCellDef="let item">
+                                    <th *matHeaderCellDef> Action </th>
+                                    <td *matCellDef="let item">
                                        <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="UnPublish" aria-hidden="true"
                                           (click)="openModal(template);getCurrentUnpublishedQues(item.actionTF)"></i>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <mat-header-row class="top_header" *matHeaderRowDef="tfdisplayedColumns">
                                  </mat-header-row>
@@ -462,72 +462,72 @@
                                  #table [dataSource]="matchdataSource" matSort>
                                  <!-- Position Column -->
                                  <ng-container matColumnDef="positionMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-position">S No.
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mtf-position">Q-{{item.positionMatch}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="mtf-position">S No.
+                                    </th>
+                                    <td *matCellDef="let item" class="mtf-position">Q-{{item.positionMatch}}
+                                    </td>
                                  </ng-container>
                                  <!-- Questions Name Column -->
                                  <ng-container matColumnDef="questionMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-question"> Questions
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mtf-question">
+                                    <th *matHeaderCellDef mat-sort-header class="mtf-question"> Questions
+                                    </th>
+                                    <td *matCellDef="let item" class="mtf-question">
                                        <div class="imgClassExpress" [MathJax]="item.questionMatch"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Options Name Column -->
                                  <ng-container matColumnDef="optionsMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-options">Options
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mtf-options">
+                                    <th *matHeaderCellDef mat-sort-header class="mtf-options">Options
+                                    </th>
+                                    <td *matCellDef="let item" class="mtf-options">
                                        <div class="changeTableMatch imgClassExpress" [MathJax]="item.optionsMatch">
                                        </div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Options Name Column -->
                                  <ng-container matColumnDef="explanationsMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-explanation">
+                                    <th *matHeaderCellDef mat-sort-header class="mtf-explanation">
                                        Explanations
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mtf-explanation">
+                                    </th>
+                                    <td *matCellDef="let item" class="mtf-explanation">
                                        <div [MathJax]="item.explanationsMatch"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Class Name Column -->
                                  <ng-container matColumnDef="classMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-class">Class
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mtf-class">{{item.classMatch}} </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="mtf-class">Class
+                                    </th>
+                                    <td *matCellDef="let item" class="mtf-class">{{item.classMatch}} </td>
                                  </ng-container>
                                  <!-- Topic Name Column -->
                                  <ng-container matColumnDef="topicMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-topic">Topic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mtf-topic">{{item.topicMatch}} </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="mtf-topic">Topic
+                                    </th>
+                                    <td *matCellDef="let item" class="mtf-topic">{{item.topicMatch}} </td>
                                  </ng-container>
                                  <!-- SubTOpic Name Column -->
                                  <ng-container matColumnDef="subtopicMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-subtopic">SubTopic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mtf-subtopic">{{item.subtopicMatch}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="mtf-subtopic">SubTopic
+                                    </th>
+                                    <td *matCellDef="let item" class="mtf-subtopic">{{item.subtopicMatch}}
+                                    </td>
                                  </ng-container>
                                  <!-- Details Name Column -->
                                  <ng-container matColumnDef="detailsMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="mtf-details"> Details
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mtf-details">
+                                    <th *matHeaderCellDef mat-sort-header class="mtf-details"> Details
+                                    </th>
+                                    <td *matCellDef="let item" class="mtf-details">
                                        <div [innerHTML]="item.detailsMatch"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Action Column -->
                                  <ng-container matColumnDef="actionMatch">
-                                    <mat-header-cell *matHeaderCellDef class="mtf-action"> Action </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="mtf-action">
+                                    <th *matHeaderCellDef class="mtf-action"> Action </th>
+                                    <td *matCellDef="let item" class="mtf-action">
                                        <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="UnPublish" aria-hidden="true"
                                           (click)="openModal(template);getCurrentUnpublishedQues(item.actionMatch)"></i>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <mat-header-row class="top_header mtf_top_header"
                                     *matHeaderRowDef="matchdisplayedColumns">
@@ -554,75 +554,75 @@
                                  #table [dataSource]="matrixmatchdataSource" matSort>
                                  <!-- Position Column -->
                                  <ng-container matColumnDef="positionMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-position">S No.
-                                    </mat-header-cell>
-                                    <mat-cell class="matrix-position" *matCellDef="let item">
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-position">S No.
+                                    </th>
+                                    <td class="matrix-position" *matCellDef="let item">
                                        Q-{{item.positionMatrixMatch}}
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Questions Name Column -->
                                  <ng-container matColumnDef="questionMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-question">
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-question">
                                        Questions
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-question">
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-question">
                                        <div class="imgClassExpress" [MathJax]="item.questionMatrixMatch"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <ng-container matColumnDef="answerMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-options">Answer
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-options">
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-options">Answer
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-options">
                                        <div class="imgClassExpress" [MathJax]="item.answerMatrixMatch"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Options Name Column -->
                                  <ng-container matColumnDef="explanationsMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-explanation">
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-explanation">
                                        Explanations
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-explanation">
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-explanation">
                                        <div [MathJax]="item.explanationsMatrixMatch"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Class Column -->
                                  <ng-container matColumnDef="classMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-class">Class
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-class">{{item.classMatrixMatch}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-class">Class
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-class">{{item.classMatrixMatch}}
+                                    </td>
                                  </ng-container>
                                  <!-- Topic Column -->
                                  <ng-container matColumnDef="topicMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-topic">Topic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-topic">{{item.topicMatrixMatch}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-topic">Topic
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-topic">{{item.topicMatrixMatch}}
+                                    </td>
                                  </ng-container>
                                  <!-- Subtopic Column -->
                                  <ng-container matColumnDef="subtopicMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-subtopic">SubTopic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-subtopic">
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-subtopic">SubTopic
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-subtopic">
                                        {{item.subtopicMatrixMatch}}
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Details Name Column -->
                                  <ng-container matColumnDef="detailsMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-details"> Details
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-details">
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-details"> Details
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-details">
                                        <div [innerHTML]="item.detailsMatrixMatch"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Action Column -->
                                  <ng-container matColumnDef="actionMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef class="matrix-action">Action </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-action">
+                                    <th *matHeaderCellDef class="matrix-action">Action </th>
+                                    <td *matCellDef="let item" class="matrix-action">
                                        <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="UnPublish" aria-hidden="true"
                                           (click)="openModal(template);getCurrentUnpublishedQues(item.actionMatrixMatch)"></i>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <mat-header-row class="top_header matrix_top_header"
                                     *matHeaderRowDef="matrixmatchdisplayedColumns"></mat-header-row>
@@ -649,71 +649,71 @@
                                  [dataSource]="matrixmatch45dataSource" matSort>
                                  <!-- Position Column -->
                                  <ng-container matColumnDef="positionMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-position">S No.
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-position">
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-position">S No.
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-position">
                                        Q-{{item.positionMatrixMatch}}
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Questions Name Column -->
                                  <ng-container matColumnDef="questionMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-question">
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-question">
                                        Questions
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-question">
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-question">
                                        <div class="imgClassExpress questionDiv" [MathJax]="item.questionMatrixMatch">
                                        </div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <ng-container matColumnDef="answerMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-options">Answer
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-options">
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-options">Answer
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-options">
                                        <div [MathJax]="item.answerMatrixMatch"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Explanation Name Column -->
                                  <ng-container matColumnDef="explanationsMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="matrix-explanation">
+                                    <th *matHeaderCellDef mat-sort-header class="matrix-explanation">
                                        Explanations
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-explanation">
+                                    </th>
+                                    <td *matCellDef="let item" class="matrix-explanation">
                                        <div [MathJax]="item.explanationsMatrixMatch"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Class Column -->
                                  <ng-container matColumnDef="classMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
-                                    <mat-cell *matCellDef="let item">{{item.classMatrixMatch}} </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header>Class</th>
+                                    <td *matCellDef="let item">{{item.classMatrixMatch}} </td>
                                  </ng-container>
                                  <!-- Topic Column -->
                                  <ng-container matColumnDef="topicMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
-                                    <mat-cell *matCellDef="let item">{{item.topicMatrixMatch}} </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header>Topic</th>
+                                    <td *matCellDef="let item">{{item.topicMatrixMatch}} </td>
                                  </ng-container>
                                  <!-- SubTOpic Name Column -->
                                  <ng-container matColumnDef="subtopicMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>SubTopic</mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="padding explanation">
+                                    <th *matHeaderCellDef mat-sort-header>SubTopic</th>
+                                    <td *matCellDef="let item" class="padding explanation">
                                        {{item.subtopicMatrixMatch}}
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Details Name Column -->
                                  <ng-container matColumnDef="detailsMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="details padding"> Details
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="details paddingAction">
+                                    <th *matHeaderCellDef mat-sort-header class="details padding"> Details
+                                    </th>
+                                    <td *matCellDef="let item" class="details paddingAction">
                                        <div [innerHTML]="item.detailsMatrixMatch"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Action Column -->
                                  <ng-container matColumnDef="actionMatrixMatch">
-                                    <mat-header-cell *matHeaderCellDef class="matrix-action">Action </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="matrix-action">
+                                    <th *matHeaderCellDef class="matrix-action">Action </th>
+                                    <td *matCellDef="let item" class="matrix-action">
                                        <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="UnPublish" aria-hidden="true"
                                           (click)="openModal(template);getCurrentUnpublishedQues(item.actionMatrixMatch)"></i>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <mat-header-row class="top_header" *matHeaderRowDef="matrixmatch45displayedColumns">
                                  </mat-header-row>
@@ -739,62 +739,62 @@
                                  [dataSource]="singleintegerdataSource" matSort>
                                  <!-- Position Column -->
                                  <ng-container matColumnDef="position">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-position">S No.
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-position">Q-{{item.position}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="sub-position">S No.
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-position">Q-{{item.position}}
+                                    </td>
                                  </ng-container>
                                  <!-- Questions Name Column -->
                                  <ng-container matColumnDef="question">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-question"> Questions
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-question">
+                                    <th *matHeaderCellDef mat-sort-header class="sub-question"> Questions
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-question">
                                        <div [MathJax]="item.question" class="imgClassExpress"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Answer Name Column -->
                                  <ng-container matColumnDef="answer">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-answer">Answer
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-answer">
+                                    <th *matHeaderCellDef mat-sort-header class="sub-answer">Answer
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-answer">
                                        <button mat-icon
                                           style="border-radius: 50% !important;
                                                   border:none !important;color:white !important;
                                                   background-color: #6c65c8 !important;font-weight:bold !important;height:40px !important;width:40px !important">
                                           <div [MathJax]="item.answer" class="imgClassExpress"></div>
                                        </button>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Class Name Column -->
                                  <ng-container matColumnDef="class">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
-                                    <mat-cell *matCellDef="let item">{{item.class}}</mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header>Class</th>
+                                    <td *matCellDef="let item">{{item.class}}</td>
                                  </ng-container>
                                  <!-- Topic Name Column -->
                                  <ng-container matColumnDef="topic">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
-                                    <mat-cell *matCellDef="let item">{{item.topic}}</mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header>Topic</th>
+                                    <td *matCellDef="let item">{{item.topic}}</td>
                                  </ng-container>
                                  <!-- Sub Topic Name Column -->
                                  <ng-container matColumnDef="subtopic">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Sub Topic</mat-header-cell>
-                                    <mat-cell *matCellDef="let item">{{item.subtopic}}</mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header>Sub Topic</th>
+                                    <td *matCellDef="let item">{{item.subtopic}}</td>
                                  </ng-container>
                                  <!-- Details Name Column -->
                                  <ng-container matColumnDef="details">
-                                    <mat-header-cell *matHeaderCellDef> Details</mat-header-cell>
-                                    <mat-cell *matCellDef="let item">
+                                    <th *matHeaderCellDef> Details</th>
+                                    <td *matCellDef="let item">
                                        <div [innerHTML]="item.details"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Action Column -->
                                  <ng-container matColumnDef="action">
-                                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-                                    <mat-cell *matCellDef="let item">
+                                    <th *matHeaderCellDef> Action </th>
+                                    <td *matCellDef="let item">
                                        <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="UnPublish" aria-hidden="true"
                                           (click)="openModal(template);getCurrentUnpublishedQues(item.action)"></i>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <mat-header-row class="top_header" *matHeaderRowDef="singleintegerdisplayedColumns">
                                  </mat-header-row>
@@ -820,24 +820,24 @@
                                  [dataSource]="doubleintegerdataSource" matSort>
                                  <!-- Position Column -->
                                  <ng-container matColumnDef="position">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-position">S No.
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-position">Q-{{item.position}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="sub-position">S No.
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-position">Q-{{item.position}}
+                                    </td>
                                  </ng-container>
                                  <!-- Questions Name Column -->
                                  <ng-container matColumnDef="question">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-question"> Questions
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-question">
+                                    <th *matHeaderCellDef mat-sort-header class="sub-question"> Questions
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-question">
                                        <div [MathJax]="item.question" class="imgClassExpress"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Answer Name Column -->
                                  <ng-container matColumnDef="answer">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-answer">Answer
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-answer">
+                                    <th *matHeaderCellDef mat-sort-header class="sub-answer">Answer
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-answer">
                                        <button mat-icon
                                           style="border-radius: 50% !important;
                                                   border:none !important;color:white !important;
@@ -850,38 +850,38 @@
                                                   background-color: #6c65c8 !important;font-weight:bold !important;height:40px !important;width:40px !important">
                                           <div [MathJax]="item.answer.charAt(1)" class="imgClassExpress"></div>
                                        </button>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Class Name Column -->
                                  <ng-container matColumnDef="class">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Class</mat-header-cell>
-                                    <mat-cell *matCellDef="let item">{{item.class}}</mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header>Class</th>
+                                    <td *matCellDef="let item">{{item.class}}</td>
                                  </ng-container>
                                  <!-- Topic Name Column -->
                                  <ng-container matColumnDef="topic">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Topic</mat-header-cell>
-                                    <mat-cell *matCellDef="let item">{{item.topic}}</mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header>Topic</th>
+                                    <td *matCellDef="let item">{{item.topic}}</td>
                                  </ng-container>
                                  <!-- Sub Topic Name Column -->
                                  <ng-container matColumnDef="subtopic">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Sub Topic</mat-header-cell>
-                                    <mat-cell *matCellDef="let item">{{item.subtopic}}</mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header>Sub Topic</th>
+                                    <td *matCellDef="let item">{{item.subtopic}}</td>
                                  </ng-container>
                                  <!-- Details Name Column -->
                                  <ng-container matColumnDef="details">
-                                    <mat-header-cell *matHeaderCellDef> Details</mat-header-cell>
-                                    <mat-cell *matCellDef="let item">
+                                    <th *matHeaderCellDef> Details</th>
+                                    <td *matCellDef="let item">
                                        <div [innerHTML]="item.details"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Action Column -->
                                  <ng-container matColumnDef="action">
-                                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-                                    <mat-cell *matCellDef="let item">
+                                    <th *matHeaderCellDef> Action </th>
+                                    <td *matCellDef="let item">
                                        <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="UnPublish" aria-hidden="true"
                                           (click)="openModal(template);getCurrentUnpublishedQues(item.action)"></i>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <mat-header-row class="top_header" *matHeaderRowDef="doubleintegerdisplayedColumns">
                                  </mat-header-row>
@@ -907,62 +907,62 @@
                                  [dataSource]="subjectivedataSource" matSort>
                                  <!-- Position Column -->
                                  <ng-container matColumnDef="positionSub">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-position">S No.
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-position">Q-{{item.positionSub}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="sub-position">S No.
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-position">Q-{{item.positionSub}}
+                                    </td>
                                  </ng-container>
                                  <!-- Questions Name Column -->
                                  <ng-container matColumnDef="questionSub">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-question"> Questions
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-question">
+                                    <th *matHeaderCellDef mat-sort-header class="sub-question"> Questions
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-question">
                                        <div class="imgClassExpress" [MathJax]="item.questionSub"></div>
                                        <!-- <div class="imgclass" [innerHTML]="item.questionSub"></div> -->
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Answer Name Column -->
                                  <ng-container matColumnDef="answerSub">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-answer">Answer
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-answer">
+                                    <th *matHeaderCellDef mat-sort-header class="sub-answer">Answer
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-answer">
                                        <div [MathJax]="item.answerSub" class="imgClassExpress"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Class Name Column -->
                                  <ng-container matColumnDef="classSub">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-class">Class
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-class">{{item.classSub}}</mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="sub-class">Class
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-class">{{item.classSub}}</td>
                                  </ng-container>
                                  <!-- Topic Column -->
                                  <ng-container matColumnDef="topicSub">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-topic">Topic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-topic">{{item.topicSub}}</mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="sub-topic">Topic
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-topic">{{item.topicSub}}</td>
                                  </ng-container>
                                  <!-- Subtopic Column -->
                                  <ng-container matColumnDef="subtopicSub">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-subtopic">SubTopic
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-subtopic">{{item.subtopicSub}}
-                                    </mat-cell>
+                                    <th *matHeaderCellDef mat-sort-header class="sub-subtopic">SubTopic
+                                    </th>
+                                    <td *matCellDef="let item" class="sub-subtopic">{{item.subtopicSub}}
+                                    </td>
                                  </ng-container>
                                  <!--Details Name Column -->
                                  <ng-container matColumnDef="detailsSub">
-                                    <mat-header-cell *matHeaderCellDef class="sub-details"> Details</mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-details">
+                                    <th *matHeaderCellDef class="sub-details"> Details</th>
+                                    <td *matCellDef="let item" class="sub-details">
                                        <div [innerHTML]="item.detailsSub"></div>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <!-- Action Column -->
                                  <ng-container matColumnDef="actionSub">
-                                    <mat-header-cell *matHeaderCellDef class="sub-action"> Action </mat-header-cell>
-                                    <mat-cell *matCellDef="let item" class="sub-action">
+                                    <th *matHeaderCellDef class="sub-action"> Action </th>
+                                    <td *matCellDef="let item" class="sub-action">
                                        <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
                                           data-placement="top" matTooltip="UnPublish" aria-hidden="true"
                                           (click)="openModal(template);getCurrentUnpublishedQues(item.actionSub)"></i>
-                                    </mat-cell>
+                                    </td>
                                  </ng-container>
                                  <mat-header-row class="top_header" *matHeaderRowDef="subjectivedisplayedColumns">
                                  </mat-header-row>
@@ -993,70 +993,70 @@
                         <mat-table class="specific-table question-management-table-main-structure" #table
                            [dataSource]="reviewdatasource" matSort (matSortChange)="sortDataEssay($event)">
                            <ng-container matColumnDef="position">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header="position" class="sub-position">S No.
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let item" class="sub-position">Q-{{item.position}} </mat-cell>
+                              <th *matHeaderCellDef mat-sort-header="position" class="sub-position">S No.
+                              </th>
+                              <td *matCellDef="let item" class="sub-position">Q-{{item.position}} </td>
                            </ng-container>
                            <!-- Questions Name Column -->
                            <ng-container matColumnDef="question">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header="question"
-                                 style="width:16% !important; flex: 0 0 12% !important"> Questions</mat-header-cell>
-                              <mat-cell *matCellDef="let item" style="width:16% !important; flex: 0 0 12% !important">
+                              <th *matHeaderCellDef mat-sort-header="question"
+                                 style="width:16% !important; flex: 0 0 12% !important"> Questions</th>
+                              <td *matCellDef="let item" style="width:16% !important; flex: 0 0 12% !important">
                                  <div class="imgClassExpress" [MathJax]="item.question"></div>
-                              </mat-cell>
+                              </td>
                            </ng-container>
                            <!-- Answer Name Column -->
                            <ng-container matColumnDef="answer">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header="answer" class="sub-answer">Answer
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let item" class="sub-answer">
+                              <th *matHeaderCellDef mat-sort-header="answer" class="sub-answer">Answer
+                              </th>
+                              <td *matCellDef="let item" class="sub-answer">
                                  <div [id]="item.toolid" matTooltip="{{htmlToText(item.showHover)}}"
                                     class="imgClassExpress" [MathJax]="item.answer">
                                  </div>
-                              </mat-cell>
+                              </td>
                            </ng-container>
                            <!-- Class Name Column -->
                            <ng-container matColumnDef="class">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-class">Class
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let item" class="sub-class">{{item.class}}</mat-cell>
+                              <th *matHeaderCellDef mat-sort-header class="sub-class">Class
+                              </th>
+                              <td *matCellDef="let item" class="sub-class">{{item.class}}</td>
                            </ng-container>
                            <!-- Explanation Column -->
                            <ng-container matColumnDef="explanations">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-explanation">Explanation
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let item" class="sub-explanation">
+                              <th *matHeaderCellDef mat-sort-header class="sub-explanation">Explanation
+                              </th>
+                              <td *matCellDef="let item" class="sub-explanation">
                                  <div [MathJax]="item.explanations"></div>
-                              </mat-cell>
+                              </td>
                            </ng-container>
                            <!-- Topic Column -->
                            <ng-container matColumnDef="topic">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header class="sub-topic">Topic
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let item" class="sub-topic">{{item.topic}}</mat-cell>
+                              <th *matHeaderCellDef mat-sort-header class="sub-topic">Topic
+                              </th>
+                              <td *matCellDef="let item" class="sub-topic">{{item.topic}}</td>
                            </ng-container>
                            <!--Sub topic Column -->
                            <ng-container matColumnDef="subtopic">
-                              <mat-header-cell *matHeaderCellDef class="sub-subtopic">Sutopic</mat-header-cell>
-                              <mat-cell *matCellDef="let item" class="sub-subtopic">{{item.subtopic}}</mat-cell>
+                              <th *matHeaderCellDef class="sub-subtopic">Sutopic</th>
+                              <td *matCellDef="let item" class="sub-subtopic">{{item.subtopic}}</td>
                            </ng-container>
                            <!--S Column -->
                            <ng-container matColumnDef="details">
-                              <mat-header-cell *matHeaderCellDef class="sub-details">Details</mat-header-cell>
-                              <mat-cell *matCellDef="let item" class="sub-details">
+                              <th *matHeaderCellDef class="sub-details">Details</th>
+                              <td *matCellDef="let item" class="sub-details">
                                  <div [innerHTML]="item.details"></div>
-                              </mat-cell>
+                              </td>
                            </ng-container>
                            <ng-container matColumnDef="action">
-                              <mat-header-cell *matHeaderCellDef class="sub-action"> Action </mat-header-cell>
-                              <mat-cell *matCellDef="let item" class="sub-action">
+                              <th *matHeaderCellDef class="sub-action"> Action </th>
+                              <td *matCellDef="let item" class="sub-action">
                                  <i class="far fa-thumbs-down table-unpublish-icon" data-toggle="tooltip"
                                     data-placement="top" matTooltip="UnPublish" aria-hidden="true"
                                     (click)="openModal(template);getCurrentUnpublishedQues(item.action)"></i>
                                  <i class="fas fa-eye view-eye-icon" data-toggle="tooltip" data-placement="top"
                                     matTooltip="View Essay" aria-hidden="true"
                                     (click)="openEssayDetails(item.action)"></i>
-                              </mat-cell>
+                              </td>
                            </ng-container>
                            <mat-header-row class="top_header" *matHeaderRowDef="reviewdisplayedColumns">
                            </mat-header-row>
