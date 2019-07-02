@@ -8,10 +8,13 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 	styleUrls: ['./teacher-wise-timetable.component.css']
 })
 export class TeacherWiseTimetableComponent implements OnInit {
+	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 	teacherArray: any[] = [];
 	subjectArray: any[] = [];
+	teacherwiseArray: any[] = [];
 	teacherwiseForm: FormGroup;
 	teacherId: any;
+	noOfDay: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -51,6 +54,7 @@ export class TeacherWiseTimetableComponent implements OnInit {
 		});
 		this.teacherId = teacherDetails.au_login_id;
 		this.getSubjectByTeacherId();
+		this.getTeacherwiseTableDetails();
 	}
 	getSubjectByTeacherId() {
 		this.subjectArray = [];
@@ -64,6 +68,14 @@ export class TeacherWiseTimetableComponent implements OnInit {
 	}
 
 	getTeacherwiseTableDetails() {
-
+		this.smartService.getTeacherwiseTableDetails({ uc_login_id: this.teacherId }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.noOfDay = result.data.no_of_day;
+				this.teacherwiseArray = result.data.tabledata;
+				console.log(this.teacherwiseArray);
+			} else {
+				this.commonService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
 	}
 }
