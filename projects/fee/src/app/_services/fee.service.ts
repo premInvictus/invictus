@@ -349,4 +349,12 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentDataPerName', value);
 	}
+	updateInvoice(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/updateInvoice', value);
+	}
+	updateReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/updateFeeReceipt', value);
+	}
 }

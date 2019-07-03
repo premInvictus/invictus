@@ -115,7 +115,7 @@ export class Reports2Component implements OnInit {
 		},
 		{
 			report_id: '12',
-			report_name: 'Advanced Security Deposit',
+			report_name: 'Security Deposit',
 			report_image: '/assets/images/Fee Reports/advanced_security.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
@@ -188,6 +188,7 @@ export class Reports2Component implements OnInit {
 			this.reportHeader = this.feeReportArray[findex].report_name;
 			this.reportType = report_id;
 		}
+		this.previousIndex = findex;
 		setTimeout(() => this.reportFlag = false, 300);
 		setTimeout(() => this.accountFlag = true, 300);
 	}
