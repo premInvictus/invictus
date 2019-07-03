@@ -10,7 +10,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag" class="col-2">
+        <div *ngIf="filterFlag && reportType !== 'defaulter'" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>{{valueLabel}}</mat-label>
                 <mat-select formControlName="fee_value" [placeholder]="valueLabel" multiple>
@@ -19,7 +19,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag" class="col-2">
+        <div *ngIf="filterFlag && reportType !== 'defaulter'" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>From Date</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
@@ -47,7 +47,7 @@
                 </button>
                 &nbsp;
                 <button class="btn-success text-uppercase" mat-raised-button
-                    (click)="getHeadWiseCollectionReport(reportFilterForm.value)">
+                    (click)="getOutstandingReport(reportFilterForm.value)">
                     generate
                 </button>
             </div>
@@ -55,31 +55,6 @@
     </div>
 </form>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag">
-    <div class="float-right margin-top-20" [hidden]="!(tableFlag && 
-    reportFilterForm.value.report_type === 'mfr')">
-        <div class="text-center">
-            <table>
-                <tr>
-                    <td><i class="fas fa-square" style="color: #27de80 !important"></i></td>
-                    <td>
-                        <span><b>Paid</b></span>
-                    </td>
-                    <td><i class="fas fa-square" style="color: #f93435 !important"></i></td>
-                    <td>
-                        <span><b>Unpaid</b></span>
-                    </td>
-                    <td><i class="fas fa-square" style="color:#4a7bec !important"></i></td>
-                    <td>
-                        <span><b>Unpaid with Fine</b></span>
-                    </td>
-                    <td><i class="fas fa-square" style="color: #d2d8e0 !important"></i></td>
-                    <td>
-                        <span><b>Not Generated</b></span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
     <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
         [dataset]="dataset" gridHeight="800" (onAngularGridCreated)="angularGridReady($event)"
         (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
