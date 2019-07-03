@@ -48,7 +48,7 @@
           <div class="row">
             <div class="col-12">
               <span class="font-size-16 font-light">Receipt no: </span><span
-                class="font-size-16 font-regular">{{data.invoiceNo}}</span>
+                class="font-size-16 font-regular">{{invoiceDetails?.rpt_receipt_no}}</span>
             </div>
           </div>
           <div class="row">
@@ -108,7 +108,7 @@
               mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
               (click)="openRecalculateDialog()">Recalulate Invoice</button>
             <button mat-raised-button class="btn-primary btn-danger  print-invoice-btn"
-              (click)="printReceipt()">Print Receipt</button>
+              (click)="printReceipt(invoiceDetails?.receipt_id)">Print Receipt</button>
           </div>
         </div>
       </div>

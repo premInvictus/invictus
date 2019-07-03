@@ -165,7 +165,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		if (this.data.from) {
 			recieptJSON = { inv_id: invoiceNo };
 		} else {
-			recieptJSON = { flgr_invoice_receipt_no: invoiceNo };
+			recieptJSON = { inv_id: invoiceNo };
 		}
 		this.feeService.getReceiptBifurcation(recieptJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -206,8 +206,9 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		});
 	}
 	editConfirm() { }
-	printReceipt() {
-		this.feeService.printReceipt({ receipt_id: [this.data.invoiceNo] }).subscribe((result: any) => {
+	printReceipt(rpt_id) {
+		console.log('this.data', this.data);
+		this.feeService.printReceipt({ receipt_id: [rpt_id] }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				const length = result.data.split('/').length;
