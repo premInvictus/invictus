@@ -194,7 +194,7 @@ export class CollectionReportComponent implements OnInit {
 									grouping: {
 										getter: 'invoice_created_date',
 										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 										},
 										aggregators: this.aggregatearray,
 										aggregateCollapsed: true,
@@ -315,6 +315,8 @@ export class CollectionReportComponent implements OnInit {
 					console.log(this.columnDefinitions);
 					console.log(this.dataset);
 					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		} else if (this.reportType === 'classwise') {
@@ -349,7 +351,7 @@ export class CollectionReportComponent implements OnInit {
 					grouping: {
 						getter: 'invoice_created_date',
 						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,
@@ -452,6 +454,8 @@ export class CollectionReportComponent implements OnInit {
 					this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		} else if (this.reportType === 'modewise') {
@@ -486,7 +490,7 @@ export class CollectionReportComponent implements OnInit {
 					grouping: {
 						getter: 'invoice_created_date',
 						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,
@@ -557,7 +561,7 @@ export class CollectionReportComponent implements OnInit {
 									grouping: {
 										getter: 'invoice_created_date',
 										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 										},
 										aggregators: this.aggregatearray,
 										aggregateCollapsed: true,
@@ -711,6 +715,8 @@ export class CollectionReportComponent implements OnInit {
 					console.log(this.columnDefinitions);
 					console.log(this.dataset);
 					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		} else if (this.reportType === 'routewise') {
@@ -745,7 +751,7 @@ export class CollectionReportComponent implements OnInit {
 					grouping: {
 						getter: 'invoice_created_date',
 						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,
@@ -883,6 +889,8 @@ export class CollectionReportComponent implements OnInit {
 					}
 					this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
+					this.tableFlag = true;
+				} else {
 					this.tableFlag = true;
 				}
 			});
@@ -1089,6 +1097,8 @@ export class CollectionReportComponent implements OnInit {
 						this.tableFlag = true;
 						index++;
 					}
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		}

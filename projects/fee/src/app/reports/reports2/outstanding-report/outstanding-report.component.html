@@ -61,3 +61,8 @@
         (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
     </angular-slickgrid>
 </div>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
+    <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+        No Records Found
+    </div>
+</div>

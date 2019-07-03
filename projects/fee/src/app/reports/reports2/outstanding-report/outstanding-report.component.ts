@@ -193,7 +193,7 @@ export class OutstandingReportComponent implements OnInit {
 									grouping: {
 										getter: 'invoice_created_date',
 										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 										},
 										aggregators: this.aggregatearray,
 										aggregateCollapsed: true,
@@ -300,6 +300,8 @@ export class OutstandingReportComponent implements OnInit {
 					console.log(this.columnDefinitions);
 					console.log(this.dataset);
 					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		} else if (this.reportType === 'classwise') {
@@ -334,7 +336,7 @@ export class OutstandingReportComponent implements OnInit {
 					grouping: {
 						getter: 'invoice_created_date',
 						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,
@@ -437,6 +439,8 @@ export class OutstandingReportComponent implements OnInit {
 					this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		} else if (this.reportType === 'modewise') {
@@ -471,7 +475,7 @@ export class OutstandingReportComponent implements OnInit {
 					grouping: {
 						getter: 'invoice_created_date',
 						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,
@@ -542,7 +546,7 @@ export class OutstandingReportComponent implements OnInit {
 									grouping: {
 										getter: 'invoice_created_date',
 										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 										},
 										aggregators: this.aggregatearray,
 										aggregateCollapsed: true,
@@ -678,6 +682,8 @@ export class OutstandingReportComponent implements OnInit {
 					console.log(this.columnDefinitions);
 					console.log(this.dataset);
 					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		} else if (this.reportType === 'defaulter' && value.to_date) {
@@ -711,7 +717,7 @@ export class OutstandingReportComponent implements OnInit {
 					grouping: {
 						getter: 'invoice_created_date',
 						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,
@@ -813,6 +819,8 @@ export class OutstandingReportComponent implements OnInit {
 					}
 					this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
+					this.tableFlag = true;
+				} else {
 					this.tableFlag = true;
 				}
 			});
@@ -1002,6 +1010,9 @@ export class OutstandingReportComponent implements OnInit {
 				this.valueLabel = 'Modes';
 				this.getModes();
 			} else if ($event.value === 'defaulter') {
+				this.reportFilterForm.patchValue({
+					'to_date': new Date()
+				});
 				this.valueLabel = 'Class';
 				this.getClass();
 			}
