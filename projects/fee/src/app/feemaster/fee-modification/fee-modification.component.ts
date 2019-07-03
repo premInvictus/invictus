@@ -265,7 +265,7 @@ export class FeeModificationComponent implements OnInit {
 						'inv_invoice_no': this.receipt.inv_invoice_no,
 						'inv_receipt_no': this.receipt.rpt_receipt_no,
 						'login_id': this.receipt.login_id,
-						'ftr_transaction_id': this.receipt.ftr_id,
+						'ftr_transaction_id': this.receipt.ftr_transaction_id,
 						'ftr_transaction_date': this.receipt.ftr_transaction_date,
 						'ftr_id' : this.receipt.ftr_id,
 						'ftr_inv_id' : this.receipt.ftr_inv_id,

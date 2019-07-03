@@ -4,7 +4,7 @@
       <mat-card class="card-top-title__container">
         <div class="row">
           <div class="col-6">
-            <h1 class="remove-bottom-margin font-size-24">Fee Modification</h1>
+            <h1 class="remove-bottom-margin font-size-24">Fee Receipt Modification</h1>
           </div>
           <!-- <div class="col-6 text-right">
             <div class="vertical-align-sub inline-flex">
@@ -27,9 +27,9 @@
       <div class="col-6 remove-col-padding-left">
         <mat-card class="card-top-form__container card-height-605 card-height-720">
           <div class="row">
-            <div class="col-6">
+            <div class="col-3">
               <div class="row">
-                <div class="col-6">
+                <div class="col-12">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Invoice No.</mat-label>
                     <input matInput #inv placeholder="Invoice No." id="inv_num" type="number"
@@ -38,9 +38,9 @@
                 </div>
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-3">
               <div class="row">
-                <div class="col-6">
+                <div class="col-12">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Receipt No.</mat-label>
                     <input matInput #rpt placeholder="Receipt No." id="rpt_num" type="number"
@@ -75,7 +75,7 @@
                     <div class="font-size-16 font-regular col-sm">Invoice No.</div>
                     <div class="font-size-16 font-bold col-sm">
                       : <a style="cursor: pointer;" class="font-skyblue font-underline"
-                        (click)="openDialog(receipt.inv_invoice_no, true)"> {{receipt.inv_invoice_no}}
+                        (click)="openDialog(receipt.inv_invoice_no, false)"> {{receipt.inv_invoice_no}}
                       </a>
                     </div>
                   </div>
