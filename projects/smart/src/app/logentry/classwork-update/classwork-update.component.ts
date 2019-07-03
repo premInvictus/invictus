@@ -366,6 +366,7 @@ export class ClassworkUpdateComponent implements OnInit {
 					console.log(result.data);
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+					this.noDataFlag = true;
 					this.classworkforForm.patchValue({
 						cw_teacher_id: '',
 						teacher_name: ''
