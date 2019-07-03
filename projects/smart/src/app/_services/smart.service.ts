@@ -197,4 +197,24 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/scheduler/deleteScheduler', value);
 	}
+	insertClasswisePeriod(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertClasswisePeriod', value);
+	}
+	getDetailsCdpRelation() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSmartUrl + '/setup/getDetailsCdpRelation');
+	}
+	updateClasswisePeriod(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/updateClasswisePeriod', value);
+	}
+	checkClassEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/checkClassEntry', value);
+	}
+	getPeriodDayByClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getPeriodDayByClass', value);
+	}
 }

@@ -1,0 +1,63 @@
+<form [formGroup]="reportFilterForm">
+    <div class="row">
+        <div class="col-2">
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Report Type</mat-label>
+                <mat-select formControlName="report_type" (selectionChange)="changeReportType($event)">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option *ngFor="let item of reportTypeArray" [value]="item.report_type">
+                        {{item.report_name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div *ngIf="filterFlag" class="col-2">
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>{{valueLabel}}</mat-label>
+                <mat-select formControlName="fee_value" [placeholder]="valueLabel" multiple>
+                    <mat-option *ngFor="let item of valueArray" [value]="item.id">{{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div *ngIf="filterFlag" class="col-2">
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>From Date</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
+                    [max]="currentDate" [min]="minDate" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div *ngIf="filterFlag" class="col-2">
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>To Date</mat-label>
+                <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
+                    [max]="currentDate" [min]="minDate" />
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div *ngIf="filterFlag" class="col-4">
+            <div class="margin-top-10">
+                <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
+                    filter
+                </button>
+                <button class="sort-bt" mat-raised-button (click)="openSort()">
+                    sort
+                </button>
+                &nbsp;
+                <button class="btn-success text-uppercase" mat-raised-button
+                    (click)="getHeadWiseCollectionReport(reportFilterForm.value)">
+                    generate
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag">
+    <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+        [dataset]="dataset" gridHeight="800" (onAngularGridCreated)="angularGridReady($event)"
+        (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+        (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+    </angular-slickgrid>
+</div>

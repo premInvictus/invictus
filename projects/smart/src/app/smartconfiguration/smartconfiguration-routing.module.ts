@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ReportsComponent } from './reports/reports.component';
-import { Reports2Component } from './reports2/reports2.component';
+import {SystemInfoComponent} from '../smartconfiguration/system-info/system-info.component';
 const routes: Routes = [
 	{
-		path: '', component: Reports2Component
+		path: 'system-info', component: SystemInfoComponent
 	}
 ];
-
 @NgModule({
 	imports: [RouterModule.forChild(routes)],
 	exports: [RouterModule]
 })
-export class ReportsRoutingModule { }
+export class SmartconfigurationRoutingModule { }
