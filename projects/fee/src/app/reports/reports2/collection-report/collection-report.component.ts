@@ -639,6 +639,8 @@ export class CollectionReportComponent implements OnInit {
 											repoArray[Number(keys)]['receipt_no'] : '-';
 										obj[key2 + k] = titem['pay_amount'] ? Number(titem['pay_amount']) : 0;
 										tot = tot + (titem['pay_amount'] ? Number(titem['pay_amount']) : 0);
+										obj['bank_name'] = repoArray[Number(keys)]['bank_name'] ?
+											repoArray[Number(keys)]['bank_name'] : '-';
 										obj['total'] = tot;
 										obj['rpt_amount'] = repoArray[Number(keys)]['rpt_amount'] ?
 											repoArray[Number(keys)]['rpt_amount'] : 0;
@@ -653,6 +655,22 @@ export class CollectionReportComponent implements OnInit {
 						this.dataset.push(obj);
 					});
 					this.columnDefinitions.push(
+						{
+							id: 'bank_name', name: 'Bank Name', field: 'bank_name',
+							filterable: true,
+							filterSearchType: FieldType.string,
+							filter: { model: Filters.compoundInput },
+							sortable: true,
+							grouping: {
+								getter: 'bank_name',
+								formatter: (g) => {
+									return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								},
+								aggregators: this.aggregatearray,
+								aggregateCollapsed: true,
+								collapsed: false
+							},
+						},
 						{
 							id: 'total', name: 'Total', field: 'total',
 							filterable: true,

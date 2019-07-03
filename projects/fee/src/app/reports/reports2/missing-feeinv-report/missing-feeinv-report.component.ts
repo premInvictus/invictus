@@ -95,6 +95,8 @@ export class MissingFeeinvReportComponent implements OnInit {
 	}
 
 	getMissingFeeReport(value: any) {
+		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
+		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
 		this.aggregatearray = [];
 		this.columnDefinitions = [];
