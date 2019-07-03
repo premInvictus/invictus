@@ -1,19 +1,20 @@
-<div class="row">
+<div class="row row-remove-top-margin">
   <div class="col-lg-12 question-subtype-col-div col-mobile-view-add-ques">
     <div class="question-subtype-box">
       <div class="question-subtype-content">
         <form [formGroup]="ind_entry_form3" novalidate>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-lg-12 question-subtype-col-div col-mobile-view-add-ques">
               <div class="question-subtype-content-title-question">
                 <span>Type questions</span>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="row">
             <div class="col-lg-12 question-subtype-col-div col-mobile-view-add-ques">
               <div class="question-subtype-text-box">
-                <ckeditor ngDefaultControl required name="mcq-quest" id="mcq-quest" class="text-editor" formControlName="qus_name" #question [config]="ckeConfig" debounce="500">
+                <ckeditor ngDefaultControl required name="mcq-quest" id="mcq-quest" class="text-editor"
+                  formControlName="qus_name" #question [config]="ckeConfig" debounce="500">
                 </ckeditor>
               </div>
             </div>
@@ -31,15 +32,17 @@
                       <hr class="option-title-divider">
                       <div class="add-option-radio">
                         <mat-radio-group formControlName="qopt_answer" name="option">
-                          <mat-radio-button value="{{i}}" ></mat-radio-button>
+                          <mat-radio-button value="{{i}}"></mat-radio-button>
                         </mat-radio-group>
                       </div>
                     </mat-card>
                   </div>
                   <div class="col-lg-11 col-mobile-view-add-ques">
                     <div class="question-subtype-text-box">
-                      <ckeditor ngDefaultControl required name="mcq-quest" id="example-text-input-{{i}}" class="text-editor" formControlName="qopt_options{{i}}" #answerckeditor [config]="ckeConfig" debounce="500">
-                    </ckeditor>
+                      <ckeditor ngDefaultControl required name="mcq-quest" id="example-text-input-{{i}}"
+                        class="text-editor" formControlName="qopt_options{{i}}" #answerckeditor [config]="ckeConfig"
+                        debounce="500">
+                      </ckeditor>
                     </div>
                   </div>
                 </div>
@@ -58,8 +61,9 @@
           <div class="row">
             <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
               <div class="question-subtype-text-box">
-                <ckeditor ngDefaultControl required name="mcq-answer"  class="text-editor" formControlName="qus_explanation" #explanationckeditor [config]="ckeConfig" debounce="500">
-                  </ckeditor>
+                <ckeditor ngDefaultControl required name="mcq-answer" class="text-editor"
+                  formControlName="qus_explanation" #explanationckeditor [config]="ckeConfig" debounce="500">
+                </ckeditor>
               </div>
             </div>
           </div>

@@ -1,29 +1,31 @@
-<div class="row">
+<div class="row row-remove-top-margin">
   <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
     <div class="question-subtype-box">
       <div class="question-subtype-content">
         <form [formGroup]="ind_entry_form3" novalidate>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
               <div class="question-subtype-content-title-question">
                 <span>Type questions</span>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="row">
             <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
               <div class="question-subtype-text-box">
-                 <ckeditor ngDefaultControl required name="mcq-quest" id="mcq-quest" class="text-editor" formControlName="qus_name" #question [config]="ckeConfig" debounce="500">
+                <ckeditor ngDefaultControl required name="mcq-quest" id="mcq-quest" class="text-editor"
+                  formControlName="qus_name" #question [config]="ckeConfig" debounce="500">
                 </ckeditor>
               </div>
             </div>
           </div>
           <br>
-          <div class="option-section" >
+          <div class="option-section">
             <div class="row">
               <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
                 <div class="row">
-                  <div class="col-lg-1 tf-col-lg-1 col-mobile-view-add-ques card-option-div" *ngFor="let item of optionsArray; let i = index">
+                  <div class="col-lg-1 tf-col-lg-1 col-mobile-view-add-ques card-option-div"
+                    *ngFor="let item of optionsArray; let i = index">
                     <mat-card class="add-option-card add-option-card-tf">
                       <div class="add-option-card-title">
                         <span class="option-title">{{item}}</span>
@@ -31,7 +33,7 @@
                       <hr class="option-title-divider">
                       <div class="add-option-radio">
                         <mat-radio-group formControlName="qopt_answer" name="option">
-                        <mat-radio-button  value="{{i}}"></mat-radio-button>
+                          <mat-radio-button value="{{i}}"></mat-radio-button>
                         </mat-radio-group>
                       </div>
                     </mat-card>
@@ -52,7 +54,8 @@
           <div class="row">
             <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
               <div class="question-subtype-text-box">
-                <ckeditor ngDefaultControl required name="mcq-explanation" id="mcq-explanation" class="text-editor" formControlName="qus_explanation" #explanationckeditor [config]="ckeConfig" debounce="500">
+                <ckeditor ngDefaultControl required name="mcq-explanation" id="mcq-explanation" class="text-editor"
+                  formControlName="qus_explanation" #explanationckeditor [config]="ckeConfig" debounce="500">
                 </ckeditor>
               </div>
             </div>
