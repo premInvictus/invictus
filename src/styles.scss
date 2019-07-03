@@ -5805,6 +5805,15 @@ b.total-footer-report {
   border: 1px solid #89A8C9 !important;
   border-collapse: collapse; 
 }
+span.invoice-span-mfr {
+  font-weight: bold;
+  color: white;
+  text-decoration: underline;
+  position: relative;
+    left: 8px;
+    top: 4px;
+    cursor: pointer;
+}
 td.tdTone2 {
   width: 250px !important;
 }

@@ -55,6 +55,16 @@
             <div class="row">
               <div class="col-12">
                 <app-collection-report *ngIf="reportType === '1'"></app-collection-report>
+                <app-outstanding-report *ngIf="reportType === '2'"></app-outstanding-report>
+                <app-fee-ledger-report *ngIf="reportType === '5'"></app-fee-ledger-report>
+                <app-deleted-feetrans-report *ngIf="reportType === '6'"></app-deleted-feetrans-report>
+                <app-feeadj-report *ngIf="reportType === '7'"></app-feeadj-report>
+                <app-feecon-report *ngIf="reportType === '8'"></app-feecon-report>
+                <app-missing-feeinv-report *ngIf="reportType === '9'"></app-missing-feeinv-report>
+                <app-feestruc-report *ngIf="reportType === '10'"></app-feestruc-report>
+                <app-chequeclearance-report *ngIf="reportType === '11'"></app-chequeclearance-report>
+                <app-security-deposit-report *ngIf="reportType === '12'"></app-security-deposit-report>
+                <app-transport-report *ngIf="reportType === '15'"></app-transport-report>
               </div>
             </div>
           </mat-expansion-panel>
