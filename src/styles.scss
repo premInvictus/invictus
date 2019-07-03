@@ -235,7 +235,7 @@ mat-sidenav-content {
   padding: 15px 0 !important;
 }
 .height-411 {
-    height: 387px !important;
+    height: 352px !important;
 }
 .student-pic__circle{
   border:2px solid #dfdfdf !important;
@@ -2217,10 +2217,12 @@ mat-table.table-main-structure {
 .bulk-right-side-box-content {
   text-align: center;
   background-color: #fff;
-  border: 1px solid #fe756d;
+  border: 1px solid #9c3;
   padding: 15px;
 }
-
+.left-right-minus-margin{
+margin:0px -10px !important;
+}
 .table-box {
   background-color: #ffffff;
   border: 1px solid #fe756d;

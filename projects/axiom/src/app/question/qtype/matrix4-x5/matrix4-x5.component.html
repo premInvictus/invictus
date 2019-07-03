@@ -1,20 +1,21 @@
-<div class="row">
+<div class="row row-remove-top-margin">
   <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
     <div class="question-subtype-box">
       <div class="question-subtype-content">
         <form [formGroup]="ind_entry_form3" novalidate>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
               <div class="question-subtype-content-title-question">
                 <span>Type questions</span>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="row">
             <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
               <div class="question-subtype-text-box">
-                <ckeditor ngDefaultControl required name="mcq-quest" id="mcq-quest" class="text-editor" formControlName="qus_name" #question [config]="ckeConfig" debounce="500">
-              </ckeditor>
+                <ckeditor ngDefaultControl required name="mcq-quest" id="mcq-quest" class="text-editor"
+                  formControlName="qus_name" #question [config]="ckeConfig" debounce="500">
+                </ckeditor>
               </div>
             </div>
           </div>
@@ -36,7 +37,8 @@
                   </div>
                   <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
                     <div class="question-subtype-text-box mtf-question-subtype-text-box">
-                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input" class="text-editor" formControlName="optiona" #optiona [config]="ckeConfig" debounce="500">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input" class="text-editor"
+                        formControlName="optiona" #optiona [config]="ckeConfig" debounce="500">
                       </ckeditor>
                     </div>
                   </div>
@@ -53,14 +55,16 @@
                   </div>
                   <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
                     <div class="question-subtype-text-box mtf-question-subtype-text-box">
-                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf1" class="text-editor" formControlName="optionp" #optionp [config]="ckeConfig" debounce="500">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf1"
+                        class="text-editor" formControlName="optionp" #optionp [config]="ckeConfig" debounce="500">
                       </ckeditor>
                     </div>
                   </div>
                   <div class="row mtf-option-row">
                     <div>
                       <div class="row four-option-collection-mobile matrix-option-collection">
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">P</span>
@@ -71,7 +75,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">Q</span>
@@ -82,7 +87,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view" >
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">R</span>
@@ -93,7 +99,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">S</span>
@@ -104,7 +111,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">T</span>
@@ -141,7 +149,8 @@
                   </div>
                   <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
                     <div class="question-subtype-text-box mtf-question-subtype-text-box">
-                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf2" class="text-editor" formControlName="optionb" #optionb [config]="ckeConfig" debounce="500">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf2"
+                        class="text-editor" formControlName="optionb" #optionb [config]="ckeConfig" debounce="500">
                       </ckeditor>
                     </div>
                   </div>
@@ -158,14 +167,16 @@
                   </div>
                   <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
                     <div class="question-subtype-text-box mtf-question-subtype-text-box">
-                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf3" class="text-editor" formControlName="optionq" #optionq [config]="ckeConfig" debounce="500">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf3"
+                        class="text-editor" formControlName="optionq" #optionq [config]="ckeConfig" debounce="500">
                       </ckeditor>
                     </div>
                   </div>
                   <div class="row mtf-option-row">
                     <div>
                       <div class="row four-option-collection-mobile matrix-option-collection">
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title text-center">P</span>
@@ -176,7 +187,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title text-center">Q</span>
@@ -187,7 +199,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title text-center">R</span>
@@ -198,7 +211,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title text-center">S</span>
@@ -209,7 +223,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title text-center">T</span>
@@ -246,7 +261,8 @@
                   </div>
                   <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
                     <div class="question-subtype-text-box mtf-question-subtype-text-box">
-                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf4" class="text-editor" formControlName="optionc" #optionc [config]="ckeConfig" debounce="500">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf4"
+                        class="text-editor" formControlName="optionc" #optionc [config]="ckeConfig" debounce="500">
                       </ckeditor>
                     </div>
                   </div>
@@ -263,14 +279,16 @@
                   </div>
                   <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
                     <div class="question-subtype-text-box mtf-question-subtype-text-box">
-                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf5" class="text-editor" formControlName="optionr" #optionr [config]="ckeConfig" debounce="500">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf5"
+                        class="text-editor" formControlName="optionr" #optionr [config]="ckeConfig" debounce="500">
                       </ckeditor>
                     </div>
                   </div>
                   <div class="row mtf-option-row">
                     <div>
                       <div class="row four-option-collection-mobile matrix-option-collection">
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">P</span>
@@ -281,7 +299,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">Q</span>
@@ -292,7 +311,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">R</span>
@@ -303,7 +323,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">S</span>
@@ -314,7 +335,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">T</span>
@@ -351,7 +373,8 @@
                   </div>
                   <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
                     <div class="question-subtype-text-box mtf-question-subtype-text-box">
-                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf6" class="text-editor" formControlName="optiond" #optiond [config]="ckeConfig" debounce="500">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf6"
+                        class="text-editor" formControlName="optiond" #optiond [config]="ckeConfig" debounce="500">
                       </ckeditor>
                     </div>
                   </div>
@@ -368,7 +391,8 @@
                   </div>
                   <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
                     <div class="question-subtype-text-box mtf-question-subtype-text-box">
-                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf7" class="text-editor" formControlName="optiont" #optiont [config]="ckeConfig" debounce="500">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf7"
+                        class="text-editor" formControlName="optiont" #optiont [config]="ckeConfig" debounce="500">
                       </ckeditor>
                     </div>
                   </div>
@@ -376,7 +400,8 @@
                   <div class="row mtf-option-row">
                     <div>
                       <div class="row four-option-collection-mobile matrix-option-collection">
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">P</span>
@@ -387,7 +412,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">Q</span>
@@ -398,7 +424,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">R</span>
@@ -409,7 +436,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">S</span>
@@ -420,7 +448,8 @@
                             </div>
                           </mat-card>
                         </div>
-                        <div class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
+                        <div
+                          class="col-lg-2 fin-tab-col-20 col-mobile-view-add-ques card-option-div four-options-together-mobile-view">
                           <mat-card class="add-option-card">
                             <div class="add-option-card-title">
                               <span class="option-title">T</span>
@@ -461,7 +490,8 @@
                   </div>
                   <div class="col-lg-3 fin-tab-col-20 mtx-opt-text-lg-3 col-mobile-view-add-ques">
                     <div class="question-subtype-text-box mtf-question-subtype-text-box">
-                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf7" class="text-editor" formControlName="optionu" #optionu [config]="ckeConfig" debounce="500">
+                      <ckeditor ngDefaultControl required name="mcq-answer" id="example-text-input_mtf7"
+                        class="text-editor" formControlName="optionu" #optionu [config]="ckeConfig" debounce="500">
                       </ckeditor>
                     </div>
                   </div>
@@ -480,7 +510,8 @@
           <div class="row">
             <div class="col-lg-12 col-mobile-view-add-ques question-subtype-col-div">
               <div class="question-subtype-text-box">
-                <ckeditor ngDefaultControl required name="mcq-answer"  class="text-editor" formControlName="qus_explanation" #explanationckeditor [config]="ckeConfig" debounce="500">
+                <ckeditor ngDefaultControl required name="mcq-answer" class="text-editor"
+                  formControlName="qus_explanation" #explanationckeditor [config]="ckeConfig" debounce="500">
                 </ckeditor>
               </div>
             </div>
