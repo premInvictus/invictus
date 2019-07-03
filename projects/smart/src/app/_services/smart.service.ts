@@ -47,6 +47,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getSubtopicByTopicId', value);
 	}
+	getSchedulerEventCategory() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSmartUrl + '/common/getSchedulerEventCategory');
+	}
 	getSubtopicCountAndDetail(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/topicwise/getSubtopicCountAndDetail', value);
@@ -180,6 +184,19 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/getTeacherwiseTableDetails', value);
 	}
+
+	insertScheduler(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/scheduler/insertScheduler', value);
+	}
+	getScheduler(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/scheduler/getScheduler', value);
+	}
+	deleteScheduler(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/scheduler/deleteScheduler', value);
+	}
 	insertClasswisePeriod(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/setup/insertClasswisePeriod', value);
@@ -196,7 +213,7 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/setup/checkClassEntry', value);
 	}
-	getPeriodDayByClass(value){
+	getPeriodDayByClass(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/getPeriodDayByClass', value);
 	}

@@ -1,0 +1,96 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-12 custom-col-80">
+          <div class="row">
+            <div class="col-12">
+              <!-- <table class="table table-borderd table-stripped custom-table">
+                  <thead class="table-skill__head text-center">
+                    <tr class="custom-tr">
+                      <th class="custom-th table-width-80">Sr No.</th>
+                      <th class="custom-th">Date</th>
+                      <th class="custom-th">Event Name</th>
+                      <th class="custom-th">Event Description</th>
+                      <th class="custom-th">Class</th>
+                      <th class="custom-th">Event Category</th>
+                      <th class="custom-th">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="custom-tr">
+                      <td class="custom-td">1</td>
+                      <td class="custom-td">13-Apr-2019</td>
+                      <td class="custom-td">Annual Function</td>
+                      <td class="custom-td text-left">Annual Function will be at this Auditorium</td>
+                      <td class="custom-td">XI - A</td>
+                      <td class="custom-td">Non - Teaching Day</td>
+                      <td class="custom-td">
+                        <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
+                          class="margin-left-10 ver-line-divider"></span><i
+                          class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table> -->
+              <table mat-table [dataSource]="dataSource" class="table-100 text-center" id="report_table">
+                <ng-container matColumnDef="srno">
+                  <th mat-header-cell *matHeaderCellDef> S.No </th>
+                  <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                </ng-container>
+                <ng-container matColumnDef="publishedon">
+                  <th mat-header-cell *matHeaderCellDef> Published On </th>
+                  <td mat-cell *matCellDef="let element"> {{element.publishedon | date: 'dd-MMM-y'}} </td>
+                </ng-container>
+                <ng-container matColumnDef="eventdate">
+                  <th mat-header-cell *matHeaderCellDef> Event Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.eventdate}} </td>
+                </ng-container>
+                <ng-container matColumnDef="eventname">
+                  <th mat-header-cell *matHeaderCellDef> Event Name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.eventname | capitalize}} </td>
+                </ng-container>
+                <ng-container matColumnDef="eventdesc">
+                  <th mat-header-cell *matHeaderCellDef> Event Description </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div [innerHtml]="element.eventdesc | capitalize | truncatetext:100"></div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="class">
+                  <th mat-header-cell *matHeaderCellDef> Class</th>
+                  <td mat-cell *matCellDef="let element"> {{element.class}} </td>
+                </ng-container>
+                <ng-container matColumnDef="eventcategory">
+                  <th mat-header-cell *matHeaderCellDef> Event Category </th>
+                  <td mat-cell *matCellDef="let element"> {{element.eventcategory | capitalize}} </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> Action </th>
+                  <td mat-cell *matCellDef="let element" class="tab-display-flex">
+                    <i class="far fa-edit font-size-16 font-color-gray cursor-pointer" (click)="openAddScheduler(element.action)"></i>
+                    <span class="margin-left-10 ver-line-divider"></span>
+                    <i class="fas fa-trash font-size-16 font-color-red cursor-pointer" (click)="openModal({sc_id: element.sc_id})"></i>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+              </table>
+              <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="changePage($event)">
+              </mat-paginator>
+              <div *ngIf="nodataFlag" class="no-records" style="text-align: center">
+                <app-no-data
+                  [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                  [noDataText]="'No Data Available'"></app-no-data>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<app-delete-modal #deleteModalRef (deleteOk)="deleteScheduler($event)"></app-delete-modal>

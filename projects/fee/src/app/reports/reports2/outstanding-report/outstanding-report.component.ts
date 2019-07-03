@@ -15,12 +15,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportFilterComponent } from '../../reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from '../../reports-filter-sort/report-sort/report-sort.component';
 import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
+
 @Component({
-	selector: 'app-collection-report',
-	templateUrl: './collection-report.component.html',
-	styleUrls: ['./collection-report.component.css']
+	selector: 'app-outstanding-report',
+	templateUrl: './outstanding-report.component.html',
+	styleUrls: ['./outstanding-report.component.css']
 })
-export class CollectionReportComponent implements OnInit {
+export class OutstandingReportComponent implements OnInit {
+
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
@@ -71,10 +73,7 @@ export class CollectionReportComponent implements OnInit {
 				report_type: 'modewise', report_name: 'Mode Wise'
 			},
 			{
-				report_type: 'routewise', report_name: 'Route Wise'
-			},
-			{
-				report_type: 'mfr', report_name: 'Monthly Fee Report (MFR)'
+				report_type: 'defaulter', report_name: 'Defaulter\'s List'
 			});
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
@@ -104,7 +103,7 @@ export class CollectionReportComponent implements OnInit {
 		});
 	}
 
-	getHeadWiseCollectionReport(value: any) {
+	getOutstandingReport(value: any) {
 		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
@@ -161,7 +160,7 @@ export class CollectionReportComponent implements OnInit {
 				'to_date': value.to_date,
 				'pageSize': '10',
 				'pageIndex': '0',
-				'filterReportBy': 'collection',
+				'filterReportBy': 'outstanding',
 				'login_id': value.login_id,
 				'orderBy': value.orderBy,
 				'downloadAll': true
@@ -186,7 +185,7 @@ export class CollectionReportComponent implements OnInit {
 									width: 3
 								},
 								{
-									id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
+									id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true,
 									filterable: true,
 									formatter: this.checkDateFormatter,
 									filterSearchType: FieldType.dateIso,
@@ -230,7 +229,7 @@ export class CollectionReportComponent implements OnInit {
 								},
 								{
 									id: 'receipt_no',
-									name: 'Reciept No.',
+									name: 'Invoice No.',
 									field: 'receipt_no',
 									sortable: true,
 									filterable: true,
@@ -260,7 +259,7 @@ export class CollectionReportComponent implements OnInit {
 											(Number(keys) + 1);
 										obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
 											(Number(keys) + 1);
-										obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
+										obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
 										obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 											repoArray[Number(keys)]['stu_admission_no'] : '-';
 										obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
@@ -270,15 +269,13 @@ export class CollectionReportComponent implements OnInit {
 										} else {
 											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
 										}
-										obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
-											repoArray[Number(keys)]['rpt_id'] : '0';
-										obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
-											repoArray[Number(keys)]['receipt_no'] : '-';
+										obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
+											repoArray[Number(keys)]['invoice_id'] : '0';
+										obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
+											repoArray[Number(keys)]['invoice_no'] : '-';
 										obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 										tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 										obj['total'] = tot;
-										obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
-											repoArray[Number(keys)]['pay_name'] : '-';
 										k++;
 									}
 								});
@@ -296,18 +293,6 @@ export class CollectionReportComponent implements OnInit {
 							sortable: true,
 							formatter: this.checkTotalFormatter,
 							groupTotalsFormatter: this.sumTotalsFormatter
-						},
-						{
-							id: 'receipt_mode_name', name: 'Mode', field: 'receipt_mode_name', sortable: true, filterable: true,
-							grouping: {
-								getter: 'receipt_mode_name',
-								formatter: (g) => {
-									return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-								},
-								aggregators: this.aggregatearray,
-								aggregateCollapsed: true,
-								collapsed: false
-							},
 						}
 					);
 					this.aggregatearray.push(new Aggregators.Sum('total'));
@@ -327,7 +312,7 @@ export class CollectionReportComponent implements OnInit {
 				'to_date': value.to_date,
 				'pageSize': '10',
 				'pageIndex': '0',
-				'filterReportBy': 'collection',
+				'filterReportBy': 'outstanding',
 				'login_id': value.login_id,
 				'orderBy': value.orderBy,
 				'downloadAll': true
@@ -341,7 +326,7 @@ export class CollectionReportComponent implements OnInit {
 					width: 2
 				},
 				{
-					id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
+					id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true,
 					filterable: true,
 					formatter: this.checkDateFormatter,
 					filterSearchType: FieldType.dateIso,
@@ -385,7 +370,7 @@ export class CollectionReportComponent implements OnInit {
 				},
 				{
 					id: 'receipt_no',
-					name: 'Reciept No.',
+					name: 'Invoice No.',
 					field: 'receipt_no',
 					sortable: true,
 					filterable: true,
@@ -394,7 +379,7 @@ export class CollectionReportComponent implements OnInit {
 				},
 				{
 					id: 'rpt_amount',
-					name: 'Reciept Amt.',
+					name: 'Invoice Amount',
 					field: 'rpt_amount',
 					sortable: true,
 					filterable: true,
@@ -430,7 +415,7 @@ export class CollectionReportComponent implements OnInit {
 							(index + 1);
 						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 							(index + 1);
-						obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
+						obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
 						obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 							repoArray[Number(index)]['stu_admission_no'] : '-';
 						obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
@@ -440,8 +425,8 @@ export class CollectionReportComponent implements OnInit {
 						} else {
 							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 						}
-						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-							repoArray[Number(index)]['receipt_no'] : '-';
+						obj['receipt_no'] = repoArray[Number(index)]['invoice_no'] ?
+							repoArray[Number(index)]['invoice_no'] : '-';
 						obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
 							repoArray[Number(index)]['rpt_amount'] : 0;
 						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
@@ -464,7 +449,7 @@ export class CollectionReportComponent implements OnInit {
 				'to_date': value.to_date,
 				'pageSize': '10',
 				'pageIndex': '0',
-				'filterReportBy': 'collection',
+				'filterReportBy': 'outstanding',
 				'login_id': value.login_id,
 				'orderBy': value.orderBy,
 				'downloadAll': true
@@ -478,7 +463,7 @@ export class CollectionReportComponent implements OnInit {
 					width: 1
 				},
 				{
-					id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
+					id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true,
 					filterable: true,
 					formatter: this.checkDateFormatter,
 					filterSearchType: FieldType.dateIso,
@@ -522,7 +507,7 @@ export class CollectionReportComponent implements OnInit {
 				},
 				{
 					id: 'receipt_no',
-					name: 'Reciept No.',
+					name: 'Invoice No.',
 					field: 'receipt_no',
 					sortable: true,
 					filterable: true,
@@ -549,7 +534,7 @@ export class CollectionReportComponent implements OnInit {
 									width: 3
 								},
 								{
-									id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
+									id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true,
 									filterable: true,
 									formatter: this.checkDateFormatter,
 									filterSearchType: FieldType.dateIso,
@@ -593,7 +578,7 @@ export class CollectionReportComponent implements OnInit {
 								},
 								{
 									id: 'receipt_no',
-									name: 'Reciept No.',
+									name: 'Invoice No.',
 									field: 'receipt_no',
 									sortable: true,
 									filterable: true,
@@ -623,7 +608,7 @@ export class CollectionReportComponent implements OnInit {
 											(Number(keys) + 1);
 										obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
 											(Number(keys) + 1);
-										obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
+										obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
 										obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 											repoArray[Number(keys)]['stu_admission_no'] : '-';
 										obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
@@ -633,14 +618,12 @@ export class CollectionReportComponent implements OnInit {
 										} else {
 											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
 										}
-										obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
-											repoArray[Number(keys)]['rpt_id'] : '0';
-										obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
-											repoArray[Number(keys)]['receipt_no'] : '-';
+										obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
+											repoArray[Number(keys)]['invoice_id'] : '0';
+										obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
+											repoArray[Number(keys)]['invoice_no'] : '-';
 										obj[key2 + k] = titem['pay_amount'] ? Number(titem['pay_amount']) : 0;
 										tot = tot + (titem['pay_amount'] ? Number(titem['pay_amount']) : 0);
-										obj['bank_name'] = repoArray[Number(keys)]['bank_name'] ?
-											repoArray[Number(keys)]['bank_name'] : '-';
 										obj['total'] = tot;
 										obj['rpt_amount'] = repoArray[Number(keys)]['rpt_amount'] ?
 											repoArray[Number(keys)]['rpt_amount'] : 0;
@@ -655,22 +638,6 @@ export class CollectionReportComponent implements OnInit {
 						this.dataset.push(obj);
 					});
 					this.columnDefinitions.push(
-						{
-							id: 'bank_name', name: 'Bank Name', field: 'bank_name',
-							filterable: true,
-							filterSearchType: FieldType.string,
-							filter: { model: Filters.compoundInput },
-							sortable: true,
-							grouping: {
-								getter: 'bank_name',
-								formatter: (g) => {
-									return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-								},
-								aggregators: this.aggregatearray,
-								aggregateCollapsed: true,
-								collapsed: false
-							},
-						},
 						{
 							id: 'total', name: 'Total', field: 'total',
 							filterable: true,
@@ -713,17 +680,16 @@ export class CollectionReportComponent implements OnInit {
 					this.tableFlag = true;
 				}
 			});
-		} else if (this.reportType === 'routewise') {
+		} else if (this.reportType === 'defaulter' && value.to_date) {
 			const collectionJSON: any = {
 				'admission_no': '',
 				'studentName': '',
-				'report_type': value.report_type,
-				'routeId': value.fee_value,
-				'from_date': value.from_date,
+				'report_type': 'classwise',
+				'classId': value.fee_value,
 				'to_date': value.to_date,
 				'pageSize': '10',
 				'pageIndex': '0',
-				'filterReportBy': 'collection',
+				'filterReportBy': 'outstanding',
 				'login_id': value.login_id,
 				'orderBy': value.orderBy,
 				'downloadAll': true
@@ -734,10 +700,10 @@ export class CollectionReportComponent implements OnInit {
 					name: 'SNo.',
 					field: 'srno',
 					sortable: true,
-					width: 1
+					width: 2
 				},
 				{
-					id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
+					id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true,
 					filterable: true,
 					formatter: this.checkDateFormatter,
 					filterSearchType: FieldType.dateIso,
@@ -781,7 +747,7 @@ export class CollectionReportComponent implements OnInit {
 				},
 				{
 					id: 'receipt_no',
-					name: 'Reciept No.',
+					name: 'Invoice No.',
 					field: 'receipt_no',
 					sortable: true,
 					filterable: true,
@@ -789,54 +755,22 @@ export class CollectionReportComponent implements OnInit {
 					cssClass: 'receipt_collection_report'
 				},
 				{
-					id: 'transport_amount',
-					name: 'Transport Amt.',
-					field: 'transport_amount',
+					id: 'rpt_amount',
+					name: 'Invoice Amount',
+					field: 'rpt_amount',
 					sortable: true,
 					filterable: true,
 					formatter: this.checkFeeFormatter,
 					groupTotalsFormatter: this.sumTotalsFormatter
 				},
 				{
-					id: 'route_name',
-					name: 'Route',
-					field: 'route_name',
+					id: 'fp_name',
+					name: 'Fee Period',
+					field: 'fp_name',
 					sortable: true,
 					filterable: true,
 					grouping: {
-						getter: 'route_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'stoppages_name',
-					name: 'Stoppage',
-					field: 'stoppages_name',
-					sortable: true,
-					filterable: true,
-					grouping: {
-						getter: 'stoppages_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'slab_name',
-					name: 'Slab',
-					field: 'slab_name',
-					sortable: true,
-					filterable: true,
-					grouping: {
-						getter: 'slab_name',
+						getter: 'fp_name',
 						formatter: (g) => {
 							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
 						},
@@ -858,7 +792,7 @@ export class CollectionReportComponent implements OnInit {
 							(index + 1);
 						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 							(index + 1);
-						obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
+						obj['invoice_created_date'] = repoArray[Number(index)]['invoice_date'];
 						obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 							repoArray[Number(index)]['stu_admission_no'] : '-';
 						obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
@@ -868,229 +802,22 @@ export class CollectionReportComponent implements OnInit {
 						} else {
 							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 						}
-						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-							repoArray[Number(index)]['receipt_no'] : '-';
-						obj['transport_amount'] = repoArray[Number(index)]['transport_amount'] ?
-							repoArray[Number(index)]['transport_amount'] : 0;
-						obj['route_name'] = repoArray[Number(index)]['route_name'] ?
-							repoArray[Number(index)]['route_name'] : '-';
-						obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
-							repoArray[Number(index)]['stoppages_name'] : '-';
-						obj['slab_name'] = repoArray[Number(index)]['slab_name'] ?
-							repoArray[Number(index)]['slab_name'] : '-';
+						obj['receipt_no'] = repoArray[Number(index)]['invoice_no'] ?
+							repoArray[Number(index)]['invoice_no'] : '-';
+						obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
+							repoArray[Number(index)]['rpt_amount'] : 0;
+						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
+							repoArray[Number(index)]['fp_name'] : '-';
 						this.dataset.push(obj);
 						index++;
 					}
-					this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
+					this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					this.tableFlag = true;
 				}
 			});
-		} else if (this.reportType === 'mfr') {
-			const collectionJSON: any = {
-				'admission_no': '',
-				'studentName': '',
-				'report_type': value.report_type,
-				'classId': value.fee_value,
-				'from_date': value.from_date,
-				'to_date': value.to_date,
-				'pageSize': '10',
-				'pageIndex': '0',
-				'filterReportBy': 'collection',
-				'login_id': value.login_id,
-				'orderBy': value.orderBy,
-				'downloadAll': true
-			};
-			this.columnDefinitions = [
-				{
-					id: 'srno',
-					name: 'SNo.',
-					field: 'srno',
-					sortable: true,
-					width: 1
-				},
-				{ id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true },
-				{
-					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
-					grouping: {
-						getter: 'stu_full_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-				},
-				{
-					id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-					filterable: true,
-					grouping: {
-						getter: 'stu_class_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				}];
-			this.feeService.getMFRReport(collectionJSON).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage(result.message, 'success');
-					repoArray = result.data.reportData;
-					this.totalRecords = Number(result.data.totalRecords);
-					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					let index = 0;
-					let qindex = 1;
-					for (const item of repoArray) {
-						const obj: any = {};
-						obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
-						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
-						obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-							repoArray[Number(index)]['stu_admission_no'] : '-';
-						obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-						if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-								repoArray[Number(index)]['stu_sec_name'];
-						} else {
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
-						}
-						obj['inv_fp_id'] = repoArray[Number(index)]['inv_fp_id'];
-						for (const titem of item['inv_invoice_generated_status']) {
-							Object.keys(titem).forEach((key: any) => {
-								if (key === 'fm_name' && index === 0 &&
-									Number(item.inv_fp_id) === 2) {
-									this.columnDefinitions.push({
-										id: 'Q' + qindex,
-										name: titem[key],
-										field: 'Q' + qindex,
-										formatter: this.getMFRFormatter
-									});
-									qindex++;
-								} else if (key === 'fm_name' && index === 0 &&
-									Number(item.inv_fp_id) === 1) {
-									this.columnDefinitions.push({
-										id: 'Q' + qindex,
-										name: titem[key],
-										field: 'Q' + qindex,
-										formatter: this.getMFRFormatter
-									});
-									qindex++;
-								} else if (key === 'fm_name' && index === 0 &&
-									Number(item.inv_fp_id) === 3) {
-									this.columnDefinitions.push({
-										id: 'Q' + qindex,
-										name: titem[key],
-										field: 'Q' + qindex,
-										formatter: this.getMFRFormatter
-									});
-									qindex++;
-								} else if (key === 'fm_name' && index === 0 &&
-									Number(item.inv_fp_id) === 4) {
-									this.columnDefinitions.push({
-										id: 'Q' + qindex,
-										name: titem[key],
-										field: 'Q' + qindex,
-										formatter: this.getMFRFormatter
-									});
-									qindex++;
-								}
-								if (key === 'fm_name' &&
-									Number(item.inv_fp_id) === 2) {
-									obj['Q1'] = {
-										status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][0]['invoice_id']
-									};
-									obj['Q2'] = {
-										status: item['inv_invoice_generated_status'][1]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][1]['invoice_id']
-									};
-									obj['Q3'] = {
-										status: item['inv_invoice_generated_status'][2]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][2]['invoice_id']
-									};
-									obj['Q4'] = {
-										status: item['inv_invoice_generated_status'][3]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][3]['invoice_id']
-									};
-								} else if (key === 'fm_name' &&
-									Number(item.inv_fp_id) === 1) {
-									obj['Q1'] = {
-										status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][0]['invoice_id']
-									};
-									obj['Q2'] = {
-										status: item['inv_invoice_generated_status'][1]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][1]['invoice_id']
-									};
-									obj['Q3'] = {
-										status: item['inv_invoice_generated_status'][2]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][2]['invoice_id']
-									};
-									obj['Q4'] = {
-										status: item['inv_invoice_generated_status'][3]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][3]['invoice_id']
-									};
-									obj['Q5'] = {
-										status: item['inv_invoice_generated_status'][4]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][4]['invoice_id']
-									};
-									obj['Q6'] = {
-										status: item['inv_invoice_generated_status'][5]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][5]['invoice_id']
-									};
-									obj['Q7'] = {
-										status: item['inv_invoice_generated_status'][6]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][6]['invoice_id']
-									};
-									obj['Q8'] = {
-										status: item['inv_invoice_generated_status'][7]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][7]['invoice_id']
-									};
-									obj['Q9'] = {
-										status: item['inv_invoice_generated_status'][8]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][8]['invoice_id']
-									};
-									obj['Q10'] = {
-										status: item['inv_invoice_generated_status'][9]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][9]['invoice_id']
-									};
-									obj['Q11'] = {
-										status: item['inv_invoice_generated_status'][10]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][10]['invoice_id']
-									};
-									obj['Q12'] = {
-										status: item['inv_invoice_generated_status'][11]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][11]['invoice_id']
-									};
-								} else if (key === 'fm_name' &&
-									Number(item.inv_fp_id) === 3) {
-									obj['Q1'] = {
-										status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][0]['invoice_id']
-									};
-									obj['Q2'] = {
-										status: item['inv_invoice_generated_status'][1]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][1]['invoice_id']
-									};
-								} else if (key === 'fm_name' &&
-									Number(item.inv_fp_id) === 4) {
-									obj['Q1'] = {
-										status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
-										invoice_id: item['inv_invoice_generated_status'][0]['invoice_id']
-									};
-								}
-							});
-						}
-						this.dataset.push(obj);
-						this.tableFlag = true;
-						index++;
-					}
-				}
-			});
+		} else {
+			this.common.showSuccessErrorMessage('Please select date also', 'error');
 		}
 	}
 	clearGroupsAndSelects() {
@@ -1134,12 +861,8 @@ export class CollectionReportComponent implements OnInit {
 		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['receipt_no'] !== '-') {
-				this.openDialogReceipt(item['receipt_no'], false);
+				this.renderDialog(item['receipt_no'], false);
 			}
-		}
-		if (e.target.className === 'invoice-span-mfr') {
-			const inv_id = Number(e.target.innerHTML);
-			this.renderDialog(inv_id, false);
 		}
 	}
 	onCellChanged(e, args) {
@@ -1181,26 +904,6 @@ export class CollectionReportComponent implements OnInit {
 	}
 	srnTotalsFormatter(totals, columnDef) {
 		return '<b class="total-footer-report">Total</b>';
-	}
-	getMFRFormatter(row, cell, value, columnDef, dataContext) {
-		if (value.status === 'unpaid') {
-			return '<div style="background-color:#f93435 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-				+ '<span class="invoice-span-mfr">' + value.invoice_id + '</span>' + '</div>';
-		} else if (value.status === 'paid') {
-			return '<div style="background-color:#27de80 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-				+ '<span class="invoice-span-mfr">' + value.invoice_id + '</span>' + '</div>';
-		} else if (value.status === 'Not Generated') {
-			return '<div style="background-color:#d2d8e0 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;' +
-				'border-right: 1px solid #89a8c8; border-top: 0px !important;' +
-				'border-bottom: 0px !important; border-left: 0px !important; margin: auto;">'
-				+ '<span class="invoice-span-mfr">' + value.invoice_id + '</span>' + '</div>';
-		} else if (value.status === 'Unpaid with fine') {
-			return '<div style="background-color:#4a7bec !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-				+ '<span class="invoice-span-mfr">' + value.invoice_id + '</span>' + '</div>';
-		} else {
-			return '<div style="background-color:#7bd450 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-				+ '<span class="invoice-span-mfr">' + value.invoice_id + '</span>' + '</div>';
-		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
@@ -1298,10 +1001,7 @@ export class CollectionReportComponent implements OnInit {
 			} else if ($event.value === 'modewise') {
 				this.valueLabel = 'Modes';
 				this.getModes();
-			} else if ($event.value === 'routewise') {
-				this.valueLabel = 'Routes';
-				this.getRoutes();
-			} else if ($event.value === 'mfr') {
+			} else if ($event.value === 'defaulter') {
 				this.valueLabel = 'Class';
 				this.getClass();
 			}
