@@ -54,6 +54,8 @@ export class ClassWiseTimetableComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						this.classArray = result.data;
 						this.subjectwiseFlag = false;
+					} else {
+						this.classArray = [];
 					}
 				}
 			);
@@ -79,6 +81,8 @@ export class ClassWiseTimetableComponent implements OnInit {
 						this.finalCountArray = [];
 						this.classwisetableArray = [];
 						this.getSubjectsByClass();
+					} else {
+						this.sectionArray = [];
 					}
 				}
 			);
@@ -93,7 +97,8 @@ export class ClassWiseTimetableComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.subjectArray = result.data;
-						console.log(this.subjectArray);
+					} else {
+						this.subjectArray = [];
 					}
 				}
 			);
@@ -127,7 +132,6 @@ export class ClassWiseTimetableComponent implements OnInit {
 													'classwise': JSON.parse(this.classwiseArray[i].td_no_of_day)
 												});
 											}
-											console.log(this.classwisetableArray);
 											for (const item of this.classwisetableArray) {
 												for (const titem of item.classwise) {
 													const findex = this.subCountArray.findIndex(f => f.subject_name === titem.subject_name);
