@@ -8,6 +8,7 @@ import { FeeService, CommonAPIService, ProcesstypeFeeService } from '../../_serv
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { saveAs } from 'file-saver';
 import { Router, ActivatedRoute } from '@angular/router';
+import { DatePipe } from '@angular/common';
 @Component({
 	selector: 'app-invoice-details-modal',
 	templateUrl: './invoice-details-modal.component.html',
@@ -25,6 +26,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	invoiceDetails: any;
 	invoiceTotal = 0;
 	adjustmentForm: FormGroup;
+	modifyInvoiceForm: FormGroup;
 	modificationFlag = false;
 	adjRemark: string;
 	checkChangedFieldsArray = [];
@@ -33,6 +35,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	class_sec: any;
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 	gender: any;
+	inv_opening_balance: any;
+	inv_fine_amount: any;
 	constructor(
 		public dialogRef: MatDialogRef<InvoiceDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -52,11 +56,23 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		} else {
 			this.modificationFlag = false;
 		}
+		this.buildForm();
 	}
+
+	toggleDatePicker(picker) {
+		picker.open();
+	}
+
 	openEditDialog = (data) => this.editReference.openModal(data);
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
 	buildForm() {
+		this.modifyInvoiceForm = this.fb.group({
+			'inv_opening_balance' : '',
+			'inv_fine_amount' : '',
+			'inv_invoice_date' : '',
+			'inv_due_date'  : ''
+		});
 		this.adjustmentForm = this.fb.group({
 			adjustmentField: this.fb.array([])
 		});
@@ -108,7 +124,12 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			adj.adjustment.push({ invg_id: item.invg_id, invg_adj_amount: item.invg_adj_amount });
 		});
 		adj.remark = this.adjRemark;
+		adj.inv_fine_amount = this.modifyInvoiceForm.value.inv_fine_amount;
+		adj.inv_opening_balance = this.modifyInvoiceForm.value.inv_opening_balance;
+		adj.inv_invoice_date = new DatePipe('en-in').transform(this.modifyInvoiceForm.value.inv_invoice_date, 'yyyy-MM-dd');
+		adj.inv_due_date = new DatePipe('en-in').transform(this.modifyInvoiceForm.value.inv_due_date, 'yyyy-MM-dd');
 		// this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')
+		console.log('adj--', adj);
 		if ((this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')) && this.adjRemark) {
 			this.feeService.invoiceAdjustmentRemark(adj).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -184,6 +205,16 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					if (result.data.length > 0) {
 						this.invoiceDetails = result.data[0];
+						this.inv_opening_balance = this.invoiceDetails.inv_opening_balance;
+						this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
+
+						this.modifyInvoiceForm.patchValue({
+							'inv_opening_balance': this.invoiceDetails.inv_opening_balance,
+							'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
+							'inv_invoice_date' : this.invoiceDetails.inv_invoice_date,
+							'inv_due_date'  : this.invoiceDetails.inv_due_date,
+						});
+
 						this.class_name = this.invoiceDetails.class_name;
 						this.section_name = this.invoiceDetails.sec_name;
 						if (this.section_name !== ' ') {
@@ -224,6 +255,14 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					if (result.data.length > 0) {
 						this.invoiceDetails = result.data[0];
+						this.inv_opening_balance = this.invoiceDetails.inv_opening_balance;
+						this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
+						this.modifyInvoiceForm.patchValue({
+							'inv_opening_balance': this.invoiceDetails.inv_opening_balance,
+							'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
+							'inv_invoice_date' : this.invoiceDetails.inv_invoice_date,
+							'inv_due_date'  : this.invoiceDetails.inv_due_date,
+						});
 						if (this.invoiceDetails.invoice_bifurcation.length > 0) {
 							this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
 							this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);

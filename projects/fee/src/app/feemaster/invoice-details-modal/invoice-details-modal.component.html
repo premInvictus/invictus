@@ -1,4 +1,5 @@
 <div class="">
+
   <div class="row">
     <div class="col-12 text-right">
       <a class="close-btn" (click)="closemodal()"><i class="material-icons">
@@ -6,104 +7,133 @@
         </i></a>
     </div>
   </div>
-  <div class="row">
-    <div class="col-2 text-center">
-      <img class="student-profile-image-popup" [src]="defaultsrc">
-      <div class="">
-        <div class="font-size-16 font-bold">
-          <span>{{invoiceDetails?.process_name}} {{invoiceDetails?.au_admission_no}} </span>
+  <form [formGroup]="modifyInvoiceForm">
+    <div class="row">
+      <div class="col-2 text-center">
+        <img class="student-profile-image-popup" [src]="defaultsrc">
+        <div class="">
+          <div class="font-size-16 font-bold">
+            <span>{{invoiceDetails?.process_name}} {{invoiceDetails?.au_admission_no}} </span>
+          </div>
+        </div>
+        <div class="">
+          <div class="font-size-16 font-bold">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Opening Balance</mat-label>
+              <input matInput placeholder="Opening Balance" type="number" formControlName="inv_opening_balance">
+            </mat-form-field>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-1">
+      <div class="col-1">
         <div class="vertical-line-divider"></div>
-    </div>
-    <div class="col-9">
-      <div class="row remove-top-margin">
-        <div class="col-3 ">
-          <div class="row remove-top-margin">
-            <div class="col-12">
-              <span class="font-size-16 font-medium">{{invoiceDetails?.au_full_name | titlecase}},
-                {{class_sec}}</span>
+      </div>
+      <div class="col-9">
+        <div class="row remove-top-margin">
+          <div class="col-3 ">
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <span class="font-size-16 font-medium">{{invoiceDetails?.au_full_name | titlecase}},
+                  {{class_sec}}</span>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <span class="font-size-16 font-light">Parent Name: </span><span
-                class="font-size-16 font-regular">{{invoiceDetails?.epd_parent_name | titlecase}}</span>
+            <div class="row">
+              <div class="col-12">
+                <span class="font-size-16 font-light">Parent Name: </span><span
+                  class="font-size-16 font-regular">{{invoiceDetails?.epd_parent_name | titlecase}}</span>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <span class="font-size-16 font-light">Mobile No: </span><span
-                class="font-size-16 font-regular">{{invoiceDetails?.epd_contact_no}}</span>
+            <div class="row">
+              <div class="col-12">
+                <span class="font-size-16 font-light">Mobile No: </span><span
+                  class="font-size-16 font-regular">{{invoiceDetails?.epd_contact_no}}</span>
+              </div>
             </div>
-          </div>
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Fine Amount</mat-label>
+                  <input matInput placeholder="Fine Amt." type="number" formControlName="inv_fine_amount">
+                </mat-form-field>
+              </div>
+            </div>
 
-        </div>
-        <div class="col-1">
+          </div>
+          <div class="col-1">
             <div class="vertical-line-divider"></div>
-        </div>
-        <div class="col-3">
-          <div class="row remove-top-margin">
-            <div class="col-12">
-              <span class="font-size-16 font-light">Invoice no: </span><span
-                class="font-size-16 font-regular">{{invoiceDetails?.inv_invoice_no}}</span>
+          </div>
+          <div class="col-3">
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <span class="font-size-16 font-light">Invoice no: </span><span
+                  class="font-size-16 font-regular">{{invoiceDetails?.inv_invoice_no}}</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <span class="font-size-16 font-light">Invoice Type: </span><span
+                  class="font-size-16 font-regular">{{invoiceDetails?.calm_name}}</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <span class="font-size-16 font-light">Fee Period: </span><span
+                  class="font-size-16 font-regular">{{invoiceDetails?.fp_months}}</span>
+              </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <span class="font-size-16 font-light">Invoice Type: </span><span
-                class="font-size-16 font-regular">{{invoiceDetails?.calm_name}}</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <span class="font-size-16 font-light">Fee Period: </span><span
-                class="font-size-16 font-regular">{{invoiceDetails?.fp_months}}</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-1">
+          <div class="col-1">
             <div class="vertical-line-divider"></div>
+          </div>
+          <div class="col-3">
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <span class="font-size-16 font-light">Invoice Date: </span>
+                <!-- {{invoiceDetails?.inv_invoice_date | date:'dd MMM, yyyy'}} -->
+              </div>
+              <div class="col-6">
+                <input matInput [matDatepicker]="picker" formControlName="inv_invoice_date">
+                <mat-datepicker #picker></mat-datepicker>
+              </div>
+              <div class="col-6">
+                <i class="material-icons icon-edit" (click)="picker.open()">create</i>
+              </div>
+            </div>
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <span class="font-size-16 font-light">Due Date: </span>
+                <!-- {{invoiceDetails?.inv_invoice_date | date:'dd MMM, yyyy'}} -->
+              </div>
+              <div class="col-6">
+                <input matInput [matDatepicker]="picker1" formControlName="inv_due_date">
+                <mat-datepicker #picker1></mat-datepicker>
+              </div>
+              <div class="col-6">
+                <i class="material-icons icon-edit" (click)="picker1.open()">create</i>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-3">
-          <div class="row remove-top-margin">
-            <div class="col-12">
-              <span class="font-size-16 font-light">Invoice Date: </span><span
-                class="font-size-16 font-regular">{{invoiceDetails?.inv_invoice_date | date:'dd MMM, yyyy'}}</span>
+        <div class="row">
+          <div class="col-12">
+            <div class="text-right">
+              <button
+                *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
+                mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
+                (click)="openRecalculateDialog()">Recalculate Invoice</button>
+              <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button class="make-pay-btn"
+                (click)="makePayment(invoiceDetails)">Make Payment</button>
+              <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
+                (click)="printInvoice()">Print Invoice</button>
+              <button
+                *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('355') || commonAPIService.isExistUserAccessMenu('362'))"
+                mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()">Delete</button>
             </div>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <span class="font-size-16 font-light">Due Date: </span><span
-                class="font-size-16 font-regular">{{invoiceDetails?.inv_due_date | date:'dd MMM, yyyy'}}</span>
-            </div>
-          </div>
-
-
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="text-right">
-            <button
-              *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
-              mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
-              (click)="openRecalculateDialog()">Recalculate Invoice</button>
-            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button
-              class="make-pay-btn" (click)="makePayment(invoiceDetails)">Make Payment</button>
-            <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
-              (click)="printInvoice()">Print Invoice</button>
-            <button
-              *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('355') || commonAPIService.isExistUserAccessMenu('362'))"
-              mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()">Delete</button>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-
+  </form>
   <div class="row margin-top-20">
     <div class="col-12">
       <table mat-table [dataSource]="dataSource" class="table-100 text-center">
@@ -118,16 +148,19 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="feedue">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Fee Due (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Fee Due (<span><i
+                class="fas fa-rupee-sign"></i></span>)</th>
           <td mat-cell *matCellDef="let element"> {{element.feedue | number | zerodash}} </td>
         </ng-container>
         <ng-container matColumnDef="concession">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Concession (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Concession (<span><i
+                class="fas fa-rupee-sign"></i></span>)</th>
           <td mat-cell *matCellDef="let element"> {{element.concession | number | zerodash}} </td>
         </ng-container>
         <ng-container matColumnDef="adjustment">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
-          <td mat-cell *matCellDef="let element" >
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment (<span><i
+                class="fas fa-rupee-sign"></i></span>)</th>
+          <td mat-cell *matCellDef="let element">
             <ng-template [ngIf]="modificationFlag" [ngIfElse]="elseContaint">
               <mat-form-field class="margin-top-10 form-field-50">
                 <input matInput type="number" [value]="element.adjustment"
@@ -140,7 +173,8 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="netpay">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Net Payable (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Net Payable (<span><i
+                class="fas fa-rupee-sign"></i></span>)</th>
           <td mat-cell *matCellDef="let element">{{element.netpay | number}} </td>
         </ng-container>
 

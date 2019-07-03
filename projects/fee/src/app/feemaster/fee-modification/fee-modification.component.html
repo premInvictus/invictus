@@ -3,236 +3,369 @@
     <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container">
         <div class="row">
-          <div class="col-6 remove-col-padding-left">
+          <div class="col-6">
             <h1 class="remove-bottom-margin font-size-24">Fee Modification</h1>
           </div>
-          <div class="col-6 remove-col-padding-right text-right">
+          <!-- <div class="col-6 text-right">
             <div class="vertical-align-sub inline-flex">
               <h3 class="font-size-15 margin-top-2 remove-bottom-margin">Bulk</h3>
-              <mat-slide-toggle class="btn-spacer"></mat-slide-toggle>
+              <mat-slide-toggle checked="false" (change)="gotoIndividual($event)" class="btn-spacer my-toggle"></mat-slide-toggle>
               <h3 class="font-size-15 margin-top-2 remove-bottom-margin btn-spacer">Individual</h3>
             </div>
-          </div>
+          </div> -->
         </div>
       </mat-card>
     </div>
   </div>
-  <div class="row margin-top-25">
+  <div class="row">
     <div class="col-12 remove-col-padding">
-      <mat-card class="card-top-title__container  ">
-        <div class="row">
-          <div class="col-2 margin-left-20 custom-fee-entry-col-14">
-            <div class="row">
-              <div class="col-12 text-center margin-top-20">
-                <span class="font-light font-size-14">Admission No.</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
-                <i class="material-icons">
-                  first_page
-                </i>
-                <i class="material-icons">
-                  navigate_before
-                </i>
-              </div>
-              <div class="col-4 remove-col-padding custom-col-30 text-center">
-                <mat-form-field class="form-field text-center">
-                  <input matInput class="adm-no-student-30">
-                </mat-form-field>
-              </div>
-              <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
-                <i class="material-icons">
-                  navigate_next
-                </i>
-                <i class="material-icons">
-                  last_page
-                </i>
-              </div>
-            </div>
-          </div>
-          <div class="col-1 custom-fee-entry-col-8">
-            <div class="row margin-top-20">
-              <div class="col-12 text-center">
-                <img class="student-profile-image-68" src="https://via.placeholder.com/68">
-              </div>
-            </div>
-          </div>
-          <div class="col-1 custom-fee-entry-col-12">
-            <div class="row margin-top-35">
-              <div class="col-12 text-left">
-                <span class="font-size-14 font-medium">Arati Kumari</span><br>
-                <span class="font-size-12">Class : 10 - A</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-2 custom-fee-entry-col-12">
-            <div class="row margin-top-8">
-              <div class="col-12 text-left">
-                <span class="font-size-13 font-light">Outstanding Fee</span><br>
-                <span class="font-size-14 font-medium">5,386</span>
-              </div>
-            </div>
-            <div class="row margin-top-10">
-              <div class="col-12 text-left">
-                <span class="font-size-13 font-light">Concession</span><br>
-                <span class="font-size-14 font-medium">15%</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-2 custom-fee-entry-col-12">
-            <div class="row margin-top-8">
-              <div class="col-12 text-left">
-                <span class="font-size-13 font-light">Route </span><br>
-                <span class="font-size-14 font-medium">Route No. - 2</span>
-              </div>
-            </div>
-            <div class="row margin-top-10">
-              <div class="col-12 text-left">
-                <span class="font-size-13 font-light">Stoppage</span><br>
-                <span class="font-size-14 font-medium">Sector 62</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-5">
-            <div class="row">
-              <div class="col-12 text-center">
-                <div class="vertical-divider-fee-entry"></div>
-              </div>
-            </div>
-
-          </div>
-          <div class="col-2 custom-fee-entry-col-12">
-            <div class="row margin-top-8">
-              <div class="col-12 text-left">
-                <span class="font-size-13 font-light">Parent Name </span><br>
-                <span class="font-size-14 font-medium">Arvind Singh</span>
-              </div>
-            </div>
-            <div class="row margin-top-10">
-              <div class="col-12 text-left">
-                <span class="font-size-13 font-light">Contact No</span><br>
-                <span class="font-size-14 font-medium">+91 999999999</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-2 custom-fee-entry-col-12">
-            <div class="row margin-top-8">
-              <div class="col-12 text-left">
-                <span class="font-size-13 font-light">Emg Contact Name </span><br>
-                <span class="font-size-14 font-medium">Sunita Singh</span>
-              </div>
-            </div>
-            <div class="row margin-top-10">
-              <div class="col-12 text-left">
-                <span class="font-size-13 font-light">Emg Contact No</span><br>
-                <span class="font-size-14 font-medium">+91 999999999</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-1 custom-fee-entry-col-8 lap-custom-fee-entry-col-10">
-            <div class="row margin-top-8">
-              <div class="col-6 remove-col-padding-right remove-col-padding-left">
-                <div class="blue-circle-btn"></div>
-                <i class="far fa-file-alt four-group-button1"></i>
-                <div class="margin-top-20 blue-circle-btn"></div>
-                <i class="fas fa-pen-square four-group-button3"></i>
-
-              </div>
-              <div class="col-6 remove-col-padding-left">
-                <div class="blue-circle-btn"></div>
-                <i class="fas fa-folder four-group-button2"></i>
-                <div class="margin-top-20 blue-circle-btn"></div>
-                <i class="far fa-file-alt four-group-button4"></i>
-              </div>
-            </div>
-
-
-
-          </div>
-
-        </div>
-
-      </mat-card>
+       
     </div>
-  </div>
-  
-  
-        <div class="row margin-top-25 ">
-            <div class="col-12 remove-col-padding">
-              <mat-card class="card-top-title__container card-height-600 card-height-720">
+ </div>
+  <form [formGroup]="modifyReceiptForm">
+    <div class="row margin-top-25" style="margin-top: 0px !important">
+      <div class="col-6 remove-col-padding-left">
+        <mat-card class="card-top-form__container card-height-605 card-height-720">
+          <div class="row">
+            <div class="col-6">
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Invoice No.</mat-label>
+                    <input matInput #inv placeholder="Invoice No." id="inv_num" type="number"
+                      formControlName="inv_invoice_no" (keydown.enter)="getReceipt(inv.value, 'invoice')">
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Receipt No.</mat-label>
+                    <input matInput #rpt placeholder="Receipt No." id="rpt_num" type="number"
+                      formControlName="inv_receipt_no" (keydown.enter)="getReceipt(rpt.value, 'receipt')">
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <fieldset class="col-12 fieldset_invoice" *ngIf="receiptArray.length > 0 && selectedMode === '1'">
+              <div class="row margin-top-0 remove-padding">
+                <legend class="invoice_legend">Receipt Details</legend>
+                <div class="col-6 border_right">
                   <div class="row">
-                      <div class="col-4 remove-col-padding-left">
-                        <mat-form-field>
-                            <input matInput placeholder="Filter" class="margin-left-10">
-                            <mat-icon matPrefix>filter_list</mat-icon>
-                        </mat-form-field>
-                          
-                      </div>
-                      <div class="col-8 text-right remove-col-padding-right">
-                          <button mat-raised-button class="btn-primary btn-consolidate">Consolidate</button>
-                          <button mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer">Recalutate</button>
-                          <button mat-raised-button class="btn-primary btn-danger btn-spacer">Delete</button>
-                        </div>
+                    <div class="font-size-16 font-regular col-sm">Admission No.</div>
+                    <div class="font-size-16 font-bold col-sm">
+                      : {{receipt.au_admission_no}}
                     </div>
+                  </div>
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Student Name</div>
+                    <div class="font-size-16 font-bold  col-sm">
+                      : {{receipt.au_full_name | capitalize}}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Class</div>
+                    <div class="font-size-16 font-bold  col-sm">
+                      : {{class_sec}}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Invoice No.</div>
+                    <div class="font-size-16 font-bold col-sm">
+                      : <a style="cursor: pointer;" class="font-skyblue font-underline"
+                        (click)="openDialog(receipt.inv_invoice_no, true)"> {{receipt.inv_invoice_no}}
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Fee Period: </div>
+                    <div class="font-size-16 font-bold col-sm">
+                      : {{receipt.fp_months}}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Invoice Date: </div>
+                    <div class="font-size-16 font-bold col-sm">
+                      : {{receipt.inv_invoice_date | date: 'd-MMM-y'}}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Invoice Due Date </div>
+                    <div class="font-size-16 font-bold col-sm">
+                      : {{receipt.inv_due_date | date: 'd-MMM-y'}}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Previous Balance </div>
+                    <div class="font-size-16 font-bold col-sm">
+                      : {{ (receipt.fin_prev_balance ? (receipt.fin_prev_balance | number): 0) }}
+                    </div>
+                  </div>
+                  <div class="row">
+                      <div class="font-size-16 font-regular col-sm">Fine & Penalties: </div>
+                      <div class="font-size-16 font-bold col-sm">
+                        : {{receipt.rpt_fine_amount ? (receipt.rpt_fine_amount | number): 0}}
+                      </div>
+                    </div>
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Invoice Amount </div>
+                    <div class="font-size-16 font-bold col-sm">
+                      : {{receipt.inv_fee_amount | number}}
+                    </div>
+                  </div>
+
+                </div>
+                <div class="col-6">
+                  <div class="row">
+
+                    <div class="font-size-16 font-regular col-sm">Receipt No</div>
+                    <div class="font-size-16 font-bold  col-sm">
+                      : <a style="cursor: pointer;" class="font-skyblue font-underline"
+                        (click)="openReceiptDialog(receipt.rpt_receipt_no, false)">
+                        {{receipt.rpt_receipt_no}}
+                      </a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Receipt Date </div>
+                    <div class="font-size-16 font-bold col-sm">
+                      : {{receipt.rpt_receipt_date | date: 'd-MMM-y'}}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Receipt Amount</div>
+                    <div class="font-size-16 font-bold col-sm">
+                      : {{receipt.rpt_net_amount | number}}
+                    </div>
+                  </div>
+
+                 
+
+                 
+
+                  <div class="row">
+                    <div class="font-size-16 font-regular col-sm">Total Amount: </div>
+                    <div class="font-size-16 font-bold col-sm">
+                      : {{receipt.rpt_net_amount | number}}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-6 remove-col-padding" *ngIf="showForm">
+        <mat-card class="card-top-form__container card-height-605 card-height-720">
+          <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+              <div class="row">
+                <div class="col-12">
+                  <mat-form-field appearance="outline" class="form-field ">
+                    <mat-label>Payment Mode</mat-label>
+                    <mat-select formControlName="ftr_pay_id" placeholder="Payment Mode"
+                      (selectionChange)="setPayAmount($event)" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let mode of payModes" [value]="mode.pay_id">{{mode.pay_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-3"></div>
+          </div>
+          <div *ngIf="modifyReceiptForm.value.ftr_pay_id === '1'">
+            <div class="row">
+              <div class="col-3"></div>
+              <div class="col-6">
                 <div class="row">
-                  <div class="col-12 remove-col-padding">
-                      <table mat-table [dataSource]="dataSource" class="table-100 text-center">
-                          <ng-container matColumnDef="select" >
-                              <th mat-header-cell *matHeaderCellDef class="select-checkbox">
-                                <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                                  [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-                                </mat-checkbox>
-                              </th>
-                              <td mat-cell *matCellDef="let row" class="select-checkbox">
-                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                                  [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
-                                </mat-checkbox>
-                              </td>
-                            </ng-container>
-                          <ng-container matColumnDef="srno">
-                            <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
-                            <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-                          </ng-container>
-                          
-                          <ng-container matColumnDef="invoiceno">
-                            <th mat-header-cell *matHeaderCellDef> Invoice No </th>
-                            <td mat-cell *matCellDef="let element"> <a class="font-skyblue text-link font-size-14" >{{element.invoiceno}}</a> </td>
-                          </ng-container>
-                          <ng-container matColumnDef="invoicedate">
-                              <th mat-header-cell *matHeaderCellDef> Invoice Date </th>
-                              <td mat-cell *matCellDef="let element"> {{element.invoicedate}}</td>
-                            </ng-container>
-                          <ng-container matColumnDef="feeperiod">
-                            <th mat-header-cell *matHeaderCellDef> Fee Period </th>
-                            <td mat-cell *matCellDef="let element"> {{element.feeperiod}} </td>
-                          </ng-container>
-                          <ng-container matColumnDef="feedue">
-                            <th mat-header-cell *matHeaderCellDef> Fee Due </th>
-                            <td mat-cell *matCellDef="let element"> {{element.feedue}} </td>
-                          </ng-container>
-                          <ng-container matColumnDef="remark">
-                            <th mat-header-cell *matHeaderCellDef> Remark </th>
-                            <td mat-cell *matCellDef="let element"> {{element.remark}} </td>
-                          </ng-container>
-                          <ng-container matColumnDef="status">
-                            <th mat-header-cell *matHeaderCellDef> Status </th>
-                            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-                          </ng-container>
-                          <ng-container matColumnDef="action">
-                            <th mat-header-cell *matHeaderCellDef> Action </th>
-                            <td mat-cell *matCellDef="let element">
-                                <i class="material-icons icon-edit"  >create</i> 
-                                <i class="material-icons icon-danger icon-spacer">delete</i>  
-                            </td>
-                          </ng-container>
-                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-                          </tr>
-                        </table>
+                  <div class="col-12">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Amount</mat-label>
+                      <input matInput placeholder="Amount" type="number" formControlName="ftr_amount"
+                        [readonly]="selectedMode === '1'" required>
+                    </mat-form-field>
                   </div>
                 </div>
-              </mat-card>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Remarks</mat-label>
+                      <textarea placeholder="Write your message" required formControlName="ftr_remark" matInput
+                        rows="4"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-3">
+              </div>
             </div>
           </div>
-</div>
+          <div *ngIf="modifyReceiptForm.value.ftr_pay_id !== '1' && modifyReceiptForm.value.ftr_pay_id !== '2' 
+       && modifyReceiptForm.value.ftr_pay_id !== '3' && modifyReceiptForm.value.ftr_pay_id !== ''">
+            <div class="row">
+              <div class="col-3"></div>
+              <div class="col-6">
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Amount</mat-label>
+                      <input matInput placeholder="Amount" type="number" formControlName="ftr_amount" required>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Transaction Id</mat-label>
+                      <input matInput placeholder="Transaction Id" type="number" formControlName="ftr_transaction_id"
+                        required>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Remarks</mat-label>
+                      <textarea placeholder="Write your message" required formControlName="ftr_remark" matInput
+                        rows="4"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-3">
+              </div>
+            </div>
+          </div>
+          <div *ngIf="modifyReceiptForm.value.ftr_pay_id === '2'">
+            <div class="row">
+              <div class="col-6">
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Bank Name </mat-label>
+                      <mat-select placeholder="Bank Name" formControlName="ftr_bnk_id" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let bank of banks" [value]="bank.bnk_id">{{bank.bank_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Amount</mat-label>
+                      <input matInput placeholder="Amount" type="number" formControlName="ftr_amount" required>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="row margin-bottom-10">
+                  <div class="col-12">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Remarks</mat-label>
+                      <textarea matInput placeholder="Write your message" formControlName="ftr_remark" required
+                        rows="6"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="modifyReceiptForm.value.ftr_pay_id === '3'">
+            <div class="row">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-3">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Deposited Bank</mat-label>
+                      <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let bank of banks" [value]="bank.bnk_id">{{bank.bank_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Cheque No.</mat-label>
+                      <input matInput placeholder="Cheque No." formControlName="ftr_cheque_no"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        type="number" maxlength="6" required>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Drawn On</mat-label>
+                      <mat-select placeholder="Drawn On" formControlName="ftr_bnk_id" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let bank of allBanks" [value]="bank.tb_id">{{bank.tb_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Branch</mat-label>
+                      <input matInput placeholder="Bank Branch" formControlName="ftr_branch" required>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-3">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Amount Chargeable</mat-label>
+                      <input matInput placeholder="Amount Chargeable" type="number" formControlName="ftr_amount"
+                        required>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Cheque Date</mat-label>
+                      <input matInput [matDatepicker]="picker3" placeholder="Choose a date"
+                        formControlName="ftr_cheque_date" required>
+                      <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                      <mat-datepicker #picker3></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Remarks</mat-label>
+                      <textarea placeholder="Write your message" matInput rows="2" required
+                        formControlName="ftr_remark"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row text-center">
+            <div class="col-12">
+              <button *ngIf="isExist('369')" mat-button class="text-uppercase btn-success"
+                (click)="updateReceipt()">submit</button>
+              <button *ngIf="isExist('370')" mat-button class="text-uppercase recalulate-invoice-btn btn-spacer"
+                (click)="saveAndPrintReceipt()">save & print</button>
+              <button mat-button class="text-uppercase btn-danger btn-spacer" (click)="reset()">reset</button>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+  <div class="my-container">
+    <ngx-loading [show]="checkBulkStatus" [config]="{ 
+        backdropBorderRadius: '14px',
+        backdropBackgroundColour: 'rgba(0,0,0,0.55)'
+        }">
+    </ngx-loading>
+    <span *ngIf="checkBulkStatus" class="text">{{loaderText}}</span>
+  </div>
