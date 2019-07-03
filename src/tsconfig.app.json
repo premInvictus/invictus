@@ -60,6 +60,7 @@
     "../projects/smart/src/app/assignment/assignment.module.ts",
     "../projects/smart/src/app/auxillaries/auxillaries.module.ts",
     "../projects/smart/src/app/reports/reports.module.ts",
+    "../projects/smart/src/app/smartconfiguration/smartconfiguration.module.ts",
   ]
 }
 
