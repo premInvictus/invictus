@@ -49,7 +49,7 @@
                 </div>
               </div>
             </div>
-            <fieldset class="col-12 fieldset_invoice" *ngIf="receiptArray.length > 0 && selectedMode === '1'">
+            <fieldset class="col-12 fieldset_invoice" *ngIf="receiptArray.length > 0">
               <div class="row margin-top-0 remove-padding">
                 <legend class="invoice_legend">Receipt Details</legend>
                 <div class="col-6 border_right">
@@ -124,7 +124,7 @@
                     <div class="font-size-16 font-regular col-sm">Receipt No</div>
                     <div class="font-size-16 font-bold  col-sm">
                       : <a style="cursor: pointer;" class="font-skyblue font-underline"
-                        (click)="openReceiptDialog(receipt.rpt_receipt_no, false)">
+                        (click)="openReceiptDialog(receipt.receipt_id, false)">
                         {{receipt.rpt_receipt_no}}
                       </a>
                     </div>

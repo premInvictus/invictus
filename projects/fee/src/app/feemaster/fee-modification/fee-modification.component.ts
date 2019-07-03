@@ -223,7 +223,7 @@ export class FeeModificationComponent implements OnInit {
 			width: '80%',
 			height: '80vh',
 			data: {
-				invoiceNo: invoiceNo,
+				rpt_id: invoiceNo,
 				edit: edit
 			},
 			hasBackdrop: true
@@ -258,7 +258,15 @@ export class FeeModificationComponent implements OnInit {
 					}
 					this.feeLoginId = this.receipt.login_id;
 					this.receipt.netPay = this.receipt.rpt_net_amount ? Number(this.receipt.rpt_net_amount) : 0;
-					this.receiptArray = this.receipt.invoice_bifurcation;
+
+					if (this.receipt.ftr_emod_id === '2' || this.receipt.ftr_emod_id === 2) {
+						//this.receiptArray['ftr_id'] =  this.receipt.ftr_id;
+						this.receiptArray = [{ftr_id: this.receipt.ftr_id}];
+					} else {
+						this.receiptArray = this.receipt.invoice_bifurcation;
+					}
+
+					console.log(this.receiptArray.length);
 					this.modifyReceiptForm.patchValue({
 						'rpt_id' : this.receipt.receipt_id,
 						'rpt_inv_id': this.receipt.inv_id,

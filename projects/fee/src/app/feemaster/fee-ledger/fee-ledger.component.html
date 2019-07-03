@@ -57,7 +57,7 @@
                 </span>
                 <span *ngIf="item.action.flgr_invoice_type === 'R'  && item.invoiceno != '0'"
                 class="pointer font-bold font-skyblue font-underline">
-                <a (click)="openReceiptDialog(item.action.flgr_inv_id, false)">R-#{{item.invoiceno}}</a>
+                <a (click)="openReceiptDialog(item.action.rpt_id, false)">R-#{{item.invoiceno}}</a>
               </span>
               </td>
               <td mat-footer-cell *matFooterCellDef></td>
