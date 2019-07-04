@@ -184,9 +184,19 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         max-width: 80% !important;
         flex: 0 0 80% !important;
     }
+    .fee-vertical-line-divider {
+        border-left: 2px solid #dee2e6;
+        height: 75%;
+        margin-left: 50%;
+    }
 }
 
 @include respond-between(lg, xl) {
+    .fee-vertical-line-divider {
+        border-left: 2px solid #dee2e6;
+        height: 75%;
+        margin-left: 50%;
+    }
     .smart-col-3 {
         max-width: 3% !important;
         flex: 0 0 3% !important;
