@@ -158,26 +158,25 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			this.ELEMENT_DATA.push(element);
 		});
 
-		
 		this.dataSource = new MatTableDataSource<ReceiptDetails>(this.ELEMENT_DATA);
 	}
 
-	prepareAdhocPaymentHead() {
-		this.ELEMENT_DATA = [];
-		this.invoiceTotal = this.invoiceDetails.rpt_net_amount;
-		let i = 0;
-			const element = {
-				srno: ++i,
-				feehead: 'Adhoc Payment',
-				feedue: 0,
-				concession: 0,
-				adjustment: 0,
-				netpay: Number(this.invoiceTotal),
-				invg_id: '0'
-			};
-			this.ELEMENT_DATA.push(element);
-		this.dataSource = new MatTableDataSource<ReceiptDetails>(this.ELEMENT_DATA);
-	}
+	// prepareAdhocPaymentHead() {
+	// 	this.ELEMENT_DATA = [];
+	// 	this.invoiceTotal = this.invoiceDetails.rpt_net_amount;
+	// 	let i = 0;
+	// 		const element = {
+	// 			srno: ++i,
+	// 			feehead: 'Adhoc Payment',
+	// 			feedue: 0,
+	// 			concession: 0,
+	// 			adjustment: 0,
+	// 			netpay: Number(this.invoiceTotal),
+	// 			invg_id: '0'
+	// 		};
+	// 		this.ELEMENT_DATA.push(element);
+	// 	this.dataSource = new MatTableDataSource<ReceiptDetails>(this.ELEMENT_DATA);
+	// }
 	getReceiptBifurcation(data) {
 		console.log('data--', data);
 		this.invoiceBifurcationArray = [];
@@ -209,11 +208,6 @@ export class ReceiptDetailsModalComponent implements OnInit {
 					if (this.invoiceDetails.invoice_bifurcation.length > 0) {
 						this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
 						this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
-					} else {
-
-						if (this.invoiceDetails.ftr_emod_id === '2' || this.invoiceDetails.ftr_emod_id === 2) {
-							this.prepareAdhocPaymentHead();
-						}
 					}
 
 					this.adjustmentForm.patchValue({
