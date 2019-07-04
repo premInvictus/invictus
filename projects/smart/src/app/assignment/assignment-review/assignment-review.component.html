@@ -64,7 +64,7 @@
             <mat-icon matPrefix>filter_list</mat-icon>
           </mat-form-field>
         </div>
-        <div class="col-8 text-right margin-top-5" *ngIf="!nodataFlag">
+        <div class="col-8 text-right margin-top-5">
           <button mat-raised-button class="btn-success-green" *ngIf="!isTeacher && (selection.selected.length > 0)" (click)="openSendModal({})"><i
               class="fas fa-location-arrow"></i> Send</button>
           <button mat-raised-button class="btn-success-blue margin-left-10" (click)="openAddAttachmentDialog()">Add

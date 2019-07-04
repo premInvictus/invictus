@@ -63,6 +63,16 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			// tslint:disable-next-line:max-line-length
 			extraPlugins: '',
 			scayt_multiLanguageMod: true,
+			fontSize: {
+				options: [
+					9,
+					11,
+					13,
+					17,
+					19,
+					21
+				]
+			},
 			toolbar: [
 				// tslint:disable-next-line:max-line-length
 				['Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates']

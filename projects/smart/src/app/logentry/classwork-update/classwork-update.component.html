@@ -123,7 +123,7 @@
                   <input matInput formControlName="cw_assignment_desc" (blur)="reviewElementAssignment(i,$event)">
                   <mat-icon matSuffix style="cursor: pointer" (click)="attachmentDialog(i)">attachment</mat-icon>
                 </mat-form-field> -->
-                <button mat-raised-button class="btn-primary-100" (click)="attachmentDialog(i)">Add Assignment</button>
+                <button mat-raised-button class="btn-primary-100 margin-top-10" (click)="attachmentDialog(i);$event.stopPropagation();">Add Assignment</button>
               </div>
 
             </div>
