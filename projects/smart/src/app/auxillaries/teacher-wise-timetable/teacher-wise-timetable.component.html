@@ -1,14 +1,36 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-4">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Teacher Wise Time Table</span>
+          </div>
+        </div>
+        <div class="col-8 text-right">
+          <div class="top-card-title">
+            <a [routerLink]="['../time-table']">
+              <button mat-raised-button class="btn-success-green margin-right-20"><i class="fas fa-plus"></i> Add New
+              </button></a>
+            <a [routerLink]="['../classwise-table']">
+              <span class="font-size-24 font-medium">Class Wise</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </mat-card>
+  </div>
+</div>
 <div class="row margin-top-15">
   <div class="col-12">
     <mat-card>
-      <div class="row">        
+      <div class="row">
         <div class="col-4">
-          <span class="font-size-20 font-bold">Teacher Wise Time Table</span>
         </div>
-        
         <div class="col-8 text-right">
-            <form [formGroup]="teacherwiseForm" novalidate>
-            <mat-form-field class="form-field-220 remove-form-field-bottom-margin"  appearance="outline">
+          <form [formGroup]="teacherwiseForm" novalidate>
+            <mat-form-field class="form-field-220 remove-form-field-bottom-margin" appearance="outline">
               <mat-label>Teacher Name</mat-label>
               <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
                 [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
@@ -19,17 +41,17 @@
                   <small>Id: {{item.au_login_id}}</small>
                 </mat-option>
               </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
-            <mat-label>Subject</mat-label>
-            <mat-select formControlName="subject_name"  placeholder="Select Subject">
+            </mat-form-field>
+            <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+              <mat-label>Subject</mat-label>
+              <mat-select formControlName="subject_id" placeholder="Select Subject">
                 <mat-option value="">Please select</mat-option>
                 <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </form>
+              </mat-select>
+            </mat-form-field>
+          </form>
         </div>
-     
+
       </div>
       <div class="row margin-top-10">
         <div class="col-12">
@@ -50,23 +72,40 @@
               <tr class="custom-tr" *ngFor="let det of teacherwiseArray;let j = index">
                 <td class="custom-td">{{j+ 1}}<sup>{{periodSup[j]}}</sup></td>
                 <ng-container *ngFor="let item of det;let i=index">
-                  <td class="custom-td" *ngIf="item.subject_id !== '-'">
-                    <i class="fas fa-circle margin-right-10 sha" [ngClass]="'color-' + item.subject_id"></i> 
-                    {{item.subject_name}}  {{item.class_name}} - {{item.sec_name}}</td>
+                  <td class="custom-td" *ngIf="(item.subject_id !== '-') && (teacherwiseForm.value.subject_id === item.subject_id)">
+                    <i class="fas fa-circle margin-right-10 animation" [ngClass]="'color-' + item.subject_id"></i>
+                    {{item.subject_name}} {{item.class_name}} - {{item.sec_name}}</td>
+                    <td class="custom-td" *ngIf="(item.subject_id !== '-') && (teacherwiseForm.value.subject_id != item.subject_id)">
+                        <i class="fas fa-circle margin-right-10 " [ngClass]="'color-' + item.subject_id"></i>
+                        {{item.subject_name}} {{item.class_name}} - {{item.sec_name}}</td>
                   <td class="custom-td" *ngIf="item.subject_id === '-'">-</td>
                 </ng-container>
-            </tr>
+              </tr>
+            </tbody>
+            <tbody *ngIf="finalDivFlag">
+                <tr class="text-center">
+                    <td colspan="9">
+                        <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                        <br><br><br>                                         
+                        <span class="font-size-20 font-bold font-color-brown">
+                          No Data Available
+                        </span>
+                        <br><span class="font-size-20 font-light font-color-brown">
+                          Please Upload Timetable  
+                        </span>
+                    </td>
+                </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <div class="row margin-top-15">
+      <div class="row margin-top-15" *ngIf="teacherwiseFlag">
         <div class="col-12 text-center">
           <span class="font-size-20 font-bold">Day Wise Summary</span>
         </div>
       </div>
-      <div class="row margin-top-10">
-      <div class="col-1"></div>
+      <div class="row margin-top-10" *ngIf="teacherwiseFlag">
+        <div class="col-1"></div>
         <div class="col-10">
           <table class="table table-borderd table-stripped custom-table">
             <thead class="table-skill__head text-center">
@@ -93,35 +132,35 @@
                 <td class="custom-td">06</td>
               </tr>
               <tr class="custom-tr">
-                  <td class="custom-td background-color-red">English</td>
-                  <td class="custom-td">08</td>
-                  <td class="custom-td">07</td>
-                  <td class="custom-td">08</td>
-                  <td class="custom-td">04</td>
-                  <td class="custom-td">02</td>
-                  <td class="custom-td">06</td>
-                  <td class="custom-td">06</td>
-                </tr>
-                <tr class="custom-tr">
-                    <td class="custom-td background-color-blue">History</td>
-                    <td class="custom-td">08</td>
-                    <td class="custom-td">07</td>
-                    <td class="custom-td">08</td>
-                    <td class="custom-td">04</td>
-                    <td class="custom-td">02</td>
-                    <td class="custom-td">06</td>
-                    <td class="custom-td">06</td>
-                  </tr>
-                  <tr class="custom-tr">
-                      <td class="custom-td background-color-grey">Total</td>
-                      <td class="custom-td">08</td>
-                      <td class="custom-td">07</td>
-                      <td class="custom-td">08</td>
-                      <td class="custom-td">04</td>
-                      <td class="custom-td">02</td>
-                      <td class="custom-td">06</td>
-                      <td class="custom-td">06</td>
-                    </tr>
+                <td class="custom-td background-color-red">English</td>
+                <td class="custom-td">08</td>
+                <td class="custom-td">07</td>
+                <td class="custom-td">08</td>
+                <td class="custom-td">04</td>
+                <td class="custom-td">02</td>
+                <td class="custom-td">06</td>
+                <td class="custom-td">06</td>
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td background-color-blue">History</td>
+                <td class="custom-td">08</td>
+                <td class="custom-td">07</td>
+                <td class="custom-td">08</td>
+                <td class="custom-td">04</td>
+                <td class="custom-td">02</td>
+                <td class="custom-td">06</td>
+                <td class="custom-td">06</td>
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td background-color-grey">Total</td>
+                <td class="custom-td">08</td>
+                <td class="custom-td">07</td>
+                <td class="custom-td">08</td>
+                <td class="custom-td">04</td>
+                <td class="custom-td">02</td>
+                <td class="custom-td">06</td>
+                <td class="custom-td">06</td>
+              </tr>
             </tbody>
           </table>
         </div>
