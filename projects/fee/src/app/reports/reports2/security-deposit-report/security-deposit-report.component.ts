@@ -146,6 +146,8 @@ export class SecurityDepositReportComponent implements OnInit {
 			'pageIndex': value.pageIndex,
 			'classId': value.fee_value,
 			'secId': value.hidden_value,
+			'login_id': value.login_id,
+			'orderBy': value.orderBy,
 			'downloadAll': true,
 		};
 		this.columnDefinitions = [
@@ -163,7 +165,7 @@ export class SecurityDepositReportComponent implements OnInit {
 				grouping: {
 					getter: 'invoice_created_date',
 					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+						return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
@@ -256,6 +258,8 @@ export class SecurityDepositReportComponent implements OnInit {
 					this.dataset.push(obj);
 					index++;
 				}
+				this.tableFlag = true;
+			} else {
 				this.tableFlag = true;
 			}
 		});
