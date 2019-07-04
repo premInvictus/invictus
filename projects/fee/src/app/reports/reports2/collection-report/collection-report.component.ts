@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportFilterComponent } from '../../reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from '../../reports-filter-sort/report-sort/report-sort.component';
+import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
 @Component({
 	selector: 'app-collection-report',
 	templateUrl: './collection-report.component.html',
@@ -49,6 +50,7 @@ export class CollectionReportComponent implements OnInit {
 	filterFlag = false;
 	filterResult: any[] = [];
 	sortResult: any[] = [];
+	dataArr: any[] = [];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -103,6 +105,9 @@ export class CollectionReportComponent implements OnInit {
 	}
 
 	getHeadWiseCollectionReport(value: any) {
+		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
+		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
+		this.dataArr = [];
 		this.aggregatearray = [];
 		this.columnDefinitions = [];
 		this.dataset = [];
@@ -189,7 +194,7 @@ export class CollectionReportComponent implements OnInit {
 									grouping: {
 										getter: 'invoice_created_date',
 										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 										},
 										aggregators: this.aggregatearray,
 										aggregateCollapsed: true,
@@ -310,6 +315,8 @@ export class CollectionReportComponent implements OnInit {
 					console.log(this.columnDefinitions);
 					console.log(this.dataset);
 					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		} else if (this.reportType === 'classwise') {
@@ -344,7 +351,7 @@ export class CollectionReportComponent implements OnInit {
 					grouping: {
 						getter: 'invoice_created_date',
 						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,
@@ -447,6 +454,8 @@ export class CollectionReportComponent implements OnInit {
 					this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		} else if (this.reportType === 'modewise') {
@@ -481,7 +490,7 @@ export class CollectionReportComponent implements OnInit {
 					grouping: {
 						getter: 'invoice_created_date',
 						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,
@@ -552,7 +561,7 @@ export class CollectionReportComponent implements OnInit {
 									grouping: {
 										getter: 'invoice_created_date',
 										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 										},
 										aggregators: this.aggregatearray,
 										aggregateCollapsed: true,
@@ -634,6 +643,8 @@ export class CollectionReportComponent implements OnInit {
 											repoArray[Number(keys)]['receipt_no'] : '-';
 										obj[key2 + k] = titem['pay_amount'] ? Number(titem['pay_amount']) : 0;
 										tot = tot + (titem['pay_amount'] ? Number(titem['pay_amount']) : 0);
+										obj['bank_name'] = repoArray[Number(keys)]['bank_name'] ?
+											repoArray[Number(keys)]['bank_name'] : '-';
 										obj['total'] = tot;
 										obj['rpt_amount'] = repoArray[Number(keys)]['rpt_amount'] ?
 											repoArray[Number(keys)]['rpt_amount'] : 0;
@@ -648,6 +659,22 @@ export class CollectionReportComponent implements OnInit {
 						this.dataset.push(obj);
 					});
 					this.columnDefinitions.push(
+						{
+							id: 'bank_name', name: 'Bank Name', field: 'bank_name',
+							filterable: true,
+							filterSearchType: FieldType.string,
+							filter: { model: Filters.compoundInput },
+							sortable: true,
+							grouping: {
+								getter: 'bank_name',
+								formatter: (g) => {
+									return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								},
+								aggregators: this.aggregatearray,
+								aggregateCollapsed: true,
+								collapsed: false
+							},
+						},
 						{
 							id: 'total', name: 'Total', field: 'total',
 							filterable: true,
@@ -688,6 +715,8 @@ export class CollectionReportComponent implements OnInit {
 					console.log(this.columnDefinitions);
 					console.log(this.dataset);
 					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		} else if (this.reportType === 'routewise') {
@@ -722,7 +751,7 @@ export class CollectionReportComponent implements OnInit {
 					grouping: {
 						getter: 'invoice_created_date',
 						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,
@@ -861,6 +890,8 @@ export class CollectionReportComponent implements OnInit {
 					this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		} else if (this.reportType === 'mfr') {
@@ -977,50 +1008,88 @@ export class CollectionReportComponent implements OnInit {
 								}
 								if (key === 'fm_name' &&
 									Number(item.inv_fp_id) === 2) {
-									obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
-									obj['Q2'] = item['inv_invoice_generated_status'][1]['invoice_paid_status'];
-									obj['Q3'] = item['inv_invoice_generated_status'][2]['invoice_paid_status'];
-									obj['Q4'] = item['inv_invoice_generated_status'][3]['invoice_paid_status'];
-									obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
-									obj['inv_id2'] = item['inv_invoice_generated_status'][1]['invoice_id'];
-									obj['inv_id3'] = item['inv_invoice_generated_status'][2]['invoice_id'];
-									obj['inv_id4'] = item['inv_invoice_generated_status'][3]['invoice_id'];
+									obj['Q1'] = {
+										status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][0]['invoice_id']
+									};
+									obj['Q2'] = {
+										status: item['inv_invoice_generated_status'][1]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][1]['invoice_id']
+									};
+									obj['Q3'] = {
+										status: item['inv_invoice_generated_status'][2]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][2]['invoice_id']
+									};
+									obj['Q4'] = {
+										status: item['inv_invoice_generated_status'][3]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][3]['invoice_id']
+									};
 								} else if (key === 'fm_name' &&
 									Number(item.inv_fp_id) === 1) {
-									obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
-									obj['Q2'] = item['inv_invoice_generated_status'][1]['invoice_paid_status'];
-									obj['Q3'] = item['inv_invoice_generated_status'][2]['invoice_paid_status'];
-									obj['Q4'] = item['inv_invoice_generated_status'][3]['invoice_paid_status'];
-									obj['Q5'] = item['inv_invoice_generated_status'][4]['invoice_paid_status'];
-									obj['Q6'] = item['inv_invoice_generated_status'][5]['invoice_paid_status'];
-									obj['Q7'] = item['inv_invoice_generated_status'][6]['invoice_paid_status'];
-									obj['Q8'] = item['inv_invoice_generated_status'][7]['invoice_paid_status'];
-									obj['Q9'] = item['inv_invoice_generated_status'][8]['invoice_paid_status'];
-									obj['Q10'] = item['inv_invoice_generated_status'][9]['invoice_paid_status'];
-									obj['Q11'] = item['inv_invoice_generated_status'][10]['invoice_paid_status'];
-									obj['Q12'] = item['inv_invoice_generated_status'][11]['invoice_paid_status'];
-									obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
-									obj['inv_id2'] = item['inv_invoice_generated_status'][1]['invoice_id'];
-									obj['inv_id3'] = item['inv_invoice_generated_status'][2]['invoice_id'];
-									obj['inv_id4'] = item['inv_invoice_generated_status'][3]['invoice_id'];
-									obj['inv_id5'] = item['inv_invoice_generated_status'][4]['invoice_id'];
-									obj['inv_id6'] = item['inv_invoice_generated_status'][5]['invoice_id'];
-									obj['inv_id7'] = item['inv_invoice_generated_status'][6]['invoice_id'];
-									obj['inv_id8'] = item['inv_invoice_generated_status'][7]['invoice_id'];
-									obj['inv_id9'] = item['inv_invoice_generated_status'][8]['invoice_id'];
-									obj['inv_id10'] = item['inv_invoice_generated_status'][9]['invoice_id'];
-									obj['inv_id11'] = item['inv_invoice_generated_status'][10]['invoice_id'];
-									obj['inv_id12'] = item['inv_invoice_generated_status'][11]['invoice_id'];
+									obj['Q1'] = {
+										status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][0]['invoice_id']
+									};
+									obj['Q2'] = {
+										status: item['inv_invoice_generated_status'][1]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][1]['invoice_id']
+									};
+									obj['Q3'] = {
+										status: item['inv_invoice_generated_status'][2]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][2]['invoice_id']
+									};
+									obj['Q4'] = {
+										status: item['inv_invoice_generated_status'][3]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][3]['invoice_id']
+									};
+									obj['Q5'] = {
+										status: item['inv_invoice_generated_status'][4]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][4]['invoice_id']
+									};
+									obj['Q6'] = {
+										status: item['inv_invoice_generated_status'][5]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][5]['invoice_id']
+									};
+									obj['Q7'] = {
+										status: item['inv_invoice_generated_status'][6]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][6]['invoice_id']
+									};
+									obj['Q8'] = {
+										status: item['inv_invoice_generated_status'][7]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][7]['invoice_id']
+									};
+									obj['Q9'] = {
+										status: item['inv_invoice_generated_status'][8]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][8]['invoice_id']
+									};
+									obj['Q10'] = {
+										status: item['inv_invoice_generated_status'][9]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][9]['invoice_id']
+									};
+									obj['Q11'] = {
+										status: item['inv_invoice_generated_status'][10]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][10]['invoice_id']
+									};
+									obj['Q12'] = {
+										status: item['inv_invoice_generated_status'][11]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][11]['invoice_id']
+									};
 								} else if (key === 'fm_name' &&
 									Number(item.inv_fp_id) === 3) {
-									obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
-									obj['Q2'] = item['inv_invoice_generated_status'][1]['invoice_paid_status'];
-									obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
-									obj['inv_id2'] = item['inv_invoice_generated_status'][1]['invoice_id'];
+									obj['Q1'] = {
+										status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][0]['invoice_id']
+									};
+									obj['Q2'] = {
+										status: item['inv_invoice_generated_status'][1]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][1]['invoice_id']
+									};
 								} else if (key === 'fm_name' &&
 									Number(item.inv_fp_id) === 4) {
-									obj['Q1'] = item['inv_invoice_generated_status'][0]['invoice_paid_status'];
-									obj['inv_id1'] = item['inv_invoice_generated_status'][0]['invoice_id'];
+									obj['Q1'] = {
+										status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
+										invoice_id: item['inv_invoice_generated_status'][0]['invoice_id']
+									};
 								}
 							});
 						}
@@ -1028,6 +1097,8 @@ export class CollectionReportComponent implements OnInit {
 						this.tableFlag = true;
 						index++;
 					}
+				} else {
+					this.tableFlag = true;
 				}
 			});
 		}
@@ -1076,6 +1147,10 @@ export class CollectionReportComponent implements OnInit {
 				this.openDialogReceipt(item['receipt_no'], false);
 			}
 		}
+		if (e.target.className === 'invoice-span-mfr') {
+			const inv_id = Number(e.target.innerHTML);
+			this.renderDialog(inv_id, false);
+		}
 	}
 	onCellChanged(e, args) {
 		console.log(e);
@@ -1118,28 +1193,23 @@ export class CollectionReportComponent implements OnInit {
 		return '<b class="total-footer-report">Total</b>';
 	}
 	getMFRFormatter(row, cell, value, columnDef, dataContext) {
-		console.log(dataContext);
-		let inv_id: any = '';
-		if (Number(dataContext['inv_fp_id']) === 1) {
-			for (let i = 0; i < 12; i++) {
-				if (dataContext['inv_id' + i] !== '') {
-					inv_id = dataContext['inv_id' + i];
-				}
-			}
-			if (value === 'unpaid') {
-				return '<div style="background-color:#e2564b !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;"></div>';
-			} else if (value === 'paid') {
-				return '<div style="background-color:#7bd451 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;"></div>';
-			} else if (value === 'Not Generated') {
-				return '<div style="background-color:#a5cede !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;' +
-					'border-right: 1px solid #89a8c8; border-top: 0px !important;' +
-					'border-bottom: 0px !important; border-left: 0px !important; margin: auto;"></div>';
-			} else if (value === 'Unpaid with fine') {
-				return '<div style="background-color:#598ac5 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-					+ '<span>' + inv_id + '</span></div>';
-			} else {
-				return '<div style="background-color:#7bd450 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;"></div>';
-			}
+		if (value.status === 'unpaid') {
+			return '<div style="background-color:#f93435 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+				+ '<span class="invoice-span-mfr">' + value.invoice_id + '</span>' + '</div>';
+		} else if (value.status === 'paid') {
+			return '<div style="background-color:#27de80 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+				+ '<span class="invoice-span-mfr">' + value.invoice_id + '</span>' + '</div>';
+		} else if (value.status === 'Not Generated') {
+			return '<div style="background-color:#d2d8e0 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;' +
+				'border-right: 1px solid #89a8c8; border-top: 0px !important;' +
+				'border-bottom: 0px !important; border-left: 0px !important; margin: auto;">'
+				+ '<span class="invoice-span-mfr">' + value.invoice_id + '</span>' + '</div>';
+		} else if (value.status === 'Unpaid with fine') {
+			return '<div style="background-color:#4a7bec !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+				+ '<span class="invoice-span-mfr">' + value.invoice_id + '</span>' + '</div>';
+		} else {
+			return '<div style="background-color:#7bd450 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+				+ '<span class="invoice-span-mfr">' + value.invoice_id + '</span>' + '</div>';
 		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
@@ -1286,6 +1356,17 @@ export class CollectionReportComponent implements OnInit {
 					'orderBy': this.sortResult.length > 0 ? [this.sortResult] : ''
 				});
 			}
+		});
+	}
+	renderDialog(inv_id, edit) {
+		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
+			width: '80%',
+			data: {
+				invoiceNo: inv_id,
+				edit: edit,
+				paidStatus: 'paid'
+			},
+			hasBackdrop: true
 		});
 	}
 }

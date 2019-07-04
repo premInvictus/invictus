@@ -40,7 +40,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.getReceiptBifurcation(this.data.invoiceNo);
+		this.getReceiptBifurcation(this.data);
 	}
 	openEditDialog = (data) => this.editReference.openModal(data);
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
@@ -77,7 +77,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			.subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-					this.getReceiptBifurcation(this.data.invoiceNo);
+					this.getReceiptBifurcation(this.data);
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 				}
@@ -133,7 +133,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			.subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-					this.getReceiptBifurcation(this.data.invoiceNo);
+					this.getReceiptBifurcation(this.data);
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 				}
@@ -157,15 +157,35 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			this.invoiceTotal += element.netpay;
 			this.ELEMENT_DATA.push(element);
 		});
+
+		
 		this.dataSource = new MatTableDataSource<ReceiptDetails>(this.ELEMENT_DATA);
 	}
-	getReceiptBifurcation(invoiceNo) {
+
+	prepareAdhocPaymentHead() {
+		this.ELEMENT_DATA = [];
+		this.invoiceTotal = this.invoiceDetails.rpt_net_amount;
+		let i = 0;
+			const element = {
+				srno: ++i,
+				feehead: 'Adhoc Payment',
+				feedue: 0,
+				concession: 0,
+				adjustment: 0,
+				netpay: Number(this.invoiceTotal),
+				invg_id: '0'
+			};
+			this.ELEMENT_DATA.push(element);
+		this.dataSource = new MatTableDataSource<ReceiptDetails>(this.ELEMENT_DATA);
+	}
+	getReceiptBifurcation(data) {
+		console.log('data--', data);
 		this.invoiceBifurcationArray = [];
 		let recieptJSON = {};
-		if (this.data.from) {
-			recieptJSON = { inv_id: invoiceNo };
+		if (this.data.invoiceNo) {
+			recieptJSON = { inv_id: this.data.invoiceNo };
 		} else {
-			recieptJSON = { flgr_invoice_receipt_no: invoiceNo };
+			recieptJSON = { rpt_id: this.data.rpt_id };
 		}
 		this.feeService.getReceiptBifurcation(recieptJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -189,6 +209,11 @@ export class ReceiptDetailsModalComponent implements OnInit {
 					if (this.invoiceDetails.invoice_bifurcation.length > 0) {
 						this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
 						this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
+					} else {
+
+						if (this.invoiceDetails.ftr_emod_id === '2' || this.invoiceDetails.ftr_emod_id === 2) {
+							this.prepareAdhocPaymentHead();
+						}
 					}
 
 					this.adjustmentForm.patchValue({
@@ -206,8 +231,9 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		});
 	}
 	editConfirm() { }
-	printReceipt() {
-		this.feeService.printReceipt({ receipt_id: [this.data.invoiceNo] }).subscribe((result: any) => {
+	printReceipt(rpt_id) {
+		console.log('this.data', this.data);
+		this.feeService.printReceipt({ receipt_id: [rpt_id] }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				const length = result.data.split('/').length;

@@ -47,6 +47,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getSubtopicByTopicId', value);
 	}
+	getSchedulerEventCategory() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSmartUrl + '/common/getSchedulerEventCategory');
+	}
 	getSubtopicCountAndDetail(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/topicwise/getSubtopicCountAndDetail', value);
@@ -183,6 +187,18 @@ export class SmartService {
 	updateTimetableDetails(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/updateTimetableDetails', value);
+		}
+	insertScheduler(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/scheduler/insertScheduler', value);
+	}
+	getScheduler(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/scheduler/getScheduler', value);
+	}
+	deleteScheduler(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/scheduler/deleteScheduler', value);
 	}
 	insertClasswisePeriod(value) {
 		this.service.startLoading();

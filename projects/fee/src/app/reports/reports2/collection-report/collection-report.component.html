@@ -55,9 +55,39 @@
     </div>
 </form>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag">
+    <div class="float-right margin-top-20" [hidden]="!(tableFlag && 
+    reportFilterForm.value.report_type === 'mfr')">
+        <div class="text-center">
+            <table>
+                <tr>
+                    <td><i class="fas fa-square" style="color: #27de80 !important"></i></td>
+                    <td>
+                        <span><b>Paid</b></span>
+                    </td>
+                    <td><i class="fas fa-square" style="color: #f93435 !important"></i></td>
+                    <td>
+                        <span><b>Unpaid</b></span>
+                    </td>
+                    <td><i class="fas fa-square" style="color:#4a7bec !important"></i></td>
+                    <td>
+                        <span><b>Unpaid with Fine</b></span>
+                    </td>
+                    <td><i class="fas fa-square" style="color: #d2d8e0 !important"></i></td>
+                    <td>
+                        <span><b>Not Generated</b></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
     <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
         [dataset]="dataset" gridHeight="800" (onAngularGridCreated)="angularGridReady($event)"
         (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
         (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
     </angular-slickgrid>
+</div>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
+    <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+        No Records Found
+    </div>
 </div>
