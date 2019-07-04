@@ -15,6 +15,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportFilterComponent } from '../../reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from '../../reports-filter-sort/report-sort/report-sort.component';
 import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
+const jsPDF = require('jspdf');
 @Component({
 	selector: 'app-collection-report',
 	templateUrl: './collection-report.component.html',
@@ -133,10 +134,21 @@ export class CollectionReportComponent implements OnInit {
 				sanitizeDataExport: true
 			},
 			gridMenu: {
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				}
+				],
 				onCommand: (e, args) => {
 					if (args.command === 'toggle-preheader') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.clearGrouping();
+					}
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF();
 					}
 				},
 			},
@@ -1368,5 +1380,13 @@ export class CollectionReportComponent implements OnInit {
 			},
 			hasBackdrop: true
 		});
+	}
+	exportAsPDF() {
+		const id: any = 'grid1';
+		const doc = new jsPDF('landscape');
+		doc.setFont('helvetica');
+		doc.setFontSize(5);
+		doc.text(document.getElementById(id).innerHTML);
+		doc.save('tab.pdf');
 	}
 }
