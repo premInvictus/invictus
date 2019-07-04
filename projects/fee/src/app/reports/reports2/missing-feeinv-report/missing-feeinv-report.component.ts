@@ -148,6 +148,8 @@ export class MissingFeeinvReportComponent implements OnInit {
 			'pageIndex': value.pageIndex,
 			'classId': value.fee_value,
 			'secId': value.hidden_value,
+			'login_id': value.login_id,
+			'orderBy': value.orderBy,
 			'downloadAll': true,
 		};
 		this.columnDefinitions = [
