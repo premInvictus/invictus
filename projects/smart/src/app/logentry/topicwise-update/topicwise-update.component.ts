@@ -95,6 +95,8 @@ export class TopicwiseUpdateComponent implements OnInit {
 					console.log(result.data);
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+					this.topicsubtopicDetailsArray = [];
+					this.noDataFlag = true;
 					this.topicwiseforForm.patchValue({
 						teacher_name: '',
 						tw_teacher_id: '',
@@ -114,6 +116,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 		});
 		this.noDataFlag = true;
 		this.teacherId = teacherDetails.au_login_id;
+		this.topicsubtopicDetailsArray = [];
 		this.getClassByTeacherId();
 	}
 	getClassByTeacherId() {
@@ -219,6 +222,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 						}
 					});
 				} else {
+					this.topicsubtopicDetailsArray = [];
 					this.noDataFlag = true;
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 				}

@@ -11,7 +11,7 @@
           </div>
           <div class="col-5 text-right">
             <div class="top-card-title-form">
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin"
                 appearance="outline">
                 <mat-label>From</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from"
@@ -27,7 +27,7 @@
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin" appearance="outline"
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline"
                 *ngIf="currentUser.role_id != '3'">
                 <mat-label>Teacher Name</mat-label>
                 <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
@@ -85,7 +85,7 @@
                     {{item.cw_entry_date | date:'dd MMM, yyyy'}}</th>
                 <tr>
               </thead>
-              <tbody>
+              <tbody *ngIf="!noDataFlag">
                 <tr class="custom-tr" *ngFor="let item1 of item.cw_array">
                   <td class="custom-td">{{item1.cw_period_id}}{{periodSup[item1.cw_period_id - 1]}}</td>
                   <td class="custom-td text-left">{{item1.sub_name | capitalize}}</td>

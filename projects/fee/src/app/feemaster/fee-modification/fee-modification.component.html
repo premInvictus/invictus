@@ -166,31 +166,25 @@
             <div class="col-3"></div>
             <div class="col-6">
               <div class="row">
-                <div class="col-12">
-                  <div class="row">
-                    <div class="col-6">
-                      <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Receipt Date</mat-label>
-                        <input matInput [matDatepicker]="pickerReceipt" placeholder="Choose a date"
-                          formControlName="ftr_transaction_date" required>
-                        <mat-datepicker-toggle matSuffix [for]="pickerReceipt"></mat-datepicker-toggle>
-                        <mat-datepicker #pickerReceipt></mat-datepicker>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-6">
-
-                      <mat-form-field appearance="outline" class="form-field ">
-                        <mat-label>Payment Mode</mat-label>
-                        <mat-select formControlName="ftr_pay_id" placeholder="Payment Mode"
-                          (selectionChange)="setPayAmount($event)" required>
-                          <mat-option value="">Please Select</mat-option>
-                          <mat-option *ngFor="let mode of payModes" [value]="mode.pay_id">{{mode.pay_name}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-
-                  </div>
+                <div class="col-6">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Receipt Date</mat-label>
+                    <input matInput [matDatepicker]="pickerReceipt" placeholder="Choose a date"
+                      formControlName="ftr_transaction_date" required>
+                    <mat-datepicker-toggle matSuffix [for]="pickerReceipt"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerReceipt></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field appearance="outline" class="form-field ">
+                    <mat-label>Payment Mode</mat-label>
+                    <mat-select formControlName="ftr_pay_id" placeholder="Payment Mode"
+                      (selectionChange)="setPayAmount($event)" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let mode of payModes" [value]="mode.pay_id">{{mode.pay_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
               </div>
             </div>
