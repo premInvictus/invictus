@@ -228,6 +228,19 @@ export class OutstandingReportComponent implements OnInit {
 									},
 								},
 								{
+									id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
+									filterable: true,
+									grouping: {
+										getter: 'fp_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false,
+									},
+								},
+								{
 									id: 'receipt_no',
 									name: 'Invoice No.',
 									field: 'receipt_no',
@@ -271,6 +284,8 @@ export class OutstandingReportComponent implements OnInit {
 										}
 										obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
 											repoArray[Number(keys)]['invoice_id'] : '0';
+											obj['fp_name'] = repoArray[Number(keys)]['fp_name'][0] ?
+											new CapitalizePipe().transform(repoArray[Number(keys)]['fp_name'][0]) : '-';
 										obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
 											repoArray[Number(keys)]['invoice_no'] : '-';
 										obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
