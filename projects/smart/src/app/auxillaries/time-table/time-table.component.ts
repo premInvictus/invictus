@@ -40,7 +40,7 @@ export class TimeTableComponent implements OnInit {
 	noOfDay: any;
 	period: any;
 	tt_id: any;
-
+	zero: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private syllabusService: SmartService,
@@ -71,7 +71,8 @@ export class TimeTableComponent implements OnInit {
 			'tt_class_id': '',
 			'tt_section_id': '',
 			'no_of_day': '',
-			'no_of_period': ''
+			'no_of_period': '',
+			'period_checkbox': ''
 		});
 	}
 
@@ -85,6 +86,7 @@ export class TimeTableComponent implements OnInit {
 
 	//  Get Class List function
 	getClass() {
+		this.resetForm();
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
@@ -93,6 +95,8 @@ export class TimeTableComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.classArray = result.data;
+					} else {
+						this.classArray = [];
 					}
 				}
 			);
@@ -107,11 +111,16 @@ export class TimeTableComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.sectionArray = result.data;
+					} else {
+						this.sectionArray = [];
 					}
 				}
 			);
+		this.uploadTimeTableForm.patchValue({
+			'period_checkbox': ''
+		});
 	}
-
+	// get period and day by selected class
 	getPeriodDayByClass() {
 		const dayParam: any = {};
 		dayParam.class_id = this.uploadTimeTableForm.value.tt_class_id;
@@ -119,7 +128,6 @@ export class TimeTableComponent implements OnInit {
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
-						console.log(result.data);
 						this.uploadTimeTableForm.patchValue({
 							'no_of_day': result.data[0].no_of_day.toString(),
 							'no_of_period': result.data[0].no_of_period.toString(),
@@ -130,17 +138,21 @@ export class TimeTableComponent implements OnInit {
 				});
 	}
 
+	// add zero period
 	addPeriod(event) {
 		if (event.checked) {
+			this.zero = 'true';
 			this.uploadTimeTableForm.patchValue({
 				no_of_period: Number(this.uploadTimeTableForm.value.no_of_period) + 1,
 			});
 		} else {
+			this.zero = 'false';
 			this.uploadTimeTableForm.patchValue({
 				no_of_period: Number(this.uploadTimeTableForm.value.no_of_period) - 1,
 			});
 		}
 	}
+
 	// function to get excel data in file varaible
 	incomingfile(event) {
 		this.file = '';
@@ -243,7 +255,6 @@ export class TimeTableComponent implements OnInit {
 	}
 	// TimeTable details insert in database
 	finalSubmit() {
-		//console.log(this.uploadTimeTableForm.value.no_of_day);
 		for (let i = 0; i < this.finalXlslArray.length; i++) {
 			if (this.finalXlslArray[i].monday_id !== '') {
 				this.finalSubmitArray.push({
@@ -351,30 +362,37 @@ export class TimeTableComponent implements OnInit {
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
-						this.commonService.showSuccessErrorMessage('Timetable Already added for the Class and Section', 'error');
-					} else {
-						this.syllabusService.insertTimetable(this.uploadTimeTableForm.value).subscribe((timetable_r: any) => {
-							if (timetable_r && timetable_r.status === 'ok') {
-								this.tt_id = timetable_r.data;
-								for (const item of this.finalperiodArray) {
-									this.finalTimeTableArray.push({
-										td_tt_id: this.tt_id,
-										td_no_of_day: JSON.stringify(item.details),
-										td_no_of_period: item.no_of_period + 1,
-										td_created_by: this.currentUser.login_id
-									});
-								}
-								this.syllabusService.insertTimetableDetails(this.finalTimeTableArray).subscribe((details_r: any) => {
-									if (details_r && details_r.status === 'ok') {
-										this.finalXlslArray = [];
-										this.excelFlag = false;
-										this.resetForm();
-									}
-								});
+						this.syllabusService.updateTimetableDetails({ 'td_tt_id': result.data[0].tt_id }).subscribe((updateDetails_r: any) => {
+							if (updateDetails_r && updateDetails_r.status === 'ok') {
 							}
 						});
-
 					}
+					const timetable: any = {};
+					timetable.tt_class_id = this.uploadTimeTableForm.value.tt_class_id;
+					timetable.tt_section_id = this.uploadTimeTableForm.value.tt_section_id;
+					timetable.no_of_day = this.uploadTimeTableForm.value.no_of_day;
+					timetable.no_of_period = this.uploadTimeTableForm.value.no_of_period;
+					timetable.zero_period = this.zero;
+					this.syllabusService.insertTimetable(timetable).subscribe((timetable_r: any) => {
+						if (timetable_r && timetable_r.status === 'ok') {
+							this.tt_id = timetable_r.data;
+							for (const item of this.finalperiodArray) {
+								this.finalTimeTableArray.push({
+									td_tt_id: this.tt_id,
+									td_no_of_day: JSON.stringify(item.details),
+									td_no_of_period: item.no_of_period + 1,
+									td_created_by: this.currentUser.login_id
+								});
+							}
+							this.syllabusService.insertTimetableDetails(this.finalTimeTableArray).subscribe((details_r: any) => {
+								if (details_r && details_r.status === 'ok') {
+									this.finalXlslArray = [];
+									this.excelFlag = false;
+									this.resetForm();
+								}
+							});
+						}
+					});
 				});
 	}
 }

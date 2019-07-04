@@ -223,11 +223,11 @@ export class FeeLedgerComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(result => {
 		});
 	}
-	openReceiptDialog(invoiceNo, edit): void {
+	openReceiptDialog(rpt_id, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: invoiceNo,
+				rpt_id: rpt_id,
 				edit: edit
 			},
 			hasBackdrop: true

@@ -10,13 +10,13 @@
         </div>
         <div class="col-8 text-right">
           <div class="top-card-title">
-            <button mat-raised-button class="btn-success-green margin-right-20"><i class="fas fa-plus"></i> Add
-              New</button>
-              <a [routerLink]="['../classwise-table']">
-                <span class="font-size-24 font-medium">Class Wise</span>
-                </a>
-              <span class="margin-left-10 ver-line-divider"></span>
-              <a [routerLink]="['../teacherwise-table']">
+            <button mat-raised-button class="btn-success-green margin-right-20"><i class="fas fa-plus"></i> Add New
+            </button>
+            <a [routerLink]="['../classwise-table']">
+              <span class="font-size-24 font-medium">Class Wise</span>
+            </a>
+            <span class="margin-left-10 ver-line-divider"></span>
+            <a [routerLink]="['../teacherwise-table']">
               <span class="font-size-24 font-medium">Teacher Wise</span></a>
           </div>
         </div>
@@ -26,179 +26,199 @@
   </div>
 </div>
 <form [formGroup]="uploadTimeTableForm" novalidate>
-<div class="row" *ngIf="uploadTimeTableFlag">  
-  <div class="col-12">
-    <mat-card>
-      <div class="top-card-title">
-        <span class="font-size-24 font-medium">Upload TimeTable</span>
-      </div>
-      <div class="row">
-        <div class="col-2 col-ver-line-divider">
-          <div class="row">
-            <div class="col-12">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Class</mat-label>
-                <mat-select formControlName="tt_class_id" (selectionChange)="getSectionsByClass()" required placeholder="Select Class">
+  <div class="row" *ngIf="uploadTimeTableFlag">
+    <div class="col-12">
+      <mat-card>
+        <div class="top-card-title">
+          <span class="font-size-24 font-medium">Upload TimeTable</span>
+        </div>
+        <div class="row">
+          <div class="col-2 col-ver-line-divider">
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Class</mat-label>
+                  <mat-select formControlName="tt_class_id" (selectionChange)="getSectionsByClass()" required
+                    placeholder="Select Class">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                        {{item.class_name}}
+                      {{item.class_name}}
                     </mat-option>
-                </mat-select>
-              </mat-form-field>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Section</mat-label>
-                <mat-select formControlName="tt_section_id" (selectionChange)="getPeriodDayByClass()" required placeholder="Select Section">
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Section</mat-label>
+                  <mat-select formControlName="tt_section_id" (selectionChange)="getPeriodDayByClass()" required
+                    placeholder="Select Section">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
-                        {{item.sec_name}}
+                      {{item.sec_name}}
                     </mat-option>
-                </mat-select>
-              </mat-form-field>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>No. of Days</mat-label>
+                  <input matInput placeholder="Day Required" type="number" formControlName="no_of_day" readonly
+                    required>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>No. of Periods</mat-label>
+                  <input matInput placeholder="Periods Required" type="number" formControlName="no_of_period" readonly
+                    required>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <mat-checkbox formControlName="period_checkbox" (change)="addPeriod($event)">Zero Period</mat-checkbox>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <button mat-raised-button class="btn-primary-100" (click)="sampleTimeTable()">Download Template</button>
+              </div>
+              <input type="file" id="file" style="display: none !important;" (change)="incomingfile($event)"
+                placeholder="Upload file" accept=".xls">
+              <span style="float:right; padding-right: 10px;font-size:12px;">
+                Have already syllabus?&nbsp;&nbsp;
+                <label for="file"> <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i> </label>
+                &nbsp;&nbsp;Upload File
+              </span>
             </div>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>No. of Days</mat-label>
-                <input matInput placeholder="Day Required" type="number" formControlName="no_of_day" readonly required>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>No. of Periods</mat-label>
-                <input matInput placeholder="Periods Required" type="number" formControlName="no_of_period" readonly required>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <mat-checkbox formControlName="period_checkbox" (change)="addPeriod($event)">Zero Period</mat-checkbox>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <button mat-raised-button class="btn-primary-100" (click)="sampleTimeTable()">Download Template</button>
-            </div>
-            <input type="file"  id ="file" style="display: none !important;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xls">
-            <span style="float:right; padding-right: 10px;font-size:12px;">
-              Have already syllabus?&nbsp;&nbsp;
-              <label for="file">  <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i> </label>
-              &nbsp;&nbsp;Upload File
-          </span>           
-          </div>
-        </div>
-        <div class="col-10" *ngIf="sampleTimeTableFlag">
-          <div class="row margin-top-10">
-            <div class="col-12">
-              <table class="table table-borderd table-stripped custom-table">
-                <thead class="table-skill__head text-center">
-                  <tr class="custom-tr">
-                    <th class="custom-th">Periods</th>
-                    <th class="custom-th">Monday</th>
-                    <th class="custom-th">Tuesday</th>
-                    <th class="custom-th">Wednesday</th>
-                    <th class="custom-th">Thursday</th>
-                    <th class="custom-th">Friday</th>
-                    <th class="custom-th"  *ngIf="uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7'" >Saturday</th>
-                    <th class="custom-th"  *ngIf="uploadTimeTableForm.value.no_of_day === '7'">Sunday</th>
-    
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="custom-tr" *ngFor="let det of sampleTimeTableArray;">
-                    <td class="custom-td"><i class="margin-right-10"></i> {{det.count + 1}}<sup>{{periodSup[det.count]}}</sup></td>
-                    <td class="custom-td">- </td>
-                    <td class="custom-td">- </td>
-                    <td class="custom-td">- </td>
-                    <td class="custom-td">- </td>
-                    <td class="custom-td">- </td>
-                    <td class="custom-td"  *ngIf="uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7'" > - </td>
-                    <td class="custom-td"  *ngIf="uploadTimeTableForm.value.no_of_day === '7'"> - </td>              
-                 
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+          <div class="col-10" *ngIf="sampleTimeTableFlag">
+            <div class="row margin-top-10">
+              <div class="col-12">
+                <table class="table table-borderd table-stripped custom-table">
+                  <thead class="table-skill__head text-center">
+                    <tr class="custom-tr">
+                      <th class="custom-th">Periods</th>
+                      <th class="custom-th">Monday</th>
+                      <th class="custom-th">Tuesday</th>
+                      <th class="custom-th">Wednesday</th>
+                      <th class="custom-th">Thursday</th>
+                      <th class="custom-th">Friday</th>
+                      <th class="custom-th"
+                        *ngIf="uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7'">
+                        Saturday</th>
+                      <th class="custom-th" *ngIf="uploadTimeTableForm.value.no_of_day === '7'">Sunday</th>
 
-        <div class="col-10" *ngIf="excelFlag">
-        <div class="row margin-top-10">
-          <div class="col-12">
-            <table class="table table-borderd table-stripped custom-table">
-              <thead class="table-skill__head text-center">
-                <tr class="custom-tr">
-                  <th class="custom-th">Periods</th>
-                  <th class="custom-th">Monday</th>
-                  <th class="custom-th">Tuesday</th>
-                  <th class="custom-th">Wednesday</th>
-                  <th class="custom-th">Thursday</th>
-                  <th class="custom-th">Friday</th>
-                  <th class="custom-th"  *ngIf="uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7'" >Saturday</th>
-                  <th class="custom-th"  *ngIf="uploadTimeTableForm.value.no_of_day === '7'">Sunday</th>
-  
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="custom-tr" *ngFor="let det of finalXlslArray;let j = index">
-                  <td class="custom-td"><i class="margin-right-10"></i> {{j + 1}}<sup>{{periodSup[j]}}</sup></td>
-                  <td class="custom-td" *ngIf="det.monday_id !== '-'"><i class="fas fa-circle color-purple margin-right-10" ></i> {{det.monday}}</td>
-                  <td class="custom-td" *ngIf="det.monday_id === '-'">-</td>
-                  <td class="custom-td" *ngIf="det.tuesday_id !== '-'"><i class="fas fa-circle color-purple margin-right-10" ></i> {{det.tuesday}}</td>
-                  <td class="custom-td" *ngIf="det.tuesday_id === '-'">-</td>
-                  <td class="custom-td" *ngIf="det.wednesday_id !== '-'"><i class="fas fa-circle color-blue margin-right-10"></i> {{det.wednesday}}</td>
-                  <td class="custom-td" *ngIf="det.wednesday_id === '-'">-</td>
-                  <td class="custom-td" *ngIf="det.thursday_id !== '-'"><i class="fas fa-circle color-tealgreen margin-right-10"></i> {{det.thursday}}</td>
-                  <td class="custom-td" *ngIf="det.thursday_id === '-'">-</td>
-                  <td class="custom-td" *ngIf="det.friday_id !== '-'"><i class="fas fa-circle color-yellow margin-right-10"></i> {{det.friday}}</td>
-                  <td class="custom-td" *ngIf="det.friday_id === '-'">-</td>
-                  <td class="custom-td" *ngIf="(uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7') && det.saturday_id !== '-' ">
-                    <i class="fas fa-circle color-grey margin-right-10"></i> {{det.saturday}}</td>
-                  <td class="custom-td" *ngIf="(uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7') && det.saturday_id === '-' ">-</td>
-                  <td class="custom-td" *ngIf="uploadTimeTableForm.value.no_of_day === '7' && det.sunday_id !== '-'"><i class="fas fa-circle color-grey margin-right-10"></i> {{det.sunday}}</td>
-                  <td class="custom-td" *ngIf="uploadTimeTableForm.value.no_of_day === '7' && det.sunday_id === '-'">-</td>
-                </tr>
-              </tbody>
-            </table>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="custom-tr" *ngFor="let det of sampleTimeTableArray;">
+                      <td class="custom-td"><i class="margin-right-10"></i>
+                        {{det.count + 1}}<sup>{{periodSup[det.count]}}</sup></td>
+                      <td class="custom-td">- </td>
+                      <td class="custom-td">- </td>
+                      <td class="custom-td">- </td>
+                      <td class="custom-td">- </td>
+                      <td class="custom-td">- </td>
+                      <td class="custom-td"
+                        *ngIf="uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7'">
+                        - </td>
+                      <td class="custom-td" *ngIf="uploadTimeTableForm.value.no_of_day === '7'"> - </td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-10" *ngIf="excelFlag">
+            <div class="row margin-top-10">
+              <div class="col-12">
+                <table class="table table-borderd table-stripped custom-table">
+                  <thead class="table-skill__head text-center">
+                    <tr class="custom-tr">
+                      <th class="custom-th">Periods</th>
+                      <th class="custom-th">Monday</th>
+                      <th class="custom-th">Tuesday</th>
+                      <th class="custom-th">Wednesday</th>
+                      <th class="custom-th">Thursday</th>
+                      <th class="custom-th">Friday</th>
+                      <th class="custom-th"
+                        *ngIf="uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7'">
+                        Saturday</th>
+                      <th class="custom-th" *ngIf="uploadTimeTableForm.value.no_of_day === '7'">Sunday</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="custom-tr" *ngFor="let det of finalXlslArray;let j = index">
+                      <td class="custom-td"><i class="margin-right-10"></i> {{j + 1}}<sup>{{periodSup[j]}}</sup></td>
+                      <td class="custom-td" *ngIf="det.monday_id !== '-'"><i
+                          class="fas fa-circle color-purple margin-right-10"></i> {{det.monday}}</td>
+                      <td class="custom-td" *ngIf="det.monday_id === '-'">-</td>
+                      <td class="custom-td" *ngIf="det.tuesday_id !== '-'"><i
+                          class="fas fa-circle color-purple margin-right-10"></i> {{det.tuesday}}</td>
+                      <td class="custom-td" *ngIf="det.tuesday_id === '-'">-</td>
+                      <td class="custom-td" *ngIf="det.wednesday_id !== '-'"><i
+                          class="fas fa-circle color-blue margin-right-10"></i> {{det.wednesday}}</td>
+                      <td class="custom-td" *ngIf="det.wednesday_id === '-'">-</td>
+                      <td class="custom-td" *ngIf="det.thursday_id !== '-'"><i
+                          class="fas fa-circle color-tealgreen margin-right-10"></i> {{det.thursday}}</td>
+                      <td class="custom-td" *ngIf="det.thursday_id === '-'">-</td>
+                      <td class="custom-td" *ngIf="det.friday_id !== '-'"><i
+                          class="fas fa-circle color-yellow margin-right-10"></i> {{det.friday}}</td>
+                      <td class="custom-td" *ngIf="det.friday_id === '-'">-</td>
+                      <td class="custom-td"
+                        *ngIf="(uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7') && det.saturday_id !== '-' ">
+                        <i class="fas fa-circle color-grey margin-right-10"></i> {{det.saturday}}</td>
+                      <td class="custom-td"
+                        *ngIf="(uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7') && det.saturday_id === '-' ">
+                        -</td>
+                      <td class="custom-td"
+                        *ngIf="uploadTimeTableForm.value.no_of_day === '7' && det.sunday_id !== '-'"><i
+                          class="fas fa-circle color-grey margin-right-10"></i> {{det.sunday}}</td>
+                      <td class="custom-td"
+                        *ngIf="uploadTimeTableForm.value.no_of_day === '7' && det.sunday_id === '-'">-</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row margin-top-20">
+              <div class="col-12 text-center">
+                <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Upload</button>
+                <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="col-10">
+        <div class="upload-timetable-container">
+          <img class="upload-timetable-img"
+            src="../../../../../../src/assets/images/smart images/upload-timetable.png">
+          <div class="row margin-top-15">
+            <div class="col-12 text-center">
+              <span class="font-skyblue font-size-24">Drop Template Here</span>
+            </div>
           </div>
         </div>
         <div class="row margin-top-20">
             <div class="col-12 text-center">
-                <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Upload</button>
-                <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
-            </div>
-        </div>
-      </div>
-
-        <!-- <div class="col-10">
-          <div class="upload-timetable-container">
-            <img class="upload-timetable-img"
-              src="../../../../../../src/assets/images/smart images/upload-timetable.png">
-            <div class="row margin-top-15">
-              <div class="col-12 text-center">
-                <span class="font-skyblue font-size-24">Drop Template Here</span>
-              </div>
+                <button mat-raised-button class="btn-success-green">Upload</button>
+                <button mat-raised-button class="btn-reset margin-left-10">cancel</button>
             </div>
           </div>
-          <div class="row margin-top-20">
-              <div class="col-12 text-center">
-                  <button mat-raised-button class="btn-success-green">Upload</button>
-                  <button mat-raised-button class="btn-reset margin-left-10">cancel</button>
-              </div>
-            </div>
-        </div> -->
+      </div> -->
 
-
-      </div>
-    </mat-card>
-  </div>  
-</div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
 </form>
-
-

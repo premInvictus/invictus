@@ -184,7 +184,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/getTeacherwiseTableDetails', value);
 	}
-
+	updateTimetableDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/updateTimetableDetails', value);
+		}
 	insertScheduler(value: any) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/scheduler/insertScheduler', value);
@@ -213,8 +216,13 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/setup/checkClassEntry', value);
 	}
+	deleteClassEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/deleteClassEntry', value);
+	}
 	getPeriodDayByClass(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/getPeriodDayByClass', value);
 	}
+	
 }
