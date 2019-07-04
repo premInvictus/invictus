@@ -196,7 +196,7 @@ export class FeeService {
 	}
 	deleteInvoice(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/invoice/deleteInvoice', { inv_id: value });
+		return this.http.post(environment.apiFeeUrl + '/invoice/deleteInvoice', value);
 	}
 	consolidateInvoice(value) {
 		this.service.startLoading();
