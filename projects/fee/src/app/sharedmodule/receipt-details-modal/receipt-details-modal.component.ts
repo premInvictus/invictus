@@ -210,11 +210,14 @@ export class ReceiptDetailsModalComponent implements OnInit {
 						this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
 					}
 
-					this.adjustmentForm.patchValue({
-						au_profileimage: this.invoiceDetails.au_profileimage
-							? this.invoiceDetails.au_profileimage
-							: this.defaultsrc,
-					});
+					if (this.adjustmentForm) {
+						this.adjustmentForm.patchValue({
+							au_profileimage: this.invoiceDetails.au_profileimage
+								? this.invoiceDetails.au_profileimage
+								: this.defaultsrc,
+						});
+					}
+
 					this.defaultsrc =
 						this.invoiceDetails.au_profileimage !== ''
 							? this.invoiceDetails.au_profileimage
