@@ -342,8 +342,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.deleteWithReasonModal.openModal(value);
 	}
 
-	deleteInvoiceFinal(value) {
-		console.log('value', value);
+	deleteInvoiceFinal(value) {		
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
