@@ -354,7 +354,11 @@ export class TransportReportComponent implements OnInit {
 					grouping: {
 						getter: 'applicable_from',
 						formatter: (g) => {
-							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+							if (g.value !== '') {
+								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+							} else {
+								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							}
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,
@@ -371,7 +375,11 @@ export class TransportReportComponent implements OnInit {
 					grouping: {
 						getter: 'applicable_to',
 						formatter: (g) => {
-							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+							if (g.value !== '') {
+								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+							} else {
+								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+							}
 						},
 						aggregators: this.aggregatearray,
 						aggregateCollapsed: true,

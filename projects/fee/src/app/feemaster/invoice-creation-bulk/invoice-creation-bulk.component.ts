@@ -25,6 +25,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
 	@ViewChild('recalculateModal') recalculateModal;
 	ELEMENT_DATA: InvoiceElement[] = [];
 	displayedColumns: string[] =
@@ -338,6 +339,10 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
 	deleteConfirm(value) {
+		this.deleteWithReasonModal.openModal(value);
+	}
+
+	deleteInvoiceFinal(value) {		
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');

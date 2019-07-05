@@ -209,3 +209,5 @@ Do you wish to continue?'"
   (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
 <app-delete-modal #consolidateModal [deleteMessage]="'Are you sure want to Consolidate'"
   (deleteOk)="consolidateConfirm($event)"></app-delete-modal>
+  <app-delete-with-reason #deleteWithReasonModal [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete an Invoice'" (deleteOk)="deleteInvoiceFinal($event)">
+    </app-delete-with-reason>

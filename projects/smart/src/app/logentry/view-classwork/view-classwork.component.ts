@@ -75,6 +75,8 @@ export class ViewClassworkComponent implements OnInit {
 					console.log(result.data);
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+					this.classworkArray = [];
+					this.noDataFlag = true;
 
 				}
 			});

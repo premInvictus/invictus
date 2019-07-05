@@ -168,9 +168,56 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         max-width: 5% !important;
         flex: 0 0 5% !important;
     }
+    .smart-col-3 {
+        max-width: 3% !important;
+        flex: 0 0 3% !important;
+    }
+    .fee-col-25 {
+        max-width: 25% !important;
+        flex: 0 0 25% !important;
+    }
+
+    .date-width-100 {
+        width: 100px;
+    }
+    .fee-col-80 {
+        max-width: 80% !important;
+        flex: 0 0 80% !important;
+    }
+    .fee-vertical-line-divider {
+        border-left: 2px solid #dee2e6;
+        height: 75%;
+        margin-left: 50%;
+    }
 }
 
 @include respond-between(lg, xl) {
+    .fee-vertical-line-divider {
+        border-left: 2px solid #dee2e6;
+        height: 75%;
+        margin-left: 50%;
+    }
+    .smart-col-3 {
+        max-width: 3% !important;
+        flex: 0 0 3% !important;
+    }
+    .fee-col-3 {
+        max-width: 3% !important;
+        flex: 0 0 3% !important;
+    }
+    .fee-col-25 {
+        max-width: 25% !important;
+        flex: 0 0 25% !important;
+    }
+
+    .fee-col-80 {
+        max-width: 80% !important;
+        flex: 0 0 80% !important;
+    }
+
+    .date-width-100 {
+        width: 100px;
+    }
     .smart-col-5 {
         max-width: 5% !important;
         flex: 0 0 5% !important;

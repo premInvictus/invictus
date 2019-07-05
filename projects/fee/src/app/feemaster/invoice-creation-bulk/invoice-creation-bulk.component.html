@@ -307,5 +307,7 @@
 </div>
 <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)">
 </app-delete-modal>
+<app-delete-with-reason #deleteWithReasonModal [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete an Invoice'" (deleteOk)="deleteInvoiceFinal($event)">
+   </app-delete-with-reason>
 <app-delete-modal #recalculateModal [deleteMessage]="'On recalculation all adjustments/remarks if any, will be removed!<br>
    Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-modal>

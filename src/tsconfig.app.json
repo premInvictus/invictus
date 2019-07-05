@@ -61,6 +61,7 @@
     "../projects/smart/src/app/auxillaries/auxillaries.module.ts",
     "../projects/smart/src/app/reports/reports.module.ts",
     "../projects/smart/src/app/smartconfiguration/smartconfiguration.module.ts",
+    "../projects/student-app/src/app/student-fee/student-fee.module.ts",
   ]
 }
 
