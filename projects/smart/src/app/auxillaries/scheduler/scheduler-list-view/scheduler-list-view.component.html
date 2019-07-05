@@ -2,37 +2,9 @@
   <div class="col-12">
     <mat-card>
       <div class="row">
-        <div class="col-12 custom-col-80">
+        <div class="col-12">
           <div class="row">
             <div class="col-12">
-              <!-- <table class="table table-borderd table-stripped custom-table">
-                  <thead class="table-skill__head text-center">
-                    <tr class="custom-tr">
-                      <th class="custom-th table-width-80">Sr No.</th>
-                      <th class="custom-th">Date</th>
-                      <th class="custom-th">Event Name</th>
-                      <th class="custom-th">Event Description</th>
-                      <th class="custom-th">Class</th>
-                      <th class="custom-th">Event Category</th>
-                      <th class="custom-th">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="custom-tr">
-                      <td class="custom-td">1</td>
-                      <td class="custom-td">13-Apr-2019</td>
-                      <td class="custom-td">Annual Function</td>
-                      <td class="custom-td text-left">Annual Function will be at this Auditorium</td>
-                      <td class="custom-td">XI - A</td>
-                      <td class="custom-td">Non - Teaching Day</td>
-                      <td class="custom-td">
-                        <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"></i><span
-                          class="margin-left-10 ver-line-divider"></span><i
-                          class="fas fa-trash font-size-16 font-color-red cursor-pointer"></i>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table> -->
               <table mat-table [dataSource]="dataSource" class="table-100 text-center" id="report_table">
                 <ng-container matColumnDef="srno">
                   <th mat-header-cell *matHeaderCellDef> S.No </th>
