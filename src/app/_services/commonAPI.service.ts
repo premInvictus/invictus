@@ -209,7 +209,7 @@ export class CommonAPIService {
 	}
 
 	getQTypeFromApi() {
-		return this.http.get('/setup/question_type/1');
+		return this.http.get(environment.apiAxiomUrl + '/setup/question_type/1');
 	}
 	setQType(value) {
 		this.question_type = [];
