@@ -24,6 +24,7 @@ export class ReviewSyllabusComponent implements OnInit {
 	param: any = {};
 	publishParam: any = {};
 	editParam: any = {};
+	processType: any = {};
 	syl_id: any;
 	currentUser: any;
 	constructor(
@@ -66,6 +67,15 @@ export class ReviewSyllabusComponent implements OnInit {
 	}
 	ngOnInit() {
 		this.buildForm();
+		if (this.syllabusService.getProcesstype()) {
+			this.processType = this.syllabusService.getProcesstype();
+			console.log(this.processType);
+			this.reviewForm.patchValue({
+				'syl_class_id': this.processType.class_id,
+				'syl_sub_id': this.processType.sub_id,
+			});
+			this.fetchSyllabusDetails();
+		}
 		this.getClass();
 	}
 
