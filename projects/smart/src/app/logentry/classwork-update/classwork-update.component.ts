@@ -63,10 +63,15 @@ export class ClassworkUpdateComponent implements OnInit {
 			teacher_name: '',
 			cw_entry_date: this.entry_date
 		});
-		for (let i = 0; i < this.noOfPeriods; i++) {
-			this.addPeriods(i + 1, this.teacherId);
-		}
-		this.generateReviewArray();
+		this.smartService.getMaxPeriod().subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.noOfPeriods = result.data.no_of_period;
+				for (let i = 0; i < this.noOfPeriods; i++) {
+					this.addPeriods(i + 1, this.teacherId);
+				}
+				this.generateReviewArray();
+			}
+		});
 
 	}
 	generateReviewArray() {
