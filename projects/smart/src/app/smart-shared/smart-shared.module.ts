@@ -10,7 +10,7 @@ import {
 	MatExpansionModule, MatSelectModule,
 	MatInputModule, MatFormFieldModule,
 	MatButtonModule, MatIconModule, MatToolbarModule, MatPaginatorModule,
-	MatCardModule, MatListModule,
+	MatCardModule, MatListModule, MatStepperModule,
 	MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatAutocompleteModule, MatSortModule
 } from '@angular/material';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
@@ -75,6 +75,7 @@ export const MY_FORMATS = {
 		MatRadioModule,
 		MatDialogModule,
 		MatPaginatorModule,
+		MatStepperModule,
 		RouterModule,
 		MatAutocompleteModule,
 		MatSortModule,
@@ -139,6 +140,7 @@ export const MY_FORMATS = {
 		MatDialogModule,
 		MatTableModule,
 		MatPaginatorModule,
+		MatStepperModule,
 		ImageViewerModule,
 		CKEditorModule,
 		MatSortModule,
