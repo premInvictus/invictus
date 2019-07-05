@@ -228,6 +228,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/datediffInWeeks', value);
 	}
+	subjectPeriodCounter(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/subjectPeriodCounter', value);
+	}
 	setProcesstype(value) {
 		this.processType = value;
 	}
