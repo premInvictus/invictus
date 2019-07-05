@@ -228,6 +228,19 @@ export class OutstandingReportComponent implements OnInit {
 									},
 								},
 								{
+									id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
+									filterable: true,
+									grouping: {
+										getter: 'fp_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false,
+									},
+								},
+								{
 									id: 'receipt_no',
 									name: 'Invoice No.',
 									field: 'receipt_no',
@@ -271,10 +284,15 @@ export class OutstandingReportComponent implements OnInit {
 										}
 										obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
 											repoArray[Number(keys)]['invoice_id'] : '0';
+											obj['fp_name'] = repoArray[Number(keys)]['fp_name'][0] ?
+											new CapitalizePipe().transform(repoArray[Number(keys)]['fp_name'][0]) : '-';
 										obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
 											repoArray[Number(keys)]['invoice_no'] : '-';
 										obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 										tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
+										obj['inv_opening_balance'] = titem['inv_opening_balance'] ? Number(titem['inv_opening_balance']) : 0;
+										obj['inv_prev_balance'] = titem['inv_prev_balance'] ? Number(titem['inv_prev_balance']) : 0;
+										obj['invoice_fine_amount'] = titem['invoice_fine_amount'] ? Number(titem['invoice_fine_amount']) : 0;
 										obj['total'] = tot;
 										k++;
 									}
@@ -284,7 +302,33 @@ export class OutstandingReportComponent implements OnInit {
 						i++;
 						this.dataset.push(obj);
 					});
-					this.columnDefinitions.push(
+					this.columnDefinitions.push({
+						id: 'inv_opening_balance', name: 'Opening Balance', field: 'inv_opening_balance',
+						filterable: true,
+						filterSearchType: FieldType.number,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						formatter: this.checkTotalFormatter,
+						groupTotalsFormatter: this.sumTotalsFormatter
+					},
+					{
+						id: 'inv_prev_balance', name: 'Previous Balance', field: 'inv_prev_balance',
+						filterable: true,
+						filterSearchType: FieldType.number,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						formatter: this.checkTotalFormatter,
+						groupTotalsFormatter: this.sumTotalsFormatter
+					},
+					{
+						id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
+						filterable: true,
+						filterSearchType: FieldType.number,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						formatter: this.checkTotalFormatter,
+						groupTotalsFormatter: this.sumTotalsFormatter
+					},
 						{
 							id: 'total', name: 'Total', field: 'total',
 							filterable: true,
@@ -295,6 +339,9 @@ export class OutstandingReportComponent implements OnInit {
 							groupTotalsFormatter: this.sumTotalsFormatter
 						}
 					);
+					this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
+					this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
+					this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('total'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					console.log(this.columnDefinitions);
@@ -930,9 +977,13 @@ export class OutstandingReportComponent implements OnInit {
 				for (const item of result.data) {
 					this.valueArray.push({
 						id: item.fh_id,
-						name: item.fh_name
+						name: new CapitalizePipe().transform(item.fh_name)
 					});
 				}
+				this.valueArray.push({
+					id: '0',
+					name: 'Transport'
+				});
 			}
 		});
 	}

@@ -5,7 +5,7 @@ import { environment } from '../../../../../src/environments/environment';
 import { of } from 'rxjs';
 @Injectable()
 export class SmartService {
-
+	private processType;
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 	getSubjectByTeacherId(value) {
 		this.service.startLoading();
@@ -184,7 +184,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/getTeacherwiseTableDetails', value);
 	}
-
+	updateTimetableDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/updateTimetableDetails', value);
+	}
 	insertScheduler(value: any) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/scheduler/insertScheduler', value);
@@ -213,8 +216,27 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/setup/checkClassEntry', value);
 	}
+	deleteClassEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/deleteClassEntry', value);
+	}
 	getPeriodDayByClass(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/getPeriodDayByClass', value);
+	}
+	datediffInWeeks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/datediffInWeeks', value);
+	}
+	setProcesstype(value) {
+		this.processType = value;
+	}
+	getProcesstype() {
+		if (this.processType) {
+			return this.processType;
+		}
+	}
+	resetProcesstype() {
+		this.processType = null;
 	}
 }

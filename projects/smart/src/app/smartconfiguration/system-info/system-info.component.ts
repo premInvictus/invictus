@@ -7,15 +7,17 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 	styleUrls: ['./system-info.component.css']
 })
 export class SystemInfoComponent implements OnInit {
+	@ViewChild('deleteModal') deleteModal;
 	configValue: any;
 	currentUser: any;
 	session: any;
+	param: any = {};
 	classArray: any[];
 	detailArray: any[];
 	systemInfoForm: FormGroup;
 	setupUpdateFlag = false;
-  editFlag = false;
-  finaldivflag = true;
+	editFlag = false;
+	finaldivflag = true;
 	constructor(
 		private fbuild: FormBuilder,
 		private syllabusService: SmartService,
@@ -39,6 +41,13 @@ export class SystemInfoComponent implements OnInit {
 			no_of_period: '',
 		});
 	}
+	// delete dialog open modal function
+	deleteSetupList(j) {
+		this.param.indexj = j;
+		this.param.text = 'Delete';
+		this.deleteModal.openModal(this.param);
+	}
+	// get class list
 	getClass() {
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
@@ -47,8 +56,10 @@ export class SystemInfoComponent implements OnInit {
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
-            this.classArray = result.data;
-            this.finaldivflag = false;
+						this.classArray = result.data;
+						this.finaldivflag = false;
+					} else {
+						this.classArray = [];
 					}
 				}
 			);
@@ -62,8 +73,8 @@ export class SystemInfoComponent implements OnInit {
 		}
 	}
 
-	// Edit syllabus list function
-	editSyllabusList(value) {
+	// Edit setup list function
+	editSetupList(value) {
 		this.setupUpdateFlag = true;
 		this.editFlag = true;
 		this.systemInfoForm.patchValue({
@@ -72,6 +83,23 @@ export class SystemInfoComponent implements OnInit {
 			'no_of_period': this.detailArray[value].no_of_period.toString(),
 		});
 	}
+	deleteClassEntry($event) {
+		if ($event) {
+			const param: any = {};
+			param.class_id = this.detailArray[this.param.indexj].class_id;
+			this.syllabusService.deleteClassEntry(param)
+				.subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.commonService.showSuccessErrorMessage('Setup Deleted Successfully', 'success');
+							this.resetForm();
+							this.getDetailsCdpRelation();
+						}
+					});
+		}
+	}
+
+	// update setup list function
 	updateConfiguration() {
 		this.editFlag = false;
 		this.setupUpdateFlag = false;
@@ -88,7 +116,7 @@ export class SystemInfoComponent implements OnInit {
 		}
 	}
 
-	// Reset setup  form 
+	// Reset setup  form
 	resetForm() {
 		this.systemInfoForm.patchValue({
 			'class_id': '',
@@ -130,6 +158,8 @@ export class SystemInfoComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.detailArray = result.data;
+					} else {
+						this.detailArray = [];
 					}
 				}
 			);

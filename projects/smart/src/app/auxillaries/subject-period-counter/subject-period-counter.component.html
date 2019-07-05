@@ -1,168 +1,180 @@
 <div class="row">
-  <div class="col-12 ">
-    <mat-card class="remove-card-padding">
-      <div class="row">
-        <div class="col-4">
-          <div class="top-card-title">
-            <span class="font-size-24 font-medium">Subject Period Counter</span>
-          </div>
+    <div class="col-12 ">
+        <mat-card class="remove-card-padding">
+            <div class="row">
+                <div class="col-4">
+                    <div class="top-card-title">
+                        <span class="font-size-24 font-medium">Subject Period Counter</span>
+                    </div>
 
-        </div>
-        <div class="col-8 text-right">
-          <div class="top-card-title-form">
-            <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
-              <mat-label>From Date</mat-label>
-              <input matInput [matDatepicker]="picker1" placeholder="Choose a date">
-              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-              <mat-datepicker #picker1></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-              <mat-label>To Date</mat-label>
-              <input matInput [matDatepicker]="picker" placeholder="Choose a date">
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-              <mat-label>Class</mat-label>
-              <mat-select>
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-              <mat-label>Section</mat-label>
-              <mat-select>
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-              <mat-label>Subject</mat-label>
-              <mat-select>
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
+                </div>
 
-    </mat-card>
-  </div>
+                <div class="col-8 text-right">
+                    <form [formGroup]="subjectPeriodForm" novalidate>
+                        <div class="top-card-title-form">
+                            <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
+                                <mat-label>From Date</mat-label>
+                                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="sc_from" (dateChange)="setMinTo($event)" required>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10" appearance="outline">
+                                <mat-label>To Date</mat-label>
+                                <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="sc_to" (dateChange)="getClass()"
+                                [min]="toMin" required>
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field class="form-field-150" appearance="outline">
+                                <mat-label>Class</mat-label>
+                                <mat-select formControlName="tt_class_id" (selectionChange)="getSectionsByClass()" required
+                                    placeholder="Select Class">
+                                    <mat-option value="">Please select</mat-option>
+                                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                        {{item.class_name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+                                <mat-label>Section</mat-label>
+                                <mat-select formControlName="tt_section_id" (selectionChange)="getclasswisedetails()"
+                                    required placeholder="Select Section">
+                                    <mat-option value="">Please select</mat-option>
+                                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                        {{item.sec_name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+                                <mat-label>Subject</mat-label>
+                                <mat-select formControlName="tt_subject_id" required placeholder="Select Subject">
+                                    <mat-option value="">Please select</mat-option>
+                                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                        {{item.sub_name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </mat-card>
+    </div>
 </div>
 
 <div class="row">
-  <div class="col-12">
-    <mat-card>
-      <div class="row">
-      <div class="col-3"></div>
-        <div class="col-6">
-          <span class="font-regular font-size-20">No. of periods available between <span class="font-skyblue">12-Dec-2018</span> & <span class="font-skyblue">30-Apr-2019</span> Class VI - A is as follow as</span>
-        </div>
-        <div class="col-3"></div>
-      </div>
-      <div class="row">
-        <div class="col-3"></div>
-        <div class="col-6">
-            <table class="table table-borderd table-stripped custom-table">
-                <thead class="table-skill__head text-center">
-                  <tr class="custom-tr">
-                    <th class="custom-th table-width-80">Sr No.</th>
-                    <th class="custom-th">Subject</th>
-                    <th class="custom-th table-width-120">No. of Period</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="custom-tr">
-                    <td class="custom-td">1</td>
-                    <td class="custom-td">Mathematics</td>
-                    <td class="custom-td">42</td>
-                  </tr>
-                  <tr class="custom-tr">
-                      <td class="custom-td">2</td>
-                      <td class="custom-td">Science</td>
-                      <td class="custom-td">40</td>
-                    </tr>
-                </tbody>
-                </table>
-        </div>
-        <div class="col-3"></div>
-      </div>
-      <div class="row margin-top-15">
-      <div class="col-3"></div>
-          <div class="col-6 ">
-            <span class="font-size-20 font-bold">Period Wise Summary</span>
-          </div>
-          <div class="col-3"></div>
-        </div>
-      <div class="row margin-top-20">
-        <div class="col-3"></div>
-          <div class="col-6">
-              <table class="table table-borderd table-stripped custom-table">
-                  <thead class="table-skill__head text-center">
-                    <tr class="custom-tr">
-                      <th class="custom-th"></th>
-                      <th class="custom-th">Day Selected</th>
-                      <th class="custom-th ">Working Days</th>
-                      <th class="custom-th ">Non Teaching Days</th>
-                      <th class="custom-th ">Teaching Days</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="custom-tr">
-                      <td class="custom-td">No. of Days</td>
-                      <td class="custom-td">108</td>
-                      <td class="custom-td">42</td>
-                      <td class="custom-td">108</td>
-                      <td class="custom-td">42</td>
-                    </tr>
-                  </tbody>
-                  </table>
-          </div>
-          <div class="col-3"></div>
-        </div>
-        <div class="row margin-top-15">
-        <div class="col-3"></div>
-          <div class="col-6 ">
-            <span class="font-size-20 font-bold">Day Wise Summary</span>
-          </div>
-          <div class="col-3"></div>
-        </div>
-        <div class="row margin-top-20">
-            <div class="col-3"></div>
-            <div class="col-6">
-                <table class="table table-borderd table-stripped custom-table">
-                    <thead class="table-skill__head text-center">
-                      <tr class="custom-tr">
-                          <th class="custom-th ">Subject</th>
-                          <th class="custom-th">Monday</th>
-                          <th class="custom-th">Tuesday</th>
-                          <th class="custom-th">Wednesday</th>
-                          <th class="custom-th">Thursday</th>
-                          <th class="custom-th">Friday</th>
-                          <th class="custom-th">Saturday</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="custom-tr">
-                        <td class="custom-td background-color-yellow">Science</td>
-                        <td class="custom-td">-</td>
-                        <td class="custom-td">42</td>
-                        <td class="custom-td">-</td>
-                        <td class="custom-td">42</td>
-                        <td class="custom-td">-</td>
-                        <td class="custom-td">42</td>
-                      </tr>
-                      <tr class="custom-tr">
-                          <td class="custom-td background-color-table-blue">Total</td>
-                          <td class="custom-td">-</td>
-                        <td class="custom-td">42</td>
-                        <td class="custom-td">-</td>
-                        <td class="custom-td">42</td>
-                        <td class="custom-td">-</td>
-                        <td class="custom-td">42</td>
-                    </tbody>
-                    </table>
+    <div class="col-12">
+        <mat-card>
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <span class="font-regular font-size-20">No. of periods available between <span
+              class="font-skyblue">12-Dec-2018</span> & <span class="font-skyblue">30-Apr-2019</span> Class VI - A is as follow as</span>
+                </div>
+                <div class="col-3"></div>
             </div>
-            <div class="col-3"></div>
-          </div>
-    </mat-card>
-  </div>
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <table class="table table-borderd table-stripped custom-table">
+                        <thead class="table-skill__head text-center">
+                            <tr class="custom-tr">
+                                <th class="custom-th table-width-80">Sr No.</th>
+                                <th class="custom-th">Subject</th>
+                                <th class="custom-th table-width-120">No. of Period</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="custom-tr" *ngFor="let det of subCountArray;let j = index">
+                                <td class="custom-td">{{j + 1}}</td>
+                                <td class="custom-td">{{det.subject_name}}</td>
+                                <td class="custom-td">{{det.count * week}}</td>
+                            </tr>                
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <div class="row margin-top-15">
+                <div class="col-3"></div>
+                <div class="col-6 ">
+                    <span class="font-size-20 font-bold">Period Wise Summary</span>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <div class="row margin-top-20">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <table class="table table-borderd table-stripped custom-table">
+                        <thead class="table-skill__head text-center">
+                            <tr class="custom-tr">
+                                <th class="custom-th"></th>
+                                <th class="custom-th">Day Selected</th>
+                                <th class="custom-th ">Working Days</th>
+                                <th class="custom-th ">Non Teaching Days</th>
+                                <th class="custom-th ">Teaching Days</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="custom-tr">
+                                <td class="custom-td">No. of Days</td>
+                                <td class="custom-td">108</td>
+                                <td class="custom-td">42</td>
+                                <td class="custom-td">108</td>
+                                <td class="custom-td">42</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <div class="row margin-top-15">
+                <div class="col-3"></div>
+                <div class="col-6 ">
+                    <span class="font-size-20 font-bold">Day Wise Summary</span>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <div class="row margin-top-20">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <table class="table table-borderd table-stripped custom-table">
+                        <thead class="table-skill__head text-center">
+                            <tr class="custom-tr">
+                                <th class="custom-th ">Subject</th>
+                                <th class="custom-th">Monday</th>
+                                <th class="custom-th">Tuesday</th>
+                                <th class="custom-th">Wednesday</th>
+                                <th class="custom-th">Thursday</th>
+                                <th class="custom-th">Friday</th>
+                                <th class="custom-th">Saturday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="custom-tr">
+                                <td class="custom-td background-color-yellow">Science</td>
+                                <td class="custom-td">-</td>
+                                <td class="custom-td">42</td>
+                                <td class="custom-td">-</td>
+                                <td class="custom-td">42</td>
+                                <td class="custom-td">-</td>
+                                <td class="custom-td">42</td>
+                            </tr>
+                            <tr class="custom-tr">
+                                <td class="custom-td background-color-table-blue">Total</td>
+                                <td class="custom-td">-</td>
+                                <td class="custom-td">42</td>
+                                <td class="custom-td">-</td>
+                                <td class="custom-td">42</td>
+                                <td class="custom-td">-</td>
+                                <td class="custom-td">42</td>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-3"></div>
+            </div>
+        </mat-card>
+    </div>
 </div>

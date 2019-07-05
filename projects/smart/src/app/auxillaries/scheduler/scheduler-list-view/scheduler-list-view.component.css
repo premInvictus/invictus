@@ -15,3 +15,14 @@ th.mat-header-cell {
     padding: .25rem;
     font-family: Helvetica, Arial, sans-serif;
 }
+td:nth-child(4) {
+    text-align: left !important;
+}
+td:nth-child(5) {
+    text-align: left !important;
+}
+.no-records {
+    border-bottom: 1px solid #89A8C9;
+    border-left: 1px solid #89A8C9;
+    border-right: 1px solid #89A8C9;
+}

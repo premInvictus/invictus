@@ -15,6 +15,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportFilterComponent } from '../../reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from '../../reports-filter-sort/report-sort/report-sort.component';
 import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
+declare var require;
+const jsPDF = require('jspdf');
 @Component({
 	selector: 'app-collection-report',
 	templateUrl: './collection-report.component.html',
@@ -133,10 +135,21 @@ export class CollectionReportComponent implements OnInit {
 				sanitizeDataExport: true
 			},
 			gridMenu: {
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				}
+				],
 				onCommand: (e, args) => {
 					if (args.command === 'toggle-preheader') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.clearGrouping();
+					}
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF();
 					}
 				},
 			},
@@ -229,6 +242,19 @@ export class CollectionReportComponent implements OnInit {
 									},
 								},
 								{
+									id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
+									filterable: true,
+									grouping: {
+										getter: 'fp_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false,
+									},
+								},
+								{
 									id: 'receipt_no',
 									name: 'Reciept No.',
 									field: 'receipt_no',
@@ -246,7 +272,7 @@ export class CollectionReportComponent implements OnInit {
 									if (key2 === 'fh_name' && Number(keys) === 0) {
 										this.columnDefinitions.push({
 											id: 'fh_name' + j,
-											name: titem[key2],
+											name: new CapitalizePipe().transform(titem[key2]),
 											field: 'fh_name' + j,
 											filterable: true,
 											formatter: this.checkFeeFormatter,
@@ -272,10 +298,15 @@ export class CollectionReportComponent implements OnInit {
 										}
 										obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
 											repoArray[Number(keys)]['rpt_id'] : '0';
+										obj['fp_name'] = repoArray[Number(keys)]['fp_name'][0] ?
+											new CapitalizePipe().transform(repoArray[Number(keys)]['fp_name'][0]) : '-';
 										obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
 											repoArray[Number(keys)]['receipt_no'] : '-';
 										obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 										tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
+										obj['inv_opening_balance'] = titem['inv_opening_balance'] ? Number(titem['inv_opening_balance']) : 0;
+										obj['inv_prev_balance'] = titem['inv_prev_balance'] ? Number(titem['inv_prev_balance']) : 0;
+										obj['invoice_fine_amount'] = titem['invoice_fine_amount'] ? Number(titem['invoice_fine_amount']) : 0;
 										obj['total'] = tot;
 										obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 											repoArray[Number(keys)]['pay_name'] : '-';
@@ -288,6 +319,33 @@ export class CollectionReportComponent implements OnInit {
 						this.dataset.push(obj);
 					});
 					this.columnDefinitions.push(
+						{
+							id: 'inv_opening_balance', name: 'Opening Balance', field: 'inv_opening_balance',
+							filterable: true,
+							filterSearchType: FieldType.number,
+							filter: { model: Filters.compoundInput },
+							sortable: true,
+							formatter: this.checkTotalFormatter,
+							groupTotalsFormatter: this.sumTotalsFormatter
+						},
+						{
+							id: 'inv_prev_balance', name: 'Previous Balance', field: 'inv_prev_balance',
+							filterable: true,
+							filterSearchType: FieldType.number,
+							filter: { model: Filters.compoundInput },
+							sortable: true,
+							formatter: this.checkTotalFormatter,
+							groupTotalsFormatter: this.sumTotalsFormatter
+						},
+						{
+							id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
+							filterable: true,
+							filterSearchType: FieldType.number,
+							filter: { model: Filters.compoundInput },
+							sortable: true,
+							formatter: this.checkTotalFormatter,
+							groupTotalsFormatter: this.sumTotalsFormatter
+						},
 						{
 							id: 'total', name: 'Total', field: 'total',
 							filterable: true,
@@ -310,6 +368,9 @@ export class CollectionReportComponent implements OnInit {
 							},
 						}
 					);
+					this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
+					this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
+					this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('total'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					console.log(this.columnDefinitions);
@@ -786,6 +847,19 @@ export class CollectionReportComponent implements OnInit {
 					},
 				},
 				{
+					id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
+					filterable: true,
+					grouping: {
+						getter: 'fp_name',
+						formatter: (g) => {
+							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+						},
+						aggregators: this.aggregatearray,
+						aggregateCollapsed: true,
+						collapsed: false,
+					},
+				},
+				{
 					id: 'receipt_no',
 					name: 'Reciept No.',
 					field: 'receipt_no',
@@ -874,6 +948,8 @@ export class CollectionReportComponent implements OnInit {
 						} else {
 							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 						}
+						obj['fp_name'] = repoArray[Number(index)]['fp_name'][0] ?
+							new CapitalizePipe().transform(repoArray[Number(index)]['fp_name'][0]) : '-';
 						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
 							repoArray[Number(index)]['receipt_no'] : '-';
 						obj['transport_amount'] = repoArray[Number(index)]['transport_amount'] ?
@@ -1229,9 +1305,13 @@ export class CollectionReportComponent implements OnInit {
 				for (const item of result.data) {
 					this.valueArray.push({
 						id: item.fh_id,
-						name: item.fh_name
+						name: new CapitalizePipe().transform(item.fh_name)
 					});
 				}
+				this.valueArray.push({
+					id: '0',
+					name: 'Transport'
+				});
 			}
 		});
 	}
@@ -1368,5 +1448,20 @@ export class CollectionReportComponent implements OnInit {
 			},
 			hasBackdrop: true
 		});
+	}
+	exportAsPDF() {
+		const doc = new jsPDF('landscape');
+		doc.setFont('helvetica');
+		doc.setFontSize(5);
+		const specialElementHandlers = {
+			'#grid1': function (element, renderer) {
+				return true;
+			}
+		};
+		doc.fromHTML(document.getElementById('grid1'), {
+			display: 'inline-flex',
+			'elementHandlers': specialElementHandlers
+		});
+		doc.save('invictus.pdf');
 	}
 }

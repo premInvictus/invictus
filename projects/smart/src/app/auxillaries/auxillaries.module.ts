@@ -1,5 +1,8 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 import { AuxillariesRoutingModule } from './auxillaries-routing.module';
 import { LoadingModule } from 'ngx-loading';
@@ -12,6 +15,10 @@ import { ClassWiseTimetableComponent } from './class-wise-timetable/class-wise-t
 import { SchedulerListViewComponent } from './scheduler/scheduler-list-view/scheduler-list-view.component';
 import { SchedulerCalenderViewComponent } from './scheduler/scheduler-calender-view/scheduler-calender-view.component';
 import { AddSchedulerComponent } from './scheduler/add-scheduler/add-scheduler.component';
+import { AngularCalendarYearViewModule } from 'angular-calendar-year-view';
+import { YearlyComponent } from './scheduler/scheduler-calender-view/yearly/yearly.component';
+import { MonthlyComponent } from './scheduler/scheduler-calender-view/monthly/monthly.component';
+import { WeeklyComponent } from './scheduler/scheduler-calender-view/weekly/weekly.component';
 
 @NgModule({
 	imports: [
@@ -19,6 +26,11 @@ import { AddSchedulerComponent } from './scheduler/add-scheduler/add-scheduler.c
 		AuxillariesRoutingModule,
 		LoadingModule,
 		SmartSharedModule,
+		AngularCalendarYearViewModule,
+		CalendarModule.forRoot({
+			provide: DateAdapter,
+			useFactory: adapterFactory
+		})
 	],
 	declarations: [
 		TimeTableComponent,
@@ -28,8 +40,12 @@ import { AddSchedulerComponent } from './scheduler/add-scheduler/add-scheduler.c
 		ClassWiseTimetableComponent,
 		SchedulerListViewComponent,
 		SchedulerCalenderViewComponent,
-		AddSchedulerComponent
+		AddSchedulerComponent,
+		YearlyComponent,
+		MonthlyComponent,
+		WeeklyComponent
 	],
-	entryComponents: [AddSchedulerComponent]
+	entryComponents: [AddSchedulerComponent],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AuxillariesModule { }

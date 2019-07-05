@@ -8,3 +8,86 @@
     color: #007bff;
     cursor: pointer;
 }
+.upload-timetable-container label{   
+        display: flex;
+        margin-bottom: .5rem;
+    
+}
+.color-1 {
+    color: aqua;
+}
+.color-2 {
+    color: aquamarine;
+}
+.color-3{
+    color: chocolate;
+}
+.color-4 {
+    color: peru;
+}
+.color-5 {
+    color: crimson;
+}
+.color-6{
+    color: rebeccapurple;
+}
+.color-7 {
+    color: red;
+}
+.color-8 {
+    color: rosybrown;
+}
+.color-9{
+    color: royalblue;
+}
+.color-10 {
+    color: yellow;
+}
+.color-11 {
+    color: yellowgreen;
+}
+.color-12{
+    color: gold;
+}
+.color-13 {
+    color: goldenrod;
+}
+.color-14 {
+    color: gray;
+}
+.color-15{
+    color: green;
+}
+.color-16 {
+    color: greenyellow;
+}
+.color-17 {
+    color: grey;
+}
+.color-18{
+    color: royalblue;
+}
+.color-19 {
+    color: blue;
+}
+.color-20{
+    color: black;
+}
+.color-21 {
+    color: blueviolet;
+}
+.color-22 {
+    color: brown;
+}
+.color-23{
+    color: coral;
+}
+.color-24 {
+    color: olive;
+}
+.color-25 {
+    color: orange;
+}
+.color-26{
+    color: orchid;
+}

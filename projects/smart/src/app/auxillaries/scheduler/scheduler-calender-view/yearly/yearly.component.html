@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-9 col-ver-line-divider" *ngIf="schedulerFlag">
+    <angular-calendar-year-view [themecolor]="themecolor" [events]="events" [nothingToshowText]="nothingToshowText"
+      (eventClicked)="eventClicked($event)" (actionClicked)="actionClicked($event)">
+    </angular-calendar-year-view>
+  </div>
+  <div class="col-2">
+    <mat-vertical-stepper [linear]="true">
+      <mat-step label="Step 1">
+        Content 1
+        Content 1
+        Content 1
+        Content 1
+        Content 1
+        Content 1
+        Content 1
+        Content 1
+        Content 1
+        Content 1
+      </mat-step>
+      <mat-step label="Step 1">
+        Content 2
+      </mat-step>
+    </mat-vertical-stepper>
+  </div>
+</div>

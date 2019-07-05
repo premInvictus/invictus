@@ -63,12 +63,25 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			// tslint:disable-next-line:max-line-length
 			extraPlugins: '',
 			scayt_multiLanguageMod: true,
+			fontSize: {
+				options: [
+					9,
+					11,
+					13,
+					17,
+					19,
+					21
+				]
+			},
 			toolbar: [
 				// tslint:disable-next-line:max-line-length
 				['Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates']
 			],
-			removeDialogTabs: 'image:advanced;image:Link'
+			removeDialogTabs: 'image:advanced;image:Link',
+			
 		};
+		this.ckeConfig.font_defaultLabel = 'Arial';
+		this.ckeConfig.fontSize_defaultLabel = '20';
 	}
 	getClass() {
 		this.classArray = [];
