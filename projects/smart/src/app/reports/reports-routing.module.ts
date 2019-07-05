@@ -6,6 +6,8 @@ import { SyllabusProgressReportComponent } from '../reports/syllabus-progress-re
 import { ComparitiveComponent } from '../reports/comparitive/comparitive.component';
 import { TopicSubtopicSkippedComponent } from '../reports/topic-subtopic-skipped/topic-subtopic-skipped.component';
 import { NegativeReportComponent } from '../reports/negative-report/negative-report.component';
+import { TeacherLogEntryComponent } from './teacher-log-entry/teacher-log-entry.component';
+import { PastAssignmentComponent } from './past-assignment/past-assignment.component';
 const routes: Routes = [
 	{
 		path: 'view-syllabus', component: ViewSyllabusComponent
@@ -24,6 +26,12 @@ const routes: Routes = [
 	},
 	{
 		path: 'negative-report', component: NegativeReportComponent
+	},
+	{
+		path: 'teacher-log-entry', component: TeacherLogEntryComponent
+	},
+	{
+		path: 'past-assignment', component: PastAssignmentComponent
 	}
 ];
 

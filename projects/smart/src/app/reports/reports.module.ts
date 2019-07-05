@@ -10,6 +10,8 @@ import { ComparitiveComponent } from './comparitive/comparitive.component';
 import { TopicSubtopicSkippedComponent } from './topic-subtopic-skipped/topic-subtopic-skipped.component';
 import { NegativeReportComponent } from './negative-report/negative-report.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import { TeacherLogEntryComponent } from './teacher-log-entry/teacher-log-entry.component';
+import { PastAssignmentComponent } from './past-assignment/past-assignment.component';
 
 @NgModule({
 	imports: [
@@ -20,7 +22,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 		MatDialogModule
 	],
 	declarations: [ViewSyllabusComponent,
-		EtcReportComponent, SyllabusProgressReportComponent, ComparitiveComponent, TopicSubtopicSkippedComponent, NegativeReportComponent, AddRemarkPopUp],
+		EtcReportComponent, SyllabusProgressReportComponent, ComparitiveComponent, TopicSubtopicSkippedComponent, NegativeReportComponent, AddRemarkPopUp, TeacherLogEntryComponent, PastAssignmentComponent],
 		entryComponents: [
 			AddRemarkPopUp
 		  ],

@@ -31,7 +31,8 @@ export class SyllabusProgressReportComponent implements OnInit {
 })
 export class AddRemarkPopUp {
   constructor(
-    public dialogRef: MatDialogRef<AddRemarkPopUp>
+    public dialogRef: MatDialogRef<AddRemarkPopUp>) {}
+
 
   onNoClick(): void {
     this.dialogRef.close();
