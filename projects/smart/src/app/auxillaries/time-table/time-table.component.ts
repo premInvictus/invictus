@@ -14,6 +14,7 @@ export class TimeTableComponent implements OnInit {
 	sampleTimeTableFlag = false;
 	excelFlag = false;
 	uploadTimeTableFlag = true;
+	defaultFlag = true;
 	public uploadTimeTableForm: FormGroup;
 	public classArray: any[];
 	public sectionArray: any[];
@@ -62,6 +63,7 @@ export class TimeTableComponent implements OnInit {
 			tt_section_id: '',
 			no_of_day: '',
 			no_of_period: '',
+			period_checkbox:''
 		});
 	}
 
@@ -86,7 +88,6 @@ export class TimeTableComponent implements OnInit {
 
 	//  Get Class List function
 	getClass() {
-		this.resetForm();
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
@@ -117,7 +118,10 @@ export class TimeTableComponent implements OnInit {
 				}
 			);
 		this.uploadTimeTableForm.patchValue({
-			'period_checkbox': ''
+			'tt_section_id': '',
+			'no_of_day': '',
+			'no_of_period': '',
+			period_checkbox:''
 		});
 	}
 	// get period and day by selected class
@@ -171,6 +175,7 @@ export class TimeTableComponent implements OnInit {
 	// function to read excel data and assigned to final array for manipulation
 	Upload() {
 		this.sampleTimeTableFlag = false;
+		this.defaultFlag = false;
 		this.excelFlag = true;
 		this.XlslArray = [];
 		this.finalXlslArray = [];
@@ -222,11 +227,13 @@ export class TimeTableComponent implements OnInit {
 
 	// download sample time table excel
 	sampleTimeTable() {
+		this.sampleTimeTableArray = [];
 		if (this.uploadTimeTableForm.valid) {
 			if (this.uploadTimeTableForm.value.no_of_period > 15) {
 				this.commonService.showSuccessErrorMessage('Number of Periods should not more than 15.', 'error');
 				return false;
 			}
+			this.defaultFlag = false;
 			this.sampleTimeTableFlag = true;
 			this.noOFPeriod = this.uploadTimeTableForm.value.no_of_period;
 			for (let i = 0; i < this.noOFPeriod; i++) {
@@ -245,7 +252,7 @@ export class TimeTableComponent implements OnInit {
 						if (excel_r && excel_r.status === 'ok') {
 							const length = excel_r.data.split('/').length;
 							saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
-							this.resetForm();
+							// this.resetForm();
 						}
 					});
 
@@ -388,6 +395,7 @@ export class TimeTableComponent implements OnInit {
 								if (details_r && details_r.status === 'ok') {
 									this.finalXlslArray = [];
 									this.excelFlag = false;
+									this.defaultFlag = true;
 									this.resetForm();
 								}
 							});

@@ -224,5 +224,8 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/getPeriodDayByClass', value);
 	}
-	
+	datediffInWeeks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/datediffInWeeks', value);
+	}
 }

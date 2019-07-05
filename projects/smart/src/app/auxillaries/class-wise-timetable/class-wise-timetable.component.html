@@ -1,16 +1,38 @@
+<div class="row">
+    <div class="col-12 ">
+        <mat-card class="remove-card-padding">
+            <div class="row">
+                <div class="col-4">
+                    <div class="top-card-title">
+                        <span class="font-size-24 font-medium">Class Wise Time Table</span>
+                    </div>
+                </div>
+                <div class="col-8 text-right">
+                    <div class="top-card-title">
+                        <a [routerLink]="['../time-table']">
+                            <button mat-raised-button class="btn-success-green margin-right-20"><i
+                                    class="fas fa-plus"></i> Add New
+                            </button></a>
+                        <a [routerLink]="['../teacherwise-table']">
+                            <span class="font-size-24 font-medium">Teacher Wise</span></a>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div>
 <div class="row margin-top-15">
     <div class="col-12">
         <mat-card>
             <div class="row">
                 <div class="col-4">
-                    <span class="font-size-20 font-bold">Class Wise Time Table</span>
                 </div>
-
                 <div class="col-8 text-right">
                     <form [formGroup]="classwiseForm" novalidate>
                         <mat-form-field class="form-field-150" appearance="outline">
                             <mat-label>Class</mat-label>
-                            <mat-select formControlName="tt_class_id" (selectionChange)="getSectionsByClass()" required placeholder="Select Class">
+                            <mat-select formControlName="tt_class_id" (selectionChange)="getSectionsByClass()" required
+                                placeholder="Select Class">
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                                     {{item.class_name}}
@@ -19,7 +41,8 @@
                         </mat-form-field>
                         <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
                             <mat-label>Section</mat-label>
-                            <mat-select formControlName="tt_section_id" (selectionChange)="getclasswisedetails()" required placeholder="Select Section">
+                            <mat-select formControlName="tt_section_id" (selectionChange)="getclasswisedetails()"
+                                required placeholder="Select Section">
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
                                     {{item.sec_name}}
@@ -37,7 +60,6 @@
                         </mat-form-field>
                     </form>
                 </div>
-
             </div>
             <div class="row margin-top-10">
                 <div class="col-12">
@@ -58,11 +80,30 @@
                             <tr class="custom-tr" *ngFor="let det of classwisetableArray;let j = index">
                                 <td class="custom-td">{{j+ 1}}<sup>{{periodSup[j]}}</sup></td>
                                 <ng-container *ngFor="let item of det.classwise;let i=index">
-                                  <td class="custom-td" *ngIf="item.subject_id !== '-'"><i class="fas fa-circle margin-right-10 sha" [ngClass]="'color-' + item.subject_id"></i> {{item.subject_name}}</td>
-                                  <td class="custom-td" *ngIf="item.subject_id === '-'">-</td>
+                                    <td class="custom-td" *ngIf="(item.subject_id !== '-') && (classwiseForm.value.tt_subject_id === item.subject_id)">
+                                        <i class="fas fa-circle margin-right-10 animation" 
+                                    [ngClass]="'color-' + item.subject_id"></i> {{item.subject_name}}</td>
+                                    <td class="custom-td" *ngIf="(item.subject_id !== '-') && (classwiseForm.value.tt_subject_id != item.subject_id)">
+                                            <i class="fas fa-circle margin-right-10 ddd" 
+                                        [ngClass]="'color-' + item.subject_id"></i> {{item.subject_name}}</td>
+                                    <td class="custom-td" *ngIf="item.subject_id === '-'">-</td>
                                 </ng-container>
                             </tr>
                         </tbody>
+                        <tbody *ngIf="finaldivflag">
+                                <tr class="text-center">
+                                    <td colspan="9">
+                                        <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                                        <br><br><br>                                         
+                                        <span class="font-size-20 font-bold font-color-brown">
+                                          No Data Available
+                                        </span>
+                                        <br><span class="font-size-20 font-light font-color-brown">
+                                          Please Upload Timetable  
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
                     </table>
                 </div>
             </div>
@@ -75,22 +116,22 @@
                 <div class="col-12">
                     <table class="table table-borderd table-stripped custom-table">
                         <thead class="table-skill__head text-center">
-                            <tr class="custom-tr" >
+                            <tr class="custom-tr">
                                 <th class="custom-th">Subjects</th>
                                 <ng-container *ngFor="let item of subjectArray;let i=index">
-                                <th class="custom-th" [ngClass]="'background-color-' + item.sub_id">{{item.sub_name}}</th>
-                              </ng-container>
+                                    <th class="custom-th" [ngClass]="'background-color-' + item.sub_id">
+                                        {{item.sub_name}}</th>
+                                </ng-container>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="custom-tr">
-                                    <td class="custom-td">No. of Periods</td>
-                                    <ng-container *ngFor="let item of subjectArray;let i=index">
-                                        <td class="custom-td ss" *ngIf="finalCountArray[item.sub_name] !== 'undefined'">{{finalCountArray[item.sub_name]}}</td>
-                                        <td class="custom-td" *ngIf="finalCountArray[item.sub_name] === 'undefined'">-</td>
-                                   
-                                    </ng-container>
-                            
+                                <td class="custom-td">No. of Periods</td>
+                                <ng-container *ngFor="let item of subjectArray;let i=index">
+                                    <td class="custom-td ss" *ngIf="finalCountArray[item.sub_name] !== 'undefined'">
+                                        {{finalCountArray[item.sub_name]}}</td>
+                                    <td class="custom-td" *ngIf="finalCountArray[item.sub_name] === 'undefined'">-</td>
+                                </ng-container>
                             </tr>
                         </tbody>
                     </table>

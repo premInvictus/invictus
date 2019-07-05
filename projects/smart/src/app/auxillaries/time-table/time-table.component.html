@@ -10,8 +10,6 @@
         </div>
         <div class="col-8 text-right">
           <div class="top-card-title">
-            <button mat-raised-button class="btn-success-green margin-right-20"><i class="fas fa-plus"></i> Add New
-            </button>
             <a [routerLink]="['../classwise-table']">
               <span class="font-size-24 font-medium">Class Wise</span>
             </a>
@@ -161,29 +159,29 @@
                     <tr class="custom-tr" *ngFor="let det of finalXlslArray;let j = index">
                       <td class="custom-td"><i class="margin-right-10"></i> {{j + 1}}<sup>{{periodSup[j]}}</sup></td>
                       <td class="custom-td" *ngIf="det.monday_id !== '-'"><i
-                          class="fas fa-circle color-purple margin-right-10"></i> {{det.monday}}</td>
+                          class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.monday_id"></i> {{det.monday}}</td>
                       <td class="custom-td" *ngIf="det.monday_id === '-'">-</td>
                       <td class="custom-td" *ngIf="det.tuesday_id !== '-'"><i
-                          class="fas fa-circle color-purple margin-right-10"></i> {{det.tuesday}}</td>
+                          class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.tuesday_id"></i> {{det.tuesday}}</td>
                       <td class="custom-td" *ngIf="det.tuesday_id === '-'">-</td>
                       <td class="custom-td" *ngIf="det.wednesday_id !== '-'"><i
-                          class="fas fa-circle color-blue margin-right-10"></i> {{det.wednesday}}</td>
+                          class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.wednesday_id"></i> {{det.wednesday}}</td>
                       <td class="custom-td" *ngIf="det.wednesday_id === '-'">-</td>
                       <td class="custom-td" *ngIf="det.thursday_id !== '-'"><i
-                          class="fas fa-circle color-tealgreen margin-right-10"></i> {{det.thursday}}</td>
+                          class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.thursday_id"></i> {{det.thursday}}</td>
                       <td class="custom-td" *ngIf="det.thursday_id === '-'">-</td>
                       <td class="custom-td" *ngIf="det.friday_id !== '-'"><i
-                          class="fas fa-circle color-yellow margin-right-10"></i> {{det.friday}}</td>
+                          class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.friday_id"></i> {{det.friday}}</td>
                       <td class="custom-td" *ngIf="det.friday_id === '-'">-</td>
                       <td class="custom-td"
                         *ngIf="(uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7') && det.saturday_id !== '-' ">
-                        <i class="fas fa-circle color-grey margin-right-10"></i> {{det.saturday}}</td>
+                        <i class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.saturday_id"></i> {{det.saturday}}</td>
                       <td class="custom-td"
                         *ngIf="(uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7') && det.saturday_id === '-' ">
                         -</td>
                       <td class="custom-td"
                         *ngIf="uploadTimeTableForm.value.no_of_day === '7' && det.sunday_id !== '-'"><i
-                          class="fas fa-circle color-grey margin-right-10"></i> {{det.sunday}}</td>
+                          class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.sunday_id"></i> {{det.sunday}}</td>
                       <td class="custom-td"
                         *ngIf="uploadTimeTableForm.value.no_of_day === '7' && det.sunday_id === '-'">-</td>
                     </tr>
@@ -198,25 +196,19 @@
               </div>
             </div>
           </div>
-
-          <!-- <div class="col-10">
-        <div class="upload-timetable-container">
-          <img class="upload-timetable-img"
-            src="../../../../../../src/assets/images/smart images/upload-timetable.png">
-          <div class="row margin-top-15">
-            <div class="col-12 text-center">
-              <span class="font-skyblue font-size-24">Drop Template Here</span>
+          <div class="col-10" *ngIf="defaultFlag">
+            <div class="upload-timetable-container">
+              <label for="file">
+                <img class="upload-timetable-img"
+                  src="../../../../../../src/assets/images/smart images/upload-timetable.png">
+              </label>
+              <div class="row margin-top-15">
+                <div class="col-12 text-center">
+                  <span class="font-skyblue font-size-24">Please upload timetable</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row margin-top-20">
-            <div class="col-12 text-center">
-                <button mat-raised-button class="btn-success-green">Upload</button>
-                <button mat-raised-button class="btn-reset margin-left-10">cancel</button>
-            </div>
-          </div>
-      </div> -->
-
         </div>
       </mat-card>
     </div>

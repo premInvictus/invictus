@@ -154,6 +154,11 @@
 .background-color-26{
     background-color: orchid;
 }
-/* .sha{
-    -webkit-animation: rippleone 0.7s linear infinite;
-} */
+.animation {
+    -webkit-animation: ripplefive 0.7s linear infinite;
+    animation: ripplefive 0.7s linear infinite;
+    cursor: pointer;
+    color: #7D5FFF !important;
+    font-size: 10px !important;
+    border-radius: 50%;
+}
