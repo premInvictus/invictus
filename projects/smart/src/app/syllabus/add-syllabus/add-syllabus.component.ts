@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
@@ -57,6 +58,8 @@ export class AddSyllabusComponent implements OnInit {
 		public commonService: CommonAPIService,
 		public axiomService: AxiomService,
 		public sisService: SisService,
+		private router: Router,
+		private route: ActivatedRoute
 
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -657,7 +660,11 @@ export class AddSyllabusComponent implements OnInit {
 						if (result1 && result1.status === 'ok') {
 							this.finalSpannedArray = [];
 							this.finalSubmitArray = [];
-							this.resetForm();
+							const setParam: any = {};
+							setParam.class_id = this.syllabusForm.value.syl_class_id;
+							setParam.sub_id = this.syllabusForm.value.syl_sub_id;
+							this.syllabusService.setProcesstype(setParam);
+							this.router.navigate(['../review'], {relativeTo: this.route});
 						}
 					});
 				}
