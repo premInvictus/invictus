@@ -5768,8 +5768,14 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
   color: #ffffff;
   padding-left: 5px;
 }
+.slickgrid-container .slick-header-columns .slick-header-column.ui-state-default {
+  color: #0e7d9e !important;
+}
 .slick-preheader-panel .ui-droppable, .slick-preheader-panel .ui-droppable-hover {
   border: 1px solid #0e7d9e !important;
+}
+.slickgrid-container .slick-viewport {
+  border-bottom: 1px solid #0e7d9e !important;
 }
 .slick-preheader-panel .ui-droppable .slick-placeholder, .slick-preheader-panel .ui-droppable-hover .slick-placeholder {
   font-style: italic;

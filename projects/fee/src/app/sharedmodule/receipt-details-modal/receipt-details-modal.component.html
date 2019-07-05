@@ -68,7 +68,7 @@
             <div class="vertical-line-divider"></div>
         </div>
         <div class="col-3">          
-          <div class="row" *ngIf="invoiceDetails?.pay_id === '1' || invoiceDetails?.pay_id === '2'">
+          <div class="row">
             <div class="col-12">
               <span class="font-size-16 font-light">Payment Mode: </span><span
                 class="font-size-16 font-regular">{{invoiceDetails?.pay_name}}</span>
@@ -76,13 +76,13 @@
           </div>
           <div class="row" *ngIf="invoiceDetails?.pay_id === '3'">
             <div class="col-12">
-              <span class="font-size-16 font-light">Cheque/Draft No.: </span><span
+              <span class="font-size-16 font-light">Cheque No.: </span><span
                 class="font-size-16 font-regular">{{invoiceDetails?.ftr_cheque_no}}</span>
             </div>
           </div>
           <div class="row" *ngIf="invoiceDetails?.pay_id === '3'">
             <div class="col-12">
-              <span class="font-size-16 font-light">Cheque/Draft Date: </span><span
+              <span class="font-size-16 font-light">Cheque Date: </span><span
                 class="font-size-16 font-regular">{{invoiceDetails?.ftr_cheque_date | date:'dd MMM, yyyy'}}</span>
             </div>
           </div>
@@ -91,6 +91,12 @@
               <span class="font-size-16 font-light">Bank Details: </span><span
                 class="font-size-16 font-regular">{{invoiceDetails?.ftr_bnk_name}},
                 {{invoiceDetails?.bnk_branch}}</span>
+            </div>
+          </div>
+          <div class="row" *ngIf="invoiceDetails?.pay_id != '1' && invoiceDetails?.pay_id != '2' && invoiceDetails?.pay_id != '3'">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Transaction Id: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.ftr_transaction_id}}</span>
             </div>
           </div>
         </div>

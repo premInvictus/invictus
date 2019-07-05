@@ -616,10 +616,11 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		return this.common.isExistUserAccessMenu(mod_id);
 	}
 	setPayAmount(event) {
-		if (event.value === '2') {
-			let $netAmount = parseInt(this.invoice.fee_amount,10) + parseInt(this.invoice.inv_fine_amount,10) + parseInt(this.invoice.inv_prev_balance,10) + parseInt(this.invoice.inv_opening_balance,10);
+		if (event.value === 2 || event.value === '2' ) {
+			// tslint:disable-next-line: max-line-length
+			const netAmount = parseInt(this.invoice.fee_amount, 10) + parseInt(this.invoice.inv_fine_amount, 10) + parseInt(this.invoice.inv_prev_balance, 10) + parseInt(this.invoice.inv_opening_balance, 10);
 			this.feeTransactionForm.patchValue({
-				'ftr_amount': $netAmount,
+				'ftr_amount': netAmount,
 				'ftr_pay_id': event.value
 			});
 		} else {

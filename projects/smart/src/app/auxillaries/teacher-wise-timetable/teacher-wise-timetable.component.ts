@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
+import { CommonAPIService, AxiomService, SmartService } from '../../_services';
 
 @Component({
 	selector: 'app-teacher-wise-timetable',
@@ -9,6 +9,8 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 })
 export class TeacherWiseTimetableComponent implements OnInit {
 	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
+	teacherwiseFlag = false;
+	finalDivFlag = true;
 	teacherArray: any[] = [];
 	subjectArray: any[] = [];
 	teacherwiseArray: any[] = [];
@@ -20,7 +22,6 @@ export class TeacherWiseTimetableComponent implements OnInit {
 		private smartService: SmartService,
 		public commonService: CommonAPIService,
 		public axiomService: AxiomService,
-		public sisService: SisService,
 	) { }
 
 	ngOnInit() {
@@ -29,10 +30,10 @@ export class TeacherWiseTimetableComponent implements OnInit {
 	buildForm() {
 		this.teacherwiseForm = this.fbuild.group({
 			teacher_name: '',
-			subject_name: ''
+			subject_id: ''
 		});
 	}
-
+	// get teacher information
 	getTeacherInfo(event) {
 		console.log(event.target.value);
 		this.teacherArray = [];
@@ -47,6 +48,8 @@ export class TeacherWiseTimetableComponent implements OnInit {
 			});
 		}
 	}
+
+	// set teacher name 
 	setTeacherId(teacherDetails) {
 		this.teacherwiseForm.patchValue({
 			teacher_name: teacherDetails.au_full_name,
@@ -56,6 +59,8 @@ export class TeacherWiseTimetableComponent implements OnInit {
 		this.getSubjectByTeacherId();
 		this.getTeacherwiseTableDetails();
 	}
+
+	// get subject by teacher
 	getSubjectByTeacherId() {
 		this.subjectArray = [];
 		this.smartService.getSubjectByTeacherId({ teacher_id: this.teacherId }).subscribe((result: any) => {
@@ -67,14 +72,17 @@ export class TeacherWiseTimetableComponent implements OnInit {
 		});
 	}
 
+	// get teacherwise timetable details
 	getTeacherwiseTableDetails() {
+		this.finalDivFlag = false;
 		this.smartService.getTeacherwiseTableDetails({ uc_login_id: this.teacherId }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.noOfDay = result.data.no_of_day;
 				this.teacherwiseArray = result.data.tabledata;
-				console.log(this.teacherwiseArray);
 			} else {
-				this.commonService.showSuccessErrorMessage(result.message, 'error');
+				this.teacherwiseArray = [];
+				this.finalDivFlag = true;
+				this.commonService.showSuccessErrorMessage('No record found', 'error');
 			}
 		});
 	}

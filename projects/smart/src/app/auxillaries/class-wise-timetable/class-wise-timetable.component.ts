@@ -10,6 +10,7 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 export class ClassWiseTimetableComponent implements OnInit {
 	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 	subjectwiseFlag = false;
+	finaldivflag = true;
 	public classArray: any[];
 	public sectionArray: any[];
 	public subjectArray: any[];
@@ -21,6 +22,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 	currentUser: any;
 	session: any;
 	noOfDay: any;
+	anaimation: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -54,12 +56,11 @@ export class ClassWiseTimetableComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						this.classArray = result.data;
 						this.subjectwiseFlag = false;
+					} else {
+						this.classArray = [];
 					}
 				}
 			);
-		this.classwiseForm.patchValue({
-			'tt_section_id': ''
-		});
 		this.classwisetableArray = [];
 		this.subCountArray = [];
 		this.finalCountArray = [];
@@ -67,6 +68,11 @@ export class ClassWiseTimetableComponent implements OnInit {
 
 	// get section list according to selected class
 	getSectionsByClass() {
+		this.finaldivflag = true;
+		this.subjectwiseFlag = false;
+		this.classwiseForm.patchValue({
+			'tt_section_id': ''
+		});
 		const sectionParam: any = {};
 		sectionParam.class_id = this.classwiseForm.value.tt_class_id;
 		this.sisService.getSectionsByClass(sectionParam)
@@ -74,11 +80,12 @@ export class ClassWiseTimetableComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.sectionArray = result.data;
-						this.subjectwiseFlag = true;
 						this.subCountArray = [];
 						this.finalCountArray = [];
 						this.classwisetableArray = [];
 						this.getSubjectsByClass();
+					} else {
+						this.sectionArray = [];
 					}
 				}
 			);
@@ -93,12 +100,12 @@ export class ClassWiseTimetableComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.subjectArray = result.data;
-						console.log(this.subjectArray);
+					} else {
+						this.subjectArray = [];
 					}
 				}
 			);
 	}
-
 	// Timetable details based on class and section
 	getclasswisedetails() {
 		this.subCountArray = [];
@@ -111,6 +118,8 @@ export class ClassWiseTimetableComponent implements OnInit {
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
+						this.finaldivflag = false;
+						this.subjectwiseFlag = true;
 						this.noOfDay = result.data[0].no_of_day;
 						const param: any = {};
 						param.td_tt_id = result.data[0].tt_id;
@@ -127,7 +136,6 @@ export class ClassWiseTimetableComponent implements OnInit {
 													'classwise': JSON.parse(this.classwiseArray[i].td_no_of_day)
 												});
 											}
-											console.log(this.classwisetableArray);
 											for (const item of this.classwisetableArray) {
 												for (const titem of item.classwise) {
 													const findex = this.subCountArray.findIndex(f => f.subject_name === titem.subject_name);
@@ -150,6 +158,8 @@ export class ClassWiseTimetableComponent implements OnInit {
 						}
 					} else {
 						this.commonService.showSuccessErrorMessage('No Record Found', 'error');
+						this.finaldivflag = true;
+						this.subjectwiseFlag = false;
 					}
 				});
 

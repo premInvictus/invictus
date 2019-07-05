@@ -11,18 +11,18 @@
     <div class="row">
       <div class="col-2 text-center">
         <img class="student-profile-image-popup" [src]="defaultsrc">
-        <div class="">
+        <div class="margin-top-20">
           <div class="font-size-16 font-bold">
             <span>{{invoiceDetails?.process_name}} {{invoiceDetails?.au_admission_no}} </span>
           </div>
         </div>
       </div>
-      <div class="col-1">
-        <div class="vertical-line-divider"></div>
+      <div class="col-1 smart-col-3">
+        <div class="fee-vertical-line-divider"></div>
       </div>
-      <div class="col-9">
+      <div class="col-9 fee-col-80 remove-col-padding">
         <div class="row remove-top-margin">
-          <div class="col-3 ">
+          <div class="col-3 remove-col-padding">
             <div class="row remove-top-margin">
               <div class="col-12">
                 <span class="font-size-16 font-medium">{{invoiceDetails?.au_full_name | titlecase}},
@@ -44,10 +44,10 @@
 
 
           </div>
-          <div class="col-1">
+          <div class="col-1 smart-col-3">
             <div class="vertical-line-divider"></div>
           </div>
-          <div class="col-3">
+          <div class="col-4">
             <div class="row remove-top-margin">
               <div class="col-12">
                 <span class="font-size-16 font-light">Invoice no: </span><span
@@ -67,44 +67,99 @@
               </div>
             </div>
           </div>
-          <div class="col-1">
+          <div class="col-1 smart-col-3">
             <div class="vertical-line-divider"></div>
           </div>
-          <div class="col-3">
+          <div class="col-4 ">
             <div class="row remove-top-margin">
               <div class="col-12">
                 <span class="font-size-16 font-light">Invoice Date: </span>
                 <span class="font-size-16 font-regular"
                   *ngIf="!(modificationFlag)">{{invoiceDetails?.inv_invoice_date | date:'dd MMM, yyyy'}}</span>
-              </div>
-              <div class="col-6" [hidden]="!modificationFlag">
-                <input matInput [matDatepicker]="picker" formControlName="inv_invoice_date">
-                <mat-datepicker #picker></mat-datepicker>
-              </div>
-              <div class="col-6" [hidden]="!modificationFlag">
+                <div class="inline-flex date-width-100" [hidden]="!modificationFlag">
+                  <input matInput [matDatepicker]="picker" formControlName="inv_invoice_date">
+                  <mat-datepicker #picker></mat-datepicker>
+                </div>
+                <div class="inline-flex" [hidden]="!modificationFlag">
                 <i class="material-icons icon-edit" (click)="picker.open()">create</i>
               </div>
+              </div>
+              
             </div>
             <div class="row remove-top-margin">
               <div class="col-12">
                 <span class="font-size-16 font-light">Due Date: </span>
                 <span class="font-size-16 font-regular"
                   *ngIf="!(modificationFlag)">{{invoiceDetails?.inv_due_date | date:'dd MMM, yyyy'}}</span>
-              </div>
-              <div class="col-6" [hidden]="!modificationFlag">
+              
+              <div class="inline-flex date-width-100" [hidden]="!modificationFlag">
                 <input matInput [matDatepicker]="picker1" formControlName="inv_due_date">
                 <mat-datepicker #picker1></mat-datepicker>
               </div>
-              <div class="col-6" [hidden]="!modificationFlag">
+              <div class="inline-flex" [hidden]="!modificationFlag">
                 <i class="material-icons icon-edit" (click)="picker1.open()">create</i>
+              </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <div class="row remove-top-margin">
+              <div class="col-6">
+              <div *ngIf="modificationFlag">
+                <div class="font-size-16 font-bold">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Opening Balance</mat-label>
+                    <input matInput placeholder="Opening Balance" type="number" formControlName="inv_opening_balance">
+                  </mat-form-field>
+                </div>
+              </div>
+              </div>
+            
+              <div class="col-6">
+              <div *ngIf="modificationFlag">
+                <div class="font-size-16 font-bold">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Fine Amount</mat-label>
+                    <input matInput placeholder="Fine Amt." type="number" formControlName="inv_fine_amount">
+                  </mat-form-field>
+                </div>
+              </div>
+              </div>
+            </div>
               </div>
             </div>
           </div>
+          <!--<div class="col-2">
+            <div class="row remove-top-margin">
+              <div class="col-12">
+              <div *ngIf="modificationFlag">
+                <div class="font-size-16 font-bold">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Opening Balance</mat-label>
+                    <input matInput placeholder="Opening Balance" type="number" formControlName="inv_opening_balance">
+                  </mat-form-field>
+                </div>
+              </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+              <div *ngIf="modificationFlag">
+                <div class="font-size-16 font-bold">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Fine Amount</mat-label>
+                    <input matInput placeholder="Fine Amt." type="number" formControlName="inv_fine_amount">
+                  </mat-form-field>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div> -->
         </div>
         <div class="row" [ngStyle]="{'float':!modificationFlag ? 'right' : '' }" [ngClass]="{'text-right': !modificationFlag}">
-          <div class="col-12">
+          <div class="col-12 text-right">
 
-            <div class="row">
+            <!--<div class="row">
               <div class="col-3" *ngIf="modificationFlag">
                 <div class="font-size-16 font-bold">
                   <mat-form-field appearance="outline" class="form-field">
@@ -120,7 +175,7 @@
                     <input matInput placeholder="Fine Amt." type="number" formControlName="inv_fine_amount">
                   </mat-form-field>
                 </div>
-              </div>
+              </div>-->
               <button
                 *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
                 mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
@@ -134,7 +189,7 @@
                 mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()">Delete</button>
            
           </div>
-          </div>
+          <!--</div>-->
         </div>
       </div>
     </div>

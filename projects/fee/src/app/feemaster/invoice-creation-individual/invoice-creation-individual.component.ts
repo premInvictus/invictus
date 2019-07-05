@@ -26,6 +26,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	@ViewChild('recalculateModal') recalculateModal;
 	@ViewChild('consolidateModal') consolidateModal;
 	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
+	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
 	ELEMENT_DATA: InvoiceElement[] = [];
 	displayedColumns: string[] =
 		['select', 'srno', 'invoiceno', 'feeperiod', 'invoicedate', 'duedate', 'feedue', 'status', 'action'];
@@ -421,6 +422,30 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
 	openConsolidateDialog = (data) => this.consolidateModal.openModal(data);
 	deleteConfirm(value) {
+		// this.feeService.deleteInvoice(value).subscribe((result: any) => {
+		// 	if (result && result.status === 'ok') {
+		// 		this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+		// 		this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+		// 		this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+		// 		this.invoiceCreationForm.patchValue({
+		// 			recalculation_flag: '',
+		// 			inv_id: [],
+		// 			inv_title: '',
+		// 			login_id: [],
+		// 			inv_calm_id: '',
+		// 			inv_fm_id: [],
+		// 			inv_invoice_date: '',
+		// 			inv_due_date: '',
+		// 			inv_activity: ''
+		// 		});
+		// 	} else {
+		// 		this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+		// 	}
+		// });
+		this.deleteWithReasonModal.openModal(value);
+	}
+
+	deleteInvoiceFinal(value) {
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');

@@ -51,12 +51,13 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.getInvoiceBifurcation(this.data);
+		console.log('this.data', this.data);
 		if (this.data.edit) {
 			this.modificationFlag = true;
 		} else {
 			this.modificationFlag = false;
 		}
+		this.getInvoiceBifurcation(this.data);
 		this.buildForm();
 	}
 
@@ -81,10 +82,10 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	closemodal(): void {
 		this.dialogRef.close();
 	}
-	modifyInvoice() {
-		this.modificationFlag = true;
-		this.checkChangedFieldsArray = [];
-	}
+	// modifyInvoice() {
+	// 	this.modificationFlag = true;
+	// 	this.checkChangedFieldsArray = [];
+	// }
 	changeAdjAmt(invg_id, $event) {
 		const invg_id_idx = this.invoiceBifurcationArray.findIndex(item => item.invg_id === invg_id);
 		if ($event.target.value) {
