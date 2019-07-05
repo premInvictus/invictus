@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Input, OnChanges } from '@angular/core';
-import { AxiomService, SisService, SmartService, CommonAPIService } from '../../../_services';
+import { SmartService, CommonAPIService } from '../../../_services';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { SchedulerList } from './scheduler-list.model';
 import { MatDialog } from '@angular/material';
@@ -25,8 +25,6 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 	pageSizeOptions = [5, 10, 25, 100];
 
 	constructor(
-		private axiomService: AxiomService,
-		private sisService: SisService,
 		private smartService: SmartService,
 		private commonAPIService: CommonAPIService,
 		public dialog: MatDialog
