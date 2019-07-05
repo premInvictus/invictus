@@ -228,4 +228,8 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/datediffInWeeks', value);
 	}
+	getMaxPeriod() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSmartUrl + '/setup/getMaxPeriod');
+	}
 }

@@ -28,6 +28,7 @@ export class YearlyComponent implements OnInit {
 	themecolor: any = '#0a5ab3';
 	schedulerArray: any[] = [];
 	schedulerFlag = false;
+	ecArray: any[] = [];
 	constructor(
 		private smartService: SmartService,
 		private commonAPIService: CommonAPIService,
@@ -35,7 +36,7 @@ export class YearlyComponent implements OnInit {
 
 	ngOnInit() {
 		this.viewDate = new Date();
-		console.log(this.viewDate);
+		console.log('yearly');
 		this.getScheduler();
 	}
 
@@ -46,12 +47,24 @@ export class YearlyComponent implements OnInit {
 		console.log('action', event.action);
 		console.log('event', event.event);
 	}
+	/* getSchedulerEventCategory() {
+		this.ecArray = [];
+		this.smartService.getSchedulerEventCategory().subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.ecArray = result.data;
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	} */
 	getScheduler() {
 		this.smartService.getScheduler({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.schedulerArray = result.data;
+				let csNameSet = new Set();
 				if (this.schedulerArray.length > 0) {
 					this.schedulerArray.forEach(element => {
+						csNameSet.add(element.ec_id);
 						const fromDate = moment(element.sc_from);
 						const toDate = moment(element.sc_to);
 						for (const i = fromDate; i.diff(toDate, 'days') <= 0; i.add(1, 'days')) {
@@ -71,6 +84,20 @@ export class YearlyComponent implements OnInit {
 							this.events.push(eachEvent);
 						}
 					});
+					console.log(csNameSet);
+					csNameSet = new Set(Array.from(csNameSet).sort());
+					csNameSet.forEach(ele => {
+						const eco: any = {ec_id: '', ec_name: '', ecArray: []};
+						eco.ec_id = ele;
+						this.schedulerArray.forEach(ele1 => {
+							if (ele === ele1.ec_id) {
+								eco.ec_name = ele1.ec_name;
+								eco.ecArray.push({sc_title: ele1.sc_title, sc_from: ele1.sc_from});
+							}
+						});
+						this.ecArray.push(eco);
+					});
+					console.log(this.ecArray);
 					console.log(this.events);
 					this.schedulerFlag = true;
 				}
