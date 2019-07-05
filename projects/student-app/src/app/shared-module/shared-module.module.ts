@@ -35,6 +35,7 @@ import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynam
 import { MathJaxDirective } from '../mathjax.directive';
 import { OngoingTestInstructionComponent } from './ongoing-test-instruction/ongoing-test-instruction.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
+import { PaymentOrderModalComponent } from './payment-order-modal/payment-order-modal.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -76,7 +77,8 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 	declarations: [
 		CommonDynamicChartComponent,
 		MathJaxDirective,
-		OngoingTestInstructionComponent
+		OngoingTestInstructionComponent,
+		PaymentOrderModalComponent
 	],
 	exports: [
 		MatProgressBarModule,
@@ -106,9 +108,10 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 		MatTooltipModule,
 		MatMenuModule,
 		CommonDynamicChartComponent,
-		MathJaxDirective
+		MathJaxDirective,
+		PaymentOrderModalComponent
 	],
-	entryComponents: [OngoingTestInstructionComponent]
+	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent]
 })
 export class SharedModuleModule {
 	constructor() {

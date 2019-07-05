@@ -19,6 +19,7 @@ import { QelementService } from 'projects/axiom/src/app/questionbank/service/qel
 import { ReportService } from 'projects/axiom/src/app/reports/service/report.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ErpCommonService } from '../../../../src/app/_services/index';
 const providers = [
 	AuthGuard,
 	LoaderService,
@@ -31,7 +32,8 @@ const providers = [
 	UserTypeService,
 	AdminService,
 	QelementService,
-	ReportService
+	ReportService,
+	ErpCommonService
 ];
 @NgModule({
 	declarations: [AppComponent],
