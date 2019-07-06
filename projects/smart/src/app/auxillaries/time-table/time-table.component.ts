@@ -191,7 +191,7 @@ export class TimeTableComponent implements OnInit {
 			const first_sheet_name = workbook.SheetNames[0];
 			const worksheet = workbook.Sheets[first_sheet_name];
 			this.XlslArray = XLSX.utils.sheet_to_json(worksheet, { raw: true });
-			for (let i = 0; i < this.XlslArray.length; i++) {
+			for (let i = 0; i < this.period ; i++) {
 				this.monday = this.XlslArray[i].Monday ? this.XlslArray[i].Monday.split('-') : '-';
 				this.tuesday = this.XlslArray[i].Tuesday ? this.XlslArray[i].Tuesday.split('-') : '-';
 				this.wednesday = this.XlslArray[i].Wednesday ? this.XlslArray[i].Wednesday.split('-') : '-';
