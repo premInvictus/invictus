@@ -476,8 +476,8 @@ export class OutstandingReportComponent implements OnInit {
 						}
 						obj['receipt_no'] = repoArray[Number(index)]['invoice_no'] ?
 							repoArray[Number(index)]['invoice_no'] : '-';
-						obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
-							repoArray[Number(index)]['rpt_amount'] : 0;
+						obj['rpt_amount'] = repoArray[Number(index)]['invoice_amount'] ?
+							repoArray[Number(index)]['invoice_amount'] : 0;
 						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
 							repoArray[Number(index)]['fp_name'] : '-';
 						this.dataset.push(obj);
@@ -676,8 +676,8 @@ export class OutstandingReportComponent implements OnInit {
 										obj[key2 + k] = titem['pay_amount'] ? Number(titem['pay_amount']) : 0;
 										tot = tot + (titem['pay_amount'] ? Number(titem['pay_amount']) : 0);
 										obj['total'] = tot;
-										obj['rpt_amount'] = repoArray[Number(keys)]['rpt_amount'] ?
-											repoArray[Number(keys)]['rpt_amount'] : 0;
+										obj['rpt_amount'] = repoArray[Number(keys)]['invoice_amount'] ?
+											repoArray[Number(keys)]['invoice_amount'] : 0;
 										obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
 											repoArray[Number(keys)]['fp_name'] : '-';
 										k++;
@@ -857,8 +857,8 @@ export class OutstandingReportComponent implements OnInit {
 						}
 						obj['receipt_no'] = repoArray[Number(index)]['invoice_no'] ?
 							repoArray[Number(index)]['invoice_no'] : '-';
-						obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
-							repoArray[Number(index)]['rpt_amount'] : 0;
+						obj['rpt_amount'] = repoArray[Number(index)]['invoice_amount'] ?
+							repoArray[Number(index)]['invoice_amount'] : 0;
 						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
 							repoArray[Number(index)]['fp_name'] : '-';
 						this.dataset.push(obj);
