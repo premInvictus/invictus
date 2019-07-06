@@ -35,13 +35,11 @@ export class TeacherWiseTimetableComponent implements OnInit {
 	}
 	// get teacher information
 	getTeacherInfo(event) {
-		console.log(event.target.value);
 		this.teacherArray = [];
 		if (event.target.value) {
 			this.axiomService.getAllTeacher({ full_name: event.target.value, role_id: '3', status: '1' }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.teacherArray = result.data;
-					console.log(result.data);
 				} else {
 					this.commonService.showSuccessErrorMessage(result.data, 'error');
 				}
@@ -49,7 +47,7 @@ export class TeacherWiseTimetableComponent implements OnInit {
 		}
 	}
 
-	// set teacher name 
+	// set teacher name
 	setTeacherId(teacherDetails) {
 		this.teacherwiseForm.patchValue({
 			teacher_name: teacherDetails.au_full_name,
