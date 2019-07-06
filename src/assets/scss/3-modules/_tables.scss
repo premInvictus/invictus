@@ -241,6 +241,10 @@ td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:
     padding-left: 0px !important;
 }
 
+.mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
+    padding-left: 0px !important;
+}
+
 tspan {
     font-weight: 400;
     font-size: 14px;
@@ -387,4 +391,29 @@ td.grand-total-row {
 
 .table-width-120 {
     width: 120px;
+}
+
+.mat-cell {
+    border-top: 1px solid #89A8C9 !important;
+    border-left: 1px solid #89A8C9 !important;
+    border-right: 1px solid #89A8C9 !important;
+}
+
+.mat-table {
+    border-bottom: 1px solid #89A8C9 !important;
+}
+
+.mat-row {
+    min-height: 35px !important;
+}
+
+.mat-header-cell {
+    border-top: 1px solid #89A8C9 !important;
+    border-left: 1px solid #89A8C9 !important;
+    border-right: 1px solid #89A8C9 !important;
+}
+
+.mat-column-position {
+    width: 8% !important;
+    flex: 0 0 8% !important;
 }
