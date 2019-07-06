@@ -19,12 +19,17 @@ export class SubjectPeriodCounterComponent implements OnInit {
 	classwisetableArray: any[] = [];
 	daywisetableArray: any[] = [];
 	subCountArray: any[] = [];
+	holidayArray: any[] = [];
 	currentUser: any;
 	session: any;
 	toDate: any;
 	fromDate: any;
 	week: any;
 	totalDay: any;
+	holiday: any = 0;
+	nonTeachingDay: any = 0;
+	workingDay: any;
+	teachingDay: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -104,29 +109,33 @@ export class SubjectPeriodCounterComponent implements OnInit {
 				}
 			);
 	}
-
+	// get subject name from existing array
 	getSubjectName(value) {
 		const ctrIndex = this.subjectArray.findIndex(f => Number(f.sub_id) === Number(value));
 		if (ctrIndex !== -1) {
 			return this.subjectArray[ctrIndex].sub_name;
 		}
 	}
+	// get Class name from existing array
 	getClassName(value) {
 		const classIndex = this.classArray.findIndex(f => Number(f.class_id) === Number(value));
 		if (classIndex !== -1) {
 			return this.classArray[classIndex].class_name;
 		}
 	}
+	// get section from existing array
 	getSectionName(value) {
 		const sectionIndex = this.sectionArray.findIndex(f => Number(f.sec_id) === Number(value));
 		if (sectionIndex !== -1) {
 			return this.sectionArray[sectionIndex].sec_name;
 		}
 	}
+	// get class wise details
 	getclasswisedetails() {
 		this.daywisetableArray = [];
 		this.subCountArray = [];
 		this.classwisetableArray = [];
+		this.holidayArray = [];
 		this.fromDate = this.commonService.dateConvertion(this.subjectPeriodForm.value.sc_from);
 		this.toDate = this.commonService.dateConvertion(this.subjectPeriodForm.value.sc_to);
 		if (this.fromDate === null) {
@@ -140,6 +149,22 @@ export class SubjectPeriodCounterComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				this.week = result.data.totalWeek;
 				this.totalDay = result.data.totalDay;
+			}
+		});
+		this.smartService.periodWiseSummary(dateParam).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.holidayArray = result.data;
+				for (let o = 0; o < this.holidayArray.length; o++) {
+					if (Number(this.holidayArray[o].sc_event_category) === 1) {
+						this.holiday = this.holidayArray[o].sc_no_of_day;
+						this.workingDay = this.totalDay - this.holiday;
+					}
+					if (Number(this.holidayArray[o].sc_event_category) === 2) {
+						this.nonTeachingDay = this.holidayArray[o].sc_no_of_day;
+					}
+
+				}
+				this.teachingDay = this.totalDay - this.holiday - this.nonTeachingDay;
 			}
 		});
 		const timetableparam: any = {};
@@ -187,7 +212,6 @@ export class SubjectPeriodCounterComponent implements OnInit {
 											periodCounter.class_id = this.subjectPeriodForm.value.tt_class_id;
 											this.smartService.subjectPeriodCounter(periodCounter).subscribe((periodCounter_result: any) => {
 												if (periodCounter_result && periodCounter_result.status === 'ok') {
-													// this.daywisetableArray = periodCounter_result.data;
 													Object.keys(periodCounter_result.data).forEach(key => {
 														if (key !== '-') {
 															this.daywisetableArray.push({
