@@ -9337,3 +9337,44 @@ a.link {
 
 
  }
+
+
+ /* changes done by Bablu */
+ .pop_month_day{
+  color: #6c6c6c !important;
+  font-size: 16px;
+  font-weight: 600;
+}
+.pop_month_day_number{
+  font-size: 38px;
+  color: #b3b3b3;
+  margin-left: 6px;
+  margin-top: -15px;
+}
+.pop_month_event_title{
+  width: 200px;
+  color: #b7b7b6;
+  margin-top: -8px;
+}
+.month_circle_day_color {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  float: left;
+  margin-right: 6px;
+  margin-top: 5px;
+}
+.month-holiday {
+  background-color: #1fbcbb;
+}
+.month-nonteaching {
+  background-color: #eb4d4b;
+}
+.month-specificclass {
+  background-color: #febe36;
+}
+.popover-body {
+  padding: .5rem .75rem !important;
+  color: #212529 !important;
+  min-width: 276px !important;
+}

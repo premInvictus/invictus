@@ -9,32 +9,20 @@
         <div class="btn-group float-right">
           <i class="material-icons cursor-pointer" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
             (viewDateChange)="closeOpenMonthViewDay()">navigate_before</i>
-          <!-- <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()">
-        Previous
-      </div> -->
-          <!-- <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
-            Today
-          </div> -->
+
           <h3 class="margin-left-20">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
-          <!-- <div class="btn btn-outline-secondary">
-        {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}
-      </div> -->
+
           <i class="material-icons cursor-pointer margin-left-20" mwlCalendarNextView [view]="view"
             [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">navigate_next</i>
-          <!-- <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()">
-        Next
-      </div> -->
+
         </div>
       </div>
     </div>
     <br />
     <div [ngSwitch]="view" *ngIf="schedulerFlag">
       <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
-        [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" 
-        (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)"
-        (eventTimesChanged)="eventTimesChanged($event)">
+        [activeDayIsOpen]="false" [cellTemplate]="customCellTemplate" (dayClicked)="dayClicked($event.day)"
+        (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
       </mwl-calendar-month-view>
     </div>
   </div>
@@ -49,5 +37,17 @@
   </div>
 </div>
 <ng-template #customCellTemplate let-day="day" let-locale="locale">
-    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+  <div class="cal-cell-top" 
+  mwlConfirmationPopover 
+  [hideConfirmButton]="true" 
+  [hideCancelButton]="true"
+  [popoverMessage]="popoverMessage" 
+  placement="right">
+    <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span></div>
+  <div class="cell-totals">
+    <span *ngFor="let group of day.eventGroups" class="badge badge-{{ group[0] }}">
+      {{ group[1].length }}
+    </span>
+  </div>
 </ng-template>
