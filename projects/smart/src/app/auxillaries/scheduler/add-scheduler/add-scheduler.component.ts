@@ -15,7 +15,7 @@ export class AddSchedulerComponent implements OnInit {
 	schedulerform: FormGroup;
 	classArray: any[] = [];
 	ecArray: any[] = [];
-	periodsArray = [1, 2, 3, 4, 5, 6, 7, 8];
+	periodsArray = [];
 	constructor(
 		public dialogRef: MatDialogRef<AddSchedulerComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -47,6 +47,7 @@ export class AddSchedulerComponent implements OnInit {
 		};
 		this.getSchedulerEventCategory();
 		this.getClass();
+		this.getMaxPeriod();
 		if (this.data && this.data.schedulerDetails) {
 			this.setSchedulerform(this.data.schedulerDetails);
 		}
@@ -62,6 +63,15 @@ export class AddSchedulerComponent implements OnInit {
 			sc_class: '',
 			sc_sec: '',
 			sc_description: ''
+		});
+	}
+	getMaxPeriod() {
+		this.smartService.getMaxPeriod().subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				for (let i = 1; i <= Number(result.data.no_of_period); i++) {
+					this.periodsArray.push(i);
+				}
+			}
 		});
 	}
 	setSchedulerform(value) {
@@ -136,10 +146,10 @@ export class AddSchedulerComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.reset();
-					this.dialogRef.close({reloadScheduler: true});
+					this.dialogRef.close({ reloadScheduler: true });
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-					this.dialogRef.close({reloadScheduler: false});
+					this.dialogRef.close({ reloadScheduler: false });
 				}
 			});
 		} else {

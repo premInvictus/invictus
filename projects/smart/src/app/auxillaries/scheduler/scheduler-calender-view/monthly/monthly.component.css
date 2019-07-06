@@ -1,0 +1,6 @@
+.cal-month-view .cal-days {
+    border: none !important;
+}
+.cal-month-view .cal-days .cal-cell-row {
+    border-bottom: none !important;
+}

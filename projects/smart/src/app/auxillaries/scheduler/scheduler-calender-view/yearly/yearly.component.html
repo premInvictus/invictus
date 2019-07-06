@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-9 col-ver-line-divider" *ngIf="schedulerFlag">
+    <angular-calendar-year-view 
+    [themecolor]="themecolor" 
+    [events]="events" 
+    [nothingToshowText]="nothingToshowText"
+    (eventClicked)="eventClicked($event)" 
+    (actionClicked)="actionClicked($event)">
+    </angular-calendar-year-view>
+  </div>
+  <div class="col-2">
+    <mat-vertical-stepper [linear]="true">
+      <mat-step *ngFor="let item of ecArray" [label]="item.ec_name">
+        <small *ngFor="let item1 of item.ecArray">{{item1.sc_from | date:'dd MMM, yyyy'}} - {{item1.sc_title}} <br></small>
+      </mat-step>
+    </mat-vertical-stepper>
+  </div>
+</div>

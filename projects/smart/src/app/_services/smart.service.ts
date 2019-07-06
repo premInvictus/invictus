@@ -231,6 +231,10 @@ export class SmartService {
 	subjectPeriodCounter(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/subjectPeriodCounter', value);
+		}	
+		getMaxPeriod() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSmartUrl + '/setup/getMaxPeriod');
 	}
 	setProcesstype(value) {
 		this.processType = value;

@@ -1,122 +1,19 @@
 <div class="row">
-    <div class="col-12">
-      <mat-card>
-        <div class="row">
-          <div class="col-8 col-ver-line-divider">
-  
-          </div>
-          <div class="col-2">
-            <div class="row">
-              <div class="col-12">
-                <mat-checkbox>Meeting</mat-checkbox>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <mat-checkbox>Conference Call</mat-checkbox>
-              </div>
-            </div>
-  
-            <div class="row">
-              <div class="col-12">
-                <mat-checkbox>Dinner</mat-checkbox>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <mat-checkbox>Assignment</mat-checkbox>
-              </div>
-            </div>
-  
-            <div class="row">
-              <div class="col-12">
-                <mat-checkbox>Reporting</mat-checkbox>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <mat-checkbox>Parent Teacher Meeting</mat-checkbox>
-              </div>
-            </div>
-  
-            <div class="row">
-              <div class="col-12">
-                <mat-checkbox>Exam Date</mat-checkbox>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <mat-checkbox>Staff Meeting</mat-checkbox>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <mat-checkbox>Lunch</mat-checkbox>
-              </div>
-            </div>
-            <div class="row margin-top-20">
-              <div class="col-12">
-                <mat-checkbox>Remove After Drop</mat-checkbox>
-              </div>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="row">
-              <div class="col-12">
-                <button mat-mini-fab class="scheduler-circle background-color-red"><span
-                    class="font-size-14">24</span></button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <button mat-mini-fab class="scheduler-circle background-color-yellow "><span
-                    class="font-size-14">24</span></button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <button mat-mini-fab class="scheduler-circle background-color-green"><span
-                    class="font-size-14">24</span></button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <button mat-mini-fab class="scheduler-circle background-color-grey"><span
-                    class="font-size-14">24</span></button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <button mat-mini-fab class="scheduler-circle background-color-blue"><span
-                    class="font-size-14">24</span></button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <button mat-mini-fab class="scheduler-circle background-color-purple"><span
-                    class="font-size-14">24</span></button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <button mat-mini-fab class="scheduler-circle background-color-tealgreen"><span
-                    class="font-size-14">24</span></button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <button mat-mini-fab class="scheduler-circle background-color-table-blue"><span
-                    class="font-size-14">24</span></button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <button mat-mini-fab class="scheduler-circle background-color-green"><span
-                    class="font-size-14">24</span></button>
-              </div>
-            </div>
-          </div>
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-12">
+          <mat-tab-group>
+            <mat-tab label="Yearly">
+              <app-yearly></app-yearly>
+            </mat-tab>
+            <mat-tab label="Monthly">
+              <app-monthly></app-monthly>
+            </mat-tab>
+            <!-- <mat-tab label="Weekly"> Content 3 </mat-tab> -->
+          </mat-tab-group>
         </div>
-      </mat-card>
-    </div>
+      </div>
+    </mat-card>
   </div>
+</div>
