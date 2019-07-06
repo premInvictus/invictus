@@ -113,7 +113,7 @@ export class CollectionReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'orderBy': ''
 		});
 	}
 
@@ -1551,11 +1551,9 @@ export class CollectionReportComponent implements OnInit {
 		sortDialog.afterClosed().subscribe((result: any) => {
 			if (result) {
 				this.sortResult = result;
-				console.log(this.sortResult);
 				this.reportFilterForm.patchValue({
-					'order_by': this.sortResult.length > 0 ? [this.sortResult] : ''
+					'orderBy': this.sortResult.length > 0 ? [this.sortResult] : ''
 				});
-				console.log(this.reportFilterForm.value);
 			}
 		});
 	}
@@ -1678,9 +1676,10 @@ export class CollectionReportComponent implements OnInit {
 				Object.keys(item.rows).forEach(key => {
 					const arr: any[] = [];
 					Object.keys(item.rows[key]).forEach(key2 => {
-						if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
+						if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name' && key2 !== 'invoice_created_date') {
 							arr.push(item.rows[key][key2]);
-						} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
+						} else if (key2 !== 'id' && key2 !== 'receipt_id' &&
+							key2 !== 'invoice_created_date' && key2 === 'fp_name') {
 							arr.push(item.rows[key][key2][0]);
 						}
 					});
@@ -1701,7 +1700,7 @@ export class CollectionReportComponent implements OnInit {
 					useCss: true,
 					styles: {
 						fontSize: 22,
-						cellWidth: 'auto',
+						cellWidth: 4,
 					},
 					theme: 'striped'
 				});

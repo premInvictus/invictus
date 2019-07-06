@@ -75,8 +75,7 @@ export class TeacherWiseTimetableComponent implements OnInit {
 		this.finalDivFlag = false;
 		this.smartService.getTeacherwiseTableDetails({ uc_login_id: this.teacherId }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.noOfDay = result.data.no_of_day;
-				this.teacherwiseArray = result.data.tabledata;
+				this.teacherwiseArray = result.data;
 			} else {
 				this.teacherwiseArray = [];
 				this.finalDivFlag = true;
