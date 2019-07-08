@@ -8,34 +8,38 @@
                     </div>
                 </div>
                 <div class="col-6 text-right">
-                    <form>
+                    <form [formGroup]="comparitiveForm" novalidate>
                         <div class="top-card-title-form">
                             <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>From Date</mat-label>
-                                <mat-select >
+                                <mat-select>
                                     <mat-option value="">Please select</mat-option>
-                                    <mat-option ></mat-option>
+                                    <mat-option></mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>To Date</mat-label>
-                                <mat-select >
+                                <mat-select>
                                     <mat-option value="">Please select</mat-option>
-                                    <mat-option ></mat-option>
+                                    <mat-option></mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>Class</mat-label>
-                                <mat-select placeholder="Select Class">
+                                <mat-select formControlName="syl_class_id" (selectionChange)="getSubjectsByClass()" required placeholder="Select Class">
                                     <mat-option value="">Please select</mat-option>
-                                    <mat-option ></mat-option>
+                                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                        {{item.class_name}}
+                                    </mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>Subject</mat-label>
-                                <mat-select placeholder="Select Subject">
+                                <mat-select formControlName="syl_sub_id" (selectionChange)="fetchSyllabusDetails()" required placeholder="Select Subject">
                                     <mat-option value="">Please select</mat-option>
-                                    <mat-option ></mat-option>
+                                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                        {{item.sub_name}}
+                                    </mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
@@ -47,22 +51,26 @@
     </div>
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-12">
         <mat-card>
-            
-        <div class="row">
-          <div class="col-4">
-            <span class="font-size-16 font-bold">As On :</span><span class="font-light font-size-16"> 1 <sup>st</sup> July 2019</span>
-          </div>
-          <div class="col-8 text-right" >
-            <span class="font-size-16 font-bold">Class :</span><span class="font-light font-size-16"> IX - A</span>
-            <span class="margin-left-10 ver-line-divider"></span>
-            <span class="font-size-16 font-bold">Subject :</span><span class="font-light font-size-16"> Science</span>
-            <span class="margin-left-10 ver-line-divider"></span>
-            <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16"> 2019-20</span>
-          </div>
-        </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-size-16 font-bold">As On :</span><span class="font-light font-size-16"> 1
+                        <sup>st</sup> July 2019</span>
+                </div>
+                <div class="col-8 text-right">
+                    <span class="font-size-16 font-bold">Class :</span><span class="font-light font-size-16"> IX -
+                        A</span>
+                    <span class="margin-left-10 ver-line-divider"></span>
+                    <span class="font-size-16 font-bold">Subject :</span><span class="font-light font-size-16">
+                        Science</span>
+                    <span class="margin-left-10 ver-line-divider"></span>
+                    <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16">
+                        2019-20</span>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12 remove-col-padding">
                     <table class="table table-borderd table-stripped custom-table">
@@ -84,101 +92,168 @@
                                 <th class="custom-th">Test</th>
                                 <th class="custom-th">Revise</th>
                                 <th class="custom-th">Total</th>
-                                
+
                             </tr>
                         </thead>
                         <tbody class="text-center">
-                          <tr class="custom-tr">
-                            <td class="custom-td text-left" rowspan="5"><span >Science</span></td>
-                            <td class="custom-td text-left" ><span >Introduction of Food</span></td>
-                            <td class="custom-td text-left" ><span >Make a chart showing all status of matter</span></td>
-                            <td class="custom-td "><span>10</span></td>
-                            <td class="custom-td "><span>32</span></td>
-                            <td class="custom-td "><span>38</span></td>
-                            <td class="custom-td "><span>148</span></td>
-                            <td class="custom-td "><span>10</span></td>
-                            <td class="custom-td "><span>32</span></td>
-                            <td class="custom-td "><span>38</span></td>
-                            <td class="custom-td "><span>148</span></td>
-                            <td class="custom-td background-red">10</td>
+                            <tr class="custom-tr">
+                                <td class="custom-td text-left" rowspan="5"><span>Science</span></td>
+                                <td class="custom-td text-left"><span>Introduction of Food</span></td>
+                                <td class="custom-td text-left"><span>Make a chart showing all status of matter</span>
+                                </td>
+                                <td class="custom-td "><span>10</span></td>
+                                <td class="custom-td "><span>32</span></td>
+                                <td class="custom-td "><span>38</span></td>
+                                <td class="custom-td "><span>148</span></td>
+                                <td class="custom-td "><span>10</span></td>
+                                <td class="custom-td "><span>32</span></td>
+                                <td class="custom-td "><span>38</span></td>
+                                <td class="custom-td "><span>148</span></td>
+                                <td class="custom-td background-red">10</td>
                                 <td rowspan="5" class="custom-td background-green">5</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td text-left" ><span >Introduction of Food</span></td>
-                            <td class="custom-td text-left" ><span >Make a chart showing all status of matter</span></td>
-                            <td class="custom-td "><span>10</span></td>
-                            <td class="custom-td "><span>32</span></td>
-                            <td class="custom-td "><span>38</span></td>
-                            <td class="custom-td "><span>148</span></td>
-                            <td class="custom-td "><span>10</span></td>
-                            <td class="custom-td "><span>32</span></td>
-                            <td class="custom-td "><span>38</span></td>
-                            <td class="custom-td "><span>148</span></td>
-                            <td class="custom-td">10</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td text-left" ><span >Introduction of Food</span></td>
-                            <td class="custom-td text-left" ><span >Make a chart showing all status of matter</span></td>
-                            <td class="custom-td "><span>10</span></td>
-                            <td class="custom-td "><span>32</span></td>
-                            <td class="custom-td "><span>38</span></td>
-                            <td class="custom-td "><span>148</span></td>
-                            <td class="custom-td "><span>10</span></td>
-                            <td class="custom-td "><span>32</span></td>
-                            <td class="custom-td "><span>38</span></td>
-                            <td class="custom-td "><span>148</span></td>
-                            <td class="custom-td">10</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td text-left" ><span >Introduction of Food</span></td>
-                            <td class="custom-td text-left" ><span >Make a chart showing all status of matter</span></td>
-                            <td class="custom-td "><span>10</span></td>
-                            <td class="custom-td "><span>32</span></td>
-                            <td class="custom-td "><span>38</span></td>
-                            <td class="custom-td "><span>148</span></td>
-                            <td class="custom-td "><span>10</span></td>
-                            <td class="custom-td "><span>32</span></td>
-                            <td class="custom-td "><span>38</span></td>
-                            <td class="custom-td "><span>148</span></td>
-                            <td class="custom-td">10</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td text-left" ><span >Introduction of Food</span></td>
-                            <td class="custom-td text-left" ><span >Make a chart showing all status of matter</span></td>
-                            <td class="custom-td "><span>10</span></td>
-                            <td class="custom-td "><span>32</span></td>
-                            <td class="custom-td "><span>38</span></td>
-                            <td class="custom-td "><span>148</span></td>
-                            <td class="custom-td "><span>10</span></td>
-                            <td class="custom-td "><span>32</span></td>
-                            <td class="custom-td "><span>38</span></td>
-                            <td class="custom-td "><span>148</span></td>
-                            <td class="custom-td">10</td>
-                          </tr>
-                          
-                          
-                          
+                            </tr>
+
                         </tbody>
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
-                              <th class="custom-th"></th>
+                                <th class="custom-th"></th>
                                 <th class="custom-th text-left" colspan="2">Grand Total</th>
                                 <th class="custom-th">26</th>
                                 <th class="custom-th">6</th>
                                 <th class="custom-th">6</th>
-                                <th class="custom-th" >38</th>
-                                <th class="custom-th" ></th>
+                                <th class="custom-th">38</th>
+                                <th class="custom-th"></th>
                                 <th class="custom-th">26</th>
                                 <th class="custom-th">6</th>
                                 <th class="custom-th">6</th>
-                                <th class="custom-th" >38</th>
-                                <th class="custom-th" ></th>
+                                <th class="custom-th">38</th>
+                                <th class="custom-th"></th>
                             </tr>
-                            </thead>
-                      </table>
-                      </div>
-                      </div>
-                      </mat-card>
-                      </div>
-                      </div>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div> -->
 
+<div class="row">
+    <div class="col-12">
+        <mat-card>
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-size-16 font-bold">As On :</span><span class="font-light font-size-16"> 1
+                        <sup>st</sup> July 2019</span>
+                </div>
+                <div class="col-8 text-right">
+                    <span class="font-size-16 font-bold">Class :</span><span class="font-light font-size-16"> IX -
+                        A</span>
+                    <span class="margin-left-10 ver-line-divider"></span>
+                    <span class="font-size-16 font-bold">Subject :</span><span class="font-light font-size-16">
+                        Science</span>
+                    <span class="margin-left-10 ver-line-divider"></span>
+                    <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16">
+                        2019-20</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-borderd table-stripped custom-table">
+                        <thead class="table-skill__head text-center">
+                            <tr class="custom-tr">
+                                <th class="custom-th" rowspan="2">Topic</th>
+                                <th class="custom-th" rowspan="2">SubTopic</th>
+                                <th class="custom-th" rowspan="2">Description</th>
+                                <th class="custom-th" colspan="3">No. of Period Required</th>
+                                <th class="custom-th" rowspan="2">Total</th>
+                                <th class="custom-th" colspan="3">No. of Period Taken To</th>
+                                <th class="custom-th" rowspan="2">Total</th>
+                                <th class="custom-th" rowspan="2" colspan="2">Deviation</th>
+
+                            </tr>
+                            <tr class="custom-tr">
+                                <th class="custom-th">Teaching</th>
+                                <th class="custom-th">Test</th>
+                                <th class="custom-th">Revision</th>
+                                <th class="custom-th">Teaching</th>
+                                <th class="custom-th">Test</th>
+                                <th class="custom-th">Revision</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <ng-container *ngFor="let item of finalSpannedArray;let i=index">
+                                <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
+                                    <ng-container>
+                                        <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
+                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                                {{getTopicName(item.sd_topic_id)}}</td>
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 1">
+                                                {{det.sd_st_name}}
+                                            </td>
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 2">
+                                                Test
+                                            </td>
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 3">
+                                                Revision
+                                            </td>
+                                            <td class="custom-td">
+                                                <div [innerHTML]="det.sd_desc"></div>
+                                            </td>
+                                            <td class="custom-td">
+                                                {{det.sd_period_teacher}}
+                                            </td>
+                                            <td class="custom-td">
+                                                {{det.sd_period_test}}
+
+                                            </td>
+                                            <td class="custom-td">
+                                                {{det.sd_period_revision}}
+
+                                            </td>
+                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                                {{item.total}}
+
+                                            </td>
+                                            <td class="custom-td">
+
+                                            </td>
+                                            <td class="custom-td">
+
+                                            </td>
+                                            <td class="custom-td">
+
+                                            </td>
+                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+
+                                            </td>
+                                            <td class="custom-td background-red">10</td>
+                                            <td rowspan="5" class="custom-td background-green" *ngIf="j == 0" [attr.rowspan]="item.details.length">5</td>
+
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </tbody>
+
+                        <tbody>
+                            <tr class="text-center" *ngIf="finalDivFlag">
+                                <td colspan="12">
+                                    <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <span class="font-size-20 font-bold font-color-brown">
+                                        No Data Available
+                                    </span>
+                                    <br><span class="font-size-20 font-light font-color-brown">
+                                        Please select Class and Subject
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div>

@@ -136,6 +136,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 													'classwise': JSON.parse(this.classwiseArray[i].td_no_of_day)
 												});
 											}
+											console.log(this.classwisetableArray);
 											for (const item of this.classwisetableArray) {
 												for (const titem of item.classwise) {
 													const findex = this.subCountArray.findIndex(f => f.subject_name === titem.subject_name);
