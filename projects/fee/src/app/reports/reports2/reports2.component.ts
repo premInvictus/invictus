@@ -196,4 +196,11 @@ export class Reports2Component implements OnInit {
 		this.accountFlag = false;
 		this.reportFlag = true;
 	}
+	getClassPerIndex(index) {
+		if (index === 0 || index === 5 || index === 10) {
+			return 'col-12 col-lg-2  col-md-6 col-sm-6';
+		} else {
+			return 'col-12 col-lg-2 col-half-offset col-md-6 col-sm-6';
+		}
+	}
 }

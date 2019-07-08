@@ -5818,6 +5818,9 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
   border-bottom: none !important;
   text-align: left;
 }
+.amount-report-fee {
+  text-align: right !important;
+}
 .slick-group-title span {
   color: #0e7d9e !important;
 }
@@ -5840,6 +5843,17 @@ span.invoice-span-mfr {
     left: 8px;
     top: 4px;
     cursor: pointer;
+}
+span.invoice-span-mfr2 {
+  font-weight: bold;
+  opacity: -0.8; 
+  color: white;
+  text-decoration: underline;
+  position: relative;
+  left: -28px;
+  top: 4px;
+  z-index: 99999 !important;
+  cursor: pointer;
 }
 td.tdTone2 {
   width: 250px !important;

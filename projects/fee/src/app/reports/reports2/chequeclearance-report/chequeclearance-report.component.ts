@@ -157,15 +157,22 @@ export class ChequeclearanceReportComponent implements OnInit {
 				name: 'SNo.',
 				field: 'srno',
 				sortable: true,
-				width: 1
+				maxWidth: 40
 			},
 			{
-				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
-				width: 4,
+				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 80,
 				groupTotalsFormatter: this.srnTotalsFormatter
 			},
 			{
-				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true, width: 6,
+				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				grouping: {
 					getter: 'stu_full_name',
 					formatter: (g) => {
@@ -177,8 +184,11 @@ export class ChequeclearanceReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true, width: 4,
+				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 				filterable: true,
+				width: 80,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				grouping: {
 					getter: 'stu_class_name',
 					formatter: (g) => {
@@ -190,8 +200,11 @@ export class ChequeclearanceReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'cheque_date', name: 'Cheque Date', field: 'cheque_date', sortable: true, width: 4,
+				id: 'cheque_date', name: 'Cheque Date', field: 'cheque_date', sortable: true,
 				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundDate },
 				formatter: this.checkDateFormatter,
 				grouping: {
 					getter: 'cheque_date',
@@ -204,8 +217,11 @@ export class ChequeclearanceReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'dishonor_date', name: 'Dishonour Date', field: 'dishonor_date', sortable: true, width: 4,
+				id: 'dishonor_date', name: 'Dishonour Date', field: 'dishonor_date', sortable: true,
 				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundDate },
 				formatter: this.checkDateFormatter,
 				grouping: {
 					getter: 'dishonor_date',
@@ -218,54 +234,96 @@ export class ChequeclearanceReportComponent implements OnInit {
 				},
 			},
 			{
+				id: 'deposite_date', name: 'Deposit Date', field: 'deposite_date', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundDate },
+				formatter: this.checkDateFormatter,
+				grouping: {
+					getter: 'deposite_date',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
 				id: 'invoice_no',
 				name: 'Invoice No.',
 				field: 'invoice_no',
+				width: 40,
 				sortable: true,
 				filterable: true,
+				formatter: this.checkReceiptFormatter,
+				cssClass: 'receipt_collection_report',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 			},
 			{
 				id: 'receipt_no',
 				name: 'Receipt No.',
+				width: 40,
 				field: 'receipt_no',
 				sortable: true,
 				filterable: true,
+				formatter: this.checkReceiptFormatter,
+				cssClass: 'receipt_collection_report',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 			},
 			{
 				id: 'receipt_amount',
 				name: 'Receipt Amt.',
+				width: 40,
 				field: 'receipt_amount',
 				sortable: true,
 				filterable: true,
-				groupTotalsFormatter: this.sumTotalsFormatter
+				cssClass: 'amount-report-fee',
+				groupTotalsFormatter: this.sumTotalsFormatter,
+				formatter: this.checkFeeFormatter
 			},
 			{
 				id: 'bank_name',
 				name: 'Bank Name',
 				field: 'bank_name',
 				sortable: true,
+				width: 120,
 				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 			},
 			{
 				id: 'status',
 				name: 'Status',
 				field: 'status',
+				width: 80,
 				sortable: true,
 				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 			},
 			{
 				id: 'fcc_reason_id',
 				name: 'Reason',
 				field: 'fcc_reason_id',
 				sortable: true,
+				width: 80,
 				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 			},
 			{
 				id: 'fcc_remarks',
 				name: 'Remarks',
 				field: 'fcc_remarks',
+				width: 40,
 				sortable: true,
 				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 			}];
 		this.feeService.getCheckControlReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -289,15 +347,21 @@ export class ChequeclearanceReportComponent implements OnInit {
 					} else {
 						obj['stu_class_name'] = repoArray[Number(index)]['class_name'];
 					}
-					obj['cheque_date'] = repoArray[Number(index)]['cheque_date'];
-					obj['dishonor_date'] = repoArray[Number(index)]['dishonor_date'];
+					obj['deposite_date'] = repoArray[Number(index)]['fcc_deposite_date'] ?
+						repoArray[Number(index)]['fcc_deposite_date'] : '-';
+					obj['cheque_date'] = repoArray[Number(index)]['cheque_date'] ? repoArray[Number(index)]['cheque_date'] : '-';
+					obj['dishonor_date'] = repoArray[Number(index)]['dishonor_date'] ? repoArray[Number(index)]['dishonor_date'] : '-';
+					obj['invoice_id'] = repoArray[Number(index)]['invoice_id'] ?
+						repoArray[Number(index)]['invoice_id'] : '0';
 					obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
 						repoArray[Number(index)]['invoice_no'] : '-';
 					obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
 						repoArray[Number(index)]['receipt_no'] : '-';
+					obj['receipt_id'] = repoArray[Number(index)]['receipt_id'] ?
+						repoArray[Number(index)]['receipt_id'] : '0';
 					obj['receipt_amount'] = repoArray[Number(index)]['receipt_amount'] ?
 						Number(repoArray[Number(index)]['receipt_amount'])
-						: '-';
+						: 0;
 					obj['bank_name'] = repoArray[Number(index)]['bank_name'] ?
 						repoArray[Number(index)]['bank_name'] : '-';
 					if (Number(repoArray[Number(index)]['status']) === 1) {
@@ -307,13 +371,32 @@ export class ChequeclearanceReportComponent implements OnInit {
 					} else {
 						obj['status'] = 'Pending';
 					}
-					obj['fcc_reason_id'] = repoArray[Number(index)]['fcc_reason_id'] ?
-						repoArray[Number(index)]['fcc_reason_id'] : '-';
+					obj['fcc_reason_id'] = repoArray[Number(index)]['reason_desc'] ?
+						repoArray[Number(index)]['reason_desc'] : '-';
 					obj['fcc_remarks'] = repoArray[Number(index)]['fcc_remarks'] ?
 						repoArray[Number(index)]['fcc_remarks'] : '-';
 					this.dataset.push(obj);
 					index++;
 				}
+				const obj3: any = {};
+				obj3['id'] = '';
+				obj3['srno'] = '';
+				obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+				obj3['stu_full_name'] = '';
+				obj3['stu_class_name'] = '';
+				obj3['deposite_date'] = '';
+				obj3['cheque_date'] = '';
+				obj3['dishonor_date'] = '';
+				obj3['invoice_id'] = '';
+				obj3['invoice_no'] = '';
+				obj3['receipt_no'] = '';
+				obj3['receipt_id'] = '';
+				obj3['receipt_amount'] = this.dataset.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0);
+				obj3['bank_name'] = '';
+				obj3['status'] = '';
+				obj3['fcc_reason_id'] = '';
+				obj3['fcc_remarks'] = '';
+				this.dataset.push(obj3);
 				this.tableFlag = true;
 			}
 		});
@@ -359,7 +442,12 @@ export class ChequeclearanceReportComponent implements OnInit {
 		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['receipt_no'] !== '-') {
-				this.renderDialog(item['receipt_no'], false);
+				this.openDialogReceipt(item['receipt_id'], false);
+			}
+		} if (args.cell === args.grid.getColumnIndex('invoice_no')) {
+			const item: any = args.grid.getDataItem(args.row);
+			if (item['invoice_no'] !== '-') {
+				this.renderDialog(item['invoice_id'], false);
 			}
 		}
 	}
@@ -398,7 +486,11 @@ export class ChequeclearanceReportComponent implements OnInit {
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
-		return new DatePipe('en-in').transform(value, 'd-MMM-y');
+		if (value !== '-') {
+			return new DatePipe('en-in').transform(value, 'd-MMM-y');
+		} else {
+			return '-';
+		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
 		return '<b class="total-footer-report">Total</b>';
@@ -407,7 +499,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: invoiceNo,
+				rpt_id: invoiceNo,
 				edit: edit
 			},
 			hasBackdrop: true

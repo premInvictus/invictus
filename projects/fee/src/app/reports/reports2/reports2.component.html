@@ -10,7 +10,7 @@
           </mat-expansion-panel-header>
           <div class="report-card__container">
             <div class="row margin-top-20">
-              <div *ngFor="let item of feeReportArray" class="col-12 col-lg-3 col-md-6 col-sm-6">
+              <div *ngFor="let item of feeReportArray;let i = index" [class]="getClassPerIndex(i)">
                 <mat-card [class]="checkEnable(item.report_id)" (click)="executeReport(item.report_id)">
                   <div class="report-card-container2">
                     <div [class]="item.main_text_class">

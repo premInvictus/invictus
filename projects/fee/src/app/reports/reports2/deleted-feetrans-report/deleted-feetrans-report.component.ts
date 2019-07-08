@@ -161,12 +161,28 @@ export class DeletedFeetransReportComponent implements OnInit {
 				width: 1
 			},
 			{
-				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
+				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				groupTotalsFormatter: this.srnTotalsFormatter,
-				width: 5,
+				width: 50,
+				grouping: {
+					getter: 'stu_admission_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
 			},
 			{
-				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true, width: 6,
+				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
+				sortable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 100,
 				grouping: {
 					getter: 'stu_full_name',
 					formatter: (g) => {
@@ -178,8 +194,11 @@ export class DeletedFeetransReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true, width: 4,
+				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 				filterable: true,
+				width: 30,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				grouping: {
 					getter: 'stu_class_name',
 					formatter: (g) => {
@@ -196,6 +215,8 @@ export class DeletedFeetransReportComponent implements OnInit {
 				field: 'invoice_no',
 				sortable: true,
 				filterable: true,
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				cssClass: 'fee-ledger-no',
 				width: 3,
 				formatter: this.checkReceiptFormatter
@@ -217,11 +238,36 @@ export class DeletedFeetransReportComponent implements OnInit {
 				},
 			},
 			{
+				id: 'invoice_amount',
+				name: 'Quantum',
+				field: 'invoice_amount',
+				sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				cssClass: 'amount-report-fee',
+				groupTotalsFormatter: this.sumTotalsFormatter,
+				formatter: this.checkFeeFormatter,
+				filter: { model: Filters.compoundInput },
+				width: 3,
+			},
+			{
+				id: 'inv_paid_status',
+				name: 'Status',
+				field: 'inv_paid_status',
+				sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 3,
+			},
+			{
 				id: 'fp_name',
 				name: 'Fee period',
 				field: 'fp_name',
 				sortable: true,
 				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				width: 3,
 			},
 			{
@@ -246,6 +292,8 @@ export class DeletedFeetransReportComponent implements OnInit {
 				field: 'mod_review_by',
 				sortable: true,
 				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				width: 3,
 			},
 			{
@@ -254,20 +302,14 @@ export class DeletedFeetransReportComponent implements OnInit {
 				field: 'reason_title',
 				sortable: true,
 				filterable: true,
-				width: 3,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 40,
 			},
 			{
 				id: 'mod_review_remark',
 				name: 'Remark',
 				field: 'mod_review_remark',
-				sortable: true,
-				filterable: true,
-				width: 3,
-			},
-			{
-				id: 'inv_paid_status',
-				name: 'Status',
-				field: 'inv_paid_status',
 				sortable: true,
 				filterable: true,
 				width: 3,
@@ -297,15 +339,33 @@ export class DeletedFeetransReportComponent implements OnInit {
 					obj['invoice_no'] = item['inv_invoice_no'] ? item['inv_invoice_no'] : '-';
 					obj['inv_id'] = item['inv_id'];
 					obj['invoice_created_date'] = repoArray[Number(index)]['inv_due_date'];
+					obj['invoice_amount'] = Number(repoArray[Number(index)]['inv_fee_amount']) + Number(repoArray[Number(index)]['inv_fine_amount']);
+					obj['inv_paid_status'] = new CapitalizePipe().transform(item['inv_paid_status']);
 					obj['fp_name'] = repoArray[Number(index)]['fp_name'];
 					obj['deleted_date'] = repoArray[Number(index)]['deleted_date'] ? repoArray[Number(index)]['deleted_date'] : '-';
 					obj['mod_review_by'] = repoArray[Number(index)]['created_by'] ? repoArray[Number(index)]['created_by'] : '-';
 					obj['reason_title'] = repoArray[Number(index)]['reason_title'] ? repoArray[Number(index)]['reason_title'] : '-';
 					obj['mod_review_remark'] = repoArray[Number(index)]['mod_review_remark'] ? repoArray[Number(index)]['mod_review_remark'] : '-';
-					obj['inv_paid_status'] = new CapitalizePipe().transform(item['inv_paid_status']);
 					this.dataset.push(obj);
 					index++;
 				}
+				const obj3: any = {};
+				obj3['id'] = '';
+				obj3['srno'] = '';
+				obj3['stu_admission_no'] = this.common.htmlToText('<b class="total-footer-report">Grand Total</b>');
+				obj3['stu_full_name'] = '';
+				obj3['stu_class_name'] = '';
+				obj3['invoice_no'] = '';
+				obj3['inv_id'] = '';
+				obj3['invoice_created_date'] = '';
+				obj3['invoice_amount'] = this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0);
+				obj3['inv_paid_status'] = '';
+				obj3['fp_name'] = '';
+				obj3['deleted_date'] = '';
+				obj3['mod_review_by'] = '';
+				obj3['reason_title'] = '';
+				obj3['mod_review_remark'] = '';
+				this.dataset.push(obj3);
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;
