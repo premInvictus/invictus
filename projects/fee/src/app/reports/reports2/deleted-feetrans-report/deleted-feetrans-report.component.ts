@@ -89,7 +89,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'orderBy': ''
 		});
 	}
 
@@ -119,7 +119,8 @@ export class DeletedFeetransReportComponent implements OnInit {
 				iconSortDescCommand: 'fas fa-sort-down',
 			},
 			exportOptions: {
-				sanitizeDataExport: true
+				sanitizeDataExport: true,
+				exportWithFormatter: true
 			},
 			gridMenu: {
 				onCommand: (e, args) => {
@@ -270,7 +271,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 				sortable: true,
 				filterable: true,
 				width: 3,
-			}, ];
+			}];
 		this.feeService.getDeletedFeeTransactionReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
@@ -293,11 +294,12 @@ export class DeletedFeetransReportComponent implements OnInit {
 					} else {
 						obj['stu_class_name'] = repoArray[Number(index)]['class_name'];
 					}
-					obj['invoice_no'] = item['inv_invoice_no'];
+					obj['invoice_no'] = item['inv_invoice_no'] ? item['inv_invoice_no'] : '-';
+					obj['inv_id'] = item['inv_id'];
 					obj['invoice_created_date'] = repoArray[Number(index)]['inv_due_date'];
 					obj['fp_name'] = repoArray[Number(index)]['fp_name'];
 					obj['deleted_date'] = repoArray[Number(index)]['deleted_date'] ? repoArray[Number(index)]['deleted_date'] : '-';
-					obj['mod_review_by'] = repoArray[Number(index)]['mod_review_by'] ? repoArray[Number(index)]['mod_review_by'] : '-';
+					obj['mod_review_by'] = repoArray[Number(index)]['created_by'] ? repoArray[Number(index)]['created_by'] : '-';
 					obj['reason_title'] = repoArray[Number(index)]['reason_title'] ? repoArray[Number(index)]['reason_title'] : '-';
 					obj['mod_review_remark'] = repoArray[Number(index)]['mod_review_remark'] ? repoArray[Number(index)]['mod_review_remark'] : '-';
 					obj['inv_paid_status'] = new CapitalizePipe().transform(item['inv_paid_status']);
@@ -351,7 +353,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		if (args.cell === args.grid.getColumnIndex('invoice_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['invoice_no'] !== '-') {
-				this.renderDialog(item['invoice_no'], false);
+				this.renderDialog(item['inv_id'], false);
 			}
 		}
 	}
@@ -404,6 +406,14 @@ export class DeletedFeetransReportComponent implements OnInit {
 			},
 			hasBackdrop: true
 		});
+	}
+	resetValues() {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': ''
+		});
+		this.sortResult = [];
+		this.filterResult = [];
 	}
 	getFeeHeads() {
 		this.valueArray = [];

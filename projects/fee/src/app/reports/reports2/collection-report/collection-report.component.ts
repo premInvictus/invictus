@@ -85,14 +85,10 @@ export class CollectionReportComponent implements OnInit {
 		const date = new Date();
 		const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
 		this.reportFilterForm.patchValue({
-			'report_type': 'headwise',
 			'from_date': firstDay,
 			'to_date': new Date()
 		});
 		this.filterFlag = true;
-		this.valueLabel = 'Fee Heads';
-		this.getFeeHeads();
-		this.getHeadWiseCollectionReport(this.reportFilterForm.value);
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -107,7 +103,7 @@ export class CollectionReportComponent implements OnInit {
 			}
 		});
 	}
-	resetValues () {
+	resetValues() {
 		this.reportFilterForm.patchValue({
 			'login_id': '',
 			'orderBy': ''
@@ -158,6 +154,7 @@ export class CollectionReportComponent implements OnInit {
 			showFooterRow: true,
 			footerRowHeight: 21,
 			enableExcelCopyBuffer: true,
+			fullWidthRows: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -230,11 +227,70 @@ export class CollectionReportComponent implements OnInit {
 									name: 'SNo.',
 									field: 'srno',
 									sortable: true,
-									width: 3
+									width: 2
 								},
 								{
-									id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
+									id: 'stu_admission_no',
+									name: 'Enrollment No.',
+									field: 'stu_admission_no',
 									filterable: true,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInputText },
+									sortable: true,
+									width: 90,
+									grouping: {
+										getter: 'stu_admission_no',
+										formatter: (g) => {
+											return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false
+									},
+								},
+								{
+									id: 'stu_full_name',
+									name: 'Student Name',
+									field: 'stu_full_name',
+									filterable: true,
+									sortable: true,
+									width: 180,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInputText },
+									grouping: {
+										getter: 'stu_full_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false
+									},
+								},
+								{
+									id: 'stu_class_name',
+									name: 'Class-Section',
+									field: 'stu_class_name',
+									sortable: true,
+									filterable: true,
+									width: 60,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInputText },
+									grouping: {
+										getter: 'stu_class_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false,
+									},
+								},
+								{
+									id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date',
+									sortable: true,
+									filterable: true,
+									width: 120,
 									formatter: this.checkDateFormatter,
 									filterSearchType: FieldType.dateIso,
 									filter: { model: Filters.compoundDate },
@@ -253,35 +309,15 @@ export class CollectionReportComponent implements OnInit {
 									},
 									groupTotalsFormatter: this.srnTotalsFormatter,
 								},
-								{ id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true },
 								{
-									id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
-									grouping: {
-										getter: 'stu_full_name',
-										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-										},
-										aggregators: this.aggregatearray,
-										aggregateCollapsed: true,
-										collapsed: false
-									},
-								},
-								{
-									id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
+									id: 'fp_name',
+									name: 'Fee Period',
+									field: 'fp_name',
+									sortable: true,
 									filterable: true,
-									grouping: {
-										getter: 'stu_class_name',
-										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-										},
-										aggregators: this.aggregatearray,
-										aggregateCollapsed: true,
-										collapsed: false,
-									},
-								},
-								{
-									id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
-									filterable: true,
+									width: 100,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInputText },
 									grouping: {
 										getter: 'fp_name',
 										formatter: (g) => {
@@ -297,24 +333,19 @@ export class CollectionReportComponent implements OnInit {
 									name: 'Reciept No.',
 									field: 'receipt_no',
 									sortable: true,
+									width: 70,
 									filterable: true,
+									filterSearchType: FieldType.number,
+									filter: { model: Filters.compoundInputNumber },
 									formatter: this.checkReceiptFormatter,
 									cssClass: 'receipt_collection_report'
 								},
 								{
 									id: 'inv_opening_balance', name: 'Opening Balance', field: 'inv_opening_balance',
 									filterable: true,
+									cssClass: 'amount-report-fee',
 									filterSearchType: FieldType.number,
-									filter: { model: Filters.compoundInput },
-									sortable: true,
-									formatter: this.checkFeeFormatter,
-									groupTotalsFormatter: this.sumTotalsFormatter
-								},
-								{
-									id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
-									filterable: true,
-									filterSearchType: FieldType.number,
-									filter: { model: Filters.compoundInput },
+									filter: { model: Filters.compoundInputNumber },
 									sortable: true,
 									formatter: this.checkFeeFormatter,
 									groupTotalsFormatter: this.sumTotalsFormatter
@@ -331,7 +362,11 @@ export class CollectionReportComponent implements OnInit {
 											id: 'fh_name' + j,
 											name: new CapitalizePipe().transform(titem[key2]),
 											field: 'fh_name' + j,
+											cssClass: 'amount-report-fee',
+											sortable: true,
 											filterable: true,
+											filterSearchType: FieldType.number,
+											filter: { model: Filters.compoundInput },
 											formatter: this.checkFeeFormatter,
 											groupTotalsFormatter: this.sumTotalsFormatter
 										});
@@ -341,11 +376,10 @@ export class CollectionReportComponent implements OnInit {
 										j++;
 									}
 									if (key2 === 'fh_name') {
-										obj['id'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
-											(Number(keys) + 1);
+										obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
+											repoArray[Number(keys)]['rpt_id'];
 										obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
 											(Number(keys) + 1);
-										obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
 										obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 											repoArray[Number(keys)]['stu_admission_no'] : '-';
 										obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
@@ -357,6 +391,7 @@ export class CollectionReportComponent implements OnInit {
 										}
 										obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
 											repoArray[Number(keys)]['rpt_id'] : '-';
+										obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
 										obj['fp_name'] = repoArray[Number(keys)]['fp_name'][0] ?
 											new CapitalizePipe().transform(repoArray[Number(keys)]['fp_name'][0]) : '-';
 										obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
@@ -367,7 +402,8 @@ export class CollectionReportComponent implements OnInit {
 											? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 										obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
 											? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
-										obj['total'] = tot;
+										obj['total'] = repoArray[Number(keys)]['invoice_amount']
+											? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 										obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 											repoArray[Number(keys)]['pay_name'] : '-';
 										k++;
@@ -380,16 +416,29 @@ export class CollectionReportComponent implements OnInit {
 					});
 					this.columnDefinitions.push(
 						{
+							id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
+							filterable: true,
+							filterSearchType: FieldType.number,
+							filter: { model: Filters.compoundInputNumber },
+							sortable: true,
+							formatter: this.checkFeeFormatter,
+							groupTotalsFormatter: this.sumTotalsFormatter
+						},
+						{
 							id: 'total', name: 'Total', field: 'total',
 							filterable: true,
 							filterSearchType: FieldType.number,
-							filter: { model: Filters.compoundInput },
+							filter: { model: Filters.compoundInputNumber },
 							sortable: true,
 							formatter: this.checkTotalFormatter,
+							cssClass: 'amount-report-fee',
 							groupTotalsFormatter: this.sumTotalsFormatter
 						},
 						{
 							id: 'receipt_mode_name', name: 'Mode', field: 'receipt_mode_name', sortable: true, filterable: true,
+							filterSearchType: FieldType.string,
+							filter: { model: Filters.compoundInputText },
+							width: 100,
 							grouping: {
 								getter: 'receipt_mode_name',
 								formatter: (g) => {
@@ -460,11 +509,53 @@ export class CollectionReportComponent implements OnInit {
 					name: 'SNo.',
 					field: 'srno',
 					sortable: true,
-					width: 2
+					width: 2,
+					maxWidth: 40,
+				},
+				{
+					id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no',
+					sortable: true,
+					filterable: true,
+					width: 20,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+				},
+				{
+					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
+					filterable: true,
+					width: 90,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+					grouping: {
+						getter: 'stu_full_name',
+						formatter: (g) => {
+							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+						},
+						aggregators: this.aggregatearray,
+						aggregateCollapsed: true,
+						collapsed: false
+					},
+				},
+				{
+					id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
+					filterable: true,
+					width: 15,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+					grouping: {
+						getter: 'stu_class_name',
+						formatter: (g) => {
+							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+						},
+						aggregators: this.aggregatearray,
+						aggregateCollapsed: true,
+						collapsed: false,
+					},
 				},
 				{
 					id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
 					filterable: true,
+					width: 30,
 					formatter: this.checkDateFormatter,
 					filterSearchType: FieldType.dateIso,
 					filter: { model: Filters.compoundDate },
@@ -483,24 +574,17 @@ export class CollectionReportComponent implements OnInit {
 					},
 					groupTotalsFormatter: this.srnTotalsFormatter,
 				},
-				{ id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true },
 				{
-					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
-					grouping: {
-						getter: 'stu_full_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-				},
-				{
-					id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
+					id: 'fp_name',
+					name: 'Fee Period',
+					field: 'fp_name',
+					sortable: true,
+					width: 30,
 					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
 					grouping: {
-						getter: 'stu_class_name',
+						getter: 'fp_name',
 						formatter: (g) => {
 							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
 						},
@@ -513,8 +597,11 @@ export class CollectionReportComponent implements OnInit {
 					id: 'receipt_no',
 					name: 'Reciept No.',
 					field: 'receipt_no',
+					width: 15,
 					sortable: true,
 					filterable: true,
+					filterSearchType: FieldType.number,
+					filter: { model: Filters.compoundInputNumber },
 					formatter: this.checkReceiptFormatter,
 					cssClass: 'receipt_collection_report'
 				},
@@ -523,25 +610,13 @@ export class CollectionReportComponent implements OnInit {
 					name: 'Reciept Amt.',
 					field: 'rpt_amount',
 					sortable: true,
+					width: 20,
+					cssClass: 'amount-report-fee',
 					filterable: true,
+					filterSearchType: FieldType.number,
+					filter: { model: Filters.compoundInputNumber },
 					formatter: this.checkFeeFormatter,
 					groupTotalsFormatter: this.sumTotalsFormatter
-				},
-				{
-					id: 'fp_name',
-					name: 'Fee Period',
-					field: 'fp_name',
-					sortable: true,
-					filterable: true,
-					grouping: {
-						getter: 'fp_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
 				}];
 			this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -556,7 +631,6 @@ export class CollectionReportComponent implements OnInit {
 							(index + 1);
 						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 							(index + 1);
-						obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
 						obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 							repoArray[Number(index)]['stu_admission_no'] : '-';
 						obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
@@ -568,12 +642,13 @@ export class CollectionReportComponent implements OnInit {
 						}
 						obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 							repoArray[Number(index)]['rpt_id'] : '-';
+						obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
+						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
+							repoArray[Number(index)]['fp_name'] : '-';
 						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
 							repoArray[Number(index)]['receipt_no'] : '-';
 						obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
 							Number(repoArray[Number(index)]['rpt_amount']) : 0;
-						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
-							repoArray[Number(index)]['fp_name'] : '-';
 						this.dataset.push(obj);
 						index++;
 					}
@@ -610,70 +685,6 @@ export class CollectionReportComponent implements OnInit {
 				'orderBy': value.orderBy,
 				'downloadAll': true
 			};
-			this.columnDefinitions = [
-				{
-					id: 'srno',
-					name: 'SNo.',
-					field: 'srno',
-					sortable: true,
-					width: 1
-				},
-				{
-					id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
-					filterable: true,
-					formatter: this.checkDateFormatter,
-					filterSearchType: FieldType.dateIso,
-					filter: { model: Filters.compoundDate },
-					grouping: {
-						getter: 'invoice_created_date',
-						formatter: (g) => {
-							if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
-							} else {
-								return `${''}`;
-							}
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-					groupTotalsFormatter: this.srnTotalsFormatter,
-				},
-				{ id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true },
-				{
-					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
-					grouping: {
-						getter: 'stu_full_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-				},
-				{
-					id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-					filterable: true,
-					grouping: {
-						getter: 'stu_class_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'receipt_no',
-					name: 'Reciept No.',
-					field: 'receipt_no',
-					sortable: true,
-					filterable: true,
-					formatter: this.checkReceiptFormatter,
-					cssClass: 'receipt_collection_report'
-				}];
 			this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.message, 'success');
@@ -693,6 +704,43 @@ export class CollectionReportComponent implements OnInit {
 									field: 'srno',
 									sortable: true,
 									width: 3
+								},
+								{
+									id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
+									filterable: true,
+									width: 120,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInput },
+								},
+								{
+									id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
+									filterable: true,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInput },
+									grouping: {
+										getter: 'stu_full_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false
+									},
+								},
+								{
+									id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
+									filterable: true,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInput },
+									grouping: {
+										getter: 'stu_class_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false,
+									},
 								},
 								{
 									id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
@@ -715,24 +763,16 @@ export class CollectionReportComponent implements OnInit {
 									},
 									groupTotalsFormatter: this.srnTotalsFormatter,
 								},
-								{ id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true },
 								{
-									id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
-									grouping: {
-										getter: 'stu_full_name',
-										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-										},
-										aggregators: this.aggregatearray,
-										aggregateCollapsed: true,
-										collapsed: false
-									},
-								},
-								{
-									id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
+									id: 'fp_name',
+									name: 'Fee Period',
+									field: 'fp_name',
+									sortable: true,
 									filterable: true,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInput },
 									grouping: {
-										getter: 'stu_class_name',
+										getter: 'fp_name',
 										formatter: (g) => {
 											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
 										},
@@ -747,6 +787,8 @@ export class CollectionReportComponent implements OnInit {
 									field: 'receipt_no',
 									sortable: true,
 									filterable: true,
+									filterSearchType: FieldType.number,
+									filter: { model: Filters.compoundInputNumber },
 									formatter: this.checkReceiptFormatter,
 									cssClass: 'receipt_collection_report'
 								}];
@@ -761,7 +803,10 @@ export class CollectionReportComponent implements OnInit {
 											id: 'pay_name' + j,
 											name: titem[key2],
 											field: 'pay_name' + j,
+											sortable: true,
 											filterable: true,
+											filterSearchType: FieldType.string,
+											filter: { model: Filters.compoundInput },
 											formatter: this.checkFeeFormatter,
 											groupTotalsFormatter: this.sumTotalsFormatter
 										});
@@ -776,7 +821,6 @@ export class CollectionReportComponent implements OnInit {
 											(Number(keys) + 1);
 										obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
 											(Number(keys) + 1);
-										obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
 										obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 											repoArray[Number(keys)]['stu_admission_no'] : '-';
 										obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
@@ -788,6 +832,9 @@ export class CollectionReportComponent implements OnInit {
 										}
 										obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
 											repoArray[Number(keys)]['rpt_id'] : '0';
+										obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
+										obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
+											repoArray[Number(keys)]['fp_name'] : '-';
 										obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
 											repoArray[Number(keys)]['receipt_no'] : '-';
 										obj[key2 + k] = titem['pay_amount'] ? Number(titem['pay_amount']) : 0;
@@ -797,8 +844,6 @@ export class CollectionReportComponent implements OnInit {
 										obj['total'] = tot;
 										obj['rpt_amount'] = repoArray[Number(keys)]['rpt_amount'] ?
 											Number(repoArray[Number(keys)]['rpt_amount']) : 0;
-										obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
-											repoArray[Number(keys)]['fp_name'] : '-';
 										k++;
 									}
 								});
@@ -841,22 +886,6 @@ export class CollectionReportComponent implements OnInit {
 							filterable: true,
 							formatter: this.checkFeeFormatter,
 							groupTotalsFormatter: this.sumTotalsFormatter
-						},
-						{
-							id: 'fp_name',
-							name: 'Fee Period',
-							field: 'fp_name',
-							sortable: true,
-							filterable: true,
-							grouping: {
-								getter: 'fp_name',
-								formatter: (g) => {
-									return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-								},
-								aggregators: this.aggregatearray,
-								aggregateCollapsed: true,
-								collapsed: false,
-							},
 						}
 					);
 					const obj3: any = {};
@@ -936,9 +965,17 @@ export class CollectionReportComponent implements OnInit {
 					},
 					groupTotalsFormatter: this.srnTotalsFormatter,
 				},
-				{ id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true },
 				{
-					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
+					id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+				},
+				{
+					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
 					grouping: {
 						getter: 'stu_full_name',
 						formatter: (g) => {
@@ -952,6 +989,8 @@ export class CollectionReportComponent implements OnInit {
 				{
 					id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
 					grouping: {
 						getter: 'stu_class_name',
 						formatter: (g) => {
@@ -965,6 +1004,8 @@ export class CollectionReportComponent implements OnInit {
 				{
 					id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
 					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
 					grouping: {
 						getter: 'fp_name',
 						formatter: (g) => {
@@ -981,6 +1022,8 @@ export class CollectionReportComponent implements OnInit {
 					field: 'receipt_no',
 					sortable: true,
 					filterable: true,
+					filterSearchType: FieldType.number,
+					filter: { model: Filters.compoundInputNumber },
 					formatter: this.checkReceiptFormatter,
 					cssClass: 'receipt_collection_report'
 				},
@@ -990,6 +1033,8 @@ export class CollectionReportComponent implements OnInit {
 					field: 'transport_amount',
 					sortable: true,
 					filterable: true,
+					filterSearchType: FieldType.number,
+					filter: { model: Filters.compoundInputNumber },
 					formatter: this.checkFeeFormatter,
 					groupTotalsFormatter: this.sumTotalsFormatter
 				},
@@ -999,6 +1044,8 @@ export class CollectionReportComponent implements OnInit {
 					field: 'route_name',
 					sortable: true,
 					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
 					grouping: {
 						getter: 'route_name',
 						formatter: (g) => {
@@ -1015,6 +1062,8 @@ export class CollectionReportComponent implements OnInit {
 					field: 'stoppages_name',
 					sortable: true,
 					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
 					grouping: {
 						getter: 'stoppages_name',
 						formatter: (g) => {
@@ -1031,6 +1080,8 @@ export class CollectionReportComponent implements OnInit {
 					field: 'slab_name',
 					sortable: true,
 					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
 					grouping: {
 						getter: 'slab_name',
 						formatter: (g) => {
@@ -1125,9 +1176,17 @@ export class CollectionReportComponent implements OnInit {
 					sortable: true,
 					width: 1
 				},
-				{ id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true },
 				{
-					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
+					id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+				},
+				{
+					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
 					grouping: {
 						getter: 'stu_full_name',
 						formatter: (g) => {
@@ -1141,6 +1200,8 @@ export class CollectionReportComponent implements OnInit {
 				{
 					id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
 					grouping: {
 						getter: 'stu_class_name',
 						formatter: (g) => {

@@ -138,7 +138,8 @@ export class OutstandingReportComponent implements OnInit {
 				iconSortDescCommand: 'fas fa-sort-down',
 			},
 			exportOptions: {
-				sanitizeDataExport: true
+				sanitizeDataExport: true,
+				exportWithFormatter: true
 			},
 			gridMenu: {
 				onCommand: (e, args) => {

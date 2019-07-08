@@ -90,7 +90,7 @@ export class FeeadjReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'orderBy': ''
 		});
 	}
 
@@ -120,7 +120,8 @@ export class FeeadjReportComponent implements OnInit {
 				iconSortDescCommand: 'fas fa-sort-down',
 			},
 			exportOptions: {
-				sanitizeDataExport: true
+				sanitizeDataExport: true,
+				exportWithFormatter: true
 			},
 			gridMenu: {
 				onCommand: (e, args) => {
@@ -268,7 +269,8 @@ export class FeeadjReportComponent implements OnInit {
 					} else {
 						obj['stu_class_name'] = repoArray[Number(index)]['class_name'];
 					}
-					obj['invoice_no'] = item['inv_invoice_no'];
+					obj['inv_id'] = item['inv_id'];
+					obj['invoice_no'] = item['inv_invoice_no'] ? item['inv_invoice_no'] : '-';
 					obj['invg_fh_name'] = item['invg_fh_name'] ? item['invg_fh_name'] : '-';
 					obj['invg_fh_amount'] = item['invg_fh_amount'] ?
 						Number(item['invg_fh_amount']) : 0;
@@ -281,6 +283,21 @@ export class FeeadjReportComponent implements OnInit {
 					index++;
 				}
 				this.aggregatearray.push(new Aggregators.Sum('invg_adj_amount'));
+				const obj3: any = {};
+				obj3['id'] = 'footer';
+				obj3['srno'] = '';
+				obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+				obj3['stu_full_name'] =  '';
+				obj3['stu_class_name'] = '';
+				obj3['inv_id'] = '';
+				obj3['invoice_no'] = '';
+				obj3['invg_fh_name'] =  '';
+				obj3['invg_fh_amount'] = '';
+				obj3['adjusted_by'] =  '';
+				obj3['adjustment_date'] = '';
+				obj3['invg_adj_amount'] = this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0);
+				obj3['inv_remark'] = '';
+				this.dataset.push(obj3);
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;
@@ -328,7 +345,7 @@ export class FeeadjReportComponent implements OnInit {
 		if (args.cell === args.grid.getColumnIndex('invoice_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['invoice_no'] !== '-') {
-				this.renderDialog(item['invoice_no'], false);
+				this.renderDialog(item['inv_id'], false);
 			}
 		}
 	}

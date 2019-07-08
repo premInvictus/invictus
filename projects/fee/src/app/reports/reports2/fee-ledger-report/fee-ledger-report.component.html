@@ -50,6 +50,9 @@
           (click)="getFeeLedgerReport(reportFilterForm.value)">
           generate
         </button>
+        <button class="btn-danger text-uppercase" mat-raised-button (click)="resetValues()">
+          reset
+        </button>
       </div>
     </div>
   </div>
@@ -63,6 +66,6 @@
 </div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
   <div class="text-center margin-top-20" style="margin-bottom:20px !important">
-      No Records Found
+    No Records Found
   </div>
 </div>

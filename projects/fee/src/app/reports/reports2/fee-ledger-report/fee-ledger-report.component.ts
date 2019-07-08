@@ -96,7 +96,7 @@ export class FeeLedgerReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'orderBy': ''
 		});
 	}
 
@@ -126,7 +126,8 @@ export class FeeLedgerReportComponent implements OnInit {
 				iconSortDescCommand: 'fas fa-sort-down',
 			},
 			exportOptions: {
-				sanitizeDataExport: true
+				sanitizeDataExport: true,
+				exportWithFormatter: true
 			},
 			gridMenu: {
 				onCommand: (e, args) => {
@@ -227,7 +228,6 @@ export class FeeLedgerReportComponent implements OnInit {
 			}];
 		this.feeService.getFeeLedgerReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.common.showSuccessErrorMessage(result.message, 'success');
 				repoArray = result.data.reportData;
 				this.totalRecords = Number(result.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -239,18 +239,18 @@ export class FeeLedgerReportComponent implements OnInit {
 						obj['id'] = repoArray[Number(index)]['au_admission_no'] + j;
 						obj['flgr_created_date'] = stu_arr['flgr_created_date'];
 						if (repoArray[Number(index)]['sec_id'] !== '0') {
-							obj['stu_class_name'] = '(' + repoArray[Number(index)]['au_admission_no'] + ')' +
-								' ' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+							obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name']  +
+								',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
 								(repoArray[Number(index)]['class_name'] + '-' +
 									repoArray[Number(index)]['sec_name']);
 						} else {
-							obj['stu_class_name'] = '(' + repoArray[Number(index)]['au_admission_no'] + ')' +
-								' ' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+							obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name']  +
+								',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
 								repoArray[Number(index)]['class_name'];
 						}
 						obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
 							stu_arr['flgr_particulars'] : '-';
-						obj['invoice_id'] = stu_arr['flgr_inv_id'] ?
+						obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
 							stu_arr['flgr_inv_id'] : '-';
 						obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
 						if (stu_arr['flgr_invoice_receipt_no']) {
@@ -282,7 +282,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				this.aggregatearray.push(new Aggregators.Sum('flgr_receipt'));
 				this.aggregatearray.push(new Aggregators.Sum('flgr_balance'));
 				this.tableFlag = true;
-				setTimeout(() => this.groupByClass(), 50);
+				setTimeout(() => this.groupByClass(), 2);
 			} else {
 				this.tableFlag = false;
 			}
@@ -297,6 +297,14 @@ export class FeeLedgerReportComponent implements OnInit {
 		if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
 			this.draggableGroupingPlugin.clearDroppedGroups();
 		}
+	}
+	resetValues () {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': ''
+		});
+		this.sortResult = [];
+		this.filterResult = [];
 	}
 
 	collapseAllGroups() {
@@ -331,9 +339,9 @@ export class FeeLedgerReportComponent implements OnInit {
 			if (item['flgr_invoice_receipt_no']) {
 				const noArray: any[] = item['flgr_invoice_receipt_no'].split('-');
 				if (noArray[0] === 'I') {
-					this.renderDialog(Number(noArray[1]), false);
+					this.renderDialog(Number(item['flgr_inv_id']), false);
 				} else if (noArray[0] === 'R') {
-					this.openDialogReceipt (Number(noArray[1]), false);
+					this.openDialogReceipt (Number(item['receipt_id']), false);
 				}
 			}
 		}
@@ -378,7 +386,7 @@ export class FeeLedgerReportComponent implements OnInit {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: invoiceNo,
+				rpt_id: invoiceNo,
 				edit: edit
 			},
 			hasBackdrop: true
@@ -505,7 +513,7 @@ export class FeeLedgerReportComponent implements OnInit {
 		this.dataviewObj.setGrouping({
 			getter: 'stu_class_name',
 			formatter: (g) => {
-				return `<b>${g.value}</b><span style="color:green"> (${g.count} items)</span>`;
+				return `<b>${g.value}</b><span style="color:green"> [ ${g.count} records]</span>`;
 			},
 			aggregators: this.aggregatearray,
 			aggregateCollapsed: true,
