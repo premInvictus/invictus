@@ -37,8 +37,8 @@
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
                   (onSelectionChange)="setTeacherId(item)">
-                  <span>{{item.au_full_name}}</span> ,
-                  <small>Id: {{item.au_login_id}}</small>
+                  <small>Id: {{item.au_login_id}}</small>,&nbsp;
+                  <small>{{item.au_full_name | capitalize}}</small>
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>

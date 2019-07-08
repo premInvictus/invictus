@@ -70,11 +70,20 @@ export class OutstandingReportComponent implements OnInit {
 				report_type: 'classwise', report_name: 'Class Wise'
 			},
 			{
-				report_type: 'modewise', report_name: 'Mode Wise'
-			},
-			{
 				report_type: 'defaulter', report_name: 'Defaulter\'s List'
 			});
+		this.reportType = 'headwise';
+		const date = new Date();
+		const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+		this.reportFilterForm.patchValue({
+			'report_type': 'headwise',
+			'from_date': firstDay,
+			'to_date': new Date()
+		});
+		this.filterFlag = true;
+		this.valueLabel = 'Fee Heads';
+		this.getFeeHeads();
+		this.getOutstandingReport(this.reportFilterForm.value);
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -99,7 +108,7 @@ export class OutstandingReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'orderBy': ''
 		});
 	}
 
@@ -173,6 +182,7 @@ export class OutstandingReportComponent implements OnInit {
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 					let i = 0;
 					let j = 0;
+					const feeHead: any[] = [];
 					Object.keys(repoArray).forEach((keys: any) => {
 						const obj: any = {};
 						if (Number(keys) === 0) {
@@ -185,7 +195,7 @@ export class OutstandingReportComponent implements OnInit {
 									width: 3
 								},
 								{
-									id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true,
+									id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
 									filterable: true,
 									formatter: this.checkDateFormatter,
 									filterSearchType: FieldType.dateIso,
@@ -193,7 +203,11 @@ export class OutstandingReportComponent implements OnInit {
 									grouping: {
 										getter: 'invoice_created_date',
 										formatter: (g) => {
-											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+											if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+												return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+											} else {
+												return `${''}`;
+											}
 										},
 										aggregators: this.aggregatearray,
 										aggregateCollapsed: true,
@@ -256,6 +270,7 @@ export class OutstandingReportComponent implements OnInit {
 							for (const titem of repoArray[Number(keys)]['fee_head_data']) {
 								Object.keys(titem).forEach((key2: any) => {
 									if (key2 === 'fh_name' && Number(keys) === 0) {
+										const feeObj: any = {};
 										this.columnDefinitions.push({
 											id: 'fh_name' + j,
 											name: titem[key2],
@@ -264,6 +279,8 @@ export class OutstandingReportComponent implements OnInit {
 											formatter: this.checkFeeFormatter,
 											groupTotalsFormatter: this.sumTotalsFormatter
 										});
+										feeObj['fh_name' + j] = '';
+										feeHead.push(feeObj);
 										this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
 										j++;
 									}
@@ -284,14 +301,13 @@ export class OutstandingReportComponent implements OnInit {
 										}
 										obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
 											repoArray[Number(keys)]['invoice_id'] : '0';
-											obj['fp_name'] = repoArray[Number(keys)]['fp_name'][0] ?
+										obj['fp_name'] = repoArray[Number(keys)]['fp_name'][0] ?
 											new CapitalizePipe().transform(repoArray[Number(keys)]['fp_name'][0]) : '-';
 										obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
 											repoArray[Number(keys)]['invoice_no'] : '-';
 										obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 										tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 										obj['inv_opening_balance'] = titem['inv_opening_balance'] ? Number(titem['inv_opening_balance']) : 0;
-										obj['inv_prev_balance'] = titem['inv_prev_balance'] ? Number(titem['inv_prev_balance']) : 0;
 										obj['invoice_fine_amount'] = titem['invoice_fine_amount'] ? Number(titem['invoice_fine_amount']) : 0;
 										obj['total'] = tot;
 										k++;
@@ -311,24 +327,15 @@ export class OutstandingReportComponent implements OnInit {
 						formatter: this.checkTotalFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
 					},
-					{
-						id: 'inv_prev_balance', name: 'Previous Balance', field: 'inv_prev_balance',
-						filterable: true,
-						filterSearchType: FieldType.number,
-						filter: { model: Filters.compoundInput },
-						sortable: true,
-						formatter: this.checkTotalFormatter,
-						groupTotalsFormatter: this.sumTotalsFormatter
-					},
-					{
-						id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
-						filterable: true,
-						filterSearchType: FieldType.number,
-						filter: { model: Filters.compoundInput },
-						sortable: true,
-						formatter: this.checkTotalFormatter,
-						groupTotalsFormatter: this.sumTotalsFormatter
-					},
+						{
+							id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
+							filterable: true,
+							filterSearchType: FieldType.number,
+							filter: { model: Filters.compoundInput },
+							sortable: true,
+							formatter: this.checkTotalFormatter,
+							groupTotalsFormatter: this.sumTotalsFormatter
+						},
 						{
 							id: 'total', name: 'Total', field: 'total',
 							filterable: true,
@@ -346,6 +353,32 @@ export class OutstandingReportComponent implements OnInit {
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					console.log(this.columnDefinitions);
 					console.log(this.dataset);
+					const obj3: any = {};
+					obj3['id'] = 'footer';
+					obj3['srno'] = '';
+					obj3['invoice_created_date'] = '<b>Grand Total</b>';
+					obj3['stu_admission_no'] = '';
+					obj3['stu_full_name'] = '';
+					obj3['stu_class_name'] = '';
+					obj3['receipt_id'] = '';
+					obj3['fp_name'] = '';
+					obj3['receipt_no'] = '';
+					obj3['inv_opening_balance'] = this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+					obj3['invoice_fine_amount'] = this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+					Object.keys(feeHead).forEach((key: any) => {
+						Object.keys(feeHead[key]).forEach(key2 => {
+							Object.keys(this.dataset).forEach(key3 => {
+								Object.keys(this.dataset[key3]).forEach(key4 => {
+									if (key4 === key2) {
+										obj3[key4] = this.dataset.map(t => t[key4]).reduce((acc, val) => acc + val, 0);
+									}
+								});
+							});
+						});
+					});
+					obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+					obj3['receipt_mode_name'] = '';
+					this.dataset.push(obj3);
 					this.tableFlag = true;
 				} else {
 					this.tableFlag = true;
@@ -474,260 +507,30 @@ export class OutstandingReportComponent implements OnInit {
 						} else {
 							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 						}
+						obj['receipt_id'] = repoArray[Number(index)]['invoice_id'] ?
+							repoArray[Number(index)]['invoice_id'] : '0';
 						obj['receipt_no'] = repoArray[Number(index)]['invoice_no'] ?
 							repoArray[Number(index)]['invoice_no'] : '-';
 						obj['rpt_amount'] = repoArray[Number(index)]['invoice_amount'] ?
-							repoArray[Number(index)]['invoice_amount'] : 0;
+							Number(repoArray[Number(index)]['invoice_amount']) : 0;
 						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
 							repoArray[Number(index)]['fp_name'] : '-';
 						this.dataset.push(obj);
 						index++;
 					}
+					const obj3: any = {};
+					obj3['id'] = 'footer';
+					obj3['srno'] = '';
+					obj3['invoice_created_date'] = '<b>Grand Total</b>';
+					obj3['stu_admission_no'] = '';
+					obj3['stu_full_name'] = '';
+					obj3['stu_class_name'] = '';
+					obj3['receipt_no'] = '';
+					obj3['rpt_amount'] = this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['fp_name'] = '';
+					this.dataset.push(obj3);
 					this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
-					this.tableFlag = true;
-				} else {
-					this.tableFlag = true;
-				}
-			});
-		} else if (this.reportType === 'modewise') {
-			const collectionJSON: any = {
-				'admission_no': '',
-				'studentName': '',
-				'report_type': value.report_type,
-				'modeId': value.fee_value,
-				'from_date': value.from_date,
-				'to_date': value.to_date,
-				'pageSize': '10',
-				'pageIndex': '0',
-				'filterReportBy': 'outstanding',
-				'login_id': value.login_id,
-				'orderBy': value.orderBy,
-				'downloadAll': true
-			};
-			this.columnDefinitions = [
-				{
-					id: 'srno',
-					name: 'SNo.',
-					field: 'srno',
-					sortable: true,
-					width: 1
-				},
-				{
-					id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true,
-					filterable: true,
-					formatter: this.checkDateFormatter,
-					filterSearchType: FieldType.dateIso,
-					filter: { model: Filters.compoundDate },
-					grouping: {
-						getter: 'invoice_created_date',
-						formatter: (g) => {
-							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-					groupTotalsFormatter: this.srnTotalsFormatter,
-				},
-				{ id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true },
-				{
-					id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
-					grouping: {
-						getter: 'stu_full_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-				},
-				{
-					id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-					filterable: true,
-					grouping: {
-						getter: 'stu_class_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					},
-				},
-				{
-					id: 'receipt_no',
-					name: 'Invoice No.',
-					field: 'receipt_no',
-					sortable: true,
-					filterable: true,
-					formatter: this.checkReceiptFormatter,
-					cssClass: 'receipt_collection_report'
-				}];
-			this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage(result.message, 'success');
-					repoArray = result.data.reportData;
-					this.totalRecords = Number(result.data.totalRecords);
-					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-					let i = 0;
-					let j = 0;
-					Object.keys(repoArray).forEach((keys: any) => {
-						const obj: any = {};
-						if (Number(keys) === 0) {
-							this.columnDefinitions = [
-								{
-									id: 'srno',
-									name: 'SNo.',
-									field: 'srno',
-									sortable: true,
-									width: 3
-								},
-								{
-									id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true,
-									filterable: true,
-									formatter: this.checkDateFormatter,
-									filterSearchType: FieldType.dateIso,
-									filter: { model: Filters.compoundDate },
-									grouping: {
-										getter: 'invoice_created_date',
-										formatter: (g) => {
-											return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
-										},
-										aggregators: this.aggregatearray,
-										aggregateCollapsed: true,
-										collapsed: false
-									},
-									groupTotalsFormatter: this.srnTotalsFormatter,
-								},
-								{ id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true },
-								{
-									id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
-									grouping: {
-										getter: 'stu_full_name',
-										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-										},
-										aggregators: this.aggregatearray,
-										aggregateCollapsed: true,
-										collapsed: false
-									},
-								},
-								{
-									id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-									filterable: true,
-									grouping: {
-										getter: 'stu_class_name',
-										formatter: (g) => {
-											return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-										},
-										aggregators: this.aggregatearray,
-										aggregateCollapsed: true,
-										collapsed: false,
-									},
-								},
-								{
-									id: 'receipt_no',
-									name: 'Invoice No.',
-									field: 'receipt_no',
-									sortable: true,
-									filterable: true,
-									formatter: this.checkReceiptFormatter,
-									cssClass: 'receipt_collection_report'
-								}];
-						}
-						if (repoArray[Number(keys)]['pay_data']) {
-							let k = 0;
-							let tot = 0;
-							for (const titem of repoArray[Number(keys)]['pay_data']) {
-								Object.keys(titem).forEach((key2: any) => {
-									if (key2 === 'pay_name' && Number(keys) === 0) {
-										this.columnDefinitions.push({
-											id: 'pay_name' + j,
-											name: titem[key2],
-											field: 'pay_name' + j,
-											filterable: true,
-											formatter: this.checkFeeFormatter,
-											groupTotalsFormatter: this.sumTotalsFormatter
-										});
-										this.aggregatearray.push(new Aggregators.Sum('pay_name' + j));
-										j++;
-									}
-									if (key2 === 'pay_name') {
-										obj['id'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
-											(Number(keys) + 1);
-										obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
-											(Number(keys) + 1);
-										obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_date'];
-										obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
-											repoArray[Number(keys)]['stu_admission_no'] : '-';
-										obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
-										if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
-											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
-												repoArray[Number(keys)]['stu_sec_name'];
-										} else {
-											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
-										}
-										obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
-											repoArray[Number(keys)]['invoice_id'] : '0';
-										obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
-											repoArray[Number(keys)]['invoice_no'] : '-';
-										obj[key2 + k] = titem['pay_amount'] ? Number(titem['pay_amount']) : 0;
-										tot = tot + (titem['pay_amount'] ? Number(titem['pay_amount']) : 0);
-										obj['total'] = tot;
-										obj['rpt_amount'] = repoArray[Number(keys)]['invoice_amount'] ?
-											repoArray[Number(keys)]['invoice_amount'] : 0;
-										obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
-											repoArray[Number(keys)]['fp_name'] : '-';
-										k++;
-									}
-								});
-							}
-						}
-						i++;
-						this.dataset.push(obj);
-					});
-					this.columnDefinitions.push(
-						{
-							id: 'total', name: 'Total', field: 'total',
-							filterable: true,
-							filterSearchType: FieldType.number,
-							filter: { model: Filters.compoundInput },
-							sortable: true,
-							formatter: this.checkTotalFormatter,
-							groupTotalsFormatter: this.sumTotalsFormatter
-						},
-						{
-							id: 'rpt_amount',
-							name: 'Reciept Amt.',
-							field: 'rpt_amount',
-							sortable: true,
-							filterable: true,
-							formatter: this.checkFeeFormatter,
-							groupTotalsFormatter: this.sumTotalsFormatter
-						},
-						{
-							id: 'fp_name',
-							name: 'Fee Period',
-							field: 'fp_name',
-							sortable: true,
-							filterable: true,
-							grouping: {
-								getter: 'fp_name',
-								formatter: (g) => {
-									return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-								},
-								aggregators: this.aggregatearray,
-								aggregateCollapsed: true,
-								collapsed: false,
-							},
-						}
-					);
-					this.aggregatearray.push(new Aggregators.Sum('total'));
-					this.aggregatearray.push(new Aggregators.Sum('srno'));
-					console.log(this.columnDefinitions);
-					console.log(this.dataset);
 					this.tableFlag = true;
 				} else {
 					this.tableFlag = true;
@@ -855,15 +658,28 @@ export class OutstandingReportComponent implements OnInit {
 						} else {
 							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 						}
+						obj['receipt_id'] = repoArray[Number(index)]['invoice_id'] ?
+							repoArray[Number(index)]['invoice_id'] : '0';
 						obj['receipt_no'] = repoArray[Number(index)]['invoice_no'] ?
 							repoArray[Number(index)]['invoice_no'] : '-';
 						obj['rpt_amount'] = repoArray[Number(index)]['invoice_amount'] ?
-							repoArray[Number(index)]['invoice_amount'] : 0;
+							Number(repoArray[Number(index)]['invoice_amount']) : 0;
 						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
 							repoArray[Number(index)]['fp_name'] : '-';
 						this.dataset.push(obj);
 						index++;
 					}
+					const obj3: any = {};
+					obj3['id'] = 'footer';
+					obj3['srno'] = '';
+					obj3['invoice_created_date'] = '<b>Grand Total</b>';
+					obj3['stu_admission_no'] = '';
+					obj3['stu_full_name'] = '';
+					obj3['stu_class_name'] = '';
+					obj3['receipt_no'] = '';
+					obj3['rpt_amount'] = this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['fp_name'] = '';
+					this.dataset.push(obj3);
 					this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					this.tableFlag = true;
@@ -916,7 +732,7 @@ export class OutstandingReportComponent implements OnInit {
 		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['receipt_no'] !== '-') {
-				this.renderDialog(item['receipt_no'], false);
+				this.renderDialog(item['receipt_id'], false);
 			}
 		}
 	}
@@ -955,10 +771,18 @@ export class OutstandingReportComponent implements OnInit {
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
-		return new DatePipe('en-in').transform(value, 'd-MMM-y');
+		if (value !== '<b>Grand Total</b>' && value !== '-' && value !== '') {
+			return new DatePipe('en-in').transform(value, 'd-MMM-y');
+		} else {
+			return value;
+		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		return '<b class="total-footer-report">Total</b>';
+		if (totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>') {
+			return '<b class="total-footer-report">Total</b>';
+		} else {
+			return '';
+		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
@@ -1050,6 +874,12 @@ export class OutstandingReportComponent implements OnInit {
 				'orderBy': '',
 				'downloadAll': true
 			});
+		const date = new Date();
+		const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+		this.reportFilterForm.patchValue({
+			'from_date': firstDay,
+			'to_date': new Date()
+		});
 		if ($event.value) {
 			if ($event.value === 'headwise') {
 				this.valueLabel = 'Fee Heads';
@@ -1057,9 +887,6 @@ export class OutstandingReportComponent implements OnInit {
 			} else if ($event.value === 'classwise') {
 				this.valueLabel = 'Class';
 				this.getClass();
-			} else if ($event.value === 'modewise') {
-				this.valueLabel = 'Modes';
-				this.getModes();
 			} else if ($event.value === 'defaulter') {
 				this.reportFilterForm.patchValue({
 					'to_date': new Date()
@@ -1071,6 +898,14 @@ export class OutstandingReportComponent implements OnInit {
 		} else {
 			this.filterFlag = false;
 		}
+	}
+	resetValues () {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': ''
+		});
+		this.sortResult = [];
+		this.filterResult = [];
 	}
 	openFilterDialog() {
 		const dialogRefFilter = this.dialog.open(ReportFilterComponent, {

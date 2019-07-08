@@ -81,6 +81,18 @@ export class CollectionReportComponent implements OnInit {
 			{
 				report_type: 'mfr', report_name: 'Monthly Fee Report (MFR)'
 			});
+		this.reportType = 'headwise';
+		const date = new Date();
+		const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+		this.reportFilterForm.patchValue({
+			'report_type': 'headwise',
+			'from_date': firstDay,
+			'to_date': new Date()
+		});
+		this.filterFlag = true;
+		this.valueLabel = 'Fee Heads';
+		this.getFeeHeads();
+		this.getHeadWiseCollectionReport(this.reportFilterForm.value);
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -94,6 +106,14 @@ export class CollectionReportComponent implements OnInit {
 				console.log(this.schoolInfo);
 			}
 		});
+	}
+	resetValues () {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': ''
+		});
+		this.sortResult = [];
+		this.filterResult = [];
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
@@ -1497,6 +1517,12 @@ export class CollectionReportComponent implements OnInit {
 				'orderBy': '',
 				'downloadAll': true
 			});
+		const date = new Date();
+		const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+		this.reportFilterForm.patchValue({
+			'from_date': firstDay,
+			'to_date': new Date()
+		});
 		if ($event.value) {
 			if ($event.value === 'headwise') {
 				this.valueLabel = 'Fee Heads';

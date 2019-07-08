@@ -120,5 +120,8 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 			}
 		});
 	}
-
+	changePage(pageEvent: PageEvent) {
+		console.log(pageEvent);
+		// this.paginator.length = 100;
+	}
 }
