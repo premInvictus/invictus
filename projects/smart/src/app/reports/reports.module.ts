@@ -12,6 +12,10 @@ import { NegativeReportComponent } from './negative-report/negative-report.compo
 import {MatDialogModule} from '@angular/material/dialog';
 import { TeacherLogEntryComponent } from './teacher-log-entry/teacher-log-entry.component';
 import { PastAssignmentComponent } from './past-assignment/past-assignment.component';
+import { LogEntryReportComponent } from './log-entry-report/log-entry-report.component';
+import { TeacherWiseComponent } from './teacher-wise/teacher-wise.component';
+import { ClassWiseComponent } from './class-wise/class-wise.component';
+import { SubjectWiseComponent } from './subject-wise/subject-wise.component';
 
 @NgModule({
 	imports: [
@@ -22,7 +26,7 @@ import { PastAssignmentComponent } from './past-assignment/past-assignment.compo
 		MatDialogModule
 	],
 	declarations: [ViewSyllabusComponent,
-		EtcReportComponent, SyllabusProgressReportComponent, ComparitiveComponent, TopicSubtopicSkippedComponent, NegativeReportComponent, AddRemarkPopUp, TeacherLogEntryComponent, PastAssignmentComponent],
+		EtcReportComponent, SyllabusProgressReportComponent, ComparitiveComponent, TopicSubtopicSkippedComponent, NegativeReportComponent, AddRemarkPopUp, TeacherLogEntryComponent, PastAssignmentComponent, LogEntryReportComponent, TeacherWiseComponent, ClassWiseComponent, SubjectWiseComponent],
 		entryComponents: [
 			AddRemarkPopUp
 		  ],
