@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { SmartService, CommonAPIService } from '../../../../_services';
 import * as moment from 'moment';
 
@@ -7,7 +7,8 @@ import * as moment from 'moment';
 	templateUrl: './yearly.component.html',
 	styleUrls: ['./yearly.component.css']
 })
-export class YearlyComponent implements OnInit {
+export class YearlyComponent implements OnInit, OnChanges {
+	@Input() reloadScheduler;
 	nothingToshowText: any = 'Nothing to show'; // "By default" => There are no events scheduled that day.
 	colors: any = {
 		holiday: {
@@ -39,6 +40,12 @@ export class YearlyComponent implements OnInit {
 		console.log('yearly');
 		this.getScheduler();
 	}
+	ngOnChanges() {
+		console.log('calling ngonchanges', this.reloadScheduler);
+		if (this.reloadScheduler > 0) {
+			this.getScheduler();
+		}
+	}
 
 	eventClicked(event) {
 		console.log(event);
@@ -58,6 +65,7 @@ export class YearlyComponent implements OnInit {
 		});
 	} */
 	getScheduler() {
+		this.schedulerArray = [];
 		this.smartService.getScheduler({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.schedulerArray = result.data;

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation, Input, OnChanges } from '@angular/core';
 import { SmartService, CommonAPIService } from '../../../../_services';
 import * as moment from 'moment';
 import {
@@ -32,10 +32,10 @@ import {
 			align-items: stretch;
 		  }
 		`
-	  ]
+	]
 })
-export class MonthlyComponent implements OnInit {
-
+export class MonthlyComponent implements OnInit, OnChanges {
+	@Input() reloadScheduler;
 	colors: any = {
 		holiday: {
 			primary: '#1fbcbb',
@@ -62,7 +62,21 @@ export class MonthlyComponent implements OnInit {
 		event: CalendarEvent;
 	};
 
-	actions: CalendarEventAction[] = [];
+	actions: CalendarEventAction[] = [
+		{
+			label: '<i class="fa fa-fw fa-pencil"></i>',
+			onClick: ({ event }: { event: CalendarEvent }): void => {
+				this.handleEvent('Edited', event);
+			}
+		},
+		{
+			label: '<i class="fa fa-fw fa-times"></i>',
+			onClick: ({ event }: { event: CalendarEvent }): void => {
+				this.events = this.events.filter(iEvent => iEvent !== event);
+				this.handleEvent('Deleted', event);
+			}
+		}
+	];
 
 	refresh: Subject<any> = new Subject();
 
@@ -73,13 +87,23 @@ export class MonthlyComponent implements OnInit {
 	schedulerFlag = false;
 	ecArray: any[] = [];
 
+	popoverTitle = '';
+	popoverMessage = '';
+	nothingToshowText: any = 'Nothing to show';
+
 	constructor(
 		private smartService: SmartService,
 		private commonAPIService: CommonAPIService,
-	) {}
+	) { }
 	ngOnInit() {
 		console.log('monthly');
 		this.getScheduler();
+	}
+	ngOnChanges() {
+		console.log('calling ngonchanges', this.reloadScheduler);
+		if (this.reloadScheduler > 0) {
+			this.getScheduler();
+		}
 	}
 	/* getScheduler() {
 		this.smartService.getScheduler({}).subscribe((result: any) => {
@@ -117,6 +141,7 @@ export class MonthlyComponent implements OnInit {
 	} */
 
 	getScheduler() {
+		this.schedulerArray = [];
 		this.smartService.getScheduler({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.schedulerArray = result.data;
@@ -133,11 +158,15 @@ export class MonthlyComponent implements OnInit {
 							eachEvent.end = nowDate;
 							eachEvent.title = element.sc_title;
 							eachEvent.sc_id = element.sc_id;
+							eachEvent.actions = this.actions;
 							if (element.ec_id === '1') {
+								eachEvent.classColor = 'month-holiday';
 								eachEvent.color = this.colors.holiday;
 							} else if (element.ec_id === '2') {
+								eachEvent.classColor = 'month-nonteaching';
 								eachEvent.color = this.colors.nonTeaching;
 							} else if (element.ec_id === '3') {
+								eachEvent.classColor = 'month-specificclass';
 								eachEvent.color = this.colors.classSpecific;
 							}
 							this.events.push(eachEvent);
@@ -146,12 +175,12 @@ export class MonthlyComponent implements OnInit {
 					console.log(csNameSet);
 					csNameSet = new Set(Array.from(csNameSet).sort());
 					csNameSet.forEach(ele => {
-						const eco: any = {ec_id: '', ec_name: '', ecArray: []};
+						const eco: any = { ec_id: '', ec_name: '', ecArray: [] };
 						eco.ec_id = ele;
 						this.schedulerArray.forEach(ele1 => {
 							if (ele === ele1.ec_id) {
 								eco.ec_name = ele1.ec_name;
-								eco.ecArray.push({sc_title: ele1.sc_title, sc_from: ele1.sc_from});
+								eco.ecArray.push({ sc_title: ele1.sc_title, sc_from: ele1.sc_from });
 							}
 						});
 						this.ecArray.push(eco);
@@ -166,20 +195,32 @@ export class MonthlyComponent implements OnInit {
 			}
 		});
 	}
+	handleAction(actionType, actionValue) {
+		console.log(actionType, actionValue);
+	}
 
-	dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
-		console.log(date, event);
-		if (isSameMonth(date, this.viewDate)) {
-			if (
-				(isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
-				events.length === 0
-			) {
-				this.activeDayIsOpen = false;
-			} else {
-				this.activeDayIsOpen = true;
-			}
-			this.viewDate = date;
+	dayClicked(event) {
+		/* <div class="month-icon"><i class="material-icons" (click)="handleAction('delete', ${element.sc_id})">delete</i></div> */
+		console.log(event);
+		const dateSplitArray = event.date.toString().split(' ');
+		let tempstring = '';
+		tempstring = tempstring + '<p class="pop_month_day">' + dateSplitArray[0] + '</p>';
+		tempstring = tempstring + '<p class="pop_month_day_number">' + dateSplitArray[2] + '</p>';
+		if (event.events.length > 0) {
+			event.events.forEach(element => {
+				tempstring = tempstring + `
+				<div>
+				 <div class="month_circle_day_color ${element.classColor}">
+				 </div>
+				 <p class="pop_month_event_title"> ${element.title}</p>
+				 </div>`;
+			});
+
+		} else {
+			tempstring = tempstring + '<p class="pop_month_event_title">' + this.nothingToshowText + '</p>';
 		}
+
+		this.popoverMessage = tempstring;
 	}
 
 	eventTimesChanged({
