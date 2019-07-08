@@ -63,7 +63,7 @@ export class TimeTableComponent implements OnInit {
 			tt_section_id: '',
 			no_of_day: '',
 			no_of_period: '',
-			period_checkbox:''
+			period_checkbox: ''
 		});
 	}
 
@@ -82,6 +82,7 @@ export class TimeTableComponent implements OnInit {
 	finalCancel() {
 		this.finalXlslArray = [];
 		this.excelFlag = false;
+		this.defaultFlag = true;
 		this.resetForm();
 	}
 
@@ -121,7 +122,7 @@ export class TimeTableComponent implements OnInit {
 			'tt_section_id': '',
 			'no_of_day': '',
 			'no_of_period': '',
-			period_checkbox:''
+			period_checkbox: ''
 		});
 	}
 	// get period and day by selected class
@@ -178,6 +179,7 @@ export class TimeTableComponent implements OnInit {
 		this.defaultFlag = false;
 		this.excelFlag = true;
 		this.XlslArray = [];
+		const finalXlslArrayTemp: any[] =[];
 		this.finalXlslArray = [];
 		const fileReader = new FileReader();
 		fileReader.onload = (e) => {
@@ -191,7 +193,22 @@ export class TimeTableComponent implements OnInit {
 			const first_sheet_name = workbook.SheetNames[0];
 			const worksheet = workbook.Sheets[first_sheet_name];
 			this.XlslArray = XLSX.utils.sheet_to_json(worksheet, { raw: true });
-			for (let i = 0; i < this.period ; i++) {
+			for (let m = 0; m < this.period; m++) {
+				finalXlslArrayTemp[m] = {
+					monday_id: '-',
+					tuesday_id: '-',
+					wednesday_id: '-',
+					thursday_id: '-',
+					friday_id: '-',
+					saturday_id: '-',
+					sunday_id: '-',
+
+				};
+			}
+			for (let i = 0; i < this.XlslArray.length; i++) {
+				if (i === Number(this.period)) {
+					break;
+				}
 				this.monday = this.XlslArray[i].Monday ? this.XlslArray[i].Monday.split('-') : '-';
 				this.tuesday = this.XlslArray[i].Tuesday ? this.XlslArray[i].Tuesday.split('-') : '-';
 				this.wednesday = this.XlslArray[i].Wednesday ? this.XlslArray[i].Wednesday.split('-') : '-';
@@ -199,27 +216,30 @@ export class TimeTableComponent implements OnInit {
 				this.friday = this.XlslArray[i].Friday ? this.XlslArray[i].Friday.split('-') : '-';
 				this.saturday = this.XlslArray[i].Saturday ? this.XlslArray[i].Saturday.split('-') : '-';
 				this.sunday = this.XlslArray[i].Sunday ? this.XlslArray[i].Sunday.split('-') : '-';
-				this.finalXlslArray.push({
-					monday: this.monday[1],
-					monday_id: this.monday[0],
-					tuesday: this.tuesday[1],
-					tuesday_id: this.tuesday[0],
-					wednesday: this.wednesday[1],
-					wednesday_id: this.wednesday[0],
-					thursday: this.thursday[1],
-					thursday_id: this.thursday[0],
-					friday: this.friday[1],
-					friday_id: this.friday[0],
-					saturday: this.saturday[1],
-					saturday_id: this.saturday[0],
-					sunday: this.sunday[1],
-					sunday_id: this.sunday[0],
-				});
+				finalXlslArrayTemp[i].monday =  this.monday[1];
+				finalXlslArrayTemp[i].monday_id =  this.monday[0];
+				finalXlslArrayTemp[i].tuesday =  this.tuesday[1];
+				finalXlslArrayTemp[i].tuesday_id =  this.tuesday[0];
+				finalXlslArrayTemp[i].wednesday =  this.wednesday[1];
+				finalXlslArrayTemp[i].wednesday_id =  this.wednesday[0];
+				finalXlslArrayTemp[i].thursday =  this.thursday[1];
+				finalXlslArrayTemp[i].	thursday_id =  this.thursday[0];
+				finalXlslArrayTemp[i].friday =  this.friday[1];
+				finalXlslArrayTemp[i].friday_id =  this.friday[0];
+				finalXlslArrayTemp[i].saturday =  this.saturday[1];
+				finalXlslArrayTemp[i].saturday_id =  this.saturday[0];
+				finalXlslArrayTemp[i].sunday =  this.sunday[1];
+				finalXlslArrayTemp[i].sunday_id =  this.sunday[0];
+			}
+			for (const item of finalXlslArrayTemp) {
+				this.finalXlslArray.push(item);
 			}
 			if (this.XlslArray.length === 0) {
 				this.commonService.showSuccessErrorMessage('Execel is blank. Please Choose another excel.', 'error');
 				return false;
 			}
+
+
 		};
 		fileReader.readAsArrayBuffer(this.file);
 
