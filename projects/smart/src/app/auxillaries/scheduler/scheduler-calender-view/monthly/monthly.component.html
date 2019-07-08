@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-6">
+  <div class="col-8 col-ver-line-divider">
     <div class="row text-center">
       <div class="col-md-4">
       </div>
@@ -26,8 +26,7 @@
       </mwl-calendar-month-view>
     </div>
   </div>
-  <div class="col-3"></div>
-  <div class="col-2">
+  <div class="col-3">
     <mat-vertical-stepper [linear]="true">
       <mat-step *ngFor="let item of ecArray" [label]="item.ec_name">
         <small *ngFor="let item1 of item.ecArray">{{item1.sc_from | date:'dd MMM, yyyy'}} - {{item1.sc_title}}
