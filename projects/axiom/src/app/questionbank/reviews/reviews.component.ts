@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { QbankService } from '../service/qbank.service';
 import { QelementService } from '../service/qelement.service';
 import { AdminService } from '../../user-type/admin/services/admin.service';
-import { NotificationService, BreadCrumbService, HtmlToTextService, UserAccessMenuService, CommonAPIService } from '../../_services/index';
+import { NotificationService, BreadCrumbService, HtmlToTextService, UserAccessMenuService } from '../../_services/index';
+import { CommonAPIService } from 'src/app/_services';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { SubjectiveElement } from './subjectiveelement.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ckconfig } from '../ckeditorconfig';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
@@ -53,7 +54,7 @@ export class ReviewsComponent implements OnInit {
 
 	SUBJECTIVE_ELEMENT_DATA: SubjectiveElement[] = [];
 	subjectivedataSource = new MatTableDataSource<SubjectiveElement>(this.SUBJECTIVE_ELEMENT_DATA);
-	subjectivedisplayedColumns = ['position', 'question', 'answer', 'class', 'topic', 'subtopic', 'details', 'reasons', 'action', ];
+	subjectivedisplayedColumns = ['position', 'question', 'answer', 'class', 'topic', 'subtopic', 'details', 'reasons', 'action',];
 	ckeConfig: any;
 	reasonsArray: any[] = [];
 	modalForm: FormGroup;
@@ -227,14 +228,14 @@ export class ReviewsComponent implements OnInit {
 		} else {
 			this.qelementService.getSubjectsByClass(class_id)
 				.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.subjectArray = result.data;
-					} else {
-						this.subjectArray = [];
-						// this.errorNotification('No Record Found');
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.subjectArray = result.data;
+						} else {
+							this.subjectArray = [];
+							// this.errorNotification('No Record Found');
+						}
 					}
-				}
 				);
 		}
 		this.parameterform.patchValue({
@@ -269,13 +270,13 @@ export class ReviewsComponent implements OnInit {
 		} else {
 			this.qelementService.getTopicByClassSubject(class_id, sub_id)
 				.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.topicArray = result.data;
-					} else {
-						this.topicArray = [];
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.topicArray = result.data;
+						} else {
+							this.topicArray = [];
+						}
 					}
-				}
 				);
 		}
 		this.parameterform.patchValue({
@@ -521,14 +522,14 @@ export class ReviewsComponent implements OnInit {
 		if (this.ind_entry_form1.valid && this.ind_entry_form2.valid && this.ind_entry_form3.valid) {
 			this.qbankService.updateQuestion(resultobj)
 				.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.notif.showSuccessErrorMessage('Question updated successfully', 'success');
-						this.getQuestionsReview();
-					} else {
-						this.notif.showSuccessErrorMessage('Error updating the question', 'error');
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.notif.showSuccessErrorMessage('Question updated successfully', 'success');
+							this.getQuestionsReview();
+						} else {
+							this.notif.showSuccessErrorMessage('Error updating the question', 'error');
+						}
 					}
-				}
 				);
 		} else {
 			this.notif.showSuccessErrorMessage('Error updating the question', 'error');
@@ -565,15 +566,15 @@ export class ReviewsComponent implements OnInit {
 			// tslint:disable-next-line:max-line-length
 			this.qelementService.publishUnpublishQuestion(qus_id, qus_status, this.qus_unpublish_remark, this.reason_id, this.currentUser.login_id, '')
 				.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.modalRef2.hide();
-						this.getQuestionsReview();
-						this.notif.showSuccessErrorMessage('Question unpublished successfully', 'success');
-					} else {
-						this.notif.showSuccessErrorMessage('Error unpublishing the question', 'error');
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.modalRef2.hide();
+							this.getQuestionsReview();
+							this.notif.showSuccessErrorMessage('Question unpublished successfully', 'success');
+						} else {
+							this.notif.showSuccessErrorMessage('Error unpublishing the question', 'error');
+						}
 					}
-				}
 				);
 		} else {
 			this.notif.showSuccessErrorMessage('Please select Reasons and enter remarks', 'error');
@@ -771,14 +772,14 @@ export class EditSubjectiveDialog implements OnInit, OnDestroy {
 		} else {
 			this.qelementService.getSubjectsByClass(class_id)
 				.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.subjectArray = result.data;
-					} else {
-						this.subjectArray = [];
-						// this.errorNotification('No Record Found');
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.subjectArray = result.data;
+						} else {
+							this.subjectArray = [];
+							// this.errorNotification('No Record Found');
+						}
 					}
-				}
 				);
 		}
 		this.parameterform.patchValue({
@@ -813,13 +814,13 @@ export class EditSubjectiveDialog implements OnInit, OnDestroy {
 		} else {
 			this.qelementService.getTopicByClassSubject(class_id, sub_id)
 				.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.topicArray = result.data;
-					} else {
-						this.topicArray = [];
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.topicArray = result.data;
+						} else {
+							this.topicArray = [];
+						}
 					}
-				}
 				);
 		}
 		this.parameterform.patchValue({
@@ -1042,15 +1043,15 @@ export class EditSubjectiveDialog implements OnInit, OnDestroy {
 		if (this.ind_entry_form1.valid && this.ind_entry_form2.valid && this.sub_entry_form3.valid) {
 			this.qbankService.updateQuestion(resultobj)
 				.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.notif.showSuccessErrorMessage('Question updated successfully', 'success');
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.notif.showSuccessErrorMessage('Question updated successfully', 'success');
 
 
-					} else {
-						this.notif.showSuccessErrorMessage('Error updating the question', 'error');
+						} else {
+							this.notif.showSuccessErrorMessage('Error updating the question', 'error');
+						}
 					}
-				}
 				);
 		} else {
 			this.notif.showSuccessErrorMessage('Error updating the question', 'error');
