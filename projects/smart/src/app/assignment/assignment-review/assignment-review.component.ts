@@ -128,7 +128,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 			if (param.to) {
 				param.to = this.commonAPIService.dateConvertion(param.to);
 			} */
-			param.as_status = '0'; // not published or not sent
+			param.as_status = ['0']; // not published or not sent
 			param.withDate = false;
 			/* param.limit = this.limit;
 			param.offset = this.offset; */
