@@ -20,6 +20,9 @@ export class SubjectPeriodCounterComponent implements OnInit {
 	daywisetableArray: any[] = [];
 	subCountArray: any[] = [];
 	holidayArray: any[] = [];
+	weekCounterArray: any[] = [];
+	subjectCountArray: any[] = [];
+	finalCountArray: any[] = [];
 	currentUser: any;
 	session: any;
 	toDate: any;
@@ -30,6 +33,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 	nonTeachingDay: any = 0;
 	workingDay: any;
 	teachingDay: any;
+	sum = 0;
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -75,6 +79,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 	}
 	// get section list according to selected class
 	getSectionsByClass() {
+		this.finalCountArray = [];
 		this.defaultFlag = true;
 		this.finalDivFlag = false;
 		this.subjectPeriodForm.patchValue({
@@ -130,6 +135,27 @@ export class SubjectPeriodCounterComponent implements OnInit {
 			return this.sectionArray[sectionIndex].sec_name;
 		}
 	}
+	getSum(dety, index, sub_id) {
+		this.sum = 0;
+		this.subjectCountArray = [];
+		for (const titem of dety) {
+			if (titem.day !== '-') {
+				this.sum = this.sum + (Number(titem.count) * Number(this.weekCounterArray[titem.day]));
+			}
+		}
+		const findex = this.subjectCountArray.findIndex(f => Number(f.id) === Number(index));
+		if (findex === -1) {
+			this.subjectCountArray.push({
+				id: index,
+				sub_name: sub_id,
+				count: this.sum
+			});
+		}
+		for (const citem of this.subjectCountArray) {
+			this.finalCountArray[citem.sub_name] = citem.count;
+		}
+		return this.sum;
+	}
 	// get class wise details
 	getclasswisedetails() {
 		this.daywisetableArray = [];
@@ -149,6 +175,11 @@ export class SubjectPeriodCounterComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				this.week = result.data.totalWeek;
 				this.totalDay = result.data.totalDay;
+			}
+		});
+		this.smartService.weekCounter(dateParam).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.weekCounterArray = result.data;
 			}
 		});
 		this.smartService.periodWiseSummary(dateParam).subscribe((result: any) => {
@@ -198,7 +229,9 @@ export class SubjectPeriodCounterComponent implements OnInit {
 														if (titem.subject_id !== '-') {
 															this.subCountArray.push({
 																'subject_name': titem.subject_name,
+																'subject_id': titem.subject_id,
 																'count': 1,
+																'day': titem.day,
 															});
 														}
 													} else {
@@ -219,7 +252,6 @@ export class SubjectPeriodCounterComponent implements OnInit {
 																dataArr: periodCounter_result.data[key]
 															});
 														}
-
 													});
 												}
 											});
