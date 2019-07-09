@@ -752,48 +752,6 @@ export class TransportReportComponent implements OnInit {
 					width: 1
 				},
 				{
-					id: 'applicable_from', name: 'Applicable From', field: 'applicable_from', sortable: true,
-					filterable: true,
-					formatter: this.checkDateFormatter,
-					filterSearchType: FieldType.dateIso,
-					filter: { model: Filters.compoundDate },
-					grouping: {
-						getter: 'applicable_from',
-						formatter: (g) => {
-							if (g.value !== '') {
-								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-							} else {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							}
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-					groupTotalsFormatter: this.srnTotalsFormatter,
-				},
-				{
-					id: 'applicable_to', name: 'Applicable To', field: 'applicable_to', sortable: true,
-					filterable: true,
-					formatter: this.checkDateFormatter,
-					filterSearchType: FieldType.dateIso,
-					filter: { model: Filters.compoundDate },
-					grouping: {
-						getter: 'applicable_to',
-						formatter: (g) => {
-							if (g.value !== '') {
-								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-							} else {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							}
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-					groupTotalsFormatter: this.srnTotalsFormatter,
-				},
-				{
 					id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
 					sortable: true,
 					filterSearchType: FieldType.string,
@@ -896,6 +854,48 @@ export class TransportReportComponent implements OnInit {
 						aggregateCollapsed: true,
 						collapsed: false,
 					},
+				},
+				{
+					id: 'applicable_from', name: 'Applicable From', field: 'applicable_from', sortable: true,
+					filterable: true,
+					formatter: this.checkDateFormatter,
+					filterSearchType: FieldType.dateIso,
+					filter: { model: Filters.compoundDate },
+					grouping: {
+						getter: 'applicable_from',
+						formatter: (g) => {
+							if (g.value !== '') {
+								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+							} else {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							}
+						},
+						aggregators: this.aggregatearray,
+						aggregateCollapsed: true,
+						collapsed: false
+					},
+					groupTotalsFormatter: this.srnTotalsFormatter,
+				},
+				{
+					id: 'applicable_to', name: 'Applicable To', field: 'applicable_to', sortable: true,
+					filterable: true,
+					formatter: this.checkDateFormatter,
+					filterSearchType: FieldType.dateIso,
+					filter: { model: Filters.compoundDate },
+					grouping: {
+						getter: 'applicable_to',
+						formatter: (g) => {
+							if (g.value !== '') {
+								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+							} else {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							}
+						},
+						aggregators: this.aggregatearray,
+						aggregateCollapsed: true,
+						collapsed: false
+					},
+					groupTotalsFormatter: this.srnTotalsFormatter,
 				}];
 			this.feeService.getTransportReport(collectionJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -910,8 +910,6 @@ export class TransportReportComponent implements OnInit {
 							(index + 1);
 						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 							(index + 1);
-						obj['applicable_from'] = repoArray[Number(index)]['applicable_from'] ? repoArray[Number(index)]['applicable_from'] : '-';
-						obj['applicable_to'] = repoArray[Number(index)]['applicable_to'] ? repoArray[Number(index)]['applicable_to'] : '-';
 						obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 							repoArray[Number(index)]['stu_admission_no'] : '-';
 						obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
@@ -927,6 +925,8 @@ export class TransportReportComponent implements OnInit {
 							new CapitalizePipe().transform(repoArray[Number(index)]['slab_name']) : '-';
 						obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
 							new CapitalizePipe().transform(repoArray[Number(index)]['stoppages_name']) : '-';
+						obj['applicable_from'] = repoArray[Number(index)]['applicable_from'] ? repoArray[Number(index)]['applicable_from'] : '-';
+						obj['applicable_to'] = repoArray[Number(index)]['applicable_to'] ? repoArray[Number(index)]['applicable_to'] : '-';
 						this.dataset.push(obj);
 						index++;
 					}
