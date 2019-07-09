@@ -30,3 +30,16 @@ button.bookmark-question-indicator {
 .bookmark-header-decorator{
   font-weight: bold !important
 }
+
+table{
+  width: 100%;
+}
+td {
+  border: 1px solid #89A8C9 !important;
+  padding: 10px;
+}
+th{
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
+  padding: 0 10px;
+}

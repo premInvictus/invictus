@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 import { AuxillariesRoutingModule } from './auxillaries-routing.module';
@@ -30,6 +31,9 @@ import { WeeklyComponent } from './scheduler/scheduler-calender-view/weekly/week
 		CalendarModule.forRoot({
 			provide: DateAdapter,
 			useFactory: adapterFactory
+		}),
+		ConfirmationPopoverModule.forRoot({
+			confirmButtonType: 'danger' // set defaults here
 		})
 	],
 	declarations: [

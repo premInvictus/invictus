@@ -96,7 +96,7 @@ export class FeeLedgerReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'orderBy': ''
 		});
 	}
 
@@ -126,7 +126,8 @@ export class FeeLedgerReportComponent implements OnInit {
 				iconSortDescCommand: 'fas fa-sort-down',
 			},
 			exportOptions: {
-				sanitizeDataExport: true
+				sanitizeDataExport: true,
+				exportWithFormatter: true
 			},
 			gridMenu: {
 				onCommand: (e, args) => {
@@ -148,8 +149,6 @@ export class FeeLedgerReportComponent implements OnInit {
 		this.columnDefinitions = [];
 		this.dataset = [];
 		const collectionJSON: any = {
-			'from_date': value.from_date,
-			'to_date': value.to_date,
 			'pageSize': value.pageSize,
 			'pageIndex': value.pageIndex,
 			'classId': value.fee_value,
@@ -171,15 +170,19 @@ export class FeeLedgerReportComponent implements OnInit {
 				id: 'flgr_particulars',
 				name: 'Particulars',
 				field: 'flgr_particulars',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				sortable: true,
-				width: 3,
 				filterable: true,
+				width: 3,
 			},
 			{
 				id: 'flgr_invoice_receipt_no',
 				name: 'Invoice/Receipt No.',
 				field: 'flgr_invoice_receipt_no',
 				formatter: this.checkReceiptFormatter,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				sortable: true,
 				filterable: true,
 				width: 1,
@@ -189,9 +192,12 @@ export class FeeLedgerReportComponent implements OnInit {
 				id: 'flgr_amount',
 				name: 'Amount Due',
 				field: 'flgr_amount',
+				cssClass: 'amount-report-fee',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				sortable: true,
-				width: 1,
 				filterable: true,
+				width: 1,
 				groupTotalsFormatter: this.sumTotalsFormatter,
 				formatter: this.checkFeeFormatter
 			},
@@ -199,9 +205,12 @@ export class FeeLedgerReportComponent implements OnInit {
 				id: 'flgr_concession',
 				name: 'Concession',
 				field: 'flgr_concession',
+				cssClass: 'amount-report-fee',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				sortable: true,
-				width: 1,
 				filterable: true,
+				width: 1,
 				groupTotalsFormatter: this.sumTotalsFormatter,
 				formatter: this.checkFeeFormatter
 			},
@@ -209,6 +218,9 @@ export class FeeLedgerReportComponent implements OnInit {
 				id: 'flgr_receipt',
 				name: 'Receipt Amount',
 				field: 'flgr_receipt',
+				cssClass: 'amount-report-fee',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				sortable: true,
 				filterable: true,
 				width: 1,
@@ -218,16 +230,18 @@ export class FeeLedgerReportComponent implements OnInit {
 			{
 				id: 'flgr_balance',
 				name: 'Balance',
-				field: 'flgr_balance',
-				sortable: true,
 				filterable: true,
+				cssClass: 'amount-report-fee',
+				field: 'flgr_balance',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
+				sortable: true,
 				width: 1,
 				groupTotalsFormatter: this.sumTotalsFormatter,
 				formatter: this.checkFeeFormatter
 			}];
 		this.feeService.getFeeLedgerReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.common.showSuccessErrorMessage(result.message, 'success');
 				repoArray = result.data.reportData;
 				this.totalRecords = Number(result.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -239,18 +253,18 @@ export class FeeLedgerReportComponent implements OnInit {
 						obj['id'] = repoArray[Number(index)]['au_admission_no'] + j;
 						obj['flgr_created_date'] = stu_arr['flgr_created_date'];
 						if (repoArray[Number(index)]['sec_id'] !== '0') {
-							obj['stu_class_name'] = '(' + repoArray[Number(index)]['au_admission_no'] + ')' +
-								' ' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+							obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
+								',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
 								(repoArray[Number(index)]['class_name'] + '-' +
 									repoArray[Number(index)]['sec_name']);
 						} else {
-							obj['stu_class_name'] = '(' + repoArray[Number(index)]['au_admission_no'] + ')' +
-								' ' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+							obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
+								',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
 								repoArray[Number(index)]['class_name'];
 						}
 						obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
 							stu_arr['flgr_particulars'] : '-';
-						obj['invoice_id'] = stu_arr['flgr_inv_id'] ?
+						obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
 							stu_arr['flgr_inv_id'] : '-';
 						obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
 						if (stu_arr['flgr_invoice_receipt_no']) {
@@ -282,7 +296,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				this.aggregatearray.push(new Aggregators.Sum('flgr_receipt'));
 				this.aggregatearray.push(new Aggregators.Sum('flgr_balance'));
 				this.tableFlag = true;
-				setTimeout(() => this.groupByClass(), 50);
+				setTimeout(() => this.groupByClass(), 2);
 			} else {
 				this.tableFlag = false;
 			}
@@ -297,6 +311,14 @@ export class FeeLedgerReportComponent implements OnInit {
 		if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
 			this.draggableGroupingPlugin.clearDroppedGroups();
 		}
+	}
+	resetValues() {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': ''
+		});
+		this.sortResult = [];
+		this.filterResult = [];
 	}
 
 	collapseAllGroups() {
@@ -331,9 +353,9 @@ export class FeeLedgerReportComponent implements OnInit {
 			if (item['flgr_invoice_receipt_no']) {
 				const noArray: any[] = item['flgr_invoice_receipt_no'].split('-');
 				if (noArray[0] === 'I') {
-					this.renderDialog(Number(noArray[1]), false);
+					this.renderDialog(Number(item['flgr_inv_id']), false);
 				} else if (noArray[0] === 'R') {
-					this.openDialogReceipt (Number(noArray[1]), false);
+					this.openDialogReceipt(Number(item['receipt_id']), false);
 				}
 			}
 		}
@@ -365,7 +387,7 @@ export class FeeLedgerReportComponent implements OnInit {
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
 		if (value) {
-		return '<a>' + value + '</a>';
+			return '<a>' + value + '</a>';
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
@@ -378,7 +400,7 @@ export class FeeLedgerReportComponent implements OnInit {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: invoiceNo,
+				rpt_id: invoiceNo,
 				edit: edit
 			},
 			hasBackdrop: true
@@ -505,7 +527,7 @@ export class FeeLedgerReportComponent implements OnInit {
 		this.dataviewObj.setGrouping({
 			getter: 'stu_class_name',
 			formatter: (g) => {
-				return `<b>${g.value}</b><span style="color:green"> (${g.count} items)</span>`;
+				return `<b>${g.value}</b><span style="color:green"> [ ${g.count} records]</span>`;
 			},
 			aggregators: this.aggregatearray,
 			aggregateCollapsed: true,

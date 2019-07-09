@@ -37,6 +37,16 @@
         width: 93px;
         line-height: -1px !important;
     }
+    .btn-danger {
+      height: 33px;
+      width: 40px !important;
+      margin-left: 6px !important;
+    }
+    .btn-danger:hover {
+      height: 33px;
+      width: 40px !important;
+      margin-left: 6px !important;
+    }
     .btn-success:hover {
         width: 93px;
         line-height: -1px !important;

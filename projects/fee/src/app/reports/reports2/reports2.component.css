@@ -116,3 +116,6 @@ button.change-bt:hover {
   float: right !important;
   margin-right: 10px;
 }
+.col-half-offset {
+  margin-left:4.166666667% !important
+}

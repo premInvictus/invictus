@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SmartService, CommonAPIService } from '../../../_services';
 
 @Component({
@@ -7,6 +7,7 @@ import { SmartService, CommonAPIService } from '../../../_services';
 	styleUrls: ['./scheduler-calender-view.component.css']
 })
 export class SchedulerCalenderViewComponent implements OnInit {
+	@Input() reloadScheduler;
 	constructor(
 		private smartService: SmartService,
 		private commonAPIService: CommonAPIService,

@@ -236,6 +236,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/periodWiseSummary', value);
 	}
+	weekCounter(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/weekCounter', value);
+	}
 	getMaxPeriod() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/setup/getMaxPeriod');
