@@ -38,6 +38,7 @@ import { ReceiptDetailsModalComponent } from './receipt-details-modal/receipt-de
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 import { SearchViaStudentComponent } from './search-via-student/search-via-student.component';
 import { DeleteWithReasonComponent } from './delete-with-reason/delete-with-reason.component';
+import { CreateInvoiceModalComponent } from './create-invoice-modal/create-invoice-modal.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -106,7 +107,8 @@ export const MY_FORMATS = {
 		ZerodashPipe,
 		ReceiptDetailsModalComponent,
 		SearchViaStudentComponent,
-		DeleteWithReasonComponent
+		DeleteWithReasonComponent,
+		CreateInvoiceModalComponent
 	],
 	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
@@ -147,7 +149,8 @@ export const MY_FORMATS = {
 		ZerodashPipe,
 		ReceiptDetailsModalComponent,
 		CommonDynamicChartComponent,
-		DeleteWithReasonComponent
+		DeleteWithReasonComponent,
+		CreateInvoiceModalComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -157,7 +160,8 @@ export const MY_FORMATS = {
 		InvoiceDetailsModalComponent,
 		ReceiptDetailsModalComponent,
 		SearchViaStudentComponent,
-		DeleteWithReasonComponent
+		DeleteWithReasonComponent,
+		CreateInvoiceModalComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
@@ -188,8 +192,8 @@ export class SharedmoduleModule {
 				CKEDITOR.plugins.addExternal('keystrokes', '/assets/js/keystrokes/', 'plugin.js') +
 				CKEDITOR.plugins.addExternal('eqneditor', '/assets/js/eqneditor/', 'plugin.js') +
 				CKEDITOR.plugins.addExternal('videoembed', '/assets/js/videoembed/', 'plugin.js');
-				CKEDITOR.plugins.addExternal('strinsert', '/assets/js/strinsert/', 'plugin.js');
+			CKEDITOR.plugins.addExternal('strinsert', '/assets/js/strinsert/', 'plugin.js');
 			document.getElementsByTagName('head')[0].appendChild(script);
 		}
 	}
- }
+}
