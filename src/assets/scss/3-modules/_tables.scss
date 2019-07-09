@@ -417,3 +417,8 @@ td.grand-total-row {
     width: 8% !important;
     flex: 0 0 8% !important;
 }
+
+td.mat-cell.text-left {
+    text-align: left !important;
+    padding-left: 5px;
+}
