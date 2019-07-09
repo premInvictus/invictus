@@ -33,23 +33,23 @@
             <div class="dialog-table-review-main admin-overall-performoance-table normal-table-responsive">
                <table class="dialog-table-review table">
                   <thead>
-                     <tr class="dialog-table-review-header">
-                        <th class="text-center">S.No</th>
-                        <th class="text-center">Subject</th>
-                        <th class="text-center" *ngFor="let test of testArray  let a=index">
+                     <tr class="dialog-table-review-header custom-tr">
+                        <th class="text-center custom-th">S.No</th>
+                        <th class="text-center custom-th">Subject</th>
+                        <th class="text-center custom-th" *ngFor="let test of testArray  let a=index">
                            {{testArray[a]}}</th>
-                        <th class="text-center">Aggregate</th>
-                        <th class="text-center">Grade</th>
+                        <th class="text-center custom-th">Aggregate</th>
+                        <th class="text-center custom-th">Grade</th>
                      </tr>
                   </thead>
                   <tbody>
-                     <tr *ngFor="let item of overallPerformance; let i=index">
-                        <td class="rowBold text-center" scope="row">{{i+1}}</td>
-                        <td class="text-center">{{item.sub_name}}</td>
-                        <td class="text-center" *ngFor="let tmarks of item.test"> {{tmarks}}</td>
-                        <td class="text-center"><span style="font-weight: bolder">{{item.sub_avg}}</span>
+                     <tr *ngFor="let item of overallPerformance; let i=index" class="custom-tr">
+                        <td class="rowBold text-center custom-td" scope="row">{{i+1}}</td>
+                        <td class="text-center custom-td">{{item.sub_name}}</td>
+                        <td class="text-center custom-td" *ngFor="let tmarks of item.test"> {{tmarks}}</td>
+                        <td class="text-center custom-td"><span style="font-weight: bolder">{{item.sub_avg}}</span>
                         </td>
-                        <td class="text-center">
+                        <td class="text-center custom-td">
                            <button mat-icon class="grade-button-border"
                               [ngStyle]="{background:getPercentageColor(item.sub_avg)}"><span
                                  class="grade-value">{{grade}}</span></button>
