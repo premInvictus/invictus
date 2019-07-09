@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-12 remove-col-padding">
+    <table class="table table-borderd table-stripped custom-table">
+      <thead class="table-skill__head text-center">
+        <tr class="custom-tr">
+          <th class="custom-th">Date</th>
+          <th class="custom-th">Class</th>
+          <th class="custom-th">Subject</th>
+          <th class="custom-th">Topic</th>
+          <th class="custom-th">SubTopic</th>
+          <th class="custom-th">Category</th>
+          <th class="custom-th">Period</th>
+        </tr>
+      </thead>
+      <tbody class="text-center">
+        <ng-container *ngFor="let item of classworkArray; let i=index">
+          <ng-container *ngFor="let item1 of item.cw_array; let j=index">
+            <tr class="custom-tr" *ngIf="j == 0">
+              <td class="custom-td " [attr.rowspan]="item.cw_array.length">
+                <span>{{item.cw_entry_date | date:'dd-MMM-yyyy'}}</span></td>
+              <td class="custom-td "><span>{{item1.class_name}} - {{item1.sec_name}}</span></td>
+              <td class="custom-td "><span>{{item1.sub_name | capitalize}}</span></td>
+              <td class="custom-td text-left"><span>{{item1.topic_name | capitalize}}</span></td>
+              <td class="custom-td text-left"><span>{{item1.st_name | capitalize}}</span></td>
+              <td class="custom-td "><span>{{item1.ctr_name | capitalize}}</span></td>
+              <td class="custom-td "><span>{{item1.cw_period_id}}<sup>{{periodSup[item1.cw_period_id]}}</sup></span>
+              </td>
+            </tr>
+            <tr class="custom-tr" *ngIf="j != 0">
+              <td class="custom-td "><span>{{item1.class_name}} - {{item1.sec_name}}</span></td>
+              <td class="custom-td "><span>{{item1.sub_name | capitalize}}</span></td>
+              <td class="custom-td text-left"><span>{{item1.topic_name | capitalize}}</span></td>
+              <td class="custom-td text-left"><span>{{item1.st_name | capitalize}}</span></td>
+              <td class="custom-td "><span>{{item1.ctr_name | capitalize}}</span></td>
+              <td class="custom-td "><span>{{item1.cw_period_id}}<sup>{{periodSup[item1.cw_period_id]}}</sup></span>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+        <tr class="text-center" *ngIf="noDataFlag && !isTeacher">
+          <td colspan="7">
+            <app-no-data
+              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+              [noDataText]="'No Data Available'" [subText]="'Please select Teacher'">
+            </app-no-data>
+          </td>
+        </tr>
+        <!-- <tr class="text-center" *ngIf="noDataFlag && isTeacher">
+          <td colspan="5">
+            <app-no-data
+              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+              [noDataText]="'No Data Available'" [subText]="'Please select class, section and subject'"></app-no-data>
+          </td>
+        </tr> -->
+      </tbody>
+    </table>
+  </div>
+</div>
