@@ -5,6 +5,8 @@ import {
 	Filters,
 	Formatters
 } from 'angular-slickgrid';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
 import { DecimalPipe, DatePipe } from '@angular/common';
@@ -159,6 +161,7 @@ export class CollectionReportComponent implements OnInit {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
 				iconSortDescCommand: 'fas fa-sort-down',
+				title: 'Sort'
 			},
 			exportOptions: {
 				sanitizeDataExport: true,
@@ -170,6 +173,24 @@ export class CollectionReportComponent implements OnInit {
 					titleKey: 'Export as PDF',
 					command: 'exportAsPDF',
 					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'expand',
+					titleKey: 'Expand Groups',
+					command: 'expandGroup',
+					iconCssClass: 'fas fa-expand-arrows-alt'
+				},
+				{
+					title: 'collapse',
+					titleKey: 'Collapse Groups',
+					command: 'collapseGroup',
+					iconCssClass: 'fas fa-compress'
+				},
+				{
+					title: 'cleargroup',
+					titleKey: 'Clear Groups',
+					command: 'cleargroup',
+					iconCssClass: 'fas fa-eraser'
 				}
 				],
 				onCommand: (e, args) => {
@@ -181,6 +202,21 @@ export class CollectionReportComponent implements OnInit {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.exportAsPDF();
 					}
+					if (args.command === 'expandGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.expandAllGroups();
+					}
+					if (args.command === 'collapseGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.collapseAllGroups();
+					}
+					if (args.command === 'cleargroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
 				},
 			},
 			draggableGrouping: {
@@ -242,7 +278,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_admission_no',
 											formatter: (g) => {
-												return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+												return `${g.value} <span style="color:green"> (${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -261,7 +297,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_full_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -280,7 +316,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_class_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -299,7 +335,7 @@ export class CollectionReportComponent implements OnInit {
 											getter: 'invoice_created_date',
 											formatter: (g) => {
 												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 												} else {
 													return `${''}`;
 												}
@@ -322,7 +358,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'fp_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -443,7 +479,7 @@ export class CollectionReportComponent implements OnInit {
 								grouping: {
 									getter: 'receipt_mode_name',
 									formatter: (g) => {
-										return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
 									},
 									aggregators: this.aggregatearray,
 									aggregateCollapsed: true,
@@ -521,7 +557,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_admission_no',
 							formatter: (g) => {
-								return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -539,7 +575,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_full_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -555,7 +591,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_class_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -573,7 +609,7 @@ export class CollectionReportComponent implements OnInit {
 							getter: 'invoice_created_date',
 							formatter: (g) => {
 								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 								} else {
 									return `${''}`;
 								}
@@ -722,7 +758,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_admission_no',
 											formatter: (g) => {
-												return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+												return `${g.value} <span style="color:green"> (${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -740,7 +776,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_full_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -756,7 +792,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_class_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -774,7 +810,7 @@ export class CollectionReportComponent implements OnInit {
 											getter: 'invoice_created_date',
 											formatter: (g) => {
 												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 												} else {
 													return `${''}`;
 												}
@@ -797,7 +833,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'fp_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -867,8 +903,6 @@ export class CollectionReportComponent implements OnInit {
 											obj['bank_name'] = repoArray[Number(keys)]['bank_name'] ?
 												repoArray[Number(keys)]['bank_name'] : '-';
 											obj['total'] = tot;
-											obj['rpt_amount'] = repoArray[Number(keys)]['rpt_amount'] ?
-												Number(repoArray[Number(keys)]['rpt_amount']) : 0;
 											k++;
 										}
 									});
@@ -888,7 +922,7 @@ export class CollectionReportComponent implements OnInit {
 								grouping: {
 									getter: 'bank_name',
 									formatter: (g) => {
-										return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
 									},
 									aggregators: this.aggregatearray,
 									aggregateCollapsed: true,
@@ -906,17 +940,6 @@ export class CollectionReportComponent implements OnInit {
 								formatter: this.checkTotalFormatter,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
-							{
-								id: 'rpt_amount',
-								name: 'Reciept Amt.',
-								field: 'rpt_amount',
-								sortable: true,
-								cssClass: 'amount-report-fee',
-								width: 50,
-								filterable: true,
-								formatter: this.checkFeeFormatter,
-								groupTotalsFormatter: this.sumTotalsFormatter
-							}
 						);
 						const obj3: any = {};
 						obj3['id'] = 'footer';
@@ -939,7 +962,6 @@ export class CollectionReportComponent implements OnInit {
 							});
 						});
 						obj3['total'] = this.dataset.map(t => t['total']).reduce((acc, val) => acc + val, 0);
-						obj3['rpt_amount'] = this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
 						this.dataset.push(obj3);
 						this.aggregatearray.push(new Aggregators.Sum('total'));
@@ -981,7 +1003,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_admission_no',
 							formatter: (g) => {
-								return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -999,7 +1021,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_full_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1015,7 +1037,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_class_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1033,7 +1055,7 @@ export class CollectionReportComponent implements OnInit {
 							getter: 'invoice_created_date',
 							formatter: (g) => {
 								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 								} else {
 									return `${''}`;
 								}
@@ -1053,7 +1075,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'fp_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1097,7 +1119,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'route_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1116,7 +1138,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stoppages_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1135,7 +1157,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'slab_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1222,7 +1244,7 @@ export class CollectionReportComponent implements OnInit {
 						name: 'SNo.',
 						field: 'srno',
 						sortable: true,
-						width: 1
+						maxWidth: 40
 					},
 					{
 						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
@@ -1231,7 +1253,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_admission_no',
 							formatter: (g) => {
-								return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1249,7 +1271,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_full_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1265,7 +1287,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_class_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1442,9 +1464,11 @@ export class CollectionReportComponent implements OnInit {
 								});
 							}
 							this.dataset.push(obj);
-							this.tableFlag = true;
 							index++;
 						}
+						this.tableFlag = true;
+						setTimeout(() => this.groupByClass(), 2);
+						this.selectedGroupingFields.push('stu_class_name');
 					} else {
 						this.tableFlag = true;
 					}
@@ -1474,6 +1498,8 @@ export class CollectionReportComponent implements OnInit {
 	}
 	onGroupChanged(groups: Grouping[]) {
 		console.log(groups);
+		console.log(this.selectedGroupingFields);
+		console.log(this.draggableGroupingPlugin);
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
 			// update all Group By select dropdown
 			this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
@@ -1499,7 +1525,6 @@ export class CollectionReportComponent implements OnInit {
 				this.openDialogReceipt(item['receipt_id'], false);
 			}
 		}
-		console.log(e.target);
 		if (e.target.className === 'invoice-span-mfr2') {
 			const inv_id = Number(e.target.innerHTML);
 			this.renderDialog(inv_id, false);
@@ -1887,5 +1912,16 @@ export class CollectionReportComponent implements OnInit {
 			doc.save('table.pdf');
 			console.log(rowData);
 		}
+	}
+	groupByClass() {
+		this.dataviewObj.setGrouping({
+			getter: 'stu_class_name',
+			formatter: (g) => {
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+			},
+			aggregators: this.aggregatearray,
+			aggregateCollapsed: true,
+			collapsed: false,
+		});
 	}
 }
