@@ -1289,11 +1289,12 @@ export class CollectionReportComponent implements OnInit {
 						},
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
+						groupTotalsFormatter: this.srnTotalsFormatter
 					},
 					{
 						id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
 						filterable: true,
-						width: 380,
+						width: 200,
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						grouping: {
@@ -1309,7 +1310,7 @@ export class CollectionReportComponent implements OnInit {
 					{
 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 						filterable: true,
-						width: 220,
+						width: 200,
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						grouping: {
@@ -1321,6 +1322,19 @@ export class CollectionReportComponent implements OnInit {
 							aggregateCollapsed: true,
 							collapsed: false,
 						},
+					},
+					{
+						id: 'stu_opening_balance',
+						name: 'Opening Bal.',
+						field: 'stu_opening_balance',
+						filterSearchType: FieldType.number,
+						filter: { model: Filters.compoundInputNumber },
+						filterable: true,
+						sortable: true,
+						width: 160,
+						formatter: this.checkFeeFormatter,
+						cssClass: 'amount-report-fee',
+						groupTotalsFormatter: this.sumTotalsFormatter
 					}];
 				this.feeService.getMFRReport(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -1345,6 +1359,8 @@ export class CollectionReportComponent implements OnInit {
 							} else {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 							}
+							obj['stu_opening_balance'] = repoArray[Number(index)]['stu_opening_balance'] ?
+								Number(repoArray[Number(index)]['stu_opening_balance']) : 0;
 							obj['inv_fp_id'] = repoArray[Number(index)]['inv_fp_id'];
 							for (const titem of item['inv_invoice_generated_status']) {
 								Object.keys(titem).forEach((key: any) => {
@@ -1494,6 +1510,7 @@ export class CollectionReportComponent implements OnInit {
 							this.dataset.push(obj);
 							index++;
 						}
+						this.aggregatearray.push(new Aggregators.Sum('stu_opening_balance'));
 						this.tableFlag = true;
 						setTimeout(() => this.groupByClass(), 2);
 						this.selectedGroupingFields.push('stu_class_name');

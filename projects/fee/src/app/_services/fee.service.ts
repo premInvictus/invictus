@@ -357,4 +357,8 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/updateFeeReceipt', value);
 	}
+	getRouteWiseTransportReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getRouteWiseTransportReport', value);
+	}
 }
