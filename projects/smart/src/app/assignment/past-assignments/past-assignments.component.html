@@ -13,17 +13,33 @@
             <div class="top-card-title-form">
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
                 appearance="outline">
-                <mat-label>As on</mat-label>
+                <mat-label>From Date</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from"
+                  (dateChange)="getAssignment()">
+                <mat-datepicker-toggle matSuffix [for]="picker" ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+                appearance="outline">
+                <mat-label>To Date</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to" [min]="toMin"
-                  readonly>
-                <mat-datepicker-toggle matSuffix [for]="picker1" disabled></mat-datepicker-toggle>
+                (dateChange)="getAssignment()">
+                <mat-datepicker-toggle matSuffix [for]="picker1" ></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
               <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10" appearance="outline"
                 *ngIf="!this.isTeacher">
                 <mat-label>Class</mat-label>
-                <mat-select formControlName="class_id" (selectionChange)="getSubjectsByClass(); getAssignment()">
+                <mat-select formControlName="class_id"
+                  (selectionChange)="getSectionsByClass();getSubjectsByClass(); getAssignment()">
                   <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field
+                class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
+                <mat-label>Section</mat-label>
+                <mat-select formControlName="sec_id" (selectionChange)="getAssignment()">
+                  <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
                 </mat-select>
               </mat-form-field>
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline"
@@ -34,7 +50,7 @@
                 </mat-select>
               </mat-form-field>
               <span *ngIf="!isTeacher" style="padding:10px 0 0 20px">
-                <i class="material-icons reset_ass" tooltip="Reset" (click)="reserParam()">replay</i>
+                <i class="material-icons reset_ass" tooltip="Reset" (click)="resetParam()">replay</i>
               </span>
             </div>
           </div>
