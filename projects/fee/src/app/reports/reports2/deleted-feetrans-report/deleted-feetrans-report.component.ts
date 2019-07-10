@@ -15,7 +15,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportFilterComponent } from '../../reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from '../../reports-filter-sort/report-sort/report-sort.component';
 import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
-
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
 @Component({
 	selector: 'app-deleted-feetrans-report',
 	templateUrl: './deleted-feetrans-report.component.html',
@@ -53,6 +55,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 	sortResult: any[] = [];
 	dataArr: any[] = [];
 	sectionArray: any[] = [];
+	schoolInfo: any;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -61,6 +64,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		private fbuild: FormBuilder) { }
 
 	ngOnInit() {
+		this.getSchool();
 		this.buildForm();
 		this.getClassData();
 		this.filterFlag = true;
@@ -70,6 +74,14 @@ export class DeletedFeetransReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+	}
+	getSchool() {
+		this.sisService.getSchool().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.schoolInfo = res.data[0];
+				console.log(this.schoolInfo);
+			}
+		});
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
@@ -89,7 +101,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'orderBy': ''
 		});
 	}
 
@@ -113,20 +125,68 @@ export class DeletedFeetransReportComponent implements OnInit {
 			createFooterRow: true,
 			showFooterRow: true,
 			footerRowHeight: 21,
+			enableExcelCopyBuffer: true,
+			fullWidthRows: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
 				iconSortDescCommand: 'fas fa-sort-down',
+				title: 'Sort'
 			},
 			exportOptions: {
-				sanitizeDataExport: true
+				sanitizeDataExport: true,
+				exportWithFormatter: true
 			},
 			gridMenu: {
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'expand',
+					titleKey: 'Expand Groups',
+					command: 'expandGroup',
+					iconCssClass: 'fas fa-expand-arrows-alt'
+				},
+				{
+					title: 'collapse',
+					titleKey: 'Collapse Groups',
+					command: 'collapseGroup',
+					iconCssClass: 'fas fa-compress'
+				},
+				{
+					title: 'cleargroup',
+					titleKey: 'Clear Groups',
+					command: 'cleargroup',
+					iconCssClass: 'fas fa-eraser'
+				}
+				],
 				onCommand: (e, args) => {
 					if (args.command === 'toggle-preheader') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.clearGrouping();
 					}
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF();
+					}
+					if (args.command === 'expandGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.expandAllGroups();
+					}
+					if (args.command === 'collapseGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.collapseAllGroups();
+					}
+					if (args.command === 'cleargroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
 				},
 			},
 			draggableGrouping: {
@@ -157,19 +217,35 @@ export class DeletedFeetransReportComponent implements OnInit {
 				name: 'SNo.',
 				field: 'srno',
 				sortable: true,
-				width: 1
+				maxWidth: 40
 			},
 			{
-				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
+				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				groupTotalsFormatter: this.srnTotalsFormatter,
-				width: 5,
+				width: 30,
+				grouping: {
+					getter: 'stu_admission_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
 			},
 			{
-				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true, width: 6,
+				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
+				sortable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 60,
 				grouping: {
 					getter: 'stu_full_name',
 					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
@@ -177,12 +253,15 @@ export class DeletedFeetransReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true, width: 4,
+				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 				filterable: true,
+				width: 30,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				grouping: {
 					getter: 'stu_class_name',
 					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
@@ -195,6 +274,8 @@ export class DeletedFeetransReportComponent implements OnInit {
 				field: 'invoice_no',
 				sortable: true,
 				filterable: true,
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				cssClass: 'fee-ledger-no',
 				width: 3,
 				formatter: this.checkReceiptFormatter
@@ -208,7 +289,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 				grouping: {
 					getter: 'invoice_created_date',
 					formatter: (g) => {
-						return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+						return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
@@ -216,11 +297,36 @@ export class DeletedFeetransReportComponent implements OnInit {
 				},
 			},
 			{
+				id: 'invoice_amount',
+				name: 'Quantum',
+				field: 'invoice_amount',
+				sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				cssClass: 'amount-report-fee',
+				groupTotalsFormatter: this.sumTotalsFormatter,
+				formatter: this.checkFeeFormatter,
+				filter: { model: Filters.compoundInput },
+				width: 3,
+			},
+			{
+				id: 'inv_paid_status',
+				name: 'Status',
+				field: 'inv_paid_status',
+				sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 3,
+			},
+			{
 				id: 'fp_name',
 				name: 'Fee period',
 				field: 'fp_name',
 				sortable: true,
 				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				width: 3,
 			},
 			{
@@ -232,7 +338,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 				grouping: {
 					getter: 'deleted_date',
 					formatter: (g) => {
-						return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+						return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
@@ -245,6 +351,8 @@ export class DeletedFeetransReportComponent implements OnInit {
 				field: 'mod_review_by',
 				sortable: true,
 				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				width: 3,
 			},
 			{
@@ -253,24 +361,18 @@ export class DeletedFeetransReportComponent implements OnInit {
 				field: 'reason_title',
 				sortable: true,
 				filterable: true,
-				width: 3,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 90,
 			},
 			{
 				id: 'mod_review_remark',
 				name: 'Remark',
 				field: 'mod_review_remark',
 				sortable: true,
+				width: 70,
 				filterable: true,
-				width: 3,
-			},
-			{
-				id: 'inv_paid_status',
-				name: 'Status',
-				field: 'inv_paid_status',
-				sortable: true,
-				filterable: true,
-				width: 3,
-			}, ];
+			}];
 		this.feeService.getDeletedFeeTransactionReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
@@ -293,17 +395,36 @@ export class DeletedFeetransReportComponent implements OnInit {
 					} else {
 						obj['stu_class_name'] = repoArray[Number(index)]['class_name'];
 					}
-					obj['invoice_no'] = item['inv_invoice_no'];
+					obj['invoice_no'] = item['inv_invoice_no'] ? item['inv_invoice_no'] : '-';
+					obj['inv_id'] = item['inv_id'];
 					obj['invoice_created_date'] = repoArray[Number(index)]['inv_due_date'];
+					obj['invoice_amount'] = Number(repoArray[Number(index)]['inv_fee_amount']) + Number(repoArray[Number(index)]['inv_fine_amount']);
+					obj['inv_paid_status'] = new CapitalizePipe().transform(item['inv_paid_status']);
 					obj['fp_name'] = repoArray[Number(index)]['fp_name'];
 					obj['deleted_date'] = repoArray[Number(index)]['deleted_date'] ? repoArray[Number(index)]['deleted_date'] : '-';
-					obj['mod_review_by'] = repoArray[Number(index)]['mod_review_by'] ? repoArray[Number(index)]['mod_review_by'] : '-';
+					obj['mod_review_by'] = repoArray[Number(index)]['created_by'] ? repoArray[Number(index)]['created_by'] : '-';
 					obj['reason_title'] = repoArray[Number(index)]['reason_title'] ? repoArray[Number(index)]['reason_title'] : '-';
 					obj['mod_review_remark'] = repoArray[Number(index)]['mod_review_remark'] ? repoArray[Number(index)]['mod_review_remark'] : '-';
-					obj['inv_paid_status'] = new CapitalizePipe().transform(item['inv_paid_status']);
 					this.dataset.push(obj);
 					index++;
 				}
+				const obj3: any = {};
+				obj3['id'] = '';
+				obj3['srno'] = '';
+				obj3['stu_admission_no'] = this.common.htmlToText('<b class="total-footer-report">Grand Total</b>');
+				obj3['stu_full_name'] = '';
+				obj3['stu_class_name'] = '';
+				obj3['invoice_no'] = '';
+				obj3['inv_id'] = '';
+				obj3['invoice_created_date'] = '';
+				obj3['invoice_amount'] = this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0);
+				obj3['inv_paid_status'] = '';
+				obj3['fp_name'] = '';
+				obj3['deleted_date'] = '';
+				obj3['mod_review_by'] = '';
+				obj3['reason_title'] = '';
+				obj3['mod_review_remark'] = '';
+				this.dataset.push(obj3);
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;
@@ -351,7 +472,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		if (args.cell === args.grid.getColumnIndex('invoice_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['invoice_no'] !== '-') {
-				this.renderDialog(item['invoice_no'], false);
+				this.renderDialog(item['inv_id'], false);
 			}
 		}
 	}
@@ -404,6 +525,14 @@ export class DeletedFeetransReportComponent implements OnInit {
 			},
 			hasBackdrop: true
 		});
+	}
+	resetValues() {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': ''
+		});
+		this.sortResult = [];
+		this.filterResult = [];
 	}
 	getFeeHeads() {
 		this.valueArray = [];
@@ -521,6 +650,149 @@ export class DeletedFeetransReportComponent implements OnInit {
 			},
 			hasBackdrop: true
 		});
+	}
+	exportAsPDF() {
+		const headerData: any[] = [];
+		let rowData: any[] = [];
+		for (const item of this.columnDefinitions) {
+			headerData.push(item.name);
+		}
+		console.log(this.dataviewObj);
+		console.log(this.dataviewObj.getGrouping());
+		if (this.dataviewObj.getGroups().length === 0) {
+			Object.keys(this.dataset).forEach(key => {
+				const arr: any[] = [];
+				Object.keys(this.dataset[key]).forEach(key2 => {
+					if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name' && key2 !== 'inv_id') {
+						arr.push(this.dataset[key][key2]);
+					} else if (key2 !== 'id' && key2 !== 'receipt_id'
+						&& key2 !== 'inv_id' && key2 === 'fp_name') {
+						arr.push(this.dataset[key][key2][0]);
+					}
+				});
+				rowData.push(arr);
+			});
+			const doc = new jsPDF('l', 'mm', 'a0');
+			doc.autoTable({
+				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 40,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'normal',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 25,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				head: [headerData],
+				body: rowData,
+				startY: 60,
+				margin: { top: 40 },
+				didDrawPage: function (data) {
+					doc.setFontSize(22);
+					doc.setTextColor(0);
+					doc.setFontStyle('bold');
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#bebebe',
+					textColor: 'black',
+				},
+				alternateRowStyles: {
+					fillColor: '#f3f3f3'
+				},
+				useCss: true,
+				styles: {
+					fontSize: 22,
+					cellWidth: 'auto',
+				},
+				theme: 'striped'
+			});
+			doc.save('table.pdf');
+		} else {
+			const doc = new jsPDF('l', 'mm', 'a0');
+			doc.autoTable({
+				head: [headerData],
+				didDrawPage: function (data) {
+					doc.setFontSize(22);
+					doc.setTextColor(0);
+					doc.setFontStyle('bold');
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#bebebe',
+					textColor: 'black',
+				},
+				alternateRowStyles: {
+					fillColor: '#f3f3f3'
+				},
+				useCss: true,
+				styles: {
+					fontSize: 22,
+					cellWidth: 'auto',
+				},
+				theme: 'striped'
+			});
+			for (const item of this.dataviewObj.getGroups()) {
+				rowData = [];
+				Object.keys(item.rows).forEach(key => {
+					const arr: any[] = [];
+					Object.keys(item.rows[key]).forEach(key2 => {
+						if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name' && key2 !== 'invoice_created_date'
+							&& key2 !== 'inv_id') {
+							arr.push(item.rows[key][key2]);
+						} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'inv_id' &&
+							key2 !== 'invoice_created_date' && key2 === 'fp_name') {
+							arr.push(item.rows[key][key2][0]);
+						}
+					});
+					rowData.push(arr);
+				});
+				doc.autoTable({
+					head: [[this.common.htmlToText(item.title)]],
+					body: rowData,
+					headerStyles: {
+						fontStyle: 'bold',
+						fillColor: '#bebebe',
+						textColor: 'black',
+						halign: 'left',
+					},
+					alternateRowStyles: {
+						fillColor: '#f3f3f3'
+					},
+					useCss: true,
+					styles: {
+						fontSize: 22,
+						cellWidth: 4,
+					},
+					theme: 'striped'
+				});
+			}
+			doc.save('table.pdf');
+			console.log(rowData);
+		}
 	}
 
 }

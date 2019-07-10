@@ -95,7 +95,7 @@ export class FeeconReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'orderBy': ''
 		});
 	}
 	getClassName(classArray) {
@@ -281,14 +281,6 @@ export class FeeconReportComponent implements OnInit {
 			};
 			this.columnDefinitions = [
 				{
-					id: 'srno',
-					name: 'SNo.',
-					field: 'srno',
-					sortable: true,
-					width: 1,
-					filterable: true
-				},
-				{
 					id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
 					width: 2,
 				},
@@ -361,35 +353,54 @@ export class FeeconReportComponent implements OnInit {
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 					let index = 0;
 					for (const item of repoArray) {
-						const obj: any = {};
-						obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
-						obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-							(index + 1);
-						obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-							repoArray[Number(index)]['stu_admission_no'] : '-';
-						obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-						if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-								repoArray[Number(index)]['stu_sec_name'];
-						} else {
-							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
+						let j = 0;
+						for (const titem of item['stu_concession_arr']) {
+							const obj: any = {};
+							obj['id'] = repoArray[Number(index)]['stu_admission_no'] + j;
+							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
+								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
+							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
+								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
+									repoArray[Number(index)]['stu_sec_name'];
+							} else {
+								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
+							}
+							obj['fee_amount'] = titem['invg_fh_amount'] ?
+								Number(item['invg_fh_amount']) : 0;
+							obj['concession_cat'] = titem['invg_fcc_name'] ? titem['invg_fcc_name'] : '-';
+							obj['inv_fp_name'] = titem['inv_fp_name'] ? titem['inv_fp_name'] : '-';
+							obj['con_amount'] = titem['invg_fcc_amount'] ?
+								Number(titem['invg_fcc_amount']) : 0;
+							this.dataset.push(obj);
+							j++;
 						}
-						obj['fee_amount'] = item['invg_fh_amount'] ?
-						Number(item['invg_fh_amount']) : 0;
-						obj['concession_cat'] = item['invg_fcc_name'] ? item['invg_fcc_name'] : '-';
-						obj['inv_fp_name'] = item['inv_fp_name'] ? item['inv_fp_name'] : '-';
-						obj['con_amount'] = item['invg_fcc_amount'] ?
-						Number(item['invg_fcc_amount']) : 0;
-						this.dataset.push(obj);
-						this.tableFlag = true;
 						index++;
 					}
+					const obj3: any = {};
+					obj3['id'] = 'footer';
+					obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+					obj3['stu_full_name'] = '';
+					obj3['stu_class_name'] = '';
+					obj3['fee_amount'] = '';
+					obj3['concession_cat'] = '';
+					obj3['inv_fp_name'] =  '';
+					obj3['con_amount'] =  this.dataset.map(t => t.con_amount).reduce((acc, val) => acc + val, 0);
+					this.tableFlag = true;
+					this.dataviewObj.addItem(obj3);
 				} else {
 					this.tableFlag = true;
 				}
 			});
 		}
+	}
+	resetValues () {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': ''
+		});
+		this.sortResult = [];
+		this.filterResult = [];
 	}
 	clearGroupsAndSelects() {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');

@@ -90,7 +90,7 @@ export class FeeadjReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'orderBy': ''
 		});
 	}
 
@@ -120,7 +120,8 @@ export class FeeadjReportComponent implements OnInit {
 				iconSortDescCommand: 'fas fa-sort-down',
 			},
 			exportOptions: {
-				sanitizeDataExport: true
+				sanitizeDataExport: true,
+				exportWithFormatter: true
 			},
 			gridMenu: {
 				onCommand: (e, args) => {
@@ -158,15 +159,33 @@ export class FeeadjReportComponent implements OnInit {
 				name: 'SNo.',
 				field: 'srno',
 				sortable: true,
-				width: 1
+				maxWidth: 40
 			},
 			{
-				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
-				width: 4,
+				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no',
+				sortable: true,
+				filterable: true,
+				grouping: {
+					getter: 'stu_admission_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 80,
 				groupTotalsFormatter: this.srnTotalsFormatter
 			},
 			{
-				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true, width: 6,
+				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name',
+				sortable: true,
+				filterable: true,
+				width: 140,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				grouping: {
 					getter: 'stu_full_name',
 					formatter: (g) => {
@@ -178,8 +197,11 @@ export class FeeadjReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true, width: 4,
+				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 				filterable: true,
+				width: 100,
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				grouping: {
 					getter: 'stu_class_name',
 					formatter: (g) => {
@@ -195,8 +217,19 @@ export class FeeadjReportComponent implements OnInit {
 				name: 'Invoice No..',
 				field: 'invoice_no',
 				sortable: true,
-				width: 1,
 				filterable: true,
+				width: 40,
+				grouping: {
+					getter: 'invoice_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				cssClass: 'fee-ledger-no',
 				formatter: this.checkReceiptFormatter
 			},
@@ -205,11 +238,28 @@ export class FeeadjReportComponent implements OnInit {
 				name: 'Fee Head',
 				field: 'invg_fh_name',
 				sortable: true,
+				width: 80,
 				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 			},
 			{
-				id: 'adjustment_date', name: 'Adj. Date', field: 'adjustment_date', sortable: true, width: 4,
+				id: 'invg_fh_amount',
+				name: 'Fee Amount',
+				field: 'invg_fh_amount',
+				sortable: true,
 				filterable: true,
+				cssClass: 'amount-report-fee',
+				width: 80,
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
+				groupTotalsFormatter: this.sumTotalsFormatter,
+				formatter: this.checkFeeFormatter
+			},
+			{
+				id: 'adjustment_date', name: 'Adj. Date', field: 'adjustment_date', sortable: true,
+				filterable: true,
+				width: 100,
 				formatter: this.checkDateFormatter,
 				filter: { model: Filters.compoundDate },
 				filterSearchType: FieldType.dateIso,
@@ -228,7 +278,11 @@ export class FeeadjReportComponent implements OnInit {
 				name: 'Adj. Amount',
 				field: 'invg_adj_amount',
 				sortable: true,
+				width: 70,
+				cssClass: 'amount-report-fee',
 				filterable: true,
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				groupTotalsFormatter: this.sumTotalsFormatter,
 				formatter: this.checkFeeFormatter
 			},
@@ -237,14 +291,20 @@ export class FeeadjReportComponent implements OnInit {
 				name: 'Adj. By',
 				field: 'adjusted_by',
 				sortable: true,
-				filterable: true
+				filterable: true,
+				width: 60,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 			},
 			{
 				id: 'inv_remark',
 				name: 'Adj. Remark',
 				field: 'inv_remark',
 				sortable: true,
-				filterable: true
+				width: 60,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 			}];
 		this.feeService.getFeeAdjustmentReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -268,7 +328,8 @@ export class FeeadjReportComponent implements OnInit {
 					} else {
 						obj['stu_class_name'] = repoArray[Number(index)]['class_name'];
 					}
-					obj['invoice_no'] = item['inv_invoice_no'];
+					obj['inv_id'] = item['inv_id'];
+					obj['invoice_no'] = item['inv_invoice_no'] ? item['inv_invoice_no'] : '-';
 					obj['invg_fh_name'] = item['invg_fh_name'] ? item['invg_fh_name'] : '-';
 					obj['invg_fh_amount'] = item['invg_fh_amount'] ?
 						Number(item['invg_fh_amount']) : 0;
@@ -281,6 +342,21 @@ export class FeeadjReportComponent implements OnInit {
 					index++;
 				}
 				this.aggregatearray.push(new Aggregators.Sum('invg_adj_amount'));
+				const obj3: any = {};
+				obj3['id'] = 'footer';
+				obj3['srno'] = '';
+				obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+				obj3['stu_full_name'] = '';
+				obj3['stu_class_name'] = '';
+				obj3['inv_id'] = '';
+				obj3['invoice_no'] = '';
+				obj3['invg_fh_name'] = '';
+				obj3['invg_fh_amount'] = this.dataset.map(t => t['invg_fh_amount']).reduce((acc, val) => acc + val, 0);
+				obj3['adjusted_by'] = '';
+				obj3['adjustment_date'] = '';
+				obj3['invg_adj_amount'] = this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0);
+				obj3['inv_remark'] = '';
+				this.dataset.push(obj3);
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;
@@ -328,7 +404,7 @@ export class FeeadjReportComponent implements OnInit {
 		if (args.cell === args.grid.getColumnIndex('invoice_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['invoice_no'] !== '-') {
-				this.renderDialog(item['invoice_no'], false);
+				this.renderDialog(item['inv_id'], false);
 			}
 		}
 	}

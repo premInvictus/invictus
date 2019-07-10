@@ -37,7 +37,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	gender: any;
 	inv_opening_balance: any;
 	inv_fine_amount: any;
-	
+
 	constructor(
 		public dialogRef: MatDialogRef<InvoiceDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -70,10 +70,10 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
 	buildForm() {
 		this.modifyInvoiceForm = this.fb.group({
-			'inv_opening_balance' : '',
-			'inv_fine_amount' : '',
-			'inv_invoice_date' : '',
-			'inv_due_date'  : ''
+			'inv_opening_balance': '',
+			'inv_fine_amount': '',
+			'inv_invoice_date': '',
+			'inv_due_date': ''
 		});
 		this.adjustmentForm = this.fb.group({
 			adjustmentField: this.fb.array([])
@@ -119,8 +119,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			this.modifyInvoiceForm.patchValue({
 				'inv_opening_balance': this.invoiceDetails.inv_opening_balance,
 				'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
-				'inv_invoice_date' : this.invoiceDetails.inv_invoice_date,
-				'inv_due_date'  : this.invoiceDetails.inv_due_date,
+				'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
+				'inv_due_date': this.invoiceDetails.inv_due_date,
 			});
 		}
 		this.getInvoiceBifurcation(this.invoiceDetails.inv_id);
@@ -218,8 +218,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 						this.modifyInvoiceForm.patchValue({
 							'inv_opening_balance': this.invoiceDetails.inv_opening_balance,
 							'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
-							'inv_invoice_date' : this.invoiceDetails.inv_invoice_date,
-							'inv_due_date'  : this.invoiceDetails.inv_due_date,
+							'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
+							'inv_due_date': this.invoiceDetails.inv_due_date,
 						});
 
 						this.class_name = this.invoiceDetails.class_name;
@@ -253,7 +253,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 
 					}
 				} else {
-					
+
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 					this.closemodal();
 				}
@@ -268,8 +268,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 						this.modifyInvoiceForm.patchValue({
 							'inv_opening_balance': this.invoiceDetails.inv_opening_balance,
 							'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
-							'inv_invoice_date' : this.invoiceDetails.inv_invoice_date,
-							'inv_due_date'  : this.invoiceDetails.inv_due_date,
+							'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
+							'inv_due_date': this.invoiceDetails.inv_due_date,
 						});
 						if (this.invoiceDetails.invoice_bifurcation.length > 0) {
 							this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;

@@ -305,7 +305,7 @@ export class ReviewSyllabusComponent implements OnInit {
 													this.finalSpannedArray[findex].total = Number(this.finalSpannedArray[findex].total) + Number(this.finalSyllabusArray[i].sd_period_req);
 												}
 											}
-										} else {
+										} else { 
 											this.finalSpannedArray = [];
 											this.finalDivFlag = true;
 											this.commonService.showSuccessErrorMessage('No Record Found', 'error');

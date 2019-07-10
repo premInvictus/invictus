@@ -17,7 +17,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportFilterComponent } from '../../reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from '../../reports-filter-sort/report-sort/report-sort.component';
 import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
-
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
 @Component({
 	selector: 'app-fee-ledger-report',
 	templateUrl: './fee-ledger-report.component.html',
@@ -56,6 +58,7 @@ export class FeeLedgerReportComponent implements OnInit {
 	sortResult: any[] = [];
 	dataArr: any[] = [];
 	sectionArray: any[] = [];
+	schoolInfo: any;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -64,6 +67,7 @@ export class FeeLedgerReportComponent implements OnInit {
 		private fbuild: FormBuilder) { }
 
 	ngOnInit() {
+		this.getSchool();
 		this.buildForm();
 		this.getClassData();
 		this.filterFlag = true;
@@ -96,7 +100,7 @@ export class FeeLedgerReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'order_by': ''
+			'orderBy': ''
 		});
 	}
 
@@ -120,20 +124,58 @@ export class FeeLedgerReportComponent implements OnInit {
 			createFooterRow: true,
 			showFooterRow: true,
 			footerRowHeight: 21,
+			enableExcelCopyBuffer: true,
+			fullWidthRows: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
 				iconSortDescCommand: 'fas fa-sort-down',
+				title: 'Sort'
 			},
 			exportOptions: {
-				sanitizeDataExport: true
+				sanitizeDataExport: true,
+				exportWithFormatter: true
 			},
 			gridMenu: {
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'expand',
+					titleKey: 'Expand Groups',
+					command: 'expandGroup',
+					iconCssClass: 'fas fa-expand-arrows-alt'
+				},
+				{
+					title: 'collapse',
+					titleKey: 'Collapse Groups',
+					command: 'collapseGroup',
+					iconCssClass: 'fas fa-compress'
+				}
+				],
 				onCommand: (e, args) => {
 					if (args.command === 'toggle-preheader') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.clearGrouping();
 					}
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF();
+					}
+					if (args.command === 'expandGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.expandAllGroups();
+					}
+					if (args.command === 'collapseGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.collapseAllGroups();
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
 				},
 			},
 			draggableGrouping: {
@@ -148,8 +190,6 @@ export class FeeLedgerReportComponent implements OnInit {
 		this.columnDefinitions = [];
 		this.dataset = [];
 		const collectionJSON: any = {
-			'from_date': value.from_date,
-			'to_date': value.to_date,
 			'pageSize': value.pageSize,
 			'pageIndex': value.pageIndex,
 			'classId': value.fee_value,
@@ -171,15 +211,19 @@ export class FeeLedgerReportComponent implements OnInit {
 				id: 'flgr_particulars',
 				name: 'Particulars',
 				field: 'flgr_particulars',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				sortable: true,
-				width: 3,
 				filterable: true,
+				width: 3,
 			},
 			{
 				id: 'flgr_invoice_receipt_no',
 				name: 'Invoice/Receipt No.',
 				field: 'flgr_invoice_receipt_no',
 				formatter: this.checkReceiptFormatter,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
 				sortable: true,
 				filterable: true,
 				width: 1,
@@ -189,9 +233,12 @@ export class FeeLedgerReportComponent implements OnInit {
 				id: 'flgr_amount',
 				name: 'Amount Due',
 				field: 'flgr_amount',
+				cssClass: 'amount-report-fee',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				sortable: true,
-				width: 1,
 				filterable: true,
+				width: 1,
 				groupTotalsFormatter: this.sumTotalsFormatter,
 				formatter: this.checkFeeFormatter
 			},
@@ -199,9 +246,12 @@ export class FeeLedgerReportComponent implements OnInit {
 				id: 'flgr_concession',
 				name: 'Concession',
 				field: 'flgr_concession',
+				cssClass: 'amount-report-fee',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				sortable: true,
-				width: 1,
 				filterable: true,
+				width: 1,
 				groupTotalsFormatter: this.sumTotalsFormatter,
 				formatter: this.checkFeeFormatter
 			},
@@ -209,6 +259,9 @@ export class FeeLedgerReportComponent implements OnInit {
 				id: 'flgr_receipt',
 				name: 'Receipt Amount',
 				field: 'flgr_receipt',
+				cssClass: 'amount-report-fee',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
 				sortable: true,
 				filterable: true,
 				width: 1,
@@ -218,16 +271,18 @@ export class FeeLedgerReportComponent implements OnInit {
 			{
 				id: 'flgr_balance',
 				name: 'Balance',
-				field: 'flgr_balance',
-				sortable: true,
 				filterable: true,
+				cssClass: 'amount-report-fee',
+				field: 'flgr_balance',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
+				sortable: true,
 				width: 1,
 				groupTotalsFormatter: this.sumTotalsFormatter,
 				formatter: this.checkFeeFormatter
 			}];
 		this.feeService.getFeeLedgerReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.common.showSuccessErrorMessage(result.message, 'success');
 				repoArray = result.data.reportData;
 				this.totalRecords = Number(result.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -239,18 +294,18 @@ export class FeeLedgerReportComponent implements OnInit {
 						obj['id'] = repoArray[Number(index)]['au_admission_no'] + j;
 						obj['flgr_created_date'] = stu_arr['flgr_created_date'];
 						if (repoArray[Number(index)]['sec_id'] !== '0') {
-							obj['stu_class_name'] = '(' + repoArray[Number(index)]['au_admission_no'] + ')' +
-								' ' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+							obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
+								',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
 								(repoArray[Number(index)]['class_name'] + '-' +
 									repoArray[Number(index)]['sec_name']);
 						} else {
-							obj['stu_class_name'] = '(' + repoArray[Number(index)]['au_admission_no'] + ')' +
-								' ' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+							obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
+								',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
 								repoArray[Number(index)]['class_name'];
 						}
 						obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
 							stu_arr['flgr_particulars'] : '-';
-						obj['invoice_id'] = stu_arr['flgr_inv_id'] ?
+						obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
 							stu_arr['flgr_inv_id'] : '-';
 						obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
 						if (stu_arr['flgr_invoice_receipt_no']) {
@@ -282,7 +337,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				this.aggregatearray.push(new Aggregators.Sum('flgr_receipt'));
 				this.aggregatearray.push(new Aggregators.Sum('flgr_balance'));
 				this.tableFlag = true;
-				setTimeout(() => this.groupByClass(), 50);
+				setTimeout(() => this.groupByClass(), 2);
 			} else {
 				this.tableFlag = false;
 			}
@@ -297,6 +352,14 @@ export class FeeLedgerReportComponent implements OnInit {
 		if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
 			this.draggableGroupingPlugin.clearDroppedGroups();
 		}
+	}
+	resetValues() {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': ''
+		});
+		this.sortResult = [];
+		this.filterResult = [];
 	}
 
 	collapseAllGroups() {
@@ -331,9 +394,9 @@ export class FeeLedgerReportComponent implements OnInit {
 			if (item['flgr_invoice_receipt_no']) {
 				const noArray: any[] = item['flgr_invoice_receipt_no'].split('-');
 				if (noArray[0] === 'I') {
-					this.renderDialog(Number(noArray[1]), false);
+					this.renderDialog(Number(item['flgr_inv_id']), false);
 				} else if (noArray[0] === 'R') {
-					this.openDialogReceipt (Number(noArray[1]), false);
+					this.openDialogReceipt(Number(item['receipt_id']), false);
 				}
 			}
 		}
@@ -365,7 +428,7 @@ export class FeeLedgerReportComponent implements OnInit {
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
 		if (value) {
-		return '<a>' + value + '</a>';
+			return '<a>' + value + '</a>';
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
@@ -378,7 +441,7 @@ export class FeeLedgerReportComponent implements OnInit {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: invoiceNo,
+				rpt_id: invoiceNo,
 				edit: edit
 			},
 			hasBackdrop: true
@@ -505,11 +568,164 @@ export class FeeLedgerReportComponent implements OnInit {
 		this.dataviewObj.setGrouping({
 			getter: 'stu_class_name',
 			formatter: (g) => {
-				return `<b>${g.value}</b><span style="color:green"> (${g.count} items)</span>`;
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
 			},
 			aggregators: this.aggregatearray,
 			aggregateCollapsed: true,
 			collapsed: false,
+		});
+	}
+	exportAsPDF() {
+		const headerData: any[] = [];
+		let rowData: any[] = [];
+		for (const item of this.columnDefinitions) {
+			headerData.push(item.name);
+		}
+		console.log(this.dataviewObj);
+		console.log(this.dataviewObj.getGrouping());
+		if (this.dataviewObj.getGroups().length === 0) {
+			Object.keys(this.dataset).forEach(key => {
+				const arr: any[] = [];
+				Object.keys(this.dataset[key]).forEach(key2 => {
+					if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
+						arr.push(this.dataset[key][key2]);
+					} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
+						arr.push(this.dataset[key][key2][0]);
+					}
+				});
+				rowData.push(arr);
+			});
+			const doc = new jsPDF('l', 'mm', 'a0');
+			doc.autoTable({
+				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 40,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'normal',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 25,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				head: [headerData],
+				body: rowData,
+				startY: 60,
+				margin: { top: 40 },
+				didDrawPage: function (data) {
+					doc.setFontSize(22);
+					doc.setTextColor(0);
+					doc.setFontStyle('bold');
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#bebebe',
+					textColor: 'black',
+				},
+				alternateRowStyles: {
+					fillColor: '#f3f3f3'
+				},
+				useCss: true,
+				styles: {
+					fontSize: 22,
+					cellWidth: 'auto',
+				},
+				theme: 'striped'
+			});
+			doc.save('table.pdf');
+		} else {
+			const doc = new jsPDF('l', 'mm', 'a0');
+			doc.autoTable({
+				head: [headerData],
+				didDrawPage: function (data) {
+					doc.setFontSize(22);
+					doc.setTextColor(0);
+					doc.setFontStyle('bold');
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#bebebe',
+					textColor: 'black',
+				},
+				alternateRowStyles: {
+					fillColor: '#f3f3f3'
+				},
+				useCss: true,
+				styles: {
+					fontSize: 22,
+					cellWidth: 'auto',
+				},
+				theme: 'striped'
+			});
+			for (const item of this.dataviewObj.getGroups()) {
+				rowData = [];
+				Object.keys(item.rows).forEach(key => {
+					const arr: any[] = [];
+					Object.keys(item.rows[key]).forEach(key2 => {
+						console.log(key2);
+						if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name' && key2 !== 'invoice_created_date'
+							&& key2 !== 'stu_class_name' && key2 !== 'flgr_inv_id' && key2 !== 'flgr_invoice_type') {
+							arr.push(item.rows[key][key2]);
+						} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'stu_class_name' &&
+							key2 !== 'flgr_invoice_type' &&
+							key2 !== 'flgr_inv_id' &&
+							key2 !== 'invoice_created_date' && key2 === 'fp_name') {
+							arr.push(item.rows[key][key2][0]);
+						}
+					});
+					rowData.push(arr);
+				});
+				doc.autoTable({
+					head: [[this.common.htmlToText(item.title)]],
+					body: rowData,
+					headerStyles: {
+						fontStyle: 'bold',
+						fillColor: '#bebebe',
+						textColor: 'black',
+						halign: 'left',
+					},
+					alternateRowStyles: {
+						fillColor: '#f3f3f3'
+					},
+					useCss: true,
+					styles: {
+						fontSize: 22,
+						cellWidth: 4,
+					},
+					theme: 'striped'
+				});
+			}
+			doc.save('table.pdf');
+			console.log(rowData);
+		}
+	}
+	getSchool() {
+		this.sisService.getSchool().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.schoolInfo = res.data[0];
+				console.log(this.schoolInfo);
+			}
 		});
 	}
 

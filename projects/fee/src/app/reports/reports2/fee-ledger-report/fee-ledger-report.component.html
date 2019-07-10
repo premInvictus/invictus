@@ -1,42 +1,5 @@
 <form [formGroup]="reportFilterForm">
   <div class="row">
-    <div class="col-2">
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Class</mat-label>
-        <mat-select formControlName="fee_value" (selectionChange)="getSectionByClass($event)">
-          <mat-option value="">Please Select</mat-option>
-          <mat-option *ngFor="let item of valueArray" [value]="item.id">
-            {{item.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div *ngIf="filterFlag" class="col-2">
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Section</mat-label>
-        <mat-select formControlName="hidden_value" [placeholder]="valueLabel">
-          <mat-option *ngFor="let item of sectionArray" [value]="item.id">{{item.name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div *ngIf="filterFlag" class="col-2">
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>From Date</mat-label>
-        <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
-          [max]="currentDate" [min]="minDate" />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div *ngIf="filterFlag" class="col-2">
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>To Date</mat-label>
-        <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
-          [max]="currentDate" [min]="minDate" />
-        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-        <mat-datepicker #picker1></mat-datepicker>
-      </mat-form-field>
-    </div>
     <div *ngIf="filterFlag" class="col-4">
       <div class="margin-top-10">
         <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
@@ -50,10 +13,17 @@
           (click)="getFeeLedgerReport(reportFilterForm.value)">
           generate
         </button>
+        <button class="btn-danger text-uppercase" mat-raised-button (click)="resetValues()">
+          reset
+        </button>
       </div>
     </div>
   </div>
 </form>
+<div class="row">
+  <div class="col-12">
+  </div>
+</div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag">
   <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
     [dataset]="dataset" gridHeight="800" (onAngularGridCreated)="angularGridReady($event)"
@@ -63,6 +33,6 @@
 </div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
   <div class="text-center margin-top-20" style="margin-bottom:20px !important">
-      No Records Found
+    No Records Found
   </div>
 </div>
