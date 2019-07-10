@@ -1,71 +1,47 @@
-<div class="breadcrumb-section">
-  <div class="row">
-     <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
-        <a [routerLink]="[homeUrl]">
-        <i class="breadcrumb-icon fas fa-home"></i>
-        </a>
-     </div>
-     <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
-        <div class="vertical-line"></div>
-     </div>
-     <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
-        <div class="first-breadcrumb-title">
-           <span class="bread-title">Reports</span>
-           <span class="bread-divider">-</span>
-           <span class="bread-link">Test Report</span>
-        </div>
-     </div>
-  </div>
+<div class="row">
+   <div class="col-12">
+      <mat-card>
+         <mat-card-title>
+            <h1 class="remove-bottom-margin font-size-24">Test Report</h1>
+         </mat-card-title>
+      </mat-card>
+   </div>
 </div>
-<div class="add-question-content">
-  <div class="row">
-     <div class="col-lg-12 col-mobile-view-add-ques">
-        <div class="white-box">
-           <div id="printModal3" class="white-box-content">
-              <div class="row">
-                 <div class="col-lg-12">
-                    <div  class="report-information-bar">
-                       <div class="information-bar-content">
-                          <div class="row row-remove-top-margin">
-                             <div class="col-lg-12 remove-col-modal-padding">
-                                <div class="row row-remove-top-margin">
-                                   <div class="col-lg-3 fin-tab-col-25 print-col-lg-3">
-                                      <div>
-                                         <i class="fas fa-circle info-first-circle"></i>
-                                         <span>
-                                         <b>Admission No: </b>{{evalutionDetail.au_admission_no}}</span>
-                                      </div>
-                                   </div>
-                                   <div class="col-lg-3 fin-tab-col-25 print-col-lg-3">
-                                      <div>
-                                         <i class="fas fa-circle info-second-circle"></i>
-                                         <span>
-                                         <b>Student Name: </b>{{evalutionDetail.au_full_name}}</span>
-                                      </div>
-                                   </div>
-                                   <div class="col-lg-3 fin-tab-col-25 print-col-lg-3">
-                                      <div>
-                                         <i class="fas fa-circle info-third-circle"></i>
-                                         <span>
-                                         <b>Test: </b>{{examDetail.qp_name}}</span>
-                                      </div>
-                                   </div>
-                                   <div class="col-lg-3 fin-tab-col-25 print-col-lg-3">
-                                      <div>
-                                         <i class="fas fa-circle info-four-circle"></i>
-                                         <span>
-                                         <b>Class: </b>{{examDetail.class_name}}-{{examDetail.sec_name}}</span>
-                                      </div>
-                                   </div>
-                                </div>
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-              </div>
-              <br>
-              <div class="row">
+<div class="row">
+   <div class="col-12">
+      <mat-card>
+         <mat-card-content>
+            <div class="row row-remove-top-margin">
+               <div class="col-lg-3 fin-tab-col-25 print-col-lg-3">
+                  <div>
+                     <i class="fas fa-circle info-first-circle">&nbsp;</i>
+                     <span>
+                        <b>Admission No: </b>{{evalutionDetail.au_admission_no}}</span>
+                  </div>
+               </div>
+               <div class="col-lg-3 fin-tab-col-25 print-col-lg-3">
+                  <div>
+                     <i class="fas fa-circle info-second-circle">&nbsp;</i>
+                     <span>
+                        <b>Student Name: </b>{{evalutionDetail.au_full_name}}</span>
+                  </div>
+               </div>
+               <div class="col-lg-3 fin-tab-col-25 print-col-lg-3">
+                  <div>
+                     <i class="fas fa-circle info-third-circle">&nbsp;</i>
+                     <span>
+                        <b>Test: </b>{{examDetail.qp_name}}</span>
+                  </div>
+               </div>
+               <div class="col-lg-3 fin-tab-col-25 print-col-lg-3">
+                  <div>
+                     <i class="fas fa-circle info-four-circle">&nbsp;</i>
+                     <span>
+                        <b>Class: </b>{{examDetail.class_name}}-{{examDetail.sec_name}}</span>
+                  </div>
+               </div>
+            </div>
+                   <div class="row">
                  <div class="col-lg-12">
                     <mat-tab-group>
                        <mat-tab>
@@ -76,11 +52,11 @@
                           </ng-template>
                           <div>
                              <div class="row">
-                                <div class="col-lg-12">
-                                   <div class="float-right">
-                                      <button class="submit-button" mat-button (click)="printScoreCard()"><i class="fas fa-print dialog-table-print-icon"></i>
-                                      &nbsp;Print</button>
-                                   </div>
+                                <div class="col-lg-12 mb-2">
+                                      <button class="submit-button float-right" mat-button (click)="printScoreCard()">
+                                         <i class="fas fa-print dialog-table-print-icon"></i> Print
+                                    </button>
+                                    <button *ngIf="reportOverviewStudentTable" mat-raised-button class="reset-button float-left" (click)="gobackScorecard()"> Back </button>
                                 </div>
                              </div>
                              <div class="row row-remove-top-margin-custom">
@@ -420,11 +396,6 @@
                                          <div *ngIf="reportOverviewStudentTable">
                                             <div class="row">
                                                <div class="col-lg-12">
-                                                  <button mat-raised-button class="reset-button" (click)="gobackScorecard()">Back</button>
-                                               </div>
-                                            </div>
-                                            <div class="row">
-                                               <div class="col-lg-12">
                                                   <div class="teacher-score-card-table">
                                                      <div class="normal-table-responsive">
                                                         <table class="dialog-table-review table" cellspacing="0">
@@ -484,9 +455,9 @@
                                             </div>
                                             <div class="row text-right">
                                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                                  <span><i class="far fa-flag teacher-score-flag-green" aria-hidden="true"></i> : Achievement</span>
-                                                  <span><i class="far fa-flag teacher-score-flag-yellow" aria-hidden="true"></i> : Average</span>
-                                                  <span><i class="far fa-flag teacher-score-flag-red" aria-hidden="true"></i> : Critical</span>
+                                                  <span class="mr-2"><i class="far fa-flag teacher-score-flag-green" aria-hidden="true">&nbsp;</i> : Achievement</span>
+                                                  <span class="mr-2"><i class="far fa-flag teacher-score-flag-yellow" aria-hidden="true">&nbsp;</i> : Average</span>
+                                                  <span class="mr-2"><i class="far fa-flag teacher-score-flag-red" aria-hidden="true">&nbsp;</i> : Critical</span>
                                                </div>
                                             </div>
                                          </div>
@@ -540,8 +511,7 @@
                     </mat-tab-group>
                  </div>
               </div>
-           </div>
-        </div>
-     </div>
-  </div>
+         </mat-card-content>
+         </mat-card>
+      </div>
 </div>

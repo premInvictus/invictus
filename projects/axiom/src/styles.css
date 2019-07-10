@@ -201,7 +201,7 @@
 
 .axiom-sidebar {
     /* top:10px; */
-    height: 94vh !important;
+    /* height: 94vh !important; */
 
 }
 
@@ -5099,7 +5099,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 
     .axiom-sidebar {
         /* top: 10px; */
-        height: 118vh !important;
+        /* height: 118vh !important; */
     }
 
     .dash-second-row-button-collection {
@@ -5731,9 +5731,9 @@ td.tdTone2 {
         margin-right: 270px;
     }
 
-    .axiom-sidebar {
-        height: 115vh !important;
-    }
+    /* .axiom-sidebar {
+         height: 115vh !important;
+    } */ 
 
     .mcq-col-lg-1 {
         flex: 0 0 12% !important;
@@ -6295,9 +6295,9 @@ td.tdTone2 {
         zoom: 80%;
     }
 
-    .axiom-sidebar {
+    /* .axiom-sidebar {
         height: 118vh !important;
-    }
+    } */
 
     .question-test-box {
         height: 455px !important;
@@ -6607,10 +6607,10 @@ td.tdTone2 {
         margin-top: 25px;
         margin-bottom: 25px;
     }
-
+/* 
     .axiom-sidebar {
         height: 116vh !important;
-    }
+    } */
 
     .hide-for-small-screen {
         display: none;
@@ -6631,7 +6631,7 @@ td.tdTone2 {
     }
 
     .axiom-sidebar {
-        height: 115vh !important;
+        /* height: 115vh !important; */
     }
 
     .mcq-col-lg-1 {
