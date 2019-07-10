@@ -1790,13 +1790,13 @@ ngx-gauge .reading-block {
 }
 
 .question-test-box {
-  height: 350px;
-  overflow-y: scroll;
-  overflow-x: hidden;
+    height: 45vh;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .test-question-number-box {
-  height: 70vh !important;
+  height: 53vh !important;
 }
 
 .white-box-content {
@@ -2042,7 +2042,9 @@ mat-tab-body .mat-tab-body-content {
 .wrap-text {
   word-wrap: break-word !important;
 }
-
+.test-question> p{
+  margin: 0 !important;
+}
 .question-display-div-content {
   font-weight: 500;
 }
@@ -3050,7 +3052,7 @@ th {
 }
 
 .bookmark-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body {
-  height: 70vh;
+  height: auto;
   overflow: auto;
 }
 
@@ -4279,7 +4281,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
   }
 
   .bookmark-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body {
-      height: 80vh;
+      height: auto;
       overflow: auto;
   }
 
@@ -5208,7 +5210,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 
 
   .bookmark-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body {
-      height: 60vh;
+      height: auto;
       overflow: auto;
   }
 
@@ -5760,6 +5762,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 }
 .slick-column-name {
   color: #5b636a !important;
+  font-weight: bold !important;
 }
 .slick-row {
   height:35px !important;
@@ -6113,7 +6116,7 @@ td.tdTone2 {
   }
 
   .bookmark-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body {
-      height: 45vh;
+      height: auto;
       overflow: auto;
   }
 
@@ -6538,7 +6541,7 @@ td.tdTone2 {
 
   .question-test-box {
       height: 300px !important;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       overflow-x: hidden !important;
   }
 
@@ -6602,7 +6605,7 @@ td.tdTone2 {
 
   .question-test-box {
       height: 455px !important;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       overflow-x: hidden !important;
   }
 
@@ -6629,7 +6632,7 @@ td.tdTone2 {
 @media (min-height: 850px) and (max-height: 889px) {
   .question-test-box {
       height: 500px !important;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       overflow-x: hidden !important;
   }
 }
@@ -6661,7 +6664,7 @@ td.tdTone2 {
 @media (min-height: 979px) and (max-height:1078px) {
   .question-test-box {
       height: 611px !important;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       overflow-x: hidden !important;
   }
 
@@ -6683,7 +6686,7 @@ td.tdTone2 {
 @media (min-height: 1079px) {
   .question-test-box {
       height: 675px !important;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       overflow-x: hidden !important;
   }
 
@@ -6693,7 +6696,7 @@ td.tdTone2 {
 @media (min-height:906px) {
   .view-concluded-test-box {
       height: 600px !important;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       overflow-x: hidden !important;
   }
 }
@@ -6709,7 +6712,7 @@ td.tdTone2 {
 
   .question-test-box {
       height: 89% !important;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       overflow-x: hidden !important;
   }
 
@@ -6739,7 +6742,7 @@ td.tdTone2 {
 
   .question-test-box {
       height: 85% !important;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       overflow-x: hidden !important;
   }
 
@@ -7453,7 +7456,7 @@ td.tdTone2 {
 
   .question-test-box {
       height: 490px !important;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       overflow-x: hidden !important;
   }
 
@@ -7626,7 +7629,7 @@ h1.instruction-company-title {
 }
 
 span.instruction-main-title {
-    font-size: 20px;
+    font-size: 14px;
     text-transform: uppercase;
     font-weight: 500;
     color: #ffffff;
@@ -9050,7 +9053,7 @@ a.link {
 
     .container-box__orange__mob {
         background: #f7931e;
-        margin: 10px 0px 0px 0px;
+        margin: 5px 0px 0px 0px;
     }
 
     .container-box__blue__mob {
