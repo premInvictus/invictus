@@ -1,7 +1,4 @@
-::-webkit-scrollbar {
-    display: none !important;
-    }
-    button.filter-bt{
+button.filter-bt{
         color: white !important;
         background-color: #797f83 !important;
         height: 33px !important;

@@ -1,6 +1,6 @@
 <form [formGroup]="reportFilterForm">
   <div class="row">
-    <div class="col-2">
+    <div class="col-1">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Report Type</mat-label>
         <mat-select formControlName="report_type" (selectionChange)="changeReportType($event)">
@@ -20,7 +20,7 @@
       </mat-form-field>
     </div>
     <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left"
-      *ngIf="reportType === 'transportAlloted' && filterFlag">
+      *ngIf="(reportType === 'transportAlloted' || reportType === 'routeslabstopwise') && filterFlag">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Slab</mat-label>
         <mat-select formControlName="hidden_value4">
@@ -31,7 +31,7 @@
       </mat-form-field>
     </div>
     <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left"
-      *ngIf="reportType === 'transportAlloted' && filterFlag">
+      *ngIf="(reportType === 'transportAlloted' || reportType === 'routeslabstopwise') && filterFlag">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Stoppages</mat-label>
         <mat-select formControlName="hidden_value5">
@@ -59,7 +59,7 @@
         <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>
     </div>
-    <div *ngIf="filterFlag" style ="margin-bottom: 10px !important" class="col-4">
+    <div *ngIf="filterFlag" style="margin-bottom: 10px !important" class="col-4">
       <div class="margin-top-10">
         <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
           filter

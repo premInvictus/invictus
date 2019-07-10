@@ -68,7 +68,7 @@
     </div>
   </div>
 </form>
-<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag">
+<div style="width: 100% !important; overflow-x: visible !important; overflow-y: hidden" *ngIf="tableFlag">
   <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
     [dataset]="dataset" gridHeight="800" (onAngularGridCreated)="angularGridReady($event)"
     (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
