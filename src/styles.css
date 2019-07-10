@@ -2845,7 +2845,7 @@ th {
 }
 
 .bookmark-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body {
-    height: 70vh;
+    height: auto;
     overflow: auto;
 }
 
@@ -4084,7 +4084,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
     }
 
     .bookmark-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body {
-        height: 80vh;
+        height: auto;
         overflow: auto;
     }
 
@@ -5013,7 +5013,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 
 
     .bookmark-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body {
-        height: 60vh;
+        height:auto;
         overflow: auto;
     }
 
@@ -5817,7 +5817,7 @@ td.tdTone2 {
     }
 
     .bookmark-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body {
-        height: 45vh;
+        height:auto;
         overflow: auto;
     }
 

@@ -17,11 +17,10 @@ input[type=checkbox], input[type=radio]{
 
 .bookmark-expansion-panel-decorator.mat-expanded {
   background:white !important;
-  margin-bottom: 10px !important;
-  margin: 5px 10px !important;
-  /* border: 1px solid #6c757dbd !important; */
+  margin: 5px 5px 10px 5px !important;
+  border: inherit !important;
   border-radius: 5px !important;
-  height:570px !important;
+  height:auto !important;
 }
 
 ::ng-deep .bookmark-checkbox .mat-checkbox-frame {
@@ -71,18 +70,33 @@ h1.font-size-14 {
 }
 
 .questions-modal-button{
-  position:fixed;
-  width:60px;
-  height:60px;
-  bottom:40px;
-  right:40px;
+  position: absolute;
+  width:40px;
+  height:40px;
+  right:15px;
+  top:-29px;
   background-color: #f7931e !important;
   color:#FFF;
-  border-radius:50px;
+  border-radius:50%;
   text-align:center;
   box-shadow: 2px 2px 3px #999;
   z-index: 9999 !important;
+  border:none;
+  line-height: 40px;
+  cursor: pointer;
 }
-.questions-modal-icon{
-  margin-top:22px;
+
+.mat-expansion-panel-header-title {
+    color: #000!important;
+}
+.table-box{
+  border:1px solid #9c3 !important
+}
+.small-screen.mobile{
+  position: fixed;
+    bottom: 0;
+    background:#efefef;
+    width: 100%;
+    left: 0;
+    right: 0;
 }
