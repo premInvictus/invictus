@@ -248,6 +248,14 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtreport/getComparativeDetails', value);
 	}
+	syllabusProgessReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtreport/syllabusProgessReport', value);
+	}
+	cwSyllabusProgessReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtreport/cwSyllabusProgessReport', value);
+	}
 	setProcesstype(value) {
 		this.processType = value;
 	}
