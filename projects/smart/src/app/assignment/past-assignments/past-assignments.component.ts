@@ -17,6 +17,7 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 	paramForm: FormGroup;
 	classArray: any[] = [];
 	subjectArray: any[] = [];
+	sectionArray: any[] = [];
 	assignmentArray: any[] = [];
 	toMin = new Date();
 	ELEMENT_DATA: AssignmentModel[] = [];
@@ -63,12 +64,15 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 		this.dataSource.paginator = this.paginator;
 	}
 	buildForm() {
+		const from = new Date();
+		from.setDate(from.getDate() - 7);
 		this.paramForm = this.fbuild.group({
 			teacher_name: '',
 			teacher_id: '',
-			from: [new Date(), Validators.required],
+			from: [from, Validators.required],
 			to: [new Date(), Validators.required],
 			class_id: '',
+			sec_id: '',
 			sub_id: ''
 		});
 	}
@@ -77,6 +81,17 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 		this.sisService.getClass({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+
+	getSectionsByClass() {
+		this.sectionArray = [];
+		this.sisService.getSectionsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.sectionArray = result.data;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -110,19 +125,19 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 		this.toMin = event.value;
 	}
 	getAssignment() {
-		if (this.paramForm.valid) {
+		if (this.paramForm.valid && (this.paramForm.value.class_id || this.paramForm.value.sec_id || this.paramForm.value.sub_id)) {
 			this.assignmentArray = [];
 			this.ELEMENT_DATA = [];
 			this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 			const param = this.paramForm.value;
-			/* if (param.from) {
+			if (param.from) {
 				param.from = this.commonAPIService.dateConvertion(param.from);
 			}
 			if (param.to) {
 				param.to = this.commonAPIService.dateConvertion(param.to);
-			} */
-      param.as_status = '1'; // published or sent
-      param.withDate = false;
+			}
+			param.as_status = ['1', '2']; // published or sent
+			param.withDate = true;
 			/* param.limit = this.limit;
 			param.offset = this.offset; */
 			this.smartService.getAssignment(param).subscribe((result: any) => {
@@ -170,6 +185,7 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 	resetParam() {
 		this.paramForm.patchValue({
 			class_id: '',
+			sec_id: '',
 			sub_id: ''
 		});
 		this.getSubject();
