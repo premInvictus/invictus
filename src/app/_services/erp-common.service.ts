@@ -7,9 +7,10 @@ import { environment } from '../../environments/environment';
 export class ErpCommonService {
 
 		constructor(private http: HttpClient, private service: CommonAPIService) { }
-		getInvoice(value) {
+
+		getStudentInvoice(value) {
 				this.service.startLoading();
-				return this.http.post(environment.apiFeeUrl + '/invoice/getInvoice', value);
+				return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getStudentInvoice', value);
 		}
 
 		getFeeLedger(value: any) {
@@ -35,5 +36,10 @@ export class ErpCommonService {
 		getOnlineTransaction(value: any) {
 			this.service.startLoading();
 			return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getOnlineTransaction', value);
+		}
+
+		downloadReceipt(value: any) {
+			this.service.startLoading();
+			return this.http.post(environment.apiFeeUrl + '/feeTransaction/printReceipt', value);
 		}
 }

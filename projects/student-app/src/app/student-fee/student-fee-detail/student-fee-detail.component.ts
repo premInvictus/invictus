@@ -81,7 +81,7 @@ export class StudentFeeDetailComponent implements OnInit {
 		this.loginId = currentUser.login_id;
 		this.processType = currentUser.au_process_type;
 		this.getStudentInvoiceDetail();
-		this.getStudentFeeOutstanding();
+		// this.getStudentFeeOutstanding();
 	}
 
 	ngAfterViewInit() {
@@ -94,15 +94,15 @@ export class StudentFeeDetailComponent implements OnInit {
 		this.invoiceArray = [];
 		const inputJson = {
 			'processType': this.processType,
-			// 'inv_process_usr_no': this.loginId,
+			'inv_login_id': this.loginId,
+			//'inv_login_id': 1574,
 			'pageIndex': this.pageIndex,
 			'pageSize': this.invoicepagesize
 		};
-		this.erpCommonService.getInvoice(inputJson).subscribe((result: any) => {
+		this.erpCommonService.getStudentInvoice(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.invoiceArray = result.data.invoiceData;
+				this.invoiceArray = result.data;
 				this.totalRecords = Number(result.data.totalRecords);
-				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				this.invoiceTableData(this.invoiceArray);
 			} else {
 				this.invoiceTableData();
@@ -163,31 +163,19 @@ export class StudentFeeDetailComponent implements OnInit {
 		invoicearr.forEach((element, index) => {
 			let status = '';
 			let statusColor = '';
-			if (element.inv_activity) {
-				status = element.inv_activity;
+			status = element.inv_paid_status;
+
+			if (element.inv_paid_status === 'paid') {
+				statusColor = 'green';
 			} else {
-				status = element.inv_paid_status;
-			}
-			if (element.inv_activity) {
-				if (element.inv_activity === 'consolidated') {
-					statusColor = '#ec398e';
-				} else if (element.inv_activity === 'modified') {
-					statusColor = '#0e7d9e';
-				} else if (element.inv_activity === 'recalculated') {
-					statusColor = '#ff962e';
-				}
-			} else {
-				if (element.inv_paid_status === 'paid') {
-					statusColor = 'green';
-				} else {
-					statusColor = 'red';
-				}
+				statusColor = 'red';
 			}
 
 			this.INVOICE_ELEMENT.push({
 				srno: (index + 1),
 				invoiceno: element.inv_invoice_no,
 				inv_id: element.inv_id,
+				rpt_id : element.rpt_id,
 				feeperiod: element.fp_name,
 				invoicedate: element.inv_invoice_date,
 				duedate: element.inv_due_date,
@@ -213,7 +201,6 @@ export class StudentFeeDetailComponent implements OnInit {
 	changeTab($event) {
 		if (Number($event.index) === 0) {
 			this.getStudentInvoiceDetail();
-			this.getStudentFeeOutstanding();
 		} else {
 			this.getStudentFeeLedgerDetail();
 		}
@@ -228,8 +215,9 @@ export class StudentFeeDetailComponent implements OnInit {
 
 	}
 
-	downloadInvoice(inv_id) {
-		this.erpCommonService.downloadInvoice({ inv_id: [inv_id] }).subscribe((result: any) => {
+	downloadInvoice(invids) {
+		const inv_id = invids.split(',');
+		this.erpCommonService.downloadInvoice({ inv_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				const length = result.data.split('/').length;
@@ -242,35 +230,32 @@ export class StudentFeeDetailComponent implements OnInit {
 
 	}
 
-	getStudentFeeOutstanding() {
-		const inputJson = {
-			inv_process_type: this.processType,
-			// inv_login_id: this.loginId
-			inv_login_id: 1678
-		};
-
-		this.erpCommonService.getStudentFeeOutstanding(inputJson).subscribe((result: any) => {
+	downloadReceipt(rpt_id) {
+		this.erpCommonService.downloadReceipt({ receipt_id: [rpt_id] }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.studentInvoiceData = result.data[0];
-				// tslint:disable-next-line: max-line-length
-				this.outStandingAmt = Number(this.studentInvoiceData['inv_fee_amount']) + Number(this.studentInvoiceData['inv_fine_amount']) + Number(this.studentInvoiceData['inv_opening_balance']);
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
 			} else {
-				this.outStandingAmt = 0;
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
+
 	}
 
-	orderPayment($event) {
+	orderPayment(element) {
+		this.outStandingAmt = element.inv_fee_amount;
 		this.orderMessage = 'Are you confirm to make payment?  Your Pyament is : <b>' + this.outStandingAmt + '</b>';
 		this.paymentOrderModel.openModal(this.outStandingAmt);
 	}
 
-	makePayment($event) {
+	makePayment(element) {
 		console.log('Do Payment');
 		const inputJson = {
 			// invoice_ids: this.studentInvoiceData['inv_ids'],
-			// inv_login_id: this.loginId,
-			inv_login_id: 1678,
+			inv_login_id: this.loginId,
+			//inv_login_id: 1574,
 			inv_process_type: this.processType,
 			out_standing_amt: this.outStandingAmt
 		};

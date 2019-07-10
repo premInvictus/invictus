@@ -2,6 +2,7 @@ export interface InvoiceElement {
 	srno: number;
 	invoiceno: number;
 	inv_id: number;
+	rpt_id: number;
 	feeperiod: string;
 	invoicedate: any;
 	duedate: any;
