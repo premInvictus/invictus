@@ -295,7 +295,8 @@ export class MissingFeeinvReportComponent implements OnInit {
 					} else {
 						obj['stu_class_name'] = repoArray[Number(index)]['class_name'];
 					}
-					obj['fp_name'] = repoArray[Number(index)]['inv_invoice_generated_status'];
+					obj['fp_name'] = repoArray[Number(index)]['inv_invoice_generated_status'].length > 0 ?
+						repoArray[Number(index)]['inv_invoice_generated_status'] : '-';
 					this.dataset.push(obj);
 					index++;
 				}
@@ -346,7 +347,9 @@ export class MissingFeeinvReportComponent implements OnInit {
 			const item: any = args.grid.getDataItem(args.row);
 			console.log(item['fp_name']);
 			console.log(item);
-			this.openInvoiceDialog(item);
+			if (item.fp_name !== '-') {
+				this.openInvoiceDialog(item);
+			}
 		}
 	}
 	onCellChanged(e, args) {
@@ -384,12 +387,16 @@ export class MissingFeeinvReportComponent implements OnInit {
 		}
 	}
 	feeperiodFormatter(row, cell, value, columnDef, dataContext) {
-		let feePeriod: any = '';
-		for (const period of value) {
-			feePeriod = feePeriod + period.fm_name + ',';
+		if (value !== '-') {
+			let feePeriod: any = '';
+			for (const period of value) {
+				feePeriod = feePeriod + period.fm_name + ',';
+			}
+			feePeriod = feePeriod.substring(0, feePeriod.length - 1);
+			return feePeriod;
+		} else {
+			return '-';
 		}
-		feePeriod = feePeriod.substring(0, feePeriod.length - 1);
-		return feePeriod;
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
 		return new DatePipe('en-in').transform(value, 'd-MMM-y');
