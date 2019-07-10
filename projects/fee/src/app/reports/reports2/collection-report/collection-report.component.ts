@@ -5,9 +5,11 @@ import {
 	Filters,
 	Formatters
 } from 'angular-slickgrid';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
-import { DecimalPipe, DatePipe } from '@angular/common';
+import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { CapitalizePipe } from '../../../_pipes';
 import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { MatDialog } from '@angular/material';
@@ -24,6 +26,8 @@ import 'jspdf-autotable';
 	styleUrls: ['./collection-report.component.css']
 })
 export class CollectionReportComponent implements OnInit {
+	sessionArray: any[] = [];
+	session: any = {};
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
@@ -55,6 +59,7 @@ export class CollectionReportComponent implements OnInit {
 	sortResult: any[] = [];
 	dataArr: any[] = [];
 	schoolInfo: any = {};
+	sessionName: any;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -64,6 +69,8 @@ export class CollectionReportComponent implements OnInit {
 
 	ngOnInit() {
 		this.getSchool();
+		this.session = JSON.parse(localStorage.getItem('session'));
+		this.getSession();
 		this.buildForm();
 		this.getClassData();
 		this.reportTypeArray.push({
@@ -100,6 +107,19 @@ export class CollectionReportComponent implements OnInit {
 			if (res && res.status === 'ok') {
 				this.schoolInfo = res.data[0];
 				console.log(this.schoolInfo);
+			}
+		});
+	}
+	getSessionName(id) {
+		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
+		if (findex !== -1) {
+			return this.sessionArray[findex].ses_name;
+		}
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				this.sessionArray = result2.data;
 			}
 		});
 	}
@@ -159,6 +179,7 @@ export class CollectionReportComponent implements OnInit {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
 				iconSortDescCommand: 'fas fa-sort-down',
+				title: 'Sort'
 			},
 			exportOptions: {
 				sanitizeDataExport: true,
@@ -170,6 +191,30 @@ export class CollectionReportComponent implements OnInit {
 					titleKey: 'Export as PDF',
 					command: 'exportAsPDF',
 					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'expand',
+					titleKey: 'Expand Groups',
+					command: 'expandGroup',
+					iconCssClass: 'fas fa-expand-arrows-alt'
+				},
+				{
+					title: 'collapse',
+					titleKey: 'Collapse Groups',
+					command: 'collapseGroup',
+					iconCssClass: 'fas fa-compress'
+				},
+				{
+					title: 'cleargroup',
+					titleKey: 'Clear Groups',
+					command: 'cleargroup',
+					iconCssClass: 'fas fa-eraser'
 				}
 				],
 				onCommand: (e, args) => {
@@ -181,6 +226,25 @@ export class CollectionReportComponent implements OnInit {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.exportAsPDF();
 					}
+					if (args.command === 'expandGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.expandAllGroups();
+					}
+					if (args.command === 'collapseGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.collapseAllGroups();
+					}
+					if (args.command === 'cleargroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel(this.dataset, 'myfile');
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
 				},
 			},
 			draggableGrouping: {
@@ -242,7 +306,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_admission_no',
 											formatter: (g) => {
-												return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+												return `${g.value} <span style="color:green"> (${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -261,7 +325,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_full_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -280,7 +344,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_class_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -299,7 +363,7 @@ export class CollectionReportComponent implements OnInit {
 											getter: 'invoice_created_date',
 											formatter: (g) => {
 												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 												} else {
 													return `${''}`;
 												}
@@ -322,7 +386,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'fp_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -443,7 +507,7 @@ export class CollectionReportComponent implements OnInit {
 								grouping: {
 									getter: 'receipt_mode_name',
 									formatter: (g) => {
-										return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
 									},
 									aggregators: this.aggregatearray,
 									aggregateCollapsed: true,
@@ -475,7 +539,7 @@ export class CollectionReportComponent implements OnInit {
 								Object.keys(this.dataset).forEach(key3 => {
 									Object.keys(this.dataset[key3]).forEach(key4 => {
 										if (key4 === key2) {
-											obj3[key4] = this.dataset.map(t => t[key4]).reduce((acc, val) => acc + val, 0);
+											obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
 										}
 									});
 								});
@@ -521,7 +585,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_admission_no',
 							formatter: (g) => {
-								return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -539,7 +603,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_full_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -555,7 +619,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_class_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -573,7 +637,7 @@ export class CollectionReportComponent implements OnInit {
 							getter: 'invoice_created_date',
 							formatter: (g) => {
 								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 								} else {
 									return `${''}`;
 								}
@@ -722,7 +786,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_admission_no',
 											formatter: (g) => {
-												return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+												return `${g.value} <span style="color:green"> (${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -740,7 +804,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_full_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -756,7 +820,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'stu_class_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -774,7 +838,7 @@ export class CollectionReportComponent implements OnInit {
 											getter: 'invoice_created_date',
 											formatter: (g) => {
 												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 												} else {
 													return `${''}`;
 												}
@@ -797,7 +861,7 @@ export class CollectionReportComponent implements OnInit {
 										grouping: {
 											getter: 'fp_name',
 											formatter: (g) => {
-												return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
 											},
 											aggregators: this.aggregatearray,
 											aggregateCollapsed: true,
@@ -867,8 +931,6 @@ export class CollectionReportComponent implements OnInit {
 											obj['bank_name'] = repoArray[Number(keys)]['bank_name'] ?
 												repoArray[Number(keys)]['bank_name'] : '-';
 											obj['total'] = tot;
-											obj['rpt_amount'] = repoArray[Number(keys)]['rpt_amount'] ?
-												Number(repoArray[Number(keys)]['rpt_amount']) : 0;
 											k++;
 										}
 									});
@@ -888,7 +950,7 @@ export class CollectionReportComponent implements OnInit {
 								grouping: {
 									getter: 'bank_name',
 									formatter: (g) => {
-										return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
 									},
 									aggregators: this.aggregatearray,
 									aggregateCollapsed: true,
@@ -906,17 +968,6 @@ export class CollectionReportComponent implements OnInit {
 								formatter: this.checkTotalFormatter,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
-							{
-								id: 'rpt_amount',
-								name: 'Reciept Amt.',
-								field: 'rpt_amount',
-								sortable: true,
-								cssClass: 'amount-report-fee',
-								width: 50,
-								filterable: true,
-								formatter: this.checkFeeFormatter,
-								groupTotalsFormatter: this.sumTotalsFormatter
-							}
 						);
 						const obj3: any = {};
 						obj3['id'] = 'footer';
@@ -939,7 +990,6 @@ export class CollectionReportComponent implements OnInit {
 							});
 						});
 						obj3['total'] = this.dataset.map(t => t['total']).reduce((acc, val) => acc + val, 0);
-						obj3['rpt_amount'] = this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
 						this.dataset.push(obj3);
 						this.aggregatearray.push(new Aggregators.Sum('total'));
@@ -981,7 +1031,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_admission_no',
 							formatter: (g) => {
-								return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -999,7 +1049,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_full_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1015,7 +1065,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_class_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1033,7 +1083,7 @@ export class CollectionReportComponent implements OnInit {
 							getter: 'invoice_created_date',
 							formatter: (g) => {
 								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count} items)</span>`;
+									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
 								} else {
 									return `${''}`;
 								}
@@ -1053,7 +1103,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'fp_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1097,7 +1147,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'route_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1116,7 +1166,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stoppages_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1135,7 +1185,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'slab_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1222,7 +1272,7 @@ export class CollectionReportComponent implements OnInit {
 						name: 'SNo.',
 						field: 'srno',
 						sortable: true,
-						width: 1
+						maxWidth: 40
 					},
 					{
 						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
@@ -1231,7 +1281,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_admission_no',
 							formatter: (g) => {
-								return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1249,7 +1299,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_full_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1265,7 +1315,7 @@ export class CollectionReportComponent implements OnInit {
 						grouping: {
 							getter: 'stu_class_name',
 							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
@@ -1442,9 +1492,11 @@ export class CollectionReportComponent implements OnInit {
 								});
 							}
 							this.dataset.push(obj);
-							this.tableFlag = true;
 							index++;
 						}
+						this.tableFlag = true;
+						setTimeout(() => this.groupByClass(), 2);
+						this.selectedGroupingFields.push('stu_class_name');
 					} else {
 						this.tableFlag = true;
 					}
@@ -1474,6 +1526,8 @@ export class CollectionReportComponent implements OnInit {
 	}
 	onGroupChanged(groups: Grouping[]) {
 		console.log(groups);
+		console.log(this.selectedGroupingFields);
+		console.log(this.draggableGroupingPlugin);
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
 			// update all Group By select dropdown
 			this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
@@ -1499,7 +1553,6 @@ export class CollectionReportComponent implements OnInit {
 				this.openDialogReceipt(item['receipt_id'], false);
 			}
 		}
-		console.log(e.target);
 		if (e.target.className === 'invoice-span-mfr2') {
 			const inv_id = Number(e.target.innerHTML);
 			this.renderDialog(inv_id, false);
@@ -1749,27 +1802,39 @@ export class CollectionReportComponent implements OnInit {
 	}
 	exportAsPDF() {
 		const headerData: any[] = [];
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		if (this.reportType === 'headwise') {
+			reportType = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'classwise') {
+			reportType = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'modewise') {
+			reportType = new TitleCasePipe().transform('mode wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'routewise') {
+			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'mfr') {
+			reportType = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
+		}
 		let rowData: any[] = [];
 		for (const item of this.columnDefinitions) {
 			headerData.push(item.name);
 		}
-		console.log(this.dataviewObj);
-		console.log(this.dataviewObj.getGrouping());
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(this.dataset).forEach(key => {
 				const arr: any[] = [];
 				Object.keys(this.dataset[key]).forEach(key2 => {
-					if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
-						arr.push(this.dataset[key][key2]);
-					} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
-						arr.push(this.dataset[key][key2][0]);
+					console.log(key2);
+					if (key2 !== 'id' && key2 !== 'receipt_id') {
+						arr.push(this.common.htmlToText(this.dataset[key][key2]));
 					}
 				});
 				rowData.push(arr);
 			});
+			console.log(headerData);
+			console.log(rowData);
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -1778,13 +1843,14 @@ export class CollectionReportComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 40,
+					fontSize: 60,
 				},
 				useCss: true,
 				theme: 'striped'
 			});
 			doc.autoTable({
 				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
+				margin: { top: 20 },
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -1793,7 +1859,23 @@ export class CollectionReportComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 25,
+					fontSize: 45,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				head: [[reportType]],
+				margin: { top: 20 },
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 60,
 				},
 				useCss: true,
 				theme: 'striped'
@@ -1801,8 +1883,8 @@ export class CollectionReportComponent implements OnInit {
 			doc.autoTable({
 				head: [headerData],
 				body: rowData,
-				startY: 60,
-				margin: { top: 40 },
+				startY: 120,
+				margin: { top: 80 },
 				didDrawPage: function (data) {
 					doc.setFontSize(22);
 					doc.setTextColor(0);
@@ -1813,18 +1895,21 @@ export class CollectionReportComponent implements OnInit {
 					fontStyle: 'bold',
 					fillColor: '#bebebe',
 					textColor: 'black',
+					fontSize: 26,
 				},
 				alternateRowStyles: {
 					fillColor: '#f3f3f3'
 				},
 				useCss: true,
 				styles: {
-					fontSize: 22,
+					fontSize: 35,
 					cellWidth: 'auto',
+					textColor: 'black',
+					lineColor: 'red',
 				},
 				theme: 'striped'
 			});
-			doc.save('table.pdf');
+			doc.save(reportType + '_' + new Date() + '.pdf');
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
@@ -1881,11 +1966,44 @@ export class CollectionReportComponent implements OnInit {
 						fontSize: 22,
 						cellWidth: 4,
 					},
-					theme: 'striped'
+					theme: 'striped',
 				});
 			}
 			doc.save('table.pdf');
 			console.log(rowData);
 		}
+	}
+	groupByClass() {
+		this.dataviewObj.setGrouping({
+			getter: 'stu_class_name',
+			formatter: (g) => {
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+			},
+			aggregators: this.aggregatearray,
+			aggregateCollapsed: true,
+			collapsed: false,
+		});
+	}
+	exportToExcel(json: any[], excelFileName: string): void {
+		const rowData: any[] = [];
+		Object.keys(json).forEach(key => {
+			const obj: any = {};
+			Object.keys(json[key]).forEach(key2 => {
+				if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
+					obj[key2] = json[key][key2];
+				} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
+					obj[key2] = json[key][key2];
+				}
+			});
+			rowData.push(obj);
+		});
+		console.log(rowData);
+		console.log(XLSX.utils.json_to_sheet(rowData));
+		const fileName = 'test.xlsx';
+		const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowData);
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'test');
+
+		XLSX.writeFile(wb, fileName);
 	}
 }
