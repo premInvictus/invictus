@@ -80,6 +80,9 @@ export class TransportReportComponent implements OnInit {
 			},
 			{
 				report_type: 'routewiseout', report_name: 'Route Wise Outstanding'
+			},
+			{
+				report_type: 'routeslabstopwise', report_name: 'Route Wise '
 			});
 	}
 	getSchool() {
@@ -936,6 +939,131 @@ export class TransportReportComponent implements OnInit {
 					this.tableFlag = true;
 				}
 			});
+		} else if (this.reportType === 'routeslabstopwise') {
+			const collectionJSON: any = {
+				'from_date': value.from_date,
+				'to_date': value.to_date,
+				'pageSize': value.pageSize,
+				'pageIndex': value.pageIndex,
+				'routeId': value.fee_value,
+				'slabId': value.hidden_value4,
+				'stoppageId': value.hidden_value5,
+				'admission_no': value.admission_no,
+				'studentName': value.au_full_name,
+				'login_id': value.login_id,
+				'orderBy': value.orderBy,
+				'downloadAll': true
+			};
+			this.columnDefinitions = [
+				{
+					id: 'route_name',
+					name: 'Route',
+					field: 'route_name',
+					sortable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+					filterable: true,
+					grouping: {
+						getter: 'route_name',
+						formatter: (g) => {
+							return `${g.value}  <span style="color:green">(${g.count})</span>`;
+						},
+						comparer: (a, b) => {
+							// (optional) comparer is helpful to sort the grouped data
+							// code below will sort the grouped value in ascending order
+							return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+						},
+						aggregators: this.aggregatearray,
+						aggregateCollapsed: true,
+						collapsed: false,
+					},
+				},
+				{
+					id: 'stoppages_name',
+					name: 'Stoppage',
+					field: 'stoppages_name',
+					sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+					grouping: {
+						getter: 'stoppages_name',
+						formatter: (g) => {
+							return `${g.value}  <span style="color:green">(${g.count})</span>`;
+						},
+						aggregators: this.aggregatearray,
+						aggregateCollapsed: true,
+						collapsed: false,
+					},
+					groupTotalsFormatter: this.srnTotalsFormatter
+				},
+				{
+					id: 'slab_name',
+					name: 'Slab',
+					field: 'slab_name',
+					sortable: true,
+					filterable: true,
+					filterSearchType: FieldType.string,
+					filter: { model: Filters.compoundInput },
+					grouping: {
+						getter: 'slab_name',
+						formatter: (g) => {
+							return `${g.value}  <span style="color:green">(${g.count})</span>`;
+						},
+						aggregators: this.aggregatearray,
+						aggregateCollapsed: true,
+						collapsed: false,
+					},
+				},
+				{
+					id: 'slab_amount',
+					name: 'Slab Amount.',
+					field: 'slab_amount',
+					sortable: true,
+					filterSearchType: FieldType.number,
+					filter: { model: Filters.compoundInputNumber },
+					filterable: true,
+					width: 1,
+					cssClass: 'amount-report-fee',
+					groupTotalsFormatter: this.sumTotalsFormatter,
+					formatter: this.checkFeeFormatter
+				}];
+			this.feeService.getRouteWiseTransportReport(collectionJSON).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
+					repoArray = result.data.reportData[0];
+					this.totalRecords = Number(result.data.totalRecords);
+					let index = 0;
+					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+					for (const item of repoArray) {
+						let j = 0;
+						for (const titem of item['stoppages_data']) {
+							const obj: any = {};
+							obj['id'] = item['tr_route_name'] + item['tr_id'] + titem['tsp_id'] +
+								titem['tsp_name'];
+							obj['route_name'] = item['tr_route_name'];
+							obj['stoppages_name'] = titem['tsp_name'];
+							obj['slab_name'] = titem['slab_data'][0]['ts_name'];
+							obj['slab_amount'] = titem['slab_data'][0]['ts_cost'] ? Number(titem['slab_data'][0]['ts_cost']) : 0;
+							j++;
+							this.dataset.push(obj);
+						}
+						index++;
+					}
+					this.aggregatearray.push(new Aggregators.Sum('slab_amount'));
+					const obj3: any = {};
+					obj3['id'] = 'footer';
+					obj3['route_name'] = this.common.htmlToText('<b>Grand Total</b>');
+					obj3['stoppages_name'] = '';
+					obj3['slab_name'] = '';
+					obj3['slab_amount'] = this.dataset.map(t => t['slab_amount']).reduce((acc, val) => acc + val, 0);
+					this.dataset.push(obj3);
+					this.tableFlag = true;
+					setTimeout(() => this.groupByRoute(), 2);
+				} else {
+					this.tableFlag = false;
+				}
+			});
 		}
 	}
 	clearGroupsAndSelects() {
@@ -992,8 +1120,6 @@ export class TransportReportComponent implements OnInit {
 		console.log(args);
 	}
 	sumTotalsFormatter(totals, columnDef) {
-		console.log(totals);
-		console.log(columnDef);
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null) {
 			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
@@ -1142,6 +1268,11 @@ export class TransportReportComponent implements OnInit {
 				this.valueLabel = 'Routes';
 				this.getRoutes();
 			} else if ($event.value === 'transportAlloted') {
+				this.valueLabel = 'Routes';
+				this.getRoutes();
+				this.getRoutes();
+				this.getSlabs();
+			} else if ($event.value === 'routeslabstopwise') {
 				this.valueLabel = 'Routes';
 				this.getRoutes();
 				this.getRoutes();
