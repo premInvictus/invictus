@@ -1,0 +1,72 @@
+<div class="modal-custom-cotainer">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Create Invoice</span><span
+          class="float-right margin-top-5"><i (click)="closeDialog()"
+            class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<div class="row margin-top-20">
+  <div class="col-4">
+    <span><b>Enrollment No: </b></span>
+    <span>{{data.invoiceDetails.stu_admission_no}}</span>
+  </div>
+  <div class="col-4">
+    <span><b>Name: </b></span>
+    <span>{{data.invoiceDetails.stu_full_name}}</span>
+  </div>
+  <div class="col-4">
+    <span><b>Class-Section: </b></span>
+    <span>{{data.invoiceDetails.stu_class_name}}</span>
+  </div>
+</div>
+<form [formGroup]="invoiceCreationForm" novalidate>
+  <div class="row margin-top-10">
+    <div class="col-12 remove-col-padding">
+      <div class="row margin-top-15">
+        <div class="col-12 col-sm-6 col-lg-4">
+          <mat-form-field appearance="outline" class="form-field-220">
+            <mat-label>Fee Period</mat-label>
+            <mat-select placeholder="Fee Period" multiple formControlName="inv_fm_id" required>
+              <mat-option *ngFor="let item of feePeriod" [value]="item.fm_id">{{item.fm_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <mat-form-field appearance="outline" class="form-field-220">
+            <mat-label>Invoice Date</mat-label>
+            <input matInput [matDatepicker]="picker" placeholder="Invoice Date" formControlName="inv_invoice_date"
+              required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <mat-form-field appearance="outline" class="form-field-220">
+            <mat-label>Due Date</mat-label>
+            <input matInput [matDatepicker]="picker1" placeholder="Due Date" formControlName="inv_due_date" required>
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center">
+            <div class="inline-flex margin-left-15">
+              <button *ngIf="commonAPIService.isExistUserAccessMenu('359')" mat-raised-button
+                class="btn-primary  btn-width-164 btn-success" (click)="insertInvoice()">Generate Invoice</button>
+              <button mat-raised-button style="margin-left: 15px; background-color: #e11022" class="print-btn"
+                (click)="invoiceCreationForm.reset()">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

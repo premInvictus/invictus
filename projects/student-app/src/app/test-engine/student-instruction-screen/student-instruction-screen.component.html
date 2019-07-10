@@ -46,7 +46,8 @@
             <form [formGroup]="instruction_form" novalidate>
                 <mat-checkbox class="test-init-checkbox" name="instruction-screen" id="instruction-screen"
                     formControlName="ins_read" (click)="insRead()"></mat-checkbox>
-                <label for="instruction-screen"> I have read and understood the instructions. I agree that in case of
+                <label class="lable-item" for="instruction-screen"> I have read and understood the instructions. I agree
+                    that in case of
                     not adhering to the exam instructions
                     I will be disqualified for giving exam.</label>
             </form>
