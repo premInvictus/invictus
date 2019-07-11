@@ -51,82 +51,86 @@
             <div class="row" *ngIf="tableCollection">
                <div class="col-lg-12 col-mobile-view-add-ques">
                   <div class="example-container table-box-main">
-                     <div class="example-header table-filter ">
-                        <mat-form-field>
+                     <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2">
+                        <mat-form-field class="form-field">
                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                            <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp;
                            </span>
                         </mat-form-field>
                      </div>
-                     <mat-table class="specific-table table-100 table-qpaper-table-padding" #table
-                        [dataSource]="dataSource" matSort>
-                        <!-- Position Column -->
-                        <ng-container matColumnDef="position">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header>S No. </mat-header-cell>
-                           <mat-cell *matCellDef="let item"> {{item.position}} </mat-cell>
-                        </ng-container>
-                        <!-- Template Name Column -->
-                        <ng-container matColumnDef="name">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header> Template Name </mat-header-cell>
-                           <mat-cell *matCellDef="let item"> {{item.name}} </mat-cell>
-                        </ng-container>
-                        <!-- Class-Section Column -->
-                        <ng-container matColumnDef="class">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header> Class </mat-header-cell>
-                           <mat-cell *matCellDef="let item"> {{item.class}} - {{item.section}}</mat-cell>
-                        </ng-container>
-                        <!-- Subject Column -->
-                        <ng-container matColumnDef="subject">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header> Subject </mat-header-cell>
-                           <mat-cell *matCellDef="let item"> {{item.subject}} </mat-cell>
-                        </ng-container>
-                        <!-- Topic Column -->
-                        <ng-container matColumnDef="topic">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header> Topic </mat-header-cell>
-                           <mat-cell *matCellDef="let item">
-                              <div class="" [innerHTML]="item.topic"></div>
-                           </mat-cell>
-                        </ng-container>
-                        <!-- Marks Column -->
-                        <ng-container matColumnDef="mark">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header> Marks </mat-header-cell>
-                           <mat-cell *matCellDef="let item"> {{item.mark}} </mat-cell>
-                        </ng-container>
-                        <!-- Time Alloted Column -->
-                        <ng-container matColumnDef="time">
-                           <mat-header-cell *matHeaderCellDef mat-sort-header> Time </mat-header-cell>
-                           <mat-cell *matCellDef="let item"> {{item.time}} </mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="reasons">
-                           <mat-header-cell *matHeaderCellDef>Reason to Unpublish</mat-header-cell>
-                           <mat-cell *matCellDef="let item">
-                              <div [innerHTML]="item.reasons"></div>
-                           </mat-cell>
-                        </ng-container>
-                        <!-- Action Column -->
-                        <ng-container matColumnDef="action">
-                           <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-                           <mat-cell *matCellDef="let item"> <i *ngIf="isExistUserAccessMenu('43')"
-                                 class="fa fa-thumbs-up table-publish-icon" data-toggle="tooltip" data-placement="top"
-                                 matTooltip="Publish" aria-hidden="true" (click)=publishTemplate(item.action.tp_id)></i>
-                              <i *ngIf="isExistUserAccessMenu('47')" class="fa fa-print table-print-icon"
-                                 aria-hidden="true" data-toggle="tooltip" matTooltip="print"
-                                 (click)="viewTemplate(item.action)"></i>
-                              <a *ngIf="isExistUserAccessMenu('41')" [routerLink]="['../specifictemplate']"
-                                 [queryParams]="{tp_id:item.action.tp_id}">
-                                 <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top"
-                                    matTooltip="Edit" aria-hidden="true"></i>
-                              </a>
-                              <i *ngIf="isExistUserAccessMenu('29')" class="far fa-trash-alt table-delete-icon"
-                                 data-placement="top" matTooltip="Delete" aria-hidden="true"
-                                 (click)="openModal({});deleteTemp(item.action.tp_id)"></i>
-                           </mat-cell>
-                        </ng-container>
-                        <mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="displayedColumns">
-                        </mat-header-row>
-                        <mat-row class="template-mat-row" *matRowDef="let row; columns: displayedColumns;">
-                        </mat-row>
-                     </mat-table>
+                     <div class="table-overflow">
+                        <table mat-table class="specific-table table-100 table-qpaper-table-padding" #table
+                           [dataSource]="dataSource" matSort>
+                           <!-- Position Column -->
+                           <ng-container matColumnDef="position">
+                              <th *matHeaderCellDef mat-sort-header>S No. </th>
+                              <td *matCellDef="let item"> {{item.position}} </td>
+                           </ng-container>
+                           <!-- Template Name Column -->
+                           <ng-container matColumnDef="name">
+                              <th *matHeaderCellDef mat-sort-header> Template Name </th>
+                              <td *matCellDef="let item"> {{item.name}} </td>
+                           </ng-container>
+                           <!-- Class-Section Column -->
+                           <ng-container matColumnDef="class">
+                              <th *matHeaderCellDef mat-sort-header> Class </th>
+                              <td *matCellDef="let item"> {{item.class}} - {{item.section}}</td>
+                           </ng-container>
+                           <!-- Subject Column -->
+                           <ng-container matColumnDef="subject">
+                              <th *matHeaderCellDef mat-sort-header> Subject </th>
+                              <td *matCellDef="let item"> {{item.subject}} </td>
+                           </ng-container>
+                           <!-- Topic Column -->
+                           <ng-container matColumnDef="topic">
+                              <th *matHeaderCellDef mat-sort-header> Topic </th>
+                              <td *matCellDef="let item">
+                                 <div class="" [innerHTML]="item.topic"></div>
+                              </td>
+                           </ng-container>
+                           <!-- Marks Column -->
+                           <ng-container matColumnDef="mark">
+                              <th *matHeaderCellDef mat-sort-header> Marks </th>
+                              <td *matCellDef="let item"> {{item.mark}} </td>
+                           </ng-container>
+                           <!-- Time Alloted Column -->
+                           <ng-container matColumnDef="time">
+                              <th *matHeaderCellDef mat-sort-header> Time </th>
+                              <td *matCellDef="let item"> {{item.time}} </td>
+                           </ng-container>
+                           <ng-container matColumnDef="reasons">
+                              <th *matHeaderCellDef>Reason to Unpublish</th>
+                              <td *matCellDef="let item">
+                                 <div [innerHTML]="item.reasons"></div>
+                              </td>
+                           </ng-container>
+                           <!-- Action Column -->
+                           <ng-container matColumnDef="action">
+                              <th *matHeaderCellDef> Action </th>
+                              <td *matCellDef="let item"> <i *ngIf="isExistUserAccessMenu('43')"
+                                    class="fa fa-thumbs-up table-publish-icon" data-toggle="tooltip"
+                                    data-placement="top" matTooltip="Publish" aria-hidden="true"
+                                    (click)=publishTemplate(item.action.tp_id)>&nbsp;</i>
+                                 <i *ngIf="isExistUserAccessMenu('47')" class="fa fa-print table-print-icon"
+                                    aria-hidden="true" data-toggle="tooltip" matTooltip="print"
+                                    (click)="viewTemplate(item.action)">&nbsp;</i>
+                                 <a *ngIf="isExistUserAccessMenu('41')" [routerLink]="['../specifictemplate']"
+                                    [queryParams]="{tp_id:item.action.tp_id}">
+                                    <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top"
+                                       matTooltip="Edit" aria-hidden="true">&nbsp;</i>
+                                 </a>
+                                 <i *ngIf="isExistUserAccessMenu('29')" class="far fa-trash-alt table-delete-icon"
+                                    data-placement="top" matTooltip="Delete" aria-hidden="true"
+                                    (click)="openModal({});deleteTemp(item.action.tp_id)"></i>
+                              </td>
+                           </ng-container>
+                           <tr mat-header-row class="top_header template-mat-header-row"
+                              *matHeaderRowDef="displayedColumns">
+                           </tr>
+                           <tr mat-row class="template-mat-row" *matRowDef="let row; columns: displayedColumns;">
+                           </tr>
+                        </table>
+                     </div>
                      <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]"
                         [showFirstLastButtons]="true">
                      </mat-paginator>

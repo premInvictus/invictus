@@ -91,88 +91,90 @@
                         <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
                      </mat-form-field>
                   </div>
-                  <table mat-table class="specific-table" #table [dataSource]="reviewdatasource" matSort
-                     (matSortChange)="sortDataEssay($event)">
-                     <!-- Position Column -->
-                     <ng-container matColumnDef="position">
-                        <th *matHeaderCellDef mat-sort-header="position">S No. </th>
-                        <td *matCellDef="let item">Q-{{item.position}} </td>
-                     </ng-container>
-                     <!-- Questions Name Column -->
-                     <ng-container matColumnDef="question">
-                        <th *matHeaderCellDef mat-sort-header="question"> Questions</th>
-                        <td *matCellDef="let item">
-                           <div class="imgClassExpress" [MathJax]="item.question"></div>
-                        </td>
-                     </ng-container>
-                     <!-- Answer Name Column -->
-                     <ng-container matColumnDef="answer">
-                        <th *matHeaderCellDef mat-sort-header="answer">Answer</th>
-                        <td *matCellDef="let item">
-                           <div matTooltip="{{htmlToText(item.showHover)}}" class="imgClassExpress"
-                              [MathJax]="item.answer">
-                           </div>
-                        </td>
-                     </ng-container>
-                     <!-- Class Name Column -->
-                     <ng-container matColumnDef="class">
-                        <th *matHeaderCellDef>Class</th>
-                        <td *matCellDef="let item">{{item.class}}</td>
-                     </ng-container>
-                     <!-- Explanation Column -->
-                     <ng-container matColumnDef="explanations">
-                        <th *matHeaderCellDef mat-sort-header>Explanation</th>
-                        <td *matCellDef="let item">{{htmlToText(item.explanations)}}</td>
-                     </ng-container>
-                     <!-- Topic Column -->
-                     <ng-container matColumnDef="topic">
-                        <th *matHeaderCellDef>Topic</th>
-                        <td *matCellDef="let item">{{item.topic}}</td>
-                     </ng-container>
-                     <!--Sub topic Column -->
-                     <ng-container matColumnDef="subtopic">
-                        <th *matHeaderCellDef>Sutopic</th>
-                        <td *matCellDef="let item">{{item.subtopic}}</td>
-                     </ng-container>
-                     <!--S Column -->
-                     <ng-container matColumnDef="details">
-                        <th *matHeaderCellDef>Details</th>
-                        <td *matCellDef="let item">
-                           <div [innerHTML]="item.details"></div>
-                        </td>
-                     </ng-container>
-                     <!-- Action Column -->
-                     <ng-container matColumnDef="reasons">
-                        <th *matHeaderCellDef>Reason to Unpublish</th>
-                        <td *matCellDef="let item">
-                           <div [innerHTML]="item.reasons"></div>
-                        </td>
-                     </ng-container>
-                     <ng-container matColumnDef="action">
-                        <th *matHeaderCellDef> Action </th>
-                        <td *matCellDef="let item">
-                           <span class="padding-8">
-                              <i class="far fa-thumbs-up table-publish-icon" data-toggle="tooltip" data-placement="top"
-                                 title="Publish" aria-hidden="true"
-                                 (click)="publishQuestion(item.action.qus_id)">&nbsp;</i>
-                              <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
-                                 title="Delete" aria-hidden="true"
-                                 (click)="openModal(template);deleteQus(item.action.qus_id)">&nbsp;</i>
-                              <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top"
-                                 title="Edit" aria-hidden="true" (click)="openDialog(item.action)">&nbsp;</i>
-                              <i class="fas fa-eye view-eye-icon" data-toggle="tooltip" data-placement="top"
-                                 title="View Essay" aria-hidden="true"
-                                 (click)="openEssayDetails(item.action)">&nbsp;</i>
-                              <i *ngIf="currentUser.role_id == '1'" class="far fa-thumbs-down table-unpublish-icon"
-                                 data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true"
-                                 (click)="openModalUnpublish(template);getCurrentUnpublishedQues(item.action)">&nbsp;</i>
-                           </span>
-                        </td>
-                     </ng-container>
-                     <tr mat-header-row class="top_header" *matHeaderRowDef="reviewdisplayedColumns">
-                     </tr>
-                     <tr mat-row *matRowDef="let row; columns: reviewdisplayedColumns"></tr>
-                  </table>
+                  <div class="table-overflow">
+                     <table mat-table class="specific-table" #table [dataSource]="reviewdatasource" matSort
+                        (matSortChange)="sortDataEssay($event)">
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="position">
+                           <th *matHeaderCellDef mat-sort-header="position">S No. </th>
+                           <td *matCellDef="let item">Q-{{item.position}} </td>
+                        </ng-container>
+                        <!-- Questions Name Column -->
+                        <ng-container matColumnDef="question">
+                           <th *matHeaderCellDef mat-sort-header="question"> Questions</th>
+                           <td *matCellDef="let item">
+                              <div class="imgClassExpress" [MathJax]="item.question"></div>
+                           </td>
+                        </ng-container>
+                        <!-- Answer Name Column -->
+                        <ng-container matColumnDef="answer">
+                           <th *matHeaderCellDef mat-sort-header="answer">Answer</th>
+                           <td *matCellDef="let item">
+                              <div matTooltip="{{htmlToText(item.showHover)}}" class="imgClassExpress"
+                                 [MathJax]="item.answer">
+                              </div>
+                           </td>
+                        </ng-container>
+                        <!-- Class Name Column -->
+                        <ng-container matColumnDef="class">
+                           <th *matHeaderCellDef>Class</th>
+                           <td *matCellDef="let item">{{item.class}}</td>
+                        </ng-container>
+                        <!-- Explanation Column -->
+                        <ng-container matColumnDef="explanations">
+                           <th *matHeaderCellDef mat-sort-header>Explanation</th>
+                           <td *matCellDef="let item">{{htmlToText(item.explanations)}}</td>
+                        </ng-container>
+                        <!-- Topic Column -->
+                        <ng-container matColumnDef="topic">
+                           <th *matHeaderCellDef>Topic</th>
+                           <td *matCellDef="let item">{{item.topic}}</td>
+                        </ng-container>
+                        <!--Sub topic Column -->
+                        <ng-container matColumnDef="subtopic">
+                           <th *matHeaderCellDef>Sutopic</th>
+                           <td *matCellDef="let item">{{item.subtopic}}</td>
+                        </ng-container>
+                        <!--S Column -->
+                        <ng-container matColumnDef="details">
+                           <th *matHeaderCellDef>Details</th>
+                           <td *matCellDef="let item">
+                              <div [innerHTML]="item.details"></div>
+                           </td>
+                        </ng-container>
+                        <!-- Action Column -->
+                        <ng-container matColumnDef="reasons">
+                           <th *matHeaderCellDef>Reason to Unpublish</th>
+                           <td *matCellDef="let item">
+                              <div [innerHTML]="item.reasons"></div>
+                           </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                           <th *matHeaderCellDef> Action </th>
+                           <td *matCellDef="let item">
+                              <span class="padding-8">
+                                 <i class="far fa-thumbs-up table-publish-icon" data-toggle="tooltip"
+                                    data-placement="top" title="Publish" aria-hidden="true"
+                                    (click)="publishQuestion(item.action.qus_id)">&nbsp;</i>
+                                 <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip"
+                                    data-placement="top" title="Delete" aria-hidden="true"
+                                    (click)="openModal(template);deleteQus(item.action.qus_id)">&nbsp;</i>
+                                 <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top"
+                                    title="Edit" aria-hidden="true" (click)="openDialog(item.action)">&nbsp;</i>
+                                 <i class="fas fa-eye view-eye-icon" data-toggle="tooltip" data-placement="top"
+                                    title="View Essay" aria-hidden="true"
+                                    (click)="openEssayDetails(item.action)">&nbsp;</i>
+                                 <i *ngIf="currentUser.role_id == '1'" class="far fa-thumbs-down table-unpublish-icon"
+                                    data-toggle="tooltip" data-placement="top" matTooltip="UnPublish" aria-hidden="true"
+                                    (click)="openModalUnpublish(template);getCurrentUnpublishedQues(item.action)">&nbsp;</i>
+                              </span>
+                           </td>
+                        </ng-container>
+                        <tr mat-header-row class="top_header" *matHeaderRowDef="reviewdisplayedColumns">
+                        </tr>
+                        <tr mat-row *matRowDef="let row; columns: reviewdisplayedColumns"></tr>
+                     </table>
+                  </div>
                   <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]"
                      [showFirstLastButtons]="true">
                   </mat-paginator>
