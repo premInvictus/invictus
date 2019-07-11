@@ -99,12 +99,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="custom-tr">
+                            <tr class="custom-tr" >
                                 <td class="custom-td">No. of Days</td>
-                                <td class="custom-td">{{totalDay}}</td>
-                                <td class="custom-td">{{totalDay - holiday}}</td>
-                                <td class="custom-td">{{nonTeachingDay}}</td> 
-                                <td class="custom-td">{{teachingDay}}</td>
+                                <td class="custom-td">{{periodWiseArray.totalDay}}</td>
+                                <td class="custom-td">{{periodWiseArray.workingDay}}</td>
+                                <td class="custom-td">{{periodWiseArray.NonTeachingDay}}</td> 
+                                <td class="custom-td">{{periodWiseArray.teachingDay}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -149,7 +149,7 @@
                 </div>
                 <div class="col-3"></div>
             </div>
-            <div class="row margin-top-15">
+            <div class="row margin-top-15"> 
                 <div class="col-3"></div>
                 <div class="col-6 ">
                     <span class="font-size-20 font-bold">Subject Wise Summary</span>
