@@ -535,7 +535,7 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <div class="table-oveflowx">
+                                    <div class="table-overflowx">
                                     <table mat-table class="table-150 specific-table ques-review-table" #table
                                        [dataSource]="matchdataSource" matSort>
                                        <!-- Position Column -->
@@ -833,81 +833,81 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table" #table
+                                    <table mat-table class="specific-table table-100 ques-review-table" #table
                                        [dataSource]="singledataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="position">
-                                          <mat-header-cell *matHeaderCellDef>S No. </mat-header-cell>
-                                          <mat-cell *matCellDef="let item"> Q-{{item.position}} </mat-cell>
+                                          <th mat-header-cell *matHeaderCellDef>S No. </th>
+                                          <td mat-cell *matCellDef="let item"> Q-{{item.position}} </td>
                                        </ng-container>
                                        <!-- Questions Name Column -->
                                        <ng-container matColumnDef="question">
-                                          <mat-header-cell *matHeaderCellDef> Questions</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Questions</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.question"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Options Name Column -->
                                        <ng-container matColumnDef="answer">
-                                          <mat-header-cell *matHeaderCellDef>Answer</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef>Answer</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.answer"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Explanations Name Column -->
                                        <ng-container matColumnDef="explanations">
-                                          <mat-header-cell *matHeaderCellDef>Explanations</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef>Explanations</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [MathJax]="item.explanations"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Skill Type Name Column -->
                                        <ng-container matColumnDef="skillType">
-                                          <mat-header-cell *matHeaderCellDef> SkillType</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> SkillType</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.skillType"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Topic Name Column -->
                                        <ng-container matColumnDef="topic">
-                                          <mat-header-cell *matHeaderCellDef> Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Topic</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.topic"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Sub Topic Name Column -->
                                        <ng-container matColumnDef="subtopic">
-                                          <mat-header-cell *matHeaderCellDef> Sub-Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Sub-Topic</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.subtopic"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Suggested Marks  Column -->
                                        <ng-container matColumnDef="suggestedMarks">
-                                          <mat-header-cell *matHeaderCellDef> Suggested Marks</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Suggested Marks</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.suggestedMarks"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Reference  Column -->
                                        <ng-container matColumnDef="reference">
-                                          <mat-header-cell *matHeaderCellDef> Reference</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Reference</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.reference"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Action  Column -->
                                        <ng-container matColumnDef="action">
-                                          <mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Action</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <i class="fa fa-refresh" aria-hidden="true"
                                                 (click)="replaceOneQuestionSingleInteger(item.action)"></i>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
-                                       <mat-header-row class="top_header" *matHeaderRowDef="singledisplayedColumns">
-                                       </mat-header-row>
-                                       <mat-row *matRowDef="let row; columns: singledisplayedColumns;"></mat-row>
-                                    </mat-table>
+                                       <tr mat-header-row class="top_header" *matHeaderRowDef="singledisplayedColumns">
+                                       </tr>
+                                       <tr mat-row *matRowDef="let row; columns: singledisplayedColumns;"></tr>
+                                    </table>
                                     <mat-paginator #paginator16 [pageSize]="10"
                                        (page)="pageEvent=getPageEvent16($event)" [pageSizeOptions]="[10,20,30]"
                                        [showFirstLastButtons]="true" [length]="lengthArraySingleInteger[i]">
@@ -928,81 +928,81 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table" #table
+                                    <table mat-table class="specific-table table-100 ques-review-table" #table
                                        [dataSource]="doubledataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="position">
-                                          <mat-header-cell *matHeaderCellDef>S No. </mat-header-cell>
-                                          <mat-cell *matCellDef="let item"> Q-{{item.position}} </mat-cell>
+                                          <th mat-header-cell *matHeaderCellDef>S No. </th>
+                                          <td mat-cell *matCellDef="let item"> Q-{{item.position}} </td>
                                        </ng-container>
                                        <!-- Questions Name Column -->
                                        <ng-container matColumnDef="question">
-                                          <mat-header-cell *matHeaderCellDef> Questions</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Questions</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.question"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Options Name Column -->
                                        <ng-container matColumnDef="answer">
-                                          <mat-header-cell *matHeaderCellDef>Answer</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef>Answer</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.answer"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Explanations Name Column -->
                                        <ng-container matColumnDef="explanations">
-                                          <mat-header-cell *matHeaderCellDef>Explanations</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef>Explanations</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [MathJax]="item.explanations"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Skill Type Name Column -->
                                        <ng-container matColumnDef="skillType">
-                                          <mat-header-cell *matHeaderCellDef> SkillType</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> SkillType</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.skillType"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Topic Name Column -->
                                        <ng-container matColumnDef="topic">
-                                          <mat-header-cell *matHeaderCellDef> Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Topic</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.topic"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Sub Topic Name Column -->
                                        <ng-container matColumnDef="subtopic">
-                                          <mat-header-cell *matHeaderCellDef> Sub-Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Sub-Topic</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.subtopic"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Suggested Marks  Column -->
                                        <ng-container matColumnDef="suggestedMarks">
-                                          <mat-header-cell *matHeaderCellDef> Suggested Marks</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Suggested Marks</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.suggestedMarks"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Reference  Column -->
                                        <ng-container matColumnDef="reference">
-                                          <mat-header-cell *matHeaderCellDef> Reference</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Reference</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.reference"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Action  Column -->
                                        <ng-container matColumnDef="action">
-                                          <mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Action</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <i class="fa fa-refresh" aria-hidden="true"
                                                 (click)="replaceOneQuestionDoubleInteger(item.action)"></i>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
-                                       <mat-header-row class="top_header" *matHeaderRowDef="doubledisplayedColumns">
-                                       </mat-header-row>
-                                       <mat-row *matRowDef="let row; columns: doubledisplayedColumns;"></mat-row>
-                                    </mat-table>
+                                       <tr mat-header-row class="top_header" *matHeaderRowDef="doubledisplayedColumns">
+                                       </tr>
+                                       <tr mat-row *matRowDef="let row; columns: doubledisplayedColumns;"></tr>
+                                    </table>
                                     <mat-paginator #paginator17 [pageSize]="10"
                                        (page)="pageEvent=getPageEvent17($event)" [pageSizeOptions]="[10,20,30]"
                                        [showFirstLastButtons]="true" [length]="lengthArrayDoubleInteger[i]">
@@ -1023,81 +1023,81 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table" #table
+                                    <table mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="filldataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
-                                          <mat-header-cell *matHeaderCellDef>S No. </mat-header-cell>
-                                          <mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </mat-cell>
+                                          <th mat-header-cell *matHeaderCellDef>S No. </th>
+                                          <td mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </td>
                                        </ng-container>
                                        <!-- Questions Name Column -->
                                        <ng-container matColumnDef="questionSub">
-                                          <mat-header-cell *matHeaderCellDef> Questions</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Questions</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.questionSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Options Name Column -->
                                        <ng-container matColumnDef="answerSub">
-                                          <mat-header-cell *matHeaderCellDef>Answer</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef>Answer</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.answerSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Explanations Name Column -->
                                        <ng-container matColumnDef="explanationsSub">
-                                          <mat-header-cell *matHeaderCellDef>Explanations</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef>Explanations</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [MathJax]="item.explanationsSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Skill Type Name Column -->
                                        <ng-container matColumnDef="skillTypeSub">
-                                          <mat-header-cell *matHeaderCellDef> SkillType</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> SkillType</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.skillTypeSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Topic Name Column -->
                                        <ng-container matColumnDef="topicSub">
-                                          <mat-header-cell *matHeaderCellDef> Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Topic</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.topicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Sub Topic Name Column -->
                                        <ng-container matColumnDef="subtopicSub">
-                                          <mat-header-cell *matHeaderCellDef> Sub-Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Sub-Topic</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.subtopicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Suggested Marks  Column -->
                                        <ng-container matColumnDef="suggestedMarksSub">
-                                          <mat-header-cell *matHeaderCellDef> Suggested Marks</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Suggested Marks</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.suggestedMarksSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Reference  Column -->
                                        <ng-container matColumnDef="referenceSub">
-                                          <mat-header-cell *matHeaderCellDef> Reference</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Reference</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.referenceSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Action  Column -->
                                        <ng-container matColumnDef="actionSub">
-                                          <mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Action</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <i class="fa fa-refresh" aria-hidden="true"
                                                 (click)="replaceOneQuestionFill(item.actionSub)"></i>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
-                                       <mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
-                                       </mat-header-row>
-                                       <mat-row *matRowDef="let row; columns: subdisplayedColumns;"></mat-row>
-                                    </mat-table>
+                                       <tr mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
+                                       </tr>
+                                       <tr mat-row *matRowDef="let row; columns: subdisplayedColumns;"></tr>
+                                    </table>
                                     <mat-paginator #paginator6 [pageSize]="10" (page)="pageEvent=getPageEvent6($event)"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
                                        [length]="lengthArrayFill[i]">
@@ -1117,81 +1117,81 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table" #table
+                                    <table mat-table class="specific-table table-100 ques-review-table" #table
                                        [dataSource]="identifydataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
-                                          <mat-header-cell *matHeaderCellDef>S No. </mat-header-cell>
-                                          <mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </mat-cell>
+                                          <th mat-header-cell *matHeaderCellDef>S No. </th>
+                                          <td mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </td>
                                        </ng-container>
                                        <!-- Questions Name Column -->
                                        <ng-container matColumnDef="questionSub">
-                                          <mat-header-cell *matHeaderCellDef> Questions</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Questions</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.questionSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Options Name Column -->
                                        <ng-container matColumnDef="answerSub">
-                                          <mat-header-cell *matHeaderCellDef>Answer</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef>Answer</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.answerSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Explanations Name Column -->
                                        <ng-container matColumnDef="explanationsSub">
-                                          <mat-header-cell *matHeaderCellDef>Explanations</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef>Explanations</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [MathJax]="item.explanationsSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Skill Type Name Column -->
                                        <ng-container matColumnDef="skillTypeSub">
-                                          <mat-header-cell *matHeaderCellDef> SkillType</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> SkillType</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.skillTypeSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Topic Name Column -->
                                        <ng-container matColumnDef="topicSub">
-                                          <mat-header-cell *matHeaderCellDef> Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Topic</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.topicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Sub Topic Name Column -->
                                        <ng-container matColumnDef="subtopicSub">
-                                          <mat-header-cell *matHeaderCellDef> Sub-Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Sub-Topic</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.subtopicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Suggested Marks  Column -->
                                        <ng-container matColumnDef="suggestedMarksSub">
-                                          <mat-header-cell *matHeaderCellDef> Suggested Marks</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Suggested Marks</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.suggestedMarksSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Reference  Column -->
                                        <ng-container matColumnDef="referenceSub">
-                                          <mat-header-cell *matHeaderCellDef> Reference</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Reference</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.referenceSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Action  Column -->
                                        <ng-container matColumnDef="actionSub">
-                                          <mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Action</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <i class="fa fa-refresh" aria-hidden="true"
                                                 (click)="replaceOneQuestionIdentify(item.actionSub)"></i>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
-                                       <mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
-                                       </mat-header-row>
-                                       <mat-row *matRowDef="let row; columns: subdisplayedColumns;"></mat-row>
-                                    </mat-table>
+                                       <tr mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
+                                       </tr>
+                                       <tr mat-row *matRowDef="let row; columns: subdisplayedColumns;"></tr>
+                                    </table>
                                     <mat-paginator #paginator7 [pageSize]="10" (page)="pageEvent=getPageEvent7($event)"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
                                        [length]="lengthArrayIdentify[i]"></mat-paginator>
@@ -1210,81 +1210,81 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table" #table
+                                    <table mat-table class="specific-table table-100 ques-review-table" #table
                                        [dataSource]="onedataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
-                                          <mat-header-cell *matHeaderCellDef>S No. </mat-header-cell>
-                                          <mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </mat-cell>
+                                          <th mat-header-cell *matHeaderCellDef>S No. </th>
+                                          <td mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </td>
                                        </ng-container>
                                        <!-- Questions Name Column -->
                                        <ng-container matColumnDef="questionSub">
-                                          <mat-header-cell *matHeaderCellDef> Questions</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Questions</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.questionSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Options Name Column -->
                                        <ng-container matColumnDef="answerSub">
-                                          <mat-header-cell *matHeaderCellDef>Answer</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef>Answer</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.answerSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Explanations Name Column -->
                                        <ng-container matColumnDef="explanationsSub">
-                                          <mat-header-cell *matHeaderCellDef>Explanations</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef>Explanations</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [MathJax]="item.explanationsSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Skill Type Name Column -->
                                        <ng-container matColumnDef="skillTypeSub">
-                                          <mat-header-cell *matHeaderCellDef> SkillType</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> SkillType</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.skillTypeSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Topic Name Column -->
                                        <ng-container matColumnDef="topicSub">
-                                          <mat-header-cell *matHeaderCellDef> Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Topic</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.topicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Sub Topic Name Column -->
                                        <ng-container matColumnDef="subtopicSub">
-                                          <mat-header-cell *matHeaderCellDef> Sub-Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Sub-Topic</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.subtopicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Suggested Marks  Column -->
                                        <ng-container matColumnDef="suggestedMarksSub">
-                                          <mat-header-cell *matHeaderCellDef> Suggested Marks</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Suggested Marks</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.suggestedMarksSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Reference  Column -->
                                        <ng-container matColumnDef="referenceSub">
-                                          <mat-header-cell *matHeaderCellDef> Reference</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Reference</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.referenceSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Action  Column -->
                                        <ng-container matColumnDef="actionSub">
-                                          <mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Action</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <i class="fa fa-refresh" aria-hidden="true"
                                                 (click)="replaceOneQuestionOne(item.actionSub)"></i>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
-                                       <mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
-                                       </mat-header-row>
-                                       <mat-row *matRowDef="let row; columns: subdisplayedColumns;"></mat-row>
-                                    </mat-table>
+                                       <tr mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
+                                       </tr>
+                                       <tr mat-row *matRowDef="let row; columns: subdisplayedColumns;"></tr>
+                                    </table>
                                     <mat-paginator #paginator8 [pageSize]="10" (page)="pageEvent=getPageEvent8($event)"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
                                        [length]="lengthArrayOne[i]">
@@ -1304,81 +1304,81 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table" #table
+                                    <table mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="veryshortdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
-                                          <mat-header-cell *matHeaderCellDef>S No. </mat-header-cell>
-                                          <mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </mat-cell>
+                                          <th mat-header-cell *matHeaderCellDef>S No. </th>
+                                          <th mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </th>
                                        </ng-container>
                                        <!-- Questions Name Column -->
                                        <ng-container matColumnDef="questionSub">
-                                          <mat-header-cell *matHeaderCellDef> Questions</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Questions</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.questionSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Options Name Column -->
                                        <ng-container matColumnDef="answerSub">
-                                          <mat-header-cell *matHeaderCellDef>Answer</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef>Answer</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.answerSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Explanations Name Column -->
                                        <ng-container matColumnDef="explanationsSub">
-                                          <mat-header-cell *matHeaderCellDef>Explanations</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef>Explanations</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [MathJax]="item.explanationsSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Skill Type Name Column -->
                                        <ng-container matColumnDef="skillTypeSub">
-                                          <mat-header-cell *matHeaderCellDef> SkillType</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> SkillType</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.skillTypeSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Topic Name Column -->
                                        <ng-container matColumnDef="topicSub">
-                                          <mat-header-cell *matHeaderCellDef> Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Topic</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.topicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Sub Topic Name Column -->
                                        <ng-container matColumnDef="subtopicSub">
-                                          <mat-header-cell *matHeaderCellDef> Sub-Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Sub-Topic</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.subtopicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Suggested Marks  Column -->
                                        <ng-container matColumnDef="suggestedMarksSub">
-                                          <mat-header-cell *matHeaderCellDef> Suggested Marks</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Suggested Marks</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.suggestedMarksSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Reference  Column -->
                                        <ng-container matColumnDef="referenceSub">
-                                          <mat-header-cell *matHeaderCellDef> Reference</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Reference</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.referenceSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Action  Column -->
                                        <ng-container matColumnDef="actionSub">
-                                          <mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Action</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <i class="fa fa-refresh" aria-hidden="true"
                                                 (click)="replaceOneQuestionVeryShort(item.actionSub)"></i>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
-                                       <mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
-                                       </mat-header-row>
-                                       <mat-row *matRowDef="let row; columns: subdisplayedColumns;"></mat-row>
-                                    </mat-table>
+                                       <tr mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
+                                       </tr>
+                                       <tr mat-row *matRowDef="let row; columns: subdisplayedColumns;"></tr>
+                                    </table>
                                     <mat-paginator #paginator9 [pageSize]="10" (page)="pageEvent=getPageEvent9($event)"
                                        [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true"
                                        [length]="lengthArrayVeryShort[i]"></mat-paginator>
@@ -1397,81 +1397,81 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table" #table
+                                    <table mat-table class="specific-table ques-review-table" #table
                                        [dataSource]="shortdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
-                                          <mat-header-cell *matHeaderCellDef>S No. </mat-header-cell>
-                                          <mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </mat-cell>
+                                          <th mat-header-cell *matHeaderCellDef>S No. </th>
+                                          <td mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </td>
                                        </ng-container>
                                        <!-- Questions Name Column -->
                                        <ng-container matColumnDef="questionSub">
-                                          <mat-header-cell *matHeaderCellDef> Questions</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Questions</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.questionSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Options Name Column -->
                                        <ng-container matColumnDef="answerSub">
-                                          <mat-header-cell *matHeaderCellDef>Answer</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef>Answer</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.answerSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Explanations Name Column -->
                                        <ng-container matColumnDef="explanationsSub">
-                                          <mat-header-cell *matHeaderCellDef>Explanations</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef>Explanations</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [MathJax]="item.explanationsSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Skill Type Name Column -->
                                        <ng-container matColumnDef="skillTypeSub">
-                                          <mat-header-cell *matHeaderCellDef> SkillType</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> SkillType</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.skillTypeSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Topic Name Column -->
                                        <ng-container matColumnDef="topicSub">
-                                          <mat-header-cell *matHeaderCellDef> Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Topic</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.topicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Sub Topic Name Column -->
                                        <ng-container matColumnDef="subtopicSub">
-                                          <mat-header-cell *matHeaderCellDef> Sub-Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Sub-Topic</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.subtopicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Suggested Marks  Column -->
                                        <ng-container matColumnDef="suggestedMarksSub">
-                                          <mat-header-cell *matHeaderCellDef> Suggested Marks</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Suggested Marks</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.suggestedMarksSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Reference  Column -->
                                        <ng-container matColumnDef="referenceSub">
-                                          <mat-header-cell *matHeaderCellDef> Reference</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Reference</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.referenceSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Action  Column -->
                                        <ng-container matColumnDef="actionSub">
-                                          <mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Action</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <i class="fa fa-refresh" aria-hidden="true"
                                                 (click)="replaceOneQuestionShort(item.actionSub)"></i>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
-                                       <mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
-                                       </mat-header-row>
-                                       <mat-row *matRowDef="let row; columns: subdisplayedColumns;"></mat-row>
-                                    </mat-table>
+                                       <tr mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
+                                       </tr>
+                                       <tr mat-row *matRowDef="let row; columns: subdisplayedColumns;"></tr>
+                                    </table>
                                     <mat-paginator #paginator10 [pageSize]="10"
                                        (page)="pageEvent=getPageEvent10($event)" [pageSizeOptions]="[10,20,30]"
                                        [showFirstLastButtons]="true" [length]="lengthArrayShort[i]">
@@ -1491,81 +1491,81 @@
                                           </span>
                                        </mat-form-field>
                                     </div>
-                                    <mat-table class="specific-table ques-review-table" #table
+                                    <table mat-table class=" table-100 specific-table ques-review-table" #table
                                        [dataSource]="longdataSource" matSort>
                                        <!-- Position Column -->
                                        <ng-container matColumnDef="positionSub">
-                                          <mat-header-cell *matHeaderCellDef>S No. </mat-header-cell>
-                                          <mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </mat-cell>
+                                          <th mat-header-cell *matHeaderCellDef>S No. </th>
+                                          <td mat-cell *matCellDef="let item"> Q-{{item.positionSub}} </td>
                                        </ng-container>
                                        <!-- Questions Name Column -->
                                        <ng-container matColumnDef="questionSub">
-                                          <mat-header-cell *matHeaderCellDef> Questions</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Questions</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.questionSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Options Name Column -->
                                        <ng-container matColumnDef="answerSub">
-                                          <mat-header-cell *matHeaderCellDef>Answer</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <td mat-header-cell *matHeaderCellDef>Answer</td>
+                                          <th mat-cell *matCellDef="let item">
                                              <div class="imgClassExpress" [MathJax]="item.answerSub"></div>
-                                          </mat-cell>
+                                          </th>
                                        </ng-container>
                                        <!-- Explanations Name Column -->
                                        <ng-container matColumnDef="explanationsSub">
-                                          <mat-header-cell *matHeaderCellDef>Explanations</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <td mat-header-cell *matHeaderCellDef>Explanations</td>
+                                          <th mat-cell *matCellDef="let item" class="padding">
                                              <div [MathJax]="item.explanationsSub"></div>
-                                          </mat-cell>
+                                          </th>
                                        </ng-container>
                                        <!-- Skill Type Name Column -->
                                        <ng-container matColumnDef="skillTypeSub">
-                                          <mat-header-cell *matHeaderCellDef> SkillType</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> SkillType</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.skillTypeSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Topic Name Column -->
                                        <ng-container matColumnDef="topicSub">
-                                          <mat-header-cell *matHeaderCellDef> Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item">
+                                          <th mat-header-cell *matHeaderCellDef> Topic</th>
+                                          <td mat-cell *matCellDef="let item">
                                              <div [innerHTML]="item.topicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Sub Topic Name Column -->
                                        <ng-container matColumnDef="subtopicSub">
-                                          <mat-header-cell *matHeaderCellDef> Sub-Topic</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Sub-Topic</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.subtopicSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!-- Suggested Marks  Column -->
                                        <ng-container matColumnDef="suggestedMarksSub">
-                                          <mat-header-cell *matHeaderCellDef> Suggested Marks</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Suggested Marks</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.suggestedMarksSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Reference  Column -->
                                        <ng-container matColumnDef="referenceSub">
-                                          <mat-header-cell *matHeaderCellDef> Reference</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Reference</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <div [innerHTML]="item.referenceSub"></div>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
                                        <!--Action  Column -->
                                        <ng-container matColumnDef="actionSub">
-                                          <mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
-                                          <mat-cell *matCellDef="let item" class="padding">
+                                          <th mat-header-cell *matHeaderCellDef> Action</th>
+                                          <td mat-cell *matCellDef="let item" class="padding">
                                              <i class="fa fa-refresh" aria-hidden="true"
                                                 (click)="replaceOneQuestionLong(item.actionSub)"></i>
-                                          </mat-cell>
+                                          </td>
                                        </ng-container>
-                                       <mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
-                                       </mat-header-row>
-                                       <mat-row *matRowDef="let row; columns: subdisplayedColumns;"></mat-row>
-                                    </mat-table>
+                                       <tr mat-header-row class="top_header" *matHeaderRowDef="subdisplayedColumns">
+                                       </tr>
+                                       <tr mat-row *matRowDef="let row; columns: subdisplayedColumns;"></tr>
+                                    </table>
                                     <mat-paginator #paginator11 [pageSize]="10"
                                        (page)="pageEvent=getPageEvent11($event)" [pageSizeOptions]="[10,20,30]"
                                        [showFirstLastButtons]="true" [length]="lengthArrayLong[i]">
