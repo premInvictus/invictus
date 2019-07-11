@@ -43,7 +43,10 @@ export class CreateNewTeacherComponent implements OnInit {
 	classArray: any[];
 	sectionArray: any[];
 	schoolinfoArray: any = {};
-	url: any;
+	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+	checkAvailable = false;
+	prefixStatusicon: string;
+	prefixStatus: any;
 	cs_relationArray: any[] = [];
 	userDetails: any = {};
 	homeUrl: string;
@@ -91,6 +94,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.buildForm();
 		this.login_id = this.route.snapshot.queryParams['login_id'];
 		if (this.route.snapshot.queryParams['login_id']) {
 			const param: any = {};
@@ -105,14 +109,23 @@ export class CreateNewTeacherComponent implements OnInit {
 							const csrelationdetail = this.userDetails.cs_relations[0];
 							this.Teacher_Form.patchValue({
 								au_login_id: this.userDetails.au_login_id,
-								au_full_name: this.userDetails.au_full_name, au_mobile: this.userDetails.au_mobile,
-								au_email: this.userDetails.au_email, au_profileimage: this.userDetails.au_profileimage,
+								au_full_name: this.userDetails.au_full_name,
+								au_username: this.userDetails.au_username,
+								au_mobile: this.userDetails.au_mobile,
+								au_email: this.userDetails.au_email,
+								au_profileimage: this.userDetails.au_profileimage,
 							}),
-							// tslint:disable-next-line:max-line-length
-							this.Cs_relation_Form.patchValue({uc_class_id: csrelationdetail.uc_class_id, uc_sec_id: csrelationdetail.uc_sec_id, uc_sub_id: csrelationdetail.uc_sub_id, uc_department: csrelationdetail.uc_department, uc_designation: csrelationdetail.uc_designation
+								// tslint:disable-next-line:max-line-length
+								this.Cs_relation_Form.patchValue({
+									uc_class_id: csrelationdetail.uc_class_id,
+									uc_sec_id: csrelationdetail.uc_sec_id,
+									uc_sub_id: csrelationdetail.uc_sub_id,
+									uc_department: csrelationdetail.uc_department,
+									uc_designation: csrelationdetail.uc_designation
 
-							});
-							document.getElementById('teacherImage').setAttribute('src', this.hosturl + this.userDetails.au_profileimage);
+								});
+							this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
+								'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
 							this.cs_relationArray = this.userDetails.cs_relations;
 							for (const item of this.cs_relationArray) {
 								this.designation = item.uc_designation;
@@ -126,7 +139,6 @@ export class CreateNewTeacherComponent implements OnInit {
 		}
 		this.getProjectList();
 		this.homeUrl = this.breadCrumbService.getUrl();
-		this.buildForm();
 		this.getSchool();
 		this.getClass();
 		this.getState();
@@ -169,7 +181,7 @@ export class CreateNewTeacherComponent implements OnInit {
 
 	getAssignedModuleList() {
 		this.assignedModuleArray = [];
-		this.userAccessMenuService.getUserAccessMenu({ login_id: this.login_id , role_id: '3'}).subscribe(
+		this.userAccessMenuService.getUserAccessMenu({ login_id: this.login_id, role_id: '3' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.assignedModuleArray = result.data;
@@ -188,6 +200,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		this.Teacher_Form = this.fbuild.group({
 			au_profileimage: new FormControl({}),
 			au_full_name: '',
+			au_username: '',
 			au_mobile: '',
 			au_email: '',
 			au_role_id: '3',
@@ -259,6 +272,9 @@ export class CreateNewTeacherComponent implements OnInit {
 		this.insertdata = true;
 		if (!this.Teacher_Form.value.au_full_name) {
 			this.notif.showSuccessErrorMessage('Name is required', 'error');
+		}
+		if (!this.Teacher_Form.value.au_username) {
+			this.notif.showSuccessErrorMessage('Username is required', 'error');
 		}
 
 		if (!this.Teacher_Form.value.au_mobile) {
@@ -419,6 +435,7 @@ export class CreateNewTeacherComponent implements OnInit {
 			const newTeacherFormData = new FormData();
 			newTeacherFormData.append('au_profileimage', this.file1);
 			newTeacherFormData.append('au_full_name', this.Teacher_Form.value.au_full_name);
+			newTeacherFormData.append('au_username', this.Teacher_Form.value.au_username);
 			newTeacherFormData.append('au_mobile', this.Teacher_Form.value.au_mobile);
 			newTeacherFormData.append('au_email', this.Teacher_Form.value.au_email);
 			newTeacherFormData.append('au_role_id', '3');
@@ -449,6 +466,7 @@ export class CreateNewTeacherComponent implements OnInit {
 			}
 			newTeacherFormData.append('au_login_id', this.Teacher_Form.value.au_login_id);
 			newTeacherFormData.append('au_full_name', this.Teacher_Form.value.au_full_name);
+			newTeacherFormData.append('au_username', this.Teacher_Form.value.au_username);
 			newTeacherFormData.append('au_mobile', this.Teacher_Form.value.au_mobile);
 			newTeacherFormData.append('au_email', this.Teacher_Form.value.au_email);
 			newTeacherFormData.append('au_role_id', '3');
@@ -496,8 +514,26 @@ export class CreateNewTeacherComponent implements OnInit {
 	}
 
 	saveief() {
-		this.Teacher_Form.patchValue({au_full_name: '', au_email: '', au_mobile: ''}),
-		// tslint:disable-next-line:max-line-length
-		this.Cs_relation_Form.patchValue({uc_class_id: '', uc_sec_id: '', uc_sub_id: '', au_profileimage: '', uc_designation: '', uc_department: ''});
+		this.Teacher_Form.patchValue({ au_full_name: '', au_email: '', au_mobile: '' }),
+			// tslint:disable-next-line:max-line-length
+			this.Cs_relation_Form.patchValue({ uc_class_id: '', uc_sec_id: '', uc_sub_id: '', au_profileimage: '', uc_designation: '', uc_department: '' });
+	}
+	checkUserExists(value) {
+		if (value) {
+			this.qelementService.checkUserStatus({ user_name: value }).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.checkAvailable = true;
+					this.prefixStatusicon = 'fas fa-check text-success';
+					this.prefixStatus = res.data;
+				} else {
+					this.checkAvailable = false;
+					this.prefixStatusicon = 'fas fa-times text-danger';
+					this.prefixStatus = res.data;
+				}
+			});
+		}
+	}
+	hideIcon() {
+		this.prefixStatus = '';
 	}
 }
