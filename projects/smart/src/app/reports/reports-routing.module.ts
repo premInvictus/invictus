@@ -9,6 +9,7 @@ import { NegativeReportComponent } from '../reports/negative-report/negative-rep
 import { TeacherLogEntryComponent } from './teacher-log-entry/teacher-log-entry.component';
 import { PastAssignmentComponent } from './past-assignment/past-assignment.component';
 import { LogEntryReportComponent } from './log-entry-report/log-entry-report.component';
+import { PastAssignmentsReportComponent } from './past-assignments-report/past-assignments-report.component';
 const routes: Routes = [
 	{
 		path: 'view-syllabus', component: ViewSyllabusComponent
@@ -35,7 +36,7 @@ const routes: Routes = [
 		path: 'log-entry-report', component: LogEntryReportComponent
 	},
 	{
-		path: 'past-assignment', component: PastAssignmentComponent
+		path: 'past-assignments-report', component: PastAssignmentsReportComponent
 	}
 ];
 

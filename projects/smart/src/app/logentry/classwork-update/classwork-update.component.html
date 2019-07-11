@@ -70,7 +70,7 @@
               <div class="col-1">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Category</mat-label>
-                  <mat-select formControlName="cw_ctr_id" (selectionChange)="reviewElementCategory(i,$event)">
+                  <mat-select formControlName="cw_ctr_id" (selectionChange)="reviewElementCategory(i,$event);disableSt(i,$event) ">
                       <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of categoryArray" [value]="item.ctr_id">{{item.ctr_name | capitalize}}</mat-option>
                   </mat-select>
@@ -111,7 +111,7 @@
               <div class="col-3">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>SubTopic</mat-label>
-                  <mat-select formControlName="cw_st_id" (selectionChange)="reviewElementSubtopic(i,$event)">
+                  <mat-select formControlName="cw_st_id" (selectionChange)="reviewElementSubtopic(i,$event)" [disabled]="disableSubtopicArray[i]">
                       <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of subtopicArray[i]" [value]="item.st_id">{{item.st_name | capitalize}}</mat-option>
                   </mat-select>

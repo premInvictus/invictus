@@ -16,6 +16,7 @@ import { LogEntryReportComponent } from './log-entry-report/log-entry-report.com
 import { TeacherWiseComponent } from './teacher-wise/teacher-wise.component';
 import { ClassWiseComponent } from './class-wise/class-wise.component';
 import { SubjectWiseComponent } from './subject-wise/subject-wise.component';
+import { PastAssignmentsReportComponent } from './past-assignments-report/past-assignments-report.component';
 
 @NgModule({
 	imports: [

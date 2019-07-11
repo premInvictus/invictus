@@ -1,3 +1,195 @@
-<p>
-  student-fee-detail works!
-</p>
+<div class="fee-container-box__grey">
+  <div class="row">
+    <div class="col-12 remove-col-padding">
+      <mat-card class="card-top-title__container">
+        <div class="row">
+          <div class="col-6">
+            <h1 class="remove-bottom-margin font-size-24">Fee Detail</h1>
+          </div>
+          <div class="col-6 text-right">
+            <div class="vertical-align-sub inline-flex">
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <!-- <mat-tab-group (selectedTabChange)="changeTab($event)">
+    <mat-tab> -->
+      <!-- <ng-template mat-tab-label>
+        <div>
+          <span>Fee Invoices</span>
+        </div>
+      </ng-template> -->
+      <div class="row margin-top-20">
+        <div class="col-12 remove-col-padding ">
+          <div class="row margin-top-20 ">
+            <div class="col-12 remove-col-padding">
+              <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
+                <ng-container matColumnDef="srno">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr. No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                </ng-container>
+                <ng-container matColumnDef="invoiceno">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice No </th>
+                  <td mat-cell *matCellDef="let element">{{element.invoiceno}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="feeperiod">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Period </th>
+                  <td mat-cell *matCellDef="let element"> {{element.feeperiod}} </td>
+                </ng-container>
+                <ng-container matColumnDef="invoicedate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.invoicedate | date: 'd-MMM-y'}} </td>
+                </ng-container>
+                <ng-container matColumnDef="duedate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.duedate | date: 'd-MMM-y'}} </td>
+                </ng-container>
+                <ng-container matColumnDef="feedue">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Due </th>
+                  <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                  <td mat-cell *matCellDef="let element" [style.color]="element.statuscolor">
+                    {{element.status | titlecase}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> Action </th>
+                  <td mat-cell *matCellDef="let element" class="tab-display-flex">
+                    <span *ngIf="element.status == 'unpaid'">
+                      <i class="fas fa-file-pdf" (click)="downloadInvoice(element.inv_id)" style="cursor:pointer" title="Download Invoice"></i>
+                      &nbsp;&nbsp;
+                      <!-- <button mat-raised-button class="make-pay-btn" (click)="">Make Payment</button> -->
+                      <i class="fa fa-credit-card" (click)="orderPayment(element)" style="cursor:pointer" title="Make Payment"></i>
+                      
+                    </span>
+                    <span *ngIf="element.status == 'paid'">
+                      <i class="fas fa-file-pdf" (click)="downloadReceipt(element.rpt_id)" style="cursor:pointer" title="Download Receipt"></i>
+                    </span>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+              </table>
+
+              <table class="table-100 text-center" style="margin-top:5px;">
+                <tr *ngIf="INVOICE_ELEMENT.length == 0">
+                  <td colspan="8">No Record Found</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    <!-- </mat-tab> -->
+    <!-- <mat-tab>
+      <ng-template mat-tab-label>
+        <div>
+          <span>Fee Ledger</span>
+        </div>
+      </ng-template>
+      <div class="row">
+        <div class="col-12 remove-col-padding">
+          <mat-card class="card-top-title__container card-height-677 card-height-795">
+            <div class="row margin-bottom-10">
+              <div class="col-6 remove-col-padding-left">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div>
+                  <div class="table-fee-ledger-child">
+                    <table id="fee_ledger" #table mat-table [dataSource]="ledgerDataSource"
+                      class="text-center table-100">
+                      <ng-container matColumnDef="srno">
+                        <th mat-header-cell *matHeaderCellDef>Sr No. </th>
+                        <td mat-cell *matCellDef="let item"> {{item.srno}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                      </ng-container>
+                      <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef> Date </th>
+                        <td mat-cell *matCellDef="let item"> {{item.date}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                      </ng-container>
+                      <ng-container matColumnDef="invoiceno">
+                        <th mat-header-cell *matHeaderCellDef> Invoice No. </th>
+                        <td mat-cell *matCellDef="let item">
+                          <span *ngIf="item.action.flgr_invoice_type === 'I' && item.invoiceno != '0'"
+                            class="pointer font-bold font-skyblue font-underline">
+                            <a>I-#{{item.invoiceno}}</a>
+                          </span>
+                          <span *ngIf="item.action.flgr_invoice_type === 'R'  && item.invoiceno != '0'"
+                            class="pointer font-bold font-skyblue font-underline">
+                            <a>R-#{{item.invoiceno}}</a>
+                          </span>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                      </ng-container>
+                      <ng-container matColumnDef="feeperiod">
+                        <th mat-header-cell *matHeaderCellDef> Fee Period </th>
+                        <td mat-cell *matCellDef="let item" style="text-align: left !important;padding-left: 0.5%;">
+                          {{item.feeperiod}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                      </ng-container>
+                      <ng-container matColumnDef="particular">
+                        <th mat-header-cell *matHeaderCellDef> Particulars </th>
+                        <td mat-cell *matCellDef="let item" style="text-align: left !important;padding-left: 0.5%;">
+                          {{item.particular}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                      </ng-container>
+                      <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef> Fee Due (<span><i class="fas fa-rupee-sign"></i></span>)
+                        </th>
+                        <td mat-cell *matCellDef="let item"> {{item.amount | number}} </td>
+                        <td mat-footer-cell *matFooterCellDef> {{footerRecord.feeduetotal | number}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="concession">
+                        <th mat-header-cell *matHeaderCellDef> Concession (<span><i
+                              class="fas fa-rupee-sign"></i></span>) </th>
+                        <td mat-cell *matCellDef="let item"> {{item.concession | number}} </td>
+                        <td mat-footer-cell *matFooterCellDef> {{footerRecord.concessiontotal | number}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="reciept">
+                        <th mat-header-cell *matHeaderCellDef> Receipt (<span><i class="fas fa-rupee-sign"></i></span>)
+                        </th>
+                        <td mat-cell *matCellDef="let item"> {{item.reciept | number}} </td>
+                        <td mat-footer-cell *matFooterCellDef> {{footerRecord.receipttotal | number}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="balance">
+                        <th mat-header-cell *matHeaderCellDef> Balance
+                          <span style="float:right; padding-right: 10px;"><img style="cursor: pointer"
+                              src="/assets/images/xml.svg" (click)="exportAsExcel()"
+                              matTooltip="Export as excel"></span>
+                        </th>
+                        <td mat-cell *matCellDef="let item"> {{item.balance | number}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedLedgerColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedLedgerColumns;"></tr>
+                      <tr mat-footer-row *matFooterRowDef="displayedLedgerColumns;"
+                        [hidden]="FEE_LEDGER_ELEMENT.length == 0">
+                      </tr>
+                    </table>
+                    <table class="table-100 text-center" style="margin-top:5px;">
+                      <tr *ngIf="FEE_LEDGER_ELEMENT.length == 0">
+                        <td colspan="8">No Record Found</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab> -->
+  <!-- </mat-tab-group> -->
+</div>
+<app-payment-order-modal #paymentOrderModel [orderMessage]="orderMessage" (orderOk)="makePayment($event)"></app-payment-order-modal>

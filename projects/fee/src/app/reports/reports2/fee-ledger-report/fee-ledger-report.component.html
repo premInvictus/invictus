@@ -24,7 +24,7 @@
   <div class="col-12">
   </div>
 </div>
-<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag">
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0">
   <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
     [dataset]="dataset" gridHeight="800" (onAngularGridCreated)="angularGridReady($event)"
     (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"

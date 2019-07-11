@@ -32,6 +32,7 @@ export class ClassworkUpdateComponent implements OnInit {
 	entry_date = new Date();
 	noDataFlag = true;
 	isTeacher = false;
+	disableSubtopicArray: any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -68,6 +69,7 @@ export class ClassworkUpdateComponent implements OnInit {
 				this.noOfPeriods = result.data.no_of_period;
 				for (let i = 0; i < this.noOfPeriods; i++) {
 					this.addPeriods(i + 1, this.teacherId);
+					this.disableSubtopicArray[i] = false;
 				}
 				this.generateReviewArray();
 			}
@@ -104,11 +106,25 @@ export class ClassworkUpdateComponent implements OnInit {
 			cw_class_id: ['', Validators.required],
 			cw_sec_id: '',
 			cw_topic_id: ['', Validators.required],
-			cw_st_id: ['', Validators.required],
+			cw_st_id: '',
 			cw_assignment_desc: '',
 			cw_entry_date: '',
 			cw_attachment: []
 		}));
+	}
+	disableSt(index, event) {
+		const eachPeriodFG: any = this.Periods.controls[index];
+		if (event.value === '2' || event.value === '3') {
+			eachPeriodFG.controls['cw_st_id'].clearValidators(Validators.required);
+			this.disableSubtopicArray[index] = true;
+			console.log(eachPeriodFG.controls);
+			eachPeriodFG.patchValue({
+				cw_st_id: '0'
+			});
+		} else {
+			eachPeriodFG.controls['cw_st_id'].setValidators(Validators.required);
+			this.disableSubtopicArray[index] = false;
+		}
 	}
 
 	reviewElementSubject(index, event) {

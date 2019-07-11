@@ -17,6 +17,7 @@ export class EditClassworkModalComponent implements OnInit {
 	subtopicArray: any[] = [];
 	categoryArray: any[] = [];
 	teacherId;
+	disableSubtop = false;
 
 	constructor(
 		private dialogRef: MatDialogRef<EditClassworkModalComponent>,
@@ -50,9 +51,22 @@ export class EditClassworkModalComponent implements OnInit {
 				cw_st_id: this.data.cw_st_id,
 			});
 			console.log(this.editclassworkform.value);
+			if (this.data.cw_ctr_id === '2' || this.data.cw_ctr_id === '3') {
+				this.disableSubtop = true;
+			}
 			return resolve();
 		});
 
+	}
+	disableSt(event) {
+		if (event.value === '2' || event.value === '3') {
+			this.disableSubtop = true;
+			this.editclassworkform.patchValue({
+				cw_st_id: '0'
+			});
+		} else {
+			this.disableSubtop = false;
+		}
 	}
 
 	getSubjectByTeacherId() {
@@ -162,8 +176,8 @@ export class EditClassworkModalComponent implements OnInit {
 				}
 			});
 		} else {
-      this.commonAPIService.showSuccessErrorMessage('Please select required field', 'success');
-    }
+			this.commonAPIService.showSuccessErrorMessage('Please select required field', 'success');
+		}
 
 
 	}

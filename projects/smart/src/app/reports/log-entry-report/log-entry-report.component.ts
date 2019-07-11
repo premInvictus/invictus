@@ -22,6 +22,8 @@ export class LogEntryReportComponent implements OnInit {
 	toMin = new Date();
 	currentTabIndex = 0;
 	isTeacher = false;
+	session: any;
+	currentSession: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -39,6 +41,8 @@ export class LogEntryReportComponent implements OnInit {
 				teacher_id: this.currentUser.login_id
 			});
 		}
+		this.session = JSON.parse(localStorage.getItem('session'));
+		this.getSession();
 		this.getClass();
 		this.getSubject();
 	}
@@ -55,6 +59,17 @@ export class LogEntryReportComponent implements OnInit {
 	}
 	setMinTo(event) {
 		this.toMin = event.value;
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				result.data.forEach(element => {
+					if (this.session.ses_id === element.ses_id) {
+						this.currentSession = element;
+					}
+				});
+			}
+		})
 	}
 	getTeacherInfo(event) {
 		console.log(event.target.value);

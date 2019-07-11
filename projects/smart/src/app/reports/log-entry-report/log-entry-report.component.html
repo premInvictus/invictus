@@ -64,7 +64,7 @@
           <span class="font-size-16 font-bold">Date Range :</span><span class="font-light font-size-16"> {{this.paramForm.value.from | date:'dd-MMM-yyyy'}} to
               {{this.paramForm.value.to | date:'dd-MMM-yyyy'}}</span>
           <span class="margin-left-10 ver-line-divider"></span>
-          <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16"> 2019-20</span>
+          <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16"> {{currentSession?.ses_name}}</span>
           <span class="font-size-16 font-bold">
             <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline"
               *ngIf="currentTabIndex == 0">
