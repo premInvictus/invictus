@@ -72,7 +72,7 @@
                       <div class="row">
                         <div class="col-3 fin-tab-col-25">
                           <div class="float-right">
-                            <span>
+                            <span class="text-capitalize">
                               {{examDetail.qp_name}}
                             </span>
                           </div>
@@ -666,99 +666,99 @@
                       </button>
                     </div>
                   </div>
-                  <div class="col-lg-3">
-                    <div class="big-screen">
-                      <div class="test-question-number-box table-box">
-                        <div class="row">
-                          <div class="col-lg-12">
-                            <div class="test-time-counter">
-                              <div class="text-center">
-                                <span>Time Left :
-                                  <span> {{timers}} </span>
-                                </span>
-                              </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="big-screen">
+                    <div class="test-question-number-box table-box">
+                      <div class="row">
+                        <div class="col-lg-12">
+                          <div class="test-time-counter">
+                            <div class="text-center">
+                              <span>Time Left :
+                                <span> {{timers}} </span>
+                              </span>
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col-lg-12 test-button-section-title">
-                            <div>
-                              <div class="text-center">
-                                <span>Question List</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="question-test-box">
-                          <div class="row">
-                            <div class="col-lg-12 remove-col-modal-padding">
-                              <mat-accordion>
-                                <mat-expansion-panel class="bookmark-expansion-panel bookmark-expansion-panel-decorator"
-                                  *ngFor="let sub of subjectArrayOfQP; first as isFirst" [expanded]="isFirst">
-                                  <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                      {{sub.subName}}
-                                    </mat-panel-title>
-                                  </mat-expansion-panel-header>
-                                  <div class="row row-margin-button">
-                                    <ng-container *ngFor="let item of questionsArray;let i=index">
-                                      <div *ngIf="item.qus_sub_id == sub.subId" class="col-2">
-                                        <div [ngStyle]="{'color':getQusColor(item.answerStatus),
-                                      'border-color':getQusColor(item.answerStatus)} " class="test-ques-button"
-                                          (click)="loadCurrentQ(i)">
-                                          <span class="test-button-value">{{("0" + (i+1)).slice(-2)}}</span>
-                                        </div>
-                                      </div>
-                                    </ng-container>
-                                  </div>
-                                  <br>
-                                </mat-expansion-panel>
-                              </mat-accordion>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-lg-12">
-                              <div class="row">
-                                <div class="col-lg-12">
-                                  <i class="fas fa-square" [style.color]="'#1ec40b'"></i>&nbsp;&nbsp;
-                                  <span>Answered</span>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-lg-12">
-                                  <i class="fas fa-square" [style.color]="'#06b7e8'"></i>&nbsp;&nbsp;
-                                  <span>Bookmarked With Answer</span>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-lg-12">
-                                  <i class="fas fa-square" [style.color]="'#6610f2'"></i>&nbsp;&nbsp;
-                                  <span>Bookmarked</span>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-lg-12">
-                                  <i class="fas fa-square" [style.color]="'#fe756d'"></i>&nbsp;&nbsp;
-                                  <span>Visited</span>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-lg-12">
-                                  <i class="fas fa-square" [style.color]="'#070707'"></i>&nbsp;&nbsp;
-                                  <span>Not Visited</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-
                       </div>
                       <div class="row">
-                        <div class="col-lg-12 text-center">
-                          <button mat-button class="test-summary-button" (click)="testSummary()">Test
-                            Summary</button>
+                        <div class="col-lg-12 test-button-section-title">
+                          <div>
+                            <div class="text-center">
+                              <span>Question List</span>
+                            </div>
+                          </div>
                         </div>
+                      </div>
+                      <div class="question-test-box">
+                        <div class="row">
+                          <div class="col-lg-12 remove-col-modal-padding">
+                            <mat-accordion>
+                              <mat-expansion-panel class="bookmark-expansion-panel bookmark-expansion-panel-decorator"
+                                *ngFor="let sub of subjectArrayOfQP; first as isFirst" [expanded]="isFirst">
+                                <mat-expansion-panel-header>
+                                  <mat-panel-title>
+                                    {{sub.subName}}
+                                  </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="row row-margin-button">
+                                  <ng-container *ngFor="let item of questionsArray;let i=index">
+                                    <div *ngIf="item.qus_sub_id == sub.subId" class="col-2">
+                                      <div [ngStyle]="{'color':getQusColor(item.answerStatus),
+                                      'border-color':getQusColor(item.answerStatus)} " class="test-ques-button"
+                                        (click)="loadCurrentQ(i)">
+                                        <span class="test-button-value">{{("0" + (i+1)).slice(-2)}}</span>
+                                      </div>
+                                    </div>
+                                  </ng-container>
+                                </div>
+                                <br>
+                              </mat-expansion-panel>
+                            </mat-accordion>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="row">
+                              <div class="col-lg-12">
+                                <i class="fas fa-square" [style.color]="'#1ec40b'"></i>&nbsp;&nbsp;
+                                <span>Answered</span>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-12">
+                                <i class="fas fa-square" [style.color]="'#06b7e8'"></i>&nbsp;&nbsp;
+                                <span>Bookmarked With Answer</span>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-12">
+                                <i class="fas fa-square" [style.color]="'#6610f2'"></i>&nbsp;&nbsp;
+                                <span>Bookmarked</span>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-12">
+                                <i class="fas fa-square" [style.color]="'#fe756d'"></i>&nbsp;&nbsp;
+                                <span>Visited</span>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-12">
+                                <i class="fas fa-square" [style.color]="'#070707'"></i>&nbsp;&nbsp;
+                                <span>Not Visited</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-12 text-center">
+                        <button mat-button class="test-summary-button" (click)="testSummary()">Test
+                          Summary</button>
                       </div>
                     </div>
                   </div>
