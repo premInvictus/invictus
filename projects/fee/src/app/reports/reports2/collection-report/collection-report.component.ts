@@ -3,7 +3,9 @@ import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
 	Filters,
-	Formatters
+	Formatters,
+	DelimiterType,
+	FileType
 } from 'angular-slickgrid';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -20,6 +22,7 @@ import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import { group } from '@angular/animations';
 @Component({
 	selector: 'app-collection-report',
 	templateUrl: './collection-report.component.html',
@@ -34,6 +37,7 @@ export class CollectionReportComponent implements OnInit {
 	gridOptions2: GridOption;
 	tableFlag = false;
 	dataset1: any[];
+	gridHeight: any;
 	dataset2: any[];
 	initgrid = false;
 	columnDefinitions: Column[] = [];
@@ -126,7 +130,15 @@ export class CollectionReportComponent implements OnInit {
 	resetValues() {
 		this.reportFilterForm.patchValue({
 			'login_id': '',
-			'orderBy': ''
+			'orderBy': '',
+			'from_date': '',
+			'to_date': '',
+			'fee_value': '',
+			'hidden_value': '',
+			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
 		});
 		this.sortResult = [];
 		this.filterResult = [];
@@ -242,6 +254,9 @@ export class CollectionReportComponent implements OnInit {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.exportToExcel(this.dataset, 'myfile');
 					}
+					if (args.command === 'export-csv') {
+						this.exportToFile('csv');
+					}
 				},
 				onColumnsChanged: (e, args) => {
 					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
@@ -251,7 +266,10 @@ export class CollectionReportComponent implements OnInit {
 				dropPlaceHolderText: 'Drop a column header here to group by the column',
 				// groupIconCssClass: 'fa fa-outdent',
 				deleteIconCssClass: 'fa fa-times',
-				onGroupChanged: (e, args) => this.onGroupChanged(args && args.groupColumns),
+				onGroupChanged: (e, args) => {
+					console.log(args);
+					this.onGroupChanged(args && args.groupColumns);
+				},
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
 		};
@@ -548,6 +566,15 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						this.dataset.push(obj3);
+						if (this.dataset.length < 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
 						this.tableFlag = true;
 					} else {
 						this.tableFlag = true;
@@ -739,6 +766,15 @@ export class CollectionReportComponent implements OnInit {
 						this.dataset.push(obj3);
 						this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
+						if (this.dataset.length < 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
 						this.tableFlag = true;
 					} else {
 						this.tableFlag = true;
@@ -996,6 +1032,15 @@ export class CollectionReportComponent implements OnInit {
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						console.log(this.columnDefinitions);
 						console.log(this.dataset);
+						if (this.dataset.length < 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
 						this.tableFlag = true;
 					} else {
 						this.tableFlag = true;
@@ -1248,6 +1293,15 @@ export class CollectionReportComponent implements OnInit {
 						this.dataset.push(obj3);
 						this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
+						if (this.dataset.length < 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
 						this.tableFlag = true;
 					} else {
 						this.tableFlag = true;
@@ -1511,6 +1565,15 @@ export class CollectionReportComponent implements OnInit {
 							index++;
 						}
 						this.aggregatearray.push(new Aggregators.Sum('stu_opening_balance'));
+						if (this.dataset.length < 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
 						this.tableFlag = true;
 						setTimeout(() => this.groupByClass(), 2);
 						this.selectedGroupingFields.push('stu_class_name');
@@ -1542,9 +1605,6 @@ export class CollectionReportComponent implements OnInit {
 		this.dataviewObj.expandAllGroups();
 	}
 	onGroupChanged(groups: Grouping[]) {
-		console.log(groups);
-		console.log(this.selectedGroupingFields);
-		console.log(this.draggableGroupingPlugin);
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
 			// update all Group By select dropdown
 			this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
@@ -1615,10 +1675,19 @@ export class CollectionReportComponent implements OnInit {
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		if (totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>') {
+		if (totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>' && !totals.group.groups && totals.group.level === 0) {
 			return '<b class="total-footer-report">Total</b>';
+		}
+		if (totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>' && totals.group.groups) {
+			if (totals.group.level === 0) {
+				return '<b class="total-footer-report">Total</b>';
+			}
 		} else {
-			return '';
+			if (totals.group.groupingKey !== '<b>Grand Total</b>') {
+				return '<b class="total-footer-report">Sub Total</b>';
+			} else {
+				return '';
+			}
 		}
 	}
 	getMFRFormatter(row, cell, value, columnDef, dataContext) {
@@ -2022,5 +2091,25 @@ export class CollectionReportComponent implements OnInit {
 		XLSX.utils.book_append_sheet(wb, ws, 'test');
 
 		XLSX.writeFile(wb, fileName);
+	}
+	exportToFile(type = 'csv') {
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		if (this.reportType === 'headwise') {
+			reportType = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'classwise') {
+			reportType = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'modewise') {
+			reportType = new TitleCasePipe().transform('mode wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'routewise') {
+			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'mfr') {
+			reportType = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
+		}
+		this.angularGrid.exportService.exportToFile({
+			delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
+			filename: reportType + '_' + new Date(),
+			format: (type === 'csv') ? FileType.csv : FileType.txt
+		});
 	}
 }

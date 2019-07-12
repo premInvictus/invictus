@@ -4,7 +4,8 @@
    <div class="col-12">
       <mat-card>
          <mat-card-title>
-            <h1 class="remove-bottom-margin font-size-24">Create User & Assign Privileges</h1>
+            <h1 class="remove-bottom-margin font-size-24">{{!updateFlag ? 'Create User & Assign Privileges' :
+                  'Update User & Assign Privileges'}}</h1>
          </mat-card-title>
       </mat-card>
    </div>
@@ -28,38 +29,40 @@
                               <div class="col-lg-6">
                                  <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>FullName</mat-label>
-                                    <input matInput formControlName="au_full_name" placeholder="FullName" required>
+                                    <input matInput formControlName="au_full_name" placeholder="FullName"
+                                       autocomplete="off" required>
                                     <mat-error *ngIf="au_full_name.hasError('required')">
                                        Full name is <strong>required</strong>
                                     </mat-error>
                                  </mat-form-field>
+                              </div>
+                              <div class="col-lg-6">
+                                 <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Username</mat-label>
+                                    <input matInput formControlName="au_username" placeholder="Username"
+                                       autocomplete="off" [value]="userDetails.au_username" [readonly]="updateFlag"
+                                       minlength="6" (blur)="checkUserExists($event.target.value)" (keyup)="hideIcon()"
+                                       required>
+                                    <mat-error *ngIf="au_full_name.hasError('required')">
+                                       Username is <strong>required of length min 6</strong>
+                                    </mat-error>
+                                 </mat-form-field>
+                                 <span *ngIf="prefixStatus && !updateFlag" style="float:left"><i
+                                       [class]="prefixStatusicon"></i> {{prefixStatus}}</span>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-6">
                                  <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Password</mat-label>
-                                    <input matInput formControlName="au_password" placeholder="Password" type="password"
-                                       required>
+                                    <input matInput formControlName="au_password" autocomplete="off"
+                                       [readonly]="updateFlag" placeholder="Password" type="password" required>
                                     <mat-error *ngIf="au_full_name.hasError('required')">
                                        Password is <strong>required</strong>
                                     </mat-error>
                                  </mat-form-field>
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Mobile Number</mat-label>
-                                    <input matInput formControlName="au_mobile" placeholder="Mobile Number" required
-                                       pattern="[0-9]*" maxlength="10">
-                                    <mat-error *ngIf="au_mobile.hasError('required')">
-                                       Mobile should be <strong>numbers</strong>
-                                    </mat-error>
-                                 </mat-form-field>
                               </div>
-                              <div class="col-lg-6  ">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Access Level</mat-label>
-                                    <mat-select placeholder="Access Level" formControlName="au_role_id" required>
-                                       <mat-option value="2">Admin</mat-option>
-                                       <mat-option *ngFor="let item of userdetailArray" [value]="item.role_id">
-                                          {{item.role_name}}
-                                       </mat-option>
-                                    </mat-select>
-                                 </mat-form-field>
+                              <div class="col-lg-6">
                                  <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Date of Birth</mat-label>
                                     <input matInput [matDatepicker]="scheduleDate" min="{{mintoday}}"
@@ -73,16 +76,29 @@
                                        DOB is <strong>required</strong>
                                     </mat-error>
                                  </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="col-lg-6">
+                                 <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Mobile Number</mat-label>
+                                    <input matInput formControlName="au_mobile" placeholder="Mobile Number" required
+                                       autocomplete="off" pattern="[0-9]*" maxlength="10">
+                                    <mat-error *ngIf="au_mobile.hasError('required')">
+                                       Mobile should be <strong>numbers</strong>
+                                    </mat-error>
+                                 </mat-form-field>
+                              </div>
+                              <div class="col-lg-6">
                                  <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Email</mat-label>
                                     <input matInput formControlName="au_email" placeholder="Email" required
-                                       pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+                                       autocomplete="off" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
                                     <mat-error *ngIf="au_email.hasError('required')">
                                        Email is <strong>required</strong>
                                     </mat-error>
                                  </mat-form-field>
                               </div>
-                              <!--priveleges-->
                            </div>
                         </div>
                      </div>
@@ -131,15 +147,15 @@
             </form>
             <div class="row">
                <div class="col-lg-12  add-question-button-collection">
-                  <button mat-raised-button class="submit-button examSetupBtn" *ngIf="!updateFlag" (click)="addUser()"
-                     [disabled]="!Cu_Form.valid">Submit</button>
-                  <button mat-raised-button class="submit-button examSetupBtn" *ngIf="updateFlag"
+                  <button mat-raised-button class="btn-primary btn-success" *ngIf="!updateFlag" (click)="addUser()"
+                     [disabled]="!(Cu_Form.valid && checkAvailable)">Submit</button>
+                  <button mat-raised-button class="btn-primary btn-success" *ngIf="updateFlag"
                      (click)="updateUser()">Update</button>
-                  <button mat-raised-button class="reset-button examSetupBtn" matTooltip="Are you sure want to reset?"
+                  <button mat-raised-button class="btn-danger btn-spacer" matTooltip="Are you sure want to reset?"
                      (click)="saveief()">Reset</button>
                   &nbsp;&nbsp;
                   <a [routerLink]="['../manage-access-user',userIdManageAccess]">
-                     <button mat-raised-button class="submit-button examSetupBtn" *ngIf="updateFlag"
+                     <button mat-raised-button class="btn-primary btn-success" *ngIf="updateFlag"
                         [disabled]="manageAccessFlag">Manage Access</button>
                   </a>
                </div>

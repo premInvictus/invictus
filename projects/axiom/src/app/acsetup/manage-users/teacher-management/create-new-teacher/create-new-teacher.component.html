@@ -3,7 +3,7 @@
    <div class="col-12">
       <mat-card>
          <mat-card-title>
-            <h1 class="remove-bottom-margin font-size-24">Create Teacher</h1>
+            <h1 class="remove-bottom-margin font-size-24">{{!updateFlag ? 'Create Teacher' : 'Update Teacher'}}</h1>
          </mat-card-title>
       </mat-card>
    </div>
@@ -22,8 +22,9 @@
                                  <div class="form-group row">
                                     <div class="image-upload">
                                        <label for="file-input">
-                                          <img class="img-fluid teacher-img" id="teacherImage" [src]="url"
-                                             style="width: 109px; height: 145px; border:1px solid #9591d8"
+                                          <img class="img-fluid teacher-img" [src]="url"
+                                             style="width: 140px; border-radius: 50% !important;
+                                             border: 1px solid rgb(149, 145, 216);"
                                              matTooltip="upload-image 109px*145px" />
                                        </label>
                                        <input id="file-input" formControlName="au_profileimage" name="file-input"
@@ -54,19 +55,25 @@
                                  <div class="row form-group">
                                     <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
                                        <mat-form-field class="form-field" appearance="outline">
+                                          <mat-label>User Name</mat-label>
+                                          <input matInput formControlName="au_username" [readonly]="updateFlag"
+                                             minlength="6" (blur)="checkUserExists($event.target.value)"
+                                             (keyup)="hideIcon()" required placeholder="User Name">
+                                          <mat-error *ngIf="au_full_name.hasError('required')">
+                                             Username is <strong>required of length min 6</strong>
+                                          </mat-error>
+                                       </mat-form-field>
+                                       <span *ngIf="prefixStatus && !updateFlag" style="float:left"><i
+                                             [class]="prefixStatusicon"></i> {{prefixStatus}}</span>
+                                    </div>
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                       <mat-form-field class="form-field" appearance="outline">
                                           <mat-label>Contact No.</mat-label>
                                           <input matInput formControlName="au_mobile" required placeholder="Contact No."
                                              maxlength="10" pattern="[0-9]*">
                                           <mat-error *ngIf="au_mobile.hasError('required')">
                                              Mobile should be <strong>numbers</strong>
                                           </mat-error>
-                                       </mat-form-field>
-                                    </div>
-                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
-                                       <mat-form-field class="form-field" appearance="outline">
-                                          <mat-label>School Code</mat-label>
-                                          <input matInput [value]="schoolinfoArray.school_prefix" readonly
-                                             placeholder="School Code">
                                        </mat-form-field>
                                     </div>
                                  </div>
@@ -170,7 +177,7 @@
                                  </div>
                                  <div class="col-md-2 col-lg-2">
                                     <div class="mt-3">
-                                       <button mat-raised-button class="submit-button" type="submit"
+                                       <button mat-raised-button class="btn-primary btn-success" type="submit"
                                           (click)="addCSToTeacher()">Add</button>
                                     </div>
                                  </div>
@@ -180,15 +187,13 @@
                      </div>
                      <div class="row" *ngIf="insertdata">
                         <div class="col-lg-12">
-                           <table class=" dialog-table-review table">
+                           <table class="table-100 text-center">
                               <thead>
-                                 <tr class="dialog-table-review-header">
-                                    <th>Teacher Name</th>
-                                    <th>Class</th>
-                                    <th>Section</th>
-                                    <th>Subject</th>
-                                    <th class="text-center">Modify</th>
-                                 </tr>
+                                 <th>Teacher Name</th>
+                                 <th>Class</th>
+                                 <th>Section</th>
+                                 <th>Subject</th>
+                                 <th class="text-center">Modify</th>
                               </thead>
                               <tbody>
                                  <tr *ngFor="let item of cs_relationArray; let i=index">
@@ -209,13 +214,13 @@
                      </div>
                      <br>
                      <div class="col-lg-6">
-                        <button mat-raised-button class="submit-button" *ngIf="!updateFlag" (click)="addUser()"
-                           [disabled]="!Cs_relation_Form.valid">Submit</button>
+                        <button mat-raised-button class="btn-primary btn-success" *ngIf="!updateFlag" (click)="addUser()"
+                           [disabled]="!(Teacher_Form.valid && Cs_relation_Form.valid && checkAvailable)">Submit</button>
                         <a [routerLink]="['../teacher-management']">
-                           <button mat-raised-button class="submit-button" matTooltip="Update Teacher"
+                           <button mat-raised-button class="btn-primary btn-success" matTooltip="Update Teacher"
                               *ngIf="updateFlag" (click)="updateUser()">Update</button>
                         </a>
-                        <button mat-raised-button class="reset-button" matTooltip="Are you sure you want to reset?"
+                        <button mat-raised-button class="btn-danger btn-spacer" matTooltip="Are you sure you want to reset?"
                            (click)="saveief()">Reset</button>
                      </div>
                   </div>

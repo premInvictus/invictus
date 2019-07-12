@@ -12,6 +12,8 @@ import { BreadCrumbService, NotificationService, UserAccessMenuService } from '.
 	styleUrls: ['./create-new-user.component.css']
 })
 export class CreateNewUserComponent implements OnInit {
+	prefixStatusicon: string;
+	prefixStatus: any;
 
 
 	constructor(
@@ -33,6 +35,7 @@ export class CreateNewUserComponent implements OnInit {
 	manageAccessFlag = true;
 	updateFlag = false;
 	mintoday: string;
+	checkAvailable = false;
 	events: string[] = [];
 
 	au_email = new FormControl('', [
@@ -54,33 +57,31 @@ export class CreateNewUserComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.buildForm();
+		const param: any = {};
 		this.login_id = this.route.snapshot.queryParams['login_id'];
-		if (this.route.snapshot.queryParams['login_id']) {
-			const param: any = {};
-			param.role_id = '2';
-			param.login_id = this.login_id;
-			this.qelementService.getUser(param).subscribe(
+		if (this.login_id) {
+			param.au_role_id = '2';
+			param.au_login_id = this.login_id;
+			this.qelementService.getEditableUser(param).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
-						if (result.data.length === 1) {
-							this.userDetails = result.data[0];
-							this.updateFlag = true;
-							this.manageAccessFlag = false;
-							this.userIdManageAccess = this.login_id;
-							this.setUserForm(this.userDetails);
-						}
-					} else {
+						this.userDetails = {};
+						this.userDetails = result.data[0];
+						this.updateFlag = true;
+						this.manageAccessFlag = false;
+						this.userIdManageAccess = this.login_id;
+						this.setUserForm(this.userDetails);
 					}
 				});
 		}
-		this.homeUrl = this.breadCrumbService.getUrl();
-		this.buildForm();
 	}
 
 	buildForm() {
 		this.Cu_Form = this.fbuild.group({
 
 			au_full_name: '',
+			au_username: '',
 			au_password: '',
 			au_mobile: '',
 			au_email: '',
@@ -111,6 +112,9 @@ export class CreateNewUserComponent implements OnInit {
 		if (!this.Cu_Form.value.au_full_name) {
 			this.notif.showSuccessErrorMessage('FullName is Required', 'error');
 		}
+		if (!this.Cu_Form.value.au_username) {
+			this.notif.showSuccessErrorMessage('Username is Required', 'error');
+		}
 		if (!this.Cu_Form.value.au_password) {
 			this.notif.showSuccessErrorMessage('Password is Required', 'error');
 		}
@@ -131,6 +135,7 @@ export class CreateNewUserComponent implements OnInit {
 		if (this.Cu_Form.valid) {
 			const newUserFormData: FormData = new FormData();
 			newUserFormData.append('au_full_name', this.Cu_Form.value.au_full_name);
+			newUserFormData.append('au_username', this.Cu_Form.value.au_username);
 			newUserFormData.append('au_email', this.Cu_Form.value.au_email);
 			newUserFormData.append('au_password', this.Cu_Form.value.au_password);
 			newUserFormData.append('au_mobile', this.Cu_Form.value.au_mobile);
@@ -182,7 +187,9 @@ export class CreateNewUserComponent implements OnInit {
 		if (!this.Cu_Form.value.au_full_name) {
 			this.notif.showSuccessErrorMessage('FullName is Required', 'error');
 		}
-
+		if (!this.Cu_Form.value.au_username) {
+			this.notif.showSuccessErrorMessage('Username is Required', 'error');
+		}
 		if (!this.Cu_Form.value.au_mobile) {
 			this.notif.showSuccessErrorMessage('Mobile Number is Required', 'error');
 		}
@@ -200,6 +207,7 @@ export class CreateNewUserComponent implements OnInit {
 			const newUserFormData = new FormData();
 			newUserFormData.append('au_login_id', this.userDetails.au_login_id);
 			newUserFormData.append('au_full_name', this.Cu_Form.value.au_full_name);
+			newUserFormData.append('au_username', this.Cu_Form.value.au_username);
 			newUserFormData.append('au_mobile', this.Cu_Form.value.au_mobile);
 			newUserFormData.append('au_email', this.Cu_Form.value.au_email);
 			newUserFormData.append('au_password', this.Cu_Form.value.au_password);
@@ -242,18 +250,42 @@ export class CreateNewUserComponent implements OnInit {
 	saveief() {
 		this.Cu_Form.reset();
 	}
-	setUserForm(value) {
-		this.Cu_Form.controls.au_full_name.setValue(value.au_full_name);
-		this.Cu_Form.controls.au_email.setValue(value.au_email);
-		this.Cu_Form.controls.au_mobile.setValue(value.au_mobile);
-		// this.Cu_Form.controls.au_password.setValue(value.au);
-		this.Cu_Form.controls.au_dob.setValue(value.au_dob);
-		this.Cu_Form.controls.au_role_id.setValue(value.au_role_id);
-		this.Cu_Form.controls.up_allow_sms.setValue(value.privileges[0].up_allow_sms === '1' ? true : false);
-		this.Cu_Form.controls.up_allow_email.setValue(value.privileges[0].up_allow_email === '1' ? true : false);
-		this.Cu_Form.controls.up_change_date.setValue(value.privileges[0].up_change_date === '1' ? true : false);
-		this.Cu_Form.controls.up_switch_tp.setValue(value.privileges[0].up_switch_tp === '1' ? true : false);
-		this.Cu_Form.controls.up_read_only.setValue(value.privileges[0].up_read_only === '1' ? true : false);
+	setUserForm(value: any) {
+		this.Cu_Form.patchValue({
+			au_full_name: value.au_full_name,
+			au_username: value.au_username,
+			au_password: value.au_password,
+			au_mobile: value.au_mobile,
+			au_email: value.au_email,
+			au_dob: value.au_dob,
+		});
+		if (value.privileges.length > 0) {
+			this.Cu_Form.patchValue({
+				up_allow_sms: value.privileges[0].up_allow_sms === '1' ? true : false,
+				up_allow_email: value.privileges[0].up_allow_email === '1' ? true : false,
+				up_change_date: value.privileges[0].up_change_date === '1' ? true : false,
+				up_switch_tp: value.privileges[0].up_switch_tp === '1' ? true : false,
+				up_read_only: value.privileges[0].up_read_only === '1' ? true : false,
+			});
+		}
+	}
+	checkUserExists(value) {
+		if (value) {
+			this.qelementService.checkUserStatus({ user_name: value }).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.checkAvailable = true;
+					this.prefixStatusicon = 'fas fa-check text-success';
+					this.prefixStatus = res.data;
+				} else {
+					this.checkAvailable = false;
+					this.prefixStatusicon = 'fas fa-times text-danger';
+					this.prefixStatus = res.data;
+				}
+			});
+		}
+	}
+	hideIcon() {
+		this.prefixStatus = '';
 	}
 
 }

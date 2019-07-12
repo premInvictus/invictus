@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { appConfig } from '../../app.config';
 import { LoaderService, NotificationService } from '../../_services/index';
@@ -98,7 +98,7 @@ export class QelementService {
 			param.sub_id = subject_id;
 		}
 		this.loaderService.startLoading();
-		return this._http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param); 
+		return this._http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param);
 	}
 	getQuestionsReview(qst_id, class_id, subject_id, topic_id, st_id, from_date, to_date) {
 		// tslint:disable-next-line:max-line-length
@@ -173,6 +173,9 @@ export class QelementService {
 
 	updateQuestionPaper(value) {
 		return this._http.put(environment.apiAxiomUrl + `/questionpaper/updateQuestionPaper`, value);
+	}
+	checkUserStatus(value) {
+		return this._http.put(environment.apiAxiomUrl + `/users/checkUserExists`, value);
 	}
 
 	getQuestionPaper(value) {
@@ -265,7 +268,7 @@ export class QelementService {
 			const formData: FormData = new FormData();
 			formData.append('uploadFile', file, file.name);
 			return this._http.post(environment.apiAxiomUrl + '/bulkupload/sectionUpload', formData)
-;
+				;
 		}
 
 	}
@@ -276,7 +279,7 @@ export class QelementService {
 			const formData: FormData = new FormData();
 			formData.append('uploadFile', file, file.name);
 			return this._http.post(environment.apiAxiomUrl + '/bulkupload/subjectUpload', formData)
-;
+				;
 		}
 
 	}
@@ -287,7 +290,7 @@ export class QelementService {
 			const formData: FormData = new FormData();
 			formData.append('uploadFile', file, file.name);
 			return this._http.post(environment.apiAxiomUrl + '/bulkupload/classUpload', formData)
-;
+				;
 		}
 
 	}
@@ -298,7 +301,7 @@ export class QelementService {
 			const formData: FormData = new FormData();
 			formData.append('uploadFile', file, file.name);
 			return this._http.post(environment.apiAxiomUrl + '/bulkupload/topicUpload', formData)
-;
+				;
 		}
 
 	}
@@ -309,7 +312,7 @@ export class QelementService {
 			const formData: FormData = new FormData();
 			formData.append('uploadFile', file, file.name);
 			return this._http.post(environment.apiAxiomUrl + '/bulkupload/subtopicUpload', formData)
-;
+				;
 		}
 	}
 	public userUpload(uploadedFile, role_id) {
@@ -320,7 +323,7 @@ export class QelementService {
 			formData.append('uploadFile', file, file.name);
 			formData.append('role_id', role_id);
 			return this._http.post(environment.apiAxiomUrl + '/bulkupload/userUpload', formData)
-;
+				;
 		}
 
 	}
@@ -339,7 +342,7 @@ export class QelementService {
 	getSpecificList(tt_id, tp_status, class_id, subject_id) {
 		this.loaderService.startLoading();
 		return this._http.post(environment.apiAxiomUrl + '/questiontemplate/getTemplate',
-		{ tt_id: tt_id, tp_status: tp_status, class_id: class_id, sub_id: subject_id });
+			{ tt_id: tt_id, tp_status: tp_status, class_id: class_id, sub_id: subject_id });
 	}
 
 
@@ -590,6 +593,10 @@ export class QelementService {
 		this.loaderService.startLoading();
 		return this._http.post(environment.apiAxiomUrl + '/users/getUser', param);
 	}
+	getEditableUser(value) {
+		this.loaderService.startLoading();
+		return this._http.post(environment.apiAxiomUrl + '/users/getUser', value);
+	}
 
 	addUser(value) {
 		this.loaderService.startLoading();
@@ -828,7 +835,7 @@ export class QelementService {
 		if (value.ess_id) {
 			param.ess_id = value.ess_id;
 			return this._http.delete(environment.apiAxiomUrl + `/essay/deleteEssay/${param.ess_id}`)
-;
+				;
 		}
 	}
 }
