@@ -17,6 +17,7 @@ import { TeacherWiseComponent } from './teacher-wise/teacher-wise.component';
 import { ClassWiseComponent } from './class-wise/class-wise.component';
 import { SubjectWiseComponent } from './subject-wise/subject-wise.component';
 import { PastAssignmentsReportComponent } from './past-assignments-report/past-assignments-report.component';
+import { RemarkProgressReportModelComponent } from './remark-progress-report-model/remark-progress-report-model.component';
 
 @NgModule({
 	imports: [
@@ -29,7 +30,7 @@ import { PastAssignmentsReportComponent } from './past-assignments-report/past-a
 	declarations: [ViewSyllabusComponent,
 		EtcReportComponent, SyllabusProgressReportComponent, ComparitiveComponent, TopicSubtopicSkippedComponent,
 		PastAssignmentsReportComponent, NegativeReportComponent, TeacherLogEntryComponent, PastAssignmentComponent,
-		LogEntryReportComponent, TeacherWiseComponent, ClassWiseComponent, SubjectWiseComponent],
+		LogEntryReportComponent, TeacherWiseComponent, ClassWiseComponent, SubjectWiseComponent, RemarkProgressReportModelComponent],
 
 })
 export class SmartReportsModule { }

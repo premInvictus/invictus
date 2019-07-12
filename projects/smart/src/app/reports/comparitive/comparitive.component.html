@@ -13,18 +13,10 @@
                             <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>From Date</mat-label>
                                 <input matInput [matDatepicker]="picker" placeholder="Choose a date"
-                                    formControlName="sc_from"  required>
+                                    formControlName="sc_from" required>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                             </mat-form-field>
-                            <!-- <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10"
-                                appearance="outline">
-                                <mat-label>To Date</mat-label>
-                                <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
-                                    formControlName="sc_to" (dateChange)="getClass()" [min]="toMin" required>
-                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                                <mat-datepicker #picker1></mat-datepicker>
-                            </mat-form-field> -->
                             <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
                                 appearance="outline">
                                 <mat-label>Class</mat-label>
@@ -77,14 +69,14 @@
                 <div class="col-8 text-right">
                     <span class="font-size-16 font-bold">Class :</span>
                     <span class="font-light font-size-16"> {{getClassName(comparitiveForm.value.syl_class_id)}} -
-                            {{getSectionName(comparitiveForm.value.syl_section_id)}}
-                        </span>
+                        {{getSectionName(comparitiveForm.value.syl_section_id)}}
+                    </span>
                     <span class="margin-left-10 ver-line-divider"></span>
                     <span class="font-size-16 font-bold">Subject :</span><span class="font-light font-size-16">
                         {{getSubjectName(comparitiveForm.value.syl_sub_id)}}</span>
                     <span class="margin-left-10 ver-line-divider"></span>
                     <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16">
-                       {{sessionArray[seesion_id.ses_id]}}</span>
+                        {{sessionArray[seesion_id.ses_id]}}</span>
                 </div>
             </div>
             <div class="row">
@@ -117,7 +109,7 @@
                                     <ng-container>
                                         <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
-                                                {{item.sd_topic_id}}</td>
+                                                {{det.sd_topic_name}}</td>
                                             <td class="custom-td" *ngIf="det.sd_ctr_id == 1">
                                                 {{det.sd_st_name}}
                                             </td>
@@ -157,17 +149,21 @@
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
                                                 {{item.total1}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 1">
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 1"
+                                                [ngStyle]="{'background-color': getcolor(det.sd_period_teacher - det.cw_period_teacher)}">
                                                 {{det.sd_period_teacher - det.cw_period_teacher}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 2">
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 2"
+                                                [ngStyle]="{'background-color': getcolor(det.sd_period_test - det.cw_period_test)}">
                                                 {{det.sd_period_test - det.cw_period_test}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 3">
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 3"
+                                                [ngStyle]="{'background-color': getcolor(det.sd_period_revision - det.cw_period_revision)}">
                                                 {{det.sd_period_revision - det.cw_period_revision}}
                                             </td>
                                             <!-- <td class="custom-td background-red">10</td> -->
-                                            <td rowspan="5" class="custom-td background-green" *ngIf="j == 0"
+                                            <td rowspan="5" class="custom-td " *ngIf="j == 0"
+                                                [ngStyle]="{'background-color': getcolor(item.total - item.total1)}"
                                                 [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
 
                                         </tr>

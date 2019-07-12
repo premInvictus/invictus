@@ -240,6 +240,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smttimetable/weekCounter', value);
 	}
+	getViewSyllabusDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getViewSyllabusDetails', value);
+	}
 	getMaxPeriod() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/setup/getMaxPeriod');
@@ -256,9 +260,21 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtreport/cwSyllabusProgessReport', value);
 	}
-	getViewSyllabusDetails(value) {
+	insertProgressReportRemarks(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getViewSyllabusDetails', value);
+		return this.http.post(environment.apiSmartUrl + '/smtreport/insertProgressReportRemarks', value);
+	}
+	updateProgressReportRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtreport/updateProgressReportRemarks', value);
+	}
+	deleteProgressReportRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtreport/deleteProgressReportRemarks', value);
+	}
+	getProgressReportRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtreport/getProgressReportRemarks', value);
 	}
 	GetHolidayDays(value) {
 		this.service.startLoading();
