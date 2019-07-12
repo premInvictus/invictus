@@ -173,7 +173,6 @@ export class SyllabusProgressReportComponent implements OnInit {
 		} else {
 			return '#dc3545a6';
 		}
-
 	}
 	addremark($event) {
 		if ($event) {
