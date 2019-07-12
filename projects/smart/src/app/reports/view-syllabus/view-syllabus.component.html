@@ -13,7 +13,7 @@
                             <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>Class</mat-label>
                                 <mat-select formControlName="syl_class_id"
-                                    (selectionChange)="getSubjectsByClass();getSectionsByClass()" required
+                                    (selectionChange)="getSubjectsByClass();getSectionsByClass();fetchSyllabusDetails()" required
                                     placeholder="Select Class">
                                     <mat-option value="">Please select</mat-option>
                                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
@@ -24,7 +24,7 @@
                             <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
                                 appearance="outline">
                                 <mat-label>Section</mat-label>
-                                <mat-select formControlName="syl_sec_id">
+                                <mat-select formControlName="syl_sec_id" (selectionChange)="fetchSyllabusDetails()">
                                     <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
                                         {{item.sec_name}}</mat-option>
                                 </mat-select>
@@ -112,7 +112,7 @@
                                                 {{item.total}}
 
                                             </td>
-                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length"> {{item.estimateDate | date:'dd MMM, yyyy'}}
                                             </td>
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
                                                 <ng-container>

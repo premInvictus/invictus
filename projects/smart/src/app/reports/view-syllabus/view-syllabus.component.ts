@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
-import { MatDialog } from '@angular/material/dialog';
+import * as moment from 'moment/moment';
 
 @Component({
 	selector: 'app-view-syllabus',
@@ -26,7 +26,6 @@ export class ViewSyllabusComponent implements OnInit {
 	currentUser: any;
 	UnpublishParam: any = {};
 	constructor(
-		public dialog: MatDialog,
 		private fbuild: FormBuilder,
 		private syllabusService: SmartService,
 		public commonService: CommonAPIService,
@@ -136,8 +135,8 @@ export class ViewSyllabusComponent implements OnInit {
 
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
-		this.finaldivflag = false;
-		this.syllabusService.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
+		if (this.reviewform.value.syl_class_id && this.reviewform.value.syl_sub_id && this.reviewform.value.syl_sec_id) {
+			this.syllabusService.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -161,6 +160,10 @@ export class ViewSyllabusComponent implements OnInit {
 										if (result1 && result1.status === 'ok') {
 											this.finalSyllabusArray = result1.data.syllabusDetails;
 											const topicwiseDetails = result1.data.topicwiseDetails;
+											const periodCoundDetails = result1.data.periodCoundDetails;
+											const scheduleDetails = result1.data.scheduleDetails;
+											const sessionStartDate = result1.data.sessionStartDate;
+											const sessionEndDate = result1.data.sessionEndDate;
 											if (!this.editRequestFlag) {
 												this.finalSpannedArray = [];
 											}
@@ -231,7 +234,38 @@ export class ViewSyllabusComponent implements OnInit {
 												}
 											}
 											if (this.finalSpannedArray.length > 0) {
+												let totalPeriodFromInitial = 0;
 												this.finalSpannedArray.forEach(element => {
+													totalPeriodFromInitial = totalPeriodFromInitial + Number(element.total);
+													let estimateDate = '';
+													if (sessionStartDate && sessionEndDate && scheduleDetails) {
+														let notp = totalPeriodFromInitial;
+														console.log(totalPeriodFromInitial);
+														const sessionSD = moment(sessionStartDate);
+														const sessionED = moment(sessionEndDate);
+														for (const d = sessionSD; d.diff(sessionED) <= 0; d.add(1, 'days')) {
+															// console.log(d.format('YYYY-MM-DD'));
+															// if day is sunday
+															if (d.day() === 0) {
+																continue;
+															} else {
+																if (scheduleDetails && scheduleDetails.length > 0) {
+																	const sdIndex = scheduleDetails.findIndex(e => e.sc_date === d.format('YYYY-MM-DD'));
+																	if (sdIndex !== -1) {
+																		continue;
+																	} else {
+																		notp = notp - periodCoundDetails[d.day()];
+																		if (notp <= 0) {
+																			estimateDate = d.format('YYYY-MM-DD');
+																			break;
+																		}
+																	}
+
+																}
+															}
+
+														}
+													}
 													const eachTopicStatus: any = {};
 													eachTopicStatus.statusStr = 'Yet To Start';
 													eachTopicStatus.statusDate = '';
@@ -250,8 +284,11 @@ export class ViewSyllabusComponent implements OnInit {
 														}
 													}
 													element.statusDetails = eachTopicStatus;
+													element.initialTotal = totalPeriodFromInitial;
+													element.estimateDate = estimateDate;
 												});
 											}
+											this.finaldivflag = false;
 											console.log('finalSpannedArray' , this.finalSpannedArray);
 										} else {
 											this.finalSpannedArray = [];
@@ -265,10 +302,14 @@ export class ViewSyllabusComponent implements OnInit {
 							this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 						}
 
+					} else {
+						this.finalSpannedArray = [];
+						this.finaldivflag = true;
+						this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 					}
 				}
 			);
-
+		}
 	}
 
 }
