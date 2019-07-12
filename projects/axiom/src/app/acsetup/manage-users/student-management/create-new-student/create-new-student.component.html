@@ -5,7 +5,7 @@
    <div class="col-12">
       <mat-card>
          <mat-card-title>
-            <h1 class="remove-bottom-margin font-size-24">Create Student</h1>
+            <h1 class="remove-bottom-margin font-size-24">{{!updateFlag ? 'Create Student' : 'Update Student' }}</h1>
          </mat-card-title>
       </mat-card>
    </div>
@@ -29,9 +29,11 @@
                                  <div class="form-group row">
                                     <div class="image-upload">
                                        <label for="file-input">
-                                          <img class="img-fluid teacher-img" id="studentImage" [src]="url"
-                                             style="width: 109px; height: 145px; border:1px solid #9591d8"
-                                             matTooltip="upload-image 109px*145px" />
+                                          <img class="img-fluid teacher-img" 
+                                          [src]="url" style="width: 140px; border-radius: 50% !important;
+                                             border: 1px solid rgb(149, 145, 216);"
+                                             matTooltip="upload-image 109px*145px" 
+                                             onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'"/>
                                        </label>
                                        <input id="file-input" formControlName="au_profileimage" name="file-input"
                                           type="file" (change)="readUrl($event);uploadStudentImage($event)" />
@@ -61,19 +63,27 @@
                                  <div class="row form-group">
                                     <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
                                        <mat-form-field class="form-field" appearance="outline">
+                                          <mat-label>Username</mat-label>
+                                          <input matInput formControlName="au_username" placeholder="Username"
+                                             autocomplete="off" [value]="userDetails.au_username"
+                                             [readonly]="updateFlag" minlength="6"
+                                             (blur)="checkUserExists($event.target.value)" (keyup)="hideIcon()"
+                                             required>
+                                          <mat-error *ngIf="au_full_name.hasError('required')">
+                                             Username is <strong>required of length min 6</strong>
+                                          </mat-error>
+                                       </mat-form-field>
+                                       <span *ngIf="prefixStatus && !updateFlag" style="float:left"><i
+                                             [class]="prefixStatusicon"></i> {{prefixStatus}}</span>
+                                    </div>
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                       <mat-form-field class="form-field" appearance="outline">
                                           <mat-label>Contact No.</mat-label>
                                           <input matInput formControlName="au_mobile" required placeholder="Contact No."
                                              maxlength="10" minlength="10" pattern="[0-9]*">
                                           <mat-error *ngIf="au_mobile.hasError('required')">
                                              Mobile should be <strong>numbers</strong>
                                           </mat-error>
-                                       </mat-form-field>
-                                    </div>
-                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
-                                       <mat-form-field class="form-field" appearance="outline">
-                                          <mat-label>School Code</mat-label>
-                                          <input matInput [value]="schoolinfoArray.school_prefix" readonly
-                                             placeholder="School Code">
                                        </mat-form-field>
                                     </div>
                                  </div>
@@ -125,7 +135,11 @@
                                     <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
                                        <mat-form-field class="form-field" appearance="outline">
                                           <mat-label>Gender</mat-label>
-                                          <mat-select placeholder="Gender" formControlName="upd_gender" required>
+                                          <mat-select placeholder="Gender" formControlName="upd_gender" required
+                                             (selectionChange)="changeUrl($event)">
+                                             <mat-option value="">
+                                                Please Select
+                                             </mat-option>
                                              <mat-option value="M">
                                                 Male
                                              </mat-option>
@@ -152,11 +166,12 @@
             <br>
             <div class="row">
                <div class="col-12 text-center">
-                  <button *ngIf="!updateFlag" mat-raised-button class="submit-button examSetupBtn"
+                  <button *ngIf="!updateFlag" mat-raised-button class="btn-success btn-primary"
+                     [disabled]="!(Student_Details_Form.valid && checkAvailable)"
                      (click)="studentForm()">Submit</button>
-                  <button mat-raised-button *ngIf="updateFlag" class="submit-button"
-                     (click)="updateUser()">Update</button>
-                  <button mat-raised-button class="reset-button examSetupBtn" (click)="saveief()">Reset</button>
+                  <button mat-raised-button [disabled]="!(Student_Details_Form.valid)" *ngIf="updateFlag"
+                     class="btn-success btn-primary" (click)="updateUser()">Update</button>
+                  <button mat-raised-button class="btn-reset btn-spacer" (click)="saveief()">Reset</button>
                </div>
             </div>
          </mat-card-content>

@@ -22,8 +22,7 @@
                                  <div class="form-group row">
                                     <div class="image-upload">
                                        <label for="file-input">
-                                          <img class="img-fluid teacher-img" [src]="url"
-                                             style="width: 140px; border-radius: 50% !important;
+                                          <img class="img-fluid teacher-img" [src]="url" style="width: 140px; border-radius: 50% !important;
                                              border: 1px solid rgb(149, 145, 216);"
                                              matTooltip="upload-image 109px*145px" />
                                        </label>
@@ -189,7 +188,6 @@
                         <div class="col-lg-12">
                            <table class="table-100 text-center">
                               <thead>
-                                 <th>Teacher Name</th>
                                  <th>Class</th>
                                  <th>Section</th>
                                  <th>Subject</th>
@@ -197,14 +195,13 @@
                               </thead>
                               <tbody>
                                  <tr *ngFor="let item of cs_relationArray; let i=index">
-                                    <td>{{Teacher_Form.value.au_full_name}}</td>
                                     <td>{{item.class_name}}</td>
                                     <td>{{item.sec_name}}</td>
                                     <td>{{item.sub_name}}</td>
                                     <td class="text-center">
                                        <a>
-                                          <i class="far fa-trash-alt table-delete-icon" aria-hidden="true"
-                                             title="Delete" (click)="deleteCSRelation(i)"></i>
+                                          <i class="material-icons icon-danger icon-spacer" matTooltip="Delete"
+                                             (click)="deleteCSRelation(i)">delete</i>
                                        </a>
                                     </td>
                                  </tr>
@@ -214,14 +211,16 @@
                      </div>
                      <br>
                      <div class="col-lg-6">
-                        <button mat-raised-button class="btn-primary btn-success" *ngIf="!updateFlag" (click)="addUser()"
+                        <button mat-raised-button class="btn-primary btn-success" *ngIf="!updateFlag"
+                           (click)="addUser()"
                            [disabled]="!(Teacher_Form.valid && Cs_relation_Form.valid && checkAvailable)">Submit</button>
                         <a [routerLink]="['../teacher-management']">
                            <button mat-raised-button class="btn-primary btn-success" matTooltip="Update Teacher"
-                              *ngIf="updateFlag" (click)="updateUser()">Update</button>
+                              [disabled]="!(Teacher_Form.valid)" *ngIf="updateFlag"
+                              (click)="updateUser()">Update</button>
                         </a>
-                        <button mat-raised-button class="btn-danger btn-spacer" matTooltip="Are you sure you want to reset?"
-                           (click)="saveief()">Reset</button>
+                        <button mat-raised-button class="btn-danger btn-spacer"
+                           matTooltip="Are you sure you want to reset?" (click)="saveief()">Reset</button>
                      </div>
                   </div>
                </mat-tab>
@@ -242,7 +241,8 @@
                            <div class="col-sm-4 col-md-4 col-lg-4">
                               <div class="form-group ">
                                  <div class="col-lg-9">
-                                    <mat-form-field class="form-field">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Select Project</mat-label>
                                        <mat-select placeholder="Project" formControlName="pro_id"
                                           (ngModelChange)="getModuleList($event)">
                                           <mat-option value="">
@@ -275,7 +275,8 @@
                         <br>
                         <div class="row">
                            <div class="col-12 mt-3 ">
-                              <button mat-raised-button class="submit-button" (click)="submitModule()">Submit</button>
+                              <button mat-raised-button class="btn-primary btn-success"
+                                 (click)="submitModule()">Submit</button>
                            </div>
                         </div>
                      </form>

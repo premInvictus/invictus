@@ -15,9 +15,6 @@ import { DatePipe } from '@angular/common';
 	styleUrls: ['./create-new-student.component.css']
 })
 export class CreateNewStudentComponent implements OnInit {
-
-
-
 	constructor(
 		private userAccessMenuService: UserAccessMenuService,
 		private breadCrumbService: BreadCrumbService,
@@ -26,7 +23,9 @@ export class CreateNewStudentComponent implements OnInit {
 		private qelementService: QelementService,
 		private route: ActivatedRoute,
 		private notif: NotificationService) { }
-
+	checkAvailable = false;
+	prefixStatusicon: string;
+	prefixStatus: any;
 	Student_Details_Form: FormGroup;
 	Personal_detail_Form: FormGroup;
 	Parents_Form: FormGroup;
@@ -49,7 +48,7 @@ export class CreateNewStudentComponent implements OnInit {
 	login_id: string;
 	userDetails: any = {};
 	updateFlag = false;
-	url: any;
+	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 	mintoday: string;
 	events: string[] = [];
 	private file1: File;
@@ -86,21 +85,34 @@ export class CreateNewStudentComponent implements OnInit {
 			this.qelementService.getUser(param).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
+						this.updateFlag = true;
 						this.userDetails = result.data[0];
 						this.setLoginId = this.userDetails.au_login_id;
 						const userPersonalDetail = this.userDetails.personal_details ? this.userDetails.personal_details[0] : '';
 						this.Student_Details_Form.patchValue({
 							au_login_id: this.userDetails.au_admission_no,
 							au_full_name: this.userDetails.au_full_name,
+							au_username: this.userDetails.au_username,
 							au_email: this.userDetails.au_email,
 							au_mobile: this.userDetails.au_mobile,
 							au_profileimage: this.userDetails.au_profileimage,
 							au_class_id: this.userDetails.au_class_id,
 							au_sec_id: this.userDetails.au_sec_id,
-							upd_gender: userPersonalDetail ? userPersonalDetail.upd_gender : ''}),
-						document.getElementById('studentImage').setAttribute('src', this.hosturl + this.userDetails.au_profileimage);
-						this.getSectionsByClass();
-						this.updateFlag = true;
+							upd_gender: userPersonalDetail ? userPersonalDetail.upd_gender : ''
+						}),
+							this.getSectionsByClass();
+						if (this.userDetails.personal_details) {
+							if (userPersonalDetail.upd_gender === 'M') {
+								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+							} else if (userPersonalDetail.upd_gender === 'F') {
+								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+							} else if (userPersonalDetail.upd_gender === '0') {
+								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+							}
+						}
 					}
 				});
 		}
@@ -111,6 +123,7 @@ export class CreateNewStudentComponent implements OnInit {
 			au_login_id: '',
 			au_profileimage: new FormControl({}),
 			au_full_name: '',
+			au_username: '',
 			au_mobile: '',
 			au_email: '',
 			au_process_type: '4',
@@ -181,6 +194,7 @@ export class CreateNewStudentComponent implements OnInit {
 			// Call to the service to addUser
 			newStudentFormData.append('au_profileimage', this.file1);
 			newStudentFormData.append('au_full_name', this.Student_Details_Form.value.au_full_name);
+			newStudentFormData.append('au_username', this.Student_Details_Form.value.au_username);
 			newStudentFormData.append('au_mobile', this.Student_Details_Form.value.au_mobile);
 			newStudentFormData.append('au_email', this.Student_Details_Form.value.au_email);
 			newStudentFormData.append('au_class_id', this.Student_Details_Form.value.au_class_id);
@@ -188,21 +202,21 @@ export class CreateNewStudentComponent implements OnInit {
 			newStudentFormData.append('upd_gender', this.Student_Details_Form.value.upd_gender);
 			newStudentFormData.append('au_role_id', '4');
 			newStudentFormData.append('au_process_type', '4');
-				this.qelementService.addUser(newStudentFormData).subscribe(
-					(result: any) => {
-						if (result && result.status === 'ok') {
-							this.login_id = result.data.login_id;
-							if (result.data.url) {
+			this.qelementService.addUser(newStudentFormData).subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.login_id = result.data.login_id;
+						if (result.data.url) {
 							const xhr = new XMLHttpRequest();
 							xhr.open('GET', result.data.url, true);
 							xhr.send();
-							}
-							this.notif.showSuccessErrorMessage('Success,Student Added Successfully', 'success');
-							this.backUrl();
 						}
-
+						this.notif.showSuccessErrorMessage('Success,Student Added Successfully', 'success');
+						this.backUrl();
 					}
-				);
+
+				}
+			);
 		} else {
 			this.notif.showSuccessErrorMessage('Please enter all the required fields', 'error');
 		}
@@ -220,8 +234,9 @@ export class CreateNewStudentComponent implements OnInit {
 			if (this.file1) {
 				newStudentFormData.append('au_profileimage', this.file1);
 			}
-			newStudentFormData.append('au_login_id', this.setLoginId );
+			newStudentFormData.append('au_login_id', this.setLoginId);
 			newStudentFormData.append('au_full_name', this.Student_Details_Form.value.au_full_name);
+			newStudentFormData.append('au_username', this.Student_Details_Form.value.au_username);
 			newStudentFormData.append('au_mobile', this.Student_Details_Form.value.au_mobile);
 			newStudentFormData.append('au_email', this.Student_Details_Form.value.au_email);
 			newStudentFormData.append('au_class_id', this.Student_Details_Form.value.au_class_id);
@@ -233,7 +248,7 @@ export class CreateNewStudentComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						this.loading = false;
 						this.notif.showSuccessErrorMessage('Updated Successfully', 'success');
-						this.router.navigate(['../student-management'], {relativeTo : this.route});
+						this.router.navigate(['../student-management'], { relativeTo: this.route });
 
 					}
 				}
@@ -246,7 +261,7 @@ export class CreateNewStudentComponent implements OnInit {
 
 	// Update user for Student
 	saveief() {
-		this.Student_Details_Form.patchValue({au_full_name: '', au_email: '', au_mobile: '', au_class_id: '', au_sec_id: ''});
+		this.Student_Details_Form.patchValue({ au_full_name: '', au_email: '', au_mobile: '', au_class_id: '', au_sec_id: '' });
 	}
 
 	readUrl(event: any) {
@@ -262,6 +277,35 @@ export class CreateNewStudentComponent implements OnInit {
 	uploadStudentImage(event) {
 		if (event.target.files.length > 0) {
 			this.file1 = event.target.files[0];
+		}
+	}
+	checkUserExists(value) {
+		if (value) {
+			this.qelementService.checkUserStatus({ user_name: value }).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.checkAvailable = true;
+					this.prefixStatusicon = 'fas fa-check text-success';
+					this.prefixStatus = res.data;
+				} else {
+					this.checkAvailable = false;
+					this.prefixStatusicon = 'fas fa-times text-danger';
+					this.prefixStatus = res.data;
+				}
+			});
+		}
+	}
+	hideIcon() {
+		this.prefixStatus = '';
+	}
+	changeUrl($event) {
+		if ($event.value === 'M') {
+			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+		} else if ($event.value === 'F') {
+			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+		} else if ($event.value === 'O') {
+			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+		} else {
+			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 		}
 	}
 }

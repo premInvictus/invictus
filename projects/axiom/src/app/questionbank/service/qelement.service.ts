@@ -590,7 +590,6 @@ export class QelementService {
 		if (value.au_admission_no) {
 			param.au_admission_no = value.au_admission_no;
 		}
-		this.loaderService.startLoading();
 		return this._http.post(environment.apiAxiomUrl + '/users/getUser', param);
 	}
 	getEditableUser(value) {

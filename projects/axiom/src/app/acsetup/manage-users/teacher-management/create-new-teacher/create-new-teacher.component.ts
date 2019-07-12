@@ -105,6 +105,7 @@ export class CreateNewTeacherComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						if (result.data.length > 0) {
+							this.updateFlag = true;
 							this.userDetails = result.data[0];
 							const csrelationdetail = this.userDetails.cs_relations[0];
 							this.Teacher_Form.patchValue({
@@ -131,7 +132,6 @@ export class CreateNewTeacherComponent implements OnInit {
 								this.designation = item.uc_designation;
 								this.department = item.uc_department;
 							}
-							this.updateFlag = true;
 						}
 					}
 				});

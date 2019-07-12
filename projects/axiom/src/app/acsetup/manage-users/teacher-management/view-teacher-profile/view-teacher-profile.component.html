@@ -2,7 +2,7 @@
    <div class="col-12">
       <mat-card>
          <mat-card-title>
-            <h1 class="remove-bottom-margin font-size-24">Create Teacher</h1>
+            <h1 class="remove-bottom-margin font-size-24">View Teacher Profile</h1>
          </mat-card-title>
       </mat-card>
    </div>
@@ -13,7 +13,7 @@
          <mat-card-content>
             <div class="row">
                <div class="col-lg-12 text-center font-size-14">
-                  <p>Fill Teacher Details</p>
+                  <p>Teacher Details</p>
                </div>
                <div class="col-lg-12 pd_left pd_right">
                   <form [formGroup]="Teacher_Form" novalidate>
@@ -24,9 +24,8 @@
                                  <div class="form-group row">
                                     <div class="image-upload">
                                        <label for="file-input">
-                                          <img class="img-fluid teacher-img" id="teacherImage"
-                                             src="{{hosturl+userDetails.au_profileimage}}"
-                                             style="width: 109px; height: 145px; border:1px solid #9591d8">
+                                          <img class="img-fluid teacher-img" [src]="url" style="width: 140px; border-radius: 50% !important;
+                                             border: 1px solid rgb(149, 145, 216);" />
                                        </label>
                                        <input id="file-input" formControlName="au_profileimage" name="file-input"
                                           type="file" [attr.disabled]="true">
@@ -35,56 +34,59 @@
                               </div>
                               <div class="col-lg-10">
                                  <div class="row form-group">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-2">
                                        <mat-form-field class="form-field" appearance="outline">
                                           <input matInput formControlName="au_login_id" readonly
                                              placeholder="Teacher Id"
                                              (keydown.enter)="getTeacherByLoginid($event.target.value)" readonly>
                                        </mat-form-field>
                                     </div>
-                                    <div class="col-lg-1 mt-3" *ngIf="updateFlag">
-                                       <button *ngIf="currentTeacherLoginIndex > 0"
-                                          class="btn btn-outline-success btn-sm" type="submit"
-                                          (click)="getTeacherDetail(0)">
-                                          <i class="fa fa-angle-double-left" aria-hidden="true"></i>
-                                       </button>
-                                       <button class="btn btn-outline-success btn-sm" type="submit"
-                                          (click)="getTeacherDetail(currentTeacherLoginIndex-1)">
-                                          <i class="fa fa-angle-left" aria-hidden="true"></i>
-                                       </button>
-                                       <button class="btn btn-outline-success btn-sm" type="submit"
-                                          (click)="getTeacherDetail(currentTeacherLoginIndex+1)">
-                                          <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                       </button>
-                                       <button *ngIf="currentTeacherLoginIndex < teacherArray.length-1"
-                                          class="btn btn-outline-success btn-sm" type="submit"
-                                          (click)="getTeacherDetail(teacherArray.length - 1)">
-                                          <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                                       </button>
+                                    <div class="col-lg-3 mt-3" *ngIf="updateFlag">
+                                       <button mat-mini-fab class="nav-button1 tab-display-flex"
+                                          [disabled]="currentTeacherLoginIndex > 0" (click)="getTeacherDetail(0)"><i
+                                             class="material-icons">
+                                             first_page
+                                          </i></button>
+                                       <button mat-mini-fab class="nav-button1 tab-display-contents"
+                                          (click)="getTeacherDetail(currentTeacherLoginIndex-1)"><i
+                                             class="material-icons">
+                                             navigate_before
+                                          </i></button>
+                                       <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="nextB"
+                                          (click)="getTeacherDetail(currentTeacherLoginIndex+1)"><i
+                                             class="material-icons">
+                                             navigate_next
+                                          </i></button>
+                                       <button mat-mini-fab class="nav-button1 tab-display-contents"
+                                          [disabled]="currentTeacherLoginIndex < teacherArray.length-1"
+                                          (click)="getTeacherDetail(teacherArray.length - 1)"><i class="material-icons">
+                                             last_page
+                                          </i></button>
                                     </div>
                                     <div class="col-lg-4  col-mobile-view-add-ques">
                                        <mat-form-field class="form-field" appearance="outline">
                                           <input matInput formControlName="au_full_name" required
-                                             placeholder="Full Name" readonly>
+                                             [value]="userDetails.au_full_name" placeholder="Full Name" readonly>
                                        </mat-form-field>
                                     </div>
                                     &nbsp;
                                     <div class="col-lg-1 mt-3">
-                                       <button class="btn btn-outline-success btn-sm"
+                                       <button mat-raised-button class="btn-primary btn-success"
                                           matTooltip="Search Teacher by Name" (click)="searchTeacher()">Search</button>
                                     </div>
                                  </div>
                                  <div class="row form-group">
                                     <div class="col-lg-5  col-mobile-view-add-ques">
                                        <mat-form-field class="form-field" appearance="outline">
-                                          <input matInput formControlName="au_mobile" required placeholder="Contact No."
-                                             maxlength="10" minlength="10" readonly>
+                                          <mat-label>User Name</mat-label>
+                                          <input matInput formControlName="au_username" readonly
+                                             [value]="userDetails.au_username" placeholder="User Name">
                                        </mat-form-field>
                                     </div>
                                     <div class="col-lg-5  col-mobile-view-add-ques">
                                        <mat-form-field class="form-field" appearance="outline">
-                                          <input matInput [value]="schoolinfoArray.school_prefix" readonly
-                                             placeholder="School Code">
+                                          <input matInput formControlName="au_mobile" required placeholder="Contact No."
+                                             maxlength="10" minlength="10" readonly>
                                        </mat-form-field>
                                     </div>
                                  </div>
@@ -125,7 +127,7 @@
                                  </div>
                               </div>
                            </div>
-                           <div class="row row-remove-top-margin">
+                           <div *ngIf="!updateFlag" class="row row-remove-top-margin">
                               <div class="col-lg-12">
                                  <form [formGroup]="Cs_relation_Form" novalidate>
                                     <div class="row">
@@ -184,7 +186,7 @@
                                        </div>
                                        <div class="col-md-2 col-lg-2">
                                           <div class="mt-3">
-                                             <button mat-raised-button class="submit-button" type="submit"
+                                             <button mat-raised-button class="btn-success btn-primary" type="submit"
                                                 (click)="addCSToTeacher()" readonly>Apply</button>
                                           </div>
                                        </div>
@@ -197,23 +199,21 @@
                                  <table class=" dialog-table-review table" cellspacing="0">
                                     <thead>
                                        <tr class="dialog-table-review-header">
-                                          <th>Teacher Name</th>
                                           <th>Class</th>
                                           <th>Section</th>
                                           <th>Subject</th>
-                                          <th class="text-center">Modify</th>
+                                          <th *ngIf="!updateFlag" class="text-center">Modify</th>
                                        </tr>
                                     </thead>
                                     <tbody>
                                        <tr *ngFor="let item of cs_relationArray; let i=index">
-                                          <td>{{Teacher_Form.value.au_full_name}}</td>
                                           <td>{{item.class_name}}</td>
                                           <td>{{item.sec_name}}</td>
                                           <td>{{item.sub_name}}</td>
-                                          <td class="text-center">
+                                          <td *ngIf="!updateFlag" class="text-center">
                                              <a>
-                                                <i class="far fa-trash-alt table-delete-icon" aria-hidden="true"
-                                                   matTooltip="Delete" (click)="deleteCSRelation(i)"></i>
+                                                <i class="material-icons icon-danger icon-spacer" matTooltip="Delete"
+                                                   (click)="deleteCSRelation(i)">delete</i>
                                              </a>
                                           </td>
                                        </tr>
@@ -226,66 +226,13 @@
                               <div class="col-lg-12">
                                  <div class="row">
                                     <div class="col-lg-6">
-                                       <button mat-raised-button class="reset-button">
-                                          <a class="backBtn" target="_self" [routerLink]="['../teacher-management']">Go
+                                       <button mat-raised-button class="btn-danger btn-spacer">
+                                          <a [routerLink]="['../teacher-management']">Go
                                              Back</a>
                                        </button>
                                     </div>
                                  </div>
                               </div>
-                           </div>
-                        </div>
-                     </mat-tab>
-                     <mat-tab>
-                        <ng-template mat-tab-label>
-                           <span>Control Dashboard</span>
-                        </ng-template>
-                        <div>
-                           <div role="tabpanel" *ngIf="isExistUserAccessMenu('114')" id="teacher-dashboard">
-                              <form [formGroup]="Remark_Form" novalidate>
-                                 <div class="row">
-                                    <div class="col-lg-12 white-box-content-title">
-                                       <h6 class="text-center tab-title">Control Dashboard</h6>
-                                       <br>
-                                    </div>
-                                 </div>
-                                 <div class="row">
-                                    <div class="col-sm-4 col-md-4 col-lg-4">
-                                       <mat-form-field class="form-field" appearance="outline">
-                                          <mat-label>Project</mat-label>
-                                          <mat-select placeholder="Project" formControlName="pro_id"
-                                             (ngModelChange)="getModuleList($event)" [disabled]=true>
-                                             <mat-option value="">
-                                                Select Project
-                                             </mat-option>
-                                             <mat-option *ngFor="let item of projectsArray" [value]="item.pro_id">
-                                                {{item.pro_name}}
-                                             </mat-option>
-                                          </mat-select>
-                                       </mat-form-field>
-                                    </div>
-                                 </div>
-                                 <div class="row">
-                                    <div class="col-sm-12">
-                                       <div class="module-list">
-                                          <ngx-treeview [config]="config" [items]="moduleItems"
-                                             (selectedChange)="moduleValues = $event">
-                                          </ngx-treeview>
-                                       </div>
-                                    </div>
-                                 </div>
-                                 <br>
-                                 <div class="row">
-                                    <div class="col-lg-4 pd_left pd_right">
-                                       <button mat-raised-button class="submit-button"
-                                          (click)="submitModule()">Submit</button>
-                                       <button mat-raised-button class="reset-button">
-                                          <a style="color:antiquewhite" [routerLink]="['../teacher-management']">Go
-                                             Back</a>
-                                       </button>
-                                    </div>
-                                 </div>
-                              </form>
                            </div>
                         </div>
                      </mat-tab>
