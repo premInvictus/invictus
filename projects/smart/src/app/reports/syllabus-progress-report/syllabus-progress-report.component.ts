@@ -25,9 +25,11 @@ export class SyllabusProgressReportComponent implements OnInit {
 	currentUser: any;
 	seesion_id: any;
 	sessionName: any;
-	month: any;
+	startMonth: any;
+	endMonth: any;
 	yeararray: any;
-	year: any;
+	currentYear: any;
+	nextYear: any;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -103,7 +105,8 @@ export class SyllabusProgressReportComponent implements OnInit {
 						}
 						this.sessionName = this.sessionArray[this.seesion_id.ses_id];
 						this.yeararray = this.sessionName.split('-');
-						this.year = this.yeararray[0];
+						this.currentYear = this.yeararray[0];
+						this.nextYear = this.yeararray[1];
 					}
 				});
 	}
@@ -112,7 +115,8 @@ export class SyllabusProgressReportComponent implements OnInit {
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
-						this.month = result.data[0].session_start_month;
+						this.startMonth = result.data[0].session_start_month;
+						this.endMonth = result.data[0].session_end_month;
 					}
 				});
 	}
@@ -127,18 +131,17 @@ export class SyllabusProgressReportComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						if (result.data[0].tt_id !== '') {
 							const dateParam: any = {};
-							dateParam.datefrom = this.year + '-' + this.month + '-1';
+							dateParam.datefrom = this.currentYear + '-' + this.startMonth + '-1';
+							dateParam.dateyear = this.nextYear + '-' + this.endMonth + '-31';
 							dateParam.dateto = this.commonService.dateConvertion(this.todaydate);
 							dateParam.class_id = this.progressReportForm.value.syl_class_id;
 							dateParam.td_tt_id = result.data[0].tt_id;
 							dateParam.sec_id = this.progressReportForm.value.syl_section_id;
 							this.smartService.cwSyllabusProgessReport(dateParam).subscribe((cwSyllabus_r: any) => {
 								if (cwSyllabus_r && cwSyllabus_r.status === 'ok') {
-									console.log(cwSyllabus_r.data);
 									for (const citem of cwSyllabus_r.data) {
 										this.periodCompletionArray[citem.cw_sub_id] = citem.cw_period_req;
 									}
-									console.log(this.periodCompletionArray);
 								}
 							});
 							this.smartService.syllabusProgessReport(dateParam).subscribe((report_r: any) => {
@@ -153,7 +156,6 @@ export class SyllabusProgressReportComponent implements OnInit {
 											});
 										}
 									});
-									//console.log('shgsa', this.classwisetableArray);
 									for (const item of this.classwisetableArray) {
 										for (const titem of item.dataArr) {
 											const findex = this.subCountArray.findIndex(f => f.subject_name === titem.subject_name);
@@ -163,14 +165,13 @@ export class SyllabusProgressReportComponent implements OnInit {
 														'subject_id': titem.subject_id,
 														'subject_name': titem.subject_name,
 														'count': titem.count * titem.daycount,
-														'day': titem.day,
+														'countYear': titem.count * titem.daycountYear,
 													});
 												}
 											} else {
 												this.subCountArray[findex].count = this.subCountArray[findex].count + titem.count * titem.daycount;
-
+												this.subCountArray[findex].countYear = this.subCountArray[findex].countYear + titem.count * titem.daycountYear;
 											}
-											console.log('sssss', this.subCountArray);
 										}
 
 									}

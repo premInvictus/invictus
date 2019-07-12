@@ -260,6 +260,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getViewSyllabusDetails', value);
 	}
+	GetHolidayDays(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/GetHolidayDays', value);
+	}
 	setProcesstype(value) {
 		this.processType = value;
 	}
