@@ -13,7 +13,7 @@ td {
   border: 1px solid #89A8C9 !important;
   padding: 10px;
 }
-th{
+th, tr {
   border: 1px solid #89A8C9 !important;
   border-collapse: collapse;
   padding: 0 10px;
