@@ -2069,6 +2069,7 @@ export class CollectionReportComponent implements OnInit {
 			aggregateCollapsed: true,
 			collapsed: false,
 		});
+		this.draggableGroupingPlugin.setDroppedGroups('stu_class_name');
 	}
 	exportToExcel(json: any[], excelFileName: string): void {
 		const rowData: any[] = [];
