@@ -69,9 +69,17 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/concessionGroup/getConcessionGroup', value);
 	}
+	getConcessionRectification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/concessionGroup/getConcessionRectification', value);
+	}
 	insertConcessionGroup(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/concessionGroup/insertConcessionGroup', value);
+	}
+	updateConcessionRectification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/concessionGroup/updateConcessionRectification', value);
 	}
 	updateConcessionGroup(value) {
 		this.service.startLoading();

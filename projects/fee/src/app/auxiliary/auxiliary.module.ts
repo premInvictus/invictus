@@ -6,6 +6,8 @@ import { BouncedChequeModalComponent } from './cheque-control-tool/bounced-chequ
 
 import { AuxiliaryRoutingModule } from './auxiliary-routing.module';
 import { EditRequestsComponent } from './edit-requests/edit-requests.component';
+import { ConcessionRectificationComponent } from './concession-rectification/concession-rectification.component';
+import { ConcessionRemarkModalComponent } from './concession-rectification/concession-remark-modal/concession-remark-modal.component';
 
 @NgModule({
 	imports: [
@@ -13,13 +15,15 @@ import { EditRequestsComponent } from './edit-requests/edit-requests.component';
 		AuxiliaryRoutingModule,
 		SharedmoduleModule
 	],
-	entryComponents: [BouncedChequeModalComponent
+	entryComponents: [BouncedChequeModalComponent, ConcessionRemarkModalComponent
 
 	],
 	declarations: [
 		BouncedChequeModalComponent,
 		ChequeControlToolComponent,
-		EditRequestsComponent
+		EditRequestsComponent,
+		ConcessionRectificationComponent,
+		ConcessionRemarkModalComponent
 	]
 })
 export class AuxiliaryModule { }

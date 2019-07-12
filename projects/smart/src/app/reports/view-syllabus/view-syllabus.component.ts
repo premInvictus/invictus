@@ -10,7 +10,6 @@ import * as moment from 'moment/moment';
 })
 export class ViewSyllabusComponent implements OnInit {
 
-	@ViewChild('UnpublishModal') UnpublishModal;
 	public reviewform: FormGroup;
 	public classArray: any[];
 	sectionArray: any[] = [];
@@ -44,12 +43,6 @@ export class ViewSyllabusComponent implements OnInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
-	}
-
-	openunPublish(syl_id, topic_id) {
-		this.UnpublishParam.syl_id = syl_id;
-		this.UnpublishParam.topic_id = topic_id;
-		this.UnpublishModal.openunpublishModal(this.UnpublishParam);
 	}
 
 	//  Get Class List function

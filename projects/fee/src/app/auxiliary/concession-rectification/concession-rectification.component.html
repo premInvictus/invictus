@@ -1,0 +1,73 @@
+<div class="fee-container-box__grey">
+  <div class="row">
+    <div class="col-12 remove-col-padding">
+      <mat-card class="card-top-title__container">
+        <div class="row">
+          <div class="col-6 remove-col-padding-left">
+            <h1 class="remove-bottom-margin font-size-24">Concession Rectification</h1>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 remove-col-padding">
+      <mat-card class="card-height-760 card-height-880">
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field [hidden]="!(ELEMENT_DATA.length > 0)">
+              <input matInput placeholder="Filter" #input (keyup)="applyFilter(input.value)">
+              <i class="fas fa-filter table-filter" matPrefix></i>
+            </mat-form-field>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <table mat-table [dataSource]="dataSource" class="fee-table-100 text-center">
+
+              <ng-container matColumnDef="srno">
+                <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
+                <td mat-cell *matCellDef="let item"> {{item.srno}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="enrollment">
+                <th mat-header-cell *matHeaderCellDef> Enrollment No. </th>
+                <td mat-cell *matCellDef="let item"> {{item.enrollment}} </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Student Name </th>
+                <td mat-cell *matCellDef="let item"> {{item.name}}</td>
+              </ng-container>
+              <ng-container matColumnDef="concession">
+                <th mat-header-cell *matHeaderCellDef> Concession Group </th>
+                <td mat-cell *matCellDef="let item"> {{item.concession}} </td>
+              </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let item">
+                  <div class="inline-flex margin-top-5">
+                    <div class="cleared-button" *ngIf="item.action.accd_fcg_status === 'pending'" (click)="openConcessionRemarkModal(item.action)">
+                      <span class="font-size-10">Approve</span>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+              </tr>
+            </table>
+            <table class="table-100 text-center" style="margin-top:5px;">
+              <tr *ngIf="ELEMENT_DATA.length == 0">
+                <td colspan="11">No Record Found</td>
+              </tr>
+            </table>
+            <mat-paginator [hidden]="!(ELEMENT_DATA.length > 0)" #paginator [pageSize]="10"
+              [pageSizeOptions]="[5,10,25,100]" (page)="pageEvent = fetchData($event)"></mat-paginator>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<app-concession-remark-modal #concessionremarkmodal (deleteOk)="approve($event)"></app-concession-remark-modal>
