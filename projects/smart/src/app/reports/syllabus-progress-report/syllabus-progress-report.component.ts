@@ -11,6 +11,9 @@ export class SyllabusProgressReportComponent implements OnInit {
 	@ViewChild('remarkModel') remarkModel;
 	todaydate = new Date();
 	progressReportForm: FormGroup;
+	editRequestFlag = false;
+	finalDivFlag = true;
+	headerDivFlag = false;
 	classArray: any[];
 	subjectArray: any[];
 	subCountArray: any[] = [];
@@ -21,9 +24,6 @@ export class SyllabusProgressReportComponent implements OnInit {
 	sectionArray: any[];
 	finalSpannedArray: any[] = [];
 	sessionArray: any[] = [];
-	editRequestFlag = false;
-	finalDivFlag = true;
-	headerDivFlag = false;
 	currentUser: any;
 	seesion_id: any;
 	sessionName: any;
@@ -45,13 +45,14 @@ export class SyllabusProgressReportComponent implements OnInit {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.seesion_id = JSON.parse(localStorage.getItem('session'));
 	}
-	// Edit dialod open modal function
+	// Add remark open modal function
 	openRemarkModal(tt_id, sub_id) {
 		this.remarkParam.tt_id = tt_id;
 		this.remarkParam.sub_id = sub_id;
 		this.remarkParam.type = 'add';
 		this.remarkModel.openRemarkModal(this.remarkParam);
 	}
+	// edit remark open modal function
 	editRemarkModal(tt_id, sub_id) {
 		this.remarkParam.tt_id = tt_id;
 		this.remarkParam.sub_id = sub_id;
@@ -140,6 +141,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 					}
 				});
 	}
+	// get end month and start month of school
 	getSchool() {
 		this.sisService.getSchool()
 			.subscribe(
@@ -150,6 +152,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 					}
 				});
 	}
+	// delete remark entry from database
 	deleteremark($event) {
 		if ($event) {
 			const param: any = {};
@@ -165,6 +168,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 					});
 		}
 	}
+	// get background color according to value range
 	getcolor(value) {
 		if (Number(value) === 0) {
 			return '#ffffff';
@@ -174,6 +178,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 			return '#dc3545a6';
 		}
 	}
+	// add remarks to database
 	addremark($event) {
 		if ($event) {
 			const param: any = {};
@@ -205,6 +210,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 
 		}
 	}
+	// fetch details for table 
 	fetchDetails() {
 		this.headerDivFlag = true;
 		this.finalDivFlag = false;
