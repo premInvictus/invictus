@@ -78,7 +78,7 @@
                                 <td class="custom-td text-left"><span>{{item.subject_name}}</span></td>
                                 <td class="custom-td "><span>{{item.count}}</span></td>
                                 <td class="custom-td" ><span>{{periodCompletionArray[item.subject_id | number]}}</span></td>
-                                <td class="custom-td "><span>148</span></td>
+                                <td class="custom-td "><span>{{item.countYear - item.count}}</span></td>
                                 <td class="custom-td background-green font-bold" *ngIf="periodCompletionArray[item.subject_id | number] !==''"><span>{{(item.count | number) - periodCompletionArray[item.subject_id | number] }}</span></td>
                                 <td class="custom-td background-green font-bold" *ngIf="periodCompletionArray[item.subject_id | number] ===''"><span>{{item.count }}</span></td>
                                 <td class="custom-td "><button class="btn-consolidate" mat-raised-button (click)="openDialog()">Add Remarks</button></td>

@@ -81,7 +81,6 @@ export class StudentFeeDetailComponent implements OnInit {
 		this.loginId = currentUser.login_id;
 		this.processType = currentUser.au_process_type;
 		this.getStudentInvoiceDetail();
-		// this.getStudentFeeOutstanding();
 	}
 
 	ngAfterViewInit() {

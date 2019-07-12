@@ -9,7 +9,7 @@ import { SyllabusProgressReportComponent } from './syllabus-progress-report/syll
 import { ComparitiveComponent } from './comparitive/comparitive.component';
 import { TopicSubtopicSkippedComponent } from './topic-subtopic-skipped/topic-subtopic-skipped.component';
 import { NegativeReportComponent } from './negative-report/negative-report.component';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { TeacherLogEntryComponent } from './teacher-log-entry/teacher-log-entry.component';
 import { PastAssignmentComponent } from './past-assignment/past-assignment.component';
 import { LogEntryReportComponent } from './log-entry-report/log-entry-report.component';
@@ -27,7 +27,9 @@ import { PastAssignmentsReportComponent } from './past-assignments-report/past-a
 		MatDialogModule
 	],
 	declarations: [ViewSyllabusComponent,
-		EtcReportComponent, SyllabusProgressReportComponent, ComparitiveComponent, TopicSubtopicSkippedComponent, NegativeReportComponent, TeacherLogEntryComponent, PastAssignmentComponent, LogEntryReportComponent, TeacherWiseComponent, ClassWiseComponent, SubjectWiseComponent],
+		EtcReportComponent, SyllabusProgressReportComponent, ComparitiveComponent, TopicSubtopicSkippedComponent,
+		PastAssignmentsReportComponent, NegativeReportComponent, TeacherLogEntryComponent, PastAssignmentComponent,
+		LogEntryReportComponent, TeacherWiseComponent, ClassWiseComponent, SubjectWiseComponent],
 
 })
 export class SmartReportsModule { }
