@@ -12,7 +12,7 @@ mat-expansion-panel.side-nav-main-menu-title-panel {
 }
 
 .side-nav-main-menu-title-panel-header:hover {
-    background-color:#02ed10 !important;
+    background-color: #02ed10 !important;
 }
 
 .side-nav-sub-menu-btn:hover {
@@ -27,44 +27,46 @@ mat-expansion-panel.side-nav-main-menu-title-panel {
 .axiom-component-viewer-sidenav .axiom-component-viewer-sidenav-content button i {
     margin-right: 8px;
     font-size: 24px;
-  }
+}
 
-  .axiom-component-viewer-sidenav .axiom-component-viewer-sidenav-content button {
-    color: #ffffff !important;
+.axiom-component-viewer-sidenav .axiom-component-viewer-sidenav-content button {
+    color: #1085a3 !important;
     font-weight: 400 !important;
     border-bottom: 1px solid #1085a3 !important;
     height: 60px !important;
-  }
+    background-color: #007d9e !important;
+}
 
- 
-
-  .axiom-component-viewer-sidenav .axiom-component-viewer-sidenav-content button.sub-menu-button {
+.axiom-component-viewer-sidenav .axiom-component-viewer-sidenav-content button.sub-menu-button {
     height: 40px !important;
-    background-color: #006580 !important;
+    background-color: #007d9e !important;
     border-bottom: 1px solid #0b6b85 !important;
-  }
+    color: #ffffff !important;
+}
 
-  .sidenav-title b {
-      font-weight: 400 !important;
-      font-size: 15px !important;
-  }
+.sidenav-title b {
+    font-weight: 400 !important;
+    font-size: 15px !important;
+}
 
 .sidenav-title {
     margin-left: 20px;
     font-size: 14px;
     font-weight: 400;
-
 }
 
 .sub-menu-button .mat-button-wrapper .sidenav-title i.fas {
     font-size: 16px !important;
 }
 
+.mat-drawer.mat-drawer-push {
+    background-color: #007D9E !important;
+}
+
 // .mainmenu li.active .submenu {
 //     display: block !important;
 //     max-height: 200px !important;
 //   }
-
 // .submenu.active {
 //     display: block !important;
 //     max-height: 100% !important;
