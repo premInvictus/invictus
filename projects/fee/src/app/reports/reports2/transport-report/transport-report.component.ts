@@ -1514,5 +1514,6 @@ export class TransportReportComponent implements OnInit {
 			aggregateCollapsed: true,
 			collapsed: false,
 		});
+		this.draggableGroupingPlugin.setDroppedGroups('route_name');
 	}
 }
