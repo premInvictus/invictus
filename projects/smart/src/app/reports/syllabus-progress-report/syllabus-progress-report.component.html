@@ -44,17 +44,18 @@
     <div class="col-12">
         <mat-card>
 
-            <div class="row">
+            <div class="row" *ngIf="headerDivFlag">
                 <div class="col-4">
-                    <span class="font-size-16 font-bold">As On :</span><span class="font-light font-size-16"> 1
-                        <sup>st</sup> July 2019</span>
+                    <span class="font-size-16 font-bold">As On : </span><span
+                        class="font-light font-size-16">{{todaydate | date: 'd-MMM-y'}}</span>
                 </div>
                 <div class="col-8 text-right">
-                    <span class="font-size-16 font-bold">Class :</span><span class="font-light font-size-16"> IX -
-                        A</span>
+                    <span class="font-size-16 font-bold">Class :</span>
+                    <span class="font-light font-size-16"> {{getClassName(progressReportForm.value.syl_class_id)}} -
+                        {{getSectionName(progressReportForm.value.syl_section_id)}}</span>
                     <span class="margin-left-10 ver-line-divider"></span>
                     <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16">
-                        2019-20</span>
+                        {{sessionArray[seesion_id.ses_id]}}</span>
                 </div>
             </div>
             <div class="row">
@@ -77,28 +78,49 @@
                             <tr class="custom-tr" *ngFor="let item of subCountArray;let j = index">
                                 <td class="custom-td text-left"><span>{{item.subject_name}}</span></td>
                                 <td class="custom-td "><span>{{item.count}}</span></td>
-                                <td class="custom-td" ><span>{{periodCompletionArray[item.subject_id | number]}}</span></td>
+                                <td class="custom-td" *ngIf="periodCompletionArray[(item.subject_id | number)]">
+                                    <span>{{periodCompletionArray[item.subject_id | number]}}</span></td>
+                                <td class="custom-td" *ngIf="!periodCompletionArray[(item.subject_id | number)]">
+                                    <span>-</span></td>
                                 <td class="custom-td "><span>{{item.countYear - item.count}}</span></td>
-                                <td class="custom-td background-green font-bold" *ngIf="periodCompletionArray[item.subject_id | number] !==''"><span>{{(item.count | number) - periodCompletionArray[item.subject_id | number] }}</span></td>
-                                <td class="custom-td background-green font-bold" *ngIf="periodCompletionArray[item.subject_id | number] ===''"><span>{{item.count }}</span></td>
-                                <td class="custom-td "><button class="btn-consolidate" mat-raised-button (click)="openDialog()">Add Remarks</button></td>
+                                <td class="custom-td  font-bold" 
+                                [ngStyle]="{'background-color': getcolor((item.count | number) - periodCompletionArray[item.subject_id | number])}"
+                                    *ngIf="periodCompletionArray[(item.subject_id | number)]">
+                                    <span>{{(item.count | number) - periodCompletionArray[item.subject_id | number] }}</span>
+                                </td>
+                                <td class="custom-td font-bold"
+                                [ngStyle]="{'background-color': getcolor((item.count | number))}"
+                                    *ngIf="!periodCompletionArray[(item.subject_id | number)]">
+                                    <span>{{item.count }}</span></td>
+                                <td class="custom-td" *ngIf="remarkArray[(item.subject_id | number)]"
+                                    (click)="editRemarkModal(tt_id,item.subject_id)">
+                                    <span>{{remarkArray[item.subject_id | number]}}</span></td>
+                                <td class="custom-td " *ngIf="!remarkArray[(item.subject_id | number)]"><button
+                                        class="btn-consolidate" mat-raised-button
+                                        (click)="openRemarkModal(tt_id,item.subject_id)">Add Remarks</button></td>
                             </tr>
-
-
                         </tbody>
-                        <!-- <thead class="table-skill__head text-center">
-                            <tr class="custom-tr">
-                                <th class="custom-th text-left">Grand Total</th>
-                                <th class="custom-th">26</th>
-                                <th class="custom-th">6</th>
-                                <th class="custom-th">6</th>
-                                <th class="custom-th">38</th>
-                                <th class="custom-th"></th>
-                            </tr>
-                        </thead> -->
+                        <tbody>
+                                <tr class="text-center" *ngIf="finalDivFlag">
+                                    <td colspan="12">
+                                        <img
+                                            src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <span class="font-size-20 font-bold font-color-brown">
+                                            No Data Available
+                                        </span>
+                                        <br><span class="font-size-20 font-light font-color-brown">
+                                            Please select Class and section
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
                     </table>
                 </div>
             </div>
         </mat-card>
     </div>
 </div>
+<app-remark-progress-report-model #remarkModel (remarkOk)="addremark($event)" (remarkCancel)="deleteremark($event)"></app-remark-progress-report-model>
