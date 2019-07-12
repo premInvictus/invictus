@@ -590,7 +590,6 @@ export class QelementService {
 		if (value.au_admission_no) {
 			param.au_admission_no = value.au_admission_no;
 		}
-		this.loaderService.startLoading();
 		return this._http.post(environment.apiAxiomUrl + '/users/getUser', param);
 	}
 	getEditableUser(value) {
@@ -837,6 +836,10 @@ export class QelementService {
 			return this._http.delete(environment.apiAxiomUrl + `/essay/deleteEssay/${param.ess_id}`)
 				;
 		}
+	}
+	uploadDocuments(value) {
+		this.loaderService.startLoading();
+		return this._http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
 	}
 }
 

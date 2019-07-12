@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormGroupDirective, NgForm, FormControl, Validators } from '@angular/forms';
 import { QelementService } from '../../../../questionbank/service/qelement.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,9 +16,7 @@ import { DatePipe } from '@angular/common';
 })
 
 export class CreateNewTeacherComponent implements OnInit {
-
-
-
+	@ViewChild('cropModal') cropModal;
 	constructor(
 		private adminService: AdminService,
 		private acsetupService: AcsetupService,
@@ -105,6 +103,7 @@ export class CreateNewTeacherComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						if (result.data.length > 0) {
+							this.updateFlag = true;
 							this.userDetails = result.data[0];
 							const csrelationdetail = this.userDetails.cs_relations[0];
 							this.Teacher_Form.patchValue({
@@ -131,7 +130,6 @@ export class CreateNewTeacherComponent implements OnInit {
 								this.designation = item.uc_designation;
 								this.department = item.uc_department;
 							}
-							this.updateFlag = true;
 						}
 					}
 				});
@@ -391,19 +389,31 @@ export class CreateNewTeacherComponent implements OnInit {
 	}
 
 	readUrl(event: any) {
-		if (event.target.files && event.target.files[0]) {
-			const reader = new FileReader();
-			reader.onload = (eventObj: any) => {
-				this.url = eventObj.target.result;
-			};
-			reader.readAsDataURL(event.target.files[0]);
-		}
+		this.openCropDialog(event);
 	}
+	openCropDialog = (imageFile) => this.cropModal.openModal(imageFile);
 
 	uploadTeacherImage(event) {
 		if (event.target.files.length > 0) {
 			this.file1 = event.target.files[0];
 		}
+	}
+	acceptCrop(result) {
+		this.uploadImage(result.filename, result.base64);
+	}
+	uploadImage(fileName, au_profileimage) {
+		this.qelementService.uploadDocuments([
+			{ fileName: fileName, imagebase64: au_profileimage, module: 'profile' }]).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.url = result.data[0].file_url;
+					this.Teacher_Form.patchValue({
+						au_profileimage: this.url
+					});
+				}
+			});
+	}
+	acceptNo(event) {
+		event.target.value = '';
 	}
 
 	getSubjectsByClass(): void {
@@ -433,7 +443,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	addUser() {
 		if (this.Teacher_Form.valid) {
 			const newTeacherFormData = new FormData();
-			newTeacherFormData.append('au_profileimage', this.file1);
+			newTeacherFormData.append('au_profileimage', this.url);
 			newTeacherFormData.append('au_full_name', this.Teacher_Form.value.au_full_name);
 			newTeacherFormData.append('au_username', this.Teacher_Form.value.au_username);
 			newTeacherFormData.append('au_mobile', this.Teacher_Form.value.au_mobile);
@@ -461,8 +471,8 @@ export class CreateNewTeacherComponent implements OnInit {
 	updateUser() {
 		if (this.Teacher_Form.valid) {
 			const newTeacherFormData = new FormData();
-			if (this.file1) {
-				newTeacherFormData.append('au_profileimage', this.file1);
+			if (this.url) {
+				newTeacherFormData.append('au_profileimage', this.url);
 			}
 			newTeacherFormData.append('au_login_id', this.Teacher_Form.value.au_login_id);
 			newTeacherFormData.append('au_full_name', this.Teacher_Form.value.au_full_name);

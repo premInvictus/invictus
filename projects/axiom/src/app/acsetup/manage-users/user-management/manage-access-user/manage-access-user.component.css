@@ -2,6 +2,10 @@
 
 .top-blue-box{
   margin-bottom: 60px;
+  border: 1px solid #0e7d9e !important;
+}
+.font-16 {
+  font-size: 16px !important;
 }
 
 /* .form-check-input{

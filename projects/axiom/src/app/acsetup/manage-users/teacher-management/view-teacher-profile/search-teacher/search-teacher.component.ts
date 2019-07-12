@@ -1,12 +1,12 @@
-import { Component, OnInit , Inject} from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { QelementService } from '../../../../../questionbank/service/qelement.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadCrumbService, UserAccessMenuService, NotificationService } from '../../../../../_services/index';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { AdminService } from '../../../../../user-type/admin/services/admin.service';
-import {appConfig} from '../../../../../app.config';
-import { MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import { appConfig } from '../../../../../app.config';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 
 @Component({
@@ -41,6 +41,7 @@ export class SearchTeacherComponent implements OnInit {
 	homeUrl: string;
 	current_Pro_id: string;
 	login_id;
+	returnId: any;
 	currentClass: string;
 	currentSection: string;
 	currentSubject: string;
@@ -55,7 +56,7 @@ export class SearchTeacherComponent implements OnInit {
 	});
 	constructor(
 		public dialogRef: MatDialogRef<SearchTeacherComponent>,
-		@Inject(MAT_DIALOG_DATA) private data ,
+		@Inject(MAT_DIALOG_DATA) private data,
 		private adminService: AdminService,
 		private userAccessMenuService: UserAccessMenuService,
 		private fbuild: FormBuilder,
@@ -88,7 +89,7 @@ export class SearchTeacherComponent implements OnInit {
 				if (result) {
 					this.teacherArray = result.data;
 					if (this.teacherArray.length > 0) {
-						this.currentTeacherLoginIndex = this.teacherArray.findIndex(item =>  item.uc_login_id === this.login_id);
+						this.currentTeacherLoginIndex = this.teacherArray.findIndex(item => item.uc_login_id === this.login_id);
 					} else {
 						this.notif.showSuccessErrorMessage('No Record Found', 'error');
 					}
@@ -130,9 +131,9 @@ export class SearchTeacherComponent implements OnInit {
 	}
 	getTeacherDetail(nextTeacherLoginIndex) {
 		if (nextTeacherLoginIndex > -1 && nextTeacherLoginIndex < this.teacherArray.length) {
-		this.currentTeacherLoginIndex = nextTeacherLoginIndex;
+			this.currentTeacherLoginIndex = nextTeacherLoginIndex;
 			// tslint:disable-next-line:max-line-length
-			this.router.navigate(['../view-teacher-profile'], {queryParams: {login_id: this.teacherArray[this.currentTeacherLoginIndex].au_login_id}, relativeTo: this.route});
+			this.router.navigate(['../view-teacher-profile'], { queryParams: { login_id: this.teacherArray[this.currentTeacherLoginIndex].au_login_id }, relativeTo: this.route });
 			const param: any = {};
 			param.role_id = '3';
 			param.login_id = this.teacherArray[this.currentTeacherLoginIndex].au_login_id;
@@ -141,10 +142,10 @@ export class SearchTeacherComponent implements OnInit {
 	}
 	getTeacherByLoginid(value) {
 		const param: any = {};
-			param.role_id = '3';
-			param.login_id = value;
-			this.router.navigate(['../view-teacher-profile'], {queryParams: {login_id: value}, relativeTo: this.route});
-			this.getUserDetail(param);
+		param.role_id = '3';
+		param.login_id = value;
+		this.router.navigate(['../view-teacher-profile'], { queryParams: { login_id: value }, relativeTo: this.route });
+		this.getUserDetail(param);
 	}
 	buildForm() {
 		this.Teacher_Form = this.fbuild.group({
@@ -227,17 +228,19 @@ export class SearchTeacherComponent implements OnInit {
 	searchTeacherByName(name) {
 		this.teacherinfo = true;
 		const param: any = {};
-			param.role_id = '3';
-			param.status = '1';
-			param.full_name = name;
-			this.getAllTeacherListByName(param);
+		param.role_id = '3';
+		param.status = '1';
+		param.full_name = name;
+		this.getAllTeacherListByName(param);
 	}
 	getTeacherDetailByName(login_id) {
-			const param: any = {};
-			param.role_id = '3';
-			param.status = '1';
-			param.login_id = login_id;
-			this.getUserDetail(param);
+		const param: any = {};
+		param.role_id = '3';
+		param.status = '1';
+		param.login_id = login_id;
+		this.returnId = login_id;
+		this.dialogRef.close({ login_id: this.returnId });
+
 	}
 	closeDialog(): void {
 		this.dialogRef.close();

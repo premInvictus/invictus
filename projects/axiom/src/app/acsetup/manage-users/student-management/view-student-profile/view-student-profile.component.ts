@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { QelementService } from '../../../../questionbank/service/qelement.service';
-import {ActivatedRoute, Router, NavigationEnd} from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
-import {BreadCrumbService} from '../../../../_services/breadcrumb.service';
-import {UserAccessMenuService} from '../../../../_services/userAccessMenu.service';
-import {appConfig} from '../../../../app.config';
-import {MatDialog, MatDialogRef} from '@angular/material';
-import {SearchStudentComponent} from './search-student/search-student.component';
+import { BreadCrumbService } from '../../../../_services/breadcrumb.service';
+import { UserAccessMenuService } from '../../../../_services/userAccessMenu.service';
+import { appConfig } from '../../../../app.config';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { SearchStudentComponent } from './search-student/search-student.component';
 import { CommonAPIService } from '../../../../_services';
 
 
@@ -45,6 +45,7 @@ export class ViewStudentProfileComponent implements OnInit {
 	updateFlag = false;
 	studentArrayByName: any[] = [];
 	dialogRef: MatDialogRef<SearchStudentComponent>;
+	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 
 
 	constructor(
@@ -72,15 +73,6 @@ export class ViewStudentProfileComponent implements OnInit {
 			param.login_id = this.login_id;
 			this.getuserDetail(param);
 		}
-		this.service.viewProfile.subscribe((result: any) => {
-			if (result) {
-				const param: any = {};
-				param.role_id = '4';
-				param.login_id = result;
-				this.getuserDetail(param);
-				this.router.navigate(['./school/setup/view-student-profile'], {queryParams: {login_id : result}});
-			}
-		});
 	}
 	getAllUser() {
 		const param: any = {};
@@ -94,7 +86,8 @@ export class ViewStudentProfileComponent implements OnInit {
 					this.userArray = result.data;
 					if (this.userArray.length > 0) {
 						for (let ti = 0; ti < this.userArray.length; ti++) {
-							if (this.userArray[ti].au_login_id === this.login_id) {
+							if (Number(this.userArray[ti].au_login_id) === Number(this.login_id)) {
+								console.log('yes');
 								this.currentStudentLoginIndex = ti;
 								break;
 							}
@@ -131,21 +124,41 @@ export class ViewStudentProfileComponent implements OnInit {
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.loading = false;
+					this.url = '';
 					if (result.data.length > 0) {
-						this.userDetails = result.data[0];
-						this.Student_Details_Form.controls.au_login_id.setValue(this.userDetails.au_admission_no);
-						this.Student_Details_Form.controls.au_full_name.setValue(this.userDetails.au_full_name);
-						this.Student_Details_Form.controls.au_email.setValue(this.userDetails.au_email);
-						this.Student_Details_Form.controls.au_mobile.setValue(this.userDetails.au_mobile);
-						this.Student_Details_Form.controls.au_class_id.setValue(this.userDetails.au_class_id);
-						this.getSectionsByClass();
-						this.Student_Details_Form.controls.au_sec_id.setValue(this.userDetails.au_sec_id);
-						this.Student_Details_Form.controls.upd_gender.setValue(this.userDetails.personal_details[0].upd_gender);
 						this.updateFlag = true;
+						this.userDetails = result.data[0];
+						const userPersonalDetail = this.userDetails.personal_details ? this.userDetails.personal_details[0] : '';
+						this.Student_Details_Form.patchValue({
+							au_login_id: this.userDetails.au_admission_no,
+							au_full_name: this.userDetails.au_full_name,
+							au_username: this.userDetails.au_username,
+							au_email: this.userDetails.au_email,
+							au_mobile: this.userDetails.au_mobile,
+							au_profileimage: this.userDetails.au_profileimage,
+							au_class_id: this.userDetails.au_class_id,
+							au_sec_id: this.userDetails.au_sec_id,
+							upd_gender: userPersonalDetail ? userPersonalDetail.upd_gender : ''
+						}),
+							this.getSectionsByClass();
+						if (this.userDetails.personal_details.length > 0) {
+							if (userPersonalDetail.upd_gender === 'M') {
+								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+							} else if (userPersonalDetail.upd_gender === 'F') {
+								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+							} else if (userPersonalDetail.upd_gender === 'O') {
+								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+							}
+						} else {
+							this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+						}
 					} else {
-					this.errorNotification('No record found');
-				}
-			} else {
+						this.errorNotification('No record found');
+					}
+				} else {
 					this.loading = false;
 					this.errorNotification('No record found');
 				}
@@ -156,55 +169,57 @@ export class ViewStudentProfileComponent implements OnInit {
 		);
 	}
 
-getStudentDetail(nextStudentLoginIndex) {
-	if (nextStudentLoginIndex > -1 && nextStudentLoginIndex < this.userArray.length) {
-	this.currentStudentLoginIndex = nextStudentLoginIndex;
-		// tslint:disable-next-line:max-line-length
-		this.router.navigate(['../view-student-profile'], {queryParams: {login_id: this.userArray[this.currentStudentLoginIndex].au_login_id}, relativeTo: this.route});
+	getStudentDetail(nextStudentLoginIndex) {
+		console.log(nextStudentLoginIndex);
+		if (nextStudentLoginIndex > -1 && nextStudentLoginIndex < this.userArray.length) {
+			this.currentStudentLoginIndex = nextStudentLoginIndex;
+			// tslint:disable-next-line:max-line-length
+			this.router.navigate(['../view-student-profile'], { queryParams: { login_id: this.userArray[this.currentStudentLoginIndex].au_login_id }, relativeTo: this.route });
+			const param: any = {};
+			param.role_id = '4';
+			param.login_id = this.userArray[this.currentStudentLoginIndex].au_login_id;
+			this.getuserDetail(param);
+		}
+
+	}
+	getStudentByloginid(value) {
 		const param: any = {};
 		param.role_id = '4';
-		param.login_id = this.userArray[this.currentStudentLoginIndex].au_login_id;
+		param.login_id = value;
+		this.router.navigate(['../view-student-profile'], { queryParams: { login_id: value }, relativeTo: this.route });
 		this.getuserDetail(param);
 	}
 
-}
-getStudentByloginid(value) {
-	const param: any = {};
-				param.role_id = '4';
-				param.login_id = value;
-				this.router.navigate(['../view-student-profile'], {queryParams: {login_id: value}, relativeTo: this.route});
-				this.getuserDetail(param);
-}
+	buildForm() {
+		this.Student_Details_Form = this.fbuild.group({
+			au_profileimage: new FormControl({}),
+			au_username: '',
+			au_login_id: '',
+			au_full_name: '',
+			au_mobile: '',
+			au_email: '',
+			au_role_id: '4',
+			au_class_id: '',
+			au_sec_id: '',
+			upd_gender: '',
+		});
+	}
+	isExistUserAccessMenu(mod_id) {
+		return this.userAccessMenuService.isExistUserAccessMenu(mod_id);
+	}
 
-buildForm() {
-	this.Student_Details_Form = this.fbuild.group({
-		au_profileimage: '',
-		au_login_id: '',
-		au_full_name: '',
-		au_mobile: '',
-		au_email: '',
-		au_role_id: '4',
-		au_class_id: '',
-		au_sec_id: '',
-		upd_gender: '',
-	});
-}
-isExistUserAccessMenu(mod_id) {
-	return this.userAccessMenuService.isExistUserAccessMenu(mod_id);
-}
+	getSchool() {
+		this.loading = true;
+		this.qelementService.getSchool().subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.loading = false;
+					this.schoolinfoArray = result.data[0];
+				}
+			},
+		);
 
-getSchool() {
-	this.loading = true;
-	this.qelementService.getSchool().subscribe(
-		(result: any) => {
-			if (result && result.status === 'ok') {
-				this.loading = false;
-				this.schoolinfoArray = result.data[0];
-			}
-		},
-	);
-
-	this.loading = false;
+		this.loading = false;
 	}
 
 	errorNotification(msg) {
@@ -236,9 +251,9 @@ getSchool() {
 	}
 
 
-getClass() {
-	this.loading = true;
-	this.qelementService.getClass().subscribe(
+	getClass() {
+		this.loading = true;
+		this.qelementService.getClass().subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.loading = false;
@@ -247,12 +262,12 @@ getClass() {
 			},
 		);
 		this.loading = false;
-}
+	}
 
-getSectionsByClass(): void {
-	this.loading = true;
-	this.qelementService.getSectionsByClass(this.Student_Details_Form.value.au_class_id).subscribe(
-		(result: any) => {
+	getSectionsByClass(): void {
+		this.loading = true;
+		this.qelementService.getSectionsByClass(this.Student_Details_Form.value.au_class_id).subscribe(
+			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.loading = false;
 					this.sectionArray = result.data;
@@ -262,55 +277,56 @@ getSectionsByClass(): void {
 			},
 		);
 		this.loading = false;
-}
+	}
 
 
 
 
-		// Update user for Student
+	// Update user for Student
 
-		getAllStudentListByName(param) {
+	getAllStudentListByName(param) {
 		this.loading = true;
-			this.qelementService.getUser(param).subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.loading = false;
-						this.studentArrayByName = result.data;
+		this.qelementService.getUser(param).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.loading = false;
+					this.studentArrayByName = result.data;
 
-					} else {
-						this.studentArrayByName = [];
-						this.notif.error(
-							'Error',
-							'No Record Found',
-							{
-								timeOut: 2000,
-								showProgressBar: true,
-								pauseOnHover: false,
-								clickToClose: true,
-								maxLength: 50
-							}
-						);
-						this.loading = false;
-					}
-				},
-				error => {
+				} else {
+					this.studentArrayByName = [];
+					this.notif.error(
+						'Error',
+						'No Record Found',
+						{
+							timeOut: 2000,
+							showProgressBar: true,
+							pauseOnHover: false,
+							clickToClose: true,
+							maxLength: 50
+						}
+					);
 					this.loading = false;
 				}
-			);
-		}
+			},
+			error => {
+				this.loading = false;
+			}
+		);
+	}
 
 
-		searchStudentByName(name) {
+	searchStudentByName(name) {
 		const param: any = {};
 		param.role_id = '4';
 		param.status = '1';
 		param.full_name = name;
 		this.getAllStudentListByName(param);
-		}
+	}
 
-		saveief() {
+	saveief() {
 		this.Student_Details_Form.controls.au_full_name.setValue('');
 		this.Student_Details_Form.controls.au_email.setValue('');
+		this.Student_Details_Form.controls.au_username.setValue('');
 		this.Student_Details_Form.controls.au_mobile.setValue('');
 		this.Personal_detail_Form.controls.au_class_id.setValue('');
 		this.Personal_detail_Form.controls.au_sec_id.setValue('');
@@ -322,16 +338,26 @@ getSectionsByClass(): void {
 		this.Personal_detail_Form.controls.upd_cit_id.setValue('');
 		this.Personal_detail_Form.controls.upd_sta_id.setValue('');
 		this.Personal_detail_Form.controls.upd_pincode.setValue('');
-}
+	}
 
-searchStudent(): void {
-	const dialogRef = this.dialog.open(SearchStudentComponent, {
-		width: '100vh',
-		height: '50vh',
-		data: {}
-	});
-}
-goBack() {
-	history.back();
-}
+	searchStudent(): void {
+		const dialogRef = this.dialog.open(SearchStudentComponent, {
+			width: '100vh',
+			height: '50%',
+			data: {}
+		});
+		dialogRef.afterClosed().subscribe((res: any) => {
+			if (res) {
+				this.router.navigate(['../view-student-profile'],
+					{ queryParams: { login_id: res.login_id }, relativeTo: this.route });
+				const param: any = {};
+				param.role_id = '4';
+				param.login_id = res.login_id;
+				this.getuserDetail(param);
+			}
+		});
+	}
+	goBack() {
+		this.router.navigate(['../student-management'], { relativeTo: this.route });
+	}
 }

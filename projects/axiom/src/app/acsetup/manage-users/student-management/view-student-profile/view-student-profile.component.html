@@ -5,7 +5,7 @@
    <div class="col-12">
       <mat-card>
          <mat-card-title>
-            <h1 class="remove-bottom-margin font-size-24">Create Student</h1>
+            <h1 class="remove-bottom-margin font-size-24">View Student Profile</h1>
          </mat-card-title>
       </mat-card>
    </div>
@@ -22,9 +22,9 @@
                            <div class="form-group row">
                               <div class="image-upload">
                                  <label for="file-input">
-                                    <img class="img-fluid teacher-img" id="teacherImage"
-                                       src="{{hosturl+userDetails.au_profileimage}}"
-                                       style="width: 109px; height: 145px; border:1px solid #9591d8">
+                                    <img class="img-fluid teacher-img" [src]="url" style="width: 140px; border-radius: 50% !important;
+                                          border: 1px solid rgb(149, 145, 216);" matTooltip="upload-image 109px*145px"
+                                       onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'" />
                                  </label>
                                  <input id="file-input" formControlName="au_profileimage" name="file-input" type="file"
                                     [attr.disabled]="true">
@@ -33,32 +33,30 @@
                         </div>
                         <div class="col-lg-10">
                            <div class="row form-group">
-                              <div class="col-lg-3  col-mobile-view-add-ques">
+                              <div class="col-lg-2  col-mobile-view-add-ques">
                                  <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Student Id</mat-label>
                                     <input matInput formControlName="au_login_id" placeholder="Student Id"
                                        (keydown.enter)="getStudentByloginid($event.target.value)" readonly>
                                  </mat-form-field>
                               </div>
-                              &nbsp;
-                              <div class="col-lg-2 mt-3">
-                                 <button *ngIf="currentStudentLoginIndex > 0" class="btn btn-outline-success btn-sm"
-                                    type="submit" (click)="getStudentDetail(0)">
-                                    <i class="fa fa-angle-double-left" aria-hidden="true"></i>
-                                 </button>
-                                 <button class="btn btn-outline-success btn-sm" type="submit"
-                                    (click)="getStudentDetail(currentStudentLoginIndex-1)">
-                                    <i class="fa fa-angle-left" aria-hidden="true"></i>
-                                 </button>
-                                 <button class="btn btn-outline-success btn-sm" type="submit"
-                                    (click)="getStudentDetail(currentStudentLoginIndex+1)">
-                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                 </button>
-                                 <button *ngIf="currentStudentLoginIndex < userArray.length-1"
-                                    class="btn btn-outline-success btn-sm" type="submit"
-                                    (click)="getStudentDetail(userArray.length - 1)">
-                                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                                 </button>
+                              <div class="col-lg-3 mt-3">
+                                 <button mat-mini-fab class="nav-button1 tab-display-flex"
+                                    (click)="getStudentDetail(0)"><i class="material-icons">
+                                       first_page
+                                    </i></button>
+                                 <button mat-mini-fab class="nav-button1 tab-display-contents"
+                                    (click)="getStudentDetail(currentStudentLoginIndex-1)"><i class="material-icons">
+                                       navigate_before
+                                    </i></button>
+                                 <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="nextB"
+                                    (click)="getStudentDetail(currentStudentLoginIndex+1)"><i class="material-icons">
+                                       navigate_next
+                                    </i></button>
+                                 <button mat-mini-fab class="nav-button1 tab-display-contents"
+                                    (click)="getStudentDetail(userArray.length - 1)"><i class="material-icons">
+                                       last_page
+                                    </i></button>
                               </div>
                               <div class="col-lg-3 ">
                                  <mat-form-field class="form-field" appearance="outline">
@@ -69,23 +67,24 @@
                               </div>
                               &nbsp;
                               <div class="col-lg-2 mt-3">
-                                 <button class="btn btn-outline-success btn-sm" matTooltip="Search Students"
-                                    type="button" (click)="searchStudent()">Search</button>
+                                 <button mat-raised-button class="btn-success btn-primary" matTooltip="Search Students" type="button"
+                                    (click)="searchStudent()">Search</button>
                               </div>
                            </div>
                            <div class="row form-group">
                               <div class="col-lg-5  col-mobile-view-add-ques">
                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Contact No.</mat-label>
-                                    <input matInput formControlName="au_mobile" required placeholder="Contact No."
-                                       maxlength="10" minlength="10" readonly>
+                                    <mat-label>Username</mat-label>
+                                    <input matInput formControlName="au_username" placeholder="Username"
+                                       autocomplete="off" [value]="userDetails.au_username" [readonly]="updateFlag"
+                                       minlength="6" required>
                                  </mat-form-field>
                               </div>
                               <div class="col-lg-5  col-mobile-view-add-ques">
                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>School Code</mat-label>
-                                    <input matInput [value]="schoolinfoArray.school_prefix" readonly
-                                       placeholder="School Code">
+                                    <mat-label>Contact No.</mat-label>
+                                    <input matInput formControlName="au_mobile" required placeholder="Contact No."
+                                       maxlength="10" minlength="10" readonly>
                                  </mat-form-field>
                               </div>
                            </div>
@@ -148,7 +147,7 @@
             </form>
             <div class="row">
                <div class="col-lg-12 text-center">
-                  <button mat-raised-button class="reset-button examSetupBtn" (click)="goBack()">Back</button>
+                  <button mat-raised-button class="btn-danger btn-spacer" (click)="goBack()">Back</button>
                </div>
             </div>
          </mat-card-content>
