@@ -837,5 +837,9 @@ export class QelementService {
 				;
 		}
 	}
+	uploadDocuments(value) {
+		this.loaderService.startLoading();
+		return this._http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
+	}
 }
 

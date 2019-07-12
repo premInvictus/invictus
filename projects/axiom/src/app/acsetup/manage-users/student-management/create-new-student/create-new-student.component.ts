@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormGroupDirective, NgForm, FormBuilder } from '@angular/forms';
 import { QelementService } from '../../../../questionbank/service/qelement.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,6 +23,7 @@ export class CreateNewStudentComponent implements OnInit {
 		private qelementService: QelementService,
 		private route: ActivatedRoute,
 		private notif: NotificationService) { }
+	@ViewChild('cropModal') cropModal;
 	checkAvailable = false;
 	prefixStatusicon: string;
 	prefixStatus: any;
@@ -108,7 +109,7 @@ export class CreateNewStudentComponent implements OnInit {
 							} else if (userPersonalDetail.upd_gender === 'F') {
 								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
 									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
-							} else if (userPersonalDetail.upd_gender === '0') {
+							} else if (userPersonalDetail.upd_gender === 'O') {
 								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
 									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 							}
@@ -192,7 +193,7 @@ export class CreateNewStudentComponent implements OnInit {
 		if (this.Student_Details_Form.valid) {
 			const newStudentFormData = new FormData();
 			// Call to the service to addUser
-			newStudentFormData.append('au_profileimage', this.file1);
+			newStudentFormData.append('au_profileimage', this.url);
 			newStudentFormData.append('au_full_name', this.Student_Details_Form.value.au_full_name);
 			newStudentFormData.append('au_username', this.Student_Details_Form.value.au_username);
 			newStudentFormData.append('au_mobile', this.Student_Details_Form.value.au_mobile);
@@ -231,8 +232,8 @@ export class CreateNewStudentComponent implements OnInit {
 		// this.loading = true;
 		if (this.Student_Details_Form.valid) {
 			const newStudentFormData = new FormData();
-			if (this.file1) {
-				newStudentFormData.append('au_profileimage', this.file1);
+			if (this.url) {
+				newStudentFormData.append('au_profileimage', this.url);
 			}
 			newStudentFormData.append('au_login_id', this.setLoginId);
 			newStudentFormData.append('au_full_name', this.Student_Details_Form.value.au_full_name);
@@ -265,20 +266,33 @@ export class CreateNewStudentComponent implements OnInit {
 	}
 
 	readUrl(event: any) {
-		if (event.target.files && event.target.files[0]) {
-			const reader = new FileReader();
-			reader.onload = (eventObj: any) => {
-				this.url = eventObj.target.result;
-			};
-			reader.readAsDataURL(event.target.files[0]);
-		}
+		this.openCropDialog(event);
 	}
+	openCropDialog = (imageFile) => this.cropModal.openModal(imageFile);
 
 	uploadStudentImage(event) {
 		if (event.target.files.length > 0) {
 			this.file1 = event.target.files[0];
 		}
 	}
+	acceptCrop(result) {
+		this.uploadImage(result.filename, result.base64);
+	}
+	uploadImage(fileName, au_profileimage) {
+		this.qelementService.uploadDocuments([
+			{ fileName: fileName, imagebase64: au_profileimage, module: 'profile' }]).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.url = result.data[0].file_url;
+					this.Student_Details_Form.patchValue({
+						au_profileimage: this.url
+					});
+				}
+			});
+	}
+	acceptNo(event) {
+		event.target.value = '';
+	}
+
 	checkUserExists(value) {
 		if (value) {
 			this.qelementService.checkUserStatus({ user_name: value }).subscribe((res: any) => {
@@ -298,13 +312,13 @@ export class CreateNewStudentComponent implements OnInit {
 		this.prefixStatus = '';
 	}
 	changeUrl($event) {
-		if ($event.value === 'M') {
+		if ($event.value === 'M' && !this.userDetails.au_profileimage) {
 			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
-		} else if ($event.value === 'F') {
+		} else if ($event.value === 'F' && !this.userDetails.au_profileimage) {
 			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
-		} else if ($event.value === 'O') {
+		} else if ($event.value === 'O' && !this.userDetails.au_profileimage) {
 			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
-		} else {
+		} else if (!$event.value && !this.userDetails.au_profileimage) {
 			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 		}
 	}

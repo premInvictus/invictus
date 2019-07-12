@@ -51,12 +51,12 @@
                <div class="col-lg-6">
                   <div class="col-sm-12 col-md-12 col-lg-12 mt-3">
                      <div class="float-right">
-                        <a *ngIf="isExistUserAccessMenu('129')" routerLink="/axiom/school/setup/create-new-student">
+                        <a *ngIf="isExistUserAccessMenu('129')" [routerLink]="['../create-new-student']">
                            <button mat-raised-button class="btn-success btn-primary" style="width: 130px !important"><i
                                  class="fa fa-plus"></i> New
                               Student</button>
                         </a>
-                        <a routerLink="/school/setup/student-dashboard-management">
+                        <a [routerLink]="['../student-dashboard-management']">
                            <button style="width: 250px !important;" mat-raised-button class="btn-danger btn-spacer"><i
                                  class="fa fa-plus"></i> Manage
                               Student Dashboard</button>

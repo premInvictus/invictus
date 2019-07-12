@@ -29,14 +29,14 @@
                                  <div class="form-group row">
                                     <div class="image-upload">
                                        <label for="file-input">
-                                          <img class="img-fluid teacher-img" 
-                                          [src]="url" style="width: 140px; border-radius: 50% !important;
+                                          <img class="img-fluid teacher-img" [src]="url" 
+                                          style="width: 140px; border-radius: 50% !important;
                                              border: 1px solid rgb(149, 145, 216);"
-                                             matTooltip="upload-image 109px*145px" 
-                                             onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'"/>
+                                             matTooltip="upload-image 109px*145px"
+                                             onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'" />
                                        </label>
                                        <input id="file-input" formControlName="au_profileimage" name="file-input"
-                                          type="file" (change)="readUrl($event);uploadStudentImage($event)" />
+                                          type="file" (change)="readUrl($event)" />
                                     </div>
                                  </div>
                               </div>
@@ -178,3 +178,4 @@
       </mat-card>
    </div>
 </div>
+<app-imagecrop #cropModal (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)"></app-imagecrop>

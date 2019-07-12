@@ -43,8 +43,7 @@
                                     </div>
                                     <div class="col-lg-3 mt-3" *ngIf="updateFlag">
                                        <button mat-mini-fab class="nav-button1 tab-display-flex"
-                                          [disabled]="currentTeacherLoginIndex > 0" (click)="getTeacherDetail(0)"><i
-                                             class="material-icons">
+                                          (click)="getTeacherDetail(0)"><i class="material-icons">
                                              first_page
                                           </i></button>
                                        <button mat-mini-fab class="nav-button1 tab-display-contents"
@@ -58,7 +57,6 @@
                                              navigate_next
                                           </i></button>
                                        <button mat-mini-fab class="nav-button1 tab-display-contents"
-                                          [disabled]="currentTeacherLoginIndex < teacherArray.length-1"
                                           (click)="getTeacherDetail(teacherArray.length - 1)"><i class="material-icons">
                                              last_page
                                           </i></button>

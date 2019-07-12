@@ -1,0 +1,31 @@
+<ng-template #cropModal>
+   <div class="modal-custom-cotainer">
+      <div class="row remove-top-margin">
+         <div class="col-12 remove-col-padding">
+            <div class="modal-title-box">
+               <span class="font-size-20 font-white font-regular">Crop Image</span><span
+                  class="float-right margin-top-5"><i (click)="closeDialog()"
+                     class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
+            </div>
+         </div>
+      </div>
+   </div>
+   <br>
+   <br>
+   <div class="row margin-top-20">
+      <div class="col-12">
+         <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="16 / 21"
+            [roundCropper]="true" format="png" [resizeToWidth]="133" [imageQuality]="100"
+            (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (loadImageFailed)="loadImageFailed()">
+         </image-cropper>
+
+         <img class="crop-image-previewer" [src]="croppedImage" />
+         <span class="crop-image-text"><b>Image Preview</b></span>
+      </div>
+   </div>
+   <br>
+   <div class="text-center">
+      <button mat-raised-button class="btn-success" (click)="acceptcrop();closeDialog()">Yes</button>&nbsp;
+      <button mat-raised-button class="btn-danger" (click)="closeDialog()">No</button>
+   </div>
+</ng-template>
