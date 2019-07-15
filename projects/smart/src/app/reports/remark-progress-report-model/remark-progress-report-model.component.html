@@ -20,14 +20,15 @@
       </div>
     </div>
   </form>
-    <div *ngIf="editFlag">
-      <span id="edit_remark" >{{editRemark}}</span>
-      <div class="row">
-        <div class="col-12">
-          <i class="far fa-edit color-grey"></i><span class="margin-left-10 color-grey" (click)="editremark()">Edit</span><span
-            class="margin-left-10 ver-line-divider"></span><i class="far fa-trash-alt color-red"></i><span
-            class="margin-left-10 color-red" (click)="deleteRemark()">Delete</span>
-        </div>
+  <div *ngIf="editFlag">
+    <span id="edit_remark">{{editRemark}}</span>
+    <div class="row">
+      <div class="col-12">
+        <i class="far fa-edit color-grey"></i><span class="margin-left-10 color-grey"
+          (click)="editremark()">Edit</span><span class="margin-left-10 ver-line-divider"></span><i
+          class="far fa-trash-alt color-red"></i><span class="margin-left-10 color-red"
+          (click)="deleteRemark()">Delete</span>
       </div>
     </div>
+  </div>
 </ng-template>

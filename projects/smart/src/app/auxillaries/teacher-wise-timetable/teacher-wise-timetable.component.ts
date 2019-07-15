@@ -14,6 +14,7 @@ export class TeacherWiseTimetableComponent implements OnInit {
 	teacherArray: any[] = [];
 	subjectArray: any[] = [];
 	teacherwiseArray: any[] = [];
+	teacherwiseWeekArray: any[] = [];
 	teacherwiseForm: FormGroup;
 	teacherId: any;
 	noOfDay: any;
@@ -46,7 +47,13 @@ export class TeacherWiseTimetableComponent implements OnInit {
 			});
 		}
 	}
-
+	// get subject name from existing array
+	getSubjectName(value) {
+		const ctrIndex = this.subjectArray.findIndex(f => Number(f.sub_id) === Number(value));
+		if (ctrIndex !== -1) {
+			return this.subjectArray[ctrIndex].sub_name;
+		}
+	}
 	// set teacher name
 	setTeacherId(teacherDetails) {
 		this.teacherwiseForm.patchValue({
@@ -72,10 +79,21 @@ export class TeacherWiseTimetableComponent implements OnInit {
 
 	// get teacherwise timetable details
 	getTeacherwiseTableDetails() {
+		this.teacherwiseWeekArray = [];
+		this.teacherwiseArray = [];
 		this.finalDivFlag = false;
+		this.teacherwiseFlag = true;
 		this.smartService.getTeacherwiseTableDetails({ uc_login_id: this.teacherId }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.teacherwiseArray = result.data;
+				this.teacherwiseArray = result.data.tabledata;
+				Object.keys(result.data.dataperiod).forEach(key => {
+					if (key !== '-') {
+						this.teacherwiseWeekArray.push({
+							sub_id: key,
+							dataArr: result.data.dataperiod[key]
+						});
+					}
+				});
 			} else {
 				this.teacherwiseArray = [];
 				this.finalDivFlag = true;

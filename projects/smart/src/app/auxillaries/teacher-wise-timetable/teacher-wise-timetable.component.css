@@ -77,82 +77,82 @@
     color: orchid;
 }
 .background-color-1 {
-    background-color: aqua;
+    background-color: aqua!important;
 }
 .background-color-2 {
-    background-color: aquamarine;
+    background-color: aquamarine!important;
 }
 .background-color-3{
-    background-color: chocolate;
+    background-color: chocolate!important;
 }
 .background-color-4 {
-    background-color: peru;
+    background-color: peru!important;
 }
 .background-color-5 {
-    background-color: crimson;
+    background-color: crimson!important;
 }
 .background-color-6{
-    background-color: rebeccapurple;
+    background-color: rebeccapurple!important;
 }
 .background-color-7 {
-    background-color: red;
+    background-color: red!important;
 }
 .background-color-8 {
-    background-color: rosybrown;
+    background-color: rosybrown!important;
 }
 .background-color-9{
-    background-color: royalblue;
+    background-color: royalblue!important;
 }
 .background-color-10 {
-    background-color: yellow;
+    background-color: yellow!important;
 }
 .background-color-11 {
-    background-color: yellowgreen;
+    background-color: yellowgreen!important;
 }
 .background-color-12{
-    background-color: gold;
+    background-color: gold!important;
 }
 .background-color-13 {
-    background-color: goldenrod;
+    background-color: goldenrod!important;
 }
 .background-color-14 {
-    background-color: gray;
+    background-color: gray!important;
 }
 .background-color-15{
-    background-color: green;
+    background-color: green!important;
 }
 .background-color-16 {
-    background-color: greenyellow;
+    background-color: greenyellow!important;
 }
 .background-color-17 {
-    background-color: grey;
+    background-color: grey!important;
 }
 .background-color-18{
-    background-color: royalblue;
+    background-color: royalblue!important;
 }
 .background-color-19 {
-    background-color: blue;
+    background-color: blue!important;
 }
 .background-color-20{
-    background-color: black;
+    background-color: black!important;
 }
 .background-color-21 {
-    background-color: blueviolet;
+    background-color: blueviolet!important;
 }
 .background-color-22 {
-    background-color: brown;
+    background-color: brown!important;
 }
 .background-color-23{
-    background-color: coral;
+    background-color: coral!important;
 }
 .background-color-24 {
-    background-color: olive;
+    background-color: olive!important;
 }
 .background-color-25 {
-    background-color: orange;
+    background-color: orange!important;
 }
 .background-color-26{
-    background-color: orchid;
+    background-color: orchid!important;
 }
 .animation {
     -webkit-animation: ripplefive 0.7s linear infinite;
