@@ -794,5 +794,15 @@ export class DeletedFeetransReportComponent implements OnInit {
 			console.log(rowData);
 		}
 	}
+	getFromDate(value) {
+		this.reportFilterForm.patchValue({
+			from_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+		});
+	}
+	getToDate(value) {
+		this.reportFilterForm.patchValue({
+			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+		});
+	}
 
 }

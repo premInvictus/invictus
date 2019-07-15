@@ -4,6 +4,7 @@ export interface FeeLedgerElement {
 	invoiceno: any;
 	feeperiod: any;
 	particular: any;
+	remarks: any;
 	amount: any;
 	concession: any;
 	reciept: any;

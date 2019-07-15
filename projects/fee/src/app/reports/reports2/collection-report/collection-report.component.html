@@ -22,7 +22,8 @@
         <div *ngIf="filterFlag && reportFilterForm.value.report_type !== 'mfr'" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>From Date</mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"/>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
+                (blur)="getFromDate($event.target.value)"/>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
@@ -30,7 +31,8 @@
         <div *ngIf="filterFlag && reportFilterForm.value.report_type !== 'mfr'" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>To Date</mat-label>
-                <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"/>
+                <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
+                (blur)="getToDate($event.target.value)"/>
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>

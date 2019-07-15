@@ -136,7 +136,7 @@ export class LoginComponent implements OnInit {
 						this.loaderService.stopLoading();
 						const user = result.data;
 						if (result.data.userSaveStateData) {
-						this.userSaveData = JSON.parse(result.data.userSaveStateData);
+							this.userSaveData = JSON.parse(result.data.userSaveStateData);
 						}
 						const tempJson = {
 							CID: user.clientKey,
@@ -145,8 +145,8 @@ export class LoginComponent implements OnInit {
 							LN: user.login_id,
 							PF: user.Prefix
 						};
-						//user.Prefix = this.model.username.split('-')[0];
-						//user.username = this.model.username;
+						// user.Prefix = this.model.username.split('-')[0];
+						// user.username = this.model.username;
 						if (user) {
 							localStorage.setItem('currentUser', JSON.stringify(user));
 							this._cookieService.put('userData', JSON.stringify(tempJson));
@@ -180,11 +180,11 @@ export class LoginComponent implements OnInit {
 											}
 											let returnUrl: any;
 											if ((this.userSaveData && !this.userSaveData.pro_url) || !this.userSaveData) {
-												localStorage.setItem('project', JSON.stringify({pro_url: 'axiom'}));
+												localStorage.setItem('project', JSON.stringify({ pro_url: 'axiom' }));
 												returnUrl = '/axiom';
 											} else {
 												returnUrl = this.userSaveData.pro_url;
-												localStorage.setItem('project', JSON.stringify({pro_url: this.userSaveData.pro_url}));
+												localStorage.setItem('project', JSON.stringify({ pro_url: this.userSaveData.pro_url }));
 											}
 											if (this.userSaveData && this.userSaveData.ses_id) {
 												const sessionParam: any = {};
