@@ -1681,4 +1681,14 @@ export class OutstandingReportComponent implements OnInit {
 			format: (type === 'csv') ? FileType.csv : FileType.txt
 		});
 	}
+	getFromDate(value) {
+		this.reportFilterForm.patchValue({
+			from_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+		});
+	}
+	getToDate(value) {
+		this.reportFilterForm.patchValue({
+			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+		});
+	}
 }
