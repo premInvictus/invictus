@@ -4,7 +4,9 @@ import {
 	OnChanges,
 	Input,
 	EventEmitter,
-	Output
+	Output,
+	ViewChild,
+	ElementRef
 } from '@angular/core';
 import {
 	FormGroup,
@@ -28,6 +30,7 @@ import {
 import { ErrorStateMatcher, MatDialog } from '@angular/material';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { SearchViaStudentComponent } from '../../sharedmodule/search-via-student/search-via-student.component';
+import { element } from '@angular/core/src/render3/instructions';
 
 @Component({
 	selector: 'app-common-student-profile',
@@ -48,6 +51,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	@Output() last2 = new EventEmitter();
 	@Output() key2 = new EventEmitter();
 	@Output() processTypeEmit = new EventEmitter();
+	@ViewChild('enrollmentFocus') enrollmentFocus: ElementRef;
 	studentdetailsform: FormGroup;
 	accountsForm: FormGroup;
 	studentdetails: any = {};
@@ -132,7 +136,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 			} else if (currentUrl === 'fee-transaction-entry-individual') {
 			}
 		}
-		document.getElementById('blur_id').focus();
+		// document.getElementById('blur_id').focus();
+		const fe = <HTMLInputElement>this.enrollmentFocus.nativeElement;
+		fe.focus();
+		fe.select();
 	}
 	goToPage(url) {
 		this.router.navigate([`../${url}`], { relativeTo: this.route });
@@ -146,7 +153,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 			this.studentdetailsflag = true;
 			this.getStudentInformation(this.feeRenderId);
 		}
-		document.getElementById('blur_id').focus();
+		// document.getElementById('blur_id').focus();
+		const fe = <HTMLInputElement>this.enrollmentFocus.nativeElement;
+		fe.focus();
+		fe.select();
 	}
 	buildForm() {
 		this.studentdetailsform = this.fbuild.group({
