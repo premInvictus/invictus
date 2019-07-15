@@ -4428,7 +4428,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
         flex: 0 0 20% !important;
     }
     .highcharts-container {
-        margin-left: -45px !important;
+        //margin-left: -45px !important;
     }
     .mob-button-nxt-prev {
         max-width: 70% !important;
@@ -8707,4 +8707,27 @@ a.link {
 
 .mat-drawer.mat-drawer-push {
     background-color: #007d9e !important;
+}
+
+@media(max-width:720px) {
+    h1.font-size-24 {
+        font-size: 17px !important;
+    }
+    .mat-drawer-container {
+        background: #ffffff;
+    }
+    .flip-card-img {
+        width: 150px !important;
+        margin: 5px !important;
+    }
+    .mat-flip-card {
+        width: 170px !important;
+        padding: 0px !important;
+        border: 1px solid #666699;
+        margin-right: 0px !important;
+        cursor: pointer;
+    }
+    .axiom-footer {
+        z-index: 99;
+    }
 }
