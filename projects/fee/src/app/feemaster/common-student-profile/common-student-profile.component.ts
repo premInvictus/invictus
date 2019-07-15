@@ -4,7 +4,9 @@ import {
 	OnChanges,
 	Input,
 	EventEmitter,
-	Output
+	Output,
+	ViewChild,
+	ElementRef
 } from '@angular/core';
 import {
 	FormGroup,
@@ -28,6 +30,7 @@ import {
 import { ErrorStateMatcher, MatDialog } from '@angular/material';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { SearchViaStudentComponent } from '../../sharedmodule/search-via-student/search-via-student.component';
+import { element } from '@angular/core/src/render3/instructions';
 
 @Component({
 	selector: 'app-common-student-profile',
@@ -48,6 +51,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	@Output() last2 = new EventEmitter();
 	@Output() key2 = new EventEmitter();
 	@Output() processTypeEmit = new EventEmitter();
+	@ViewChild('enrollmentFocus') enrollmentFocus: ElementRef;
 	studentdetailsform: FormGroup;
 	accountsForm: FormGroup;
 	studentdetails: any = {};
@@ -132,6 +136,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 			} else if (currentUrl === 'fee-transaction-entry-individual') {
 			}
 		}
+		// document.getElementById('blur_id').focus();
+		const fe = <HTMLInputElement>this.enrollmentFocus.nativeElement;
+		fe.focus();
+		fe.select();
 	}
 	goToPage(url) {
 		this.router.navigate([`../${url}`], { relativeTo: this.route });
@@ -145,6 +153,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 			this.studentdetailsflag = true;
 			this.getStudentInformation(this.feeRenderId);
 		}
+		// document.getElementById('blur_id').focus();
+		const fe = <HTMLInputElement>this.enrollmentFocus.nativeElement;
+		fe.focus();
+		fe.select();
 	}
 	buildForm() {
 		this.studentdetailsform = this.fbuild.group({
@@ -482,11 +494,11 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.processTypeEmit.emit(this.processType);
 	}
 	parent_type_fun(type: any) {
-		if (type.parentinfo && type.parentinfo.length > 0  && type.parentinfo[0].epd_parent_type === 'F') {
+		if (type.parentinfo && type.parentinfo.length > 0 && type.parentinfo[0].epd_parent_type === 'F') {
 			return 'Father\'s Name';
-		} else if (type.parentinfo && type.parentinfo.length > 0  && type.parentinfo[0].epd_parent_type === 'M') {
+		} else if (type.parentinfo && type.parentinfo.length > 0 && type.parentinfo[0].epd_parent_type === 'M') {
 			return 'Mother\'s Name';
-		} else if (type.parentinfo && type.parentinfo.length > 0  && type.parentinfo[0].epd_parent_type === 'G') {
+		} else if (type.parentinfo && type.parentinfo.length > 0 && type.parentinfo[0].epd_parent_type === 'G') {
 			return 'Guardian\'s Name';
 		} else {
 			return 'Active Parent Name';
@@ -503,7 +515,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		});
 		diaogRef.afterClosed().subscribe((result: any) => {
 			if (result) {
-				this.processType = result.process_type ;
+				this.processType = result.process_type;
 				this.processtypeService.setProcesstype(result.process_type);
 				this.nextId(result.adm_no);
 			}

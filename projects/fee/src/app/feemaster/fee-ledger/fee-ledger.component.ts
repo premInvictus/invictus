@@ -7,16 +7,7 @@ import * as XLSX from 'xlsx';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
-export interface PeriodicElement {
-	srno: number;
-	date: string;
-	invoiceno: number;
-	particular: string;
-	amount: number;
-	concession: number;
-	reciept: number;
-	balance: number;
-}
+
 @Component({
 	selector: 'app-fee-ledger',
 	templateUrl: './fee-ledger.component.html',
@@ -24,7 +15,8 @@ export interface PeriodicElement {
 })
 export class FeeLedgerComponent implements OnInit {
 
-	displayedColumns: string[] = ['srno', 'date', 'invoiceno', 'feeperiod', 'particular', 'amount', 'concession', 'reciept', 'balance'];
+	displayedColumns: string[] = ['srno', 'date', 'invoiceno', 'particular',
+	 'amount', 'concession', 'reciept', 'balance', 'remarks'];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
 	dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 	recordArray: any[] = [];
@@ -108,6 +100,7 @@ export class FeeLedgerComponent implements OnInit {
 						invoiceno: item.flgr_invoice_receipt_no ? item.flgr_invoice_receipt_no : '-',
 						feeperiod: item.flgr_fp_months ? item.flgr_fp_months : '-',
 						particular: item.flgr_particulars ? item.flgr_particulars : '-',
+						remarks: item.remarks ? item.remarks : '-',
 						amount: item.flgr_amount ? item.flgr_amount : '0',
 						concession: item.flgr_concession ? item.flgr_concession : '0',
 						reciept: item.flgr_receipt ? item.flgr_receipt : '0',
