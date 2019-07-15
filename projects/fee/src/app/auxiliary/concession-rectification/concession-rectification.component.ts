@@ -74,12 +74,15 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 		param.accd_fcg_status = 'approved';
 		this.feeService.updateConcessionRectification(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-        this.getConcessionRectification();
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getConcessionRectification();
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
+	}
+	applyFilter(filterValue: string) {
+		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
 
 }
