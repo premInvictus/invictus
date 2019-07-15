@@ -129,6 +129,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 			return this.sectionArray[sectionIndex].sec_name;
 		}
 	}
+	// get sum of total count of subject in week
 	getSum(dety, index, sub_id) {
 		this.sum = 0;
 		this.subjectCountArray = [];

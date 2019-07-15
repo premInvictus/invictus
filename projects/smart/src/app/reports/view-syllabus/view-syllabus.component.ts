@@ -44,7 +44,6 @@ export class ViewSyllabusComponent implements OnInit {
 		this.buildForm();
 		this.getClass();
 	}
-
 	//  Get Class List function
 	getClass() {
 		this.finalSpannedArray = [];

@@ -312,7 +312,7 @@ export class AddSyllabusComponent implements OnInit {
 		if (subIndex !== -1) {
 			return this.subTopicJson[subIndex].st_name;
 		}
-	}
+	} 
 
 	// Reset Syllabus Details form 
 	resetForm() {

@@ -10,11 +10,11 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ComparitiveComponent implements OnInit {
 
-	toMin = new Date();
 	editRequestFlag = false;
 	finalDivFlag = true;
 	headerDivFlag = false;
 	comparitiveForm: FormGroup;
+	toMin = new Date();
 	classArray: any[];
 	subjectArray: any[];
 	finalSyllabusArray: any[];
@@ -48,7 +48,7 @@ export class ComparitiveComponent implements OnInit {
 			sc_from: '',
 			sc_to: '',
 			syl_class_id: '',
-			syl_section_id:'',
+			syl_section_id: '',
 			syl_sub_id: ''
 		});
 	}
@@ -80,28 +80,31 @@ export class ComparitiveComponent implements OnInit {
 			'syl_sub_id': ''
 		});
 	}
-		// get section list according to selected class
-		getSectionsByClass() {
-			this.comparitiveForm.patchValue({
-				'syl_section_id': '',
-				'syl_sub_id': ''
-			});
-			const sectionParam: any = {};
-			sectionParam.class_id = this.comparitiveForm.value.syl_class_id;
-			this.sisService.getSectionsByClass(sectionParam)
-				.subscribe(
-					(result: any) => {
-						if (result && result.status === 'ok') {
-							this.sectionArray = result.data;
-							this.getSubjectsByClass();
-						} else {
-							this.sectionArray = [];
-						}
+	// get section list according to selected class
+	getSectionsByClass() {
+		this.comparitiveForm.patchValue({
+			'syl_section_id': '',
+			'syl_sub_id': ''
+		});
+		const sectionParam: any = {};
+		sectionParam.class_id = this.comparitiveForm.value.syl_class_id;
+		this.sisService.getSectionsByClass(sectionParam)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.sectionArray = result.data;
+						this.getSubjectsByClass();
+					} else {
+						this.sectionArray = [];
 					}
-				);
-		}
+				}
+			);
+	}
 	//  Get Subject By Class function
 	getSubjectsByClass(): void {
+		this.comparitiveForm.patchValue({
+			'syl_sub_id': ''
+		});
 		this.finalSpannedArray = [];
 		this.finalDivFlag = true;
 		const subjectParam: any = {};
@@ -177,6 +180,7 @@ export class ComparitiveComponent implements OnInit {
 	}
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
+		this.finalSpannedArray = [];
 		this.finalDivFlag = false;
 		this.headerDivFlag = true;
 		const param: any = {};
