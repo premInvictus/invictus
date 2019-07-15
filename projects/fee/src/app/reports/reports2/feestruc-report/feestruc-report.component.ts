@@ -702,6 +702,7 @@ export class FeestrucReportComponent implements OnInit {
 					createFooterRow: true,
 					showFooterRow: true,
 					footerRowHeight: 21,
+					rowHeight: 800,
 					enableExcelCopyBuffer: true,
 					fullWidthRows: true,
 					headerMenu: {

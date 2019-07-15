@@ -43,6 +43,8 @@ import { EditobjectiveComponent } from '../questionbank/reviewo/editobjective/ed
 import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit-essay.component';
 import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dialog/question-paper-dialog.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { ImagecropComponent } from './imagecrop/imagecrop.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -78,7 +80,8 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 		AccordionModule.forRoot(),
 		FormsModule,
 		ReactiveFormsModule,
-		InvictusSharedModule
+		InvictusSharedModule,
+		ImageCropperModule,
 
 	],
 	declarations: [
@@ -91,7 +94,8 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 		EssayDialogsComponent,
 		EditobjectiveComponent,
 		EditEssayComponent,
-		QuestionPaperDialogComponent
+		QuestionPaperDialogComponent,
+		ImagecropComponent
 	],
 	exports: [
 		DeleteModalComponent,
@@ -127,8 +131,11 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 		EditobjectiveComponent,
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
-		AddInstructionComponent
-	]
+		AddInstructionComponent,
+		ImageCropperModule,
+		ImagecropComponent
+	],
+	entryComponents: [ImagecropComponent]
 })
 export class SharedModule {
 	constructor() {

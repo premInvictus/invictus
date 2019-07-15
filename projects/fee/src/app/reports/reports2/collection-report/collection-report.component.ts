@@ -2069,6 +2069,7 @@ export class CollectionReportComponent implements OnInit {
 			aggregateCollapsed: true,
 			collapsed: false,
 		});
+		this.draggableGroupingPlugin.setDroppedGroups('stu_class_name');
 	}
 	exportToExcel(json: any[], excelFileName: string): void {
 		const rowData: any[] = [];
@@ -2110,6 +2111,16 @@ export class CollectionReportComponent implements OnInit {
 			delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
 			filename: reportType + '_' + new Date(),
 			format: (type === 'csv') ? FileType.csv : FileType.txt
+		});
+	}
+	getFromDate(value) {
+		this.reportFilterForm.patchValue({
+			from_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+		});
+	}
+	getToDate(value) {
+		this.reportFilterForm.patchValue({
+			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
 		});
 	}
 }

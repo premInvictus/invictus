@@ -25,6 +25,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('recalculateModal') recalculateModal;
 	@ViewChild('consolidateModal') consolidateModal;
+	@ViewChild('unconsolidateModal') unconsolidateModal;
 	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
 	ELEMENT_DATA: InvoiceElement[] = [];
@@ -421,6 +422,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
 	openConsolidateDialog = (data) => this.consolidateModal.openModal(data);
+	openUnConsolidateDialog = (data) => this.unconsolidateModal.openModal(data);
 	deleteConfirm(value) {
 		// this.feeService.deleteInvoice(value).subscribe((result: any) => {
 		// 	if (result && result.status === 'ok') {
@@ -516,6 +518,30 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			}
 		});
 
+	}
+
+	unconsolidateConfirm(value) {
+		console.log(this.fetchInvId());
+		this.feeService.unconsolidateInvoice({ inv_consolidate_id: this.fetchInvId() }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
 	}
 
 	navigateBulk() {

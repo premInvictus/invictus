@@ -122,21 +122,6 @@ export class SearchStudentComponent implements OnInit {
 					this.loading = false;
 					if (result.data.length > 0) {
 						this.userDetails = result.data[0];
-						this.Student_Details_Form.controls.au_login_id.setValue(this.userDetails.au_login_id);
-						this.Student_Details_Form.controls.au_full_name.setValue(this.userDetails.au_full_name);
-						this.Student_Details_Form.controls.au_email.setValue(this.userDetails.au_email);
-						this.Student_Details_Form.controls.au_mobile.setValue(this.userDetails.au_mobile);
-						this.Personal_detail_Form.controls.au_class_id.setValue(this.userDetails.au_class_id);
-						this.getSectionsByClass();
-						this.Personal_detail_Form.controls.au_sec_id.setValue(this.userDetails.au_sec_id);
-						this.Personal_detail_Form.controls.upd_aadhaar_no.setValue(this.userDetails.personal_details[0].upd_aadhaar_no);
-						this.Personal_detail_Form.controls.upd_dob.setValue(this.userDetails.personal_details[0].upd_dob);
-						this.Personal_detail_Form.controls.upd_gender.setValue(this.userDetails.personal_details[0].upd_gender);
-						this.Personal_detail_Form.controls.upd_doj.setValue(this.userDetails.personal_details[0].upd_doj);
-						this.Personal_detail_Form.controls.upd_address.setValue(this.userDetails.personal_details[0].upd_address);
-						this.Personal_detail_Form.controls.upd_cit_id.setValue(this.userDetails.personal_details[0].upd_cit_id);
-						this.Personal_detail_Form.controls.upd_sta_id.setValue(this.userDetails.personal_details[0].upd_sta_id);
-						this.Personal_detail_Form.controls.upd_pincode.setValue(this.userDetails.personal_details[0].upd_pincode);
 						this.updateFlag = true;
 					} else {
 						this.errorNotification('No record found');
@@ -425,8 +410,7 @@ export class SearchStudentComponent implements OnInit {
 		this.getAllStudentListByName(param);
 	}
 	routeToStudentPage(id) {
-		this.service.viewProfile.next(id);
-		this.dialogRef.close();
+		this.dialogRef.close({login_id: id});
 	}
 
 	saveief() {

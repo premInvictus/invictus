@@ -8,20 +8,22 @@ import { MatDialog } from '@angular/material/dialog';
 	styleUrls: ['./syllabus-progress-report.component.css']
 })
 export class SyllabusProgressReportComponent implements OnInit {
+	@ViewChild('remarkModel') remarkModel;
 	todaydate = new Date();
 	progressReportForm: FormGroup;
+	editRequestFlag = false;
+	finalDivFlag = true;
+	headerDivFlag = false;
 	classArray: any[];
 	subjectArray: any[];
 	subCountArray: any[] = [];
 	finalArray: any[];
 	classwisetableArray: any[];
 	periodCompletionArray: any[] = [];
+	remarkArray: any[] = [];
 	sectionArray: any[];
 	finalSpannedArray: any[] = [];
 	sessionArray: any[] = [];
-	editRequestFlag = false;
-	finalDivFlag = true;
-	headerDivFlag = false;
 	currentUser: any;
 	seesion_id: any;
 	sessionName: any;
@@ -30,6 +32,8 @@ export class SyllabusProgressReportComponent implements OnInit {
 	yeararray: any;
 	currentYear: any;
 	nextYear: any;
+	tt_id: any;
+	remarkParam: any = {};
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -40,6 +44,20 @@ export class SyllabusProgressReportComponent implements OnInit {
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.seesion_id = JSON.parse(localStorage.getItem('session'));
+	}
+	// Add remark open modal function
+	openRemarkModal(tt_id, sub_id) {
+		this.remarkParam.tt_id = tt_id;
+		this.remarkParam.sub_id = sub_id;
+		this.remarkParam.type = 'add';
+		this.remarkModel.openRemarkModal(this.remarkParam);
+	}
+	// edit remark open modal function
+	editRemarkModal(tt_id, sub_id) {
+		this.remarkParam.tt_id = tt_id;
+		this.remarkParam.sub_id = sub_id;
+		this.remarkParam.type = 'edit';
+		this.remarkModel.openRemarkModal(this.remarkParam);
 	}
 	buildForm() {
 		this.progressReportForm = this.fbuild.group({
@@ -77,7 +95,6 @@ export class SyllabusProgressReportComponent implements OnInit {
 	}
 	// get section list according to selected class
 	getSectionsByClass() {
-		this.finalDivFlag = false;
 		this.progressReportForm.patchValue({
 			'syl_section_id': ''
 		});
@@ -93,6 +110,20 @@ export class SyllabusProgressReportComponent implements OnInit {
 					}
 				}
 			);
+	}
+	// get Class name from existing array
+	getClassName(value) {
+		const classIndex = this.classArray.findIndex(f => Number(f.class_id) === Number(value));
+		if (classIndex !== -1) {
+			return this.classArray[classIndex].class_name;
+		}
+	}
+	// get section from existing array
+	getSectionName(value) {
+		const sectionIndex = this.sectionArray.findIndex(f => Number(f.sec_id) === Number(value));
+		if (sectionIndex !== -1) {
+			return this.sectionArray[sectionIndex].sec_name;
+		}
 	}
 	// get session name by session id
 	getSession() {
@@ -110,6 +141,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 					}
 				});
 	}
+	// get end month and start month of school
 	getSchool() {
 		this.sisService.getSchool()
 			.subscribe(
@@ -120,8 +152,71 @@ export class SyllabusProgressReportComponent implements OnInit {
 					}
 				});
 	}
+	// delete remark entry from database
+	deleteremark($event) {
+		if ($event) {
+			const param: any = {};
+			param.rm_tt_id = $event.tt_id;
+			param.rm_subject_id = $event.sub_id;
+			this.smartService.deleteProgressReportRemarks(param)
+				.subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.fetchDetails();
+							this.commonService.showSuccessErrorMessage('Remark deleted Successfully', 'success');
+						}
+					});
+		}
+	}
+	// get background color according to value range
+	getcolor(value) {
+		if (Number(value) === 0) {
+			return '#ffffff';
+		} else if (Number(value) > 0) {
+			return '#28a7456b';
+		} else {
+			return '#dc3545a6';
+		}
+	}
+	// add remarks to database
+	addremark($event) {
+		if ($event) {
+			const param: any = {};
+			param.rm_tt_id = $event.tt_id;
+			param.rm_subject_id = $event.sub_id;
+			param.rm_remark = $event.remark;
+			this.smartService.getProgressReportRemarks(param).subscribe((remark_r: any) => {
+				if (remark_r && remark_r.status === 'ok') {
+					this.smartService.updateProgressReportRemarks(param)
+						.subscribe(
+							(result: any) => {
+								if (result && result.status === 'ok') {
+									this.fetchDetails();
+									this.commonService.showSuccessErrorMessage('Remark Updated Successfully', 'success');
+								}
+							});
+				} else {
+					this.smartService.insertProgressReportRemarks(param)
+						.subscribe(
+							(result: any) => {
+								if (result && result.status === 'ok') {
+									this.fetchDetails();
+									this.commonService.showSuccessErrorMessage('Remark added Successfully', 'success');
+								}
+							});
+				}
 
+			});
+
+		}
+	}
+	// fetch details for table 
 	fetchDetails() {
+		this.headerDivFlag = true;
+		this.finalDivFlag = false;
+		this.subCountArray = [];
+		this.remarkArray = [];
+		this.periodCompletionArray = [];
 		const timetableparam: any = {};
 		timetableparam.tt_class_id = this.progressReportForm.value.syl_class_id;
 		timetableparam.tt_section_id = this.progressReportForm.value.syl_section_id;
@@ -129,7 +224,17 @@ export class SyllabusProgressReportComponent implements OnInit {
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
+						this.tt_id = result.data[0].tt_id;
 						if (result.data[0].tt_id !== '') {
+							const param: any = {};
+							param.rm_tt_id = this.tt_id;
+							this.smartService.getProgressReportRemarks(param).subscribe((remark_r: any) => {
+								if (remark_r && remark_r.status === 'ok') {
+									for (const citem of remark_r.data) {
+										this.remarkArray[citem.rm_subject_id] = citem.rm_remark;
+									}
+								}
+							});
 							const dateParam: any = {};
 							dateParam.datefrom = this.currentYear + '-' + this.startMonth + '-1';
 							dateParam.dateyear = this.nextYear + '-' + this.endMonth + '-31';

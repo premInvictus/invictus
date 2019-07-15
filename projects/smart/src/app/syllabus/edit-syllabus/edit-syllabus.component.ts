@@ -9,7 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 	styleUrls: ['./edit-syllabus.component.css']
 })
 export class EditSyllabusComponent implements OnInit {
-	@Input() revieweditform: FormGroup;
+	@Input() revieweditform: FormGroup; 
 	public editArray: any[] = [];
 	ckeConfig: any = {};
 	inputData: any = {};
@@ -43,7 +43,6 @@ export class EditSyllabusComponent implements OnInit {
 			height: '550px',
 			width: '700px'
 		});
-		this.buildForm();
 		this.buildForm();
 		this.getSyllabusDetailsEdit(data);
 		this.ckeConfig = {

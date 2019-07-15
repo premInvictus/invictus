@@ -155,7 +155,9 @@
                      (click)="saveief()">Reset</button>
                   &nbsp;&nbsp;
                   <a [routerLink]="['../manage-access-user',userIdManageAccess]">
-                     <button mat-raised-button class="btn-primary btn-success" *ngIf="updateFlag"
+                     <button mat-raised-button class="btn-primary btn-success" 
+                     style="width: 180px"
+                     *ngIf="updateFlag"
                         [disabled]="manageAccessFlag">Manage Access</button>
                   </a>
                </div>

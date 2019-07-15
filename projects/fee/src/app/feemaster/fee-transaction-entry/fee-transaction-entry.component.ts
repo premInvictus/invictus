@@ -177,15 +177,15 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.invoice.balance_amt = Number(this.invoice.balance_amt);
 					this.invoice.netPay += Number(this.invoice.balance_amt);
 				}
-				if (this.invoice.prev_balance) {
-					this.invoice.netPay += Number(this.invoice.prev_balance);
-					this.invoice.balance_amt += Number(this.invoice.prev_balance);
-				}
+				// if (this.invoice.prev_balance) {
+				// 	this.invoice.netPay += Number(this.invoice.prev_balance);
+				// 	this.invoice.balance_amt += Number(this.invoice.prev_balance);
+				// }
 
 				if (this.invoice.netPay < 0) {
 					this.invoice.netPay = 0;
-					
 				}
+					
 				
 				this.invoiceArray = this.invoice.invoice_bifurcation;
 				this.feeTransactionForm.patchValue({
@@ -618,7 +618,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	setPayAmount(event) {
 		if (event.value === 2 || event.value === '2' ) {
 			// tslint:disable-next-line: max-line-length
-			const netAmount = parseInt(this.invoice.fee_amount, 10) + parseInt(this.invoice.inv_fine_amount, 10) + parseInt(this.invoice.inv_prev_balance, 10) + parseInt(this.invoice.inv_opening_balance, 10);
+			let netAmount = parseInt(this.invoice.fee_amount, 10) + parseInt(this.invoice.inv_fine_amount, 10) + parseInt(this.invoice.inv_prev_balance, 10);
+			
+			if (netAmount < 0) {
+				netAmount = 0;
+			}
+
 			this.feeTransactionForm.patchValue({
 				'ftr_amount': netAmount,
 				'ftr_pay_id': event.value

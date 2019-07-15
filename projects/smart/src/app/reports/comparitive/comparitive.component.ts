@@ -11,6 +11,9 @@ import { MatDialog } from '@angular/material/dialog';
 export class ComparitiveComponent implements OnInit {
 
 	toMin = new Date();
+	editRequestFlag = false;
+	finalDivFlag = true;
+	headerDivFlag = false;
 	comparitiveForm: FormGroup;
 	classArray: any[];
 	subjectArray: any[];
@@ -20,9 +23,6 @@ export class ComparitiveComponent implements OnInit {
 	sectionArray: any[];
 	finalSpannedArray: any[] = [];
 	sessionArray: any[] = [];
-	editRequestFlag = false;
-	finalDivFlag = true;
-	headerDivFlag = false;
 	param: any = {};
 	publishParam: any = {};
 	editParam: any = {};
@@ -82,9 +82,9 @@ export class ComparitiveComponent implements OnInit {
 	}
 		// get section list according to selected class
 		getSectionsByClass() {
-			this.finalDivFlag = false;
 			this.comparitiveForm.patchValue({
-				'syl_section_id': ''
+				'syl_section_id': '',
+				'syl_sub_id': ''
 			});
 			const sectionParam: any = {};
 			sectionParam.class_id = this.comparitiveForm.value.syl_class_id;
@@ -103,6 +103,7 @@ export class ComparitiveComponent implements OnInit {
 	//  Get Subject By Class function
 	getSubjectsByClass(): void {
 		this.finalSpannedArray = [];
+		this.finalDivFlag = true;
 		const subjectParam: any = {};
 		subjectParam.class_id = this.comparitiveForm.value.syl_class_id;
 		this.axiomService.getSubjectsByClass(subjectParam)
@@ -152,13 +153,7 @@ export class ComparitiveComponent implements OnInit {
 			return this.sectionArray[sectionIndex].sec_name;
 		}
 	}
-	//  Get Topic Name from existion Array for details table
-	getTopicName(value) {
-		const topIndex = this.topicArray.findIndex(f => Number(f.topic_id) === Number(value));
-		if (topIndex !== -1) {
-			return this.topicArray[topIndex].topic_name;
-		}
-	}
+	// get session year of the selected session
 	getSession() {
 		this.sisService.getSession()
 			.subscribe(
@@ -170,15 +165,15 @@ export class ComparitiveComponent implements OnInit {
 					}
 				});
 	}
-	//  Get Sub Topic Name
-	getSubTopicName(value): void {
-		this.axiomService.getSubtopicByTopic(value)
-			.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						return result.data.st_name;
-					}
-				});
+	// get background color according to value range
+	getcolor(value) {
+		if (Number(value) === 0) {
+			return '#ffffff';
+		} else if (Number(value) > 0) {
+			return '#28a7456b';
+		} else {
+			return '#dc3545a6';
+		}
 	}
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
@@ -194,8 +189,6 @@ export class ComparitiveComponent implements OnInit {
 				(result1: any) => {
 					if (result1 && result1.status === 'ok') {
 						this.finalSyllabusArray = result1.data;
-						console.log(this.finalSyllabusArray);
-
 						for (let i = 0; i < this.finalSyllabusArray.length; i++) {
 							let sd_period_teacher: any = '';
 							let sd_period_test: any = '';
@@ -280,7 +273,6 @@ export class ComparitiveComponent implements OnInit {
 								// tslint:disable-next-line: max-line-length
 								this.finalSpannedArray[findex].total1 = Number(this.finalSpannedArray[findex].total1) + Number(this.finalSyllabusArray[i].cw_period_req);
 							}
-							console.log(this.finalSpannedArray);
 						}
 
 					} else {
