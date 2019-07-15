@@ -47,7 +47,6 @@ export class RemarkProgressReportModelComponent implements OnInit {
 		});
 		this.buildForm();
 		this.inputData = data;
-		console.log(this.inputData);
 		if (this.inputData.type === 'add') {
 			this.addFlag = true;
 			this.editFlag = false;

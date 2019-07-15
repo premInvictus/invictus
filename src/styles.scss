@@ -393,7 +393,8 @@ mat-dialog-content {
         color: #ffffff;
         text-align: center;
     }
-    .mobile-menu-icon {
+    .mobile-menu-icon,
+    .mobile-menu-icon:hover {
         width: 48px;
         padding-top: 10px;
         padding-left: 10px;
@@ -402,6 +403,9 @@ mat-dialog-content {
         text-decoration-color: none;
         text-decoration: none;
         color: #fff;
+        background: none !important;
+        width: auto !important;
+        cursor: pointer;
     }
     .axiom-navbar-hide-small {
         display: none;
@@ -1213,7 +1217,7 @@ img.no-records-fond-partial-img {
     position: -webkit-sticky;
     top: 0;
     z-index: 1;
-    background-color: #c8d6e5!important;
+    background-color: #c8d6e5 !important;
 }
 
 .text-lowercase {
@@ -1309,6 +1313,14 @@ img.no-records-fond-partial-img {
     font-size: 14px;
     font-weight: 500;
     color: #fff;
+    background: #716aca;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 30px;
+    position: absolute;
+    right: 2px;
 }
 
 .purple-highlighter {
@@ -1338,12 +1350,15 @@ img.no-records-fond-partial-img {
 }
 
 .instruct-content-two {
-    width: 80%;
+    width: 90%;
 }
 
 .instruct-add-icon {
     font-size: 30px !important;
     color: #716aca;
+    position: absolute;
+    top: 2px;
+    left: 2px;
 }
 
 .evaluate-test-icon {
@@ -1399,6 +1414,7 @@ mat-radio-group.double-int-radio .mat-radio-button .mat-radio-label {
     font-size: 14px;
     font-weight: 500;
     color: #716aca;
+    text-align: right;
 }
 
 .marks-title {
@@ -2495,7 +2511,7 @@ overflow-y: scroll !important;*/
 }
 
 .table-filter-icon {
-    color: #9c3;
+    color: #0e7d9e;
 }
 
 .mat-paginator-icon {
@@ -8689,22 +8705,6 @@ a.link {
     z-index: 9 !important;
 }
 
-.table-bordered td,
-.table-bordered th {
-    border: 1px solid #89A8C9;
-}
-
-table {
-    width: 100%;
-}
-
-td {
-    border: 1px solid #89A8C9 !important;
-    padding: 10px;
-}
-
-th {
-    border: 1px solid #89A8C9 !important;
-    border-collapse: collapse;
-    padding: 0 10px;
+.mat-drawer.mat-drawer-push {
+    background-color: #007d9e !important;
 }

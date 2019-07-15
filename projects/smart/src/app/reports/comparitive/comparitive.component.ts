@@ -11,6 +11,9 @@ import { MatDialog } from '@angular/material/dialog';
 export class ComparitiveComponent implements OnInit {
 
 	toMin = new Date();
+	editRequestFlag = false;
+	finalDivFlag = true;
+	headerDivFlag = false;
 	comparitiveForm: FormGroup;
 	classArray: any[];
 	subjectArray: any[];
@@ -20,9 +23,6 @@ export class ComparitiveComponent implements OnInit {
 	sectionArray: any[];
 	finalSpannedArray: any[] = [];
 	sessionArray: any[] = [];
-	editRequestFlag = false;
-	finalDivFlag = true;
-	headerDivFlag = false;
 	param: any = {};
 	publishParam: any = {};
 	editParam: any = {};
@@ -189,8 +189,6 @@ export class ComparitiveComponent implements OnInit {
 				(result1: any) => {
 					if (result1 && result1.status === 'ok') {
 						this.finalSyllabusArray = result1.data;
-						console.log(this.finalSyllabusArray);
-
 						for (let i = 0; i < this.finalSyllabusArray.length; i++) {
 							let sd_period_teacher: any = '';
 							let sd_period_test: any = '';
@@ -275,7 +273,6 @@ export class ComparitiveComponent implements OnInit {
 								// tslint:disable-next-line: max-line-length
 								this.finalSpannedArray[findex].total1 = Number(this.finalSpannedArray[findex].total1) + Number(this.finalSyllabusArray[i].cw_period_req);
 							}
-							console.log(this.finalSpannedArray);
 						}
 
 					} else {
