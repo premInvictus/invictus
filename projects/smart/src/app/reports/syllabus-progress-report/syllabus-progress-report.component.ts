@@ -9,11 +9,12 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class SyllabusProgressReportComponent implements OnInit {
 	@ViewChild('remarkModel') remarkModel;
-	todaydate = new Date();
-	progressReportForm: FormGroup;
+	
 	editRequestFlag = false;
 	finalDivFlag = true;
 	headerDivFlag = false;
+	todaydate = new Date();
+	progressReportForm: FormGroup;
 	classArray: any[];
 	subjectArray: any[];
 	subCountArray: any[] = [];
