@@ -37,7 +37,12 @@ export class AuthenticationService {
 			};
 		}
 		const headers = new HttpHeaders(prefixOptions);
-		return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
+		// return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
+		if (this.loaderService.getUserPrefix()) {
+			return this.http.post(environment.apiAxiomUrl + '/users/forgot_password_mobile', value);
+		} else {
+			return this.http.post(environment.apiAxiomUrl + '/users/forgot_password_mobile', value, { headers: headers });
+		}
 	}
 	sendMail(value: any) {
 		let prefixOptions;
@@ -48,7 +53,11 @@ export class AuthenticationService {
 			};
 		}
 		const headers = new HttpHeaders(prefixOptions);
-		return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
+		if (this.loaderService.getUserPrefix()) {
+			return this.http.post(environment.apiAxiomUrl + '/users/forgot_password_email', value);
+		} else {
+			return this.http.post(environment.apiAxiomUrl + '/users/forgot_password_email', value, { headers: headers });
+		}
 	}
 	validateOTP(value: any) {
 		let prefixOptions;
@@ -59,7 +68,11 @@ export class AuthenticationService {
 			};
 		}
 		const headers = new HttpHeaders(prefixOptions);
-		return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
+		if (this.loaderService.getUserPrefix()) {
+			return this.http.post(environment.apiAxiomUrl + '/users/validate_otp', value);
+		} else {
+			return this.http.post(environment.apiAxiomUrl + '/users/validate_otp', value, { headers: headers });
+		}
 	}
 	resetPassword(value: any) {
 		let prefixOptions;
@@ -70,7 +83,11 @@ export class AuthenticationService {
 			};
 		}
 		const headers = new HttpHeaders(prefixOptions);
-		return this.http.post(environment.apiAxiomUrl + '/users/authenticate', value, { headers: headers });
+		if (this.loaderService.getUserPrefix()) {
+			return this.http.post(environment.apiAxiomUrl + '/users/change_password', value);
+		} else {
+			return this.http.post(environment.apiAxiomUrl + '/users/change_password', value, { headers: headers });
+		}
 	}
 
 	getUserProjectDetail(value: any) {
