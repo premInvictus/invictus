@@ -79,14 +79,14 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 
-	@HostListener('window:resize', ['$event'])
-	onResize(event) {
-		if (this.mobileQuery.matches) {
-			this.innerHeight = (window.innerHeight) - 150;
-		} else {
-			this.innerHeight = (window.innerHeight) - 150;
-		}
-	}
+	// @HostListener('window:resize', ['$event'])
+	// onResize(event) {
+	// 	if (this.mobileQuery.matches) {
+	// 		this.innerHeight = (window.innerHeight) - 150;
+	// 	} else {
+	// 		this.innerHeight = (window.innerHeight) - 150;
+	// 	}
+	// }
 
 	sidenavOpen() {
 		const element = document.getElementById('sidenav');
@@ -98,11 +98,11 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
 	ngOnInit() {
-		if (this.mobileQuery.matches) {
-			this.innerHeight = (window.innerHeight) - 150;
-		} else {
-			this.innerHeight = (window.innerHeight) - 150;
-		}
+		// if (this.mobileQuery.matches) {
+		// 	this.innerHeight = (window.innerHeight) - 150;
+		// } else {
+		// 	this.innerHeight = (window.innerHeight) - 150;
+		// }
 		//console.log(this.mobileQuery);
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
