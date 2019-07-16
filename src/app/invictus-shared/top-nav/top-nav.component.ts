@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSidenav, MatTooltip } from '@angular/material';
@@ -54,6 +54,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	proUrl: any;
 	projectId: any;
 	private _mobileQueryListener: () => void;
+	innerHeight: any;
 
 
 	constructor(
@@ -78,8 +79,15 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 
-
-
+	@HostListener('window:resize', ['$event'])
+	onResize(event) {
+		if(this.mobileQuery.matches){
+			this.innerHeight = (window.innerHeight)-150;
+		}else{
+			this.innerHeight = (window.innerHeight)-150;
+		}
+	}
+	
 	sidenavOpen() {
 		const element = document.getElementById('sidenav');
 		const elementTwo = document.getElementById('sidenav-content');
@@ -90,6 +98,12 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
 	ngOnInit() {
+		if(this.mobileQuery.matches){
+			this.innerHeight = (window.innerHeight)-150;
+		}else{
+			this.innerHeight = (window.innerHeight)-150;
+		}
+		console.log(this.mobileQuery);
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getSession();

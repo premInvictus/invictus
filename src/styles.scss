@@ -4,6 +4,7 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import '../node_modules/angular-slickgrid/styles/sass/slickgrid-theme-bootstrap.scss';
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
+@import "./assets/scss/inv-icon/icon.scss";
 
 /* Css for Main navigation start here*/
 
@@ -8728,6 +8729,12 @@ a.link {
         cursor: pointer;
     }
     .axiom-footer {
-        z-index: 99;
+        z-index: 10 !important;
+    }
+    .table {
+        width: 100%;
+        min-width: 200%;
+        margin-bottom: 0rem;
+        background-color: transparent;
     }
 }
