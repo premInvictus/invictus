@@ -97,7 +97,7 @@
                 <mat-menu #schoolbranch="matMenu" *ngIf="currentUser?.role_id == 1">
                     <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i>{{schoolInfo?.school_name}}</button>
                 </mat-menu>
-                <span class="mat-button-wrapper">
+                <span class="mat-button-wrapper invictus">
            <i class="fas fa-graduation-cap top-nav-icon"></i>{{schoolInfo?.school_name}}</span>
             </a>
             <a class="axiom-navbar-link mat-button" mat-button tabindex="0" aria-label="false" [matMenuTriggerFor]="erpmodule">
@@ -120,7 +120,7 @@
         </nav>
     </div>
     <mat-sidenav-container class="axiom-sidebar">
-        <mat-sidenav id="sidenav" class="axiom-sidenav" #sidenav [mode]="mobileQuery.matches ? 'push' : 'side'" [fixedInViewport]="mobileQuery.matches" [opened]="true">
+        <mat-sidenav id="sidenav" class="axiom-sidenav" #sidenav [mode]="mobileQuery.matches ? 'push' : 'side'" [fixedInViewport]="mobileQuery.matches" [opened]="mobileQuery.matches ? 'false':'true'">
             <div class="axiom-component-viewer-sidenav">
                 <div class="axiom-component-viewer-sidenav-content">
                     <app-side-nav [projectId]="projectId"></app-side-nav>
@@ -134,6 +134,8 @@
             <footer class="axiom-footer">
                 <app-footer></app-footer>
             </footer>
+            <br>
+            <br>
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>

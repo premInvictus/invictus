@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     font-size: $font-size-base;
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
@@ -10,7 +11,7 @@ body {
 }
 
 h1 {
-	font-size: 2rem !important;
+    font-size: 2rem !important;
 }
 
 h2 {
@@ -35,9 +36,9 @@ a:hover {
 
 .mat-drawer-content {
     position: initial !important;
-    overflow-x:  hidden !important;
+    overflow-x: hidden !important;
     overflow-y: auto !important;
-    height: 113.5vh !important;
+    height: auto !important;
 }
 
 .mat-sidenav-content {
@@ -45,5 +46,5 @@ a:hover {
 }
 
 .cdk-overlay-pane {
-    transform: none !important; 
+    transform: none !important;
 }
