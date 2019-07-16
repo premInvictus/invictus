@@ -67,13 +67,27 @@ tr, th, td {
   }
 } */
 
-.table-box{
-  margin-bottom: 60px;
+.table-box {
+    margin-bottom: 60px;
 }
+
 .create-new-user {
-  float: right;
-  margin-right: 10px;
+    float: right;
+    margin-right: 10px;
 }
+
 .table-filter-icon {
-  color: #0e7d9e;
+    color: #0e7d9e;
+}
+
+.table-overflow table {
+    width: 100%;
+    min-width: 800px;
+}
+
+.table-overflow th,
+td {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+    padding: 5px;
 }
