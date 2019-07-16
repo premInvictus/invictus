@@ -10,7 +10,9 @@ import { saveAs } from 'file-saver';
 	styleUrls: ['./add-syllabus.component.css']
 })
 export class AddSyllabusComponent implements OnInit {
+
 	@ViewChild('deleteModal') deleteModal;
+	todaydate = new Date();
 	activityUpdateFlag = false;
 	syllabusUpdateFlag = false;
 	finaldivflag = true;
@@ -31,6 +33,8 @@ export class AddSyllabusComponent implements OnInit {
 	finalSubmitArray: any[] = [];
 	finalXlslArray: any[] = [];
 	XlslArray: any[] = [];
+	subTopicJson: any[] = [];
+	sessionArray: any[] = [];
 	arrayBuffer: any;
 	file: any;
 	syllabusValue1: any;
@@ -47,10 +51,17 @@ export class AddSyllabusComponent implements OnInit {
 	sub_id: any;
 	ckeConfig: any = {};
 	submitParam: any = {};
-	subTopicJson: any[] = [];
 	category_id: any;
 	topic_id: any;
 	subtopic_id: any;
+	seesion_id: any;
+	sessionName: any;
+	startMonth: any;
+	endMonth: any;
+	yeararray: any;
+	currentYear: any;
+	nextYear: any;
+	totalPeriod  = 0;
 	add = 'Add';
 	constructor(
 		private fbuild: FormBuilder,
@@ -70,6 +81,8 @@ export class AddSyllabusComponent implements OnInit {
 		this.buildForm();
 		this.getClass();
 		this.ctrList();
+		this.getSession();
+		this.getSchool();
 		this.ckeConfig = {
 			allowedContent: true,
 			pasteFromWordRemoveFontStyles: false,
@@ -100,6 +113,33 @@ export class AddSyllabusComponent implements OnInit {
 		});
 	}
 
+	// get end month and start month of school
+	getSchool() {
+		this.sisService.getSchool()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.startMonth = result.data[0].session_start_month;
+						this.endMonth = result.data[0].session_end_month;
+					}
+				});
+	}
+	// get session name by session id
+	getSession() {
+		this.sisService.getSession()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.sessionArray[citem.ses_id] = citem.ses_name;
+						}
+						this.sessionName = this.sessionArray[this.session.ses_id];
+						this.yeararray = this.sessionName.split('-');
+						this.currentYear = this.yeararray[0];
+						this.nextYear = this.yeararray[1];
+					}
+				});
+	}
 	// function to get excel data in file varaible
 	incomingfile(event) {
 		this.file = '';
@@ -312,7 +352,7 @@ export class AddSyllabusComponent implements OnInit {
 		if (subIndex !== -1) {
 			return this.subTopicJson[subIndex].st_name;
 		}
-	} 
+	}
 
 	// Reset Syllabus Details form 
 	resetForm() {
@@ -351,6 +391,18 @@ export class AddSyllabusComponent implements OnInit {
 						} else {
 							this.syllabus_flag = false;
 							this.details_flag = true;
+
+							const dateParam: any = {};
+							dateParam.datefrom = this.currentYear + '-' + this.startMonth + '-1';
+							dateParam.dateyear = this.nextYear + '-' + this.endMonth + '-31';
+							dateParam.dateto = this.commonService.dateConvertion(this.todaydate);
+							dateParam.class_id = this.syllabusForm.value.syl_class_id;
+							dateParam.subject_id = this.syllabusForm.value.syl_sub_id;
+							this.syllabusService.syllabusPeriodCount(dateParam).subscribe((count_r: any) => {
+								if (count_r && count_r.status === 'ok') {
+									this.totalPeriod = count_r.data;
+								}
+							});
 						}
 					});
 		} else {
@@ -664,7 +716,7 @@ export class AddSyllabusComponent implements OnInit {
 							setParam.class_id = this.syllabusForm.value.syl_class_id;
 							setParam.sub_id = this.syllabusForm.value.syl_sub_id;
 							this.syllabusService.setProcesstype(setParam);
-							this.router.navigate(['../review'], {relativeTo: this.route});
+							this.router.navigate(['../review'], { relativeTo: this.route });
 						}
 					});
 				}
