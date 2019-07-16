@@ -19,3 +19,24 @@
 .inv.question {
     @include background(-100px 0px)
 }
+.syllabus-management {
+    @include background(-650px 0px)
+}
+.dashboard{
+    @include background(-300px 0px)
+}
+.assignment{
+    @include background(-750px 0px)
+}
+.log-entry{
+    @include background(-800px 0px)
+}
+.auxiliaries{
+    @include background(-700px 0px)
+}
+.report{
+    @include background(-550px 0px)
+}
+.setup{
+    @include background(-950px 0px)
+}
