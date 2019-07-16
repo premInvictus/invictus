@@ -1,16 +1,21 @@
 @mixin background($position) {
     background-image: url(./assets/images/sprite.png);
     background-position: $position;
-    height: 30px;
-    width: 30px;
+    height: 25px;
+    width: 25px;
     display: inline-block;
     background-repeat: no-repeat;
+    background-size: cover;
 }
 
-.inv .upload {
+.inv.upload {
     @include background(0px 0px)
 }
 
-.inv .file {
-    @include background(-30px 0px)
+.inv.file {
+    @include background(-50px 0px)
+}
+
+.inv.question {
+    @include background(-100px 0px)
 }
