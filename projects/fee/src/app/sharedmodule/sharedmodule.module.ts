@@ -39,6 +39,7 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 import { SearchViaStudentComponent } from './search-via-student/search-via-student.component';
 import { DeleteWithReasonComponent } from './delete-with-reason/delete-with-reason.component';
 import { CreateInvoiceModalComponent } from './create-invoice-modal/create-invoice-modal.component';
+import { SearchDialogComponent } from './search-dialog/search-dialog.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -108,7 +109,8 @@ export const MY_FORMATS = {
 		ReceiptDetailsModalComponent,
 		SearchViaStudentComponent,
 		DeleteWithReasonComponent,
-		CreateInvoiceModalComponent
+		CreateInvoiceModalComponent,
+		SearchDialogComponent
 	],
 	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
@@ -150,7 +152,8 @@ export const MY_FORMATS = {
 		ReceiptDetailsModalComponent,
 		CommonDynamicChartComponent,
 		DeleteWithReasonComponent,
-		CreateInvoiceModalComponent
+		CreateInvoiceModalComponent,
+		SearchDialogComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -161,7 +164,8 @@ export const MY_FORMATS = {
 		ReceiptDetailsModalComponent,
 		SearchViaStudentComponent,
 		DeleteWithReasonComponent,
-		CreateInvoiceModalComponent
+		CreateInvoiceModalComponent,
+		SearchDialogComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

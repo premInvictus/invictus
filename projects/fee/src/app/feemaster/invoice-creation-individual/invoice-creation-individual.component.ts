@@ -26,8 +26,11 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	@ViewChild('recalculateModal') recalculateModal;
 	@ViewChild('consolidateModal') consolidateModal;
 	@ViewChild('unconsolidateModal') unconsolidateModal;
+	@ViewChild('detachReceiptModal') detachReceiptModal;
 	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
+	@ViewChild('searchModal') searchModal;
+
 	ELEMENT_DATA: InvoiceElement[] = [];
 	displayedColumns: string[] =
 		['select', 'srno', 'invoiceno', 'feeperiod', 'invoicedate', 'duedate', 'feedue', 'status', 'action'];
@@ -277,12 +280,13 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 		invoicearr.forEach((element, index) => {
 			let status = '';
 			let statusColor = '';
-			if (element.inv_activity) {
+			if (element.inv_paid_status !== 'paid' && element.inv_activity !== '') {
 				status = element.inv_activity;
 			} else {
 				status = element.inv_paid_status;
 			}
-			if (element.inv_activity) {
+
+			if (element.inv_paid_status !== 'paid' && element.inv_activity !== '') {
 				if (element.inv_activity === 'consolidated') {
 					statusColor = '#ec398e';
 				} else if (element.inv_activity === 'modified') {
@@ -423,6 +427,8 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
 	openConsolidateDialog = (data) => this.consolidateModal.openModal(data);
 	openUnConsolidateDialog = (data) => this.unconsolidateModal.openModal(data);
+	openDetachReceiptDialog = (data) => this.detachReceiptModal.openModal(data);
+	openAttachDialog = (data) => this.searchModal.openModal(data);
 	deleteConfirm(value) {
 		// this.feeService.deleteInvoice(value).subscribe((result: any) => {
 		// 	if (result && result.status === 'ok') {
@@ -469,6 +475,8 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			}
 		});
 	}
+
+	
 	recalculateConfirm(value) {
 		this.invoiceCreationForm.patchValue({
 			inv_id: this.fetchInvId(),
@@ -521,8 +529,55 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	}
 
 	unconsolidateConfirm(value) {
-		console.log(this.fetchInvId());
 		this.feeService.unconsolidateInvoice({ inv_consolidate_id: this.fetchInvId() }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+
+	detachReceiptConfirm(value) {
+		console.log('value--', value);
+		this.feeService.detachReceipt({ inv_id: value }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
+				this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+				this.invoiceCreationForm.patchValue({
+					recalculation_flag: '',
+					inv_id: [],
+					inv_title: '',
+					login_id: [],
+					inv_calm_id: '',
+					inv_fm_id: [],
+					inv_invoice_date: '',
+					inv_due_date: '',
+					inv_activity: ''
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+
+	attachReceipt(value) {
+		console.log('receipt value', value);
+		this.feeService.attachReceipt(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.getInvoice({ inv_process_usr_no: this.currentAdmno });
