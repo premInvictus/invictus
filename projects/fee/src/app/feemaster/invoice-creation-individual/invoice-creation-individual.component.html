@@ -186,6 +186,12 @@
                   <i *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('362')"
                     class="material-icons icon-danger icon-spacer"
                     (click)="openDeleteDialog([element.inv_id])">delete</i>
+                  <img src="/assets/icons/attach.png" style="margin-top: -10px;margin-left: 10px;" *ngIf="!element.selectionDisable && commonAPIService.isExistUserAccessMenu('362')" (click)="openAttachDialog([element.inv_id])" title="Attach Receipt"/> 
+                  <img src="/assets/icons/dettach.png" style="margin-top: -10px;margin-left: 10px;" *ngIf="element.selectionDisable && commonAPIService.isExistUserAccessMenu('362')" (click)="openDetachReceiptDialog([element.inv_id])" title="Detach Receipt"/> 
+                    
+                  <!-- <i *ngIf="element.selectionDisable && commonAPIService.isExistUserAccessMenu('362')"
+                    class="material-icons fa fa-times  icon-spacer" title="Detach Receipt"
+                    (click)="openDetachReceiptDialog([element.inv_id])"></i> -->
                   <i *ngIf="element.remark" class="material-icons icon-spacer"
                     [matTooltip]="element.remark | capitalize">bookmark</i>
                 </td>
@@ -208,11 +214,18 @@
 <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)">
 </app-delete-modal>
 <app-delete-modal #recalculateModal [deleteMessage]="'On recalculation all adjustments/remarks if any, will be removed!<br>
-Do you wish to continue?'"
-  (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
+Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
 <app-delete-modal #consolidateModal [deleteMessage]="'Are you sure want to Consolidate'"
   (deleteOk)="consolidateConfirm($event)"></app-delete-modal>
-  <app-delete-modal #unconsolidateModal [deleteMessage]="'Are you sure want to Un-Consolidate Selected Invoice'"
+<app-delete-modal #unconsolidateModal [deleteMessage]="'Are you sure want to Un-Consolidate Selected Invoice'"
   (deleteOk)="unconsolidateConfirm($event)"></app-delete-modal>
-  <app-delete-with-reason #deleteWithReasonModal [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete an Invoice'" (deleteOk)="deleteInvoiceFinal($event)">
-    </app-delete-with-reason>
+<app-delete-modal #detachReceiptModal [deleteMessage]="'Are you sure to Detach Selected Invoice'"
+  (deleteOk)="detachReceiptConfirm($event)"></app-delete-modal>
+<app-delete-with-reason #deleteWithReasonModal
+  [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete an Invoice'"
+  (deleteOk)="deleteInvoiceFinal($event)">
+</app-delete-with-reason>
+<app-search-dialog #searchModal
+[deleteMessage]="'Please Choose Receipt Number to Attach with this Invoice'"
+(deleteOk)="attachReceipt($event)">
+</app-search-dialog>

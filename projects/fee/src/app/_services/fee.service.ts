@@ -214,6 +214,15 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/unconsolidateInvoice', value);
 	}
+	detachReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/detachReceipt', value);
+	}
+
+	attachReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/attachReceipt', value);
+	}
 	getInvoice(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/getInvoice', value);
