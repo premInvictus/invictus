@@ -27,7 +27,7 @@ export class FeeLedgerComponent implements OnInit {
 	@ViewChild('detachReceiptModal') detachReceiptModal;
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
-	displayedColumns: string[] = ['select', 'srno', 'date', 'invoiceno', 'particular', 'duedate',
+	displayedColumns: string[] = ['select', 'date', 'invoiceno', 'particular', 'duedate',
 	 'amount', 'concession', 'fine', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
 	dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
@@ -38,7 +38,9 @@ export class FeeLedgerComponent implements OnInit {
 	footerRecord: any = {
 		feeduetotal: 0,
 		concessiontotal: 0,
-		receipttotal: 0
+		receipttotal: 0,
+		finetotal: 0,
+		balancetotal: 0
 	};
 	actionFlag: any = {
 		deleteinvoice: false,
@@ -117,7 +119,9 @@ export class FeeLedgerComponent implements OnInit {
 				this.footerRecord = {
 					feeduetotal: 0,
 					concessiontotal: 0,
-					receipttotal: 0
+					receipttotal: 0,
+					finetotal: 0,
+					balancetotal: 0
 				};
 				this.recordArray = result.data;
 				for (const item of this.recordArray) {
@@ -159,7 +163,7 @@ export class FeeLedgerComponent implements OnInit {
 						balance: item.flgr_balance ? item.flgr_balance : '0',
 						receiptdate: item.rpt_receipt_date,
 						receiptno: item.rpt_receipt_no,
-						mop: item.pay_name + (item.tb_name ? '(' + item.tb_name + ')' : ''),
+						mop: item.pay_name ? item.pay_name + (item.tb_name ? ' (' + item.tb_name + ')' : '') : '-',
 						eachActionFlag: tempactionFlag,
 						action: item
 					};
@@ -168,6 +172,8 @@ export class FeeLedgerComponent implements OnInit {
 					this.footerRecord.feeduetotal += Number(element.amount);
 					this.footerRecord.concessiontotal += Number(element.concession);
 					this.footerRecord.receipttotal += Number(element.reciept);
+					this.footerRecord.finetotal += Number(element.fine);
+					this.footerRecord.balancetotal += Number(element.balance);
 				}
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			}
@@ -259,13 +265,13 @@ export class FeeLedgerComponent implements OnInit {
 
 	}
 	// to veiw invoice details
-	openDialog(invoiceNo, edit): void {
+	openDialog(item, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: invoiceNo,
+				invoiceNo: item.flgr_inv_id,
 				edit: edit,
-				paidStatus: 'paid'
+				paidStatus: item.inv_paid_status
 			},
 			hasBackdrop: true
 		});
