@@ -1,9 +1,20 @@
-.grade-value
-{
-  color: #ffffff;
-  font-weight: bolder;
+.grade-value {
+    color: #ffffff;
+    font-weight: bolder;
 }
-.grade-button-border
-{
-  border:none !important
+
+.grade-button-border {
+    border: none !important
+}
+
+.table-overflow table {
+    width: 100%;
+    min-width: 800px;
+}
+
+.table-overflow th,
+td {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+    padding: 5px;
 }

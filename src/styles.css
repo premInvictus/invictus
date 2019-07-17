@@ -197,7 +197,7 @@
 }
 
 .axiom-sidebar {
-    top: 10px;
+    /* top: 10px; */
     height: 94vh !important;
 }
 
@@ -4837,7 +4837,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
         font-size: 14px;
     }
     .axiom-sidebar {
-        top: 10px;
+        /* top: 10px; */
         height: 118vh !important;
     }
     .dash-second-row-button-collection {
