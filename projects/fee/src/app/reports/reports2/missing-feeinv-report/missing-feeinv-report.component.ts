@@ -701,6 +701,7 @@ export class MissingFeeinvReportComponent implements OnInit {
 			aggregateCollapsed: true,
 			collapsed: false,
 		});
+		this.draggableGroupingPlugin.setDroppedGroups('stu_class_name');
 	}
 	getFromDate(value) {
 		this.reportFilterForm.patchValue({

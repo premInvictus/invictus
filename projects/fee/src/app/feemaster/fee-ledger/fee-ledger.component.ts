@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FeeLedgerElement } from './fee-ledger.model';
+import { SelectionModel } from '@angular/cdk/collections';
 import { SisService, ProcesstypeFeeService, FeeService } from '../../_services';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
@@ -15,10 +16,11 @@ import { StudentRouteMoveStoreService } from '../student-route-move-store.servic
 })
 export class FeeLedgerComponent implements OnInit {
 
-	displayedColumns: string[] = ['srno', 'date', 'invoiceno', 'particular',
-	 'amount', 'concession', 'reciept', 'balance', 'remarks'];
+	displayedColumns: string[] = ['select', 'srno', 'date', 'invoiceno', 'particular', 'duedate',
+	 'amount', 'concession', 'fine', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
 	dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
+	selection = new SelectionModel<FeeLedgerElement>(true, []);
 	recordArray: any[] = [];
 	lastRecordId: any;
 	loginId: any;
@@ -26,6 +28,17 @@ export class FeeLedgerComponent implements OnInit {
 		feeduetotal: 0,
 		concessiontotal: 0,
 		receipttotal: 0
+	};
+	actionFlag: any = {
+		deleteinvoice: false,
+		deletereceipt: false,
+		edit: false,
+		recalculate: false,
+		consolidate: false,
+		attach: false,
+		detach: false,
+		unconsolidate: false,
+		receiptmodification: false
 	};
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('table') table: ElementRef;
@@ -94,17 +107,46 @@ export class FeeLedgerComponent implements OnInit {
 				};
 				this.recordArray = result.data;
 				for (const item of this.recordArray) {
+					const tempactionFlag: any = {
+						deleteinvoice: false,
+						deletereceipt: false,
+						edit: false,
+						recalculate: false,
+						consolidate: false,
+						attach: false,
+						detach: false,
+						unconsolidate: false,
+						receiptmodification: false
+					};
+					if (item.inv_paid_status === 'paid') {
+						tempactionFlag.deletereceipt = true;
+						tempactionFlag.detach = true;
+						tempactionFlag.receiptmodification = true;
+					} else if (item.inv_paid_status === 'unpaid') {
+						tempactionFlag.deleteinvoice = true;
+						tempactionFlag.edit = true;
+						tempactionFlag.recalculate = true;
+						tempactionFlag.consolidate = true;
+						tempactionFlag.attach = true;
+						tempactionFlag.unconsolidate = true;
+					}
 					element = {
 						srno: pos,
 						date: new DatePipe('en-in').transform(item.flgr_created_date, 'd-MMM-y'),
 						invoiceno: item.flgr_invoice_receipt_no ? item.flgr_invoice_receipt_no : '-',
 						feeperiod: item.flgr_fp_months ? item.flgr_fp_months : '-',
 						particular: item.flgr_particulars ? item.flgr_particulars : '-',
+						duedate: item.inv_due_date,
 						remarks: item.remarks ? item.remarks : '-',
 						amount: item.flgr_amount ? item.flgr_amount : '0',
 						concession: item.flgr_concession ? item.flgr_concession : '0',
-						reciept: item.flgr_receipt ? item.flgr_receipt : '0',
+						fine: item.inv_fine_amount ? item.inv_fine_amount : '0',
+						reciept: item.rpt_net_amount ? item.rpt_net_amount : '0',
 						balance: item.flgr_balance ? item.flgr_balance : '0',
+						receiptdate: item.rpt_receipt_date,
+						receiptno: item.rpt_receipt_no,
+						mop: item.pay_name + (item.tb_name ? '(' + item.tb_name + ')' : ''),
+						eachActionFlag: tempactionFlag,
 						action: item
 					};
 					this.FEE_LEDGER_ELEMENT.push(element);
@@ -228,6 +270,71 @@ export class FeeLedgerComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 		});
+	}
+	isAllSelected() {
+		const numSelected = this.selection.selected.length;
+		const numRows = this.dataSource.data.length;
+		return numSelected === numRows;
+	}
+
+	masterToggle() {
+		this.isAllSelected() ?
+			this.selection.clear() :
+			this.dataSource.data.forEach(row => {
+				/* if (row.selectionDisable === false) {
+					this.selection.select(row);
+				} */
+				this.selection.select(row);
+			});
+	}
+
+	checkboxLabel(row?: FeeLedgerElement): string {
+		if (!row) {
+			return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+		}
+		return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.srno + 1}`;
+	}
+
+	manipulateAction(row) {
+		this.selection.toggle(row);
+		console.log(this.selection.selected);
+		const tempactionFlag: any = {
+			deleteinvoice: true,
+			deletereceipt: true,
+			edit: true,
+			recalculate: true,
+			consolidate: true,
+			attach: true,
+			detach: true,
+			unconsolidate: true,
+			receiptmodification: true
+		};
+		if (this.selection.selected.length > 0) {
+			this.selection.selected.forEach(item => {
+				tempactionFlag.deleteinvoice = tempactionFlag.deleteinvoice && item.eachActionFlag.deleteinvoice && this.selection.selected.length > 0;
+				tempactionFlag.deletereceipt = tempactionFlag.deletereceipt && item.eachActionFlag.deletereceipt && this.selection.selected.length > 0;
+				tempactionFlag.edit = tempactionFlag.edit && item.eachActionFlag.edit && this.selection.selected.length === 1;
+				tempactionFlag.recalculate = tempactionFlag.recalculate && item.eachActionFlag.recalculate && this.selection.selected.length > 0;
+				tempactionFlag.consolidate = tempactionFlag.consolidate && item.eachActionFlag.consolidate && this.selection.selected.length > 1;
+				tempactionFlag.attach = tempactionFlag.attach && item.eachActionFlag.attach && this.selection.selected.length === 1;
+				tempactionFlag.detach = tempactionFlag.detach && item.eachActionFlag.detach && this.selection.selected.length === 1;
+				tempactionFlag.unconsolidate = tempactionFlag.unconsolidate && item.eachActionFlag.unconsolidate && this.selection.selected.length > 0;
+				tempactionFlag.receiptmodification = tempactionFlag.receiptmodification && item.eachActionFlag.receiptmodification && this.selection.selected.length === 1;
+			});
+			this.actionFlag = tempactionFlag;
+		} else {
+			this.actionFlag = {
+				deleteinvoice: false,
+				deletereceipt: false,
+				edit: false,
+				recalculate: false,
+				consolidate: false,
+				attach: false,
+				detach: false,
+				unconsolidate: false,
+				receiptmodification: false
+			};
+		}
 	}
 
 

@@ -20,12 +20,166 @@
   <div class="row">
     <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container card-height-677 card-height-795">
-        <div class="row margin-bottom-10">
+        <!-- <div class="row margin-bottom-10">
           <div class="col-6 remove-col-padding-left">
-            <!-- <span class="font-size-24 font-medium">Accounts</span> -->
           </div>
+        </div> -->
+        <div style="margin-top:15px !important" class="col-12 text-right">
+          <button *ngIf="actionFlag.receiptmodification" mat-raised-button class="btn-primary btn-consolidate"
+            (click)="openConsolidateDialog({})">Receipt Modification</button>
+          <button *ngIf="actionFlag.attach" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+            (click)="openConsolidateDialog({})">Attach</button>
+          <button *ngIf="actionFlag.detach" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+            (click)="openConsolidateDialog({})">Detach</button>
+          <button *ngIf="actionFlag.edit" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+            (click)="openConsolidateDialog({})">Edit</button>
+          <button *ngIf="actionFlag.consolidate" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+            (click)="openConsolidateDialog({})">Consolidate</button>
+          <button *ngIf="actionFlag.unconsolidate" mat-raised-button class="btn-primary btn-unconsolidate btn-spacer"
+            (click)="openUnConsolidateDialog(fetchInvId())">Un-Consolidate</button>
+          <button *ngIf="actionFlag.recalulate" mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer"
+            (click)="openRecalculateDialog()">Recalutate</button>
+          <button *ngIf="actionFlag.deleteinvoice" mat-raised-button class="btn-primary btn-danger btn-spacer"
+            (click)="openDeleteDialog(fetchInvId())">Delete Invoice</button>
+            <button *ngIf="actionFlag.deletereceipt" mat-raised-button class="btn-primary btn-danger btn-spacer"
+            (click)="openDeleteDialog(fetchInvId())">Delete Receipt</button>
         </div>
         <div class="row">
+          <div class="col-12">
+            <div>
+              <div class="table-fee-ledger-child">
+                <table id="fee_ledger" #table mat-table [dataSource]="dataSource" class="text-center table-100">
+
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                      </mat-checkbox>
+                    </th>
+                    <td width="3%" mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? manipulateAction(row) : null"
+                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                      </mat-checkbox>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="srno">
+                    <th mat-header-cell *matHeaderCellDef>Sr No. </th>
+                    <td mat-cell *matCellDef="let item"> {{item.srno}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef> Inv. Date </th>
+                    <td width="6%" mat-cell *matCellDef="let item"> {{item.date}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="invoiceno">
+                    <th mat-header-cell *matHeaderCellDef> Inv. No. </th>
+                    <td width="5%" mat-cell *matCellDef="let item">
+                      <span *ngIf="item.action.flgr_invoice_type === 'I' && item.invoiceno != '0'"
+                        class="pointer font-bold font-skyblue font-underline">
+                        <a (click)="openDialog(item.action.flgr_inv_id, false)">{{item.invoiceno}}</a>
+                      </span>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="particular">
+                    <th mat-header-cell *matHeaderCellDef> Particulars </th>
+                    <td width="15%" mat-cell *matCellDef="let item"
+                      style="text-align: left !important;padding-left: 0.5%;">
+                      {{item.particular}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="duedate">
+                    <th mat-header-cell *matHeaderCellDef> Due Date </th>
+                    <td width="6%" mat-cell *matCellDef="let item"> {{item.duedate | date: 'd-MMM-y'}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="amount">
+                    <th mat-header-cell *matHeaderCellDef> Amt. Due (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
+                    <td width="5%" mat-cell *matCellDef="let item"> {{item.amount | number | zerodash}} </td>
+                    <td mat-footer-cell *matFooterCellDef> {{footerRecord.feeduetotal | number}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="concession">
+                    <th mat-header-cell *matHeaderCellDef> Con. (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
+                    <td width="5%" mat-cell *matCellDef="let item"> {{item.concession | number | zerodash}} </td>
+                    <td mat-footer-cell *matFooterCellDef> {{footerRecord.concessiontotal | number}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="fine">
+                    <th mat-header-cell *matHeaderCellDef> Fine (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
+                    <td width="5%" mat-cell *matCellDef="let item"> {{item.fine | number | zerodash}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="reciept">
+                    <th mat-header-cell *matHeaderCellDef> Amt. Rec. (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
+                    <td width="5%" mat-cell *matCellDef="let item"> {{item.reciept | number | zerodash}} </td>
+                    <td mat-footer-cell *matFooterCellDef> {{footerRecord.receipttotal | number}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="balance">
+                    <th mat-header-cell *matHeaderCellDef> Balance (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+                    <td width="5%" mat-cell *matCellDef="let item"> {{item.balance | number}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <ng-container matColumnDef="receiptdate">
+                    <th mat-header-cell *matHeaderCellDef> Receipt Date</th>
+                    <td width="6%" mat-cell *matCellDef="let item"> {{item.receiptdate | date:'d-MMM-y'}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <ng-container matColumnDef="receiptno">
+                    <th mat-header-cell *matHeaderCellDef> Receipt No</th>
+                    <td width="5%" mat-cell *matCellDef="let item"> 
+                        <span *ngIf="item.action.rpt_id"
+                        class="pointer font-bold font-skyblue font-underline">
+                        <a (click)="openReceiptDialog(item.action.rpt_id, false)">{{item.receiptno}}</a>
+                      </span></td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <ng-container matColumnDef="mop">
+                    <th mat-header-cell *matHeaderCellDef> MOP</th>
+                    <td width="10%" mat-cell *matCellDef="let item"> {{item.mop | titlecase}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <ng-container matColumnDef="remarks">
+                    <th mat-header-cell *matHeaderCellDef> Remarks
+                      <span style="float:right; padding-right: 10px;"><img style="cursor: pointer"
+                          src="/assets/images/xml.svg" (click)="exportAsExcel()" matTooltip="Export as excel"></span>
+                    </th>
+                    <td width="28%" mat-cell *matCellDef="let item"
+                      style="text-align: left !important;padding-left: 0.5%;">
+                      {{item.remarks | capitalize}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  <tr mat-footer-row *matFooterRowDef="displayedColumns;" [hidden]="FEE_LEDGER_ELEMENT.length == 0">
+                  </tr>
+                </table>
+                <table class="table-100 text-center" style="margin-top:5px;">
+                  <tr *ngIf="FEE_LEDGER_ELEMENT.length == 0">
+                    <td colspan="8">No Record Found</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- <div class="row">
           <div class="col-12">
             <div>
               <div class="table-fee-ledger-child">
@@ -36,14 +190,12 @@
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
-                  <!-- Name Column -->
                   <ng-container matColumnDef="date">
                     <th mat-header-cell *matHeaderCellDef> Date </th>
                     <td width="8%" mat-cell *matCellDef="let item"> {{item.date}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
-                  <!-- Weight Column -->
                   <ng-container matColumnDef="invoiceno">
                     <th mat-header-cell *matHeaderCellDef> Invoice No. </th>
                     <td width="8%" mat-cell *matCellDef="let item">
@@ -59,14 +211,6 @@
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
-                  <!-- Symbol Column -->
-                  <!-- <ng-container matColumnDef="feeperiod">
-                    <th mat-header-cell *matHeaderCellDef> Fee Period </th>
-                    <td mat-cell *matCellDef="let item" style="text-align: left !important;padding-left: 0.5%;">
-                      {{item.feeperiod}} </td>
-                    <td mat-footer-cell *matFooterCellDef></td>
-                  </ng-container> -->
-                  <!-- Symbol Column -->
                   <ng-container matColumnDef="particular">
                     <th mat-header-cell *matHeaderCellDef> Particulars </th>
                     <td width="17%" mat-cell *matCellDef="let item" style="text-align: left !important;padding-left: 0.5%;">
@@ -94,7 +238,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="balance">
-                    <th mat-header-cell *matHeaderCellDef> Balance
+                    <th mat-header-cell *matHeaderCellDef> Balance (<span><i class="fas fa-rupee-sign"></i></span>)
                       
                     </th>
                     <td width="8%" mat-cell *matCellDef="let item"> {{item.balance | number}} </td>
@@ -114,15 +258,6 @@
                   <tr mat-footer-row *matFooterRowDef="displayedColumns;" [hidden]="FEE_LEDGER_ELEMENT.length == 0">
                   </tr>
                 </table>
-                <!-- <table class="table-100 text-center" style="margin-top:5px;">
-              <tr *ngIf="FEE_LEDGER_ELEMENT.length > 0">
-                <td colspan="5">Total</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td></td>
-              </tr>
-            </table> -->
                 <table class="table-100 text-center" style="margin-top:5px;">
                   <tr *ngIf="FEE_LEDGER_ELEMENT.length == 0">
                     <td colspan="8">No Record Found</td>
@@ -132,7 +267,7 @@
             </div>
 
           </div>
-        </div>
+        </div> -->
       </mat-card>
     </div>
   </div>
