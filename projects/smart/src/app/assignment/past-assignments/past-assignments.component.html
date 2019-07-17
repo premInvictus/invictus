@@ -1,139 +1,133 @@
 <div class="row">
-  <div class="col-12 ">
-    <mat-card class="remove-card-padding">
-      <form [formGroup]="paramForm" novalidate>
-        <div class="row">
-          <div class="col-4">
-            <div class="top-card-title">
-              <span class="font-size-24 font-medium">Past Assignment</span>
-            </div>
-
-          </div>
-          <div class="col-8 text-right">
-            <div class="top-card-title-form">
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
-                appearance="outline">
-                <mat-label>From Date</mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from"
-                  (dateChange)="getAssignment()">
-                <mat-datepicker-toggle matSuffix [for]="picker" ></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
-                appearance="outline">
-                <mat-label>To Date</mat-label>
-                <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to" [min]="toMin"
-                (dateChange)="getAssignment()">
-                <mat-datepicker-toggle matSuffix [for]="picker1" ></mat-datepicker-toggle>
-                <mat-datepicker #picker1></mat-datepicker>
-              </mat-form-field>
-              <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10" appearance="outline"
-                *ngIf="!this.isTeacher">
-                <mat-label>Class</mat-label>
-                <mat-select formControlName="class_id"
-                  (selectionChange)="getSectionsByClass();getSubjectsByClass(); getAssignment()">
-                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field
-                class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
-                <mat-label>Section</mat-label>
-                <mat-select formControlName="sec_id" (selectionChange)="getAssignment()">
-                  <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline"
-                *ngIf="!this.isTeacher">
-                <mat-label>Subject</mat-label>
-                <mat-select formControlName="sub_id" (selectionChange)="getAssignment()">
-                  <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-              <span *ngIf="!isTeacher" style="padding:10px 0 0 20px">
-                <i class="material-icons reset_ass" tooltip="Reset" (click)="resetParam()">replay</i>
-              </span>
-            </div>
-          </div>
-        </div>
-      </form>
-    </mat-card>
-  </div>
+    <div class="col-12 ">
+        <mat-card class="remove-card-padding">
+            <form [formGroup]="paramForm" novalidate>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                        <div class="mt-4 ml-2">
+                            <span class="font-size-24 font-medium">Past Assignment</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9  text-right">
+                        <div class="row justify-content-end">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>From Date</mat-label>
+                                    <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from" (dateChange)="getAssignment()">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>To Date</mat-label>
+                                    <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to" [min]="toMin" (dateChange)="getAssignment()">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                                <mat-form-field class="form-field" appearance="outline" *ngIf="!this.isTeacher">
+                                    <mat-label>Class</mat-label>
+                                    <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass();getSubjectsByClass(); getAssignment()">
+                                        <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Section</mat-label>
+                                    <mat-select formControlName="sec_id" (selectionChange)="getAssignment()">
+                                        <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                                <mat-form-field class="form-field" appearance="outline" *ngIf="!this.isTeacher">
+                                    <mat-label>Subject</mat-label>
+                                    <mat-select formControlName="sub_id" (selectionChange)="getAssignment()">
+                                        <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!isTeacher" style="padding:0px 0 0 20px">
+                              <i class="material-icons reset_ass" tooltip="Reset" (click)="resetParam()">replay</i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </mat-card>
+    </div>
 </div>
 
 <div class="row margin-top-15">
-  <div class="col-12">
-    <mat-card>
-      <div class="row">
-        <div class="col-4">
-          <mat-form-field appearance="a">
-            <input class="margin-left-10" matInput placeholder="Filter"
-              (keyup)="doAssignmentFilter($event.target.value)">
-            <mat-icon matPrefix>filter_list</mat-icon>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row margin-top-10">
-        <div class="col-12">
-          <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
-            <ng-container matColumnDef="srno">
-              <th mat-header-cell *matHeaderCellDef> S.No </th>
-              <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-            </ng-container>
-            <ng-container matColumnDef="class">
-              <th mat-header-cell *matHeaderCellDef> Class </th>
-              <td mat-cell *matCellDef="let element"> {{element.class | capitalize}} </td>
-            </ng-container>
-            <ng-container matColumnDef="subject">
-              <th mat-header-cell *matHeaderCellDef> Subject </th>
-              <td mat-cell *matCellDef="let element"> {{element.subject | capitalize}} </td>
-            </ng-container>
-            <ng-container matColumnDef="topic">
-              <th mat-header-cell *matHeaderCellDef> Topic </th>
-              <td mat-cell *matCellDef="let element"> {{element.topic | capitalize}} </td>
-            </ng-container>
-            <ng-container matColumnDef="assignment">
-              <th mat-header-cell *matHeaderCellDef> Assignment </th>
-              <td mat-cell *matCellDef="let element">
-                <div [innerHtml]="element.assignment | capitalize | truncatetext:100"></div>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="entrydate">
-              <th mat-header-cell *matHeaderCellDef> Assigned On</th>
-              <td mat-cell *matCellDef="let element"> {{element.entryDate | date: 'd-MMM-y'}} </td>
-            </ng-container>
-            <ng-container matColumnDef="assignedby">
-              <th mat-header-cell *matHeaderCellDef> Assigned By </th>
-              <td mat-cell *matCellDef="let element"> {{element.assignedBy}} </td>
-            </ng-container>
-            <ng-container matColumnDef="publishedby">
-              <th mat-header-cell *matHeaderCellDef> Approved By </th>
-              <td mat-cell *matCellDef="let element"> {{element.publishedBy}} </td>
-            </ng-container>
-            <ng-container matColumnDef="attachment">
-              <th mat-header-cell *matHeaderCellDef> Attachment </th>
-              <td mat-cell *matCellDef="let element"> <button mat-mini-fab class="btn-blue margin-left-10"
-                  (click)="previewDocuments(element.action.as_attachment)"><span
+    <div class="col-12">
+        <mat-card>
+            <div class="row">
+                <div class="col-4">
+                    <mat-form-field appearance="a">
+                        <input class="margin-left-10" matInput placeholder="Filter" (keyup)="doAssignmentFilter($event.target.value)">
+                        <mat-icon matPrefix>filter_list</mat-icon>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row margin-top-10">
+                <div class="col-12">
+                    <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
+                        <ng-container matColumnDef="srno">
+                            <th mat-header-cell *matHeaderCellDef> S.No </th>
+                            <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="class">
+                            <th mat-header-cell *matHeaderCellDef> Class </th>
+                            <td mat-cell *matCellDef="let element"> {{element.class | capitalize}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="subject">
+                            <th mat-header-cell *matHeaderCellDef> Subject </th>
+                            <td mat-cell *matCellDef="let element"> {{element.subject | capitalize}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="topic">
+                            <th mat-header-cell *matHeaderCellDef> Topic </th>
+                            <td mat-cell *matCellDef="let element"> {{element.topic | capitalize}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="assignment">
+                            <th mat-header-cell *matHeaderCellDef> Assignment </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div [innerHtml]="element.assignment | capitalize | truncatetext:100"></div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="entrydate">
+                            <th mat-header-cell *matHeaderCellDef> Assigned On</th>
+                            <td mat-cell *matCellDef="let element"> {{element.entryDate | date: 'd-MMM-y'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="assignedby">
+                            <th mat-header-cell *matHeaderCellDef> Assigned By </th>
+                            <td mat-cell *matCellDef="let element"> {{element.assignedBy}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="publishedby">
+                            <th mat-header-cell *matHeaderCellDef> Approved By </th>
+                            <td mat-cell *matCellDef="let element"> {{element.publishedBy}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="attachment">
+                            <th mat-header-cell *matHeaderCellDef> Attachment </th>
+                            <td mat-cell *matCellDef="let element"> <button mat-mini-fab class="btn-blue margin-left-10" (click)="previewDocuments(element.action.as_attachment)"><span
                     class="font-white font-size-16">{{element.attachment | zerodash}}</span></button></td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-            </tr>
-          </table>
-          <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize"
-            [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="changePage($event)">
-          </mat-paginator>
-          <div *ngIf="nodataFlag && !isTeacher" class="no-records" style="text-align: center">
-            <app-no-data
-              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-              [noDataText]="'No Data Available'" [subText]="'Please select class or subject'"></app-no-data>
-          </div>
-          <div *ngIf="nodataFlag && isTeacher" class="no-records" style="text-align: center">
-            <app-no-data
-              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-              [noDataText]="'No Data Available'"></app-no-data>
-          </div>
-        </div>
-      </div>
-    </mat-card>
-  </div>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="changePage($event)">
+                    </mat-paginator>
+                    <div *ngIf="nodataFlag && !isTeacher" class="no-records" style="text-align: center">
+                        <app-no-data [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" [noDataText]="'No Data Available'" [subText]="'Please select class or subject'"></app-no-data>
+                    </div>
+                    <div *ngIf="nodataFlag && isTeacher" class="no-records" style="text-align: center">
+                        <app-no-data [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" [noDataText]="'No Data Available'"></app-no-data>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </div>
 </div>

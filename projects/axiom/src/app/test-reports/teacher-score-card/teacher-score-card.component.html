@@ -1,188 +1,185 @@
 <div class="row row-remove-top-margin">
-  <div class="col-lg-12">
-     <div class="float-right">
-        <button class="submit-button" mat-button (click)="printTeacherScoreCard()"><i class="fas fa-print dialog-table-print-icon"></i> &nbsp;Print</button>
-     </div>
-  </div>
+    <div class="col-lg-12">
+        <div class="float-right">
+            <button class="submit-button" mat-button (click)="printTeacherScoreCard()"><i class="fas fa-print dialog-table-print-icon"></i> &nbsp;Print</button>
+        </div>
+    </div>
 </div>
 <div id="printModal" class="main-score-card-div">
-<div class="main-score-card-div" id="scorecardid">
-<div class="main-score-card-div" id="scorecardid">
-<div class="main-score-card-div" id="scorecardid">
-  <div *ngIf="scoreCardDiv">
-     <div class="row">
-        <div class="col-lg-12 remove-col-modal-padding">
-           <div class="row row-remove-top-margin">
-              <div class="col-lg-3 fin-tab-col-25">
-                 <mat-card class="score-card-info-card-main-box">
-                    <div class="score-card-info-car-box">
-                       <div class="row  row-remove-top-margin">
-                          <div class="col-lg-12 remove-col-modal-padding">
-                             <div class="row">
-                                <div class="col-lg-8 fin-tab-col-80 mob-report-card-col-8 tab-report-card-col-lg-8">
-                                   <div>
-                                      <span class="teacher-score-card-dynamic-value">{{attendanceArray.length}}</span><span class="teacher-score-card-sub-title">/{{studentArray.length}}</span><br>
-                                      <span class="attendence-student-appeared-title">Student Appeared</span><br>
-                                   </div>
+    <div class="main-score-card-div" id="scorecardid">
+        <div class="main-score-card-div" id="scorecardid">
+            <div class="main-score-card-div" id="scorecardid">
+                <div *ngIf="scoreCardDiv">
+                    <div class="row">
+                        <div class="col-lg-12 remove-col-modal-padding">
+                            <div class="row row-remove-top-margin">
+                                <div class="col-lg-3 fin-tab-col-25">
+                                    <mat-card class="score-card-info-card-main-box">
+                                        <div class="score-card-info-car-box">
+                                            <div class="row  row-remove-top-margin">
+                                                <div class="col-lg-12 remove-col-modal-padding">
+                                                    <div class="row">
+                                                        <div class="col-lg-8 fin-tab-col-80 mob-report-card-col-8 tab-report-card-col-lg-8">
+                                                            <div>
+                                                                <span class="teacher-score-card-dynamic-value">{{attendanceArray.length}}</span><span class="teacher-score-card-sub-title">/{{studentArray.length}}</span><br>
+                                                                <span class="attendence-student-appeared-title">Student Appeared</span><br>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 fin-tab-col-20 mob-report-card-col-2 tab-report-card-col-lg-2">
+                                                            <div>
+                                                                <img class="teacher-score-card-tot-ques-img float-right" src="/assets/images/group.svg">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card>
                                 </div>
-                                <div class="col-lg-4 fin-tab-col-20 mob-report-card-col-2 tab-report-card-col-lg-2">
-                                   <div>
-                                      <img class="teacher-score-card-tot-ques-img float-right" src="/assets/images/group.svg">
-                                   </div>
+                                <div class="col-lg-3 fin-tab-col-25">
+                                    <mat-card class="score-card-info-card-main-box">
+                                        <div class="score-card-info-car-box">
+                                            <div class="row row-remove-top-margin">
+                                                <div class="col-lg-12 remove-col-modal-padding">
+                                                    <div class="row">
+                                                        <div class="col-lg-8 fin-tab-col-80 mob-report-card-col-8 tab-report-card-col-lg-8">
+                                                            <span class="teacher-score-card-dynamic-value">{{questionpaperDetail.qlist.length}}</span><br>
+                                                            <span class="attendence-student-appeared-title">Total Question</span><br>
+                                                        </div>
+                                                        <div class="col-lg-4 fin-tab-col-20 mob-report-card-col-2 tab-report-card-col-lg-2">
+                                                            <img class="teacher-score-card-tot-ques-img float-right" src="/assets/images/menu.svg">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card>
                                 </div>
-                             </div>
-                          </div>
-                       </div>
+                                <div class="col-lg-3 fin-tab-col-25">
+                                    <mat-card class="score-card-info-card-main-box">
+                                        <div class="score-card-info-car-box">
+                                            <div class="row row-remove-top-margin">
+                                                <div class="col-lg-12 remove-col-modal-padding">
+                                                    <div class="row">
+                                                        <div class="col-lg-8 fin-tab-col-80 mob-report-card-col-8 tab-report-card-col-lg-8">
+                                                            <span class="teacher-score-card-dynamic-value">{{questionpaperDetail.tp_marks}}</span><br>
+                                                            <span class="attendence-student-appeared-title">Total Marks</span><br>
+                                                        </div>
+                                                        <div class="col-lg-4 fin-tab-col-20 mob-report-card-col-2 tab-report-card-col-lg-2">
+                                                            <img class="teacher-score-card-tot-ques-img float-right" src="/assets/images/statistics.svg">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card>
+                                </div>
+                                <div class="col-lg-3 fin-tab-col-25">
+                                    <mat-card class="score-card-info-card-main-box">
+                                        <div class="score-card-info-car-box">
+                                            <div class="row row-remove-top-margin">
+                                                <div class="col-lg-12 remove-col-modal-padding">
+                                                    <div class="row">
+                                                        <div class="col-lg-8 fin-tab-col-80 mob-report-card-col-8 tab-report-card-col-lg-8">
+                                                            <span class="teacher-score-card-dynamic-value">{{questionpaperDetail.tp_time_alloted}}</span><br>
+                                                            <span class="attendence-student-appeared-title">Total Time </span><br>
+                                                        </div>
+                                                        <div class="col-lg-4 fin-tab-col-20 mob-report-card-col-2 tab-report-card-col-lg-2">
+                                                            <img class="teacher-score-card-tot-ques-img float-right" src="/assets/images/time-management.svg">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                 </mat-card>
-              </div>
-              <div class="col-lg-3 fin-tab-col-25">
-                 <mat-card class="score-card-info-card-main-box">
-                    <div class="score-card-info-car-box">
-                       <div class="row row-remove-top-margin">
-                          <div class="col-lg-12 remove-col-modal-padding">
-                             <div class="row">
-                                <div class="col-lg-8 fin-tab-col-80 mob-report-card-col-8 tab-report-card-col-lg-8">
-                                   <span class="teacher-score-card-dynamic-value">{{questionpaperDetail.qlist.length}}</span><br>
-                                   <span class="attendence-student-appeared-title">Total Question</span><br>
-                                </div>
-                                <div class="col-lg-4 fin-tab-col-20 mob-report-card-col-2 tab-report-card-col-lg-2">
-                                   <img class="teacher-score-card-tot-ques-img float-right" src="/assets/images/menu.svg">
-                                </div>
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                 </mat-card>
-              </div>
-              <div class="col-lg-3 fin-tab-col-25">
-                 <mat-card class="score-card-info-card-main-box">
-                    <div class="score-card-info-car-box">
-                       <div class="row row-remove-top-margin">
-                          <div class="col-lg-12 remove-col-modal-padding">
-                             <div class="row">
-                                <div class="col-lg-8 fin-tab-col-80 mob-report-card-col-8 tab-report-card-col-lg-8">
-                                   <span class="teacher-score-card-dynamic-value">{{questionpaperDetail.tp_marks}}</span><br>
-                                   <span class="attendence-student-appeared-title">Total Marks</span><br>
-                                </div>
-                                <div class="col-lg-4 fin-tab-col-20 mob-report-card-col-2 tab-report-card-col-lg-2">
-                                   <img class="teacher-score-card-tot-ques-img float-right" src="/assets/images/statistics.svg">
-                                </div>
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                 </mat-card>
-              </div>
-              <div class="col-lg-3 fin-tab-col-25">
-                 <mat-card class="score-card-info-card-main-box">
-                    <div class="score-card-info-car-box">
-                       <div class="row row-remove-top-margin">
-                          <div class="col-lg-12 remove-col-modal-padding">
-                             <div class="row">
-                                <div class="col-lg-8 fin-tab-col-80 mob-report-card-col-8 tab-report-card-col-lg-8">
-                                   <span class="teacher-score-card-dynamic-value">{{questionpaperDetail.tp_time_alloted}}</span><br>
-                                   <span class="attendence-student-appeared-title">Total Time </span><br>
-                                </div>
-                                <div class="col-lg-4 fin-tab-col-20 mob-report-card-col-2 tab-report-card-col-lg-2">
-                                   <img class="teacher-score-card-tot-ques-img float-right" src="/assets/images/time-management.svg">
-                                </div>
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                 </mat-card>
-              </div>
-           </div>
-        </div>
-     </div>
-     <div class="row row-remove-top-margin">
-        <div class="col-lg-12 remove-col-modal-padding">
-           <div class="row row-remove-top-margin">
-              <div class="col-lg-12">
-                 <mat-table class="specific-table teacher-score-table-main-structure table-main-structure-teacher-report" #table
-                 [dataSource]="reportdatasource"
-                 matSort
-                 (matSortChange)="sortRank($event)">
-                 <!--Position Column-->
-                 <ng-container matColumnDef="position">
-                    <mat-header-cell *matHeaderCellDef><b>S.No</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item">{{item.position}}</mat-cell>
-                 </ng-container>
-                 <!--Admission No Column-->
-                 <ng-container matColumnDef="admissionNo">
-                    <mat-header-cell *matHeaderCellDef class="te-adm-print"><b>Admission No.</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item" class="te-adm-print"><a [routerLink]="['../../individual-student-report',es_id,item.admissionNo]">{{item.loginid}}</a></mat-cell>
-                 </ng-container>
-                 <!--Student Name Column-->
-                 <ng-container matColumnDef="studentName">
-                    <mat-header-cell *matHeaderCellDef class="te-adm-print"><b>Student Name</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item" class="te-adm-print">{{item.studentName}}</mat-cell>
-                 </ng-container>
-                 <!--Rank Column-->
-                 <ng-container matColumnDef="rank">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header="rank" class="te-adm-print"><b>Rank</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item" class="te-adm-print">{{item.rank}}</mat-cell>
-                 </ng-container>
-                 <!--Maximum Marks Column-->
-                 <ng-container matColumnDef="max_marks">
-                    <mat-header-cell *matHeaderCellDef><b>Max.Marks</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item">{{item.max_marks}}</mat-cell>
-                 </ng-container>
-                 <!--Attempted Column-->
-                 <ng-container matColumnDef="attempted">
-                    <mat-header-cell *matHeaderCellDef><b>Attempted</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item">{{getAttempted(item.correct,item.incorrect)}}</mat-cell>
-                 </ng-container>
-                 <!--Correct Column-->
-                 <ng-container matColumnDef="correct">
-                    <mat-header-cell *matHeaderCellDef><b>Correct</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item">
-                       <div *ngIf="item.correct">{{item.correct}}</div>
-                       <div *ngIf="!item.correct">-</div>
-                    </mat-cell>
-                 </ng-container>
-                 <!--InCorrect Column-->
-                 <ng-container matColumnDef="incorrect">
-                    <mat-header-cell *matHeaderCellDef><b>Incorrect</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item">
-                       <div *ngIf="item.incorrect">{{item.incorrect}}</div>
-                       <div *ngIf="!item.incorrect">-</div>
-                    </mat-cell>
-                 </ng-container>
-                 <!--Skip Column-->
-                 <ng-container matColumnDef="skip">
-                    <mat-header-cell *matHeaderCellDef><b>Skipped</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item">
-                       <div *ngIf="item.skip">{{item.skip}}</div>
-                       <div *ngIf="!item.skip">-</div>
-                    </mat-cell>
-                 </ng-container>
-                 <!--Score Column-->
-                 <ng-container matColumnDef="score">
-                    <mat-header-cell *matHeaderCellDef><b>Score</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item">{{getScore(item.score)}}</mat-cell>
-                 </ng-container>
-                 <!--Percentage Column-->
-                 <ng-container matColumnDef="percentage">
-                    <mat-header-cell *matHeaderCellDef><b>Percentage</b></mat-header-cell>
-                    <mat-cell *matCellDef="let item">{{item.percentage}}</mat-cell>
-                 </ng-container>
-                 <!---->
-                 <ng-container matColumnDef="cutoff">
-                  <mat-header-cell *matHeaderCellDef><b>Variance({{passMarks}})
+                    <div class="row row-remove-top-margin">
+                        <div class="col-lg-12 remove-col-modal-padding">
+                            <div class="row row-remove-top-margin">
+                                <div class="col-lg-12">
+                                    <div class="table-overflow">
+                                        <table mat-table class="specific-table teacher-score-table-main-structure table-main-structure-teacher-report" #table [dataSource]="reportdatasource" matSort (matSortChange)="sortRank($event)">
+                                            <!--Position Column-->
+                                            <ng-container matColumnDef="position">
+                                                <th *matHeaderCellDef><b>S.No</b></th>
+                                                <td *matCellDef="let item">{{item.position}}</td>
+                                            </ng-container>
+                                            <!--Admission No Column-->
+                                            <ng-container matColumnDef="admissionNo">
+                                                <th *matHeaderCellDef class="te-adm-print"><b>Admission No.</b></th>
+                                                <td *matCellDef="let item" class="te-adm-print"><a [routerLink]="['../../individual-student-report',es_id,item.admissionNo]">{{item.loginid}}</a></td>
+                                            </ng-container>
+                                            <!--Student Name Column-->
+                                            <ng-container matColumnDef="studentName">
+                                                <th *matHeaderCellDef class="te-adm-print"><b>Student Name</b></th>
+                                                <td *matCellDef="let item" class="te-adm-print">{{item.studentName}}</td>
+                                            </ng-container>
+                                            <!--Rank Column-->
+                                            <ng-container matColumnDef="rank">
+                                                <th *matHeaderCellDef mat-sort-header="rank" class="te-adm-print"><b>Rank</b></th>
+                                                <td *matCellDef="let item" class="te-adm-print">{{item.rank}}</td>
+                                            </ng-container>
+                                            <!--Maximum Marks Column-->
+                                            <ng-container matColumnDef="max_marks">
+                                                <th *matHeaderCellDef><b>Max.Marks</b></th>
+                                                <td *matCellDef="let item">{{item.max_marks}}</td>
+                                            </ng-container>
+                                            <!--Attempted Column-->
+                                            <ng-container matColumnDef="attempted">
+                                                <th *matHeaderCellDef><b>Attempted</b></th>
+                                                <td *matCellDef="let item">{{getAttempted(item.correct,item.incorrect)}}</td>
+                                            </ng-container>
+                                            <!--Correct Column-->
+                                            <ng-container matColumnDef="correct">
+                                                <th *matHeaderCellDef><b>Correct</b></th>
+                                                <td *matCellDef="let item">
+                                                    <div *ngIf="item.correct">{{item.correct}}</div>
+                                                    <div *ngIf="!item.correct">-</div>
+                                                </td>
+                                            </ng-container>
+                                            <!--InCorrect Column-->
+                                            <ng-container matColumnDef="incorrect">
+                                                <th *matHeaderCellDef><b>Incorrect</b></th>
+                                                <td *matCellDef="let item">
+                                                    <div *ngIf="item.incorrect">{{item.incorrect}}</div>
+                                                    <div *ngIf="!item.incorrect">-</div>
+                                                </td>
+                                            </ng-container>
+                                            <!--Skip Column-->
+                                            <ng-container matColumnDef="skip">
+                                                <th *matHeaderCellDef><b>Skipped</b></th>
+                                                <td *matCellDef="let item">
+                                                    <div *ngIf="item.skip">{{item.skip}}</div>
+                                                    <div *ngIf="!item.skip">-</div>
+                                                </td>
+                                            </ng-container>
+                                            <!--Score Column-->
+                                            <ng-container matColumnDef="score">
+                                                <th *matHeaderCellDef><b>Score</b></th>
+                                                <td *matCellDef="let item">{{getScore(item.score)}}</td>
+                                            </ng-container>
+                                            <!--Percentage Column-->
+                                            <ng-container matColumnDef="percentage">
+                                                <th *matHeaderCellDef><b>Percentage</b></th>
+                                                <td *matCellDef="let item">{{item.percentage}}</td>
+                                            </ng-container>
+                                            <!---->
+                                            <ng-container matColumnDef="cutoff">
+                                                <th *matHeaderCellDef><b>Variance({{passMarks}})
                         <i class="fas fa-info-circle" style="cursor: pointer"
                         matTooltip="Difference between marks scored and cut off marks for the exam"></i>
-                  </b></mat-header-cell>
-                  <mat-cell *matCellDef="let item">
-                    <div [innerHTML]="item.cutoff"></div></mat-cell>
-               </ng-container>
-                 <!--Status Column-->
-                 <ng-container matColumnDef="status">
-                    <mat-header-cell *matHeaderCellDef><b>Grade</b>
-                     <i class="fas fa-info-circle" style="cursor: pointer"
-                     matTooltip="
-                     Grade A1: 90-100
+                  </b></th>
+                                                <td *matCellDef="let item">
+                                                    <div [innerHTML]="item.cutoff"></div>
+                                                </td>
+                                            </ng-container>
+                                            <!--Status Column-->
+                                            <ng-container matColumnDef="status">
+                                                <th *matHeaderCellDef><b>Grade</b>
+                                                    <i class="fas fa-info-circle" style="cursor: pointer" matTooltip="Grade A1: 90-100
                      Grade A2: 80-90
                      Grade B1: 70-80
                      Grade B2: 60-70
@@ -190,18 +187,19 @@
                      Grade C2: 40-50
                      Grade D:  32-40
                      Grade E:  0-32"></i>
-                  </mat-header-cell>
-                    <mat-cell *matCellDef="let item">
-                     <button mat-icon class="grade-button-border"
-                     [ngStyle]="{background:getPercentageColor(item.percentage)}"><span class="grade-value">{{grade}}</span></button>
-                    </mat-cell>
-                 </ng-container>
-                 <mat-header-row class="top_header" *matHeaderRowDef="reportdisplayedColumns"></mat-header-row>
-                 <mat-row *matRowDef="let row; columns: reportdisplayedColumns;"></mat-row>
-                 </mat-table>
-              </div>
-           </div>
-        </div>
-     </div>
-  </div>
-</div>
+                                                </th>
+                                                <td *matCellDef="let item">
+                                                    <button mat-icon class="grade-button-border" [ngStyle]="{background:getPercentageColor(item.percentage)}"><span class="grade-value">{{grade}}</span></button>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row class="top_header" *matHeaderRowDef="reportdisplayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: reportdisplayedColumns;"></tr>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
