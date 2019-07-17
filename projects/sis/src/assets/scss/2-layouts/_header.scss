@@ -59,6 +59,7 @@
     flex-grow: 1;
 }
 
+
 /* .far {
     font-size: 20px;
 } */
@@ -100,7 +101,6 @@
     font-weight: 500 !important;
 }
 
-
 .axiom-profile-image {
     border-radius: 100%;
     height: 32px;
@@ -118,9 +118,8 @@
 }
 
 .axiom-sidebar {
-    /* top:10px; */
-    // height: 120vh !important;
-
+    top: 10px;
+    height: 120vh !important;
 }
 
 .mat-expansion-panel-body {
@@ -130,6 +129,7 @@
 .side-nav-sub-menu-btn .mat-button-focus-overlay {
     background-color: none !important;
 }
+
 
 /*.axiom-sidenav {
   width: 16%;
@@ -157,9 +157,9 @@
 }
 
 .digisoft-title {
-  color: #ffffff !important;
-  font-weight: 500;
-  font-size: 18px !important;
+    color: #ffffff !important;
+    font-weight: 500;
+    font-size: 18px !important;
 }
 
 // .cdk-overlay-container .cdk-overlay-connected-position-bounding-box .cdk-overlay-pane {
@@ -169,9 +169,6 @@
 //     align-items: flex-start;
 //     justify-content: flex-start;
 // }
-
-
-
 .mat-sidenav {
     width: 75px;
     overflow: hidden !important;

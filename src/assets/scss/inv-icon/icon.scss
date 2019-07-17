@@ -1,0 +1,42 @@
+@mixin background($position) {
+    background-image: url(./assets/images/sprite.png);
+    background-position: $position;
+    height: 25px;
+    width: 25px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.inv.upload {
+    @include background(0px 0px)
+}
+
+.inv.file {
+    @include background(-50px 0px)
+}
+
+.inv.question {
+    @include background(-100px 0px)
+}
+.syllabus-management {
+    @include background(-650px 0px)
+}
+.dashboard{
+    @include background(-300px 0px)
+}
+.assignment{
+    @include background(-750px 0px)
+}
+.log-entry{
+    @include background(-800px 0px)
+}
+.auxiliaries{
+    @include background(-700px 0px)
+}
+.report{
+    @include background(-550px 0px)
+}
+.setup{
+    @include background(-950px 0px)
+}

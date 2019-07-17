@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSidenav, MatTooltip } from '@angular/material';
@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import { UserTypeService } from 'projects/fee/src/app/usertype/usertype.service';
 import { SisService } from 'projects/fee/src/app/_services';
 import { NotificationService } from 'projects/axiom/src/app/_services/index';
-import {CommonAPIService} from '../../_services/index';
+import { CommonAPIService } from '../../_services/index';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
 import { LoaderService } from 'projects/fee/src/app/_services/loader.service';
@@ -54,6 +54,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	proUrl: any;
 	projectId: any;
 	private _mobileQueryListener: () => void;
+	innerHeight: any;
 
 
 	constructor(
@@ -78,7 +79,14 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 
-
+	// @HostListener('window:resize', ['$event'])
+	// onResize(event) {
+	// 	if (this.mobileQuery.matches) {
+	// 		this.innerHeight = (window.innerHeight) - 150;
+	// 	} else {
+	// 		this.innerHeight = (window.innerHeight) - 150;
+	// 	}
+	// }
 
 	sidenavOpen() {
 		const element = document.getElementById('sidenav');
@@ -90,6 +98,12 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
 	ngOnInit() {
+		// if (this.mobileQuery.matches) {
+		// 	this.innerHeight = (window.innerHeight) - 150;
+		// } else {
+		// 	this.innerHeight = (window.innerHeight) - 150;
+		// }
+		//console.log(this.mobileQuery);
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getSession();
