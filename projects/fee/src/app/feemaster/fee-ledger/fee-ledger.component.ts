@@ -103,6 +103,8 @@ export class FeeLedgerComponent implements OnInit {
 		}
 	}
 	getFeeLedger(login_id) {
+		this.selection.clear();
+		this.resetActionFlag();
 		let element: any = {};
 		this.FEE_LEDGER_ELEMENT = [];
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
@@ -357,18 +359,22 @@ export class FeeLedgerComponent implements OnInit {
 			});
 			this.actionFlag = tempactionFlag;
 		} else {
-			this.actionFlag = {
-				deleteinvoice: false,
-				deletereceipt: false,
-				edit: false,
-				recalculate: false,
-				consolidate: false,
-				attach: false,
-				detach: false,
-				unconsolidate: false,
-				receiptmodification: false
-			};
+			this.resetActionFlag();
 		}
+	}
+
+	resetActionFlag() {
+		this.actionFlag = {
+			deleteinvoice: false,
+			deletereceipt: false,
+			edit: false,
+			recalculate: false,
+			consolidate: false,
+			attach: false,
+			detach: false,
+			unconsolidate: false,
+			receiptmodification: false
+		};
 	}
 
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
