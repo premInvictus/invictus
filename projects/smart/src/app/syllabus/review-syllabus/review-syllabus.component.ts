@@ -67,15 +67,16 @@ export class ReviewSyllabusComponent implements OnInit {
 	}
 	ngOnInit() {
 		this.buildForm();
+		this.getClass();
 		if (this.syllabusService.getProcesstype()) {
 			this.processType = this.syllabusService.getProcesstype();
 			this.reviewForm.patchValue({
 				'syl_class_id': this.processType.class_id,
 				'syl_sub_id': this.processType.sub_id,
 			});
+			this.getSubjectsByClass();
 			this.fetchSyllabusDetails();
 		}
-		this.getClass();
 	}
 
 	//  Get Class List function
@@ -305,13 +306,17 @@ export class ReviewSyllabusComponent implements OnInit {
 													this.finalSpannedArray[findex].total = Number(this.finalSpannedArray[findex].total) + Number(this.finalSyllabusArray[i].sd_period_req);
 												}
 											}
-										} else { 
+										} else {
 											this.finalSpannedArray = [];
 											this.finalDivFlag = true;
 											this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 										}
 									});
 						}
+					} else {
+						this.finalSpannedArray = [];
+						this.finalDivFlag = true;
+						this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 					}
 				}
 			);

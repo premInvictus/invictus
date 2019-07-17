@@ -45,7 +45,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(dresult => {
-			console.log(dresult);
+			// console.log(dresult);
 			if (dresult) {
 				if  (dresult.tw_entry_date) {
 					param.tw_entry_date = this.commonAPIService.dateConvertion(dresult.tw_entry_date);
@@ -80,19 +80,19 @@ export class TopicwiseUpdateComponent implements OnInit {
 	topicwiseInsert(value) {
 		this.smartService.topicwiseInsert(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				console.log(result);
+				// console.log(result);
 				this.getTopicwiseDetails();
 			}
 		});
 	}
 	getTeacherInfo(event) {
-		console.log(event.target.value);
+		// console.log(event.target.value);
 		this.teacherArray = [];
 		if (event.target.value) {
 			this.axiomService.getAllTeacher({ full_name: event.target.value, role_id: '3', status: '1' }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.teacherArray = result.data;
-					console.log(result.data);
+					// console.log(result.data);
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 					this.topicsubtopicDetailsArray = [];
@@ -153,7 +153,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 	}
 	getSubjectByTeacherIdClassIdSectionId(event) {
 		const csArray = event.value.split('-');
-		console.log(csArray);
+		// console.log(csArray);
 		this.subjectArray = [];
 		this.topicwiseforForm.patchValue({
 			tw_sub_id: ''
@@ -200,7 +200,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 			this.smartService.getSubtopicCountAndDetail(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.noDataFlag = false;
-					console.log('result', result.data);
+					// console.log('result', result.data);
 					this.topicsubtopicArray = result.data;
 					Object.assign(this.topicsubtopicDetailsArray, result.data);
 					this.topicsubtopicDetailsArray.forEach(item => {
@@ -208,17 +208,17 @@ export class TopicwiseUpdateComponent implements OnInit {
 						item.revisionDone = '';
 						item.testConducted = '';
 					});
-					console.log('topicsubtopicDetailsArray', this.topicsubtopicDetailsArray);
+					// console.log('topicsubtopicDetailsArray', this.topicsubtopicDetailsArray);
 					this.smartService.getTopicwiseCTR(param).subscribe((result1: any) => {
 						if (result1 && result1.status === 'ok') {
-							console.log(result1.data);
+							// console.log(result1.data);
 							this.topicCTRArray = result1.data;
 							this.topicsubtopicDetailsArray.forEach(item => {
 								item.courseCompleted = this.getCTRStatus(item.topic_id, '1', this.topicCTRArray);
 								item.revisionDone = this.getCTRStatus(item.topic_id, '3', this.topicCTRArray);
 								item.testConducted = this.getCTRStatus(item.topic_id, '2', this.topicCTRArray);
 							});
-							console.log(this.topicsubtopicDetailsArray);
+							// console.log(this.topicsubtopicDetailsArray);
 						}
 					});
 				} else {
@@ -239,10 +239,10 @@ export class TopicwiseUpdateComponent implements OnInit {
 		param.tw_topic_id = this.topicsubtopicDetailsArray[i].topic_id;
 		param.tw_ctr_id = ctr;
 		if (ctrStatus && ctrStatus.tw_status === '1') {
-			console.log('calling unpublish');
+			// console.log('calling unpublish');
 			param.tw_status = '0';
 		} else {
-			console.log('calling publish');
+			// console.log('calling publish');
 			param.tw_status = '1';
 		}
 		this.openUpdateConfirmation(param);
