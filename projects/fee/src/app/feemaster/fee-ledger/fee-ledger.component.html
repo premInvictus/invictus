@@ -76,7 +76,7 @@
                     <td width="5%" mat-cell *matCellDef="let item">
                       <span *ngIf="item.invoiceno != '0'"
                         class="pointer font-bold font-skyblue font-underline">
-                        <a (click)="openDialog(item.action.flgr_inv_id, false)">{{item.invoiceno}}</a>
+                        <a (click)="openDialog(item.action, false)">{{item.invoiceno}}</a>
                       </span>
                     </td>
                     <td mat-footer-cell *matFooterCellDef></td>

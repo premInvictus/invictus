@@ -265,13 +265,13 @@ export class FeeLedgerComponent implements OnInit {
 
 	}
 	// to veiw invoice details
-	openDialog(invoiceNo, edit): void {
+	openDialog(item, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: invoiceNo,
+				invoiceNo: item.flgr_inv_id,
 				edit: edit,
-				paidStatus: 'paid'
+				paidStatus: item.inv_paid_status
 			},
 			hasBackdrop: true
 		});
