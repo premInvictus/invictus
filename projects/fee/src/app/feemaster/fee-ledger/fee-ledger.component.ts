@@ -516,6 +516,7 @@ export class FeeLedgerComponent implements OnInit {
 		stuDetails.stu_full_name = this.commonStudentProfileComponent.studentdetails.au_full_name;
 		stuDetails.stu_class_name = this.commonStudentProfileComponent.class_sec;
 		stuDetails.au_login_id = this.commonStudentProfileComponent.studentdetails.au_login_id;
+		stuDetails.fromPage = 'feeledger';
 		const dialogRef = this.dialog.open(CreateInvoiceModalComponent, {
 			width: '50%',
 			data: {

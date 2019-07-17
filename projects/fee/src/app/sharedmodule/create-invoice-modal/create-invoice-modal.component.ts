@@ -13,6 +13,7 @@ export class CreateInvoiceModalComponent implements OnInit {
 	feePeriod: any[] = [];
 	invoiceType: any[] = [];
 	invoiceCreationForm: FormGroup;
+	studentFlag = true;
 	constructor(@Inject(MAT_DIALOG_DATA) public data,
 		private dialogRef: MatDialogRef<CreateInvoiceModalComponent>,
 		private processTypeService: ProcesstypeFeeService,
@@ -24,6 +25,9 @@ export class CreateInvoiceModalComponent implements OnInit {
 		this.buildForm();
 		this.processTypeService.setProcesstype('4');
 		console.log(this.data);
+		if (this.data.invoiceDetails.fromPage && this.data.invoiceDetails.fromPage === 'feeledger') {
+			this.studentFlag = false;
+		}
 		if (this.data.invoiceDetails.fp_name) {
 			this.feePeriod = this.data.invoiceDetails.fp_name;
 		} else {
@@ -33,7 +37,7 @@ export class CreateInvoiceModalComponent implements OnInit {
 	}
 	buildForm() {
 		this.invoiceCreationForm = this.fb.group({
-			recalculation_flag: '0',
+			recalculation_flag: '',
 			inv_id: [],
 			inv_title: '',
 			login_id: [],
@@ -73,7 +77,8 @@ export class CreateInvoiceModalComponent implements OnInit {
 				'inv_invoice_date': new DatePipe('en-in').transform(this.invoiceCreationForm.value.inv_invoice_date, 'yyyy-MM-dd'),
 				'inv_due_date': new DatePipe('en-in').transform(this.invoiceCreationForm.value.inv_due_date, 'yyyy-MM-dd'),
 				'login_id': [this.data.invoiceDetails.au_login_id],
-				'inv_fp_id': this.data.invoiceDetails.inv_fp_id ? this.data.invoiceDetails.inv_fp_id : this.invoiceCreationForm.value.inv_fp_id
+				'inv_fp_id': this.data.invoiceDetails.inv_fp_id ? this.data.invoiceDetails.inv_fp_id : this.invoiceCreationForm.value.inv_fp_id,
+				'recalculation_flag' : this.invoiceCreationForm.value.recalculation_flag === true ? '1' : '0'
 			});
 			this.feeService.insertInvoice(this.invoiceCreationForm.value).subscribe((res: any) => {
 				if (res && res.status === 'ok') {
