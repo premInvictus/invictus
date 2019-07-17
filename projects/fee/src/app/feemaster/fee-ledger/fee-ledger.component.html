@@ -25,24 +25,24 @@
           </div>
         </div> -->
         <div style="margin-top:15px !important" class="col-12 text-right">
-          <button *ngIf="actionFlag.receiptmodification" mat-raised-button class="btn-primary btn-consolidate"
-            (click)="openConsolidateDialog({})">Receipt Modification</button>
+          <button *ngIf="actionFlag.receiptmodification" mat-raised-button class="btn-primary btn-receiptMod"
+            (click)="openReciptModificationDialog()">Receipt Modification</button>
           <button *ngIf="actionFlag.attach" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-            (click)="openConsolidateDialog({})">Attach</button>
+            (click)="openAttachDialog(fetchInvId())">Attach</button>
           <button *ngIf="actionFlag.detach" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-            (click)="openConsolidateDialog({})">Detach</button>
-          <button *ngIf="actionFlag.edit" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-            (click)="openConsolidateDialog({})">Edit</button>
+            (click)="openDetachReceiptDialog(fetchInvId())">Detach</button>
+          <button *ngIf="actionFlag.edit" mat-raised-button class="btn-primary btn-edit-inv btn-spacer"
+          (click)="openDialog1(true)">Edit Invoice</button>
           <button *ngIf="actionFlag.consolidate" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
             (click)="openConsolidateDialog({})">Consolidate</button>
           <button *ngIf="actionFlag.unconsolidate" mat-raised-button class="btn-primary btn-unconsolidate btn-spacer"
             (click)="openUnConsolidateDialog(fetchInvId())">Un-Consolidate</button>
-          <button *ngIf="actionFlag.recalulate" mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer"
+          <button *ngIf="actionFlag.recalculate" mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer"
             (click)="openRecalculateDialog()">Recalutate</button>
-          <button *ngIf="actionFlag.deleteinvoice" mat-raised-button class="btn-primary btn-danger btn-spacer"
+          <button *ngIf="actionFlag.deleteinvoice" mat-raised-button class="btn-primary btn-delete-rec btn-spacer"
             (click)="openDeleteDialog(fetchInvId())">Delete Invoice</button>
-            <button *ngIf="actionFlag.deletereceipt" mat-raised-button class="btn-primary btn-danger btn-spacer"
-            (click)="openDeleteDialog(fetchInvId())">Delete Receipt</button>
+          <button *ngIf="actionFlag.deletereceipt" mat-raised-button class="btn-primary btn-delete-rec btn-spacer"
+            (click)="openDeleteReciptDialog(fetchRecId())">Delete Receipt</button>
         </div>
         <div class="row">
           <div class="col-12">
@@ -142,9 +142,8 @@
                   </ng-container>
                   <ng-container matColumnDef="receiptno">
                     <th mat-header-cell *matHeaderCellDef> Receipt No</th>
-                    <td width="5%" mat-cell *matCellDef="let item"> 
-                        <span *ngIf="item.action.rpt_id"
-                        class="pointer font-bold font-skyblue font-underline">
+                    <td width="5%" mat-cell *matCellDef="let item">
+                      <span *ngIf="item.action.rpt_id" class="pointer font-bold font-skyblue font-underline">
                         <a (click)="openReceiptDialog(item.action.rpt_id, false)">{{item.receiptno}}</a>
                       </span></td>
                     <td mat-footer-cell *matFooterCellDef></td>
@@ -272,3 +271,26 @@
     </div>
   </div>
 </div>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)">
+</app-delete-modal>
+<app-delete-modal #deleteReceiptModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteReciptConfirm($event)">
+</app-delete-modal>
+<app-delete-modal #recalculateModal [deleteMessage]="'On recalculation all adjustments/remarks if any, will be removed!<br>
+Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
+<app-delete-modal #consolidateModal [deleteMessage]="'Are you sure want to Consolidate'"
+  (deleteOk)="consolidateConfirm($event)"></app-delete-modal>
+<app-delete-modal #unconsolidateModal [deleteMessage]="'Are you sure want to Un-Consolidate Selected Invoice'"
+  (deleteOk)="unconsolidateConfirm($event)"></app-delete-modal>
+<app-delete-modal #detachReceiptModal [deleteMessage]="'Are you sure to Detach Selected Invoice'"
+  (deleteOk)="detachReceiptConfirm($event)"></app-delete-modal>
+<app-search-dialog #searchModal [deleteMessage]="'Please Choose Receipt Number to Attach with this Invoice'"
+  (deleteOk)="attachReceipt($event)">
+</app-search-dialog>
+<app-delete-with-reason #deleteWithReasonModal
+  [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete Invoice'"
+  (deleteOk)="deleteInvoiceFinal($event)">
+</app-delete-with-reason>
+<app-delete-with-reason #deleteReceiptWithReasonModal
+  [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete receipt'"
+  (deleteOk)="deleteReceiptFinal($event)">
+</app-delete-with-reason>

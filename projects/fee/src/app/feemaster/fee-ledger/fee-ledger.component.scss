@@ -48,8 +48,37 @@ td.mat-footer-cell {
     background: #004261;
     color: #fff;
     text-transform: uppercase;
-    width: 138px;
+    padding: 0 5px;
     height: 32px;
     font-size: 13px;
     line-height: 32px !important;
-  }
+}
+
+.btn-receiptMod {
+    background: #004261;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+.btn-delete-rec {
+    background: #ff5a5a;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+
+.btn-edit-inv{
+    background: #6c757d;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}

@@ -218,6 +218,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/detachReceipt', value);
 	}
+	deleteReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/deleteReceipt', value);
+	}
 
 	attachReceipt(value) {
 		this.service.startLoading();

@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FeeLedgerElement } from './fee-ledger.model';
 import { SelectionModel } from '@angular/cdk/collections';
-import { SisService, ProcesstypeFeeService, FeeService } from '../../_services';
+import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
+import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 
 @Component({
 	selector: 'app-fee-ledger',
@@ -16,6 +17,16 @@ import { StudentRouteMoveStoreService } from '../student-route-move-store.servic
 })
 export class FeeLedgerComponent implements OnInit {
 
+	@ViewChild(CommonStudentProfileComponent) commonStudentProfileComponent: CommonStudentProfileComponent;
+	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('deleteReceiptModal') deleteReceiptModal;
+	@ViewChild('deleteReceiptWithReasonModal') deleteReceiptWithReasonModal;
+	@ViewChild('recalculateModal') recalculateModal;
+	@ViewChild('consolidateModal') consolidateModal;
+	@ViewChild('unconsolidateModal') unconsolidateModal;
+	@ViewChild('detachReceiptModal') detachReceiptModal;
+	@ViewChild('searchModal') searchModal;
+	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
 	displayedColumns: string[] = ['select', 'srno', 'date', 'invoiceno', 'particular', 'duedate',
 	 'amount', 'concession', 'fine', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
@@ -46,7 +57,8 @@ export class FeeLedgerComponent implements OnInit {
 		private feeService: FeeService,
 		public processtypeService: ProcesstypeFeeService,
 		public dialog: MatDialog,
-		public studentRouteMoveStoreService: StudentRouteMoveStoreService
+		public studentRouteMoveStoreService: StudentRouteMoveStoreService,
+		private commonAPIService: CommonAPIService
 	) { }
 
 	ngOnInit() {
@@ -244,6 +256,7 @@ export class FeeLedgerComponent implements OnInit {
 		XLSX.writeFile(wb, 'FeeLedger_' + this.loginId + '_' + (new Date).getTime() + '.xlsx');
 
 	}
+	// to veiw invoice details
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
 			width: '80%',
@@ -258,6 +271,26 @@ export class FeeLedgerComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(result => {
 		});
 	}
+
+	// to edit invoice detials
+	openDialog1(edit): void {
+		const inv_id = this.fetchInvId();
+		if (inv_id && inv_id.length === 1) {
+			const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
+				width: '80%',
+				height: '80vh',
+				data: {
+					invoiceNo: inv_id[0],
+					edit: edit,
+					paidStatus: 'unpaid'
+				}
+			});
+			dialogRef.afterClosed().subscribe(result => {
+				this.getFeeLedger(this.loginId);
+			});
+		}
+	}
+
 	openReceiptDialog(rpt_id, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
@@ -319,6 +352,7 @@ export class FeeLedgerComponent implements OnInit {
 				tempactionFlag.attach = tempactionFlag.attach && item.eachActionFlag.attach && this.selection.selected.length === 1;
 				tempactionFlag.detach = tempactionFlag.detach && item.eachActionFlag.detach && this.selection.selected.length === 1;
 				tempactionFlag.unconsolidate = tempactionFlag.unconsolidate && item.eachActionFlag.unconsolidate && this.selection.selected.length > 0;
+				// tslint:disable-next-line:max-line-length
 				tempactionFlag.receiptmodification = tempactionFlag.receiptmodification && item.eachActionFlag.receiptmodification && this.selection.selected.length === 1;
 			});
 			this.actionFlag = tempactionFlag;
@@ -337,5 +371,130 @@ export class FeeLedgerComponent implements OnInit {
 		}
 	}
 
+	openDeleteDialog = (data) => this.deleteModal.openModal(data);
+	openDeleteReciptDialog = (data) => this.deleteReceiptModal.openModal(data);
+	openRecalculateDialog = (data) => this.recalculateModal.openModal(data);
+	openConsolidateDialog = (data) => this.consolidateModal.openModal(data);
+	openUnConsolidateDialog = (data) => this.unconsolidateModal.openModal(data);
+	openDetachReceiptDialog = (data) => this.detachReceiptModal.openModal(data);
+	openAttachDialog = (data) => this.searchModal.openModal(data);
+
+	deleteConfirm(value) {
+		this.deleteWithReasonModal.openModal(value);
+	}
+
+	deleteReciptConfirm(value) {
+		this.deleteReceiptWithReasonModal.openModal(value);
+	}
+
+	fetchInvId() {
+		const inv_id_arr = [];
+		this.selection.selected.forEach(element => {
+			if (element.action.flgr_inv_id) {
+				inv_id_arr.push(element.action.flgr_inv_id);
+			}
+		});
+		return inv_id_arr;
+	}
+	fetchRecId() {
+		const rec_id_arr = [];
+		this.selection.selected.forEach(element => {
+			if (element.action.ftr_id) {
+				rec_id_arr.push(element.action.ftr_id);
+			}
+		});
+		return rec_id_arr;
+	}
+
+	deleteInvoiceFinal(value) {
+		console.log(value);
+		this.feeService.deleteInvoice(value).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getFeeLedger(this.loginId);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+	deleteReceiptFinal(value) {
+		const param: any = {};
+		param.ftr_id = value.inv_id;
+		param.login_id = this.loginId;
+		param.process_type = this.commonStudentProfileComponent.processType;
+		param.reason_remark = value.reason_remark;
+		param.reason_id = value.reason_id;
+		// console.log(param);
+		// console.log(this.commonStudentProfileComponent.processType);
+		this.feeService.deleteReceipt(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getFeeLedger(this.loginId);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+
+	recalculateConfirm(value) {
+		const param: any = {};
+		param.inv_id = this.fetchInvId();
+		param.recalculation_flag = 1;
+		this.feeService.recalculateInvoice(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getFeeLedger(this.loginId);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+
+	consolidateConfirm(value) {
+		this.feeService.consolidateInvoice({ inv_id: this.fetchInvId() }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getFeeLedger(this.loginId);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+
+	attachReceipt(value) {
+		console.log('receipt value', value);
+		this.feeService.attachReceipt(value).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getFeeLedger(this.loginId);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+	unconsolidateConfirm(value) {
+		this.feeService.unconsolidateInvoice({ inv_consolidate_id: this.fetchInvId() }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getFeeLedger(this.loginId);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+	detachReceiptConfirm(value) {
+		console.log('value--', value);
+		this.feeService.detachReceipt({ inv_id: value }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.getFeeLedger(this.loginId);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+	openReciptModificationDialog() {
+
+	}
 
 }
