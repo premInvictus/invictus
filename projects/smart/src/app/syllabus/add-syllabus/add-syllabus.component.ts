@@ -693,7 +693,7 @@ export class AddSyllabusComponent implements OnInit {
 		this.resetForm();
 	}
 
-	// final submit function 
+	// final submit function
 	// In this function database entry occur
 	finalSubmit($event) {
 		if ($event) {
