@@ -8,6 +8,7 @@ export interface FeeLedgerElement {
 	remarks: any;
 	amount: any;
 	concession: any;
+	adjustment: any;
 	fine: any;
 	reciept: any;
 	balance: any;

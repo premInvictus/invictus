@@ -28,8 +28,8 @@ export class FeeLedgerComponent implements OnInit {
 	@ViewChild('detachReceiptModal') detachReceiptModal;
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
-	displayedColumns: string[] = ['select', 'date', 'invoiceno', 'particular', 'duedate',
-	 'amount', 'concession', 'fine', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
+	displayedColumns: string[] = ['select', 'date', 'invoiceno', 'feeperiod', 'particular', 'duedate',
+	 'amount', 'concession', 'adjustment', 'fine', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
 	dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 	selection = new SelectionModel<FeeLedgerElement>(true, []);
@@ -39,6 +39,7 @@ export class FeeLedgerComponent implements OnInit {
 	footerRecord: any = {
 		feeduetotal: 0,
 		concessiontotal: 0,
+		adjustmenttotal: 0,
 		receipttotal: 0,
 		finetotal: 0,
 		balancetotal: 0
@@ -120,6 +121,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.footerRecord = {
 					feeduetotal: 0,
 					concessiontotal: 0,
+					adjustmenttotal: 0,
 					receipttotal: 0,
 					finetotal: 0,
 					balancetotal: 0
@@ -159,6 +161,7 @@ export class FeeLedgerComponent implements OnInit {
 						remarks: item.remarks ? item.remarks : '-',
 						amount: item.flgr_amount ? item.flgr_amount : '0',
 						concession: item.flgr_concession ? item.flgr_concession : '0',
+						adjustment: item.flgr_adj_amount ? item.flgr_adj_amount : '0',
 						fine: item.inv_fine_amount ? item.inv_fine_amount : '0',
 						reciept: item.rpt_net_amount ? item.rpt_net_amount : '0',
 						balance: item.flgr_balance ? item.flgr_balance : '0',
@@ -172,11 +175,14 @@ export class FeeLedgerComponent implements OnInit {
 					pos++;
 					this.footerRecord.feeduetotal += Number(element.amount);
 					this.footerRecord.concessiontotal += Number(element.concession);
+					this.footerRecord.adjustmenttotal += Number(element.adjustment);
 					this.footerRecord.receipttotal += Number(element.reciept);
 					this.footerRecord.finetotal += Number(element.fine);
 					this.footerRecord.balancetotal += Number(element.balance);
 				}
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
