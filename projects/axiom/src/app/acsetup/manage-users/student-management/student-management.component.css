@@ -1,10 +1,42 @@
-.table-box{
-  margin-bottom: 60px;
+.table-box {
+    margin-bottom: 60px;
 }
+
 .create-new-user {
-  float: right;
-  margin-right: 10px;
+    float: right;
+    margin-right: 10px;
 }
+
 .table-filter-icon {
-  color: #0e7d9e;
+    color: #0e7d9e;
+}
+
+.button_student {
+    text-align: right;
+}
+
+.button_student>a {
+    margin-left: 10px;
+}
+
+.table-overflow table {
+    width: 100%;
+    min-width: 900px;
+}
+
+.table-overflow th,
+td {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+@media(max-width:991px) {
+    .button_student {
+        text-align: left;
+    }
+    .button_student>a {
+        margin-right: 10px;
+        margin-left: 0px;
+    }
 }

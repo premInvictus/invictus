@@ -2,155 +2,139 @@
 <simple-notifications></simple-notifications>
 <!--view modal-->
 <div class="row">
-   <div class="col-12">
-      <mat-card>
-         <mat-card-title>
-            <h1 class="remove-bottom-margin font-size-24">View Student Profile</h1>
-         </mat-card-title>
-      </mat-card>
-   </div>
+    <div class="col-12">
+        <mat-card>
+            <mat-card-title>
+                <h1 class="remove-bottom-margin font-size-24">View Student Profile</h1>
+            </mat-card-title>
+        </mat-card>
+    </div>
 </div>
 <div class="row">
-   <div class="col-12">
-      <mat-card>
-         <mat-card-content>
-            <form [formGroup]="Student_Details_Form" novalidate>
-               <div class="row">
-                  <div class="col-lg-12">
-                     <div class="row">
-                        <div class="col-lg-2">
-                           <div class="form-group row">
-                              <div class="image-upload">
-                                 <label for="file-input">
+    <div class="col-12">
+        <mat-card>
+            <mat-card-content>
+                <form [formGroup]="Student_Details_Form" novalidate>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-12 col-lg-2">
+                                    <div class="form-group row m-0 image_center">
+                                        <div class="image-upload">
+                                            <label for="file-input">
                                     <img class="img-fluid teacher-img" [src]="url" style="width: 140px; border-radius: 50% !important;
                                           border: 1px solid rgb(149, 145, 216);" matTooltip="upload-image 109px*145px"
                                        onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'" />
                                  </label>
-                                 <input id="file-input" formControlName="au_profileimage" name="file-input" type="file"
-                                    [attr.disabled]="true">
-                              </div>
-                           </div>
+                                            <input id="file-input" formControlName="au_profileimage" name="file-input" type="file" [attr.disabled]="true">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-10 col-12">
+                                    <div class="row form-group">
+                                        <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Student Id</mat-label>
+                                                <input matInput formControlName="au_login_id" placeholder="Student Id" (keydown.enter)="getStudentByloginid($event.target.value)" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 mt-2">
+                                            <button mat-mini-fab class="nav-button1 tab-display-flex" (click)="getStudentDetail(0)">
+                                               <i class="material-icons"> first_page </i>
+                                             </button>
+                                            <button mat-mini-fab class="nav-button1 tab-display-contents" (click)="getStudentDetail(currentStudentLoginIndex-1)">
+                                               <i class="material-icons"> navigate_before </i>
+                                             </button>
+                                            <button mat-mini-fab class="nav-button1 tab-display-flex" (click)="getStudentDetail(currentStudentLoginIndex+1)">
+                                               <i class="material-icons"> navigate_next </i>
+                                             </button>
+                                            <button mat-mini-fab class="nav-button1 tab-display-contents" (click)="getStudentDetail(userArray.length - 1)">
+                                               <i class="material-icons"> last_page </i>
+                                             </button>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Full Name</mat-label>
+                                                <input matInput formControlName="au_full_name" required placeholder="Full Name" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 mt-2">
+                                            <button mat-raised-button class="btn-success btn-primary" matTooltip="Search Students" type="button" (click)="searchStudent()">Search</button>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-12 col-sm-12 col-lg-6 col-md-6 col-xl-6">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Username</mat-label>
+                                                <input matInput formControlName="au_username" placeholder="Username" autocomplete="off" [value]="userDetails.au_username" [readonly]="updateFlag" minlength="6" required>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-lg-6 col-md-6 col-xl-6">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Contact No.</mat-label>
+                                                <input matInput formControlName="au_mobile" required placeholder="Contact No." maxlength="10" minlength="10" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-12 col-sm-12 col-lg-6 col-md-6 col-xl-6">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>School Name</mat-label>
+                                                <input matInput [value]="schoolinfoArray.school_name" readonly placeholder="School Name">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-lg-6 col-md-6 col-xl-6">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Email ID</mat-label>
+                                                <input matInput name="email" formControlName="au_email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" placeholder="Email ID" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-12 col-sm-12 col-lg-6 col-md-6 col-xl-6">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Select Class</mat-label>
+                                                <mat-select formControlName="au_class_id" (change)="getSectionsByClass()" placeholder="Select Class" disabled>
+                                                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                        {{item.class_name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-lg-6 col-md-6 col-xl-6">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Select Section</mat-label>
+                                                <mat-select formControlName="au_sec_id" placeholder="Select Section" disabled>
+                                                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                                        {{item.sec_name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-12 col-sm-12 col-lg-6 col-md-6 col-xl-6">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Gender</mat-label>
+                                                <mat-select placeholder="Gender" formControlName="upd_gender" disabled>
+                                                    <mat-option value="M">Male</mat-option>
+                                                    <mat-option value="F">Female</mat-option>
+                                                    <mat-option value="O">Other</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-lg-10">
-                           <div class="row form-group">
-                              <div class="col-lg-2  col-mobile-view-add-ques">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Student Id</mat-label>
-                                    <input matInput formControlName="au_login_id" placeholder="Student Id"
-                                       (keydown.enter)="getStudentByloginid($event.target.value)" readonly>
-                                 </mat-form-field>
-                              </div>
-                              <div class="col-lg-3 mt-3">
-                                 <button mat-mini-fab class="nav-button1 tab-display-flex"
-                                    (click)="getStudentDetail(0)"><i class="material-icons">
-                                       first_page
-                                    </i></button>
-                                 <button mat-mini-fab class="nav-button1 tab-display-contents"
-                                    (click)="getStudentDetail(currentStudentLoginIndex-1)"><i class="material-icons">
-                                       navigate_before
-                                    </i></button>
-                                 <button mat-mini-fab class="nav-button1 tab-display-flex"
-                                    (click)="getStudentDetail(currentStudentLoginIndex+1)"><i class="material-icons">
-                                       navigate_next
-                                    </i></button>
-                                 <button mat-mini-fab class="nav-button1 tab-display-contents"
-                                    (click)="getStudentDetail(userArray.length - 1)"><i class="material-icons">
-                                       last_page
-                                    </i></button>
-                              </div>
-                              <div class="col-lg-3 ">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Full Name</mat-label>
-                                    <input matInput formControlName="au_full_name" required placeholder="Full Name"
-                                       readonly>
-                                 </mat-form-field>
-                              </div>
-                              &nbsp;
-                              <div class="col-lg-2 mt-3">
-                                 <button mat-raised-button class="btn-success btn-primary" matTooltip="Search Students" type="button"
-                                    (click)="searchStudent()">Search</button>
-                              </div>
-                           </div>
-                           <div class="row form-group">
-                              <div class="col-lg-5  col-mobile-view-add-ques">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Username</mat-label>
-                                    <input matInput formControlName="au_username" placeholder="Username"
-                                       autocomplete="off" [value]="userDetails.au_username" [readonly]="updateFlag"
-                                       minlength="6" required>
-                                 </mat-form-field>
-                              </div>
-                              <div class="col-lg-5  col-mobile-view-add-ques">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Contact No.</mat-label>
-                                    <input matInput formControlName="au_mobile" required placeholder="Contact No."
-                                       maxlength="10" minlength="10" readonly>
-                                 </mat-form-field>
-                              </div>
-                           </div>
-                           <div class="row form-group">
-                              <div class="col-lg-5  col-mobile-view-add-ques">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>School Name</mat-label>
-                                    <input matInput [value]="schoolinfoArray.school_name" readonly
-                                       placeholder="School Name">
-                                 </mat-form-field>
-                              </div>
-                              <div class="col-lg-5  col-mobile-view-add-ques">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Email ID</mat-label>
-                                    <input matInput name="email" formControlName="au_email" required
-                                       pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" placeholder="Email ID"
-                                       readonly>
-                                 </mat-form-field>
-                              </div>
-                           </div>
-                           <div class="row form-group">
-                              <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Select Class</mat-label>
-                                    <mat-select formControlName="au_class_id" (change)="getSectionsByClass()"
-                                       placeholder="Select Class" disabled>
-                                       <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                                          {{item.class_name}}
-                                       </mat-option>
-                                    </mat-select>
-                                 </mat-form-field>
-                              </div>
-                              <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Select Section</mat-label>
-                                    <mat-select formControlName="au_sec_id" placeholder="Select Section" disabled>
-                                       <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
-                                          {{item.sec_name}}
-                                       </mat-option>
-                                    </mat-select>
-                                 </mat-form-field>
-                              </div>
-                           </div>
-                           <div class="row form-group">
-                              <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
-                                 <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Gender</mat-label>
-                                    <mat-select placeholder="Gender" formControlName="upd_gender" disabled>
-                                       <mat-option value="M">Male</mat-option>
-                                       <mat-option value="F">Female</mat-option>
-                                       <mat-option value="O">Other</mat-option>
-                                    </mat-select>
-                                 </mat-form-field>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </form>
-            <div class="row">
-               <div class="col-lg-12 text-center">
-                  <button mat-raised-button class="btn-danger btn-spacer" (click)="goBack()">Back</button>
-               </div>
-            </div>
-         </mat-card-content>
-      </mat-card>
-   </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <button mat-raised-button class="btn-danger btn-spacer" (click)="goBack()">Back</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>

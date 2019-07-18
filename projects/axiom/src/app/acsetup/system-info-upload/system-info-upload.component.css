@@ -65,3 +65,11 @@
     padding-right: 25% !important;
 
 } */
+
+.bulk-right-side-box-content {
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #9c3;
+    padding: 15px;
+    height: 100%;
+}

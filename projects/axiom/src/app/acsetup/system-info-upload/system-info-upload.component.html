@@ -1,138 +1,119 @@
 <div class="row">
-   <div class="col-12">
-      <mat-card>
-         <mat-card-title>
-            <h1 class="remove-bottom-margin font-size-24">System Bulk Upload</h1>
-         </mat-card-title>
-      </mat-card>
-   </div>
+    <div class="col-12">
+        <mat-card>
+            <mat-card-title>
+                <h1 class="remove-bottom-margin font-size-24">System Bulk Upload</h1>
+            </mat-card-title>
+        </mat-card>
+    </div>
 </div>
 <div class="row">
-   <div class="col-12">
-      <mat-card>
-         <mat-card-content>
-            <div class="row">
-               <div class="col-lg-3">
-                  <form [formGroup]="SelectForm" novalidate>
-                     <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Setup Options</mat-label>
-                        <mat-select formControlName="selectfield" placeholder="Setup Options">
-                           <mat-option value="2">Section</mat-option>
-                           <mat-option value="3">Subject</mat-option>
-                           <mat-option value="4">Class</mat-option>
-                           <mat-option value="5">Topic</mat-option>
-                           <mat-option value="6">Sub-Topic</mat-option>
-                           <mat-option value="11">Student</mat-option>
-                           <mat-option value="12">Teacher</mat-option>
-                        </mat-select>
-                     </mat-form-field>
-                  </form>
-               </div>
-            </div>
-            <div class="row">
-               <div class="col-lg-6 col-mobile-view-add-ques">
-                  <div class="left-parameter-content">
-                     <div class="left-side-box">
-                        <form method="post" action="#" id="#">
-                           <div class="bulk-left-side-box-content">
-                              <span class="bulk-left-side-box-content-title">Upload File</span>
-                              <hr class="left-side-box-content-title-divider">
-                              <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i>
-                              <br>
-                              <span class="drag-drop-title">Drag & Drop</span>
-                              <br>
-                              <span class="drag-drop-sub-title">your files to Assets, or</span>
-                              <br>
-                              <button mat-raised-button class="drag-drop-button">Click here to browse </button>
-                              <div class="form-group files">
-                                 <input type="file" id="uploadFile" name="uploadFile" (change)="fileChange($event)"
-                                    class="mv_top" multiple="">
-                              </div>
-                           </div>
+    <div class="col-12">
+        <mat-card>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <form [formGroup]="SelectForm" novalidate>
+                            <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>Setup Options</mat-label>
+                                <mat-select formControlName="selectfield" placeholder="Setup Options">
+                                    <mat-option value="2">Section</mat-option>
+                                    <mat-option value="3">Subject</mat-option>
+                                    <mat-option value="4">Class</mat-option>
+                                    <mat-option value="5">Topic</mat-option>
+                                    <mat-option value="6">Sub-Topic</mat-option>
+                                    <mat-option value="11">Student</mat-option>
+                                    <mat-option value="12">Teacher</mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </form>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-lg-6 col-mobile-view-add-ques">
-                  <div class="left-parameter-content">
-                     <div class="left-side-box">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <form method="post" action="#" id="#">
+                            <div class="bulk-left-side-box-content">
+                                <span class="bulk-left-side-box-content-title">Upload File</span>
+                                <hr class="left-side-box-content-title-divider">
+                                <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i>
+                                <br>
+                                <span class="drag-drop-title">Drag & Drop</span>
+                                <br>
+                                <span class="drag-drop-sub-title">your files to Assets, or</span>
+                                <br>
+                                <button mat-raised-button class="drag-drop-button">Click here to browse </button>
+                                <div class="form-group files">
+                                    <input type="file" id="uploadFile" name="uploadFile" (change)="fileChange($event)" class="mv_top" multiple="">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                         <div class="bulk-right-side-box-content">
-                           <span class="bulk-right-side-box-content-title">Generate Excel</span>
-                           <hr class="left-side-box-content-title-divider">
-                           <div class="row row-remove-top-margin">
-                              <div class="col-lg-12 col-mobile-view-add-ques">
-                                 <form [formGroup]="bulkuploadform" novalidate>
-                                    <div class="row row-remove-top-margin">
-                                       <div class="col-lg-6 col-mobile-view-add-ques">
-                                          <mat-form-field class="form-field" appearance="outline"
-                                             *ngIf="SelectForm.value.selectfield == 4 || SelectForm.value.selectfield == 5 || SelectForm.value.selectfield == 6">
-                                             <mat-label>Select Board</mat-label>
-                                             <mat-select formControlName="board_id" required placeholder="Select Board">
-                                                <mat-option [value]="schoolinfoArray.school_board_id">
-                                                   {{schoolinfoArray.school_board}}
-                                                </mat-option>
-                                             </mat-select>
-                                          </mat-form-field>
-                                          <mat-form-field class="form-field" appearance="outline"
-                                             *ngIf="SelectForm.value.selectfield == 2 || SelectForm.value.selectfield == 3 || SelectForm.value.selectfield == 5 || SelectForm.value.selectfield == 6">
-                                             <mat-label>Select Class</mat-label>
-                                             <mat-select formControlName="class_id"
-                                                (selectionChange)="getSubjectsByClass()" required
-                                                placeholder="Select Class">
-                                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                                                   {{item.class_name}}
-                                                </mat-option>
-                                             </mat-select>
-                                          </mat-form-field>
-                                          <mat-form-field class="form-field" appearance="outline"
-                                             *ngIf="SelectForm.value.selectfield == 5 || SelectForm.value.selectfield == 6">
-                                             <mat-label>Select Subject</mat-label>
-                                             <mat-select formControlName="sub_id"
-                                                (selectionChange)="getTopicByClassSubject()" required
-                                                placeholder="Select Subject">
-                                                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
-                                                   {{item.sub_name}}
-                                                </mat-option>
-                                             </mat-select>
-                                          </mat-form-field>
-                                          <mat-form-field class="form-field" *ngIf="SelectForm.value.selectfield == 6"
-                                             appearance="outline">
-                                             <mat-label>Select Topic</mat-label>
-                                             <mat-select formControlName="topic_id"
-                                                (selectionChange)="getSubtopicByTopic()" required
-                                                placeholder="Select Topic">
-                                                <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
-                                                   {{item.topic_name}}
-                                                </mat-option>
-                                             </mat-select>
-                                          </mat-form-field>
-                                       </div>
-                                    </div>
-                                    <div class="row">
-                                       <div class="col-lg-12 col-mobile-view-add-ques">
-                                          <div class="row row-remove-top-margin">
-                                             <div class="col-lg-3 col-mobile-view-add-ques">
-                                             </div>
-                                             <div class="col-lg-3 col-mobile-view-add-ques">
-                                                <div class="add-question-button-collection">
-                                                   <div class="button-row">
-                                                      <button mat-raised-button class="submit-button"
-                                                         (click)="generateExcel()">Generate</button>
-                                                   </div>
+                            <span class="bulk-right-side-box-content-title">Generate Excel</span>
+                            <hr class="left-side-box-content-title-divider">
+                            <div class="row row-remove-top-margin">
+                                <div class="col-lg-12 col-mobile-view-add-ques">
+                                    <form [formGroup]="bulkuploadform" novalidate>
+                                        <div class="row row-remove-top-margin">
+                                            <div class="col-lg-6 col-mobile-view-add-ques">
+                                                <mat-form-field class="form-field" appearance="outline" *ngIf="SelectForm.value.selectfield == 4 || SelectForm.value.selectfield == 5 || SelectForm.value.selectfield == 6">
+                                                    <mat-label>Select Board</mat-label>
+                                                    <mat-select formControlName="board_id" required placeholder="Select Board">
+                                                        <mat-option [value]="schoolinfoArray.school_board_id">
+                                                            {{schoolinfoArray.school_board}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                                <mat-form-field class="form-field" appearance="outline" *ngIf="SelectForm.value.selectfield == 2 || SelectForm.value.selectfield == 3 || SelectForm.value.selectfield == 5 || SelectForm.value.selectfield == 6">
+                                                    <mat-label>Select Class</mat-label>
+                                                    <mat-select formControlName="class_id" (selectionChange)="getSubjectsByClass()" required placeholder="Select Class">
+                                                        <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                            {{item.class_name}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                                <mat-form-field class="form-field" appearance="outline" *ngIf="SelectForm.value.selectfield == 5 || SelectForm.value.selectfield == 6">
+                                                    <mat-label>Select Subject</mat-label>
+                                                    <mat-select formControlName="sub_id" (selectionChange)="getTopicByClassSubject()" required placeholder="Select Subject">
+                                                        <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                                            {{item.sub_name}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                                <mat-form-field class="form-field" *ngIf="SelectForm.value.selectfield == 6" appearance="outline">
+                                                    <mat-label>Select Topic</mat-label>
+                                                    <mat-select formControlName="topic_id" (selectionChange)="getSubtopicByTopic()" required placeholder="Select Topic">
+                                                        <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
+                                                            {{item.topic_name}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                <div class="button-row">
+                                                    <button mat-raised-button class="submit-button" (click)="generateExcel()">Generate</button>
                                                 </div>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </form>
-                              </div>
-                           </div>
+                                                <!-- <div class="row row-remove-top-margin">
+                                                    <div class="col-lg-3 col-mobile-view-add-ques">
+                                                    </div>
+                                                    <div class="col-lg-3 col-mobile-view-add-ques">
+                                                        <div class="add-question-button-collection">
+
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </mat-card-content>
-      </mat-card>
-   </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>
