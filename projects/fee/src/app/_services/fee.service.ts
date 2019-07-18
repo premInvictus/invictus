@@ -220,7 +220,7 @@ export class FeeService {
 	}
 	deleteReceipt(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/feeTransaction/deleteReceipt', value);
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/deleteFeeReceipt', value);
 	}
 
 	attachReceipt(value) {
