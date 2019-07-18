@@ -36,4 +36,49 @@ th.mat-header-cell {
 }
 tr.mat-footer-row {
     font-weight: bold;
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+td.mat-footer-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+
+.btn-unconsolidate {
+    background: #004261;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+
+.btn-receiptMod {
+    background: #004261;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+.btn-delete-rec {
+    background: #ff5a5a;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+
+.btn-edit-inv{
+    background: #6c757d;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
 }
