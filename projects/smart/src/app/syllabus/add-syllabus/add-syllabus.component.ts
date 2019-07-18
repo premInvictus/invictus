@@ -600,7 +600,7 @@ export class AddSyllabusComponent implements OnInit {
 		this.syllabusDetailForm.patchValue({
 			'sd_ctr_id': this.finalSpannedArray[value1].details[value2].sd_ctr_id.toString(),
 			'sd_topic_id': this.finalSpannedArray[value1].sd_topic_id.toString(),
-			'sd_st_id': this.finalSpannedArray[value1].details[value2].sd_st_id,
+			'sd_st_id': this.finalSpannedArray[value1].details[value2].sd_st_id.toString(),
 			'sd_period_req': this.finalSpannedArray[value1].details[value2].sd_period_req,
 			'sd_desc': this.finalSpannedArray[value1].details[value2].sd_desc,
 		});
@@ -608,8 +608,8 @@ export class AddSyllabusComponent implements OnInit {
 
 	// Update syllabus list function
 	updateSyllabussList() {
-		this.syllabusDetailForm.value.sd_topic_id = Number(this.syllabusDetailForm.value.sd_topic_id);
-		this.syllabusDetailForm.value.sd_ctr_id = Number(this.syllabusDetailForm.value.sd_ctr_id);
+		this.syllabusDetailForm.value.sd_topic_id = (this.syllabusDetailForm.value.sd_topic_id).toString();
+		this.syllabusDetailForm.value.sd_ctr_id = (this.syllabusDetailForm.value.sd_ctr_id).toString();
 		const findex = this.finalSyllabusArray.findIndex(f => f.sd_topic_id === this.finalSpannedArray[this.syllabusValue1].sd_topic_id
 			&& f.sd_ctr_id === this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_ctr_id
 			&& f.sd_period_req === this.finalSpannedArray[this.syllabusValue1].details[this.syllabusValue2].sd_period_req);
