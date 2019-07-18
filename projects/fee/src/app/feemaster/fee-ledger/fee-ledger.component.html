@@ -89,6 +89,12 @@
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
+                  <ng-container matColumnDef="feeperiod">
+                    <th mat-header-cell *matHeaderCellDef> Fee Period </th>
+                    <td  width="5%" mat-cell *matCellDef="let item" style="text-align: left !important;padding-left: 0.5%;">  {{item.feeperiod}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
                   <ng-container matColumnDef="particular">
                     <th mat-header-cell *matHeaderCellDef> Particulars </th>
                     <td width="15%" mat-cell *matCellDef="let item"
@@ -116,6 +122,13 @@
                     <td width="5%" mat-cell *matCellDef="let item"> {{item.concession | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.concessiontotal | number | zerodash}} </td>
                   </ng-container>
+
+                  <ng-container matColumnDef="adjustment">
+                      <th mat-header-cell *matHeaderCellDef> Adj. (<span><i class="fas fa-rupee-sign"></i></span>)
+                      </th>
+                      <td width="5%" mat-cell *matCellDef="let item"> {{item.adjustment | number | zerodash}} </td>
+                      <td mat-footer-cell *matFooterCellDef> {{footerRecord.adjustmenttotal | number | zerodash}} </td>
+                    </ng-container>
 
                   <ng-container matColumnDef="fine">
                     <th mat-header-cell *matHeaderCellDef> Fine (<span><i class="fas fa-rupee-sign"></i></span>)

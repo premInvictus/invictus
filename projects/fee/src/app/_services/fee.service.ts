@@ -265,6 +265,7 @@ export class FeeService {
 		return this.http.post(environment.apiFeeUrl + '/checkControlTool/addCheckControlTool', value);
 	}
 	getFeeLedger(value: any) {
+		this.service.startLoading();
 		if (this.processType.getProcesstype()) {
 			value.inv_process_type = this.processType.getProcesstype();
 		}
