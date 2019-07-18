@@ -29,7 +29,7 @@ export class FeeLedgerComponent implements OnInit {
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
 	displayedColumns: string[] = ['select', 'date', 'invoiceno', 'feeperiod', 'particular', 'duedate',
-	 'amount', 'concession', 'adjustment', 'fine', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
+		'amount', 'concession', 'adjustment', 'fine', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
 	dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 	selection = new SelectionModel<FeeLedgerElement>(true, []);
@@ -140,8 +140,11 @@ export class FeeLedgerComponent implements OnInit {
 						receiptmodification: false
 					};
 					if (item.inv_paid_status === 'paid') {
-						tempactionFlag.deletereceipt = true;
-						tempactionFlag.detach = true;
+						if (item.flgr_invoice_receipt_no === '0') {
+							tempactionFlag.deletereceipt = true;
+						} else {
+							tempactionFlag.detach = true;
+						}
 						tempactionFlag.receiptmodification = true;
 					} else if (item.inv_paid_status === 'unpaid') {
 						tempactionFlag.deleteinvoice = true;
