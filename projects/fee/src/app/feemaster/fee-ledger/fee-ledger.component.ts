@@ -9,6 +9,7 @@ import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-d
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
+import { CreateInvoiceModalComponent } from '../../sharedmodule/create-invoice-modal/create-invoice-modal.component';
 
 @Component({
 	selector: 'app-fee-ledger',
@@ -507,6 +508,28 @@ export class FeeLedgerComponent implements OnInit {
 	}
 	openReciptModificationDialog() {
 
+	}
+	openCreateInvoiceModal() {
+		console.log(this.commonStudentProfileComponent.studentdetails);
+		const stuDetails: any = {};
+		stuDetails.stu_admission_no = this.commonStudentProfileComponent.studentdetails.em_admission_no;
+		stuDetails.stu_full_name = this.commonStudentProfileComponent.studentdetails.au_full_name;
+		stuDetails.stu_class_name = this.commonStudentProfileComponent.class_sec;
+		stuDetails.au_login_id = this.commonStudentProfileComponent.studentdetails.au_login_id;
+		stuDetails.fromPage = 'feeledger';
+		const dialogRef = this.dialog.open(CreateInvoiceModalComponent, {
+			width: '50%',
+			data: {
+				invoiceDetails: stuDetails
+			},
+			hasBackdrop: true
+		});
+
+		dialogRef.afterClosed().subscribe(dresult => {
+			if (dresult && dresult.status) {
+				this.getFeeLedger(this.loginId);
+			}
+		})
 	}
 
 }
