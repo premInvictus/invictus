@@ -14,6 +14,7 @@ export class CreateInvoiceModalComponent implements OnInit {
 	invoiceType: any[] = [];
 	invoiceCreationForm: FormGroup;
 	studentFlag = true;
+	recalculation: any = '0';
 	constructor(@Inject(MAT_DIALOG_DATA) public data,
 		private dialogRef: MatDialogRef<CreateInvoiceModalComponent>,
 		private processTypeService: ProcesstypeFeeService,
@@ -78,7 +79,7 @@ export class CreateInvoiceModalComponent implements OnInit {
 				'inv_due_date': new DatePipe('en-in').transform(this.invoiceCreationForm.value.inv_due_date, 'yyyy-MM-dd'),
 				'login_id': [this.data.invoiceDetails.au_login_id],
 				'inv_fp_id': this.data.invoiceDetails.inv_fp_id ? this.data.invoiceDetails.inv_fp_id : this.invoiceCreationForm.value.inv_fp_id,
-				'recalculation_flag' : this.invoiceCreationForm.value.recalculation_flag === true ? '1' : '0'
+				'recalculation_flag': this.recalculation
 			});
 			this.feeService.insertInvoice(this.invoiceCreationForm.value).subscribe((res: any) => {
 				if (res && res.status === 'ok') {
@@ -89,6 +90,13 @@ export class CreateInvoiceModalComponent implements OnInit {
 					this.dialogRef.close({ status: false });
 				}
 			});
+		}
+	}
+	checkRecal($event) {
+		if ($event.checked) {
+			this.recalculation = '1';
+		} else {
+			this.recalculation = '0';
 		}
 	}
 
