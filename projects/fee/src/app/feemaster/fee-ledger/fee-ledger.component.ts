@@ -9,6 +9,7 @@ import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-d
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
+import { CreateInvoiceModalComponent } from '../../sharedmodule/create-invoice-modal/create-invoice-modal.component';
 
 @Component({
 	selector: 'app-fee-ledger',
@@ -27,8 +28,8 @@ export class FeeLedgerComponent implements OnInit {
 	@ViewChild('detachReceiptModal') detachReceiptModal;
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
-	displayedColumns: string[] = ['select', 'date', 'invoiceno', 'particular', 'duedate',
-	 'amount', 'concession', 'fine', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
+	displayedColumns: string[] = ['select', 'date', 'invoiceno', 'feeperiod', 'particular', 'duedate',
+	 'amount', 'concession', 'adjustment', 'fine', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
 	dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 	selection = new SelectionModel<FeeLedgerElement>(true, []);
@@ -38,6 +39,7 @@ export class FeeLedgerComponent implements OnInit {
 	footerRecord: any = {
 		feeduetotal: 0,
 		concessiontotal: 0,
+		adjustmenttotal: 0,
 		receipttotal: 0,
 		finetotal: 0,
 		balancetotal: 0
@@ -119,6 +121,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.footerRecord = {
 					feeduetotal: 0,
 					concessiontotal: 0,
+					adjustmenttotal: 0,
 					receipttotal: 0,
 					finetotal: 0,
 					balancetotal: 0
@@ -158,6 +161,7 @@ export class FeeLedgerComponent implements OnInit {
 						remarks: item.remarks ? item.remarks : '-',
 						amount: item.flgr_amount ? item.flgr_amount : '0',
 						concession: item.flgr_concession ? item.flgr_concession : '0',
+						adjustment: item.flgr_adj_amount ? item.flgr_adj_amount : '0',
 						fine: item.inv_fine_amount ? item.inv_fine_amount : '0',
 						reciept: item.flgr_receipt ? item.flgr_receipt : '0',
 						balance: item.flgr_balance ? item.flgr_balance : '0',
@@ -171,11 +175,14 @@ export class FeeLedgerComponent implements OnInit {
 					pos++;
 					this.footerRecord.feeduetotal += Number(element.amount);
 					this.footerRecord.concessiontotal += Number(element.concession);
+					this.footerRecord.adjustmenttotal += Number(element.adjustment);
 					this.footerRecord.receipttotal += Number(element.reciept);
 					this.footerRecord.finetotal += Number(element.fine);
 					this.footerRecord.balancetotal += Number(element.balance);
 				}
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
@@ -507,6 +514,28 @@ export class FeeLedgerComponent implements OnInit {
 	}
 	openReciptModificationDialog() {
 
+	}
+	openCreateInvoiceModal() {
+		console.log(this.commonStudentProfileComponent.studentdetails);
+		const stuDetails: any = {};
+		stuDetails.stu_admission_no = this.commonStudentProfileComponent.studentdetails.em_admission_no;
+		stuDetails.stu_full_name = this.commonStudentProfileComponent.studentdetails.au_full_name;
+		stuDetails.stu_class_name = this.commonStudentProfileComponent.class_sec;
+		stuDetails.au_login_id = this.commonStudentProfileComponent.studentdetails.au_login_id;
+		stuDetails.fromPage = 'feeledger';
+		const dialogRef = this.dialog.open(CreateInvoiceModalComponent, {
+			width: '50%',
+			data: {
+				invoiceDetails: stuDetails
+			},
+			hasBackdrop: true
+		});
+
+		dialogRef.afterClosed().subscribe(dresult => {
+			if (dresult && dresult.status) {
+				this.getFeeLedger(this.loginId);
+			}
+		})
 	}
 
 }

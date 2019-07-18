@@ -261,7 +261,38 @@ export class TeacherCopyComponent implements OnInit {
 		const popupWin = window.open('', '_blank', 'width=900,height=500');
 		popupWin.document.open();
 		// tslint:disable-next-line:max-line-length
-		popupWin.document.write('<html><style>button { display:none; } iframe{background-image:url("http://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");background-size:100% 100%} .my_passage{font-size:14px !important} .option_width_essay{width: 30% !important} .option_width{width:20% !important;} .ques_name{width:60rem !important;} .question-paper-table th {vertical-align:top !important;} .question-paper-table-essay th {vertical-align:top !important;} .question-paper-table tbody tr th{width:1rem;} .question-paper-table-essay{padding-top :40px !important;} .question-paper-table-essay tbody tr th{width:1rem;} .ques-paper-logo{width:45px;height:45px;} .logo{text-align:center;} .qp_name{font-size:12px} table{font-size:12px} .imgClassExpress p img{height:100px;width:auto;margin-bottom:10px} .imgclassQpList p img {height:100px;margin-bottom:10px} .qus_position{width:10rem !important;padding-top:20px !important} .qst_name{text-align:center;} .moveTd{padding-left:400px;width:800px} .ques_name{padding-top: 19px !important} @media print{body{-webkit-print-color-adjust: exact; !important}} .modifyWidth{width:92.5% !important} .MJX_Assistive_MathML{display:none !important} mrow.MJX-TeXAtom-ORD{display:none !important} </style><body onload="window.print()">' + printModal2.innerHTML + '</html>');
+		popupWin.document.write(`<html>
+		<style>
+		@media print{
+		button { display:none; } 
+		iframe{background-image:url("http://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");
+		background-size:100% 100%} 
+		.my_passage{font-size:14px !important} 
+
+
+		.qst_name_head{text-align:center;font-size:15px; font-weight:bold}
+		.qp_name_head{text-align:center;font-size:15px;}
+		.logo{text-align:center;}
+		.qus_position{width:2% !important}
+		.ques_name{width:85% !important;}
+		.moveTd{width:13% !important;font-weight:bold;}
+		.imgClassExpress p img{height:100px;width:auto;margin-bottom:10px} 
+		.imgclassQpList p img {height:100px;margin-bottom:10px} 
+		table{margin:0px; padding:0px;}
+		label{width:100% !important;margin:0px !important;}
+		.general-inc{font-size:15px; font-weight:bold;}
+		.text-center h5{text-align:center; margin:0;}
+		.max_marks,.time_allowed{width:25% !important;}
+		body{-webkit-print-color-adjust: exact; !important}
+		.modifyWidth{width:92.5% !important} 
+		.MJX_Assistive_MathML{display:none !important}
+		mrow.MJX-TeXAtom-ORD{display:none !important}
+		</style>
+		<body onload="window.print()">
+		${printModal2.innerHTML}
+		</body>
+		</html>
+		`);
 		popupWin.document.close();
 	}
 

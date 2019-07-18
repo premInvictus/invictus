@@ -40,3 +40,39 @@
 .setup{
     @include background(-950px 0px)
 }
+.add-syllabus{
+    @include background(-1000px 0px)
+}
+.review-syllabus{
+    @include background(-1050px 0px)
+}
+.browse-syllabus{
+    @include background(-1100px 0px)
+}
+.classwork-update{
+    @include background(-1494px 0px)
+}
+.topicwise-update{
+    @include background(-1544px 0px)
+}
+.assignment-review{
+    @include background(-1150px 0px)
+}
+.past-assignment{
+    @include background(-1200px 0px)
+}
+.timetable{
+    @include background(-1350px 0px)
+}
+.subject-period-counter{
+    @include background(-1300px 0px)
+}
+.scheduler{
+    @include background(-1250px 0px)
+}
+.syllabus-progress-report{
+    @include background(-1400px 0px)
+}
+.past-assignment-report{
+    @include background(-1444px 0px)
+}

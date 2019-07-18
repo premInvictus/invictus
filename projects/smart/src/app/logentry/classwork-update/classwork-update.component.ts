@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { ReviewClassworkComponent } from './review-classwork/review-classwork.component';
+// tslint:disable-next-line: max-line-length
 import { AssignmentAttachmentDialogComponent } from '../../smart-shared/assignment-attachment-dialog/assignment-attachment-dialog.component';
 
 @Component({
@@ -117,7 +118,7 @@ export class ClassworkUpdateComponent implements OnInit {
 		if (event.value === '2' || event.value === '3') {
 			eachPeriodFG.controls['cw_st_id'].clearValidators(Validators.required);
 			this.disableSubtopicArray[index] = true;
-			console.log(eachPeriodFG.controls);
+			// console.log(eachPeriodFG.controls);
 			eachPeriodFG.patchValue({
 				cw_st_id: '0'
 			});
@@ -131,41 +132,41 @@ export class ClassworkUpdateComponent implements OnInit {
 		if (event.value) {
 			this.reviewClasswork[index].subjectName = this.subjectArray.find(item => item.sub_id === event.value).sub_name;
 		}
-		console.log(this.reviewClasswork[index]);
+		// console.log(this.reviewClasswork[index]);
 	}
 	reviewElementCategory(index, event) {
 		if (event.value) {
 			this.reviewClasswork[index].categoryName = this.categoryArray.find(item => item.ctr_id === event.value).ctr_name;
 		}
-		console.log(this.reviewClasswork[index]);
+		// console.log(this.reviewClasswork[index]);
 	}
 	reviewElementClass(index, event) {
 		if (event.value) {
 			this.reviewClasswork[index].className = this.classSectionArray[index].find(item => item.cs_id === event.value).cs_name;
 		}
-		console.log(this.reviewClasswork[index]);
+		// console.log(this.reviewClasswork[index]);
 	}
 	reviewElementSection(index, event) {
 		if (event.value) {
 			this.reviewClasswork[index].sectionName = this.sectiontArray[index].find(item => item.sec_id === event.value).sec_name;
 		}
-		console.log(this.reviewClasswork[index]);
+		// console.log(this.reviewClasswork[index]);
 	}
 	reviewElementTopic(index, event) {
 		if (event.value) {
 			this.reviewClasswork[index].topicName = this.topicArray[index].find(item => item.topic_id === event.value).topic_name;
 		}
-		console.log(this.reviewClasswork[index]);
+		// console.log(this.reviewClasswork[index]);
 	}
 	reviewElementSubtopic(index, event) {
 		if (event.value) {
 			this.reviewClasswork[index].subtopicName = this.subtopicArray[index].find(item => item.st_id === event.value).st_name;
 		}
-		console.log(this.reviewClasswork[index]);
+		// console.log(this.reviewClasswork[index]);
 	}
 	reviewElementAssignment(index, value) {
 		this.reviewClasswork[index].assignment = value;
-		console.log(this.reviewClasswork[index]);
+		// console.log(this.reviewClasswork[index]);
 	}
 	getSubjectByTeacherId() {
 		this.subjectArray = [];
@@ -178,9 +179,9 @@ export class ClassworkUpdateComponent implements OnInit {
 		});
 	}
 	getClassByTeacherIdSubjectId(i) {
-		console.log(this.Periods);
+		// console.log(this.Periods);
 		const eachPeriodFG = this.Periods.controls[i];
-		console.log(eachPeriodFG);
+		// console.log(eachPeriodFG);
 		this.classArray[i] = [];
 		this.resetClassworkFormForSubjectChange(i);
 		this.smartService.getClassByTeacherIdSubjectId({ teacher_id: this.teacherId, sub_id: eachPeriodFG.value.cw_sub_id }).subscribe(
@@ -193,9 +194,9 @@ export class ClassworkUpdateComponent implements OnInit {
 			});
 	}
 	getClassSectionByTeacherIdSubjectId(i) {
-		console.log(this.Periods);
+		// console.log(this.Periods);
 		const eachPeriodFG = this.Periods.controls[i];
-		console.log(eachPeriodFG);
+		// console.log(eachPeriodFG);
 		this.classSectionArray[i] = [];
 		this.resetClassworkFormForSubjectChange(i);
 		this.smartService.getClassSectionByTeacherIdSubjectId({ teacher_id: this.teacherId, sub_id: eachPeriodFG.value.cw_sub_id }).subscribe(
@@ -267,8 +268,8 @@ export class ClassworkUpdateComponent implements OnInit {
 		});
 	}
 	cancelForm() {
-		console.log(this.classworkForm);
-		console.log(this.classworkForm.value);
+		// console.log(this.classworkForm);
+		// console.log(this.classworkForm.value);
 	}
 	classworkInsert() {
 
@@ -281,10 +282,10 @@ export class ClassworkUpdateComponent implements OnInit {
 				data: this.reviewClasswork
 			});
 			dialogRef.afterClosed().subscribe(dresult => {
-				console.log('The dialog was closed');
-				console.log(dresult);
+				// console.log('The dialog was closed');
+				// console.log(dresult);
 				if (dresult && dresult.data) {
-					console.log('submitting form');
+					// console.log('submitting form');
 					if (this.classworkForm.valid) {
 						this.Periods.controls.forEach((eachFormGroup: FormGroup) => {
 							Object.keys(eachFormGroup.controls).forEach(key => {
@@ -362,8 +363,8 @@ export class ClassworkUpdateComponent implements OnInit {
 				}
 			});
 			dialogRef.afterClosed().subscribe(dresult => {
-				console.log('clossing dialog');
-				console.log(dresult);
+				// console.log('clossing dialog');
+				// console.log(dresult);
 				if (dresult && dresult.assignment_desc) {
 					eachPeriodFG.patchValue({
 						cw_assignment_desc: dresult.assignment_desc,
@@ -372,19 +373,19 @@ export class ClassworkUpdateComponent implements OnInit {
 					this.reviewElementAssignment(currentAttachmentIndex, dresult.assignment_desc);
 					this.reviewClasswork[currentAttachmentIndex].attachments = dresult.attachments.length;
 				}
-				console.log('eachPeriodFG', eachPeriodFG);
+				// console.log('eachPeriodFG', eachPeriodFG);
 			});
 
 		}
 	}
 	getTeacherInfo(event) {
-		console.log(event.target.value);
+		// console.log(event.target.value);
 		this.teacherArray = [];
 		if (event.target.value) {
 			this.axiomService.getAllTeacher({ full_name: event.target.value, role_id: '3', status: '1' }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.teacherArray = result.data;
-					console.log(result.data);
+					// console.log(result.data);
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 					this.noDataFlag = true;
@@ -409,15 +410,15 @@ export class ClassworkUpdateComponent implements OnInit {
 	}
 
 	/* getTeacherInfo(event) {
-		console.log(event.target.value);
+		// console.log(event.target.value);
 		this.teacherId = event.target.value;
 		this.axiomService.getAllTeacher({login_id: event.target.value, role_id: '3', status: '1'}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				console.log(result.data);
+				// console.log(result.data);
 				this.classworkforForm.patchValue({
 					teacher_name : result.data[0].au_full_name
 				});
-				console.log(this.classworkForm.value);
+				// console.log(this.classworkForm.value);
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 				this.classworkforForm.patchValue({
@@ -437,7 +438,7 @@ export class ClassworkUpdateComponent implements OnInit {
 				}
 			});
 		});
-		console.log(this.classworkForm.value);
+		// console.log(this.classworkForm.value);
 	}
 	resetClassworkFormForSubjectChange(i) {
 		const eachPeriodFG = <FormGroup>this.Periods.controls[i];
@@ -450,7 +451,7 @@ export class ClassworkUpdateComponent implements OnInit {
 		this.sectiontArray[i] = [];
 		this.topicArray[i] = [];
 		this.subtopicArray[i] = [];
-		console.log(this.classworkForm.value);
+		// console.log(this.classworkForm.value);
 	}
 
 }

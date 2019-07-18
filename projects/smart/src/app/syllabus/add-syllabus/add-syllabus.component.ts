@@ -22,12 +22,12 @@ export class AddSyllabusComponent implements OnInit {
 	details_flag = false;
 	periodDivFlag = false;
 	editRequestFlag = false;
-	public syllabusForm: FormGroup;
-	public syllabusDetailForm: FormGroup;
-	public classArray: any[];
-	public subjectArray: any[];
-	public ctrArray: any[];
-	public topicArray: any[] = [];
+	syllabusForm: FormGroup;
+	syllabusDetailForm: FormGroup;
+	classArray: any[];
+	subjectArray: any[];
+	ctrArray: any[];
+	topicArray: any[] = [];
 	finalSyllabusArray: any[] = [];
 	finalSpannedArray: any[] = [];
 	finalSubmitArray: any[] = [];
@@ -61,7 +61,7 @@ export class AddSyllabusComponent implements OnInit {
 	yeararray: any;
 	currentYear: any;
 	nextYear: any;
-	totalPeriod  = 0;
+	totalPeriod = 0;
 	add = 'Add';
 	constructor(
 		private fbuild: FormBuilder,
@@ -493,18 +493,27 @@ export class AddSyllabusComponent implements OnInit {
 		}
 	}
 	excelDownload() {
-		const param: any = {};
-		param.class_id = this.syllabusForm.value.syl_class_id;;
-		param.sub_id = this.syllabusForm.value.syl_sub_id;
-		this.syllabusService.downloadSyllabusExcel(param)
+		this.axiomService.getTopicByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
 			.subscribe(
-				(excel_r: any) => {
-					if (excel_r && excel_r.status === 'ok') {
-						const length = excel_r.data.split('/').length;
-						saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
-						this.resetForm();
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						const param: any = {};
+						param.class_id = this.syllabusForm.value.syl_class_id;
+						param.sub_id = this.syllabusForm.value.syl_sub_id;
+						this.syllabusService.downloadSyllabusExcel(param)
+							.subscribe(
+								(excel_r: any) => {
+									if (excel_r && excel_r.status === 'ok') {
+										const length = excel_r.data.split('/').length;
+										saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+										this.resetForm();
+									}
+								});
+					} else {
+						this.commonService.showSuccessErrorMessage('No Topic Present in this class.', 'error');
 					}
-				});
+				}
+			);
 	}
 	// Add syllabus list function
 	addxlslDetailsList(xlsl_array) {
@@ -684,7 +693,7 @@ export class AddSyllabusComponent implements OnInit {
 		this.resetForm();
 	}
 
-	// final submit function 
+	// final submit function
 	// In this function database entry occur
 	finalSubmit($event) {
 		if ($event) {
