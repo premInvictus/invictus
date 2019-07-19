@@ -17,7 +17,7 @@ import { CreateInvoiceModalComponent } from '../../sharedmodule/create-invoice-m
 	styleUrls: ['./fee-ledger.component.scss']
 })
 export class FeeLedgerComponent implements OnInit {
-
+	feeRenderId: any = '';
 	@ViewChild(CommonStudentProfileComponent) commonStudentProfileComponent: CommonStudentProfileComponent;
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('deleteReceiptModal') deleteReceiptModal;
@@ -184,6 +184,7 @@ export class FeeLedgerComponent implements OnInit {
 					this.footerRecord.balancetotal += Number(element.balance);
 				}
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
+				this.feeRenderId = '';
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -433,7 +434,9 @@ export class FeeLedgerComponent implements OnInit {
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
+				this.feeRenderId = this.loginId;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -451,7 +454,9 @@ export class FeeLedgerComponent implements OnInit {
 		this.feeService.deleteReceipt(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
+				this.feeRenderId = this.loginId;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -465,7 +470,9 @@ export class FeeLedgerComponent implements OnInit {
 		this.feeService.recalculateInvoice(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
+				this.feeRenderId = this.loginId;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -476,7 +483,9 @@ export class FeeLedgerComponent implements OnInit {
 		this.feeService.consolidateInvoice({ inv_id: this.fetchInvId() }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
+				this.feeRenderId = this.loginId;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -498,7 +507,9 @@ export class FeeLedgerComponent implements OnInit {
 		this.feeService.unconsolidateInvoice({ inv_consolidate_id: this.fetchInvId() }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
+				this.feeRenderId = this.loginId;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -509,7 +520,9 @@ export class FeeLedgerComponent implements OnInit {
 		this.feeService.detachReceipt({ inv_id: value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
+				this.feeRenderId = this.loginId;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -536,9 +549,11 @@ export class FeeLedgerComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(dresult => {
 			if (dresult && dresult.status) {
+				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
+				this.feeRenderId = this.loginId;
 			}
-		})
+		});
 	}
 
 }

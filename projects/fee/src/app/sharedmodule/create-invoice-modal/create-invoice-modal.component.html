@@ -67,7 +67,7 @@
       </div>
       <div class="row" *ngIf="!studentFlag">
           <div class="col-12">
-            <mat-checkbox formControlName="recalculation_flag"><span class="font-size-16 font-medium">Recalulate All
+            <mat-checkbox (change)="checkRecal($event)"><span class="font-size-16 font-medium">Recalulate All
                 Unpaid Invoices</span></mat-checkbox>
           </div>
         </div>
