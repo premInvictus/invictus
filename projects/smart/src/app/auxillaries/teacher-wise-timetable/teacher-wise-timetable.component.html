@@ -37,8 +37,7 @@
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
                   (onSelectionChange)="setTeacherId(item)">
-                  <small>Id: {{item.au_login_id}}</small>,&nbsp;
-                  <small>{{item.au_full_name | capitalize}}</small>
+                  <small>{{item.au_full_name | capitalize}} ( {{item.au_login_id}} )</small>
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
@@ -117,6 +116,7 @@
                 <th class="custom-th ">Friday</th>
                 <th class="custom-th ">Saturday</th>
                 <th class="custom-th ">Sunday</th>
+                <th class="custom-th ">Total</th>
               </tr>
             </thead>
             <tbody>
@@ -125,6 +125,18 @@
                     <ng-container *ngFor="let items of dety.dataArr">
                         <td class="custom-td" >{{(items.count | number)}}</td>                                   
                     </ng-container>
+                    <td class="custom-td" >{{getSum(dety.dataArr)}}</td> 
+                </tr>
+                <tr class="custom-tr" >
+                    <td class="custom-td" >Total</td>
+                    <td class="custom-td">{{monday}}</td>
+                    <td class="custom-td">{{tuesday}}</td>
+                    <td class="custom-td">{{wednesday}}</td>
+                    <td class="custom-td">{{thursday}}</td>
+                    <td class="custom-td">{{friday}}</td>
+                    <td class="custom-td">{{saturday}}</td>
+                    <td class="custom-td">{{sunday}}</td>
+                    <td class="custom-td"></td>
                 </tr>
             </tbody>
           </table>

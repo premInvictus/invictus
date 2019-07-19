@@ -18,6 +18,14 @@ export class TeacherWiseTimetableComponent implements OnInit {
 	teacherwiseForm: FormGroup;
 	teacherId: any;
 	noOfDay: any;
+	sum = 0;
+	monday = 0;
+	tuesday = 0;
+	wednesday = 0;
+	thursday = 0;
+	friday = 0;
+	saturday = 0;
+	sunday = 0;
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -76,7 +84,15 @@ export class TeacherWiseTimetableComponent implements OnInit {
 			}
 		});
 	}
-
+	getSum(dety) {
+		this.sum = 0;
+		for (const titem of dety) {
+			if (titem.day !== '-') {
+				this.sum = this.sum + (Number(titem.count) ;
+			}
+		}
+		return this.sum;
+	}
 	// get teacherwise timetable details
 	getTeacherwiseTableDetails() {
 		this.teacherwiseWeekArray = [];
@@ -94,6 +110,31 @@ export class TeacherWiseTimetableComponent implements OnInit {
 						});
 					}
 				});
+				for (const item of this.teacherwiseWeekArray) {
+					for (const titem of item.dataArr) {
+						if (titem.day === 'Monday') {
+							this.monday = this.monday + (Number(titem.count));
+						}
+						if (titem.day === 'Tuesday') {
+							this.tuesday = this.tuesday + (Number(titem.count));
+						}
+						if (titem.day === 'Wednesday') {
+							this.wednesday = this.wednesday + (Number(titem.count));
+						}
+						if (titem.day === 'Thursday') {
+							this.thursday = this.thursday + (Number(titem.count));
+						}
+						if (titem.day === 'Friday') {
+							this.friday = this.friday + (Number(titem.count));
+						}
+						if (titem.day === 'Saturday') {
+							this.saturday = this.saturday + (Number(titem.count));
+						}
+						if (titem.day === 'Sunday') {
+							this.sunday = this.sunday + (Number(titem.count));
+						}
+					}
+				}
 			} else {
 				this.teacherwiseArray = [];
 				this.finalDivFlag = true;
