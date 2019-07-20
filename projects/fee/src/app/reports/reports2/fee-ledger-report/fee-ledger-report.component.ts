@@ -200,12 +200,35 @@ export class FeeLedgerReportComponent implements OnInit {
 		};
 		this.columnDefinitions = [
 			{
-				id: 'flgr_created_date', name: 'Date', field: 'flgr_created_date', sortable: true, width: 4,
+				id: 'inv_invoice_date', name: 'Inv. Date', 
+				field: 'inv_invoice_date', sortable: true, width: 4,
 				filterable: true,
 				formatter: this.checkDateFormatter,
 				filterSearchType: FieldType.dateIso,
 				filter: { model: Filters.compoundDate },
 				groupTotalsFormatter: this.srnTotalsFormatter
+			},
+			{
+				id: 'flgr_invoice_receipt_no',
+				name: 'Inv. No.',
+				field: 'flgr_invoice_receipt_no',
+				formatter: this.checkReceiptFormatter,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				sortable: true,
+				filterable: true,
+				width: 1,
+				cssClass: 'fee-ledger-no'
+			},
+			{
+				id: 'flgr_fp_months',
+				name: 'Fee Period',
+				field: 'flgr_fp_months',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				sortable: true,
+				filterable: true,
+				width: 3,
 			},
 			{
 				id: 'flgr_particulars',
@@ -218,20 +241,17 @@ export class FeeLedgerReportComponent implements OnInit {
 				width: 3,
 			},
 			{
-				id: 'flgr_invoice_receipt_no',
-				name: 'Invoice/Receipt No.',
-				field: 'flgr_invoice_receipt_no',
-				formatter: this.checkReceiptFormatter,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				sortable: true,
+				id: 'inv_due_date', name: 'Due Date', 
+				field: 'inv_due_date', sortable: true, width: 4,
 				filterable: true,
-				width: 1,
-				cssClass: 'fee-ledger-no'
+				formatter: this.checkDateFormatter,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundDate },
+				groupTotalsFormatter: this.srnTotalsFormatter
 			},
 			{
 				id: 'flgr_amount',
-				name: 'Amount Due',
+				name: 'Amt. Due',
 				field: 'flgr_amount',
 				cssClass: 'amount-report-fee',
 				filterSearchType: FieldType.number,
@@ -244,7 +264,7 @@ export class FeeLedgerReportComponent implements OnInit {
 			},
 			{
 				id: 'flgr_concession',
-				name: 'Concession',
+				name: 'Con.',
 				field: 'flgr_concession',
 				cssClass: 'amount-report-fee',
 				filterSearchType: FieldType.number,
@@ -256,8 +276,34 @@ export class FeeLedgerReportComponent implements OnInit {
 				formatter: this.checkFeeFormatter
 			},
 			{
+				id: 'flgr_adj_amount',
+				name: 'Adj.',
+				field: 'flgr_adj_amount',
+				cssClass: 'amount-report-fee',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
+				sortable: true,
+				filterable: true,
+				width: 1,
+				groupTotalsFormatter: this.sumTotalsFormatter,
+				formatter: this.checkFeeFormatter
+			},
+			{
+				id: 'inv_fine_amount',
+				name: 'Fine',
+				field: 'inv_fine_amount',
+				cssClass: 'amount-report-fee',
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInputNumber },
+				sortable: true,
+				filterable: true,
+				width: 1,
+				groupTotalsFormatter: this.sumTotalsFormatter,
+				formatter: this.checkFeeFormatter
+			},
+			{
 				id: 'flgr_receipt',
-				name: 'Receipt Amount',
+				name: 'Amt. Rec.',
 				field: 'flgr_receipt',
 				cssClass: 'amount-report-fee',
 				filterSearchType: FieldType.number,
@@ -280,9 +326,55 @@ export class FeeLedgerReportComponent implements OnInit {
 				width: 1,
 				groupTotalsFormatter: this.sumTotalsFormatter,
 				formatter: this.checkFeeFormatter
-			}];
+			}, 
+			{
+				id: 'rpt_receipt_date', name: 'Receipt Date', 
+				field: 'rpt_receipt_date', sortable: true, width: 4,
+				filterable: true,
+				formatter: this.checkDateFormatter,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundDate },
+				groupTotalsFormatter: this.srnTotalsFormatter
+			},
+			{
+				id: 'rpt_receipt_no',
+				name: 'Receipt No',
+				field: 'rpt_receipt_no',
+				formatter: this.checkReceiptFormatter,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				sortable: true,
+				filterable: true,
+				width: 1,
+				cssClass: 'fee-ledger-no'
+			},
+			{
+				id: 'pay_name',
+				name: 'MOP',
+				field: 'pay_name',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				sortable: true,
+				filterable: true,
+				width: 1,
+				cssClass: 'fee-ledger-no'
+			},
+			{
+				id: 'remarks',
+				name: 'Remark',
+				field: 'remarks',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				sortable: true,
+				filterable: true,
+				width: 1,
+				cssClass: 'fee-ledger-no'
+			},
+		];
 		this.feeService.getFeeLedgerReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
+				repoArray = [];
+				this.dataset = [];
 				repoArray = result.data.reportData;
 				this.totalRecords = Number(result.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -292,7 +384,17 @@ export class FeeLedgerReportComponent implements OnInit {
 					for (const stu_arr of item.stu_ledger_arr) {
 						const obj: any = {};
 						obj['id'] = repoArray[Number(index)]['au_admission_no'] + j;
+						obj['inv_invoice_date'] = stu_arr['inv_invoice_date'];
+						obj['flgr_invoice_receipt_no'] = stu_arr['flgr_invoice_receipt_no'];
 						obj['flgr_created_date'] = stu_arr['flgr_created_date'];
+						obj['flgr_fp_months'] = stu_arr['flgr_fp_months'];
+						obj['inv_due_date'] = stu_arr['inv_due_date'];
+						obj['flgr_adj_amount'] = stu_arr['flgr_adj_amount'];
+						obj['inv_fine_amount'] = stu_arr['inv_fine_amount'];
+						obj['rpt_receipt_date'] = stu_arr['rpt_receipt_date'];
+						obj['rpt_receipt_no'] = stu_arr['rpt_receipt_no'];
+						obj['pay_name'] = stu_arr['pay_name'];
+						obj['remarks'] = stu_arr['remarks'];
 						if (repoArray[Number(index)]['sec_id'] !== '0') {
 							obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
 								',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
@@ -307,17 +409,17 @@ export class FeeLedgerReportComponent implements OnInit {
 							stu_arr['flgr_particulars'] : '-';
 						obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
 							stu_arr['flgr_inv_id'] : '-';
-						obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
-						if (stu_arr['flgr_invoice_receipt_no']) {
-							if (stu_arr['flgr_invoice_type'] === 'R' && Number(stu_arr['flgr_invoice_receipt_no']) !== 0) {
-								obj['flgr_invoice_receipt_no'] = 'R-' + (stu_arr['flgr_invoice_receipt_no'] ?
-									stu_arr['flgr_invoice_receipt_no'] : '-');
-							} else if (stu_arr['flgr_invoice_type'] === 'I' && Number(stu_arr['flgr_invoice_receipt_no']) !== 0) {
-								obj['flgr_invoice_receipt_no'] = 'I-' + (stu_arr['flgr_invoice_receipt_no'] ?
-									stu_arr['flgr_invoice_receipt_no'] : '-');
-							}
-						}
-						obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
+						// obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
+						// if (stu_arr['flgr_invoice_receipt_no']) {
+						// 	if (stu_arr['flgr_invoice_type'] === 'R' && Number(stu_arr['flgr_invoice_receipt_no']) !== 0) {
+						// 		obj['flgr_invoice_receipt_no'] = 'R-' + (stu_arr['flgr_invoice_receipt_no'] ?
+						// 			stu_arr['flgr_invoice_receipt_no'] : '-');
+						// 	} else if (stu_arr['flgr_invoice_type'] === 'I' && Number(stu_arr['flgr_invoice_receipt_no']) !== 0) {
+						// 		obj['flgr_invoice_receipt_no'] = 'I-' + (stu_arr['flgr_invoice_receipt_no'] ?
+						// 			stu_arr['flgr_invoice_receipt_no'] : '-');
+						// 	}
+						// }
+						// obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
 						obj['flgr_amount'] = stu_arr['flgr_amount'] ?
 							Number(stu_arr['flgr_amount']) : 0;
 						obj['flgr_concession'] = stu_arr['flgr_concession'] ?

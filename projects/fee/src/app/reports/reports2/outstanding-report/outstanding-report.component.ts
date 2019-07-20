@@ -325,29 +325,29 @@ export class OutstandingReportComponent implements OnInit {
 											collapsed: false,
 										},
 									},
-									{
-										id: 'invoice_created_date', name: 'Invoice. Date', field: 'invoice_created_date',
-										sortable: true,
-										filterable: true,
-										width: 120,
-										formatter: this.checkDateFormatter,
-										filterSearchType: FieldType.dateIso,
-										filter: { model: Filters.compoundDate },
-										grouping: {
-											getter: 'invoice_created_date',
-											formatter: (g) => {
-												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-												} else {
-													return `${''}`;
-												}
-											},
-											aggregators: this.aggregatearray,
-											aggregateCollapsed: true,
-											collapsed: false
-										},
-										groupTotalsFormatter: this.srnTotalsFormatter,
-									},
+									// {
+									// 	id: 'invoice_created_date', name: 'Invoice. Date', field: 'invoice_created_date',
+									// 	sortable: true,
+									// 	filterable: true,
+									// 	width: 120,
+									// 	formatter: this.checkDateFormatter,
+									// 	filterSearchType: FieldType.dateIso,
+									// 	filter: { model: Filters.compoundDate },
+									// 	grouping: {
+									// 		getter: 'invoice_created_date',
+									// 		formatter: (g) => {
+									// 			if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+									// 				return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+									// 			} else {
+									// 				return `${''}`;
+									// 			}
+									// 		},
+									// 		aggregators: this.aggregatearray,
+									// 		aggregateCollapsed: true,
+									// 		collapsed: false
+									// 	},
+									// 	groupTotalsFormatter: this.srnTotalsFormatter,
+									// },
 									{
 										id: 'fp_name',
 										name: 'Fee Period',
@@ -367,18 +367,18 @@ export class OutstandingReportComponent implements OnInit {
 											collapsed: false,
 										},
 									},
-									{
-										id: 'receipt_no',
-										name: 'Invoice No.',
-										field: 'receipt_no',
-										sortable: true,
-										width: 70,
-										filterable: true,
-										filterSearchType: FieldType.number,
-										filter: { model: Filters.compoundInputNumber },
-										formatter: this.checkReceiptFormatter,
-										cssClass: 'receipt_collection_report'
-									},
+									// {
+									// 	id: 'receipt_no',
+									// 	name: 'Invoice No.',
+									// 	field: 'receipt_no',
+									// 	sortable: true,
+									// 	width: 70,
+									// 	filterable: true,
+									// 	filterSearchType: FieldType.number,
+									// 	filter: { model: Filters.compoundInputNumber },
+									// 	formatter: this.checkReceiptFormatter,
+									// 	cssClass: 'receipt_collection_report'
+									// },
 									{
 										id: 'inv_opening_balance', name: 'Opening Balance', field: 'inv_opening_balance',
 										filterable: true,
