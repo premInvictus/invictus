@@ -479,7 +479,7 @@ export class TransportReportComponent implements OnInit {
 				'studentName': '',
 				'report_type': 'routewise',
 				'routeId': value.fee_value,
-				'from_date': value.from_date,
+				// 'from_date': value.from_date,
 				'to_date': value.to_date,
 				'pageSize': '10',
 				'pageIndex': '0',
@@ -544,28 +544,28 @@ export class TransportReportComponent implements OnInit {
 						collapsed: false,
 					},
 				},
-				{
-					id: 'invoice_created_date', name: 'Invoice. Date', field: 'invoice_created_date', sortable: true,
-					filterable: true,
-					width: 120,
-					formatter: this.checkDateFormatter,
-					filterSearchType: FieldType.dateIso,
-					filter: { model: Filters.compoundDate },
-					grouping: {
-						getter: 'invoice_created_date',
-						formatter: (g) => {
-							if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-								return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-							} else {
-								return `${''}`;
-							}
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false
-					},
-					groupTotalsFormatter: this.srnTotalsFormatter,
-				},
+				// {
+				// 	id: 'invoice_created_date', name: 'Invoice. Date', field: 'invoice_created_date', sortable: true,
+				// 	filterable: true,
+				// 	width: 120,
+				// 	formatter: this.checkDateFormatter,
+				// 	filterSearchType: FieldType.dateIso,
+				// 	filter: { model: Filters.compoundDate },
+				// 	grouping: {
+				// 		getter: 'invoice_created_date',
+				// 		formatter: (g) => {
+				// 			if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+				// 				return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+				// 			} else {
+				// 				return `${''}`;
+				// 			}
+				// 		},
+				// 		aggregators: this.aggregatearray,
+				// 		aggregateCollapsed: true,
+				// 		collapsed: false
+				// 	},
+				// 	groupTotalsFormatter: this.srnTotalsFormatter,
+				// },
 				{
 					id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
 					filterable: true,
@@ -582,18 +582,18 @@ export class TransportReportComponent implements OnInit {
 						collapsed: false,
 					},
 				},
-				{
-					id: 'receipt_no',
-					name: 'Invoice No.',
-					field: 'receipt_no',
-					sortable: true,
-					width: 60,
-					filterable: true,
-					filterSearchType: FieldType.number,
-					filter: { model: Filters.compoundInputNumber },
-					formatter: this.checkReceiptFormatter,
-					cssClass: 'receipt_collection_report'
-				},
+				// {
+				// 	id: 'receipt_no',
+				// 	name: 'Invoice No.',
+				// 	field: 'receipt_no',
+				// 	sortable: true,
+				// 	width: 60,
+				// 	filterable: true,
+				// 	filterSearchType: FieldType.number,
+				// 	filter: { model: Filters.compoundInputNumber },
+				// 	formatter: this.checkReceiptFormatter,
+				// 	cssClass: 'receipt_collection_report'
+				// },
 				{
 					id: 'transport_amount',
 					name: 'Transport Amt.',

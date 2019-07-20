@@ -166,7 +166,7 @@ export class FeeLedgerComponent implements OnInit {
 						concession: item.flgr_concession ? item.flgr_concession : '0',
 						adjustment: item.flgr_adj_amount ? item.flgr_adj_amount : '0',
 						fine: item.inv_fine_amount ? item.inv_fine_amount : '0',
-						reciept: item.rpt_net_amount ? item.rpt_net_amount : '0',
+						reciept: item.flgr_receipt ? item.flgr_receipt : '0',
 						balance: item.flgr_balance ? item.flgr_balance : '0',
 						receiptdate: item.rpt_receipt_date,
 						receiptno: item.rpt_receipt_no,
