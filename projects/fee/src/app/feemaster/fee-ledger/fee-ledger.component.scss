@@ -6,9 +6,7 @@
     overflow-y: scroll;
     height: 100%
 }
-::-webkit-scrollbar {
-    display: none !important
-}
+
 .pointer {
     cursor: pointer;
 }
@@ -87,3 +85,6 @@ td.mat-footer-cell {
     min-width: 2800px;  
     width: 100%;  
  }  
+ .table-100{
+    width: 130% !important;
+ }
