@@ -179,7 +179,7 @@ export class TimeTableComponent implements OnInit {
 		this.defaultFlag = false;
 		this.excelFlag = true;
 		this.XlslArray = [];
-		const finalXlslArrayTemp: any[] =[];
+		const finalXlslArrayTemp: any[] = [];
 		this.finalXlslArray = [];
 		const fileReader = new FileReader();
 		fileReader.onload = (e) => {
@@ -200,8 +200,8 @@ export class TimeTableComponent implements OnInit {
 					wednesday_id: '-',
 					thursday_id: '-',
 					friday_id: '-',
-					saturday_id: '-',
-					sunday_id: '-',
+					saturday_id: '',
+					sunday_id: '',
 
 				};
 			}
@@ -216,20 +216,24 @@ export class TimeTableComponent implements OnInit {
 				this.friday = this.XlslArray[i].Friday ? this.XlslArray[i].Friday.split('-') : '-';
 				this.saturday = this.XlslArray[i].Saturday ? this.XlslArray[i].Saturday.split('-') : '-';
 				this.sunday = this.XlslArray[i].Sunday ? this.XlslArray[i].Sunday.split('-') : '-';
-				finalXlslArrayTemp[i].monday =  this.monday[1];
-				finalXlslArrayTemp[i].monday_id =  this.monday[0];
-				finalXlslArrayTemp[i].tuesday =  this.tuesday[1];
-				finalXlslArrayTemp[i].tuesday_id =  this.tuesday[0];
-				finalXlslArrayTemp[i].wednesday =  this.wednesday[1];
-				finalXlslArrayTemp[i].wednesday_id =  this.wednesday[0];
-				finalXlslArrayTemp[i].thursday =  this.thursday[1];
-				finalXlslArrayTemp[i].	thursday_id =  this.thursday[0];
-				finalXlslArrayTemp[i].friday =  this.friday[1];
-				finalXlslArrayTemp[i].friday_id =  this.friday[0];
-				finalXlslArrayTemp[i].saturday =  this.saturday[1];
-				finalXlslArrayTemp[i].saturday_id =  this.saturday[0];
-				finalXlslArrayTemp[i].sunday =  this.sunday[1];
-				finalXlslArrayTemp[i].sunday_id =  this.sunday[0];
+				finalXlslArrayTemp[i].monday = this.monday[1];
+				finalXlslArrayTemp[i].monday_id = this.monday[0];
+				finalXlslArrayTemp[i].tuesday = this.tuesday[1];
+				finalXlslArrayTemp[i].tuesday_id = this.tuesday[0];
+				finalXlslArrayTemp[i].wednesday = this.wednesday[1];
+				finalXlslArrayTemp[i].wednesday_id = this.wednesday[0];
+				finalXlslArrayTemp[i].thursday = this.thursday[1];
+				finalXlslArrayTemp[i].thursday_id = this.thursday[0];
+				finalXlslArrayTemp[i].friday = this.friday[1];
+				finalXlslArrayTemp[i].friday_id = this.friday[0];
+				if (Number(this.uploadTimeTableForm.value.no_of_day) === 6 || Number(this.uploadTimeTableForm.value.no_of_day === 7)) {
+					finalXlslArrayTemp[i].saturday = this.saturday[1];
+					finalXlslArrayTemp[i].saturday_id = this.saturday[0];
+				}
+				if (Number(this.uploadTimeTableForm.value.no_of_day) === 7) {
+					finalXlslArrayTemp[i].sunday = this.sunday[1];
+					finalXlslArrayTemp[i].sunday_id = this.sunday[0];
+				}
 			}
 			for (const item of finalXlslArrayTemp) {
 				this.finalXlslArray.push(item);
@@ -238,8 +242,21 @@ export class TimeTableComponent implements OnInit {
 				this.commonService.showSuccessErrorMessage('Execel is blank. Please Choose another excel.', 'error');
 				return false;
 			}
-
-
+			let count = 0;
+			for (const item of this.finalXlslArray) {
+				Object.keys(item).forEach((key: any) => {
+					if (item[key] === '-') {
+						count++;
+					}
+				});
+			}
+			if (count > 0) {
+				this.commonService.showSuccessErrorMessage('Please fill all Periods in timetable.', 'error');
+				this.finalXlslArray = [];
+				this.excelFlag = false;
+				this.defaultFlag = true;
+				return false;
+			}
 		};
 		fileReader.readAsArrayBuffer(this.file);
 
@@ -350,7 +367,7 @@ export class TimeTableComponent implements OnInit {
 					});
 				}
 			}
-			// console.log(this.finalSubmitArray);
+			console.log('submit', this.finalSubmitArray);
 		}
 		for (let i = 0; i < this.finalSubmitArray.length; i++) {
 

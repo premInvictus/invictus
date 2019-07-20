@@ -86,8 +86,7 @@
                             <tr class="custom-tr">
                                 <th class="custom-th" rowspan="2">Topic</th>
                                 <th class="custom-th" rowspan="2">SubTopic</th>
-                                <th class="custom-th" rowspan="2">Description</th>
-                                <th class="custom-th" colspan="3">No. of Period Required</th>
+                                <th class="custom-th" colspan="3">No. of Period Required To</th>
                                 <th class="custom-th" rowspan="2">Total</th>
                                 <th class="custom-th" colspan="3">No. of Period Taken To</th>
                                 <th class="custom-th" rowspan="2">Total</th>
@@ -95,12 +94,12 @@
 
                             </tr>
                             <tr class="custom-tr">
-                                <th class="custom-th">Teaching</th>
+                                <th class="custom-th">Teach</th>
                                 <th class="custom-th">Test</th>
-                                <th class="custom-th">Revision</th>
-                                <th class="custom-th">Teaching</th>
+                                <th class="custom-th">Revised</th>
+                                <th class="custom-th">Teach</th>
                                 <th class="custom-th">Test</th>
-                                <th class="custom-th">Revision</th>
+                                <th class="custom-th">Revised</th>
                             </tr>
                         </thead>
                         <tbody class="text-center">
@@ -118,9 +117,6 @@
                                             </td>
                                             <td class="custom-td" *ngIf="det.sd_ctr_id == 3">
                                                 Revision
-                                            </td>
-                                            <td class="custom-td">
-                                                <div [innerHTML]="det.sd_desc"></div>
                                             </td>
                                             <td class="custom-td">
                                                 {{det.sd_period_teacher}}
@@ -164,11 +160,47 @@
                                             <td rowspan="5" class="custom-td " *ngIf="j == 0"
                                                 [ngStyle]="{'background-color': getcolor(item.total - item.total1)}"
                                                 [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
-
                                         </tr>
                                     </ng-container>
                                 </ng-container>
                             </ng-container>
+                            <tr class="custom-tr">
+                                <td class="custom-td">
+                                    Grand Total
+                                </td>
+                                <td class="custom-td">
+                                </td>
+                                <td class="custom-td">
+                                    {{teachingSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{testSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{revisionSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{teachingSum + testSum + revisionSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{cwteachingSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{cwtestSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{cwrevisionSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{cwteachingSum + cwtestSum + cwrevisionSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{deviationSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{deviationSum}}
+                                </td>
+                            </tr>
                         </tbody>
 
                         <tbody>

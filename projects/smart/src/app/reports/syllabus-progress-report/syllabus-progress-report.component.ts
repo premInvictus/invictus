@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class SyllabusProgressReportComponent implements OnInit {
 	@ViewChild('remarkModel') remarkModel;
-	
+
 	editRequestFlag = false;
 	finalDivFlag = true;
 	headerDivFlag = false;
@@ -22,6 +22,8 @@ export class SyllabusProgressReportComponent implements OnInit {
 	classwisetableArray: any[];
 	periodCompletionArray: any[] = [];
 	remarkArray: any[] = [];
+	createdByArray: any[] = [];
+	UserArray: any[] = [];
 	sectionArray: any[];
 	finalSpannedArray: any[] = [];
 	sessionArray: any[] = [];
@@ -75,6 +77,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 		this.getClass();
 		this.getSession();
 		this.getSchool();
+		this.getUserName();
 	}
 	//  Get Class List function
 	getClass() {
@@ -153,6 +156,18 @@ export class SyllabusProgressReportComponent implements OnInit {
 					}
 				});
 	}
+	// get user name and login id
+	getUserName() {
+		this.smartService.getUserName()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.UserArray[citem.au_login_id] = citem.au_full_name;
+						}
+					}
+				});
+	}
 	// delete remark entry from database
 	deleteremark($event) {
 		if ($event) {
@@ -186,6 +201,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 			param.rm_tt_id = $event.tt_id;
 			param.rm_subject_id = $event.sub_id;
 			param.rm_remark = $event.remark;
+			param.rm_created_by = this.currentUser.login_id;
 			this.smartService.getProgressReportRemarks(param).subscribe((remark_r: any) => {
 				if (remark_r && remark_r.status === 'ok') {
 					this.smartService.updateProgressReportRemarks(param)
@@ -217,6 +233,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 		this.finalDivFlag = false;
 		this.subCountArray = [];
 		this.remarkArray = [];
+		this.createdByArray = [];
 		this.periodCompletionArray = [];
 		const timetableparam: any = {};
 		timetableparam.tt_class_id = this.progressReportForm.value.syl_class_id;
@@ -233,6 +250,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 								if (remark_r && remark_r.status === 'ok') {
 									for (const citem of remark_r.data) {
 										this.remarkArray[citem.rm_subject_id] = citem.rm_remark;
+										this.createdByArray[citem.rm_subject_id] = citem.rm_created_by;
 									}
 								}
 							});

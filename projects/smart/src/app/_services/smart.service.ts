@@ -284,6 +284,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/syllabusPeriodCount', value);
 	}
+	getUserName() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSmartUrl + '/common/getUserName');
+	}
 	setProcesstype(value) {
 		this.processType = value;
 	}
