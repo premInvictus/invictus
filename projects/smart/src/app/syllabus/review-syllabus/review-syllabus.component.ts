@@ -265,6 +265,9 @@ export class ReviewSyllabusComponent implements OnInit {
 													sd_topic_name: this.finalSyllabusArray[i].topic_name,
 													sd_st_name: this.finalSyllabusArray[i].st_name,
 													sd_id: this.finalSyllabusArray[i].sd_id,
+													au_full_name: this.finalSyllabusArray[i].au_full_name,
+													sd_unpublish_remark: this.finalSyllabusArray[i].sd_unpublish_remark,
+													sd_unpublish_reason_id: this.finalSyllabusArray[i].sd_unpublish_reason_id,
 												});
 												for (let j = i + 1; j < this.finalSyllabusArray.length; j++) {
 													let sd_period_teacher1: any = '';
@@ -290,6 +293,9 @@ export class ReviewSyllabusComponent implements OnInit {
 															sd_topic_name: this.finalSyllabusArray[j].topic_name,
 															sd_st_name: this.finalSyllabusArray[j].st_name,
 															sd_id: this.finalSyllabusArray[j].sd_id,
+															au_full_name: this.finalSyllabusArray[i].au_full_name,
+															sd_unpublish_remark: this.finalSyllabusArray[i].sd_unpublish_remark,
+															sd_unpublish_reason_id: this.finalSyllabusArray[i].sd_unpublish_reason_id,
 														});
 													}
 												}
