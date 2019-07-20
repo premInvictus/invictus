@@ -170,7 +170,7 @@ export class FeeLedgerComponent implements OnInit {
 						balance: item.flgr_balance ? item.flgr_balance : '0',
 						receiptdate: item.rpt_receipt_date,
 						receiptno: item.rpt_receipt_no,
-						mop: item.pay_name ? item.pay_name + (item.tb_name ? ' (' + item.tb_name + ')' : '') : '-',
+						mop:  (item.tb_name ? item.tb_name  : (item.pay_name ? item.pay_name : '-')),
 						eachActionFlag: tempactionFlag,
 						action: item
 					};

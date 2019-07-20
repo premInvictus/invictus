@@ -75,14 +75,14 @@
                   </ng-container>
 
                   <ng-container matColumnDef="date">
-                    <th mat-header-cell *matHeaderCellDef> Inv. Date </th>
-                    <td width="6%" mat-cell *matCellDef="let item"> {{item.date}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Inv. Date </th>
+                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.date}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="invoiceno">
-                    <th mat-header-cell *matHeaderCellDef> Inv. No. </th>
-                    <td width="5%" mat-cell *matCellDef="let item">
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Inv. No. </th>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap">
                       <span *ngIf="item.invoiceno != '0'"
                         class="pointer font-bold font-skyblue font-underline">
                         <a (click)="openDialog(item.action, false)">{{item.invoiceno}}</a>
@@ -92,90 +92,90 @@
                   </ng-container>
 
                   <ng-container matColumnDef="feeperiod">
-                    <th mat-header-cell *matHeaderCellDef> Fee Period </th>
-                    <td  width="5%" mat-cell *matCellDef="let item" style="text-align: left !important;padding-left: 0.5%;">  {{item.feeperiod}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Fee Period </th>
+                    <td  width="5%" mat-cell *matCellDef="let item" class="text-nowrap" style="text-align: left !important;padding-left: 0.5%;">  {{item.feeperiod}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="particular">
-                    <th mat-header-cell *matHeaderCellDef> Particulars </th>
-                    <td width="15%" mat-cell *matCellDef="let item"
+                    <th mat-header-cell *matHeaderCellDef  class="text-nowrap"> Particulars </th>
+                    <td width="15%" mat-cell *matCellDef="let item" class="text-nowrap"
                       style="text-align: left !important;padding-left: 0.5%;">
                       {{item.particular}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="duedate">
-                    <th mat-header-cell *matHeaderCellDef> Due Date </th>
-                    <td width="6%" mat-cell *matCellDef="let item"> {{item.duedate | date: 'd-MMM-y'}} </td>
+                    <th mat-header-cell *matHeaderCellDef  class="text-nowrap"> Due Date </th>
+                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.duedate | date: 'd-MMM-y'}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="amount">
-                    <th mat-header-cell *matHeaderCellDef> Amt. Due (<span><i class="fas fa-rupee-sign"></i></span>)
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amt. Due (<span><i class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item"> {{item.amount | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item"  class="text-nowrap"> {{item.amount | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.feeduetotal | number}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="concession">
-                    <th mat-header-cell *matHeaderCellDef> Con. (<span><i class="fas fa-rupee-sign"></i></span>)
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Con. (<span><i class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item"> {{item.concession | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.concession | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.concessiontotal | number | zerodash}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="adjustment">
-                      <th mat-header-cell *matHeaderCellDef> Adj. (<span><i class="fas fa-rupee-sign"></i></span>)
+                      <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Adj. (<span><i class="fas fa-rupee-sign"></i></span>)
                       </th>
-                      <td width="5%" mat-cell *matCellDef="let item"> {{item.adjustment | number | zerodash}} </td>
+                      <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.adjustment | number | zerodash}} </td>
                       <td mat-footer-cell *matFooterCellDef> {{footerRecord.adjustmenttotal | number | zerodash}} </td>
                     </ng-container>
 
                   <ng-container matColumnDef="fine">
-                    <th mat-header-cell *matHeaderCellDef> Fine (<span><i class="fas fa-rupee-sign"></i></span>)
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap" > Fine (<span><i class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item"> {{item.fine | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.fine | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.finetotal | number | zerodash}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="reciept">
-                    <th mat-header-cell *matHeaderCellDef> Amt. Rec. (<span><i class="fas fa-rupee-sign"></i></span>)
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amt. Rec. (<span><i class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item"> {{item.reciept | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.reciept | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.receipttotal | number | zerodash}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="balance">
-                    <th mat-header-cell *matHeaderCellDef> Balance (<span><i class="fas fa-rupee-sign"></i></span>)</th>
-                    <td width="5%" mat-cell *matCellDef="let item"> {{item.balance | number}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Balance (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.balance | number}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.balancetotal | number}} </td>
                   </ng-container>
                   <ng-container matColumnDef="receiptdate">
-                    <th mat-header-cell *matHeaderCellDef> Receipt Date</th>
-                    <td width="6%" mat-cell *matCellDef="let item"> {{item.receiptdate | date:'d-MMM-y'}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Rpt. Date</th>
+                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.receiptdate | date:'d-MMM-y'}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <ng-container matColumnDef="receiptno">
-                    <th mat-header-cell *matHeaderCellDef> Receipt No</th>
-                    <td width="5%" mat-cell *matCellDef="let item">
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Rpt. No</th>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap">
                       <span *ngIf="item.action.rpt_id" class="pointer font-bold font-skyblue font-underline">
                         <a (click)="openReceiptDialog(item.action.rpt_id, false)">{{item.receiptno}}</a>
                       </span></td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <ng-container matColumnDef="mop">
-                    <th mat-header-cell *matHeaderCellDef> MOP</th>
-                    <td width="10%" mat-cell *matCellDef="let item"> {{item.mop | titlecase}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> MOP</th>
+                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.mop | titlecase}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <ng-container matColumnDef="remarks">
-                    <th mat-header-cell *matHeaderCellDef> Remarks
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Remarks
                       <span style="float:right; padding-right: 10px;"><img style="cursor: pointer"
                           src="/assets/images/xml.svg" (click)="exportAsExcel()" matTooltip="Export as excel"></span>
                     </th>
-                    <td width="28%" mat-cell *matCellDef="let item"
-                      style="text-align: left !important;padding-left: 0.5%;">
+                    <td width="40%" mat-cell *matCellDef="let item"
+                      style="text-align: left !important;padding-left: 0.5%;" class="text-nowrap">
                       {{item.remarks | capitalize}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
