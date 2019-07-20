@@ -19,7 +19,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && reportType !== 'defaulter'" class="col-2">
+        <!-- <div *ngIf="filterFlag && reportType !== 'defaulter'" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>From Date</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
@@ -27,7 +27,7 @@
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
-        </div>
+        </div> -->
         <div *ngIf="filterFlag" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>To Date</mat-label>
