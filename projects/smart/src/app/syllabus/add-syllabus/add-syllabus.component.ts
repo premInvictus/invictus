@@ -22,6 +22,7 @@ export class AddSyllabusComponent implements OnInit {
 	details_flag = false;
 	periodDivFlag = false;
 	editRequestFlag = false;
+	flag = true;
 	syllabusForm: FormGroup;
 	syllabusDetailForm: FormGroup;
 	classArray: any[];
@@ -62,6 +63,7 @@ export class AddSyllabusComponent implements OnInit {
 	currentYear: any;
 	nextYear: any;
 	totalPeriod = 0;
+	subtopicIdArray: any[] = [];
 	add = 'Add';
 	constructor(
 		private fbuild: FormBuilder,
@@ -367,6 +369,7 @@ export class AddSyllabusComponent implements OnInit {
 
 	// Function for cancel the perfor action and back to add class and subject
 	finalCancel() {
+		this.subtopicIdArray = [];
 		this.finalSpannedArray = [];
 		this.finalSubmitArray = [];
 		this.finaldivflag = true;
@@ -429,6 +432,7 @@ export class AddSyllabusComponent implements OnInit {
 	}
 	// Add syllabus list function
 	addDetailsList() {
+		this.flag = true;
 		this.finaldivflag = false;
 		this.finalSubmitdivflag = true;
 		this.periodDivFlag = false;
@@ -442,17 +446,14 @@ export class AddSyllabusComponent implements OnInit {
 				this.periodDivFlag = true;
 				return false;
 			}
-			
-			this.finalSyllabusArray.push(this.syllabusDetailForm.value);
-			console.log(this.finalSpannedArray);
-			for (const item of this.finalSpannedArray) {
-				console.log(item);
-				for (const fetch of item.details) {
-					if (fetch.sd_st_id === this.syllabusDetailForm.value.sd_st_id) {
-						this.commonService.showSuccessErrorMessage('Subtopic Already exist. For modification please edit.', 'error');
-						return false;
-					}
-				}
+			const sindex = this.subtopicIdArray.findIndex(f => f.sd_st_id === this.syllabusDetailForm.value.sd_st_id);
+			if (sindex !== -1) {
+				this.commonService.showSuccessErrorMessage('Subtopic Already added. For any manipulation please edit.', 'error');
+			} else {
+				this.subtopicIdArray.push({
+					sd_st_id: this.syllabusDetailForm.value.sd_st_id,
+				});
+				this.finalSyllabusArray.push(this.syllabusDetailForm.value);
 			}
 			for (let i = 0; i < this.finalSyllabusArray.length; i++) {
 				let sd_period_teacher: any = '';
@@ -511,8 +512,6 @@ export class AddSyllabusComponent implements OnInit {
 				} else {
 					this.finalSpannedArray[findex].total = this.finalSpannedArray[findex].total + this.finalSyllabusArray[i].sd_period_req;
 				}
-
-				// console.log(this.finalSpannedArray);
 			}
 			this.syllabusDetailForm.patchValue({
 				'sd_st_id': '',
