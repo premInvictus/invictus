@@ -556,4 +556,12 @@ export class FeeLedgerComponent implements OnInit {
 		});
 	}
 
+	checkStatus() {
+		if (this.commonStudentProfileComponent.studentdetails.editable_status === '1') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

@@ -15,3 +15,17 @@ button.nav-button.mat-mini-fab.mat-accent {
     border-right: 2px solid #dee2e6;
     margin-right: 1.5%;
 }
+.blink{
+    background-color: #e11022;
+    text-align: center;
+}
+.blink span{
+    font-family: cursive;
+    color: white;
+    animation: blink 1s linear infinite;
+}
+@keyframes blink{
+    0%{opacity: 0;}
+    50%{opacity: .5;}
+    100%{opacity: 1;}
+    }

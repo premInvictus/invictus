@@ -19,7 +19,7 @@
       </app-common-student-profile>
     </div>
   </div>
-  <div class="floating-button">
+  <div class="floating-button" *ngIf="checkStatus()">
     <button mat-button class="float-edit-button"><i class="material-icons font-white">playlist_add</i>
       <span class="margin-top-2 right-text" (click)="openCreateInvoiceModal()">
         <i class="material-icons font-white">playlist_add</i>

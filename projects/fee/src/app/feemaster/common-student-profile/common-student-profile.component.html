@@ -67,7 +67,8 @@
             <span
               class="font-size-16 font-bold">{{studentdetails.au_full_name ? (studentdetails.au_full_name | titlecase) : '-'}}</span><i style="cursor: pointer;" class="fas fa-search margin-left-10" matTooltip="Search Students"
               (click)="openSearchDialog()"></i><br>
-            <span class="font-size-14">Class : {{class_sec}}</span>
+            <span class="font-size-14">Class : {{class_sec}}</span><br>
+            <div class="font-size-16 font-bold blink"  *ngIf="studentdetails.au_process_type=='5'"><span>LEFT</span></div>
           </div>
         </div>
       </div>
@@ -151,11 +152,17 @@
               <img style="margin-left: 13px ; margin-top: 12px" src="/assets/student_profile.svg">
             </div>
           </div>
-          <div class="col-6">
+          <!-- <div class="col-6">
             <div class=" blue-circle-btn margin-top-5" matTooltip="Invoice Creation"
               (click)="goToPage('invoice-creation-individual')">
               <img style="margin-left: 13px ; margin-top: 12px" src="/assets/invoice_creation.svg">
             </div>
+          </div> -->
+          <div class="col-6">
+            <div class="margin-top-5 blue-circle-btn" (click)="goToPage('fee-ledger')" matTooltip="Fee Ledger">
+              <img style="margin-left: 13px ; margin-top: 12px" src="/assets/fee_modification.svg">
+            </div>
+
           </div>
           <div class="col-6">
             <div class=" blue-circle-btn margin-top-5" matTooltip="Fee Transaction Entry"
@@ -163,12 +170,7 @@
               <img style="margin-left: 13px ; margin-top: 12px" src="/assets/fee_transaction_entry.svg">
             </div>
           </div>
-          <div class="col-6">
-            <div class="margin-top-5 blue-circle-btn" (click)="goToPage('fee-ledger')" matTooltip="Fee Ledger">
-              <img style="margin-left: 13px ; margin-top: 12px" src="/assets/fee_modification.svg">
-            </div>
-
-          </div>
+          
         </div>
       </div>
     </div>
