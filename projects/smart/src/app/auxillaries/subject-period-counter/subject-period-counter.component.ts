@@ -28,6 +28,13 @@ export class SubjectPeriodCounterComponent implements OnInit {
 	toDate: any;
 	fromDate: any;
 	sum = 0;
+	monday = 0;
+	tuesday = 0;
+	wednesday = 0;
+	thursday = 0;
+	friday = 0;
+	saturday = 0;
+	sunday = 0;
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -227,8 +234,34 @@ export class SubjectPeriodCounterComponent implements OnInit {
 															});
 														}
 													});
+													for (const item of this.daywisetableArray) {
+														for (const titem of item.dataArr) {
+															if (titem.day === 'Monday') {
+																this.monday = this.monday + (Number(titem.count) * Number(this.weekCounterArray[titem.day]));
+															}
+															if (titem.day === 'Tuesday') {
+																this.tuesday = this.tuesday + (Number(titem.count) * Number(this.weekCounterArray[titem.day]));
+															}
+															if (titem.day === 'Wednesday') {
+																this.wednesday = this.wednesday + (Number(titem.count) * Number(this.weekCounterArray[titem.day]));
+															}
+															if (titem.day === 'Thursday') {
+																this.thursday = this.thursday + (Number(titem.count) * Number(this.weekCounterArray[titem.day]));
+															}
+															if (titem.day === 'Friday') {
+																this.friday = this.friday + (Number(titem.count) * Number(this.weekCounterArray[titem.day]));
+															}
+															if (titem.day === 'Saturday') {
+																this.saturday = this.saturday + (Number(titem.count) * Number(this.weekCounterArray[titem.day]));
+															}
+															if (titem.day === 'Sunday') {
+																this.sunday = this.sunday + (Number(titem.count) * Number(this.weekCounterArray[titem.day]));
+															}
+														}
+													}
 												}
 											});
+											console.log('tav',this.daywisetableArray);
 										}
 									});
 

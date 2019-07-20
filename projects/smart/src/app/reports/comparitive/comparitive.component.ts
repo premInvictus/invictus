@@ -32,6 +32,13 @@ export class ComparitiveComponent implements OnInit {
 	seesion_id: any;
 	toDate: any;
 	fromDate: any;
+	teachingSum = 0;
+	cwteachingSum = 0;
+	testSum = 0;
+	cwtestSum = 0;
+	revisionSum = 0;
+	cwrevisionSum = 0;
+	deviationSum = 0;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -180,6 +187,13 @@ export class ComparitiveComponent implements OnInit {
 	}
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
+		this.teachingSum = 0;
+		this.cwteachingSum = 0;
+		this.testSum = 0;
+		this.cwtestSum = 0;
+		this.revisionSum = 0;
+		this.cwrevisionSum = 0;
+		this.deviationSum = 0;
 		this.finalSpannedArray = [];
 		this.finalDivFlag = false;
 		this.headerDivFlag = true;
@@ -201,12 +215,18 @@ export class ComparitiveComponent implements OnInit {
 							let cw_period_test: any = '';
 							let cw_period_revision: any = '';
 							if (this.finalSyllabusArray[i].sd_ctr_id === '1') {
+								this.teachingSum = this.teachingSum + Number(this.finalSyllabusArray[i].sd_period_req);
+								this.cwteachingSum = this.cwteachingSum + Number(this.finalSyllabusArray[i].cw_period_req);
 								sd_period_teacher = this.finalSyllabusArray[i].sd_period_req;
 								cw_period_teacher = this.finalSyllabusArray[i].cw_period_req;
 							} else if (this.finalSyllabusArray[i].sd_ctr_id === '2') {
+								this.testSum = this.testSum + Number(this.finalSyllabusArray[i].sd_period_req);
+								this.cwtestSum = this.cwtestSum + Number(this.finalSyllabusArray[i].cw_period_req);
 								sd_period_test = this.finalSyllabusArray[i].sd_period_req;
 								cw_period_test = this.finalSyllabusArray[i].cw_period_req;
 							} else {
+								this.revisionSum = this.revisionSum + Number(this.finalSyllabusArray[i].sd_period_req);
+								this.cwrevisionSum = this.cwrevisionSum + Number(this.finalSyllabusArray[i].cw_period_req);
 								sd_period_revision = this.finalSyllabusArray[i].sd_period_req;
 								cw_period_revision = this.finalSyllabusArray[i].cw_period_req;
 							}
@@ -236,12 +256,18 @@ export class ComparitiveComponent implements OnInit {
 								let cw_period_revision1: any = '';
 								if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id) {
 									if (this.finalSyllabusArray[j].sd_ctr_id === '1') {
+										// this.teachingSum = this.teachingSum + Number(this.finalSyllabusArray[j].sd_period_req);
+										// this.cwteachingSum = this.cwteachingSum + Number(this.finalSyllabusArray[j].cw_period_req);
 										sd_period_teacher1 = this.finalSyllabusArray[j].sd_period_req;
 										cw_period_teacher1 = this.finalSyllabusArray[j].cw_period_req;
 									} else if (this.finalSyllabusArray[j].sd_ctr_id === '2') {
+										// this.testSum = this.testSum + Number(this.finalSyllabusArray[j].sd_period_req);
+										// this.cwtestSum = this.cwtestSum + Number(this.finalSyllabusArray[j].cw_period_req);
 										sd_period_test1 = this.finalSyllabusArray[j].sd_period_req;
 										cw_period_test1 = this.finalSyllabusArray[j].cw_period_req;
 									} else {
+										// this.revisionSum = this.revisionSum + Number(this.finalSyllabusArray[j].sd_period_req);
+										// this.cwrevisionSum = this.cwrevisionSum + Number(this.finalSyllabusArray[j].cw_period_req);
 										sd_period_revision1 = this.finalSyllabusArray[j].sd_period_req;
 										cw_period_revision1 = this.finalSyllabusArray[j].cw_period_req;
 									}
@@ -278,7 +304,7 @@ export class ComparitiveComponent implements OnInit {
 								this.finalSpannedArray[findex].total1 = Number(this.finalSpannedArray[findex].total1) + Number(this.finalSyllabusArray[i].cw_period_req);
 							}
 						}
-
+						this.deviationSum = (this.teachingSum + this.testSum + this.revisionSum) - (this.cwteachingSum + this.cwtestSum + this.cwrevisionSum);
 					} else {
 						this.finalSpannedArray = [];
 						this.finalDivFlag = true;
