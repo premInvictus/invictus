@@ -288,6 +288,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/common/getUserName');
 	}
+	getSyllabusTopicId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getSyllabusTopicId', value);
+	}
 	setProcesstype(value) {
 		this.processType = value;
 	}
