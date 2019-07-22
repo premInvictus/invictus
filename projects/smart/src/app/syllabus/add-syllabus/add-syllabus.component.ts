@@ -283,13 +283,14 @@ export class AddSyllabusComponent implements OnInit {
 						this.topicArray = result.data;
 					} else {
 						this.topicArray = [];
+						this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 					}
 				}
 			);
 	}
 
 	//  Get Subtopic List function
-	getSubtopicByTopic(): void {
+	getSubtopicByTopic() {
 		this.axiomService.getSubtopicByTopic(this.syllabusDetailForm.value.sd_topic_id)
 			.subscribe(
 				(result: any) => {

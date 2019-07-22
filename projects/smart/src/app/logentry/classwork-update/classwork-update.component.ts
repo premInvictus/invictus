@@ -34,6 +34,8 @@ export class ClassworkUpdateComponent implements OnInit {
 	noDataFlag = true;
 	isTeacher = false;
 	disableSubtopicArray: any[] = [];
+	disabletopicArray: any[] = [];
+	disableClassArray: any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -71,6 +73,8 @@ export class ClassworkUpdateComponent implements OnInit {
 				for (let i = 0; i < this.noOfPeriods; i++) {
 					this.addPeriods(i + 1, this.teacherId);
 					this.disableSubtopicArray[i] = false;
+					this.disabletopicArray[i] = false;
+					this.disableClassArray[i] = false;
 				}
 				this.generateReviewArray();
 			}
@@ -102,11 +106,11 @@ export class ClassworkUpdateComponent implements OnInit {
 		this.Periods.push(this.fbuild.group({
 			cw_teacher_id: teacherId,
 			cw_period_id: period,
-			cw_sub_id: ['', Validators.required],
+			cw_sub_id: '',
 			cw_ctr_id: ['', Validators.required],
-			cw_class_id: ['', Validators.required],
+			cw_class_id: '',
 			cw_sec_id: '',
-			cw_topic_id: ['', Validators.required],
+			cw_topic_id: '',
 			cw_st_id: '',
 			cw_assignment_desc: '',
 			cw_entry_date: '',
@@ -122,9 +126,28 @@ export class ClassworkUpdateComponent implements OnInit {
 			eachPeriodFG.patchValue({
 				cw_st_id: '0'
 			});
+		} else if (event.value === '8') {
+			eachPeriodFG.controls['cw_sub_id'].clearValidators(Validators.required);
+			eachPeriodFG.controls['cw_class_id'].clearValidators(Validators.required);
+			eachPeriodFG.controls['cw_topic_id'].clearValidators(Validators.required);
+			eachPeriodFG.controls['cw_st_id'].clearValidators(Validators.required);
+			this.disableClassArray[index] = true;
+			this.disabletopicArray[index] = true;
+			this.disableSubtopicArray[index] = true;
+			// console.log(eachPeriodFG.controls);
+			eachPeriodFG.patchValue({
+				cw_class_id: '0',
+				cw_topic_id: '0',
+				cw_st_id: '0'
+			});
 		} else {
+			eachPeriodFG.controls['cw_sub_id'].setValidators(Validators.required);
 			eachPeriodFG.controls['cw_st_id'].setValidators(Validators.required);
+			eachPeriodFG.controls['cw_topic_id'].setValidators(Validators.required);
+			eachPeriodFG.controls['cw_class_id'].setValidators(Validators.required);
 			this.disableSubtopicArray[index] = false;
+			this.disabletopicArray[index] = false;
+			this.disableClassArray[index] = false;
 		}
 	}
 
@@ -232,7 +255,7 @@ export class ClassworkUpdateComponent implements OnInit {
 	}
 	ctrList() {
 		this.categoryArray = [];
-		this.smartService.ctrList().subscribe((result: any) => {
+		this.smartService.cwCtrList().subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.categoryArray = result.data;
 			} else {
@@ -290,11 +313,18 @@ export class ClassworkUpdateComponent implements OnInit {
 						this.Periods.controls.forEach((eachFormGroup: FormGroup) => {
 							Object.keys(eachFormGroup.controls).forEach(key => {
 								if (key === 'cw_class_id') {
-									const csArray = eachFormGroup.value.cw_class_id.split('-');
-									eachFormGroup.patchValue({
-										cw_class_id: csArray[0],
-										cw_sec_id: csArray[1]
-									});
+									if (eachFormGroup.value.cw_class_id !== '') {
+										const csArray = eachFormGroup.value.cw_class_id.split('-');
+										eachFormGroup.patchValue({
+											cw_class_id: csArray[0],
+											cw_sec_id: csArray[1]
+										});
+									} else {
+										eachFormGroup.patchValue({
+											cw_class_id: '',
+											cw_sec_id: ''
+										});
+									}
 								}
 								if (!this.isTeacher) {
 									if (key === 'cw_teacher_id') {
@@ -426,7 +456,7 @@ export class ClassworkUpdateComponent implements OnInit {
 					teacher_name : ''
 				});
 				this.resetClassworkForm();
-			}
+			} 
 		});
 	} */
 	resetClassworkForm() {

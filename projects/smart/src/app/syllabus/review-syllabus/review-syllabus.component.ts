@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
+import * as XLSX from 'xlsx';
 
 @Component({
 	selector: 'app-review-syllabus',
@@ -19,14 +20,17 @@ export class ReviewSyllabusComponent implements OnInit {
 	public topicArray: any[];
 	public subtopicArray: any[];
 	finalSpannedArray: any[] = [];
+	finalSubmitArray: any[] = [];
 	editRequestFlag = false;
 	finalDivFlag = true;
 	param: any = {};
 	publishParam: any = {};
 	editParam: any = {};
+	addParam: any = {};
 	processType: any = {};
 	syl_id: any;
 	currentUser: any;
+	session: any;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -36,14 +40,21 @@ export class ReviewSyllabusComponent implements OnInit {
 		public sisService: SisService,
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.session = JSON.parse(localStorage.getItem('session'));
 	}
 
 	// Edit dialod open modal function
 	openEditDialog(sd_id) {
 		this.editParam.sd_id = sd_id;
+		this.editParam.text = 'Edit';
 		this.editModal.openEditModal(this.editParam);
 	}
-
+	openAddDialog(syl_id, topic_id) {
+		this.addParam.syl_id = syl_id;
+		this.addParam.topic_id = topic_id;
+		this.addParam.text = 'Add';
+		this.editModal.openEditModal(this.addParam);
+	}
 	// delete dialog open modal function
 	openModal(i, j, sd_id) {
 		this.param.indexi = i;
@@ -148,7 +159,15 @@ export class ReviewSyllabusComponent implements OnInit {
 					}
 				});
 	}
+	// export excel code
+	exportAsExcel() {
+		// tslint:disable-next-line:max-line-length
+		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table')); // converts a DOM TABLE element to a worksheet
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
 
+	}
 	// delete syllabus list from database function 
 	deleteSyllabusList($event) {
 		if ($event) {
@@ -201,7 +220,30 @@ export class ReviewSyllabusComponent implements OnInit {
 					});
 		}
 	}
+	// Add syllabus 
+	addSyllabussEdit($event) {
+		if ($event) {
+			console.log('addd', $event);
+			this.finalSubmitArray.push({
+				sd_syl_id: $event.syl_id,
+				sd_ses_id: this.session.ses_id,
+				sd_created_by: this.currentUser.login_id,
+				sd_ctr_id: $event.sd_ctr_id,
+				sd_topic_id: $event.topic_id,
+				sd_period_req: $event.sd_period_req,
+				sd_st_id: $event.sd_st_id,
+				sd_desc: $event.sd_desc
+			});
+			this.syllabusService.insertSyllabusDetails(this.finalSubmitArray).subscribe((result1: any) => {
+				if (result1 && result1.status === 'ok') {
+					this.finalSubmitArray = [];
+					this.fetchSyllabusDetails();
+					this.commonService.showSuccessErrorMessage('Syllabus Added  Successfully', 'success');
 
+				}
+			});
+		}
+	}
 	// updtae syllabus list function
 	updateSyllabussEdit($event) {
 		if ($event) {
@@ -219,7 +261,6 @@ export class ReviewSyllabusComponent implements OnInit {
 					});
 		}
 	}
-
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
 		this.finalDivFlag = false;
