@@ -340,6 +340,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 					epd_id: item.formGroup.value.epd_id,
 					epd_login_id: this.context.studentdetails.studentdetailsform.value.au_login_id,
 					epd_parent_name: item.formGroup.value.epd_parent_name,
+					epd_parent_honorific: item.formGroup.value.epd_parent_honorific,
 					epd_parent_dob: datePipe.transform(item.formGroup.value.epd_parent_dob, 'yyyy-MM-dd'),
 					epd_parent_nationality: item.formGroup.value.epd_parent_nationality,
 					epd_contact_no: item.formGroup.value.epd_contact_no,

@@ -81,16 +81,26 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			if (data && data.addMode) {
 				this.viewOnly = false;
 				this.addOnly = true;
-				this.edu.previousEducations = [];
-				this.doc.finalDocumentArray = [];
-				this.skill.finalAwardArray = [];
-				this.skill.finalSpannedArray = [];
+				if (this.edu) {
+					this.edu.previousEducations = [];
+				}
+				if (this.doc) {
+					this.doc.finalDocumentArray = [];
+				}
+
+				if (this.skill) {
+					this.skill.finalAwardArray = [];
+					this.skill.finalSpannedArray = [];
+				}
 				this.educationDetails = [];
 				this.documentDetails = [];
 				this.awardsDetails = [];
 				this.awardsDetailsNew = [];
 				this.accountDetails = {};
-				this.account.accountsForm.reset();
+
+				if (this.account) {
+					this.account.accountsForm.reset();
+				}
 			}
 			if (data && data.viewMode) {
 				this.viewOnly = true;
