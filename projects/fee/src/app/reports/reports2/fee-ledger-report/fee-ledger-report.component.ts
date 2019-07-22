@@ -200,6 +200,39 @@ export class FeeLedgerReportComponent implements OnInit {
 		};
 		this.columnDefinitions = [
 			{
+				id: 'au_full_name',
+				name: 'Student Name',
+				field: 'au_full_name',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				sortable: true,
+				filterable: true,
+				width: 1,
+				cssClass: 'fee-ledger-no'
+			},
+			{
+				id: 'class_name',
+				name: 'Class',
+				field: 'class_name',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				sortable: true,
+				filterable: true,
+				width: 1,
+				cssClass: 'fee-ledger-no'
+			},
+			{
+				id: 'sec_name',
+				name: 'Sec',
+				field: 'sec_name',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				sortable: true,
+				filterable: true,
+				width: 1,
+				cssClass: 'fee-ledger-no'
+			},
+			{
 				id: 'inv_invoice_date', name: 'Inv. Date', 
 				field: 'inv_invoice_date', sortable: true, width: 4,
 				filterable: true,
@@ -326,7 +359,18 @@ export class FeeLedgerReportComponent implements OnInit {
 				width: 1,
 				groupTotalsFormatter: this.sumTotalsFormatter,
 				formatter: this.checkFeeFormatter
-			}, 
+			},
+			{
+				id: 'pay_name',
+				name: 'MOP',
+				field: 'pay_name',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				sortable: true,
+				filterable: true,
+				width: 1,
+				cssClass: 'fee-ledger-no'
+			},
 			{
 				id: 'rpt_receipt_date', name: 'Receipt Date', 
 				field: 'rpt_receipt_date', sortable: true, width: 4,
@@ -341,17 +385,6 @@ export class FeeLedgerReportComponent implements OnInit {
 				name: 'Receipt No',
 				field: 'rpt_receipt_no',
 				formatter: this.checkReceiptFormatter,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				sortable: true,
-				filterable: true,
-				width: 1,
-				cssClass: 'fee-ledger-no'
-			},
-			{
-				id: 'pay_name',
-				name: 'MOP',
-				field: 'pay_name',
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
 				sortable: true,
@@ -384,6 +417,9 @@ export class FeeLedgerReportComponent implements OnInit {
 					for (const stu_arr of item.stu_ledger_arr) {
 						const obj: any = {};
 						obj['id'] = repoArray[Number(index)]['au_admission_no'] + j;
+						obj['au_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
+						obj['class_name'] = repoArray[Number(index)]['class_name'];
+						obj['sec_name'] = repoArray[Number(index)]['sec_name'];
 						obj['inv_invoice_date'] = stu_arr['inv_invoice_date'];
 						obj['flgr_invoice_receipt_no'] = stu_arr['flgr_invoice_receipt_no'];
 						obj['flgr_created_date'] = stu_arr['flgr_created_date'];
@@ -393,7 +429,7 @@ export class FeeLedgerReportComponent implements OnInit {
 						obj['inv_fine_amount'] = stu_arr['inv_fine_amount'];
 						obj['rpt_receipt_date'] = stu_arr['rpt_receipt_date'];
 						obj['rpt_receipt_no'] = stu_arr['rpt_receipt_no'];
-						obj['pay_name'] = stu_arr['pay_name'];
+						obj['pay_name'] = stu_arr['tb_name'] !== '' ? stu_arr['tb_name'] : stu_arr['pay_name'];
 						obj['remarks'] = stu_arr['remarks'];
 						if (repoArray[Number(index)]['sec_id'] !== '0') {
 							obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
