@@ -114,7 +114,18 @@
                      height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" src="/assets/images/id-father_sample_pic.jpg" alt="student photo"></div>
                      <p *ngIf="showParentName" 
                      class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>{{studentDetails.father_name}}</b></p>
-                     <p *ngIf="showParentMobile" class="id_card_student_contact_info remove-paragraph-bottom-padding">{{studentDetails.father_no}}</p>
+                     <p *ngIf="showParentMobile" class="id_card_student_contact_info remove-paragraph-bottom-padding">
+                           {{  studentDetails && studentDetails.father_honorific === '1' ? 'Mr.' :
+                           studentDetails && studentDetails.father_honorific === '2' ? 'Mrs.' :
+                           studentDetails && studentDetails.father_honorific === '3' ? 'Miss.' :
+                           studentDetails && studentDetails.father_honorific === '4' ? 'Ms.' :
+                           studentDetails && studentDetails.father_honorific === '5' ? 'Mx.' :
+                           studentDetails && studentDetails.father_honorific === '6' ? 'Sir.' :
+                           studentDetails && studentDetails.father_honorific === '7' ? 'Dr.' :
+                           studentDetails && studentDetails.father_honorific === '8' ? 'Lady' : ''
+                       }}
+                        
+                        {{studentDetails.father_no}}</p>
                    </div>
                    <div [ngStyle]="{'font-weight':allContentBold}" 
                    class="col-4 text-center remove-col-padding">
@@ -123,7 +134,18 @@
                      height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" src="/assets/images/id-mother_sample_pic.jpg" alt="student photo"></div>
                      <p *ngIf="showParentName"  
                      class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>{{studentDetails.mother_name}}</b></p>
-                     <p *ngIf="showParentMobile" class="id_card_student_contact_info remove-paragraph-bottom-padding">{{studentDetails.mother_no}}</p>
+                     <p *ngIf="showParentMobile" class="id_card_student_contact_info remove-paragraph-bottom-padding">
+                           {{studentDetails && studentDetails.mother_honorific === '1' ? 'Mr.' :
+                           studentDetails && studentDetails.mother_honorific === '2' ? 'Mrs.' :
+                           studentDetails && studentDetails.mother_honorific === '3' ? 'Miss.' :
+                           studentDetails && studentDetails.mother_honorific === '4' ? 'Ms.' :
+                           studentDetails && studentDetails.mother_honorific === '5' ? 'Mx.' :
+                           studentDetails && studentDetails.mother_honorific === '6' ? 'Sir.' :
+                           studentDetails && studentDetails.mother_honorific === '7' ? 'Dr.' :
+                           studentDetails && studentDetails.mother_honorific === '8' ? 'Lady' : ''
+                         }}
+                        
+                        {{studentDetails.mother_no}}</p>
                    </div>
                    <div [ngStyle]="{'font-weight':allContentBold}"
                     class="col-4 text-center remove-col-padding">
@@ -132,7 +154,18 @@
                      height: 65px;margin:auto"><img *ngIf="showGuardianPhoto"class="parent-photo--size" src="/assets/images/id-guardian_sample_pic.jpg" alt="student photo"></div>
                      <p 
                      class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>{{studentDetails.guardian_name}}</b> </p>
-                     <p class="id_card_student_contact_info remove-paragraph-bottom-padding">{{studentDetails.guardian_no}}</p>
+                     <p class="id_card_student_contact_info remove-paragraph-bottom-padding">
+                        
+                        {{studentDetails && studentDetails.guardian_honorific === '1' ? 'Mr.' :
+                           studentDetails && studentDetails.guardian_honorific === '2' ? 'Mrs.' :
+                           studentDetails && studentDetails.guardian_honorific === '3' ? 'Miss.' :
+                           studentDetails && studentDetails.guardian_honorific === '4' ? 'Ms.' :
+                           studentDetails && studentDetails.guardian_honorific === '5' ? 'Mx.' :
+                           studentDetails && studentDetails.guardian_honorific === '6' ? 'Sir.' :
+                           studentDetails && studentDetails.guardian_honorific === '7' ? 'Dr.' :
+                           studentDetails && studentDetails.guardian_honorific === '8' ? 'Lady' : ''
+                         }} 
+                        {{studentDetails.guardian_no}}</p>
                    </div>
                  </div>
                  <div class="row remove-margin">

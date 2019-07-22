@@ -44,6 +44,27 @@
                         <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 "
                            *ngIf="checkIfFieldExist('epd_parent_name')">
                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Choose Honorific</mat-label>
+                              <mat-select placeholder="Category" formControlName="epd_parent_honorific" required
+                                 [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                 <mat-option value="">Please Select</mat-option>
+                                 <mat-option value="1">Mr.</mat-option>
+                                 <mat-option value="2">Mrs.</mat-option>
+                                 <mat-option value="3">Miss.</mat-option>
+                                 <mat-option value="4">Ms.</mat-option>
+                                 <mat-option value="5">Mx.</mat-option>
+                                 <mat-option value="6">Sir.</mat-option>
+                                 <mat-option value="7">Dr.</mat-option>
+                                 <mat-option value="8">Lady</mat-option>
+                              </mat-select>
+                              <mat-error>
+                                 This field is required
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 "
+                           *ngIf="checkIfFieldExist('epd_parent_name')">
+                           <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Full Name</mat-label>
                               <input matInput placeholder="Full name" [readonly]="viewOnly" minlength="2" maxlength="50"
                                  formControlName="epd_parent_name" [errorStateMatcher]="confirmValidParentMatcher"
@@ -103,7 +124,7 @@
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Date of Birth</mat-label>
                               <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
-                                 placeholder="Date of Birth" formControlName="epd_parent_dob"/>
+                                 placeholder="Date of Birth" formControlName="epd_parent_dob" />
                               <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker"></mat-datepicker-toggle>
                               <mat-datepicker tabindex="-1" [disabled]="viewOnly" #picker></mat-datepicker>
                               <mat-error>

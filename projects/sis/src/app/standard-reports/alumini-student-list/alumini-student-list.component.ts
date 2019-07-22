@@ -134,12 +134,40 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		return validateFlag;
 	}
 
+	getParentHonorific(value) {
+
+		console.log('value', value);
+		let honorific = '';
+		if (value === '1') {
+			honorific = 'Mr.';
+		} else if (value === '2') {
+			honorific = 'Mrs.';
+		} else if (value === '3') {
+			honorific = 'Miss.';
+		} else if (value === '4') {
+			honorific = 'Ms.';
+		} else if (value === '5') {
+			honorific = 'Mx.';
+		} else if (value === '6') {
+			honorific = 'Sir.';
+		} else if (value === '7') {
+			honorific = 'Dr.';
+		} else if (value === '8') {
+			honorific = 'Lady';
+		}
+
+		return honorific;
+	}
+
+
 	prepareDataSource() {
 		this.userDataSource = new MatTableDataSource<Element>(this.REPORT_PROCESS_WISE_ELEMENT_DATA);
 		let counter = 1;
 		const total = 0;
 		for (let i = 0; i < this.reportProcessWiseData.length; i++) {
 			const tempObj = {};
+
+			let parentHonorific = this.getParentHonorific(this.reportProcessWiseData[i]['epd_parent_honorific']);
 			tempObj['counter'] = counter;
 			tempObj['class_name'] = this.reportProcessWiseData[i]['class_name'];
 			tempObj['sec_name'] = this.reportProcessWiseData[i]['sec_name'];
@@ -147,7 +175,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 			tempObj['login_id'] = this.reportProcessWiseData[i]['au_login_id'];
 			tempObj['admission_no'] = this.reportProcessWiseData[i]['au_admission_no'];
 			tempObj['alumini_no'] = this.reportProcessWiseData[i]['em_alumini_no'];
-			tempObj['parent_name'] = this.reportProcessWiseData[i]['epd_parent_name'];
+			tempObj['parent_name'] = parentHonorific + this.reportProcessWiseData[i]['epd_parent_name'];
 			tempObj['gender'] = this.reportProcessWiseData[i]['upd_gender'];
 			tempObj['full_name'] = this.reportProcessWiseData[i]['au_full_name'];
 			tempObj['admission_date'] = this.reportProcessWiseData[i]['em_admission_date'];

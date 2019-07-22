@@ -140,6 +140,32 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		return validateFlag;
 	}
 
+
+	getParentHonorific(value) {
+
+		console.log('value', value);
+		let honorific = '';
+		if (value === '1') {
+			honorific = 'Mr.';
+		} else if (value === '2') {
+			honorific = 'Mrs.';
+		} else if (value === '3') {
+			honorific = 'Miss.';
+		} else if (value === '4') {
+			honorific = 'Ms.';
+		} else if (value === '5') {
+			honorific = 'Mx.';
+		} else if (value === '6') {
+			honorific = 'Sir.';
+		} else if (value === '7') {
+			honorific = 'Dr.';
+		} else if (value === '8') {
+			honorific = 'Lady';
+		}
+
+		return honorific;
+	}
+
 	prepareDataSource() {
 		this.userDataSource = new MatTableDataSource<Element>(this.REPORT_PROCESS_WISE_ELEMENT_DATA);
 		let counter = 1;
@@ -153,15 +179,25 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['admission_no'] = this.reportProcessWiseData[key]['au_admission_no'];
 			tempObj['dob'] = this.reportProcessWiseData[key]['dob'];
 
+			const father_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
+			this.reportProcessWiseData[key]['student_parent_data'][0] ?
+			this.reportProcessWiseData[key]['student_parent_data'][0]['epd_parent_honorific'] : '');
 
+			const mother_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
+			this.reportProcessWiseData[key]['student_parent_data'][1] ?
+			this.reportProcessWiseData[key]['student_parent_data'][1]['epd_parent_honorific'] : '');
 
-			tempObj['father_name'] = this.reportProcessWiseData[key]['student_parent_data'] &&
+			const guardian_honorific = this.getParentHonorific(this.reportProcessWiseData[key]['student_parent_data'] &&
+			this.reportProcessWiseData[key]['student_parent_data'][2] ?
+			this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_honorific'] : '');
+
+			tempObj['father_name'] = father_honorific + this.reportProcessWiseData[key]['student_parent_data'] &&
 				this.reportProcessWiseData[key]['student_parent_data'][0] ?
 				this.reportProcessWiseData[key]['student_parent_data'][0]['epd_parent_name'] : '';
-			tempObj['mother_name'] = this.reportProcessWiseData[key]['student_parent_data'] &&
+			tempObj['mother_name'] = mother_honorific + this.reportProcessWiseData[key]['student_parent_data'] &&
 				this.reportProcessWiseData[key]['student_parent_data'][1] ?
 				this.reportProcessWiseData[key]['student_parent_data'][1]['epd_parent_name'] : '';
-			tempObj['guardian_name'] = this.reportProcessWiseData[key]['student_parent_data'] &&
+			tempObj['guardian_name'] = guardian_honorific + this.reportProcessWiseData[key]['student_parent_data'] &&
 				this.reportProcessWiseData[key]['student_parent_data'][2] ?
 				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_parent_name'] : '';
 			tempObj['gender'] = this.reportProcessWiseData[key]['upd_gender'];

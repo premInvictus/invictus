@@ -161,7 +161,18 @@
                                             Father Name
                                         </th>
                                         <td mat-cell *matCellDef="let element">
-                                            <span *ngIf="element.father_name">{{ element.father_name | titlecase }}</span>
+                                            <span *ngIf="element.father_name">
+                                                    {{element.father_honorific === '1' ? 'Mr.' :
+                                                    element.father_honorific === '2' ? 'Mrs.' :
+                                                    element.father_honorific === '3' ? 'Miss.' :
+                                                    element.father_honorific === '4' ? 'Ms.' :
+                                                    element.father_honorific === '5' ? 'Mx.' :
+                                                    element.father_honorific === '6' ? 'Sir.' :
+                                                    element.father_honorific === '7' ? 'Dr.' :
+                                                    element.father_honorific === '8' ? 'Lady' : ''
+                                                  }}
+                                                
+                                                {{ element.father_name | titlecase }}</span>
                                             <span *ngIf="!element.father_name">N/A</span>
                                         </td>
                                     </ng-container>
@@ -171,7 +182,17 @@
                                         </th>
 
                                         <td mat-cell *matCellDef="let element">
-                                            <span *ngIf="element.mother_name">{{ element.mother_name | titlecase }}</span>
+                                            <span *ngIf="element.mother_name">
+                                                    {{element.mother_honorific === '1' ? 'Mr.' :
+                                                    element.mother_honorific === '2' ? 'Mrs.' :
+                                                    element.mother_honorific === '3' ? 'Miss.' :
+                                                    element.mother_honorific === '4' ? 'Ms.' :
+                                                    element.mother_honorific === '5' ? 'Mx.' :
+                                                    element.mother_honorific === '6' ? 'Sir.' :
+                                                    element.mother_honorific === '7' ? 'Dr.' :
+                                                    element.mother_honorific === '8' ? 'Lady' : ''
+                                                  }}
+                                                {{ element.mother_name | titlecase }}</span>
                                             <span *ngIf="!element.mother_name">N/A</span>
                                         </td>
                                     </ng-container>
@@ -181,7 +202,17 @@
                                         </th>
 
                                         <td mat-cell *matCellDef="let element">
-                                            <span *ngIf="element.guardian_name">{{ element.guardian_name | titlecase }}</span>
+                                            <span *ngIf="element.guardian_name">
+                                                    {{element.guardian_honorific === '1' ? 'Mr.' :
+                                                    element.guardian_honorific === '2' ? 'Mrs.' :
+                                                    element.guardian_honorific === '3' ? 'Miss.' :
+                                                    element.guardian_honorific === '4' ? 'Ms.' :
+                                                    element.guardian_honorific === '5' ? 'Mx.' :
+                                                    element.guardian_honorific === '6' ? 'Sir.' :
+                                                    element.guardian_honorific === '7' ? 'Dr.' :
+                                                    element.guardian_honorific === '8' ? 'Lady' : ''
+                                                  }}
+                                                {{ element.guardian_name | titlecase }}</span>
                                             <span *ngIf="!element.guardian_name">N/A</span>
                                         </td>
                                     </ng-container>
