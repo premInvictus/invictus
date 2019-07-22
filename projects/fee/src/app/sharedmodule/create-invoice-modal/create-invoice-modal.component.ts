@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { ProcesstypeFeeService, CommonAPIService, FeeService } from '../../_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { StudentRouteMoveStoreService } from '../../feemaster/student-route-move-store.service';
 
 @Component({
 	selector: 'app-create-invoice-modal',
@@ -20,11 +21,20 @@ export class CreateInvoiceModalComponent implements OnInit {
 		private processTypeService: ProcesstypeFeeService,
 		private fb: FormBuilder,
 		public feeService: FeeService,
-		public commonAPIService: CommonAPIService) { }
+		public commonAPIService: CommonAPIService,
+		private studentRouteMoveStoreService: StudentRouteMoveStoreService) { }
 
 	ngOnInit() {
 		this.buildForm();
-		this.processTypeService.setProcesstype('4');
+		
+		let processType;
+		if (this.studentRouteMoveStoreService.getProcesRouteType()) {
+			processType = this.studentRouteMoveStoreService.getProcesRouteType();
+		} else {
+			processType = '4';
+		}
+		
+		this.processTypeService.setProcesstype(processType);
 		console.log(this.data);
 		if (this.data.invoiceDetails.fromPage && this.data.invoiceDetails.fromPage === 'feeledger') {
 			this.studentFlag = false;
