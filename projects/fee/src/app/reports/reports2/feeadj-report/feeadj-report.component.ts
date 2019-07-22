@@ -430,6 +430,15 @@ export class FeeadjReportComponent implements OnInit {
 						width: 60,
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
+						grouping: {
+							getter: 'adjusted_by',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+							},
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+
 					},
 					{
 						id: 'inv_remark',
