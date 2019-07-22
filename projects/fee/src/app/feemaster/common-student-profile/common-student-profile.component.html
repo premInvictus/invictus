@@ -115,7 +115,20 @@
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">{{parent_type_fun(studentdetails)}} </span><br>
-            <span class="font-size-16 font-bold">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
+            <span class="font-size-16 font-bold">
+              
+              {{studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '1' ? 'Mr.' :
+                studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '2' ? 'Mrs.' :
+                studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '3' ? 'Miss.' :
+                studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '4' ? 'Ms.' :
+                studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '5' ? 'Mx.' :
+                studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '6' ? 'Sir.' :
+                studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '7' ? 'Dr.' :
+                studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '8' ? 'Lady' : ''
+              }}
+
+
+              {{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
               (studentdetails.parentinfo[0].epd_parent_name | capitalize) : '-'}}</span>
           </div>
         </div>
