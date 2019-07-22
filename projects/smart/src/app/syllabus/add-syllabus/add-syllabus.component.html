@@ -135,7 +135,7 @@
                             <div class="col-12 remove-col-padding">
                                 <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Category (CTR)</mat-label>
-                                    <mat-select formControlName="sd_ctr_id" (selectionChange)="getTopicByClassSubject()"
+                                    <mat-select formControlName="sd_ctr_id" 
                                         required placeholder="Category (CTR)">
                                         <mat-option value="">Please select</mat-option>
                                         <mat-option *ngFor="let item of ctrArray" [value]="item.ctr_id">

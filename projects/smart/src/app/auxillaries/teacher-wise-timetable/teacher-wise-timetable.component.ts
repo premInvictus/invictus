@@ -88,7 +88,7 @@ export class TeacherWiseTimetableComponent implements OnInit {
 		this.sum = 0;
 		for (const titem of dety) {
 			if (titem.day !== '-') {
-				this.sum = this.sum + (Number(titem.count) ;
+				this.sum = this.sum + (Number(titem.count));
 			}
 		}
 		return this.sum;
