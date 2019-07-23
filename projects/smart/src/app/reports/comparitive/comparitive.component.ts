@@ -256,18 +256,12 @@ export class ComparitiveComponent implements OnInit {
 								let cw_period_revision1: any = '';
 								if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id) {
 									if (this.finalSyllabusArray[j].sd_ctr_id === '1') {
-										// this.teachingSum = this.teachingSum + Number(this.finalSyllabusArray[j].sd_period_req);
-										// this.cwteachingSum = this.cwteachingSum + Number(this.finalSyllabusArray[j].cw_period_req);
 										sd_period_teacher1 = this.finalSyllabusArray[j].sd_period_req;
 										cw_period_teacher1 = this.finalSyllabusArray[j].cw_period_req;
 									} else if (this.finalSyllabusArray[j].sd_ctr_id === '2') {
-										// this.testSum = this.testSum + Number(this.finalSyllabusArray[j].sd_period_req);
-										// this.cwtestSum = this.cwtestSum + Number(this.finalSyllabusArray[j].cw_period_req);
 										sd_period_test1 = this.finalSyllabusArray[j].sd_period_req;
 										cw_period_test1 = this.finalSyllabusArray[j].cw_period_req;
 									} else {
-										// this.revisionSum = this.revisionSum + Number(this.finalSyllabusArray[j].sd_period_req);
-										// this.cwrevisionSum = this.cwrevisionSum + Number(this.finalSyllabusArray[j].cw_period_req);
 										sd_period_revision1 = this.finalSyllabusArray[j].sd_period_req;
 										cw_period_revision1 = this.finalSyllabusArray[j].cw_period_req;
 									}

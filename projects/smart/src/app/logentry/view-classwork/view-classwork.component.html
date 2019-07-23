@@ -89,11 +89,14 @@
                 <tbody *ngIf="!noDataFlag">
                   <tr class="custom-tr" *ngFor="let item1 of item.cw_array">
                     <td class="custom-td">{{item1.cw_period_id}}{{periodSup[item1.cw_period_id - 1]}}</td>
-                    <td class="custom-td text-left">{{item1.sub_name | capitalize}}</td>
+                    <td class="custom-td text-left" *ngIf="item1.sub_name">{{item1.sub_name | capitalize}}</td>
+                    <td class="custom-td text-left" *ngIf="!item1.sub_name ">-</td>
                     <td class="custom-td text-left">{{item1.ctr_name | capitalize}}</td>
                     <td class="custom-td">{{item1.class_name}} - {{item1.sec_name}}</td>
-                    <td class="custom-td text-left">{{item1.topic_name | capitalize}}</td>
-                    <td class="custom-td text-left">{{item1.st_name | capitalize}}</td>
+                    <td class="custom-td text-left" *ngIf="item1.topic_name">{{item1.topic_name | capitalize}}</td>
+                    <td class="custom-td text-left" *ngIf="!item1.topic_name">-</td>
+                    <td class="custom-td text-left" *ngIf="item1.st_name">{{item1.st_name | capitalize}}</td>
+                    <td class="custom-td text-left" *ngIf="!item1.st_name">-</td>
                     <!-- *ngIf="item1.edit_flag == '1'" -->
                     <td class="custom-td text-left"><i *ngIf="item1.edit_flag == '1'" class="material-icons icon-edit"
                         (click)="openEditClassworkModal(item1)">create</i></td>

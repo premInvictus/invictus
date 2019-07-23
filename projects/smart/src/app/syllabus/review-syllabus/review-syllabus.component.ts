@@ -220,10 +220,12 @@ export class ReviewSyllabusComponent implements OnInit {
 					});
 		}
 	}
-	// Add syllabus 
+	// Add syllabus
 	addSyllabussEdit($event) {
 		if ($event) {
-			console.log('addd', $event);
+			if ($event.sd_st_id === '') {
+				$event.sd_st_id = '0';
+			}
 			this.finalSubmitArray.push({
 				sd_syl_id: $event.syl_id,
 				sd_ses_id: this.session.ses_id,
@@ -239,7 +241,6 @@ export class ReviewSyllabusComponent implements OnInit {
 					this.finalSubmitArray = [];
 					this.fetchSyllabusDetails();
 					this.commonService.showSuccessErrorMessage('Syllabus Added  Successfully', 'success');
-
 				}
 			});
 		}

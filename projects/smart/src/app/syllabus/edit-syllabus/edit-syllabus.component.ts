@@ -120,6 +120,26 @@ export class EditSyllabusComponent implements OnInit {
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
+						const subTopicParam: any = {};
+						subTopicParam.syl_id = value.syl_id;
+						subTopicParam.sd_topic_id = value.topic_id;
+						this.syllabusService.getSyllabusSubTopicId(subTopicParam)
+							.subscribe(
+								(subtopic_r: any) => {
+									if (subtopic_r && subtopic_r.status === 'ok') {
+										for (const citem of subtopic_r.data) {
+											for (const item of this.subtopicArray) {
+												if (citem.sd_st_id === item.st_id) {
+													const rindex = this.subtopicArray.findIndex(f => f.st_id === item.st_id);
+													if (rindex !== -1) {
+														this.subtopicArray.splice(rindex, 1);
+														break;
+													}
+												}
+											}
+										}
+									}
+								});
 						this.syllabusService.getTopicNameByTopicId({ topic_id: value.topic_id })
 							.subscribe(
 								(topic_r: any) => {
