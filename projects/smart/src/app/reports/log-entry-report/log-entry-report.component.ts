@@ -23,7 +23,7 @@ export class LogEntryReportComponent implements OnInit {
 	currentTabIndex = 0;
 	isTeacher = false;
 	session: any;
-	currentSession: any;
+	currentSession: any; 
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,

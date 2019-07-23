@@ -55,7 +55,7 @@ export class ClassWiseComponent implements OnInit, OnChanges {
 			this.smartService.getClasswork(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.noDataFlag = false;
-					console.log(result.data);
+					// console.log(result.data);
 					const tempcw = result.data;
 					const dateSet = new Set();
 					if (tempcw.length > 0) {
@@ -63,13 +63,14 @@ export class ClassWiseComponent implements OnInit, OnChanges {
 							dateSet.add(element.entry_date);
 						});
 					}
+					console.log('dateSet', dateSet);
 					dateSet.forEach(item => {
 						this.classworkArray.push({
 							cw_entry_date: item,
 							cw_array: this.getClassworkForDate(item, tempcw)
 						});
 					});
-					console.log(this.classworkArray);
+					console.log('class', this.classworkArray);
 
 				} else {
 					this.noDataFlag = true;

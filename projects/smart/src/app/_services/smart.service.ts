@@ -81,6 +81,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/smtsyllabus/ctrList');
 	}
+	cwCtrList() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSmartUrl + '/smtsyllabus/cwCtrList');
+	}
 	getTermList() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/smtsyllabus/getTermList');
@@ -287,6 +291,18 @@ export class SmartService {
 	getUserName() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/common/getUserName');
+	}
+	getSyllabusTopicId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getSyllabusTopicId', value);
+	}
+	addSubtopicByTopicwise(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/addSubtopicByTopicwise', value);
+	}
+	getTopicNameByTopicId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getTopicNameByTopicId', value);
 	}
 	setProcesstype(value) {
 		this.processType = value;

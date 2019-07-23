@@ -125,6 +125,31 @@ export class SiblingDetailsReportComponent implements OnInit, AfterViewInit {
 		return validateFlag;
 	}
 
+	getParentHonorific(value) {
+
+		console.log('value', value);
+		let honorific = '';
+		if (value === '1') {
+			honorific = 'Mr.';
+		} else if (value === '2') {
+			honorific = 'Mrs.';
+		} else if (value === '3') {
+			honorific = 'Miss.';
+		} else if (value === '4') {
+			honorific = 'Ms.';
+		} else if (value === '5') {
+			honorific = 'Mx.';
+		} else if (value === '6') {
+			honorific = 'Sir.';
+		} else if (value === '7') {
+			honorific = 'Dr.';
+		} else if (value === '8') {
+			honorific = 'Lady';
+		}
+
+		return honorific;
+	}
+
 	prepareDataSource() {
 		this.studentSiblingDataSource = new MatTableDataSource<Element>(this.SIBLING_REPORT_ELEMENT_DATA);
 		let counter = 1;
@@ -148,15 +173,25 @@ export class SiblingDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['mobile'] = this.studentSiblingData[key]['au_mobile'];
 			tempObj['transport_required'] = this.studentSiblingData[key]['ead_transport_required'];
 			// tempObj['parent_data'] = this.studentSiblingData[key]['student_parent_data'];
+
+			console.log(this.studentSiblingData[key]['student_parent_data']);
+
+			let father_honorific = this.getParentHonorific(this.studentSiblingData[key]['student_parent_data'] &&
+			this.studentSiblingData[key]['student_parent_data'][2] ? this.studentSiblingData[key]['student_parent_data'][2]['epd_parent_honorific']  : '');
+
+			let mother_honorific = this.getParentHonorific(this.studentSiblingData[key]['student_parent_data'] &&
+			this.studentSiblingData[key]['student_parent_data'][2] ? this.studentSiblingData[key]['student_parent_data'][1]['epd_parent_honorific']  : '');
+
+			let guardian_honorific = this.getParentHonorific(this.studentSiblingData[key]['student_parent_data'] &&
+			this.studentSiblingData[key]['student_parent_data'][2] ? this.studentSiblingData[key]['student_parent_data'][1]['epd_parent_honorific']  : '');
+
 			tempObj['father_name'] = this.studentSiblingData[key]['student_parent_data'] &&
-				this.studentSiblingData[key]['student_parent_data'][2] ?
-				this.studentSiblingData[key]['student_parent_data'][2]['epd_parent_name'] : '';
+				this.studentSiblingData[key]['student_parent_data'][2] ? father_honorific + this.studentSiblingData[key]['student_parent_data'][2]['epd_parent_name'] : '';
 			tempObj['mother_name'] = this.studentSiblingData[key]['student_parent_data'] &&
-				this.studentSiblingData[key]['student_parent_data'][1] ?
-				this.studentSiblingData[key]['student_parent_data'][1]['epd_parent_name'] : '';
+				this.studentSiblingData[key]['student_parent_data'][1] ? mother_honorific + this.studentSiblingData[key]['student_parent_data'][1]['epd_parent_name'] : '';
+			
 			tempObj['guardian_name'] = this.studentSiblingData[key]['student_parent_data'] &&
-				this.studentSiblingData[key]['student_parent_data'][0] ?
-				this.studentSiblingData[key]['student_parent_data'][0]['epd_parent_name'] : '';
+				this.studentSiblingData[key]['student_parent_data'][0] ? guardian_honorific + this.studentSiblingData[key]['student_parent_data'][0]['epd_parent_name'] : '';
 			// tempObj['sibling_details'] = this.studentSiblingData[key]['student_sibling_details'];
 			// tempObj['Total'] = total_sec_student;
 			// total = total+total_sec_student;
@@ -177,15 +212,30 @@ export class SiblingDetailsReportComponent implements OnInit, AfterViewInit {
 				sibtempObj['email'] = this.studentSiblingData[key]['student_sibling_details'][sibkey]['au_email'];
 				sibtempObj['mobile'] = this.studentSiblingData[key]['student_sibling_details'][sibkey]['au_mobile'];
 				sibtempObj['transport_required'] = this.studentSiblingData[key]['student_sibling_details'][sibkey]['ead_transport_required'];
+
+				let sibling_father_honorific = this.getParentHonorific(this.studentSiblingData[key]['student_sibling_details'] &&
+				this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][2] ?
+				this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][2]['epd_parent_honorific']  : '');
+
+				let sibnling_mother_honorific = this.getParentHonorific(this.studentSiblingData[key]['student_sibling_details'] &&
+				this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][1] ?
+				this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][1]['epd_parent_honorific']  : '');
+
+				let sibling_guardian_honorific = this.getParentHonorific(this.studentSiblingData[key]['student_sibling_details'] &&
+				this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][0] ?
+				this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][0]['epd_parent_honorific']  : '');
+
+
+
 				sibtempObj['father_name'] = this.studentSiblingData[key]['student_sibling_details'] &&
 					this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][2] ?
-					this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][2]['epd_parent_name'] : '';
+					sibling_father_honorific+this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][2]['epd_parent_name'] : '';
 				sibtempObj['mother_name'] = this.studentSiblingData[key]['student_sibling_details'] &&
 					this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][1] ?
-					this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][1]['epd_parent_name'] : '';
+					sibnling_mother_honorific+this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][1]['epd_parent_name'] : '';
 				sibtempObj['guardian_name'] = this.studentSiblingData[key]['student_sibling_details'] &&
 					this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][0] ?
-					this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][0]['epd_parent_name'] : '';
+					sibling_guardian_honorific+this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'][0]['epd_parent_name'] : '';
 				// sibtempObj['parent_data'] = this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_parent_data'];
 				// sibtempObj['sibling_details'] = this.studentSiblingData[key]['student_sibling_details'][sibkey]['student_sibling_details'];
 				counter++;

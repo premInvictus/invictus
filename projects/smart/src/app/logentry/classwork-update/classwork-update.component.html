@@ -79,7 +79,7 @@
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Class & Section</mat-label>
                   <mat-select formControlName="cw_class_id"
-                    (selectionChange)="getTopicByClassSubject(i);reviewElementClass(i,$event)">
+                    (selectionChange)="getTopicByClassSubject(i);reviewElementClass(i,$event)" [disabled]="disableClassArray[i]">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of classSectionArray[i]" [value]="item.cs_id">{{item.cs_name}}
                     </mat-option>
@@ -97,10 +97,10 @@
                 </mat-form-field>
               </div> -->
               <div class="col-3">
-                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline" >
                   <mat-label>Topic</mat-label>
                   <mat-select formControlName="cw_topic_id"
-                    (selectionChange)="getSubtopicByTopic(i);reviewElementTopic(i,$event)">
+                    (selectionChange)="getSubtopicByTopic(i);reviewElementTopic(i,$event)" [disabled]="disabletopicArray[i]">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of topicArray[i]" [value]="item.topic_id">{{item.topic_name | capitalize}}
                     </mat-option>

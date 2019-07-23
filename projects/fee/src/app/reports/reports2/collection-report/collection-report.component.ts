@@ -487,8 +487,8 @@ export class CollectionReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
-											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
-												repoArray[Number(keys)]['pay_name'] : '-';
+											obj['receipt_mode_name'] = repoArray[Number(keys)]['tb_name'] !== '' ?
+												repoArray[Number(keys)]['tb_name'] :  (repoArray[Number(keys)]['pay_name']) ? repoArray[Number(keys)]['pay_name'] : '-';
 											k++;
 										}
 									});
