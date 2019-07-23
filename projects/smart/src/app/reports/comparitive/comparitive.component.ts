@@ -2,6 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
+import * as XLSX from 'xlsx';
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
 
 @Component({
 	selector: 'app-comparitive',
@@ -175,6 +179,38 @@ export class ComparitiveComponent implements OnInit {
 					}
 				});
 	}
+	// export excel code
+	exportAsExcel() {
+		// tslint:disable-next-line:max-line-length
+		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table')); // converts a DOM TABLE element to a worksheet
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
+
+	}
+	// pdf download
+	pdfDownload() {
+		const doc = new jsPDF('landscape');
+		doc.autoTable({
+			html: '#report_table',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: 'red',
+			},
+			theme: 'grid'
+		});
+		doc.save('table.pdf');
+	}
 	// get background color according to value range
 	getcolor(value) {
 		if (Number(value) === 0) {
@@ -256,18 +292,12 @@ export class ComparitiveComponent implements OnInit {
 								let cw_period_revision1: any = '';
 								if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id) {
 									if (this.finalSyllabusArray[j].sd_ctr_id === '1') {
-										// this.teachingSum = this.teachingSum + Number(this.finalSyllabusArray[j].sd_period_req);
-										// this.cwteachingSum = this.cwteachingSum + Number(this.finalSyllabusArray[j].cw_period_req);
 										sd_period_teacher1 = this.finalSyllabusArray[j].sd_period_req;
 										cw_period_teacher1 = this.finalSyllabusArray[j].cw_period_req;
 									} else if (this.finalSyllabusArray[j].sd_ctr_id === '2') {
-										// this.testSum = this.testSum + Number(this.finalSyllabusArray[j].sd_period_req);
-										// this.cwtestSum = this.cwtestSum + Number(this.finalSyllabusArray[j].cw_period_req);
 										sd_period_test1 = this.finalSyllabusArray[j].sd_period_req;
 										cw_period_test1 = this.finalSyllabusArray[j].cw_period_req;
 									} else {
-										// this.revisionSum = this.revisionSum + Number(this.finalSyllabusArray[j].sd_period_req);
-										// this.cwrevisionSum = this.cwrevisionSum + Number(this.finalSyllabusArray[j].cw_period_req);
 										sd_period_revision1 = this.finalSyllabusArray[j].sd_period_req;
 										cw_period_revision1 = this.finalSyllabusArray[j].cw_period_req;
 									}

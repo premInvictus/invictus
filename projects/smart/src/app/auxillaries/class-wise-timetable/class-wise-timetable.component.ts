@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
+import * as XLSX from 'xlsx';
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
 
 @Component({
 	selector: 'app-class-wise-timetable',
@@ -106,6 +110,38 @@ export class ClassWiseTimetableComponent implements OnInit {
 				}
 			);
 	}
+		// export excel code
+		exportAsExcel() {
+			// tslint:disable-next-line:max-line-length
+			const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table')); // converts a DOM TABLE element to a worksheet
+			const wb: XLSX.WorkBook = XLSX.utils.book_new();
+			XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+			XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
+	
+		}
+		// pdf download
+		pdfDownload() {
+			const doc = new jsPDF('landscape');
+			doc.autoTable({
+				html: '#report_table',
+				headerStyles: {
+					fontStyle: 'normal',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 14,
+				},
+				useCss: true,
+				styles: {
+					fontSize: 14,
+					cellWidth: 'auto',
+					textColor: 'black',
+					lineColor: 'red',
+				},
+				theme: 'grid'
+			});
+			doc.save('table.pdf');
+		}
 	// Timetable details based on class and section
 	getclasswisedetails() {
 		this.subCountArray = [];

@@ -296,6 +296,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getSyllabusTopicId', value);
 	}
+	getSyllabusSubTopicId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getSyllabusSubTopicId', value);
+	}
 	addSubtopicByTopicwise(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/addSubtopicByTopicwise', value);

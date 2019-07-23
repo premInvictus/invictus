@@ -60,7 +60,7 @@
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Subject</mat-label>
                   <mat-select formControlName="cw_sub_id"
-                    (selectionChange)="getClassSectionByTeacherIdSubjectId(i);reviewElementSubject(i,$event)">
+                    (selectionChange)="getClassSectionByTeacherIdSubjectId(i);reviewElementSubject(i,$event)"  [disabled]="disableSubjectArray[i]">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name | capitalize}}</mat-option>
                   </mat-select>
@@ -74,7 +74,7 @@
                     <mat-option *ngFor="let item of categoryArray" [value]="item.ctr_id">{{item.ctr_name | capitalize}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-              </div>
+              </div>              
               <div class="col-1">
                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                   <mat-label>Class & Section</mat-label>

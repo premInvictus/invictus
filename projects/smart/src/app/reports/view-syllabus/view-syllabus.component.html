@@ -13,8 +13,8 @@
                             <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>Class</mat-label>
                                 <mat-select formControlName="syl_class_id"
-                                    (selectionChange)="getSubjectsByClass();getSectionsByClass();fetchSyllabusDetails()" required
-                                    placeholder="Select Class">
+                                    (selectionChange)="getSubjectsByClass();getSectionsByClass();fetchSyllabusDetails()"
+                                    required placeholder="Select Class">
                                     <mat-option value="">Please select</mat-option>
                                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                                         {{item.class_name}}
@@ -49,19 +49,23 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-12">
+    <div class="col-12 remove-col-padding text-right">
         <mat-card>
-            <!-- <div class="row remove-top-margin">
-        <div class="col-4">
-          <mat-form-field appearance="a">
-            <input class="margin-left-10" matInput placeholder="Filter">
-            <mat-icon matPrefix>filter_list</mat-icon>
-          </mat-form-field>
-        </div>
-      </div> -->
+            <div class="inline-flex btn-spacer text-right" *ngIf="finalSpannedArray.length > 0">
+                <div>
+                    <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+                        matTooltip="Download as Pdf" (click)="pdfDownload()" />
+                </div>
+            </div>
+            <div class="inline-flex btn-spacer text-right" *ngIf="finalSpannedArray.length > 0">
+                <div>
+                    <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+                        matTooltip="Export as excel" (click)="exportAsExcel()" />
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12">
-                    <table class="table table-borderd table-stripped custom-table">
+                    <table class="table table-borderd table-stripped custom-table" id="report_table">
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
                                 <th class="custom-th" rowspan="2">Topic</th>
@@ -112,22 +116,52 @@
                                                 {{item.total}}
 
                                             </td>
-                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length"> {{item.estimateDate | date:'dd MMM, yyyy'}}
+                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                                {{item.estimateDate | date:'dd MMM, yyyy'}}
                                             </td>
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
                                                 <ng-container>
-                                                    <i *ngIf="item.statusDetails.statusFlag" class="fas fa-check-circle font-size-40 font-color-green"></i><br>
-                                                    <span class="font-size-14 font-regular">{{item.statusDetails.statusStr}} </span> <br>
-                                                    <span *ngIf="item.statusDetails.statusFlag" class="font-size-12 font-bold"> {{item.statusDetails.statusDate | date:'dd MMM, yyyy'}}</span>
+                                                    <i *ngIf="item.statusDetails.statusFlag"
+                                                        class="fas fa-check-circle font-size-40 font-color-green"></i><br>
+                                                    <span
+                                                        class="font-size-14 font-regular">{{item.statusDetails.statusStr}}
+                                                    </span> <br>
+                                                    <span *ngIf="item.statusDetails.statusFlag"
+                                                        class="font-size-12 font-bold">
+                                                        {{item.statusDetails.statusDate | date:'dd MMM, yyyy'}}</span>
                                                 </ng-container>
                                             </td>
-
                                         </tr>
                                     </ng-container>
                                 </ng-container>
                             </ng-container>
-                        </tbody>
+                            <tr class="custom-tr">
+                                <td class="custom-td">
+                                    Grand Total
+                                </td>
+                                <td class="custom-td">
+                                </td>
+                                <td class="custom-td">
+                                </td>
+                                <td class="custom-td">
+                                    {{teachingSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{testSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{revisionSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{teachingSum + testSum + revisionSum}}
+                                </td>
+                                <td class="custom-td">
 
+                                </td>
+                                <td class="custom-td">
+                                </td>
+                            </tr>
+                        </tbody>
                         <tbody>
                             <tr class="text-center" *ngIf="finaldivflag">
                                 <td colspan="9">
@@ -146,6 +180,6 @@
                     </table>
                 </div>
             </div>
-        </mat-card> 
+        </mat-card>
     </div>
 </div>

@@ -135,8 +135,7 @@
                             <div class="col-12 remove-col-padding">
                                 <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Category (CTR)</mat-label>
-                                    <mat-select formControlName="sd_ctr_id" 
-                                        required placeholder="Category (CTR)">
+                                    <mat-select formControlName="sd_ctr_id" required placeholder="Category (CTR)">
                                         <mat-option value="">Please select</mat-option>
                                         <mat-option *ngFor="let item of ctrArray" [value]="item.ctr_id">
                                             {{item.ctr_name}}
@@ -198,20 +197,22 @@
                                 <button mat-raised-button class="btn-reset margin-left-10"
                                     (click)="resetForm()">Reset</button>
                             </div>
-                            <input type="file" id="file" style="display: none !important;"
-                                (change)="incomingfile($event)" placeholder="Upload file" accept=".xls">
-                            <span style="float:right; padding-right: 10px;font-size:12px;">
-                                Have syllabus already ?&nbsp;&nbsp;
-                                <label for="file"> <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i> </label>
-                                &nbsp;&nbsp;Upload File
-                            </span>
-                            <br>
-                            <br>
-                            <span style="float:right; padding-right: 10px; font-size:10px;">
-                                <img style="cursor: pointer" src="/assets/images/xml.svg" (click)="excelDownload()"
-                                    matTooltip="Click to Download">
-                                &nbsp;&nbsp;Sample Excel Sheet
-                            </span>
+                            <div *ngIf="hideExcelupload">
+                                <input type="file" id="file" style="display: none !important;"
+                                    (change)="incomingfile($event)" placeholder="Upload file" accept=".xls">
+                                <span style="float:right; padding-right: 10px;font-size:12px;">
+                                    Have syllabus already ?&nbsp;&nbsp;
+                                    <label for="file"> <i class="fas fa-cloud-upload-alt upload-icon-bulk"></i> </label>
+                                    &nbsp;&nbsp;Upload File
+                                </span>
+                                <br>
+                                <br>
+                                <span style="float:left; padding-right: 10px; font-size:10px;">
+                                    <img style="cursor: pointer" src="/assets/images/xml.svg" (click)="excelDownload()"
+                                        matTooltip="Click to Download">
+                                    &nbsp;&nbsp;Sample Excel Sheet
+                                </span>
+                            </div>
                         </div>
                     </form>
                 </div>

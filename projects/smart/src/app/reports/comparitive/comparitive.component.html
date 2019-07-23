@@ -79,9 +79,23 @@
                         {{sessionArray[seesion_id.ses_id]}}</span>
                 </div>
             </div>
-            <div class="row">
+            <div class="row margin-top-0  text-right">
                 <div class="col-12">
-                    <table class="table table-borderd table-stripped custom-table">
+                    <div class="inline-flex btn-spacer text-right margin-bottom-5"
+                        *ngIf="finalSpannedArray.length > 0">
+                        <div>
+                            <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+                                matTooltip="Download as Pdf" (click)="pdfDownload()" />
+                        </div>
+                    </div>
+                    <div class="inline-flex btn-spacer text-right margin-bottom-5"
+                        *ngIf="finalSpannedArray.length > 0">
+                        <div>
+                            <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+                                matTooltip="Export as excel" (click)="exportAsExcel()" />
+                        </div>
+                    </div>
+                    <table class="table table-borderd table-stripped custom-table" id="report_table">
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
                                 <th class="custom-th" rowspan="2">Topic</th>

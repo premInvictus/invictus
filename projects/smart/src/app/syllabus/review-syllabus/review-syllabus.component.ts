@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import * as XLSX from 'xlsx';
-
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
 @Component({
 	selector: 'app-review-syllabus',
 	templateUrl: './review-syllabus.component.html',
@@ -168,6 +170,30 @@ export class ReviewSyllabusComponent implements OnInit {
 		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
 
 	}
+	// pdf download
+	pdfDownload() {
+		const doc = new jsPDF('landscape');
+		doc.autoTable({
+			html: '#report_table',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: 'red',
+			},
+			theme: 'grid'
+		});
+		doc.save('table.pdf');
+	}
+
 	// delete syllabus list from database function 
 	deleteSyllabusList($event) {
 		if ($event) {
@@ -220,10 +246,12 @@ export class ReviewSyllabusComponent implements OnInit {
 					});
 		}
 	}
-	// Add syllabus 
+	// Add syllabus
 	addSyllabussEdit($event) {
 		if ($event) {
-			console.log('addd', $event);
+			if ($event.sd_st_id === '') {
+				$event.sd_st_id = '0';
+			}
 			this.finalSubmitArray.push({
 				sd_syl_id: $event.syl_id,
 				sd_ses_id: this.session.ses_id,
@@ -239,7 +267,6 @@ export class ReviewSyllabusComponent implements OnInit {
 					this.finalSubmitArray = [];
 					this.fetchSyllabusDetails();
 					this.commonService.showSuccessErrorMessage('Syllabus Added  Successfully', 'success');
-
 				}
 			});
 		}
