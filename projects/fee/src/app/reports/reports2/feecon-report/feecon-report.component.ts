@@ -502,17 +502,17 @@ export class FeeconReportComponent implements OnInit {
 									width: 180,
 								}];
 						}
-						if (repoArray[Number(keys)]['stu_concession_arr']['fcgr_fcc_id']) {
+						if (repoArray[Number(keys)]['stu_concession_arr']) {
 							let k = 0;
 							let tot = 0;
-							for (const titem of repoArray[Number(keys)]['stu_concession_arr']['fcgr_fcc_id']) {
+							for (const titem of repoArray[Number(keys)]['stu_concession_arr']) {
 								Object.keys(titem).forEach((key2: any) => {
-									if (key2 === 'fcc_name' && Number(keys) === 0) {
+									if (key2 === 'fh_name' && Number(keys) === 0) {
 										const feeObj: any = {};
 										this.columnDefinitions.push({
-											id: 'fcc_name' + j,
+											id: 'fh_name' + j,
 											name: new CapitalizePipe().transform(titem[key2]),
-											field: 'fcc_name' + j,
+											field: 'fh_name' + j,
 											cssClass: 'amount-report-fee',
 											sortable: true,
 											filterable: true,
@@ -521,14 +521,14 @@ export class FeeconReportComponent implements OnInit {
 											formatter: this.checkFeeFormatter,
 											groupTotalsFormatter: this.sumTotalsFormatter
 										});
-										feeObj['fcc_name' + j] = '';
+										feeObj['fh_name' + j] = '';
 										feeHead.push(feeObj);
-										this.aggregatearray.push(new Aggregators.Sum('fcc_name' + j));
+										this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
 										j++;
 									}
-									if (key2 === 'fcc_name') {
-										obj['id'] = repoArray[Number(keys)]['fcg_name'] + keys +
-											repoArray[Number(keys)]['fcg_id'];
+									if (key2 === 'fh_name') {
+										obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
+											repoArray[Number(keys)]['inv_id'];
 										obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
 											(Number(keys) + 1);
 										obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'];
@@ -540,10 +540,11 @@ export class FeeconReportComponent implements OnInit {
 										} else {
 											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
 										}
-										obj['fcg_name'] = repoArray[Number(keys)]['stu_concession_arr']['fcg_name'];
-										obj['fcg_description'] = repoArray[Number(keys)]['stu_concession_arr']['fcg_description'];
-										obj[key2 + k] = titem['fcc_amount'] ? Number(titem['fcc_amount']) : 0;
-										tot = tot + (titem['fcc_amount'] ? Number(titem['fcc_amount']) : 0);
+										obj['fh_name'] = repoArray[Number(keys)]['stu_concession_arr']['fh_name'];
+										obj['fcg_name'] = repoArray[Number(keys)]['fcg_name'];
+										obj['fcg_description'] = repoArray[Number(keys)]['fcg_description'];
+										obj[key2 + k] = titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0;
+										tot = tot + (titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0);
 										obj['total'] = tot;
 										k++;
 									}
@@ -571,7 +572,7 @@ export class FeeconReportComponent implements OnInit {
 					obj3['stu_admission_no'] = '';
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
-					obj3['fcg_name'] = '';
+					obj3['fh_name'] = '';
 					Object.keys(feeHead).forEach((key: any) => {
 						Object.keys(feeHead[key]).forEach(key2 => {
 							Object.keys(this.dataset).forEach(key3 => {
