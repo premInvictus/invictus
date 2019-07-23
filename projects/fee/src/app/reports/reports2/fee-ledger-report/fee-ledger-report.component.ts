@@ -233,7 +233,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				cssClass: 'fee-ledger-no'
 			},
 			{
-				id: 'inv_invoice_date', name: 'Inv. Date', 
+				id: 'inv_invoice_date', name: 'Inv. Date',
 				field: 'inv_invoice_date', sortable: true, width: 4,
 				filterable: true,
 				formatter: this.checkDateFormatter,
@@ -274,7 +274,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				width: 3,
 			},
 			{
-				id: 'inv_due_date', name: 'Due Date', 
+				id: 'inv_due_date', name: 'Due Date',
 				field: 'inv_due_date', sortable: true, width: 4,
 				filterable: true,
 				formatter: this.checkDateFormatter,
@@ -372,7 +372,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				cssClass: 'fee-ledger-no'
 			},
 			{
-				id: 'rpt_receipt_date', name: 'Receipt Date', 
+				id: 'rpt_receipt_date', name: 'Receipt Date',
 				field: 'rpt_receipt_date', sortable: true, width: 4,
 				filterable: true,
 				formatter: this.checkDateFormatter,
@@ -414,59 +414,61 @@ export class FeeLedgerReportComponent implements OnInit {
 				let index = 0;
 				for (const item of repoArray) {
 					let j = 0;
-					for (const stu_arr of item.stu_ledger_arr) {
-						const obj: any = {};
-						obj['id'] = repoArray[Number(index)]['au_admission_no'] + j;
-						obj['au_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
-						obj['class_name'] = repoArray[Number(index)]['class_name'];
-						obj['sec_name'] = repoArray[Number(index)]['sec_name'];
-						obj['inv_invoice_date'] = stu_arr['inv_invoice_date'];
-						obj['flgr_invoice_receipt_no'] = stu_arr['flgr_invoice_receipt_no'];
-						obj['flgr_created_date'] = stu_arr['flgr_created_date'];
-						obj['flgr_fp_months'] = stu_arr['flgr_fp_months'];
-						obj['inv_due_date'] = stu_arr['inv_due_date'];
-						obj['flgr_adj_amount'] = stu_arr['flgr_adj_amount'];
-						obj['inv_fine_amount'] = stu_arr['inv_fine_amount'];
-						obj['rpt_receipt_date'] = stu_arr['rpt_receipt_date'];
-						obj['rpt_receipt_no'] = stu_arr['rpt_receipt_no'];
-						obj['pay_name'] = stu_arr['tb_name'] !== '' ? stu_arr['tb_name'] : stu_arr['pay_name'];
-						obj['remarks'] = stu_arr['remarks'];
-						if (repoArray[Number(index)]['sec_id'] !== '0') {
-							obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
-								',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
-								(repoArray[Number(index)]['class_name'] + '-' +
-									repoArray[Number(index)]['sec_name']);
-						} else {
-							obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
-								',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
-								repoArray[Number(index)]['class_name'];
+					if (item.stu_ledger_arr && item.stu_ledger_arr.length > 0) {
+						for (const stu_arr of item.stu_ledger_arr) {
+							const obj: any = {};
+							obj['id'] = repoArray[Number(index)]['au_admission_no'] + j;
+							obj['au_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
+							obj['class_name'] = repoArray[Number(index)]['class_name'];
+							obj['sec_name'] = repoArray[Number(index)]['sec_name'];
+							obj['inv_invoice_date'] = stu_arr['inv_invoice_date'];
+							obj['flgr_invoice_receipt_no'] = stu_arr['flgr_invoice_receipt_no'];
+							obj['flgr_created_date'] = stu_arr['flgr_created_date'];
+							obj['flgr_fp_months'] = stu_arr['flgr_fp_months'];
+							obj['inv_due_date'] = stu_arr['inv_due_date'];
+							obj['flgr_adj_amount'] = stu_arr['flgr_adj_amount'];
+							obj['inv_fine_amount'] = stu_arr['inv_fine_amount'];
+							obj['rpt_receipt_date'] = stu_arr['rpt_receipt_date'];
+							obj['rpt_receipt_no'] = stu_arr['rpt_receipt_no'];
+							obj['pay_name'] = stu_arr['tb_name'] !== '' ? stu_arr['tb_name'] : stu_arr['pay_name'];
+							obj['remarks'] = stu_arr['remarks'];
+							if (repoArray[Number(index)]['sec_id'] !== '0') {
+								obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
+									',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+									(repoArray[Number(index)]['class_name'] + '-' +
+										repoArray[Number(index)]['sec_name']);
+							} else {
+								obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
+									',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+									repoArray[Number(index)]['class_name'];
+							}
+							obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
+								stu_arr['flgr_particulars'] : '-';
+							obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
+								stu_arr['flgr_inv_id'] : '-';
+							// obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
+							// if (stu_arr['flgr_invoice_receipt_no']) {
+							// 	if (stu_arr['flgr_invoice_type'] === 'R' && Number(stu_arr['flgr_invoice_receipt_no']) !== 0) {
+							// 		obj['flgr_invoice_receipt_no'] = 'R-' + (stu_arr['flgr_invoice_receipt_no'] ?
+							// 			stu_arr['flgr_invoice_receipt_no'] : '-');
+							// 	} else if (stu_arr['flgr_invoice_type'] === 'I' && Number(stu_arr['flgr_invoice_receipt_no']) !== 0) {
+							// 		obj['flgr_invoice_receipt_no'] = 'I-' + (stu_arr['flgr_invoice_receipt_no'] ?
+							// 			stu_arr['flgr_invoice_receipt_no'] : '-');
+							// 	}
+							// }
+							// obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
+							obj['flgr_amount'] = stu_arr['flgr_amount'] ?
+								Number(stu_arr['flgr_amount']) : 0;
+							obj['flgr_concession'] = stu_arr['flgr_concession'] ?
+								stu_arr['flgr_concession'] : 0;
+							obj['flgr_receipt'] = stu_arr['flgr_receipt'] ?
+								Number(stu_arr['flgr_receipt']) : '0';
+							obj['receipt_id'] = stu_arr['receipt_id'];
+							obj['flgr_balance'] = stu_arr['flgr_balance'] ?
+								Number(stu_arr['flgr_balance']) : 0;
+							this.dataset.push(obj);
+							j++;
 						}
-						obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
-							stu_arr['flgr_particulars'] : '-';
-						obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
-							stu_arr['flgr_inv_id'] : '-';
-						// obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
-						// if (stu_arr['flgr_invoice_receipt_no']) {
-						// 	if (stu_arr['flgr_invoice_type'] === 'R' && Number(stu_arr['flgr_invoice_receipt_no']) !== 0) {
-						// 		obj['flgr_invoice_receipt_no'] = 'R-' + (stu_arr['flgr_invoice_receipt_no'] ?
-						// 			stu_arr['flgr_invoice_receipt_no'] : '-');
-						// 	} else if (stu_arr['flgr_invoice_type'] === 'I' && Number(stu_arr['flgr_invoice_receipt_no']) !== 0) {
-						// 		obj['flgr_invoice_receipt_no'] = 'I-' + (stu_arr['flgr_invoice_receipt_no'] ?
-						// 			stu_arr['flgr_invoice_receipt_no'] : '-');
-						// 	}
-						// }
-						// obj['flgr_invoice_type'] = stu_arr['flgr_invoice_type'];
-						obj['flgr_amount'] = stu_arr['flgr_amount'] ?
-							Number(stu_arr['flgr_amount']) : 0;
-						obj['flgr_concession'] = stu_arr['flgr_concession'] ?
-							stu_arr['flgr_concession'] : 0;
-						obj['flgr_receipt'] = stu_arr['flgr_receipt'] ?
-							Number(stu_arr['flgr_receipt']) : '0';
-						obj['receipt_id'] = stu_arr['receipt_id'];
-						obj['flgr_balance'] = stu_arr['flgr_balance'] ?
-							Number(stu_arr['flgr_balance']) : 0;
-						this.dataset.push(obj);
-						j++;
 					}
 					index++;
 				}

@@ -203,4 +203,15 @@ export class Reports2Component implements OnInit {
 			return 'col-12 col-lg-2 col-half-offset col-md-6 col-sm-6';
 		}
 	}
+	displyRep($event) {
+		if ($event.report_id) {
+			if ($event.report_id !== 'mfr') {
+				this.reportHeader = 'Collection Report - ' + $event.report_name;
+			} else {
+				this.reportHeader = 'Collection  - ' + $event.report_name;
+			}
+		} else {
+			this.reportHeader = $event.report_name;
+		}
+	}
 }

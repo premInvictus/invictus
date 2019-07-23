@@ -21,7 +21,8 @@ const routes: Routes = [
 	},
 	{
 		path: 'teacher', canActivate: [AuthGuard], component: ProjectComponent, children: [
-			{ path: '', component: TeacherDashboardComponent }
+			{ path: '', component: TeacherDashboardComponent },
+			{ path: 'assignment', loadChildren: '../assignment/assignment.module#AssignmentModule' },
 		]
 	}
 ];
