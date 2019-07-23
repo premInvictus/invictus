@@ -169,7 +169,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	getFeeStructures() {
-		this.feeService.getFeeStructure({ fs_is_hostel_fee: 0 }).subscribe((result: any) => {
+		this.feeService.getFeeStructure({ fs_is_hostel_fee: 0, fs_status:1 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feeStructureArray = result.data;
 			}
@@ -183,7 +183,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	getHostelFeeStructures() {
-		this.feeService.getFeeStructure({ fs_is_hostel_fee: 1 }).subscribe((result: any) => {
+		this.feeService.getFeeStructure({ fs_is_hostel_fee: 1 ,fs_status:1}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.hostelFeeStructureArray = result.data;
 			}
