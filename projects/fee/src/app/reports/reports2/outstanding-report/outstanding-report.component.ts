@@ -1397,8 +1397,8 @@ export class OutstandingReportComponent implements OnInit {
 							} else {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 							}
-							obj['rpt_amount'] = repoArray[Number(index)]['invoice_amount'] ?
-								Number(repoArray[Number(index)]['invoice_amount']) : 0;
+							obj['rpt_amount'] = repoArray[Number(index)]['defaulter_inv_group_amount'] ?
+								Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0;
 							obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
 								repoArray[Number(index)]['fp_name'] : '-';
 							this.dataset.push(obj);

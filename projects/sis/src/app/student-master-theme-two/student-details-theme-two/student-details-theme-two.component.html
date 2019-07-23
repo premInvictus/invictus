@@ -95,7 +95,7 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Full Name</mat-label>
                   <input class="text-capitalize" formControlName="au_full_name" matInput placeholder="Full Name"
-                    required [readonly]="viewOnly">
+                    required [readonly]="viewOnly"  [value]="studentdetailsform.get('au_full_name').value | capitalize">
                 </mat-form-field>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
