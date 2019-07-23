@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, AxiomService, SmartService } from '../../_services';
+import * as XLSX from 'xlsx';
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
 
 @Component({
 	selector: 'app-teacher-wise-timetable',
@@ -83,6 +87,53 @@ export class TeacherWiseTimetableComponent implements OnInit {
 				this.commonService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
+	}
+	// export excel code
+	exportAsExcel(id) {
+		// tslint:disable-next-line:max-line-length
+		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById(id)); // converts a DOM TABLE element to a worksheet
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
+
+	}
+	// pdf download
+	pdfDownload(id) {
+		const doc = new jsPDF('landscape');
+		// doc.autoTable({
+		// 	head: [['Day wise Summary']],
+		// 	didDrawPage: function (data) {
+		// 		doc.setFont('Roboto');
+		// 	},
+		// 	headerStyles: {
+		// 		fontStyle: 'bold',
+		// 		fillColor: '#ffffff',
+		// 		textColor: 'black',
+		// 		halign: 'center',
+		// 		fontSize: 15,
+		// 	},
+		// 	useCss: true,
+		// 	theme: 'striped'
+		// });
+		doc.autoTable({
+			html: '#' + id,
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: 'red',
+			},
+			theme: 'grid'
+		});
+		doc.save('table.pdf');
 	}
 	getSum(dety) {
 		this.sum = 0;

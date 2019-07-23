@@ -22,6 +22,7 @@ export class AddSyllabusComponent implements OnInit {
 	details_flag = false;
 	periodDivFlag = false;
 	editRequestFlag = false;
+	hideExcelupload = true;
 	flag = true;
 	syllabusForm: FormGroup;
 	syllabusDetailForm: FormGroup;
@@ -256,7 +257,6 @@ export class AddSyllabusComponent implements OnInit {
 						this.subjectArray = result.data;
 					} else {
 						this.subjectArray = [];
-						this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 					}
 				}
 			);
@@ -283,7 +283,6 @@ export class AddSyllabusComponent implements OnInit {
 						this.topicArray = result.data;
 					} else {
 						this.topicArray = [];
-						this.commonService.showSuccessErrorMessage('No Record Found', 'error');
 					}
 				}
 			);
@@ -411,6 +410,7 @@ export class AddSyllabusComponent implements OnInit {
 									});
 							this.syllabus_flag = false;
 							this.details_flag = true;
+							this.hideExcelupload = false;
 						} else {
 							this.syllabus_flag = false;
 							this.details_flag = true;

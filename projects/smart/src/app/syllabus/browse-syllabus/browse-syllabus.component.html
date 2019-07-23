@@ -12,16 +12,19 @@
                         <div class="top-card-title-form">
                             <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>Class</mat-label>
-                                <mat-select formControlName="syl_class_id" (selectionChange)="getSubjectsByClass()" required placeholder="Select Class">
+                                <mat-select formControlName="syl_class_id" (selectionChange)="getSubjectsByClass()"
+                                    required placeholder="Select Class">
                                     <mat-option value="">Please select</mat-option>
                                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                                         {{item.class_name}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <mat-form-field class="form-field-220 margin-left-10 remove-form-field-bottom-margin" appearance="outline">
+                            <mat-form-field class="form-field-220 margin-left-10 remove-form-field-bottom-margin"
+                                appearance="outline">
                                 <mat-label>Subject</mat-label>
-                                <mat-select formControlName="syl_sub_id" (selectionChange)="fetchSyllabusDetails()" required placeholder="Select Subject">
+                                <mat-select formControlName="syl_sub_id" (selectionChange)="fetchSyllabusDetails()"
+                                    required placeholder="Select Subject">
                                     <mat-option value="">Please select</mat-option>
                                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                         {{item.sub_name}}
@@ -37,19 +40,23 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-12">
+        <div class="col-12 remove-col-padding text-right">
         <mat-card>
-            <!-- <div class="row remove-top-margin">
-        <div class="col-4">
-          <mat-form-field appearance="a">
-            <input class="margin-left-10" matInput placeholder="Filter">
-            <mat-icon matPrefix>filter_list</mat-icon>
-          </mat-form-field>
-        </div>
-      </div> -->
+            <div class="inline-flex btn-spacer text-right" *ngIf="finalSpannedArray.length > 0">
+                <div>
+                    <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+                        matTooltip="Download as Pdf" (click)="pdfDownload()" />
+                </div>
+            </div>
+            <div class="inline-flex btn-spacer text-right" *ngIf="finalSpannedArray.length > 0">
+                <div>
+                    <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+                        matTooltip="Export as excel" (click)="exportAsExcel()" />
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12">
-                    <table class="table table-borderd table-stripped custom-table">
+                    <table class="table table-borderd table-stripped custom-table" id="report_table">
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
                                 <th class="custom-th" rowspan="2">Topic</th>
@@ -100,8 +107,9 @@
 
                                             </td>
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
-                                                <i class="fas fa-thumbs-down font-color-red cursor-pointer font-size-16" matTooltip="Unpublish"
-                                                 (click)="openunPublish(item.syl_id, item.sd_topic_id)"></i></td>
+                                                <i class="fas fa-thumbs-down font-color-red cursor-pointer font-size-16"
+                                                    matTooltip="Unpublish"
+                                                    (click)="openunPublish(item.syl_id, item.sd_topic_id)"></i></td>
                                         </tr>
                                     </ng-container>
                                 </ng-container>
@@ -111,10 +119,11 @@
                         <tbody>
                             <tr class="text-center" *ngIf="finaldivflag">
                                 <td colspan="9">
-                                    <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
-                                    <br><br><br>                                         
+                                    <img
+                                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                                    <br><br><br>
                                     <span class="font-size-20 font-bold font-color-brown">
-                                      No Data Available
+                                        No Data Available
                                     </span>
                                     <br><span class="font-size-20 font-light font-color-brown">
                                         Please select Class and Subject
