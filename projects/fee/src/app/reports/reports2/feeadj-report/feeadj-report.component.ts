@@ -3,7 +3,9 @@ import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
 	Filters,
-	Formatters
+	Formatters,
+	DelimiterType,
+	FileType
 } from 'angular-slickgrid';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
@@ -212,6 +214,9 @@ export class FeeadjReportComponent implements OnInit {
 					if (args.command === 'exportAsExcel') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.exportToExcel(this.dataset, 'myfile');
+					}
+					if (args.command === 'export-csv') {
+						this.exportToFile('csv');
 					}
 				},
 				onColumnsChanged: (e, args) => {
@@ -707,19 +712,19 @@ export class FeeadjReportComponent implements OnInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(this.dataset).forEach(key => {
 				const arr: any[] = [];
-				Object.keys(this.dataset[key]).forEach(key2 => {
-					console.log(key2);
-					if (key2 !== 'id' && key2 !== 'receipt_id') {
-						arr.push(this.common.htmlToText(this.dataset[key][key2]));
+				for (const item of this.columnDefinitions) {
+					if (item.id !== 'adjustment_date') {
+						arr.push(this.common.htmlToText(this.dataset[key][item.id]));
+					} else if (item.id === 'adjustment_date') {
+						arr.push(new DatePipe('en-in').transform(this.dataset[key][item.id], 'd-MMM-y'));
 					}
-				});
+				}
 				rowData.push(arr);
 			});
-			console.log(headerData);
-			console.log(rowData);
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -728,30 +733,15 @@ export class FeeadjReportComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 60,
+					fontSize: 30,
 				},
 				useCss: true,
 				theme: 'striped'
 			});
-			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
-				margin: { top: 20 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'normal',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 45,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
+
 			doc.autoTable({
 				head: [[reportType]],
-				margin: { top: 20 },
+				margin: { top: 0 },
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -760,7 +750,7 @@ export class FeeadjReportComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 60,
+					fontSize: 30,
 				},
 				useCss: true,
 				theme: 'striped'
@@ -768,35 +758,67 @@ export class FeeadjReportComponent implements OnInit {
 			doc.autoTable({
 				head: [headerData],
 				body: rowData,
-				startY: 120,
-				margin: { top: 80 },
+				startY: 65,
+				tableLineColor: 'black',
 				didDrawPage: function (data) {
-					doc.setFontSize(22);
 					doc.setTextColor(0);
 					doc.setFontStyle('bold');
 					doc.setFont('Roboto');
 				},
 				headerStyles: {
 					fontStyle: 'bold',
-					fillColor: '#bebebe',
-					textColor: 'black',
-					fontSize: 26,
+					fillColor: '#c8d6e5',
+					textColor: '#5e666d',
+					fontSize: 25,
 				},
 				alternateRowStyles: {
-					fillColor: '#f3f3f3'
+					fillColor: '#f1f4f7'
 				},
 				useCss: true,
 				styles: {
-					fontSize: 35,
+					fontSize: 20,
 					cellWidth: 'auto',
 					textColor: 'black',
-					lineColor: 'red',
+					lineColor: '#89a8c8',
 				},
-				theme: 'striped'
+				theme: 'grid'
 			});
 			doc.save(reportType + '_' + new Date() + '.pdf');
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 30,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+
+			doc.autoTable({
+				head: [[reportType]],
+				margin: { top: 0 },
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 30,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
 			doc.autoTable({
 				head: [headerData],
 				didDrawPage: function (data) {
@@ -824,37 +846,44 @@ export class FeeadjReportComponent implements OnInit {
 				rowData = [];
 				Object.keys(item.rows).forEach(key => {
 					const arr: any[] = [];
-					Object.keys(item.rows[key]).forEach(key2 => {
-						if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name' && key2 !== 'invoice_created_date') {
-							arr.push(item.rows[key][key2]);
-						} else if (key2 !== 'id' && key2 !== 'receipt_id' &&
-							key2 !== 'invoice_created_date' && key2 === 'fp_name') {
-							arr.push(item.rows[key][key2][0]);
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id !== 'adjustment_date') {
+							arr.push(this.common.htmlToText(item.rows[key][item2.id]));
+						} else if (item2.id === 'adjustment_date') {
+							arr.push(new DatePipe('en-in').transform(item.rows[key][item2.id], 'd-MMM-y'));
 						}
-					});
+					}
 					rowData.push(arr);
 				});
 				doc.autoTable({
 					head: [[this.common.htmlToText(item.title)]],
 					body: rowData,
+					didDrawPage: function (data) {
+						doc.setTextColor(0);
+						doc.setFontStyle('bold');
+						doc.setFont('Roboto');
+					},
 					headerStyles: {
 						fontStyle: 'bold',
-						fillColor: '#bebebe',
+						fillColor: '#c8d6e5',
 						textColor: 'black',
+						fontSize: 25,
 						halign: 'left',
 					},
 					alternateRowStyles: {
-						fillColor: '#f3f3f3'
+						fillColor: '#f1f4f7'
 					},
 					useCss: true,
 					styles: {
-						fontSize: 22,
-						cellWidth: 4,
+						fontSize: 20,
+						cellWidth: 'auto',
+						textColor: 'black',
+						lineColor: '#89a8c8',
 					},
-					theme: 'striped',
+					theme: 'grid',
 				});
 			}
-			doc.save('table.pdf');
+			doc.save(reportType + '_' + new Date() + '.pdf');
 			console.log(rowData);
 		}
 	}
@@ -871,23 +900,24 @@ export class FeeadjReportComponent implements OnInit {
 	}
 	exportToExcel(json: any[], excelFileName: string): void {
 		const rowData: any[] = [];
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		reportType = new TitleCasePipe().transform('fee adjustment: ') + this.sessionName;
 		Object.keys(json).forEach(key => {
 			const obj: any = {};
-			Object.keys(json[key]).forEach(key2 => {
-				if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
-					obj[key2] = json[key][key2];
-				} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
-					obj[key2] = json[key][key2];
+			for (const item of this.columnDefinitions) {
+				if (item.id !== 'id' && item.id !== 'receipt_id' && item.id !== 'fp_name') {
+					obj[item.name] = json[key][item.id];
+				} else if (item.id !== 'id' && item.id !== 'receipt_id' && item.id === 'fp_name') {
+					obj[item.name] = json[key][item.id];
 				}
-			});
+			}
 			rowData.push(obj);
 		});
-		console.log(rowData);
-		console.log(XLSX.utils.json_to_sheet(rowData));
-		const fileName = 'test.xlsx';
+		const fileName = reportType + '.xlsx';
 		const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowData);
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, 'test');
+		XLSX.utils.book_append_sheet(wb, ws, reportType);
 
 		XLSX.writeFile(wb, fileName);
 	}
@@ -899,6 +929,16 @@ export class FeeadjReportComponent implements OnInit {
 	getToDate(value) {
 		this.reportFilterForm.patchValue({
 			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+		});
+	}
+	exportToFile(type = 'csv') {
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		reportType = new TitleCasePipe().transform('fee adjustment  report: ') + this.sessionName;
+		this.angularGrid.exportService.exportToFile({
+			delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
+			filename: reportType + '_' + new Date(),
+			format: (type === 'csv') ? FileType.csv : FileType.txt
 		});
 	}
 }

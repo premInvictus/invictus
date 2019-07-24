@@ -1777,7 +1777,8 @@ export class OutstandingReportComponent implements OnInit {
 			});
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -1787,22 +1788,6 @@ export class OutstandingReportComponent implements OnInit {
 					textColor: 'black',
 					halign: 'center',
 					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'normal',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 30,
 				},
 				useCss: true,
 				theme: 'striped'
@@ -1856,7 +1841,8 @@ export class OutstandingReportComponent implements OnInit {
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -1866,22 +1852,6 @@ export class OutstandingReportComponent implements OnInit {
 					textColor: 'black',
 					halign: 'center',
 					fontSize: 30,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'normal',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 20,
 				},
 				useCss: true,
 				theme: 'striped'

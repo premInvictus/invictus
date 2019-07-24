@@ -1938,7 +1938,8 @@ export class CollectionReportComponent implements OnInit {
 			});
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)+ ', '+ this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -2001,7 +2002,8 @@ export class CollectionReportComponent implements OnInit {
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)+ ', '+ this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -2015,7 +2017,7 @@ export class CollectionReportComponent implements OnInit {
 				useCss: true,
 				theme: 'striped'
 			});
-			
+
 			doc.autoTable({
 				head: [[reportType]],
 				margin: { top: 0 },

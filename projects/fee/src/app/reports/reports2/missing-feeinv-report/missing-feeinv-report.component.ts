@@ -7,9 +7,10 @@ import {
 	Sorters,
 	SortDirectionNumber
 } from 'angular-slickgrid';
+import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
-import { DecimalPipe, DatePipe } from '@angular/common';
+import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { CapitalizePipe } from '../../../_pipes';
 import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { MatDialog } from '@angular/material';
@@ -27,7 +28,9 @@ import { CreateInvoiceModalComponent } from '../../../sharedmodule/create-invoic
 	styleUrls: ['./missing-feeinv-report.component.css']
 })
 export class MissingFeeinvReportComponent implements OnInit {
-
+	sessionArray: any[] = [];
+	session: any = {};
+	sessionName: any;
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
@@ -68,6 +71,8 @@ export class MissingFeeinvReportComponent implements OnInit {
 		private fbuild: FormBuilder) { }
 
 	ngOnInit() {
+		this.session = JSON.parse(localStorage.getItem('session'));
+		this.getSession();
 		this.getSchool();
 		this.buildForm();
 		this.getClassData();
@@ -149,6 +154,12 @@ export class MissingFeeinvReportComponent implements OnInit {
 					iconCssClass: 'fas fa-download'
 				},
 				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
+					iconCssClass: 'fas fa-download'
+				},
+				{
 					title: 'expand',
 					titleKey: 'Expand Groups',
 					command: 'expandGroup',
@@ -187,6 +198,10 @@ export class MissingFeeinvReportComponent implements OnInit {
 					if (args.command === 'cleargroup') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.clearGrouping();
+					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel(this.dataset, 'myfile');
 					}
 				},
 				onColumnsChanged: (e, args) => {
@@ -551,23 +566,28 @@ export class MissingFeeinvReportComponent implements OnInit {
 		for (const item of this.columnDefinitions) {
 			headerData.push(item.name);
 		}
-		console.log(this.dataviewObj);
-		console.log(this.dataviewObj.getGrouping());
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(this.dataset).forEach(key => {
 				const arr: any[] = [];
-				Object.keys(this.dataset[key]).forEach(key2 => {
-					if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
-						arr.push(this.dataset[key][key2]);
-					} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
-						arr.push(this.dataset[key][key2][0]);
+				for (const item of this.columnDefinitions) {
+					if (item.id !== 'fp_name') {
+						arr.push(this.dataset[key][item.id]);
+					} else if (item.id === 'fp_name') {
+						let feePeriod: any = '';
+						console.log(this.dataset[key][item.id]);
+						for (const period of this.dataset[key][item.id]) {
+							feePeriod = feePeriod + period.fm_name + ',';
+						}
+						feePeriod = feePeriod.substring(0, feePeriod.length - 1);
+						arr.push(feePeriod);
 					}
-				});
+				}
 				rowData.push(arr);
 			});
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -576,22 +596,23 @@ export class MissingFeeinvReportComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 40,
+					fontSize: 35,
 				},
 				useCss: true,
 				theme: 'striped'
 			});
 			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
+				head: [['Missing Fee invoice Report: ' + this.sessionName]],
+				margin: { top: 0 },
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
 				headerStyles: {
-					fontStyle: 'normal',
+					fontStyle: 'bold',
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 25,
+					fontSize: 35,
 				},
 				useCss: true,
 				theme: 'striped'
@@ -599,8 +620,8 @@ export class MissingFeeinvReportComponent implements OnInit {
 			doc.autoTable({
 				head: [headerData],
 				body: rowData,
-				startY: 60,
-				margin: { top: 40 },
+				startY: 65,
+				tableLineColor: 'black',
 				didDrawPage: function (data) {
 					doc.setFontSize(22);
 					doc.setTextColor(0);
@@ -609,22 +630,58 @@ export class MissingFeeinvReportComponent implements OnInit {
 				},
 				headerStyles: {
 					fontStyle: 'bold',
-					fillColor: '#bebebe',
-					textColor: 'black',
+					fillColor: '#c8d6e5',
+					textColor: '#5e666d',
+					fontSize: 26,
 				},
 				alternateRowStyles: {
-					fillColor: '#f3f3f3'
+					fillColor: '#f1f4f7'
 				},
 				useCss: true,
 				styles: {
-					fontSize: 22,
+					fontSize: 35,
 					cellWidth: 'auto',
+					textColor: 'black',
+					lineColor: '#89a8c8',
 				},
-				theme: 'striped'
+				theme: 'grid'
 			});
-			doc.save('table.pdf');
+			doc.save('Missing Fee Invoice' + '_' + new Date() + '.pdf');
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 30,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+
+			doc.autoTable({
+				head: [['Missing Fee invoice Report: ' + this.sessionName]],
+				margin: { top: 0 },
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 30,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
 			doc.autoTable({
 				head: [headerData],
 				didDrawPage: function (data) {
@@ -635,11 +692,11 @@ export class MissingFeeinvReportComponent implements OnInit {
 				},
 				headerStyles: {
 					fontStyle: 'bold',
-					fillColor: '#bebebe',
-					textColor: 'black',
+					fillColor: '#c8d6e5',
+					textColor: '#5e666d',
 				},
 				alternateRowStyles: {
-					fillColor: '#f3f3f3'
+					fillColor: '#f1f4f7'
 				},
 				useCss: true,
 				styles: {
@@ -652,38 +709,51 @@ export class MissingFeeinvReportComponent implements OnInit {
 				rowData = [];
 				Object.keys(item.rows).forEach(key => {
 					const arr: any[] = [];
-					Object.keys(item.rows[key]).forEach(key2 => {
-						if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name' && key2 !== 'invoice_created_date') {
-							arr.push(item.rows[key][key2]);
-						} else if (key2 !== 'id' && key2 !== 'receipt_id' &&
-							key2 !== 'invoice_created_date' && key2 === 'fp_name') {
-							arr.push(item.rows[key][key2][0]);
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id !== 'fp_name') {
+							arr.push(item.rows[key][item2.id]);
+						} else if (item2.id === 'fp_name') {
+							let feePeriod: any = '';
+							console.log(item.rows[key][item2.id]);
+							for (const period of item.rows[key][item2.id]) {
+								feePeriod = feePeriod + period.fm_name + ',';
+							}
+							feePeriod = feePeriod.substring(0, feePeriod.length - 1);
+							arr.push(feePeriod);
 						}
-					});
+					}
 					rowData.push(arr);
 				});
 				doc.autoTable({
 					head: [[this.common.htmlToText(item.title)]],
 					body: rowData,
+					didDrawPage: function (data) {
+						doc.setFontSize(22);
+						doc.setTextColor(0);
+						doc.setFontStyle('bold');
+						doc.setFont('Roboto');
+					},
 					headerStyles: {
 						fontStyle: 'bold',
-						fillColor: '#bebebe',
+						fillColor: '#c8d6e5',
 						textColor: 'black',
+						fontSize: 35,
 						halign: 'left',
 					},
 					alternateRowStyles: {
-						fillColor: '#f3f3f3'
+						fillColor: '#f1f4f7'
 					},
 					useCss: true,
 					styles: {
-						fontSize: 22,
-						cellWidth: 4,
+						fontSize: 35,
+						cellWidth: 'auto',
+						textColor: 'black',
+						lineColor: '#89a8c8',
 					},
-					theme: 'striped'
+					theme: 'grid',
 				});
 			}
-			doc.save('table.pdf');
-			console.log(rowData);
+			doc.save('Missing Fee Invoice' + '_' + new Date() + '.pdf');
 		}
 	}
 	groupByClass() {
@@ -712,5 +782,46 @@ export class MissingFeeinvReportComponent implements OnInit {
 		this.reportFilterForm.patchValue({
 			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
 		});
+	}
+	getSessionName(id) {
+		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
+		if (findex !== -1) {
+			return this.sessionArray[findex].ses_name;
+		}
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				this.sessionArray = result2.data;
+				this.sessionName = this.getSessionName(this.session.ses_id);
+			}
+		});
+	}
+	exportToExcel(json: any[], excelFileName: string): void {
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		reportType = new TitleCasePipe().transform('missing fee_inv') + this.sessionName;
+		const rowData: any[] = [];
+		Object.keys(json).forEach(key => {
+			const obj: any = {};
+			for (const item2 of this.columnDefinitions) {
+				if (item2.id !== 'fp_name') {
+					obj[item2.name] = json[key][item2.id];
+				} else if (item2.id === 'fp_name') {
+					let feePeriod: any = '';
+					for (const period of json[key][item2.id]) {
+						feePeriod = feePeriod + period.fm_name + ',';
+					}
+					feePeriod = feePeriod.substring(0, feePeriod.length - 1);
+					obj[item2.name] = feePeriod;
+				}
+			}
+			rowData.push(obj);
+		});
+		const fileName = reportType + '.xlsx';
+		const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowData);
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, reportType);
+		XLSX.writeFile(wb, fileName);
 	}
 }
