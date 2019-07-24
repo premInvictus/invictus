@@ -1938,7 +1938,7 @@ export class CollectionReportComponent implements OnInit {
 			});
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)]],
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)+ ', '+ this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -1948,22 +1948,6 @@ export class CollectionReportComponent implements OnInit {
 					textColor: 'black',
 					halign: 'center',
 					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'normal',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 30,
 				},
 				useCss: true,
 				theme: 'striped'
@@ -1987,7 +1971,7 @@ export class CollectionReportComponent implements OnInit {
 			doc.autoTable({
 				head: [headerData],
 				body: rowData,
-				startY: 85,
+				startY: 65,
 				tableLineColor: 'black',
 				didDrawPage: function (data) {
 					doc.setFontSize(22);
@@ -2017,7 +2001,7 @@ export class CollectionReportComponent implements OnInit {
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)]],
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)+ ', '+ this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -2031,22 +2015,7 @@ export class CollectionReportComponent implements OnInit {
 				useCss: true,
 				theme: 'striped'
 			});
-			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'normal',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 20,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
+			
 			doc.autoTable({
 				head: [[reportType]],
 				margin: { top: 0 },
