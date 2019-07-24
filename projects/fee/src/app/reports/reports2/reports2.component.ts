@@ -23,7 +23,7 @@ export class Reports2Component implements OnInit {
 		},
 		{
 			report_id: '2',
-			report_name: 'Fee Outstanding Report',
+			report_name: 'Outstanding Report',
 			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
@@ -205,10 +205,15 @@ export class Reports2Component implements OnInit {
 	}
 	displyRep($event) {
 		if ($event.report_id) {
-			if ($event.report_id !== 'mfr') {
-				this.reportHeader = 'Collection Report - ' + $event.report_name;
-			} else {
-				this.reportHeader = 'Collection  - ' + $event.report_name;
+			if ($event.report_index === 1) {
+				if ($event.report_id !== 'mfr') {
+					this.reportHeader = 'Collection Report - ' + $event.report_name;
+				} else {
+					this.reportHeader = 'Collection  - ' + $event.report_name;
+				}
+			}
+			if ($event.report_index === 2) {
+				this.reportHeader = 'Outstanding Report - ' + $event.report_name;
 			}
 		} else {
 			this.reportHeader = $event.report_name;

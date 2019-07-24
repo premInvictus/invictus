@@ -94,11 +94,11 @@ export class CollectionReportComponent implements OnInit {
 				report_type: 'mfr', report_name: 'Monthly Fee Report (MFR)'
 			});
 		this.reportType = 'headwise';
-		const date = new Date();
-		const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+		const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
+		const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
 		this.reportFilterForm.patchValue({
 			'from_date': firstDay,
-			'to_date': new Date()
+			'to_date': date
 		});
 		this.filterFlag = true;
 	}
@@ -125,6 +125,7 @@ export class CollectionReportComponent implements OnInit {
 		this.sisService.getSession().subscribe((result2: any) => {
 			if (result2.status === 'ok') {
 				this.sessionArray = result2.data;
+				this.sessionName = this.getSessionName(this.session.ses_id);
 			}
 		});
 	}
@@ -1697,7 +1698,7 @@ export class CollectionReportComponent implements OnInit {
 				+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
 				'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
 		} else if (value.status === 'paid') {
-			return '<div style="background-color:#27de80 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+			return '<div style="background-color:#29A341 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
 				+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
 				'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
 		} else if (value.status === 'Not Generated') {
@@ -1806,14 +1807,14 @@ export class CollectionReportComponent implements OnInit {
 				'orderBy': '',
 				'downloadAll': true
 			});
-		const date = new Date();
-		const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+		const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
+		const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
 		this.reportFilterForm.patchValue({
 			'from_date': firstDay,
-			'to_date': new Date()
+			'to_date': date
 		});
 		if ($event.value) {
-			this.displyRep.emit({ report_id: $event.value, report_name: this.getReportName($event.value) });
+			this.displyRep.emit({ report_index: 1, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'headwise') {
 				this.valueLabel = 'Fee Heads';
 				this.getFeeHeads();
@@ -1836,7 +1837,7 @@ export class CollectionReportComponent implements OnInit {
 			}
 			this.filterFlag = true;
 		} else {
-			this.displyRep.emit({ report_id: '', report_name: 'Collection Report' });
+			this.displyRep.emit({ report_index: 1, report_id: '', report_name: 'Collection Report' });
 			this.filterFlag = false;
 		}
 	}
@@ -2168,8 +2169,21 @@ export class CollectionReportComponent implements OnInit {
 		const rowData: any[] = [];
 		Object.keys(json).forEach(key => {
 			const obj: any = {};
-			for (const item of this.columnDefinitions) {
-				obj[item.name] = json[key][item.id];
+			for (const item2 of this.columnDefinitions) {
+				if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+					obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
+				}
+				if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+					&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+					obj[item2.name] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
+				}
+				if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+					&& json[key][item2.id] === '<b>Grand Total</b>') {
+					obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
+				}
+				if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+					obj[item2.name] = this.common.htmlToText(json[key][item2.id][0]);
+				}
 			}
 			rowData.push(obj);
 		});
