@@ -36,10 +36,13 @@ button.filter-bt{
   .btn-success {
     width: 93px;
     line-height: -1px !important;
+    background-color: #43A047
 }
 .btn-success:hover {
     width: 93px;
     line-height: -1px !important;
+    color: #43A047;
+    background-color: white !important
 }
 .btn-danger {
   height: 33px;

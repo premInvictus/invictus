@@ -56,7 +56,8 @@
               <div class="col-12">
                 <app-collection-report (displyRep)="displyRep($event)"
                 *ngIf="reportType === '1'"></app-collection-report>
-                <app-outstanding-report *ngIf="reportType === '2'"></app-outstanding-report>
+                <app-outstanding-report (displyRep)="displyRep($event)"
+                *ngIf="reportType === '2'"></app-outstanding-report>
                 <app-fee-ledger-report *ngIf="reportType === '5'"></app-fee-ledger-report>
                 <app-deleted-feetrans-report *ngIf="reportType === '6'"></app-deleted-feetrans-report>
                 <app-feeadj-report *ngIf="reportType === '7'"></app-feeadj-report>

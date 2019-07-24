@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
@@ -29,6 +29,7 @@ import * as XLSX from 'xlsx';
 	styleUrls: ['./outstanding-report.component.css']
 })
 export class OutstandingReportComponent implements OnInit {
+	@Output() displyRep = new EventEmitter();
 	sessionArray: any[] = [];
 	session: any = {};
 	gridHeight: any;
@@ -89,11 +90,11 @@ export class OutstandingReportComponent implements OnInit {
 			{
 				report_type: 'defaulter', report_name: 'Defaulter\'s List'
 			});
-		const date = new Date();
-		const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+		const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
+		const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
 		this.reportFilterForm.patchValue({
 			'from_date': firstDay,
-			'to_date': new Date()
+			'to_date': date
 		});
 		this.filterFlag = true;
 	}
@@ -1608,6 +1609,12 @@ export class OutstandingReportComponent implements OnInit {
 			}
 		});
 	}
+	getReportName(value) {
+		const findex = this.reportTypeArray.findIndex(f => f.report_type === value);
+		if (findex !== -1) {
+			return this.reportTypeArray[findex].report_name;
+		}
+	}
 	changeReportType($event) {
 		this.filterResult = [];
 		this.sortResult = [];
@@ -1629,13 +1636,14 @@ export class OutstandingReportComponent implements OnInit {
 				'orderBy': '',
 				'downloadAll': true
 			});
-		const date = new Date();
-		const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+		const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
+		const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
 		this.reportFilterForm.patchValue({
 			'from_date': firstDay,
-			'to_date': new Date()
+			'to_date': date
 		});
-		if ($event.value) {	
+		if ($event.value) {
+			this.displyRep.emit({ report_index: 2, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'headwise') {
 				this.valueLabel = 'Fee Heads';
 				this.getFeeHeads();
@@ -1650,13 +1658,15 @@ export class OutstandingReportComponent implements OnInit {
 				this.getRoutes();
 			} else if ($event.value === 'defaulter') {
 				this.reportFilterForm.patchValue({
-					'to_date': new Date()
+					'from_date': firstDay,
+					'to_date': date
 				});
 				this.valueLabel = 'Class';
 				this.getClass();
 			}
 			this.filterFlag = true;
 		} else {
+			this.displyRep.emit({ report_index: 2, report_id: '', report_name: 'Outstanding Report' });
 			this.filterFlag = false;
 		}
 	}
@@ -1730,13 +1740,13 @@ export class OutstandingReportComponent implements OnInit {
 		let reportType: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		if (this.reportType === 'headwise') {
-			reportType = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
+			reportType = new TitleCasePipe().transform('head wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'headwisedetail') {
-			reportType = new TitleCasePipe().transform('head wise Detail collection report: ') + this.sessionName;
+			reportType = new TitleCasePipe().transform('head wise Detail outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'classwise') {
-			reportType = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
+			reportType = new TitleCasePipe().transform('class wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'routewise') {
-			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
+			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
 			reportType = new TitleCasePipe().transform('defaulter list: ') + this.sessionName;
 		}
@@ -1747,12 +1757,22 @@ export class OutstandingReportComponent implements OnInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(this.dataset).forEach(key => {
 				const arr: any[] = [];
-				Object.keys(this.dataset[key]).forEach(key2 => {
-					console.log(key2);
-					if (key2 !== 'id' && key2 !== 'receipt_id') {
-						arr.push(this.common.htmlToText(this.dataset[key][key2]));
+				for (const item of this.columnDefinitions) {
+					if (item.id !== 'fp_name' && item.id !== 'invoice_created_date') {
+						arr.push(this.common.htmlToText(this.dataset[key][item.id]));
 					}
-				});
+					if (item.id !== 'fp_name' && item.id === 'invoice_created_date'
+						&& this.dataset[key][item.id] !== '<b>Grand Total</b>') {
+						arr.push(new DatePipe('en-in').transform((this.dataset[key][item.id]), 'd-MMM-y'));
+					}
+					if (item.id !== 'fp_name' && item.id === 'invoice_created_date'
+						&& this.dataset[key][item.id] === '<b>Grand Total</b>') {
+						arr.push(this.common.htmlToText(this.dataset[key][item.id]));
+					}
+					if (item.id !== 'invoice_created_date' && item.id === 'fp_name') {
+						arr.push(this.common.htmlToText(this.dataset[key][item.id]));
+					}
+				}
 				rowData.push(arr);
 			});
 			const doc = new jsPDF('l', 'mm', 'a0');
@@ -1766,14 +1786,14 @@ export class OutstandingReportComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 60,
+					fontSize: 35,
 				},
 				useCss: true,
 				theme: 'striped'
 			});
 			doc.autoTable({
 				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
-				margin: { top: 20 },
+				margin: { top: 0 },
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -1782,14 +1802,14 @@ export class OutstandingReportComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 45,
+					fontSize: 30,
 				},
 				useCss: true,
 				theme: 'striped'
 			});
 			doc.autoTable({
 				head: [[reportType]],
-				margin: { top: 20 },
+				margin: { top: 0 },
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -1798,7 +1818,7 @@ export class OutstandingReportComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 60,
+					fontSize: 35,
 				},
 				useCss: true,
 				theme: 'striped'
@@ -1806,8 +1826,8 @@ export class OutstandingReportComponent implements OnInit {
 			doc.autoTable({
 				head: [headerData],
 				body: rowData,
-				startY: 120,
-				margin: { top: 80 },
+				startY: 85,
+				tableLineColor: 'black',
 				didDrawPage: function (data) {
 					doc.setFontSize(22);
 					doc.setTextColor(0);
@@ -1816,25 +1836,72 @@ export class OutstandingReportComponent implements OnInit {
 				},
 				headerStyles: {
 					fontStyle: 'bold',
-					fillColor: '#bebebe',
-					textColor: 'black',
+					fillColor: '#c8d6e5',
+					textColor: '#5e666d',
 					fontSize: 26,
 				},
 				alternateRowStyles: {
-					fillColor: '#f3f3f3'
+					fillColor: '#f1f4f7'
 				},
 				useCss: true,
 				styles: {
 					fontSize: 35,
 					cellWidth: 'auto',
 					textColor: 'black',
-					lineColor: 'red',
+					lineColor: '#89a8c8',
 				},
-				theme: 'striped'
+				theme: 'grid'
 			});
 			doc.save(reportType + '_' + new Date() + '.pdf');
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
+			doc.autoTable({
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 30,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
+				margin: { top: 0 },
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'normal',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 20,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				head: [[reportType]],
+				margin: { top: 0 },
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 30,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
 			doc.autoTable({
 				head: [headerData],
 				didDrawPage: function (data) {
@@ -1845,11 +1912,11 @@ export class OutstandingReportComponent implements OnInit {
 				},
 				headerStyles: {
 					fontStyle: 'bold',
-					fillColor: '#bebebe',
-					textColor: 'black',
+					fillColor: '#c8d6e5',
+					textColor: '#5e666d',
 				},
 				alternateRowStyles: {
-					fillColor: '#f3f3f3'
+					fillColor: '#f1f4f7'
 				},
 				useCss: true,
 				styles: {
@@ -1862,38 +1929,54 @@ export class OutstandingReportComponent implements OnInit {
 				rowData = [];
 				Object.keys(item.rows).forEach(key => {
 					const arr: any[] = [];
-					Object.keys(item.rows[key]).forEach(key2 => {
-						if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name' && key2 !== 'invoice_created_date') {
-							arr.push(item.rows[key][key2]);
-						} else if (key2 !== 'id' && key2 !== 'receipt_id' &&
-							key2 !== 'invoice_created_date' && key2 === 'fp_name') {
-							arr.push(item.rows[key][key2][0]);
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
-					});
+						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+							arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
+						}
+						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+							&& this.dataset[key][item2.id] === '<b>Grand Total</b>') {
+							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+						}
+						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+							arr.push(this.common.htmlToText(this.dataset[key][item2.id][0]));
+						}
+					}
 					rowData.push(arr);
 				});
 				doc.autoTable({
 					head: [[this.common.htmlToText(item.title)]],
 					body: rowData,
+					didDrawPage: function (data) {
+						doc.setFontSize(22);
+						doc.setTextColor(0);
+						doc.setFontStyle('bold');
+						doc.setFont('Roboto');
+					},
 					headerStyles: {
 						fontStyle: 'bold',
-						fillColor: '#bebebe',
+						fillColor: '#c8d6e5',
 						textColor: 'black',
+						fontSize: 35,
 						halign: 'left',
 					},
 					alternateRowStyles: {
-						fillColor: '#f3f3f3'
+						fillColor: '#f1f4f7'
 					},
 					useCss: true,
 					styles: {
-						fontSize: 22,
-						cellWidth: 4,
+						fontSize: 35,
+						cellWidth: 'auto',
+						textColor: 'black',
+						lineColor: '#89a8c8',
 					},
-					theme: 'striped',
+					theme: 'grid',
 				});
 			}
-			doc.save('table.pdf');
-			console.log(rowData);
+			doc.save(reportType + '_' + new Date() + '.pdf');
 		}
 	}
 	getSchool() {
@@ -1913,6 +1996,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.sisService.getSession().subscribe((result2: any) => {
 			if (result2.status === 'ok') {
 				this.sessionArray = result2.data;
+				this.sessionName = this.getSessionName(this.session.ses_id);
 			}
 		});
 	}
@@ -1934,24 +2018,45 @@ export class OutstandingReportComponent implements OnInit {
 		this.draggableGroupingPlugin.setDroppedGroups('stu_class_name');
 	}
 	exportToExcel(json: any[], excelFileName: string): void {
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		if (this.reportType === 'headwise') {
+			reportType = new TitleCasePipe().transform('head wise: ') + this.sessionName;
+		} else if (this.reportType === 'headwisedetail') {
+			reportType = new TitleCasePipe().transform('head wise detail: ') + this.sessionName;
+		} else if (this.reportType === 'classwise') {
+			reportType = new TitleCasePipe().transform('class wise: ') + this.sessionName;
+		} else if (this.reportType === 'routewise') {
+			reportType = new TitleCasePipe().transform('route wise: ') + this.sessionName;
+		} else if (this.reportType === 'defaulter') {
+			reportType = new TitleCasePipe().transform('defaulter list: ') + this.sessionName;
+		}
 		const rowData: any[] = [];
 		Object.keys(json).forEach(key => {
 			const obj: any = {};
-			Object.keys(json[key]).forEach(key2 => {
-				if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
-					obj[key2] = json[key][key2];
-				} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
-					obj[key2] = json[key][key2];
+			for (const item2 of this.columnDefinitions) {
+				if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+					obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
 				}
-			});
+				if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+					&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+					obj[item2.name] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
+				}
+				if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+					&& json[key][item2.id] === '<b>Grand Total</b>') {
+					obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
+				}
+				if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+					obj[item2.name] = this.common.htmlToText(json[key][item2.id][0]);
+				}
+			}
 			rowData.push(obj);
 		});
 		console.log(rowData);
-		console.log(XLSX.utils.json_to_sheet(rowData));
-		const fileName = 'test.xlsx';
+		const fileName = reportType + '.xlsx';
 		const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowData);
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, 'test');
+		XLSX.utils.book_append_sheet(wb, ws, reportType);
 
 		XLSX.writeFile(wb, fileName);
 	}
