@@ -127,6 +127,7 @@ export class ClassworkUpdateComponent implements OnInit {
 			eachPeriodFG.patchValue({
 				cw_st_id: '0'
 			});
+			this.getClassSectionByTeacherIdSubjectId(index, false);
 		} else if (event.value === '8') {
 			eachPeriodFG.controls['cw_sub_id'].clearValidators(Validators.required);
 			eachPeriodFG.controls['cw_class_id'].clearValidators(Validators.required);
@@ -144,6 +145,17 @@ export class ClassworkUpdateComponent implements OnInit {
 				cw_topic_id: '0',
 				cw_st_id: '0'
 			});
+		} else if (event.value === '7') {
+			eachPeriodFG.controls['cw_topic_id'].clearValidators(Validators.required);
+			eachPeriodFG.controls['cw_st_id'].clearValidators(Validators.required);
+			this.disabletopicArray[index] = true;
+			this.disableSubtopicArray[index] = true;
+			eachPeriodFG.patchValue({
+				cw_sec_id: '0',
+				cw_topic_id: '0',
+				cw_st_id: '0'
+			});
+			this.getClassBySubjectId(index);
 		} else {
 			eachPeriodFG.controls['cw_sub_id'].setValidators(Validators.required);
 			eachPeriodFG.controls['cw_st_id'].setValidators(Validators.required);
@@ -153,6 +165,7 @@ export class ClassworkUpdateComponent implements OnInit {
 			this.disableSubtopicArray[index] = false;
 			this.disabletopicArray[index] = false;
 			this.disableClassArray[index] = false;
+			this.getClassSectionByTeacherIdSubjectId(index, false);
 		}
 	}
 
@@ -206,6 +219,27 @@ export class ClassworkUpdateComponent implements OnInit {
 			}
 		});
 	}
+	getClassBySubjectId(i) {
+		const eachPeriodFG = this.Periods.controls[i];
+		this.classSectionArray[i] = [];
+		this.smartService.getClassBySubjectId({sub_id: eachPeriodFG.value.cw_sub_id}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const csArray = result.data;
+					if (csArray.length > 0) {
+						csArray.forEach(element => {
+							this.classSectionArray[i].push({
+								cs_id: element.class_id + '- 0',
+								cs_name: element.class_name
+							});
+						});
+					}
+
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+
 	getClassByTeacherIdSubjectId(i) {
 		// console.log(this.Periods);
 		const eachPeriodFG = this.Periods.controls[i];
@@ -221,12 +255,14 @@ export class ClassworkUpdateComponent implements OnInit {
 				}
 			});
 	}
-	getClassSectionByTeacherIdSubjectId(i) {
+	getClassSectionByTeacherIdSubjectId(i, resetflag = true) {
 		// console.log(this.Periods);
 		const eachPeriodFG = this.Periods.controls[i];
 		// console.log(eachPeriodFG);
 		this.classSectionArray[i] = [];
-		this.resetClassworkFormForSubjectChange(i);
+		if (resetflag) {
+			this.resetClassworkFormForSubjectChange(i);
+		}
 		this.smartService.getClassSectionByTeacherIdSubjectId({ teacher_id: this.teacherId, sub_id: eachPeriodFG.value.cw_sub_id }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {

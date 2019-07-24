@@ -124,6 +124,7 @@ export class ViewClassworkComponent implements OnInit {
 					if (tempcw.length > 0) {
 						tempcw.forEach(element => {
 							dateSet.add(this.commonAPIService.dateConvertion(new Date(element.cw_entry_date)));
+							element.csName = element.sec_name ? element.class_name + '-' + element.sec_name : element.class_name;
 						});
 					}
 					dateSet.forEach(item => {

@@ -63,14 +63,14 @@ export class ClassWiseComponent implements OnInit, OnChanges {
 							dateSet.add(element.entry_date);
 						});
 					}
-					console.log('dateSet', dateSet);
+					// console.log('dateSet', dateSet);
 					dateSet.forEach(item => {
 						this.classworkArray.push({
 							cw_entry_date: item,
-							cw_array: this.getClassworkForDate(item, tempcw)
+							cw_array: (this.getClassworkForDate(item, tempcw)).sort((a, b) => Number(a.cw_period_id) - Number(b.cw_period_id))
 						});
 					});
-					console.log('class', this.classworkArray);
+					// console.log('class', this.classworkArray);
 
 				} else {
 					this.noDataFlag = true;
