@@ -68,7 +68,8 @@
                 *ngIf="reportType === '10'"></app-feestruc-report>
                 <app-chequeclearance-report *ngIf="reportType === '11'"></app-chequeclearance-report>
                 <app-security-deposit-report *ngIf="reportType === '12'"></app-security-deposit-report>
-                <app-transport-report *ngIf="reportType === '15'"></app-transport-report>
+                <app-transport-report (displyRep)="displyRep($event)"
+                *ngIf="reportType === '15'"></app-transport-report>
               </div>
             </div>
           </mat-expansion-panel>

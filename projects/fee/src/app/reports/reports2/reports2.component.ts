@@ -221,6 +221,9 @@ export class Reports2Component implements OnInit {
 			if ($event.report_index === 10) {
 				this.reportHeader = 'Structure - ' + $event.report_name;
 			}
+			if ($event.report_index === 15) {
+				this.reportHeader = 'Transport - ' + $event.report_name;
+			}
 		} else {
 			this.reportHeader = $event.report_name;
 		}

@@ -483,8 +483,8 @@ export class OutstandingReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand Total</b>';
-						obj3['stu_admission_no'] = '';
+						obj3['invoice_created_date'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
@@ -770,7 +770,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
 						obj3['invoice_created_date'] = '<b>Grand Total</b>';
-						obj3['stu_admission_no'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
@@ -983,7 +983,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
 						obj3['invoice_created_date'] = '<b>Grand Total</b>';
-						obj3['stu_admission_no'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_no'] = '';
@@ -1241,7 +1241,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
 						obj3['invoice_created_date'] = '<b>Grand Total</b>';
-						obj3['stu_admission_no'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
