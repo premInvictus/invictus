@@ -5,8 +5,10 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BreadCrumbService, NotificationService, UserAccessMenuService, CommonAPIService } from '../../_services/index';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { BoardElement, SubjectElement, ClassElement, TopicElement,
-	SubTopicElement, SectionElement, QuestionTypeElement, QuestionSubTypeElement, SkillTypeElement, LODElement } from './system.model';
+import {
+	BoardElement, SubjectElement, ClassElement, TopicElement,
+	SubTopicElement, SectionElement, QuestionTypeElement, QuestionSubTypeElement, SkillTypeElement, LODElement
+} from './system.model';
 
 @Component({
 	selector: 'app-systeminfo',
@@ -28,6 +30,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	private formLod: FormGroup;
 	modalRef: BsModalRef;
 	currentsec: any[];
+	subjectArray: any[] = [];
 	private editFlag = false;
 	private arrayBoard: any[] = [];
 	private arraySection: any[] = [];
@@ -274,6 +277,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		} else if (this.valueSystemInfo === 3) {
 			this.getBoardALL(this);
 			this.getSubjectAll(this);
+			this.getSubject();
 			this.formSubject.reset();
 		} else if (this.valueSystemInfo === 4) {
 			this.formClass.reset();
@@ -359,8 +363,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 						if (result && result.status === 'ok') {
 							this.getSectionAll(this);
 							this.notif.showSuccessErrorMessage(result.data, 'success');
-						}});
-						this.formSection.patchValue({sec_name: '', section_id: ''});
+						}
+					});
+			this.formSection.patchValue({ sec_name: '', section_id: '' });
 		}
 	}
 
@@ -369,30 +374,38 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		if (!this.formSubject.value.sub_name) {
 			this.notif.showSuccessErrorMessage('Subject name is required', 'error');
 		}
-		if (!this.formSubject.value.board_id) {
-			this.notif.showSuccessErrorMessage('Board name is required', 'error');
-		}
+		// if (!this.formSubject.value.board_id) {
+		// 	this.notif.showSuccessErrorMessage('Board name is required', 'error');
+		// }
 		/* Form Validation Ends */
 		if (this.formSubject.valid) {
-			this.acsetupService.addSubject(this.formSubject.value)
-				.subscribe(
-					(result: any) => {
-						if (result && result.status === 'ok') {
-							this.getSubjectAll(this);
-							this.acsetupService.exportSubject(
-								{
-									board_id: this.formSubject.value.board_id,
-									sub_name: this.formSubject.value.sub_name,
+			const findex = this.subjectArray.findIndex(f => (f.sub_name).toLowerCase() === (this.formSubject.value.sub_name).toLowerCase());
+			if (findex === -1) {
+				this.acsetupService.addSubject(this.formSubject.value)
+					.subscribe(
+						(result: any) => {
+							if (result && result.status === 'ok') {
+								this.getSubjectAll(this);
+								this.acsetupService.exportSubject(
+									{
+										board_id: this.formSubject.value.board_id,
+										sub_name: this.formSubject.value.sub_name,
 
-								}).subscribe((result2: any) => {
-									if (result2 && result2.status === 'ok') {
-										this.notif.showSuccessErrorMessage(result2.data, 'success');
-										this.formSubject.controls.sub_name.setValue('');
-									}
-								});
+									}).subscribe((result2: any) => {
+										if (result2 && result2.status === 'ok') {
+											this.notif.showSuccessErrorMessage(result2.data, 'success');
+											this.formSubject.controls.sub_name.setValue('');
+										}
+									});
+							}
 						}
-					}
-				);
+					);
+			} else {
+				this.notif.showSuccessErrorMessage('Subject already exist.', 'error');
+			}
+			console.log('subject', this.subjectArray);
+
+
 		}
 	}
 
@@ -402,12 +415,12 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			this.notif.showSuccessErrorMessage('Class name is required', 'error');
 		}
 		if (Number(this.currentUser.role_id) === 2) {
-		if (!this.formClass.value.sec_id) {
-			this.notif.showSuccessErrorMessage('Section is required', 'error');
+			if (!this.formClass.value.sec_id) {
+				this.notif.showSuccessErrorMessage('Section is required', 'error');
+			}
+		} else {
+			this.formClass.value.sec_id = [];
 		}
-	} else {
-		this.formClass.value.sec_id = [];
-	}
 		if (!this.formClass.value.sub_id) {
 			this.notif.showSuccessErrorMessage('Subject is required', 'error');
 		}
@@ -422,23 +435,23 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 						if (result && result.status === 'ok') {
 							this.getClassAll(this);
 							this.acsetupService.exportClass(
-						{
-							board_id: this.formClass.value.board_id,
-							class_name: this.formClass.value.class_name,
-							sub_id: this.formClass.value.sub_id,
-							sec_id: this.formClass.value.sec_id
+								{
+									board_id: this.formClass.value.board_id,
+									class_name: this.formClass.value.class_name,
+									sub_id: this.formClass.value.sub_id,
+									sec_id: this.formClass.value.sec_id
 
-						}).subscribe((result2: any) => {
-								if (result2 && result2.status === 'ok') {
-									this.notif.showSuccessErrorMessage(result2.data, 'success');
-									this.formClass.patchValue({class_name: '', sec_id: [], sub_id: []});
-								}
-							});
+								}).subscribe((result2: any) => {
+									if (result2 && result2.status === 'ok') {
+										this.notif.showSuccessErrorMessage(result2.data, 'success');
+										this.formClass.patchValue({ class_name: '', sec_id: [], sub_id: [] });
+									}
+								});
 
 						}
 					}
 				);
-			}
+		}
 		this.getClassAll(this);
 	}
 
@@ -561,7 +574,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 						}
 					}
 				);
-			this.formQtype.patchValue({qt_name: '', qst_id: ['']});
+			this.formQtype.patchValue({ qt_name: '', qst_id: [''] });
 		}
 	}
 
@@ -681,7 +694,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					that.arraySubject = result.data;
 					let ind = 1;
 					for (const t of that.arraySubject) {
-						that.SUBJECT_ELEMENT_DATA.push({ position: ind, board: t.board_name , name: t.sub_name, action: t });
+						that.SUBJECT_ELEMENT_DATA.push({ position: ind, board: t.board_name, name: t.sub_name, action: t });
 						ind++;
 						that.subjectdataSource = new MatTableDataSource<SubjectElement>(that.SUBJECT_ELEMENT_DATA);
 						that.subjectdataSource.paginator = that.paginator;
@@ -699,6 +712,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.arraySubject = result.data;
+					this.subjectArray = result.data;
 				}
 			}
 		);
@@ -760,8 +774,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					that.arrayTopic = result.data;
 					let ind = 1;
 					for (const t of that.arrayTopic) {
-						that.TOPIC_ELEMENT_DATA.push({ position: ind, board: t.board_name,
-							class: t.class_name, subject: t.sub_name, name: t.topic_name, action: t });
+						that.TOPIC_ELEMENT_DATA.push({
+							position: ind, board: t.board_name,
+							class: t.class_name, subject: t.sub_name, name: t.topic_name, action: t
+						});
 						ind++;
 						that.topicdataSource = new MatTableDataSource<TopicElement>(that.TOPIC_ELEMENT_DATA);
 						that.topicdataSource.paginator = that.paginator;
@@ -794,8 +810,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					that.arraySubtopic = result.data;
 					let ind = 1;
 					for (const t of that.arraySubtopic) {
-						that.SUBTOPIC_ELEMENT_DATA.push({ position: ind, board: t.board_name,
-							class: t.class_name, subject: t.sub_name, topic: t.topic_name, name: t.st_name, action: t });
+						that.SUBTOPIC_ELEMENT_DATA.push({
+							position: ind, board: t.board_name,
+							class: t.class_name, subject: t.sub_name, topic: t.topic_name, name: t.st_name, action: t
+						});
 						ind++;
 						that.subtopicdataSource = new MatTableDataSource<SubTopicElement>(that.SUBTOPIC_ELEMENT_DATA);
 						that.subtopicdataSource.paginator = that.paginator;
@@ -900,18 +918,20 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 
 	formeditBoard(value: any) {
 		this.editFlag = true;
-		this.formBoard.patchValue({board_id: value.board_id, board_name: value.board_name,
-			board_alias: value.board_alias, board_status: value.board_status});
+		this.formBoard.patchValue({
+			board_id: value.board_id, board_name: value.board_name,
+			board_alias: value.board_alias, board_status: value.board_status
+		});
 	}
 
 	formeditSection(value: any) {
 		this.editFlag = true;
-		this.formSection.patchValue({sec_id: value.sec_id, sec_name: value.sec_name, sec_status: value.sec_status});
+		this.formSection.patchValue({ sec_id: value.sec_id, sec_name: value.sec_name, sec_status: value.sec_status });
 	}
 
 	formeditSubject(value: any) {
 		this.editFlag = true;
-		this.formSubject.patchValue({board_id: value.board_id, sub_id: value.sub_id, sub_name: value.sub_name, sub_status: value.sub_status});
+		this.formSubject.patchValue({ board_id: value.board_id, sub_id: value.sub_id, sub_name: value.sub_name, sub_status: value.sub_status });
 	}
 
 	getIdArray(value: any) {
@@ -940,8 +960,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 
 	formeditClass(value: any) {
 		this.editFlag = true;
-		this.formClass.patchValue({class_id: value.class_id, class_name: value.class_name, sec_id: this.getSecIdArray(value.sec_id),
-			sub_id: this.getSubIdArray(value.sub_id), class_status: value.class_status, board_id: value.board_id});
+		this.formClass.patchValue({
+			class_id: value.class_id, class_name: value.class_name, sec_id: this.getSecIdArray(value.sec_id),
+			sub_id: this.getSubIdArray(value.sub_id), class_status: value.class_status, board_id: value.board_id
+		});
 	}
 
 	formeditTopic(value: any) {
@@ -970,23 +992,25 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 
 	formeditQsubtype(value: any) {
 		this.editFlag = true;
-		this.formQsubtype.patchValue({qst_id: value.qst_id, qst_name: value.qst_name, qst_status: value.qst_status });
+		this.formQsubtype.patchValue({ qst_id: value.qst_id, qst_name: value.qst_name, qst_status: value.qst_status });
 	}
 
 	formeditQtype(value: any) {
 		this.editFlag = true;
-		this.formQtype.patchValue({qt_id: value.qt_id, qt_name: value.qt_name,
-			qst_id: this.getIdArray(value.qst_id), qt_status: value.qt_status});
+		this.formQtype.patchValue({
+			qt_id: value.qt_id, qt_name: value.qt_name,
+			qst_id: this.getIdArray(value.qst_id), qt_status: value.qt_status
+		});
 	}
 
 	formeditSkill(value: any) {
 		this.editFlag = true;
-		this.formSkill.patchValue({skill_id: value.skill_id, skill_name: value.skill_name, skill_status: value.skill_status });
+		this.formSkill.patchValue({ skill_id: value.skill_id, skill_name: value.skill_name, skill_status: value.skill_status });
 	}
 
 	formeditLod(value: any) {
 		this.editFlag = true;
-		this.formLod.patchValue({dl_id: value.dl_id, dl_name: value.dl_name, dl_status: value.dl_status});
+		this.formLod.patchValue({ dl_id: value.dl_id, dl_name: value.dl_name, dl_status: value.dl_status });
 	}
 
 	editBoard(value: any) {
@@ -1007,7 +1031,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					}
 				}
 			);
-			this.formBoard.patchValue({board_name: '', board_alias: ''});
+			this.formBoard.patchValue({ board_name: '', board_alias: '' });
 		}
 	}
 
@@ -1060,12 +1084,12 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			this.notif.showSuccessErrorMessage('Class name is required', 'error');
 		}
 		if (Number(this.currentUser.role_id) === 2) {
-		if (!this.formClass.value.sec_id) {
-			this.notif.showSuccessErrorMessage('Section is required', 'error');
+			if (!this.formClass.value.sec_id) {
+				this.notif.showSuccessErrorMessage('Section is required', 'error');
+			}
+		} else {
+			this.formClass.value.sec_id = [];
 		}
-	} else {
-		this.formClass.value.sec_id = [];
-	}
 		if (!this.formClass.value.sub_id) {
 			this.notif.showSuccessErrorMessage('Subject is required', 'error');
 		}
@@ -1114,7 +1138,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 			);
 			this.editFlag = false;
-			this.formTopic.patchValue({topic_id: '', board_id: '', class_id: '', sub_id: '', topic_name: ''});
+			this.formTopic.patchValue({ topic_id: '', board_id: '', class_id: '', sub_id: '', topic_name: '' });
 		}
 	}
 
@@ -1145,7 +1169,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					}
 				});
 			this.editFlag = false;
-			this.formSubtopic.patchValue({st_id: '', board_id: '', class_id: '', sub_id: '', topic_id: '', st_name: ''});
+			this.formSubtopic.patchValue({ st_id: '', board_id: '', class_id: '', sub_id: '', topic_id: '', st_name: '' });
 		}
 	}
 
@@ -1171,7 +1195,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					this.notif.showSuccessErrorMessage(result.data, 'success');
 				}
 			});
-			this.formQtype.patchValue({qt_id: '', qt_name: '', qst_id: ''});
+		this.formQtype.patchValue({ qt_id: '', qt_name: '', qst_id: '' });
 	}
 
 	editSkill(value: any) {
@@ -1190,7 +1214,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 			);
 			this.editFlag = false;
-			this.formSkill.patchValue({skill_id: '', skill_name: ''});
+			this.formSkill.patchValue({ skill_id: '', skill_name: '' });
 		}
 
 	}
@@ -1210,7 +1234,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 			);
 			this.editFlag = false;
-			this.formLod.patchValue({dl_id: '', dl_name: ''});
+			this.formLod.patchValue({ dl_id: '', dl_name: '' });
 		}
 	}
 	toggleBoardStatus(value: any) {
@@ -1428,14 +1452,14 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	}
 
 	openModal = (data) => this.deleteModalRef.openDeleteModal(data);
-		// this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+	// this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
 
 	closeFirstModal() {
 		this.modalRef.hide();
 		this.modalRef = null;
 	}
 
-	deleteEntry(deletedData, serFnName , next) {
+	deleteEntry(deletedData, serFnName, next) {
 		this.acsetupService[serFnName](deletedData).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
