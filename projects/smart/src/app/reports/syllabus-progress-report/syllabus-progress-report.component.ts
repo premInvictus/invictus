@@ -40,6 +40,9 @@ export class SyllabusProgressReportComponent implements OnInit {
 	currentYear: any;
 	nextYear: any;
 	tt_id: any;
+	totalCompletion = 0;
+	totalAvailed = 0;
+	totalAvailable = 0;
 	remarkParam: any = {};
 	constructor(
 		public dialog: MatDialog,
@@ -173,6 +176,22 @@ export class SyllabusProgressReportComponent implements OnInit {
 	pdfDownload() {
 		const doc = new jsPDF('landscape');
 		doc.autoTable({
+			head: [['Syllabus Progress Report of ' + this.getClassName(this.progressReportForm.value.syl_class_id) + '-' +
+				this.getSectionName(this.progressReportForm.value.syl_section_id)]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
 			html: '#report_table',
 			headerStyles: {
 				fontStyle: 'normal',
@@ -266,6 +285,9 @@ export class SyllabusProgressReportComponent implements OnInit {
 	}
 	// fetch details for table 
 	fetchDetails() {
+		this.totalAvailable = 0;
+		this.totalCompletion = 0;
+		this.totalAvailed = 0;
 		this.headerDivFlag = true;
 		this.finalDivFlag = false;
 		this.subCountArray = [];
@@ -301,6 +323,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 							this.smartService.cwSyllabusProgessReport(dateParam).subscribe((cwSyllabus_r: any) => {
 								if (cwSyllabus_r && cwSyllabus_r.status === 'ok') {
 									for (const citem of cwSyllabus_r.data) {
+										this.totalAvailed = this.totalAvailed + Number(citem.cw_period_req);
 										this.periodCompletionArray[citem.cw_sub_id] = citem.cw_period_req;
 									}
 								}
@@ -322,6 +345,8 @@ export class SyllabusProgressReportComponent implements OnInit {
 											const findex = this.subCountArray.findIndex(f => f.subject_name === titem.subject_name);
 											if (findex === -1) {
 												if (titem.day !== '-') {
+													this.totalCompletion = this.totalCompletion + titem.count * titem.daycount;
+													this.totalAvailable = this.totalAvailable + titem.count * titem.daycountYear;
 													this.subCountArray.push({
 														'subject_id': titem.subject_id,
 														'subject_name': titem.subject_name,
@@ -332,6 +357,8 @@ export class SyllabusProgressReportComponent implements OnInit {
 											} else {
 												this.subCountArray[findex].count = this.subCountArray[findex].count + titem.count * titem.daycount;
 												this.subCountArray[findex].countYear = this.subCountArray[findex].countYear + titem.count * titem.daycountYear;
+												this.totalCompletion = this.totalCompletion + titem.count * titem.daycount;
+												this.totalAvailable = this.totalAvailable + titem.count * titem.daycountYear;
 											}
 										}
 

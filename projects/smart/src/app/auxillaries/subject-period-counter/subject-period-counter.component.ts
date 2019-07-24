@@ -1,6 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
+import * as XLSX from 'xlsx';
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
+
 @Component({
 	selector: 'app-subject-period-counter',
 	templateUrl: './subject-period-counter.component.html',
@@ -136,6 +141,122 @@ export class SubjectPeriodCounterComponent implements OnInit {
 			return this.sectionArray[sectionIndex].sec_name;
 		}
 	}
+	// export excel code
+	exportAsExcel() {
+		// tslint:disable-next-line:max-line-length
+		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('daywise_table')); // converts a DOM TABLE element to a worksheet
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
+
+	}
+	// pdf download
+	pdfDownload() {
+		const doc = new jsPDF('landscape');
+		doc.autoTable({
+			head: [['Period Wise Summary Of Class ' + this.getClassName(this.subjectPeriodForm.value.tt_class_id) + '-' +
+				this.getSectionName(this.subjectPeriodForm.value.tt_section_id)]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			html: '#periodwise_table',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: 'red',
+			},
+			theme: 'grid'
+		});
+		doc.autoTable({
+			head: [['Day Wise Summary Of Class ' + this.getClassName(this.subjectPeriodForm.value.tt_class_id) + '-' +
+				this.getSectionName(this.subjectPeriodForm.value.tt_section_id)]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			html: '#daywise_table',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: 'red',
+			},
+			theme: 'grid'
+		});
+		doc.autoTable({
+			head: [['Subject Wise Summary Of Class ' + this.getClassName(this.subjectPeriodForm.value.tt_class_id) + '-' +
+				this.getSectionName(this.subjectPeriodForm.value.tt_section_id)]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			html: '#subjectwise_table',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: 'red',
+			},
+			theme: 'grid'
+		});
+		doc.save('table.pdf');
+	}
 	// get sum of total count of subject in week
 	getSum(dety, index, sub_id) {
 		this.sum = 0;
@@ -261,7 +382,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 													}
 												}
 											});
-											console.log('tav',this.daywisetableArray);
+											console.log('tav', this.daywisetableArray);
 										}
 									});
 
