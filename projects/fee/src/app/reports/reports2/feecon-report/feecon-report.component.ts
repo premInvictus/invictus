@@ -140,100 +140,6 @@ export class FeeconReportComponent implements OnInit {
 		return className;
 	}
 	getConReport(value: any) {
-		this.gridOptions = {
-			enableDraggableGrouping: true,
-			createPreHeaderPanel: true,
-			showPreHeaderPanel: true,
-			enableHeaderMenu: true,
-			preHeaderPanelHeight: 40,
-			enableFiltering: true,
-			enableSorting: true,
-			enableColumnReorder: true,
-			createFooterRow: true,
-			showFooterRow: true,
-			footerRowHeight: 21,
-			enableExcelCopyBuffer: true,
-			fullWidthRows: true,
-			headerMenu: {
-				iconColumnHideCommand: 'fas fa-times',
-				iconSortAscCommand: 'fas fa-sort-up',
-				iconSortDescCommand: 'fas fa-sort-down',
-				title: 'Sort'
-			},
-			exportOptions: {
-				sanitizeDataExport: true,
-				exportWithFormatter: true
-			},
-			gridMenu: {
-				customItems: [{
-					title: 'pdf',
-					titleKey: 'Export as PDF',
-					command: 'exportAsPDF',
-					iconCssClass: 'fas fa-download'
-				},
-				{
-					title: 'excel',
-					titleKey: 'Export Excel',
-					command: 'exportAsExcel',
-					iconCssClass: 'fas fa-download'
-				},
-				{
-					title: 'expand',
-					titleKey: 'Expand Groups',
-					command: 'expandGroup',
-					iconCssClass: 'fas fa-expand-arrows-alt'
-				},
-				{
-					title: 'collapse',
-					titleKey: 'Collapse Groups',
-					command: 'collapseGroup',
-					iconCssClass: 'fas fa-compress'
-				},
-				{
-					title: 'cleargroup',
-					titleKey: 'Clear Groups',
-					command: 'cleargroup',
-					iconCssClass: 'fas fa-eraser'
-				}
-				],
-				onCommand: (e, args) => {
-					if (args.command === 'toggle-preheader') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.clearGrouping();
-					}
-					if (args.command === 'exportAsPDF') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF();
-					}
-					if (args.command === 'expandGroup') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.expandAllGroups();
-					}
-					if (args.command === 'collapseGroup') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.collapseAllGroups();
-					}
-					if (args.command === 'cleargroup') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.clearGrouping();
-					}
-					if (args.command === 'exportAsExcel') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportToExcel(this.dataset, 'myfile');
-					}
-				},
-				onColumnsChanged: (e, args) => {
-					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
-				},
-			},
-			draggableGrouping: {
-				dropPlaceHolderText: 'Drop a column header here to group by the column',
-				// groupIconCssClass: 'fa fa-outdent',
-				deleteIconCssClass: 'fa fa-times',
-				onGroupChanged: (e, args) => this.onGroupChanged(args && args.groupColumns),
-				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-			}
-		};
 		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
@@ -262,9 +168,10 @@ export class FeeconReportComponent implements OnInit {
 			this.feeService.getFeeConcessionReport(collectionJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.message, 'success');
+					console.log('result', result);
 					repoArray = result.data.reportData;
 					let i = 0;
-					let j = 0;
+					const j = 0;
 					const feeHead: any[] = [];
 					Object.keys(repoArray).forEach((keys: any) => {
 						const obj: any = {};
@@ -275,7 +182,7 @@ export class FeeconReportComponent implements OnInit {
 									name: 'SNo.',
 									field: 'srno',
 									sortable: true,
-									maxWidth: 280
+									maxWidth: 80
 								},
 								{
 									id: 'fcg_name',
@@ -285,7 +192,7 @@ export class FeeconReportComponent implements OnInit {
 									filterable: true,
 									filterSearchType: FieldType.string,
 									filter: { model: Filters.compoundInput },
-									width: 350,
+									width: 180,
 									grouping: {
 										getter: 'fcg_name',
 										formatter: (g) => {
@@ -298,6 +205,17 @@ export class FeeconReportComponent implements OnInit {
 									groupTotalsFormatter: this.srnTotalsFormatter
 								},
 								{
+									id: 'fcg_concession_category',
+									name: 'Concession Category',
+									field: 'fcg_concession_category',
+									sortable: true,
+									filterable: true,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInput },
+									width: 360,
+									formatter: this.checkFeeHeadFormatter
+								},
+								{
 									id: 'fcg_description',
 									name: 'Description',
 									field: 'fcg_description',
@@ -305,81 +223,108 @@ export class FeeconReportComponent implements OnInit {
 									filterable: true,
 									filterSearchType: FieldType.string,
 									filter: { model: Filters.compoundInput },
-									width: 180,
+									width: 700,
 								}];
 						}
+
 						if (repoArray[Number(keys)]['fcgr_fcc_id']) {
 							let k = 0;
-							let tot = 0;
+							const tot = 0;
+
+							obj['id'] = repoArray[Number(keys)]['fcg_id'] + keys;
+							obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+								(Number(keys) + 1);
+							obj['fcg_name'] = repoArray[Number(keys)]['fcg_name'];
+							obj['fcg_description'] = repoArray[Number(keys)]['fcg_description'];
+							let feeHead = '';
 							for (const titem of repoArray[Number(keys)]['fcgr_fcc_id']) {
 								Object.keys(titem).forEach((key2: any) => {
-									if (key2 === 'fcc_name' && Number(keys) === 0) {
-										const feeObj: any = {};
-										this.columnDefinitions.push({
-											id: 'fcc_name' + j,
-											name: new CapitalizePipe().transform(titem[key2]),
-											field: 'fcc_name' + j,
-											cssClass: 'amount-report-fee',
-											sortable: true,
-											filterable: true,
-											filterSearchType: FieldType.number,
-											filter: { model: Filters.compoundInput },
-											formatter: this.checkFeeFormatter,
-											groupTotalsFormatter: this.sumTotalsFormatter
-										});
-										feeObj['fcc_name' + j] = '';
-										feeHead.push(feeObj);
-										this.aggregatearray.push(new Aggregators.Sum('fcc_name' + j));
-										j++;
-									}
+									// if (key2 === 'fcc_name' && Number(keys) === 0) {
+									// 	const feeObj: any = {};
+									// 	this.columnDefinitions.push({
+									// 		id: 'fcc_name' + j,
+									// 		name: new CapitalizePipe().transform(titem[key2]),
+									// 		field: 'fcc_name' + j,
+									// 		cssClass: 'amount-report-fee',
+									// 		sortable: true,
+									// 		filterable: true,
+									// 		filterSearchType: FieldType.number,
+									// 		filter: { model: Filters.compoundInput },
+									// 		formatter: this.checkFeeFormatter,
+									// 		groupTotalsFormatter: this.sumTotalsFormatter
+									// 	});
+									// 	feeObj['fcc_name' + j] = '';
+									// 	feeHead.push(feeObj);
+									// 	this.aggregatearray.push(new Aggregators.Sum('fcc_name' + j));
+									// 	j++;
+									// }
+
 									if (key2 === 'fcc_name') {
-										obj['id'] = repoArray[Number(keys)]['fcg_name'] + keys +
-											repoArray[Number(keys)]['fcg_id'];
-										obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
-											(Number(keys) + 1);
-										obj['fcg_name'] = repoArray[Number(keys)]['fcg_name'];
-										obj['fcg_description'] = repoArray[Number(keys)]['fcg_description'];
-										obj[key2 + k] = titem['fcc_amount'] ? Number(titem['fcc_amount']) : 0;
-										tot = tot + (titem['fcc_amount'] ? Number(titem['fcc_amount']) : 0);
-										obj['total'] = tot;
+
+										// obj['id'] = repoArray[Number(keys)]['fcg_id'] + keys +titem['fcc_id'];
+										// obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +(Number(keys) + 1);
+										// obj['fcg_name'] = repoArray[Number(keys)]['fcg_name'];
+
+										// obj['fcc_name'] = titem['fcc_name'];
+										// obj['fcg_description'] = repoArray[Number(keys)]['fcg_description'];
+										// obj[key2 + k] = titem['fcc_amount'] ? Number(titem['fcc_amount']) : 0;
+										// tot = tot + (titem['fcc_amount'] ? Number(titem['fcc_amount']) : 0);
+										// obj['total'] = tot;
+
+										feeHead = feeHead + '<b>' + new CapitalizePipe().transform(titem.fcc_name) + '(' + titem.fcrt_alias + ') :'
+											+ titem.fcc_amount + '</b><br>';
+										let classAmt = '';
+										if (titem.fh_class_amount_detail &&
+											JSON.parse(titem.fh_class_amount_detail).length > 0) {
+											for (const titem1 of JSON.parse(titem.fh_class_amount_detail)) {
+												classAmt = classAmt + 'Class ' +
+													titem1.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem1.head_amt)) + ', ';
+											}
+											classAmt = classAmt.substring(0, classAmt.length - 2);
+										}
+										feeHead = feeHead + classAmt + '<br>';
+										obj['fcg_concession_category'] = feeHead;
 										k++;
 									}
 								});
 							}
 						}
 						i++;
-						this.dataset.push(obj);
+
+						if (Object.keys(obj).length > 0) {
+							this.dataset.push(obj);
+						}
 					});
-					this.columnDefinitions.push(
-						{
-							id: 'total', name: 'Total', field: 'total',
-							filterable: true,
-							filterSearchType: FieldType.number,
-							filter: { model: Filters.compoundInputNumber },
-							sortable: true,
-							formatter: this.checkTotalFormatter,
-							cssClass: 'amount-report-fee',
-							groupTotalsFormatter: this.sumTotalsFormatter
-						},
-					);
-					console.log(this.dataset);
-					const obj3: any = {};
-					obj3['id'] = 'footer';
-					obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
-					obj3['fcg_name'] = '';
-					Object.keys(feeHead).forEach((key: any) => {
-						Object.keys(feeHead[key]).forEach(key2 => {
-							Object.keys(this.dataset).forEach(key3 => {
-								Object.keys(this.dataset[key3]).forEach(key4 => {
-									if (key4 === key2) {
-										obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-									}
-								});
-							});
-						});
-					});
-					obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
-					this.dataset.push(obj3);
+					// this.columnDefinitions.push(
+					// 	{
+					// 		id: 'total', name: 'Total', field: 'total',
+					// 		filterable: true,
+					// 		filterSearchType: FieldType.number,
+					// 		filter: { model: Filters.compoundInputNumber },
+					// 		sortable: true,
+					// 		formatter: this.checkTotalFormatter,
+					// 		cssClass: 'amount-report-fee',
+					// 		groupTotalsFormatter: this.sumTotalsFormatter
+					// 	},
+					// );
+
+					// const obj3: any = {};
+					// obj3['id'] = 'footer';
+					// obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
+					// obj3['fcg_name'] = '';
+					// Object.keys(feeHead).forEach((key: any) => {
+					// 	Object.keys(feeHead[key]).forEach(key2 => {
+					// 		Object.keys(this.dataset).forEach(key3 => {
+					// 			Object.keys(this.dataset[key3]).forEach(key4 => {
+					// 				if (key4 === key2) {
+					// 					obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+					// 				}
+					// 			});
+					// 		});
+					// 	});
+					// });
+					// obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+					// this.dataset.push(obj3);
 					this.tableFlag = true;
 				} else {
 					this.tableFlag = true;
@@ -786,9 +731,198 @@ export class FeeconReportComponent implements OnInit {
 			});
 		if ($event.value) {
 			if ($event.value === 'concession') {
+				this.gridOptions = {
+					enableDraggableGrouping: true,
+					createPreHeaderPanel: true,
+					showPreHeaderPanel: true,
+					enableHeaderMenu: true,
+					preHeaderPanelHeight: 40,
+					enableFiltering: true,
+					enableSorting: true,
+					enableColumnReorder: true,
+					createFooterRow: true,
+					showFooterRow: true,
+					footerRowHeight: 21,
+					rowHeight: 150,
+					enableExcelCopyBuffer: true,
+					fullWidthRows: true,
+					headerMenu: {
+						iconColumnHideCommand: 'fas fa-times',
+						iconSortAscCommand: 'fas fa-sort-up',
+						iconSortDescCommand: 'fas fa-sort-down',
+						title: 'Sort'
+					},
+					exportOptions: {
+						sanitizeDataExport: true,
+						exportWithFormatter: true
+					},
+					gridMenu: {
+						customItems: [{
+							title: 'pdf',
+							titleKey: 'Export as PDF',
+							command: 'exportAsPDF',
+							iconCssClass: 'fas fa-download'
+						},
+						{
+							title: 'excel',
+							titleKey: 'Export Excel',
+							command: 'exportAsExcel',
+							iconCssClass: 'fas fa-download'
+						},
+						{
+							title: 'expand',
+							titleKey: 'Expand Groups',
+							command: 'expandGroup',
+							iconCssClass: 'fas fa-expand-arrows-alt'
+						},
+						{
+							title: 'collapse',
+							titleKey: 'Collapse Groups',
+							command: 'collapseGroup',
+							iconCssClass: 'fas fa-compress'
+						},
+						{
+							title: 'cleargroup',
+							titleKey: 'Clear Groups',
+							command: 'cleargroup',
+							iconCssClass: 'fas fa-eraser'
+						}
+						],
+						onCommand: (e, args) => {
+							if (args.command === 'toggle-preheader') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.clearGrouping();
+							}
+							if (args.command === 'exportAsPDF') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.exportAsPDF();
+							}
+							if (args.command === 'expandGroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.expandAllGroups();
+							}
+							if (args.command === 'collapseGroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.collapseAllGroups();
+							}
+							if (args.command === 'cleargroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.clearGrouping();
+							}
+							if (args.command === 'exportAsExcel') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.exportToExcel(this.dataset, 'myfile');
+							}
+						},
+						onColumnsChanged: (e, args) => {
+							console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+						},
+					},
+					draggableGrouping: {
+						dropPlaceHolderText: 'Drop a column header here to group by the column',
+						// groupIconCssClass: 'fa fa-outdent',
+						deleteIconCssClass: 'fa fa-times',
+						onGroupChanged: (e, args) => this.onGroupChanged(args && args.groupColumns),
+						onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+					}
+				};
 				this.filterFlag = false;
 				this.getConReport(this.reportFilterForm.value);
 			} else if ($event.value === 'concessionAlloted') {
+				this.gridOptions = {
+					enableDraggableGrouping: true,
+					createPreHeaderPanel: true,
+					showPreHeaderPanel: true,
+					enableHeaderMenu: true,
+					preHeaderPanelHeight: 40,
+					enableFiltering: true,
+					enableSorting: true,
+					enableColumnReorder: true,
+					createFooterRow: true,
+					showFooterRow: true,
+					footerRowHeight: 21,
+					enableExcelCopyBuffer: true,
+					fullWidthRows: true,
+					headerMenu: {
+						iconColumnHideCommand: 'fas fa-times',
+						iconSortAscCommand: 'fas fa-sort-up',
+						iconSortDescCommand: 'fas fa-sort-down',
+						title: 'Sort'
+					},
+					exportOptions: {
+						sanitizeDataExport: true,
+						exportWithFormatter: true
+					},
+					gridMenu: {
+						customItems: [{
+							title: 'pdf',
+							titleKey: 'Export as PDF',
+							command: 'exportAsPDF',
+							iconCssClass: 'fas fa-download'
+						},
+						{
+							title: 'excel',
+							titleKey: 'Export Excel',
+							command: 'exportAsExcel',
+							iconCssClass: 'fas fa-download'
+						},
+						{
+							title: 'expand',
+							titleKey: 'Expand Groups',
+							command: 'expandGroup',
+							iconCssClass: 'fas fa-expand-arrows-alt'
+						},
+						{
+							title: 'collapse',
+							titleKey: 'Collapse Groups',
+							command: 'collapseGroup',
+							iconCssClass: 'fas fa-compress'
+						},
+						{
+							title: 'cleargroup',
+							titleKey: 'Clear Groups',
+							command: 'cleargroup',
+							iconCssClass: 'fas fa-eraser'
+						}
+						],
+						onCommand: (e, args) => {
+							if (args.command === 'toggle-preheader') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.clearGrouping();
+							}
+							if (args.command === 'exportAsPDF') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.exportAsPDF();
+							}
+							if (args.command === 'expandGroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.expandAllGroups();
+							}
+							if (args.command === 'collapseGroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.collapseAllGroups();
+							}
+							if (args.command === 'cleargroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.clearGrouping();
+							}
+							if (args.command === 'exportAsExcel') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.exportToExcel(this.dataset, 'myfile');
+							}
+						},
+						onColumnsChanged: (e, args) => {
+							console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+						},
+					},
+					draggableGrouping: {
+						dropPlaceHolderText: 'Drop a column header here to group by the column',
+						// groupIconCssClass: 'fa fa-outdent',
+						deleteIconCssClass: 'fa fa-times',
+						onGroupChanged: (e, args) => this.onGroupChanged(args && args.groupColumns),
+						onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+					}
+				};
 				this.valueLabel = 'Class';
 				this.filterFlag = true;
 				this.getClassData();
