@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
 	Filters,
 	Formatters,
 	Sorters,
-	SortDirectionNumber
+	SortDirectionNumber,
+	DelimiterType,
+	FileType
 } from 'angular-slickgrid';
+import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
-import { DecimalPipe, DatePipe } from '@angular/common';
+import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { CapitalizePipe } from '../../../_pipes';
 import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { MatDialog } from '@angular/material';
@@ -26,7 +29,8 @@ import 'jspdf-autotable';
 	styleUrls: ['./transport-report.component.css']
 })
 export class TransportReportComponent implements OnInit {
-
+	sessionArray: any[] = [];
+	session: any = {};
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
@@ -60,6 +64,8 @@ export class TransportReportComponent implements OnInit {
 	hiddenValueArray5: any[] = [];
 	hiddenValueArray4: any[] = [];
 	schoolInfo: any;
+	sessionName: any;
+	@Output() displyRep = new EventEmitter();
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -142,6 +148,8 @@ export class TransportReportComponent implements OnInit {
 			footerRowHeight: 21,
 			enableExcelCopyBuffer: true,
 			fullWidthRows: true,
+			enableAutoTooltip: true,
+			enableCellNavigation: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -157,6 +165,12 @@ export class TransportReportComponent implements OnInit {
 					title: 'pdf',
 					titleKey: 'Export as PDF',
 					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
 					iconCssClass: 'fas fa-download'
 				},
 				{
@@ -195,9 +209,16 @@ export class TransportReportComponent implements OnInit {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.collapseAllGroups();
 					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel(this.dataset, 'myfile');
+					}
 					if (args.command === 'cleargroup') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 						this.clearGrouping();
+					}
+					if (args.command === 'export-csv') {
+						this.exportToFile('csv');
 					}
 				},
 				onColumnsChanged: (e, args) => {
@@ -1264,6 +1285,7 @@ export class TransportReportComponent implements OnInit {
 				'downloadAll': true
 			});
 		if ($event.value) {
+			this.displyRep.emit({ report_index: 15, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'routewisecoll' || $event.value === 'routewiseout') {
 				this.valueLabel = 'Routes';
 				this.getRoutes();
@@ -1280,7 +1302,14 @@ export class TransportReportComponent implements OnInit {
 			}
 			this.filterFlag = true;
 		} else {
+			this.displyRep.emit({ report_index: 15, report_id: '', report_name: 'Transport Report' });
 			this.filterFlag = false;
+		}
+	}
+	getReportName(value) {
+		const findex = this.reportTypeArray.findIndex(f => f.report_type === value);
+		if (findex !== -1) {
+			return this.reportTypeArray[findex].report_name;
 		}
 	}
 	openFilterDialog() {
@@ -1358,29 +1387,53 @@ export class TransportReportComponent implements OnInit {
 			}
 		});
 	}
+	getSessionName(id) {
+		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
+		if (findex !== -1) {
+			return this.sessionArray[findex].ses_name;
+		}
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				this.sessionArray = result2.data;
+				this.sessionName = this.getSessionName(this.session.ses_id);
+			}
+		});
+	}
 	exportAsPDF() {
 		const headerData: any[] = [];
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		if (this.reportType === 'routewisecoll') {
+			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'routewiseout') {
+			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
+		} else if (this.reportType === 'transportAlloted') {
+			reportType = new TitleCasePipe().transform('Transport allotee report: ') + this.sessionName;
+		} else if (this.reportType === 'routeslabstopwise') {
+			reportType = new TitleCasePipe().transform('route slab stoppage wise collection report: ') + this.sessionName;
+		}
 		let rowData: any[] = [];
 		for (const item of this.columnDefinitions) {
 			headerData.push(item.name);
 		}
-		console.log(this.dataviewObj);
-		console.log(this.dataviewObj.getGrouping());
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(this.dataset).forEach(key => {
 				const arr: any[] = [];
-				Object.keys(this.dataset[key]).forEach(key2 => {
-					if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name') {
-						arr.push(this.dataset[key][key2]);
-					} else if (key2 !== 'id' && key2 !== 'receipt_id' && key2 === 'fp_name') {
-						arr.push(this.dataset[key][key2][0]);
+				for (const item of this.columnDefinitions) {
+					if (item.id !== 'id' && item.id !== 'receipt_id' && item.id !== 'fp_name') {
+						arr.push(this.dataset[key][item.id]);
+					} else if (item.id !== 'id' && item.id !== 'receipt_id' && item.id === 'fp_name') {
+						arr.push(this.dataset[key][item.id][0]);
 					}
-				});
+				}
 				rowData.push(arr);
 			});
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new CapitalizePipe().transform(this.schoolInfo.school_name)]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -1389,22 +1442,23 @@ export class TransportReportComponent implements OnInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 40,
+					fontSize: 35,
 				},
 				useCss: true,
 				theme: 'striped'
 			});
 			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
+				head: [[reportType]],
+				margin: { top: 0 },
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
 				headerStyles: {
-					fontStyle: 'normal',
+					fontStyle: 'bold',
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 25,
+					fontSize: 35,
 				},
 				useCss: true,
 				theme: 'striped'
@@ -1412,8 +1466,8 @@ export class TransportReportComponent implements OnInit {
 			doc.autoTable({
 				head: [headerData],
 				body: rowData,
-				startY: 60,
-				margin: { top: 40 },
+				startY: 65,
+				tableLineColor: 'black',
 				didDrawPage: function (data) {
 					doc.setFontSize(22);
 					doc.setTextColor(0);
@@ -1422,22 +1476,58 @@ export class TransportReportComponent implements OnInit {
 				},
 				headerStyles: {
 					fontStyle: 'bold',
-					fillColor: '#bebebe',
-					textColor: 'black',
+					fillColor: '#c8d6e5',
+					textColor: '#5e666d',
+					fontSize: 26,
 				},
 				alternateRowStyles: {
-					fillColor: '#f3f3f3'
+					fillColor: '#f1f4f7'
 				},
 				useCss: true,
 				styles: {
-					fontSize: 22,
+					fontSize: 35,
 					cellWidth: 'auto',
+					textColor: 'black',
+					lineColor: '#89a8c8',
 				},
-				theme: 'striped'
+				theme: 'grid'
 			});
-			doc.save('table.pdf');
+			doc.save(reportType + '_' + new Date() + '.pdf');
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 30,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+
+			doc.autoTable({
+				head: [[reportType]],
+				margin: { top: 0 },
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'center',
+					fontSize: 30,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
 			doc.autoTable({
 				head: [headerData],
 				didDrawPage: function (data) {
@@ -1448,11 +1538,11 @@ export class TransportReportComponent implements OnInit {
 				},
 				headerStyles: {
 					fontStyle: 'bold',
-					fillColor: '#bebebe',
-					textColor: 'black',
+					fillColor: '#c8d6e5',
+					textColor: '#5e666d',
 				},
 				alternateRowStyles: {
-					fillColor: '#f3f3f3'
+					fillColor: '#f1f4f7'
 				},
 				useCss: true,
 				styles: {
@@ -1465,38 +1555,46 @@ export class TransportReportComponent implements OnInit {
 				rowData = [];
 				Object.keys(item.rows).forEach(key => {
 					const arr: any[] = [];
-					Object.keys(item.rows[key]).forEach(key2 => {
-						if (key2 !== 'id' && key2 !== 'receipt_id' && key2 !== 'fp_name' && key2 !== 'invoice_created_date') {
-							arr.push(item.rows[key][key2]);
-						} else if (key2 !== 'id' && key2 !== 'receipt_id' &&
-							key2 !== 'invoice_created_date' && key2 === 'fp_name') {
-							arr.push(item.rows[key][key2][0]);
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id !== 'id' && item2.id !== 'receipt_id' && item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+							arr.push(item.rows[key][item2.id]);
+						} else if (item2.id !== 'id' && item2.id !== 'receipt_id' &&
+							item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+							arr.push(item.rows[key][item2.id][0]);
 						}
-					});
+					}
 					rowData.push(arr);
 				});
 				doc.autoTable({
 					head: [[this.common.htmlToText(item.title)]],
 					body: rowData,
+					didDrawPage: function (data) {
+						doc.setFontSize(22);
+						doc.setTextColor(0);
+						doc.setFontStyle('bold');
+						doc.setFont('Roboto');
+					},
 					headerStyles: {
 						fontStyle: 'bold',
-						fillColor: '#bebebe',
+						fillColor: '#c8d6e5',
 						textColor: 'black',
+						fontSize: 35,
 						halign: 'left',
 					},
 					alternateRowStyles: {
-						fillColor: '#f3f3f3'
+						fillColor: '#f1f4f7'
 					},
 					useCss: true,
 					styles: {
-						fontSize: 22,
-						cellWidth: 4,
+						fontSize: 35,
+						cellWidth: 'auto',
+						textColor: 'black',
+						lineColor: '#89a8c8',
 					},
-					theme: 'striped'
+					theme: 'grid',
 				});
 			}
-			doc.save('table.pdf');
-			console.log(rowData);
+			doc.save(reportType + '_' + new Date() + '.pdf');
 		}
 	}
 	groupByRoute() {
@@ -1525,5 +1623,49 @@ export class TransportReportComponent implements OnInit {
 		this.reportFilterForm.patchValue({
 			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
 		});
+	}
+	exportToFile(type = 'csv') {
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		if (this.reportType === 'routewisecoll') {
+			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'routewiseout') {
+			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
+		} else if (this.reportType === 'transportAlloted') {
+			reportType = new TitleCasePipe().transform('Transport allotee report: ') + this.sessionName;
+		} else if (this.reportType === 'routeslabstopwise') {
+			reportType = new TitleCasePipe().transform('route slab stoppage wise collection report: ') + this.sessionName;
+		}
+		this.angularGrid.exportService.exportToFile({
+			delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
+			filename: reportType + '_' + new Date(),
+			format: (type === 'csv') ? FileType.csv : FileType.txt
+		});
+	}
+	exportToExcel(json: any[], excelFileName: string): void {
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		if (this.reportType === 'routewisecoll') {
+			reportType = new TitleCasePipe().transform('route wise col: ') + this.sessionName;
+		} else if (this.reportType === 'routewiseout') {
+			reportType = new TitleCasePipe().transform('route wise out: ') + this.sessionName;
+		} else if (this.reportType === 'transportAlloted') {
+			reportType = new TitleCasePipe().transform('Transport allote: ') + this.sessionName;
+		} else if (this.reportType === 'routeslabstopwise') {
+			reportType = new TitleCasePipe().transform('route slab stop: ') + this.sessionName;
+		}
+		const rowData: any[] = [];
+		Object.keys(json).forEach(key => {
+			const obj: any = {};
+			for (const item2 of this.columnDefinitions) {
+				obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
+			}
+			rowData.push(obj);
+		});
+		const fileName = reportType + '.xlsx';
+		const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowData);
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, reportType);
+		XLSX.writeFile(wb, fileName);
 	}
 }

@@ -12,63 +12,68 @@
   </div>
   <div class="row">
     <div class="col-lg-12">
-          
-          <div class="row">
-            <div class="col-lg-12">
-              <mat-form-field appearance="outline">
-                <input id="search" matInput placeholder="Search"
-                  (keydown.enter)="searchStudentByName($event.target.value)"
-                  (blur)="searchStudentByName($event.target.value)">
-              </mat-form-field>
-            </div>
-          </div>
-          <mat-dialog-content class="main-dialog-content">
-            <div class="row" *ngIf="searchStudent">
-              <div class="col-lg-12">
-                <div>
-                  <div class="row">
-                    <div class="col-lg-12 col-remove-padding">
-                      <div>
-                        <table class="table-fixed table-100 text-center">
-                          <thead>
-                            <tr>
-                              <th style="width: 5%">S.No</th>
-                              <th style="width: 13%">Enrollment No</th>
-                              <th style="width: 60%">Name</th>
-                              <th>Class</th>
-                              <th>Section</th>
-                              <th>Process</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let item of studentArrayByName let i = index">
-                              <td>{{i+1}}</td>
-                              <td><a style="color: #007bff !important; cursor: pointer !important"
-                                  (click)="setId(item.au_admission_no, item.au_process_type)">{{item.au_admission_no}}</a>
-                              </td>
-                              <td style="text-align: left">
-                                <span class="icon-spacer">{{item.au_full_name}}
-                                </span>
-                              </td>
-                              <td>{{item.class_name}}</td>
-                              <td>{{item.sec_name}}</td>
-                              <td>{{getProcessType(item.au_process_type)}}</td>
-                            </tr>
-                            <tr *ngIf="studentArrayByName.length === 0">
-                              <td colspan="6">
-                                No Records Found
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <mat-form-field appearance="outline">
+            <input id="search" matInput placeholder="Search" (keydown.enter)="searchStudentByName($event.target.value)"
+              (blur)="searchStudentByName($event.target.value)">
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-dialog-content class="main-dialog-content">
+        <div class="row" *ngIf="searchStudent">
+          <div class="col-lg-12">
+            <div>
+              <div class="row">
+                <div class="col-lg-12 col-remove-padding">
+                  <div>
+                    <table class="table-fixed table-100 text-center" style="margin-bottom: 10px !important">
+                      <thead>
+                        <tr>
+                          <th style="width: 5%">S.No</th>
+                          <th style="width: 13%">Enrollment No</th>
+                          <th style="width: 40%">Name</th>
+                          <th>Class-Section</th>
+                          <th>Parent Name</th>
+                          <th>Contact No.</th>
+                          <th>Process</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of studentArrayByName let i = index">
+                          <td>{{i+1}}</td>
+                          <td><a style="color: #007bff !important; cursor: pointer !important"
+                              (click)="setId(item.au_admission_no, item.au_process_type)">{{item.au_admission_no}}</a>
+                          </td>
+                          <td style="text-align: left">
+                            <span class="icon-spacer">{{item.au_full_name}}
+                            </span>
+                          </td>
+                          <td>{{item.au_sec_id !== '0' ? (item.class_name + '-' + item.sec_name) : item.class_name}}
+                          </td>
+                          <td style="text-align: left">
+                            <span class="icon-spacer">{{item.epd_parent_name ? (item.epd_parent_name| titlecase) : '-'}}
+                            </span>
+                          </td>
+                          <td>{{item.epd_contact_no ? (item.epd_contact_no | mask: '00000 00000') : '-' }}</td>
+                          <td>{{getProcessType(item.au_process_type)}}</td>
+                        </tr>
+                        <tr *ngIf="studentArrayByName.length === 0">
+                          <td colspan="6">
+                            No Records Found
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
             </div>
-          </mat-dialog-content>
-        
+          </div>
+        </div>
+      </mat-dialog-content>
+
     </div>
   </div>
 </div>

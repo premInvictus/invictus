@@ -37,9 +37,10 @@
                           <tr>
                             <th style="width: 5%">S.No</th>
                             <th style="width: 13%">Enrollment No</th>
-                            <th style="width: 60%">Name</th>
-                            <th>Class</th>
-                            <th>Section</th>
+                            <th style="width: 40%">Name</th>
+                            <th>Class-Section</th>
+                            <th>Parent Name</th>
+                            <th>Contact No.</th>
                             <th>Process</th>
                           </tr>
                         </thead>
@@ -53,8 +54,13 @@
                               <span class="icon-spacer">{{item.au_full_name}}
                               </span>
                             </td>
-                            <td>{{item.class_name}}</td>
-                            <td>{{item.sec_name}}</td>
+                            <td>{{item.au_sec_id !== '0' ? (item.class_name + '-' + item.sec_name) : item.class_name}}
+                            </td>
+                            <td style="text-align: left">
+                              <span class="icon-spacer">{{item.epd_parent_name ? (item.epd_parent_name| titlecase) : '-'}}
+                              </span>
+                            </td>
+                            <td>{{item.epd_contact_no ? (item.epd_contact_no | mask: '00000 00000') : '-' }}</td>
                             <td>{{getProcessType(item.au_process_type)}}</td>
                           </tr>
                           <tr *ngIf="studentArrayByName.length === 0">
