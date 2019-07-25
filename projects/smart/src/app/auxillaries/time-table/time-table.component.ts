@@ -67,7 +67,7 @@ export class TimeTableComponent implements OnInit {
 		});
 	}
 
-	// Reset Syllabus Details form 
+	// Reset Syllabus Details form
 	resetForm() {
 		this.uploadTimeTableForm.patchValue({
 			'tt_class_id': '',
@@ -299,6 +299,7 @@ export class TimeTableComponent implements OnInit {
 	}
 	// TimeTable details insert in database
 	finalSubmit() {
+		this.finalTimeTableArray = [];
 		for (let i = 0; i < this.finalXlslArray.length; i++) {
 			if (this.finalXlslArray[i].monday_id !== '') {
 				this.finalSubmitArray.push({
@@ -414,6 +415,7 @@ export class TimeTableComponent implements OnInit {
 					const timetable: any = {};
 					timetable.tt_class_id = this.uploadTimeTableForm.value.tt_class_id;
 					timetable.tt_section_id = this.uploadTimeTableForm.value.tt_section_id;
+					timetable.tt_ses_id = this.session.ses_id;
 					timetable.no_of_day = this.uploadTimeTableForm.value.no_of_day;
 					timetable.no_of_period = this.uploadTimeTableForm.value.no_of_period;
 					timetable.zero_period = this.zero;
@@ -423,6 +425,7 @@ export class TimeTableComponent implements OnInit {
 							for (const item of this.finalperiodArray) {
 								this.finalTimeTableArray.push({
 									td_tt_id: this.tt_id,
+									td_ses_id: this.session.ses_id,
 									td_no_of_day: JSON.stringify(item.details),
 									td_no_of_period: item.no_of_period + 1,
 									td_created_by: this.currentUser.login_id

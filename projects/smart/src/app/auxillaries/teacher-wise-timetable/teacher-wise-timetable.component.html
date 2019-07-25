@@ -83,11 +83,11 @@
               <tr class="custom-tr" *ngFor="let det of teacherwiseArray;let j = index">
                 <td class="custom-td">{{j+ 1}}<sup>{{periodSup[j]}}</sup></td>
                 <ng-container *ngFor="let item of det;let i=index">
-                  <td class="custom-td"
+                  <td class="custom-td text-left pad-sub"
                     *ngIf="(item.subject_id !== '-') && (teacherwiseForm.value.subject_id === item.subject_id)">
                     <i class="fas fa-circle margin-right-10 animation" [ngClass]="'color-' + item.subject_id"></i>
                     {{item.subject_name}} {{item.class_name}} - {{item.sec_name}}</td>
-                  <td class="custom-td"
+                  <td class="custom-td text-left pad-sub"
                     *ngIf="(item.subject_id !== '-') && (teacherwiseForm.value.subject_id != item.subject_id)">
                     <i class="fas fa-circle margin-right-10 " [ngClass]="'color-' + item.subject_id"></i>
                     {{item.subject_name}} {{item.class_name}} - {{item.sec_name}}</td>
