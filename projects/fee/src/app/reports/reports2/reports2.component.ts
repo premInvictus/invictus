@@ -78,7 +78,7 @@ export class Reports2Component implements OnInit {
 		},
 		{
 			report_id: '8',
-			report_name: 'Fee Concession Report',
+			report_name: 'Concession Report',
 			report_image: '/assets/images/Fee Reports/fee_concession.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
@@ -214,6 +214,15 @@ export class Reports2Component implements OnInit {
 			}
 			if ($event.report_index === 2) {
 				this.reportHeader = 'Outstanding Report - ' + $event.report_name;
+			}
+			if ($event.report_index === 8) {
+				this.reportHeader = 'Concession - ' + $event.report_name;
+			}
+			if ($event.report_index === 10) {
+				this.reportHeader = 'Structure - ' + $event.report_name;
+			}
+			if ($event.report_index === 15) {
+				this.reportHeader = 'Transport - ' + $event.report_name;
 			}
 		} else {
 			this.reportHeader = $event.report_name;

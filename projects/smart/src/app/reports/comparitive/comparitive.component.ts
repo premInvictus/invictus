@@ -14,7 +14,7 @@ import 'jspdf-autotable';
 })
 export class ComparitiveComponent implements OnInit {
 
-	editRequestFlag = false;
+	editRequestFlag = false; 
 	finalDivFlag = true;
 	headerDivFlag = false;
 	comparitiveForm: FormGroup;
@@ -191,6 +191,23 @@ export class ComparitiveComponent implements OnInit {
 	// pdf download
 	pdfDownload() {
 		const doc = new jsPDF('landscape');
+		doc.autoTable({
+			head: [['Comparative Analysis of ' + this.getClassName(this.comparitiveForm.value.syl_class_id) + '-' +
+				this.getSectionName(this.comparitiveForm.value.syl_section_id) + '    Subject : ' +
+				this.getSubjectName(this.comparitiveForm.value.syl_sub_id)]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
 		doc.autoTable({
 			html: '#report_table',
 			headerStyles: {

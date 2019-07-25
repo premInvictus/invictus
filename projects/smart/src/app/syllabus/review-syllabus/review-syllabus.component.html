@@ -80,18 +80,18 @@
                                 <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
                                     <ng-container>
                                         <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
-                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                            <td class="custom-td text-left" *ngIf="j == 0" [attr.rowspan]="item.details.length">
                                                 {{getTopicName(item.sd_topic_id)}}</td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 1">
+                                            <td class="custom-td text-left" *ngIf="det.sd_ctr_id == 1">
                                                 {{det.sd_st_name}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 2">
+                                            <td class="custom-td text-left" *ngIf="det.sd_ctr_id == 2">
                                                 Test
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 3">
+                                            <td class="custom-td text-left" *ngIf="det.sd_ctr_id == 3">
                                                 Revision
                                             </td>
-                                            <td class="custom-td">
+                                            <td class="custom-td text-left">
                                                 <div [innerHTML]="det.sd_desc"></div>
                                             </td>
                                             <td class="custom-td">

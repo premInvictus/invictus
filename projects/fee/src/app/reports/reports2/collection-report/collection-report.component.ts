@@ -166,7 +166,6 @@ export class CollectionReportComponent implements OnInit {
 			'orderBy': ''
 		});
 	}
-
 	getHeadWiseCollectionReport(value: any) {
 		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
@@ -188,6 +187,8 @@ export class CollectionReportComponent implements OnInit {
 			showFooterRow: true,
 			footerRowHeight: 21,
 			enableExcelCopyBuffer: true,
+			enableAutoTooltip: true,
+			enableCellNavigation: true,
 			fullWidthRows: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
@@ -1938,7 +1939,8 @@ export class CollectionReportComponent implements OnInit {
 			});
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)+ ', '+ this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -2001,7 +2003,8 @@ export class CollectionReportComponent implements OnInit {
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)+ ', '+ this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -2015,7 +2018,7 @@ export class CollectionReportComponent implements OnInit {
 				useCss: true,
 				theme: 'striped'
 			});
-			
+
 			doc.autoTable({
 				head: [[reportType]],
 				margin: { top: 0 },

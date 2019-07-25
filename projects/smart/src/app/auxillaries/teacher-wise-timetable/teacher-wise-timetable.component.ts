@@ -21,6 +21,7 @@ export class TeacherWiseTimetableComponent implements OnInit {
 	teacherwiseWeekArray: any[] = [];
 	teacherwiseForm: FormGroup;
 	teacherId: any;
+	teacherName: any;
 	noOfDay: any;
 	sum = 0;
 	monday = 0;
@@ -73,6 +74,7 @@ export class TeacherWiseTimetableComponent implements OnInit {
 			cw_teacher_id: teacherDetails.au_login_id
 		});
 		this.teacherId = teacherDetails.au_login_id;
+		this.teacherName = teacherDetails.au_full_name;
 		this.getSubjectByTeacherId();
 		this.getTeacherwiseTableDetails();
 	}
@@ -98,25 +100,58 @@ export class TeacherWiseTimetableComponent implements OnInit {
 
 	}
 	// pdf download
-	pdfDownload(id) {
+	pdfDownload() {
 		const doc = new jsPDF('landscape');
-		// doc.autoTable({
-		// 	head: [['Day wise Summary']],
-		// 	didDrawPage: function (data) {
-		// 		doc.setFont('Roboto');
-		// 	},
-		// 	headerStyles: {
-		// 		fontStyle: 'bold',
-		// 		fillColor: '#ffffff',
-		// 		textColor: 'black',
-		// 		halign: 'center',
-		// 		fontSize: 15,
-		// 	},
-		// 	useCss: true,
-		// 	theme: 'striped'
-		// });
 		doc.autoTable({
-			html: '#' + id,
+			head: [['Teacher Wise Time table Of ' + this.teacherName + ' (' + this.teacherId + ')']],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			html: '#report_table',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: 'red',
+			},
+			theme: 'grid'
+		});
+		doc.autoTable({
+			head: [['Day wise Summary of ' + this.teacherName + ' (' + this.teacherId + ')']],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			html: '#daywise_table',
 			headerStyles: {
 				fontStyle: 'normal',
 				fillColor: '#ffffff',

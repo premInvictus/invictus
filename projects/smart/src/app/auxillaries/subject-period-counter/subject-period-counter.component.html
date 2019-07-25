@@ -6,9 +6,7 @@
                     <div class="top-card-title">
                         <span class="font-size-24 font-medium">Subject Period Counter</span>
                     </div>
-
                 </div>
-
                 <div class="col-8 text-right">
                     <form [formGroup]="subjectPeriodForm" novalidate>
                         <div class="top-card-title-form">
@@ -65,7 +63,7 @@
     </div>
 </div>
 <div class="row" *ngIf="finalDivFlag">
-    <div class="col-12">
+    <div class="col-12 ">
         <mat-card>
             <div class="row">
                 <div class="col-3"></div>
@@ -77,7 +75,20 @@
                         {{getSectionName(subjectPeriodForm.value.tt_section_id)}}
                         is as follow as</span>
                 </div>
-                <div class="col-3"></div>
+                <div class="col-3">
+                    <div class="inline-flex btn-spacer text-right">
+                        <div>
+                            <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+                                matTooltip="Download as Pdf" (click)="pdfDownload()" />
+                        </div>
+                    </div>
+                    <div class="inline-flex btn-spacer text-right">
+                        <div>
+                            <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+                                matTooltip="Export as excel" (click)="exportAsExcel()" />
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row margin-top-15">
                 <div class="col-3"></div>
@@ -89,7 +100,7 @@
             <div class="row margin-top-20">
                 <div class="col-3"></div>
                 <div class="col-6">
-                    <table class="table table-borderd table-stripped custom-table">
+                    <table class="table table-borderd table-stripped custom-table" id="periodwise_table">
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
                                 <th class="custom-th"></th>
@@ -122,7 +133,7 @@
             <div class="row margin-top-20">
                 <div class="col-3"></div>
                 <div class="col-6">
-                    <table class="table table-borderd table-stripped custom-table">
+                    <table class="table table-borderd table-stripped custom-table" id="daywise_table">
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
                                 <th class="custom-th ">Subject</th>
@@ -148,8 +159,8 @@
                                 </ng-container>
                                 <td class="custom-td">{{getSum(dety.dataArr , k, dety.sub_id)}}</td>
                             </tr>
-                            <tr class="custom-tr" >
-                                <td class="custom-td" >Total</td>
+                            <tr class="custom-tr">
+                                <td class="custom-td">Total</td>
                                 <td class="custom-td">{{monday}}</td>
                                 <td class="custom-td">{{tuesday}}</td>
                                 <td class="custom-td">{{wednesday}}</td>
@@ -174,7 +185,8 @@
             <div class="row">
                 <div class="col-3"></div>
                 <div class="col-6">
-                    <table class="table table-borderd table-stripped custom-table">
+                    <table class="table table-borderd table-stripped custom-table" id="report_table"
+                        id="subjectwise_table">
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
                                 <th class="custom-th table-width-80">Sr No.</th>

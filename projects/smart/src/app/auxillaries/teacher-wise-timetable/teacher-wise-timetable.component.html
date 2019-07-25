@@ -57,7 +57,7 @@
           <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="teacherwiseArray.length > 0">
             <div>
               <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
-                matTooltip="Download as Pdf" (click)="pdfDownload('report_table')" />
+                matTooltip="Download as Pdf" (click)="pdfDownload()" />
             </div>
           </div>
           <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="teacherwiseArray.length > 0">
@@ -120,12 +120,6 @@
       </div>
       <div class="row margin-top-0 text-right" *ngIf="teacherwiseFlag">
         <div class="col-12">
-          <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="teacherwiseArray.length > 0">
-            <div>
-              <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
-                matTooltip="Download as Pdf" (click)="pdfDownload('daywise_table')" />
-            </div>
-          </div>
           <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="teacherwiseArray.length > 0">
             <div>
               <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"

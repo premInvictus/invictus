@@ -123,6 +123,20 @@ export class BrowseSyllabusComponent implements OnInit {
 					}
 				});
 	}
+	// get Class name from existing array
+	getClassName(value) {
+		const classIndex = this.classArray.findIndex(f => Number(f.class_id) === Number(value));
+		if (classIndex !== -1) {
+			return this.classArray[classIndex].class_name;
+		}
+	}
+	// get subject name from existing array
+	getSubjectName(value) {
+		const ctrIndex = this.subjectArray.findIndex(f => Number(f.sub_id) === Number(value));
+		if (ctrIndex !== -1) {
+			return this.subjectArray[ctrIndex].sub_name;
+		}
+	}
 	// export excel code
 	exportAsExcel() {
 		// tslint:disable-next-line:max-line-length
@@ -135,6 +149,22 @@ export class BrowseSyllabusComponent implements OnInit {
 	// pdf download
 	pdfDownload() {
 		const doc = new jsPDF('landscape');
+		doc.autoTable({
+			head: [['Browse Syllabus Of Class : ' + this.getClassName(this.reviewform.value.syl_class_id) + '    Subject : ' +
+				this.getSubjectName(this.reviewform.value.syl_sub_id)]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
 		doc.autoTable({
 			html: '#report_table',
 			headerStyles: {

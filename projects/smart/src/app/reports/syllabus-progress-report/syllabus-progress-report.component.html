@@ -122,6 +122,15 @@
                                     *ngIf="createdByArray[(item.subject_id | number)] === currentUser.login_id">
                                     -</td>
                             </tr>
+                            <tr class="custom-tr">
+                                <td class="custom-td ">Grand Total</td>
+                                <td class="custom-td ">{{totalCompletion}}</td>
+                                <td class="custom-td ">{{totalAvailed}}</td>
+                                <td class="custom-td ">{{totalAvailable - totalCompletion}}</td>
+                                <td class="custom-td ">{{totalCompletion - totalAvailed}}</td>
+                                <td class="custom-td "></td>
+                                <td class="custom-td "></td>
+                            </tr>
                         </tbody>
                         <tbody>
                             <tr class="text-center" *ngIf="finalDivFlag">

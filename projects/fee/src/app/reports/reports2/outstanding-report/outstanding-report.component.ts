@@ -147,6 +147,8 @@ export class OutstandingReportComponent implements OnInit {
 			footerRowHeight: 21,
 			enableExcelCopyBuffer: true,
 			fullWidthRows: true,
+			enableAutoTooltip: true,
+			enableCellNavigation: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -483,8 +485,8 @@ export class OutstandingReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand Total</b>';
-						obj3['stu_admission_no'] = '';
+						obj3['invoice_created_date'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
@@ -770,7 +772,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
 						obj3['invoice_created_date'] = '<b>Grand Total</b>';
-						obj3['stu_admission_no'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
@@ -983,7 +985,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
 						obj3['invoice_created_date'] = '<b>Grand Total</b>';
-						obj3['stu_admission_no'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_no'] = '';
@@ -1241,7 +1243,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
 						obj3['invoice_created_date'] = '<b>Grand Total</b>';
-						obj3['stu_admission_no'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
@@ -1777,7 +1779,8 @@ export class OutstandingReportComponent implements OnInit {
 			});
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -1787,22 +1790,6 @@ export class OutstandingReportComponent implements OnInit {
 					textColor: 'black',
 					halign: 'center',
 					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'normal',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 30,
 				},
 				useCss: true,
 				theme: 'striped'
@@ -1856,7 +1843,8 @@ export class OutstandingReportComponent implements OnInit {
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name)]],
+				// tslint:disable-next-line:max-line-length
+				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -1866,22 +1854,6 @@ export class OutstandingReportComponent implements OnInit {
 					textColor: 'black',
 					halign: 'center',
 					fontSize: 30,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [[this.schoolInfo.school_city + ',' + this.schoolInfo.school_state]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'normal',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 20,
 				},
 				useCss: true,
 				theme: 'striped'

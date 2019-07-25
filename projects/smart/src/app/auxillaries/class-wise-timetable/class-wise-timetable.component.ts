@@ -110,38 +110,68 @@ export class ClassWiseTimetableComponent implements OnInit {
 				}
 			);
 	}
-		// export excel code
-		exportAsExcel() {
-			// tslint:disable-next-line:max-line-length
-			const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table')); // converts a DOM TABLE element to a worksheet
-			const wb: XLSX.WorkBook = XLSX.utils.book_new();
-			XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-			XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
-	
+	// get Class name from existing array
+	getClassName(value) {
+		const classIndex = this.classArray.findIndex(f => Number(f.class_id) === Number(value));
+		if (classIndex !== -1) {
+			return this.classArray[classIndex].class_name;
 		}
-		// pdf download
-		pdfDownload() {
-			const doc = new jsPDF('landscape');
-			doc.autoTable({
-				html: '#report_table',
-				headerStyles: {
-					fontStyle: 'normal',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 14,
-				},
-				useCss: true,
-				styles: {
-					fontSize: 14,
-					cellWidth: 'auto',
-					textColor: 'black',
-					lineColor: 'red',
-				},
-				theme: 'grid'
-			});
-			doc.save('table.pdf');
+	}
+	// get section from existing array
+	getSectionName(value) {
+		const sectionIndex = this.sectionArray.findIndex(f => Number(f.sec_id) === Number(value));
+		if (sectionIndex !== -1) {
+			return this.sectionArray[sectionIndex].sec_name;
 		}
+	}
+	// export excel code
+	exportAsExcel() {
+		// tslint:disable-next-line:max-line-length
+		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table')); // converts a DOM TABLE element to a worksheet
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
+
+	}
+	// pdf download
+	pdfDownload() {
+		const doc = new jsPDF('landscape');
+		doc.autoTable({
+			head: [['Class Wise Time table Of ' + this.getClassName(this.classwiseForm.value.tt_class_id) + '-' +
+				this.getSectionName(this.classwiseForm.value.tt_section_id)]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			html: '#report_table',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: 'red',
+			},
+			theme: 'grid'
+		});
+		doc.save('table.pdf');
+	}
 	// Timetable details based on class and section
 	getclasswisedetails() {
 		this.subCountArray = [];
