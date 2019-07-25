@@ -146,16 +146,18 @@ export class ClassworkUpdateComponent implements OnInit {
 				cw_st_id: '0'
 			});
 		} else if (event.value === '7') {
+			eachPeriodFG.controls['cw_sub_id'].clearValidators(Validators.required);
 			eachPeriodFG.controls['cw_topic_id'].clearValidators(Validators.required);
 			eachPeriodFG.controls['cw_st_id'].clearValidators(Validators.required);
+			this.disableSubjectArray[index] = true;
 			this.disabletopicArray[index] = true;
 			this.disableSubtopicArray[index] = true;
 			eachPeriodFG.patchValue({
-				cw_sec_id: '0',
+				cw_sub_id: '0',
 				cw_topic_id: '0',
 				cw_st_id: '0'
 			});
-			this.getClassBySubjectId(index);
+			this.getAllClassSection(index);
 		} else {
 			eachPeriodFG.controls['cw_sub_id'].setValidators(Validators.required);
 			eachPeriodFG.controls['cw_st_id'].setValidators(Validators.required);
@@ -219,17 +221,17 @@ export class ClassworkUpdateComponent implements OnInit {
 			}
 		});
 	}
-	getClassBySubjectId(i) {
+	getAllClassSection(i) {
 		const eachPeriodFG = this.Periods.controls[i];
 		this.classSectionArray[i] = [];
-		this.smartService.getClassBySubjectId({sub_id: eachPeriodFG.value.cw_sub_id}).subscribe((result: any) => {
+		this.smartService.getAllClassSection().subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				const csArray = result.data;
 					if (csArray.length > 0) {
 						csArray.forEach(element => {
 							this.classSectionArray[i].push({
-								cs_id: element.class_id + '- 0',
-								cs_name: element.class_name
+								cs_id: element.class_id + '-' + element.sec_id,
+								cs_name: element.class_name + ' - ' + element.sec_name
 							});
 						});
 					}
