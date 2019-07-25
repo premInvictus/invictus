@@ -92,11 +92,11 @@
                             <tr class="custom-tr" *ngFor="let det of classwisetableArray;let j = index">
                                 <td class="custom-td">{{j+ 1}}<sup>{{periodSup[j]}}</sup></td>
                                 <ng-container *ngFor="let item of det.classwise;let i=index">
-                                    <td class="custom-td"
+                                    <td class="custom-td text-left  pad-sub"
                                         *ngIf="(item.subject_id !== '-') && (classwiseForm.value.tt_subject_id === item.subject_id)">
                                         <i class="fas fa-circle margin-right-10 animation"
                                             [ngClass]="'color-' + item.subject_id"></i> {{item.subject_name}}</td>
-                                    <td class="custom-td"
+                                    <td class="custom-td text-left  pad-sub"
                                         *ngIf="(item.subject_id !== '-') && (classwiseForm.value.tt_subject_id != item.subject_id)">
                                         <i class="fas fa-circle margin-right-10 ddd"
                                             [ngClass]="'color-' + item.subject_id"></i> {{item.subject_name}}</td>

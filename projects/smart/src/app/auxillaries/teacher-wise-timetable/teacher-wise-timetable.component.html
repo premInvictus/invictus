@@ -57,7 +57,7 @@
           <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="teacherwiseArray.length > 0">
             <div>
               <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
-                matTooltip="Download as Pdf" (click)="pdfDownload('report_table')" />
+                matTooltip="Download as Pdf" (click)="pdfDownload()" />
             </div>
           </div>
           <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="teacherwiseArray.length > 0">
@@ -83,11 +83,11 @@
               <tr class="custom-tr" *ngFor="let det of teacherwiseArray;let j = index">
                 <td class="custom-td">{{j+ 1}}<sup>{{periodSup[j]}}</sup></td>
                 <ng-container *ngFor="let item of det;let i=index">
-                  <td class="custom-td"
+                  <td class="custom-td text-left pad-sub"
                     *ngIf="(item.subject_id !== '-') && (teacherwiseForm.value.subject_id === item.subject_id)">
                     <i class="fas fa-circle margin-right-10 animation" [ngClass]="'color-' + item.subject_id"></i>
                     {{item.subject_name}} {{item.class_name}} - {{item.sec_name}}</td>
-                  <td class="custom-td"
+                  <td class="custom-td text-left pad-sub"
                     *ngIf="(item.subject_id !== '-') && (teacherwiseForm.value.subject_id != item.subject_id)">
                     <i class="fas fa-circle margin-right-10 " [ngClass]="'color-' + item.subject_id"></i>
                     {{item.subject_name}} {{item.class_name}} - {{item.sec_name}}</td>
@@ -120,12 +120,6 @@
       </div>
       <div class="row margin-top-0 text-right" *ngIf="teacherwiseFlag">
         <div class="col-12">
-          <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="teacherwiseArray.length > 0">
-            <div>
-              <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
-                matTooltip="Download as Pdf" (click)="pdfDownload('daywise_table')" />
-            </div>
-          </div>
           <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="teacherwiseArray.length > 0">
             <div>
               <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"

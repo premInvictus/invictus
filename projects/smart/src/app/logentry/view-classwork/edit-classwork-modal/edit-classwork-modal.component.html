@@ -16,7 +16,7 @@
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Subject</mat-label>
             <mat-select formControlName="cw_sub_id"
-                    (selectionChange)="getClassSectionByTeacherIdSubjectId();resetClassworkFormForSubjectChange()" required>
+                    (selectionChange)="getClassSectionByTeacherIdSubjectId();resetClassworkFormForSubjectChange()" required [disabled]="distableSubject">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
                   </mat-select>
@@ -39,7 +39,7 @@
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Class & Section</mat-label>
             <mat-select formControlName="cw_class_id"
-                    (selectionChange)="getTopicByClassSubject();resetTopicSubtopic()" required>
+                    (selectionChange)="getTopicByClassSubject();resetTopicSubtopic()" required [disabled]="disableClass">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of classSectionArray" [value]="item.cs_id">{{item.cs_name}}
                     </mat-option>
@@ -55,7 +55,7 @@
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Topic</mat-label>
             <mat-select formControlName="cw_topic_id"
-                    (selectionChange)="getSubtopicByTopic();resetSuptopic()" required>
+                    (selectionChange)="getSubtopicByTopic();resetSuptopic()" required [disabled]="disableTopic">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">{{item.topic_name}}
                     </mat-option>

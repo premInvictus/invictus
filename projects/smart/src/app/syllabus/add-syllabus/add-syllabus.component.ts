@@ -763,6 +763,7 @@ export class AddSyllabusComponent implements OnInit {
 							});
 
 						} else {
+							this.syllabusForm.value.syl_ses_id = this.session.ses_id;
 							this.syllabusService.insertSyllabus(this.syllabusForm.value).subscribe((insert_r: any) => {
 								if (insert_r && insert_r.status === 'ok') {
 									this.syl_id = insert_r.data;
