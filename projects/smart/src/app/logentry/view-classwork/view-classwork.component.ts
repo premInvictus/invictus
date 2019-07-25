@@ -158,5 +158,43 @@ export class ViewClassworkComponent implements OnInit {
 		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
 
 	}
+	// pdf download
+	pdfDownload() {
+		const doc = new jsPDF('landscape');
+		doc.autoTable({
+			head: [['View Classwork']],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'grid'
+		});
+		doc.autoTable({
+			html: '#report_table',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: 'red',
+			},
+			theme: 'grid'
+		});
+		doc.save('table.pdf');
+	}
 
 }

@@ -94,12 +94,12 @@
                 </tr>
               </thead>
               <ng-container *ngFor="let item of classworkArray; let i=index">
-                <thead>
+                <tbody>
                   <tr class="custom-tr">
-                    <th colspan="7" class="custom-th text-center">As on date :
+                    <th colspan="7" class="custom-th text-center" style="vertical-align: middle">As on date :
                       {{item.cw_entry_date | date:'dd MMM, yyyy'}}</th>
                   <tr>
-                </thead>
+                </tbody>
                 <tbody *ngIf="!noDataFlag">
                   <tr class="custom-tr" *ngFor="let item1 of item.cw_array">
                     <td class="custom-td">{{item1.cw_period_id}}{{periodSup[item1.cw_period_id - 1]}}</td>
