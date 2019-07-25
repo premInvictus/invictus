@@ -157,32 +157,32 @@
                   </thead>
                   <tbody>
                     <tr class="custom-tr" *ngFor="let det of finalXlslArray;let j = index">
-                      <td class="custom-td"><i class="margin-right-10"></i> {{j + 1}}<sup>{{periodSup[j]}}</sup></td>
-                      <td class="custom-td" *ngIf="det.monday_id !== '-'"><i
+                      <td class="custom-td text-left"><i class="margin-right-10"></i> {{j + 1}}<sup>{{periodSup[j]}}</sup></td>
+                      <td class="custom-td text-left" *ngIf="det.monday_id !== '-'"><i
                           class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.monday_id"></i> {{det.monday}}</td>
-                      <td class="custom-td" *ngIf="det.monday_id === '-'">-</td>
-                      <td class="custom-td" *ngIf="det.tuesday_id !== '-'"><i
+                      <td class="custom-td text-left" *ngIf="det.monday_id === '-'">-</td>
+                      <td class="custom-td text-left" *ngIf="det.tuesday_id !== '-'"><i
                           class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.tuesday_id"></i> {{det.tuesday}}</td>
-                      <td class="custom-td" *ngIf="det.tuesday_id === '-'">-</td>
-                      <td class="custom-td" *ngIf="det.wednesday_id !== '-'"><i
+                      <td class="custom-td text-left" *ngIf="det.tuesday_id === '-'">-</td>
+                      <td class="custom-td text-left" *ngIf="det.wednesday_id !== '-'"><i
                           class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.wednesday_id"></i> {{det.wednesday}}</td>
-                      <td class="custom-td" *ngIf="det.wednesday_id === '-'">-</td>
-                      <td class="custom-td" *ngIf="det.thursday_id !== '-'"><i
+                      <td class="custom-td text-left" *ngIf="det.wednesday_id === '-'">-</td>
+                      <td class="custom-td text-left" *ngIf="det.thursday_id !== '-'"><i
                           class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.thursday_id"></i> {{det.thursday}}</td>
-                      <td class="custom-td" *ngIf="det.thursday_id === '-'">-</td>
-                      <td class="custom-td" *ngIf="det.friday_id !== '-'"><i
+                      <td class="custom-td text-left" *ngIf="det.thursday_id === '-'">-</td>
+                      <td class="custom-td text-left" *ngIf="det.friday_id !== '-'"><i
                           class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.friday_id"></i> {{det.friday}}</td>
-                      <td class="custom-td" *ngIf="det.friday_id === '-'">-</td>
-                      <td class="custom-td"
+                      <td class="custom-td text-left" *ngIf="det.friday_id === '-'">-</td>
+                      <td class="custom-td text-left"
                         *ngIf="(uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7') && det.saturday_id !== '-' ">
                         <i class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.saturday_id"></i> {{det.saturday}}</td>
-                      <td class="custom-td"
+                      <td class="custom-td text-left"
                         *ngIf="(uploadTimeTableForm.value.no_of_day === '6' || uploadTimeTableForm.value.no_of_day === '7') && det.saturday_id === '-' ">
                         -</td>
-                      <td class="custom-td"
+                      <td class="custom-td text-left"
                         *ngIf="uploadTimeTableForm.value.no_of_day === '7' && det.sunday_id !== '-'"><i
                           class="fas fa-circle  margin-right-10" [ngClass]="'color-' + det.sunday_id"></i> {{det.sunday}}</td>
-                      <td class="custom-td"
+                      <td class="custom-td text-left"
                         *ngIf="uploadTimeTableForm.value.no_of_day === '7' && det.sunday_id === '-'">-</td>
                     </tr>
                   </tbody>
