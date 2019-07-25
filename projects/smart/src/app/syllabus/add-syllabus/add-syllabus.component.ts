@@ -530,7 +530,9 @@ export class AddSyllabusComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						const param: any = {};
 						param.class_id = this.syllabusForm.value.syl_class_id;
+						param.class_name = this.getSyllabusClass(param.class_id);
 						param.sub_id = this.syllabusForm.value.syl_sub_id;
+						param.sub_name = this.getSyllabusSubject(param.sub_id);
 						this.syllabusService.downloadSyllabusExcel(param)
 							.subscribe(
 								(excel_r: any) => {
