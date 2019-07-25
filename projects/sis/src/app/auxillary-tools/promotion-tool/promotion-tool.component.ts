@@ -48,7 +48,9 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 	prev: any;
 	next: any;
 	orderByArray: any[] = [{ order_by: 'sec_id', order_by_name: 'Section' }];
-	@ViewChild(MatSort) sort: MatSort;
+	@ViewChild('sortP') sortP: MatSort;
+	@ViewChild('sortD') sortD: MatSort;
+
 
 	constructor(private commonApiService: CommonAPIService,
 		private sisService: SisService,
@@ -65,8 +67,8 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		this.demoteFlag = false;
 	}
 	ngAfterViewInit() {
-		this.promotedataSource.sort = this.sort;
-		this.demotedataSource.sort = this.sort;
+		this.promotedataSource.sort = this.sortP;
+		this.demotedataSource.sort = this.sortD;
 	}
 	buildForm() {
 		this.promoteForm = this.fbuild.group({
@@ -89,7 +91,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		this.promotedataSource.filter = filterValue.trim().toLowerCase();
 	}
 	applyFilterDemote(filterValue: string) {
-		this.promotedataSource.filter = filterValue.trim().toLowerCase();
+		this.demotedataSource.filter = filterValue.trim().toLowerCase();
 	}
 	getClass() {
 		this.sisService.getClass({}).subscribe((result: any) => {
@@ -158,6 +160,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getPromotionList() {
+		this.toBePromotedList = [];
 		this.promoteStudentListArray = [];
 		this.PROMOTE_ELEMENT_DATA = [];
 		this.promotedataSource = new MatTableDataSource<Element>(this.PROMOTE_ELEMENT_DATA);
@@ -182,14 +185,14 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 							no: item.au_login_id,
 							name: item.au_full_name,
 							class: item.class_name,
-							section: item.sec_name,
+							section: item.sec_id !== '0' ? item.sec_name : '-',
 							em_admission_no: this.promoteForm.value.enrollment_type === '4' ? item.em_admission_no : item.em_provisional_admission_no,
 							action: item
 						});
 						counter++;
 					}
 					this.promotedataSource = new MatTableDataSource<Element>(this.PROMOTE_ELEMENT_DATA);
-					this.promotedataSource.sort = this.sort;
+					this.promotedataSource.sort = this.sortP;
 					this.promoteFlag = true;
 				} else {
 					this.PROMOTE_ELEMENT_DATA = [];
@@ -201,6 +204,8 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		}
 	}
 	getDemotionList() {
+		console.log(this.promoteForm.value.enrollment_type === '4');
+		this.toBeDemotedList = [];
 		this.demoteStudentListArray = [];
 		this.DEMOTE_ELEMENT_DATA = [];
 		this.demotedataSource = new MatTableDataSource<Element>(this.DEMOTE_ELEMENT_DATA);
@@ -224,14 +229,15 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 							no: item.au_login_id,
 							name: item.au_full_name,
 							class: item.class_name,
-							section: item.sec_name,
-							em_admission_no: this.promoteForm.value.enrollment_type === '4' ? item.em_admission_no : item.em_provisional_admission_no,
+							section: item.sec_id !== '0' ? item.sec_name : '-',
+							em_admission_no: this.promoteForm.value.enrollment_type === '4'
+							|| this.demoteForm.value.enrollment_type === '4' ? item.em_admission_no : item.em_provisional_admission_no,
 							action: item
 						});
 						counter++;
 					}
 					this.demotedataSource = new MatTableDataSource<Element>(this.DEMOTE_ELEMENT_DATA);
-					this.demotedataSource.sort = this.sort;
+					this.demotedataSource.sort = this.sortD;
 					this.demoteFlag = true;
 				} else {
 					this.DEMOTE_ELEMENT_DATA = [];
@@ -242,27 +248,35 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 			});
 		}
 	}
+	isSelectedP(login_id) {
+		return this.toBePromotedList.findIndex(f => f.em_admission_no === login_id) !== -1 ? true : false;
+	}
+	isDisabledP(login_id) {
+		return this.promoteStudentListArray.findIndex(f => f.au_login_id === login_id && f.pmap_status === '0') !== -1 ? true : false;
+	}
 	insertIntoToBePromotedList($event, item) {
-		const findex = this.toBePromotedList.findIndex(f => f.em_admission_no === $event.source.value);
-		if (findex === -1) {
+		console.log($event.source.value);
+		if ($event.checked === true) {
 			this.toBePromotedList.push({
 				em_admission_no: $event.source.value,
 				item: item
-			}
-			);
+			});
 		} else {
+			const findex = this.toBePromotedList.findIndex(f => f.em_admission_no === $event.source.value);
 			this.toBePromotedList.splice(findex, 1);
 		}
 	}
+	isSelectedD(login_id) {
+		return this.toBeDemotedList.findIndex(f => f.em_admission_no === login_id) !== -1 ? true : false;
+	}
 	insertIntoToBeDemotedList($event, item) {
-		const findex = this.toBeDemotedList.findIndex(f => f.em_admission_no === $event.source.value);
-		if (findex === -1) {
+		if ($event.checked === true) {
 			this.toBeDemotedList.push({
 				em_admission_no: $event.source.value,
 				item: item
-			}
-			);
+			});
 		} else {
+			const findex = this.toBeDemotedList.findIndex(f => f.em_admission_no === $event.source.value);
 			this.toBeDemotedList.splice(findex, 1);
 		}
 	}
@@ -323,10 +337,12 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		if ($event.checked === true) {
 			this.promotionListAllFlag = true;
 			for (const item of this.PROMOTE_ELEMENT_DATA) {
-				this.toBePromotedList.push({
-					em_admission_no: item.no,
-					item: item.action
-				});
+				if (item.action.pmap_status === '1') {
+					this.toBePromotedList.push({
+						em_admission_no: item.no,
+						item: item.action
+					});
+				}
 			}
 		} else {
 			this.promotionListAllFlag = false;
@@ -376,6 +392,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 						this.DEMOTE_ELEMENT_DATA = [];
 						this.promoteStudentListArray = [];
 						this.PROMOTE_ELEMENT_DATA = [];
+						this.toBePromotedList = [];
 						this.getPromotionList();
 						this.getDemotionList();
 						this.getCountCurrentYearStudents();
@@ -408,6 +425,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 						this.DEMOTE_ELEMENT_DATA = [];
 						this.promoteStudentListArray = [];
 						this.PROMOTE_ELEMENT_DATA = [];
+						this.toBeDemotedList = [];
 						this.getPromotionList();
 						this.getDemotionList();
 						this.getCountCurrentYearStudents();
