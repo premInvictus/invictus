@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SisService, AxiomService, CommonAPIService, SmartService } from '../../../_services';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'app-edit-classwork-modal',
@@ -18,6 +18,9 @@ export class EditClassworkModalComponent implements OnInit {
 	categoryArray: any[] = [];
 	teacherId;
 	disableSubtop = false;
+	disableClass = false;
+	distableSubject = false;
+	disableTopic = false;
 
 	constructor(
 		private dialogRef: MatDialogRef<EditClassworkModalComponent>,
@@ -51,21 +54,63 @@ export class EditClassworkModalComponent implements OnInit {
 				cw_st_id: this.data.cw_st_id,
 			});
 			console.log(this.editclassworkform.value);
-			if (this.data.cw_ctr_id === '2' || this.data.cw_ctr_id === '3') {
+			if (this.data.cw_ctr_id === '2' || this.data.cw_ctr_id === '3' || this.data.cw_ctr_id === '5' || this.data.cw_ctr_id === '6') {
 				this.disableSubtop = true;
+			} else if (this.data.cw_ctr_id === '8') {
+				this.disableSubtop = true;
+				this.disableClass = true;
+				this.disableTopic = true;
+				this.distableSubject = true;
+			} else if (this.data.cw_ctr_id === '7') {
+				this.disableTopic = true;
+				this.disableSubtop = true;
+				this.getClassBySubjectId();
 			}
 			return resolve();
 		});
 
 	}
 	disableSt(event) {
-		if (event.value === '2' || event.value === '3') {
+		if (event.value === '2' || event.value === '3' || event.value === '5' || event.value === '6') {
 			this.disableSubtop = true;
+			this.editclassworkform.controls['cw_st_id'].clearValidators();
 			this.editclassworkform.patchValue({
 				cw_st_id: '0'
 			});
+			this.getClassSectionByTeacherIdSubjectId();
+		} else if (event.value === '8') {
+			this.editclassworkform.controls['cw_sub_id'].clearValidators();
+			this.editclassworkform.controls['cw_class_id'].clearValidators();
+			this.editclassworkform.controls['cw_topic_id'].clearValidators();
+			this.editclassworkform.controls['cw_st_id'].clearValidators();
+			this.disableSubtop = true;
+			this.disableClass = true;
+			this.disableTopic = true;
+			this.distableSubject = true;
+			this.editclassworkform.patchValue({
+				cw_sub_id: '0',
+				cw_class_id: '0',
+				cw_sec_id: '0',
+				cw_topic_id: '0',
+				cw_st_id: '0'
+			});
+			console.log(this.editclassworkform.value);
+		} else if (event.value === '7') {
+			this.editclassworkform.controls['cw_class_id'].setValidators(Validators.required);
+			this.editclassworkform.controls['cw_topic_id'].clearValidators();
+			this.editclassworkform.controls['cw_st_id'].clearValidators();
+			this.disableTopic = true;
+			this.disableSubtop = true;
+			this.editclassworkform.patchValue({
+				cw_sec_id: '0',
+				cw_topic_id: '0',
+				cw_st_id: '0'
+			});
+			console.log(this.editclassworkform.value);
+			this.getClassBySubjectId();
 		} else {
 			this.disableSubtop = false;
+			this.getClassSectionByTeacherIdSubjectId();
 		}
 	}
 
@@ -81,7 +126,7 @@ export class EditClassworkModalComponent implements OnInit {
 	}
 	ctrList() {
 		this.categoryArray = [];
-		this.smartService.ctrList().subscribe((result: any) => {
+		this.smartService.cwCtrList().subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.categoryArray = result.data;
 			} else {
@@ -89,6 +134,27 @@ export class EditClassworkModalComponent implements OnInit {
 			}
 		});
 	}
+
+	getClassBySubjectId() {
+		this.classSectionArray = [];
+		this.smartService.getClassBySubjectId({sub_id: this.editclassworkform.value.cw_sub_id}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const csArray = result.data;
+					if (csArray.length > 0) {
+						csArray.forEach(element => {
+							this.classSectionArray.push({
+								cs_id: element.class_id + '- 0',
+								cs_name: element.class_name
+							});
+						});
+					}
+
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+
 	getClassSectionByTeacherIdSubjectId() {
 		this.classSectionArray = [];
 		// this.resetClassworkFormForSubjectChange();
@@ -165,10 +231,12 @@ export class EditClassworkModalComponent implements OnInit {
 	updateClasswork() {
 		if (this.editclassworkform.valid) {
 			const csArray = this.editclassworkform.value.cw_class_id.split('-');
-			this.editclassworkform.patchValue({
-				cw_class_id: csArray[0],
-				cw_sec_id: csArray[1]
-			});
+			if (csArray.length === 2) {
+				this.editclassworkform.patchValue({
+					cw_class_id: csArray[0],
+					cw_sec_id: csArray[1]
+				});
+			}
 			this.smartService.updateClasswork(this.editclassworkform.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -176,7 +244,7 @@ export class EditClassworkModalComponent implements OnInit {
 				}
 			});
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Please select required field', 'success');
+			this.commonAPIService.showSuccessErrorMessage('Please select required field', 'error');
 		}
 
 
