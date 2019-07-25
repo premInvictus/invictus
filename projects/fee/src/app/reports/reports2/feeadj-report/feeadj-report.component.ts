@@ -147,6 +147,8 @@ export class FeeadjReportComponent implements OnInit {
 			showFooterRow: true,
 			footerRowHeight: 21,
 			enableExcelCopyBuffer: true,
+			enableAutoTooltip: true,
+			enableCellNavigation: true,
 			fullWidthRows: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',

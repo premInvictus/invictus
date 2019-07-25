@@ -166,7 +166,6 @@ export class CollectionReportComponent implements OnInit {
 			'orderBy': ''
 		});
 	}
-
 	getHeadWiseCollectionReport(value: any) {
 		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
@@ -188,6 +187,8 @@ export class CollectionReportComponent implements OnInit {
 			showFooterRow: true,
 			footerRowHeight: 21,
 			enableExcelCopyBuffer: true,
+			enableAutoTooltip: true,
+			enableCellNavigation: true,
 			fullWidthRows: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',

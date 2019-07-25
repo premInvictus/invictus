@@ -148,6 +148,8 @@ export class TransportReportComponent implements OnInit {
 			footerRowHeight: 21,
 			enableExcelCopyBuffer: true,
 			fullWidthRows: true,
+			enableAutoTooltip: true,
+			enableCellNavigation: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',

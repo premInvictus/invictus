@@ -713,6 +713,8 @@ export class FeestrucReportComponent implements OnInit {
 					rowHeight: 300,
 					enableExcelCopyBuffer: true,
 					fullWidthRows: true,
+					enableAutoTooltip: true,
+					enableCellNavigation: true,
 					headerMenu: {
 						iconColumnHideCommand: 'fas fa-times',
 						iconSortAscCommand: 'fas fa-sort-up',
@@ -792,6 +794,8 @@ export class FeestrucReportComponent implements OnInit {
 					footerRowHeight: 21,
 					enableExcelCopyBuffer: true,
 					fullWidthRows: true,
+					enableAutoTooltip: true,
+					enableCellNavigation: true,
 					headerMenu: {
 						iconColumnHideCommand: 'fas fa-times',
 						iconSortAscCommand: 'fas fa-sort-up',
