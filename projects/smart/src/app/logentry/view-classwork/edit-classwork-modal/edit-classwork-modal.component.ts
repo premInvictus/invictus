@@ -19,7 +19,7 @@ export class EditClassworkModalComponent implements OnInit {
 	teacherId;
 	disableSubtop = false;
 	disableClass = false;
-	distableSubject = false;
+	disableSubject = false;
 	disableTopic = false;
 
 	constructor(
@@ -37,7 +37,7 @@ export class EditClassworkModalComponent implements OnInit {
 		this.buildForm().then(() => {
 			this.ctrList();
 			this.getSubjectByTeacherId();
-			this.getClassSectionByTeacherIdSubjectId();
+			this.getClassSectionByTeacherIdSubjectId(false);
 			this.getTopicByClassSubject();
 			this.getSubtopicByTopic();
 		});
@@ -60,11 +60,12 @@ export class EditClassworkModalComponent implements OnInit {
 				this.disableSubtop = true;
 				this.disableClass = true;
 				this.disableTopic = true;
-				this.distableSubject = true;
+				this.disableSubject = true;
 			} else if (this.data.cw_ctr_id === '7') {
+				this.disableSubject = true;
 				this.disableTopic = true;
 				this.disableSubtop = true;
-				this.getClassBySubjectId();
+				this.getAllClassSection();
 			}
 			return resolve();
 		});
@@ -72,12 +73,18 @@ export class EditClassworkModalComponent implements OnInit {
 	}
 	disableSt(event) {
 		if (event.value === '2' || event.value === '3' || event.value === '5' || event.value === '6') {
-			this.disableSubtop = true;
+			this.editclassworkform.controls['cw_sub_id'].setValidators(Validators.required);
+			this.editclassworkform.controls['cw_class_id'].setValidators(Validators.required);
+			this.editclassworkform.controls['cw_topic_id'].setValidators(Validators.required);
 			this.editclassworkform.controls['cw_st_id'].clearValidators();
+			this.disableSubtop = true;
+			this.disableClass = false;
+			this.disableTopic = false;
+			this.disableSubject = false;
 			this.editclassworkform.patchValue({
 				cw_st_id: '0'
 			});
-			this.getClassSectionByTeacherIdSubjectId();
+			this.getClassSectionByTeacherIdSubjectId(false);
 		} else if (event.value === '8') {
 			this.editclassworkform.controls['cw_sub_id'].clearValidators();
 			this.editclassworkform.controls['cw_class_id'].clearValidators();
@@ -86,7 +93,7 @@ export class EditClassworkModalComponent implements OnInit {
 			this.disableSubtop = true;
 			this.disableClass = true;
 			this.disableTopic = true;
-			this.distableSubject = true;
+			this.disableSubject = true;
 			this.editclassworkform.patchValue({
 				cw_sub_id: '0',
 				cw_class_id: '0',
@@ -97,20 +104,30 @@ export class EditClassworkModalComponent implements OnInit {
 			console.log(this.editclassworkform.value);
 		} else if (event.value === '7') {
 			this.editclassworkform.controls['cw_class_id'].setValidators(Validators.required);
+			this.editclassworkform.controls['cw_sub_id'].clearValidators();
 			this.editclassworkform.controls['cw_topic_id'].clearValidators();
 			this.editclassworkform.controls['cw_st_id'].clearValidators();
+			this.disableSubject = true;
 			this.disableTopic = true;
 			this.disableSubtop = true;
+			this.disableClass = false;
 			this.editclassworkform.patchValue({
-				cw_sec_id: '0',
+				cw_sub_id: '0',
 				cw_topic_id: '0',
 				cw_st_id: '0'
 			});
 			console.log(this.editclassworkform.value);
-			this.getClassBySubjectId();
+			this.getAllClassSection();
 		} else {
+			this.editclassworkform.controls['cw_sub_id'].setValidators(Validators.required);
+			this.editclassworkform.controls['cw_class_id'].setValidators(Validators.required);
+			this.editclassworkform.controls['cw_topic_id'].setValidators(Validators.required);
+			this.editclassworkform.controls['cw_st_id'].setValidators(Validators.required);
 			this.disableSubtop = false;
-			this.getClassSectionByTeacherIdSubjectId();
+			this.disableClass = false;
+			this.disableTopic = false;
+			this.disableSubject = false;
+			this.getClassSectionByTeacherIdSubjectId(false);
 		}
 	}
 
@@ -135,19 +152,19 @@ export class EditClassworkModalComponent implements OnInit {
 		});
 	}
 
-	getClassBySubjectId() {
+	getAllClassSection() {
 		this.classSectionArray = [];
-		this.smartService.getClassBySubjectId({sub_id: this.editclassworkform.value.cw_sub_id}).subscribe((result: any) => {
+		this.smartService.getAllClassSection().subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				const csArray = result.data;
-					if (csArray.length > 0) {
-						csArray.forEach(element => {
-							this.classSectionArray.push({
-								cs_id: element.class_id + '- 0',
-								cs_name: element.class_name
-							});
+				if (csArray.length > 0) {
+					csArray.forEach(element => {
+						this.classSectionArray.push({
+							cs_id: element.class_id + '-' + element.sec_id,
+							cs_name: element.class_name + ' - ' + element.sec_name
 						});
-					}
+					});
+				}
 
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
@@ -155,9 +172,11 @@ export class EditClassworkModalComponent implements OnInit {
 		});
 	}
 
-	getClassSectionByTeacherIdSubjectId() {
+	getClassSectionByTeacherIdSubjectId(resetFlag = true) {
 		this.classSectionArray = [];
-		// this.resetClassworkFormForSubjectChange();
+		if (resetFlag) {
+			this.resetClassworkFormForSubjectChange();
+		}
 		this.smartService.getClassSectionByTeacherIdSubjectId({
 			teacher_id: this.teacherId,
 			sub_id: this.editclassworkform.value.cw_sub_id
@@ -181,7 +200,7 @@ export class EditClassworkModalComponent implements OnInit {
 
 	resetSuptopic() {
 		this.editclassworkform.patchValue({
-			cw_st_id: ''
+			cw_st_id: '0'
 		});
 	}
 	getTopicByClassSubject() {
@@ -224,8 +243,8 @@ export class EditClassworkModalComponent implements OnInit {
 	}
 	resetTopicSubtopic() {
 		this.editclassworkform.patchValue({
-			cw_topic_id: '',
-			cw_st_id: ''
+			cw_topic_id: '0',
+			cw_st_id: '0'
 		});
 	}
 	updateClasswork() {
