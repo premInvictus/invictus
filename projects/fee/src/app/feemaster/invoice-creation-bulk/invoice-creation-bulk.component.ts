@@ -205,8 +205,8 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.dataSource = new MatTableDataSource<InvoiceElement>(this.ELEMENT_DATA);
 		this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 		this.dataSource.sort = this.sort;
-		this.dataSource.paginator = this.paginator;
 		this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+		this.dataSource.paginator = this.paginator;
 	}
 	addTo(row) {
 	}
@@ -342,7 +342,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.deleteWithReasonModal.openModal(value);
 	}
 
-	deleteInvoiceFinal(value) {		
+	deleteInvoiceFinal(value) {
 		this.feeService.deleteInvoice(value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');

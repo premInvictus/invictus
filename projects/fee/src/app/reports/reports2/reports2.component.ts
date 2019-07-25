@@ -152,9 +152,23 @@ export class Reports2Component implements OnInit {
 	];
 	reportType: string;
 	reportHeader: any;
-	constructor() { }
+	userArray: any[] = [];
+	userName: any = '';
+	currentUser: any = {};
+	constructor(private service: FeeService) { }
 
 	ngOnInit() {
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.service.getUserName().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.userArray = [];
+				this.userArray = res.data;
+				const findex = this.userArray.findIndex(f => Number(f.au_login_id) === Number(this.currentUser.login_id));
+				if (findex !== -1) {
+					this.userName = this.userArray[findex].au_full_name;
+				}
+			}
+		});
 	}
 	checkEnable(report_id) {
 		if (Number(report_id) === 3 || Number(report_id) === 4 || Number(report_id) === 13

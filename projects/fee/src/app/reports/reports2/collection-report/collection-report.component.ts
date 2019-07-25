@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
@@ -48,6 +48,7 @@ export class CollectionReportComponent implements OnInit {
 	draggableGroupingPlugin: any;
 	durationOrderByCount = false;
 	gridObj: any;
+	@Input() userName: any = '';
 	@Output() displyRep = new EventEmitter();
 	processing = false;
 	selectedGroupingFields: string[] = ['', '', ''];
@@ -490,8 +491,13 @@ export class CollectionReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
-											obj['receipt_mode_name'] = repoArray[Number(keys)]['tb_name'] !== '' ?
-												repoArray[Number(keys)]['tb_name'] : (repoArray[Number(keys)]['pay_name']) ? repoArray[Number(keys)]['pay_name'] : '-';
+											if (repoArray[Number(keys)]['tb_name'] && repoArray[Number(keys)]['pay_name']) {
+												obj['receipt_mode_name'] = repoArray[Number(keys)]['tb_name'] ?
+													repoArray[Number(keys)]['tb_name'] : '-';
+											} else if ((!repoArray[Number(keys)]['tb_name'] && repoArray[Number(keys)]['pay_name'])) {
+												obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
+													repoArray[Number(keys)]['pay_name'] : '-';
+											}
 											k++;
 										}
 									});
@@ -569,7 +575,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						this.dataset.push(obj3);
-						if (this.dataset.length < 5) {
+						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
 						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
@@ -769,7 +775,7 @@ export class CollectionReportComponent implements OnInit {
 						this.dataset.push(obj3);
 						this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
-						if (this.dataset.length < 5) {
+						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
 						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
@@ -1033,9 +1039,7 @@ export class CollectionReportComponent implements OnInit {
 						this.dataset.push(obj3);
 						this.aggregatearray.push(new Aggregators.Sum('total'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
-						console.log(this.columnDefinitions);
-						console.log(this.dataset);
-						if (this.dataset.length < 5) {
+						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
 						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
@@ -1296,7 +1300,7 @@ export class CollectionReportComponent implements OnInit {
 						this.dataset.push(obj3);
 						this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
-						if (this.dataset.length < 5) {
+						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
 						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
@@ -1568,7 +1572,7 @@ export class CollectionReportComponent implements OnInit {
 							index++;
 						}
 						this.aggregatearray.push(new Aggregators.Sum('stu_opening_balance'));
-						if (this.dataset.length < 5) {
+						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
 						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
@@ -1808,12 +1812,21 @@ export class CollectionReportComponent implements OnInit {
 				'orderBy': '',
 				'downloadAll': true
 			});
-		const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
-		const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
-		this.reportFilterForm.patchValue({
-			'from_date': firstDay,
-			'to_date': date
-		});
+		if (Number(this.sessionName.split('-')[0]) < Number(new Date().getFullYear())) {
+			const date2 = new Date(Number(this.sessionName.split('-')[0]) + 1, Number(this.schoolInfo.session_end_month), 0);
+			const firstDay2 = new Date(this.sessionName.split('-')[0], Number(this.schoolInfo.session_start_month) - 1, 1);
+			this.reportFilterForm.patchValue({
+				'from_date': firstDay2,
+				'to_date': date2
+			});
+		} else {
+			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
+			const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
+			this.reportFilterForm.patchValue({
+				'from_date': firstDay,
+				'to_date': date
+			});
+		}
 		if ($event.value) {
 			this.displyRep.emit({ report_index: 1, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'headwise') {
@@ -2138,30 +2151,107 @@ export class CollectionReportComponent implements OnInit {
 		} else if (this.reportType === 'mfr') {
 			reportType = new TitleCasePipe().transform('monthly fee_') + this.sessionName;
 		}
+		let reportType2: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		if (this.reportType === 'headwise') {
+			reportType2 = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'classwise') {
+			reportType2 = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'modewise') {
+			reportType2 = new TitleCasePipe().transform('mode wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'routewise') {
+			reportType2 = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'mfr') {
+			reportType2 = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
+		}
 		const rowData: any[] = [];
+		const obj2: any = {};
+		const obj3: any = {};
+		const obj4: any = {};
+		for (const item of this.columnDefinitions) {
+			obj2[item.name] = item.name;
+		}
+		rowData.push(obj2);
+		for (const item of this.columnDefinitions) {
+			obj3[item.name] = item.name;
+		}
+		rowData.push(obj3);
+		for (const item of this.columnDefinitions) {
+			obj4[item.name] = item.name;
+		}
+		rowData.push(obj4);
 		Object.keys(json).forEach(key => {
 			const obj: any = {};
 			for (const item2 of this.columnDefinitions) {
-				if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-					obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
-				}
-				if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-					&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
-					obj[item2.name] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
-				}
-				if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-					&& json[key][item2.id] === '<b>Grand Total</b>') {
-					obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
-				}
-				if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-					obj[item2.name] = this.common.htmlToText(json[key][item2.id][0]);
+				if (this.reportType !== 'mfr') {
+					if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+						obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
+					}
+					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+						&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+						obj[item2.name] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
+					}
+					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+						&& json[key][item2.id] === '<b>Grand Total</b>') {
+						obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
+					}
+					if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+						obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
+					}
+				} else {
+					if (item2.id.toString().match(/Q/)) {
+						obj[item2.name] = json[key][item2.id].status;
+					} else {
+						obj[item2.name] = json[key][item2.id];
+					}
 				}
 			}
 			rowData.push(obj);
 		});
+		const obj5: any = {};
+		const obj6: any = {};
+		const obj7: any = {};
+		for (const item of this.columnDefinitions) {
+			obj5[item.name] = item.name;
+		}
+		rowData.push(obj5);
+		for (const item of this.columnDefinitions) {
+			obj6[item.name] = item.name;
+		}
+		rowData.push(obj6);
+		for (const item of this.columnDefinitions) {
+			obj7[item.name] = item.name;
+		}
+		rowData.push(obj7);
 		const fileName = reportType + '.xlsx';
-		const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowData);
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowData);
+		const merge = XLSX.utils.decode_range('A1:AB1');
+		const merge2 = XLSX.utils.decode_range('A2:AB2');
+		const merge3 = XLSX.utils.decode_range('A3:AB3');
+		const rangeDecode = 'A' + (this.dataset.length + 5).toString() + ':' + 'AB' + (this.dataset.length + 5).toString();
+		const rangeDecode2 = 'A' + (this.dataset.length + 6).toString() + ':' + 'AB' + (this.dataset.length + 6).toString();
+		const rangeDecode3 = 'A' + (this.dataset.length + 7).toString() + ':' + 'AB' + (this.dataset.length + 7).toString();
+		const merge4 = XLSX.utils.decode_range('A' + (this.dataset.length + 5).toString() + ':' + 'AB' + (this.dataset.length + 5).toString());
+		const merge5 = XLSX.utils.decode_range('A' + (this.dataset.length + 6).toString() + ':' + 'AB' + (this.dataset.length + 6).toString());
+		const merge6 = XLSX.utils.decode_range('A' + (this.dataset.length + 7).toString() + ':' + 'AB' + (this.dataset.length + 7).toString());
+		if (!ws['!merges']) { ws['!merges'] = []; }
+		ws['!merges'].push(merge);
+		ws['!merges'].push(merge2);
+		ws['!merges'].push(merge3);
+		ws['!merges'].push(merge4);
+		ws['!merges'].push(merge5);
+		ws['!merges'].push(merge6);
+		ws.A1.v =
+			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+		ws.A2.v = reportType2;
+		ws.A3.v = '';
+		ws[rangeDecode.split(':')[0]]['v'] = 'Generated On: ' + new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+		ws[rangeDecode2.split(':')[0]]['v'] = 'Generated By: ' + this.userName;
+		ws[rangeDecode3.split(':')[0]]['v'] = 'Filter By: ' + 'From Date -->' +
+			new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+			+ ' - ' + 'To Date -->'
+			+ new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y');
 		XLSX.utils.book_append_sheet(wb, ws, reportType);
 		XLSX.writeFile(wb, fileName);
 	}
