@@ -374,13 +374,11 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		if (!this.formSubject.value.sub_name) {
 			this.notif.showSuccessErrorMessage('Subject name is required', 'error');
 		}
-		// if (!this.formSubject.value.board_id) {
-		// 	this.notif.showSuccessErrorMessage('Board name is required', 'error');
-		// }
-		/* Form Validation Ends */
 		if (this.formSubject.valid) {
 			const findex = this.subjectArray.findIndex(f => (f.sub_name).toLowerCase() === (this.formSubject.value.sub_name).toLowerCase());
+			console.log('fff', findex);
 			if (findex === -1) {
+				console.log('fff', findex);
 				this.acsetupService.addSubject(this.formSubject.value)
 					.subscribe(
 						(result: any) => {
