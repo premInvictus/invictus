@@ -283,6 +283,9 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getCheckControlReport', value);
 	}
+	getUserName() {
+		return this.http.get(environment.apiSmartUrl + '/common/getUserName');
+	}
 	getFeeLedgerReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeLedgerReport', value);

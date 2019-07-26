@@ -55,6 +55,7 @@
             <div class="row">
               <div class="col-12">
                 <app-collection-report (displyRep)="displyRep($event)"
+                [userName]="userName"
                 *ngIf="reportType === '1'"></app-collection-report>
                 <app-outstanding-report (displyRep)="displyRep($event)"
                 *ngIf="reportType === '2'"></app-outstanding-report>
