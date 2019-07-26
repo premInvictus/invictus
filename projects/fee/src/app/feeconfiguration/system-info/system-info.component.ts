@@ -18,6 +18,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
 	headerFooterFlag = false;
+	receiptHeaderFooterFlag = false;
 	configValue: any;
 	vaccinationArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
@@ -81,9 +82,10 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			'spt_invoice_format': '',
 			'spt_receipt_format': '',
 			'spt_header_template': '',
-			'spt_footer_template': ''
-
-
+			'spt_footer_template': '',
+			'spt_print_format_receipt':  '',
+			'spt_receipt_header_template': '',
+			'spt_receipt_footer_template': ''
 		});
 	}
 	loadConfiguration($event) {
@@ -236,13 +238,21 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				} else {
 					this.headerFooterFlag = false;
 				}
+				if (Number(this.settings.spt_print_format_receipt) === 2) {
+					this.receiptHeaderFooterFlag = true;
+				} else {
+					this.receiptHeaderFooterFlag = false;
+				}
 				this.printForm.patchValue({
 					'spt_id': this.settings.spt_id,
 					'spt_print_format': this.settings.spt_print_format,
 					'spt_invoice_format': this.settings.spt_invoice_format,
 					'spt_receipt_format': this.settings.spt_receipt_format,
 					'spt_header_template': this.settings.spt_header_template,
-					'spt_footer_template': this.settings.spt_footer_template
+					'spt_footer_template': this.settings.spt_footer_template,
+					'spt_print_format_receipt':  this.settings.spt_print_format_receipt,
+					'spt_receipt_header_template':  this.settings.spt_receipt_header_template,
+					'spt_receipt_footer_template': this.settings.spt_receipt_footer_template
 				});
 			}
 		});
@@ -266,7 +276,10 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				'spt_invoice_format': this.settings.spt_invoice_format,
 				'spt_receipt_format': this.settings.spt_receipt_format,
 				'spt_header_template': this.settings.spt_header_template,
-				'spt_footer_template': this.settings.spt_footer_template
+				'spt_footer_template': this.settings.spt_footer_template,
+				'spt_print_format_receipt':  this.settings.spt_print_format_receipt,
+				'spt_receipt_header_template':  this.settings.spt_receipt_header_template,
+				'spt_receipt_footer_template': this.settings.spt_receipt_footer_template
 			});
 		} else {
 			this.printForm.patchValue({
@@ -274,7 +287,10 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				'spt_invoice_format': '',
 				'spt_receipt_format': '',
 				'spt_header_template': '',
-				'spt_footer_template': ''
+				'spt_footer_template': '',
+				'spt_print_format_receipt':  '',
+				'spt_receipt_header_template':  '',
+				'spt_receipt_footer_template': ''
 			});
 		}
 	}
@@ -283,6 +299,14 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.headerFooterFlag = true;
 		} else {
 			this.headerFooterFlag = false;
+		}
+	}
+
+	enableReceiptHeaderFooter($event) {
+		if (Number($event.value) === 2) {
+			this.headerFooterFlag = false;
+		} else {
+			this.receiptHeaderFooterFlag = false;
 		}
 	}
 }
