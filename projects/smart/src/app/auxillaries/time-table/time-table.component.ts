@@ -125,6 +125,20 @@ export class TimeTableComponent implements OnInit {
 			period_checkbox: ''
 		});
 	}
+	// get Class name from existing array
+	getClassName(value) {
+		const classIndex = this.classArray.findIndex(f => Number(f.class_id) === Number(value));
+		if (classIndex !== -1) {
+			return this.classArray[classIndex].class_name;
+		}
+	}
+	// get section from existing array
+	getSectionName(value) {
+		const sectionIndex = this.sectionArray.findIndex(f => Number(f.sec_id) === Number(value));
+		if (sectionIndex !== -1) {
+			return this.sectionArray[sectionIndex].sec_name;
+		}
+	}
 	// get period and day by selected class
 	getPeriodDayByClass() {
 		const dayParam: any = {};
@@ -281,6 +295,8 @@ export class TimeTableComponent implements OnInit {
 			}
 			const param: any = {};
 			param.class_id = this.uploadTimeTableForm.value.tt_class_id;
+			param.class_name = this.getClassName(param.class_id);
+			param.sec_name = this.getSectionName(this.uploadTimeTableForm.value.tt_section_id);
 			param.no_of_days = this.uploadTimeTableForm.value.no_of_day;
 			param.no_of_period = this.uploadTimeTableForm.value.no_of_period;
 			this.syllabusService.downloadTimeTableExcel(param)
@@ -289,7 +305,6 @@ export class TimeTableComponent implements OnInit {
 						if (excel_r && excel_r.status === 'ok') {
 							const length = excel_r.data.split('/').length;
 							saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
-							// this.resetForm();
 						}
 					});
 
@@ -368,10 +383,8 @@ export class TimeTableComponent implements OnInit {
 					});
 				}
 			}
-			console.log('submit', this.finalSubmitArray);
 		}
 		for (let i = 0; i < this.finalSubmitArray.length; i++) {
-
 			const spannArray: any[] = [];
 			spannArray.push({
 				no_of_period: this.finalSubmitArray[i].no_of_period,

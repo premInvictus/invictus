@@ -1,31 +1,32 @@
 <div class="fee-container-box__grey card-height-860-lp">
-    <div class="row ">
-      <div class="col-12 remove-col-padding">
-        <div class="row remove-top-margin">
-          <div class="col-6 remove-col-padding-left remove-col-padding-right">
-            <div class="container-box__white card-height-830">
-              <div class="row">
-                <!-- <div class="col-3 custom-col-10 text-center">
+  <div class="row ">
+    <div class="col-12 remove-col-padding">
+      <div class="row remove-top-margin">
+        <div class="col-6 remove-col-padding-left remove-col-padding-right">
+          <div class="container-box__white card-height-830">
+            <div class="row">
+              <!-- <div class="col-3 custom-col-10 text-center">
                   <div class="line-divider"></div>
                 </div> -->
-                <div class="col-12 text-center">
-                  <h4 class="text-uppercase ">
-                    <b>Strength of {{sessionPromote}}: {{currentSessionStudentCount}}</b>
-                  </h4>
-                </div>
-                <!-- <div class="col-3 custom-col-10 text-center">
-                  <div class="line-divider"></div>
-                </div> -->
+              <div class="col-12 text-center">
+                <h4 class="text-uppercase ">
+                  <b>Strength of {{sessionPromote}}: {{currentSessionStudentCount}}</b>
+                </h4>
               </div>
-              <form [formGroup]="promoteForm">
+              <!-- <div class="col-3 custom-col-10 text-center">
+                  <div class="line-divider"></div>
+                </div> -->
+            </div>
+            <form [formGroup]="promoteForm">
               <div class="row">
                 <div class="col-6">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Enrollment Type</mat-label>
-                    <mat-select placeholder="Enrollment type" formControlName="enrollment_type" 
-                    [errorStateMatcher]="confirmValidParentMatcher" required>
-                    <mat-option value="">Please Select</mat-option>  
-                    <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">{{item.au_process_name}}</mat-option>
+                    <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">
+                        {{item.au_process_name}}</mat-option>
                     </mat-select>
                     <mat-error>
                       Please select enrollment type
@@ -33,13 +34,14 @@
                   </mat-form-field>
                 </div>
                 <div class="col-6">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Current Class</mat-label>
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Current Class</mat-label>
                     <mat-select placeholder="Current Class" #promoClass_id formControlName="class_id"
-                    (selectionChange)="getSectionByClassForPromotion(promoClass_id.value)" 
-                    [errorStateMatcher]="confirmValidParentMatcher" required>
-                    <mat-option value="">Please Select</mat-option>  
-                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                      (selectionChange)="getSectionByClassForPromotion(promoClass_id.value)"
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                      </mat-option>
                     </mat-select>
                     <mat-error>
                       Please select previous class
@@ -49,21 +51,23 @@
               </div>
               <div class="row">
                 <div class="col-6">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Section</mat-label>
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Section</mat-label>
                     <mat-select placeholder="Section" formControlName="sec_id">
-                        <mat-option value="">Please Select</mat-option>
-                      <mat-option *ngFor="let item of promotionSectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of promotionSectionArray" [value]="item.sec_id">{{item.sec_name}}
+                      </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="col-6">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>New Class</mat-label>
-                      <mat-select  placeholder="New Class" required formControlName="new_class_id" 
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>New Class</mat-label>
+                    <mat-select placeholder="New Class" required formControlName="new_class_id"
                       [errorStateMatcher]="confirmValidParentMatcher" required>
-                      <mat-option value="">Please Select</mat-option>    
-                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                      </mat-option>
                     </mat-select>
                     <mat-error>
                       Please select new class
@@ -73,52 +77,54 @@
               </div>
               <div class="row">
                 <div class="col-6">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Sorted By</mat-label>
-                    <mat-select placeholder="Sorted by" formControlName="order_by" >
-                        <mat-option value="">Please Select</mat-option>
-                      <mat-option *ngFor="let item of orderByArray" [value]="item.order_by">{{item.order_by_name}}</mat-option>
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Sorted By</mat-label>
+                    <mat-select placeholder="Sorted by" formControlName="order_by">
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of orderByArray" [value]="item.order_by">{{item.order_by_name}}
+                      </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="col-6 ">
-                  <button mat-raised-button class="btn-success margin-top-12" (click)="getPromotionList()">Generate</button>
+                  <button mat-raised-button class="btn-success margin-top-12"
+                    (click)="getPromotionList()">Generate</button>
                 </div>
               </div>
             </form>
             <div class="row">
-                <div class="col-12">
-                  <div *ngIf="promoteFlag">
-                    <div class="row remove-top-margin">
-                      <div class="col-12">
-                        <div class="row remove-top-margin">
-                          <div class="col-4 remove-col-padding-left">
-                              <mat-form-field  >
-                                  <input
-                                    matInput
-                                    (keyup)="applyFilterPromote($event.target.value)"
-                                    placeholder="Filter"
-                                    />
-                                </mat-form-field>
-                          </div>
-                          <div class="col-8 margin-top-12 text-right">
-                              <div *ngIf="toBePromotedList.length > 0"class="float-right">
-                                  <span><b>Selected Students: </b></span>
-                                  <span>{{toBePromotedList.length}}</span>
-                                </div>
+              <div class="col-12">
+                <div [hidden]="!promoteFlag">
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <div class="row remove-top-margin">
+                        <div class="col-4 remove-col-padding-left">
+                          <mat-form-field>
+                            <input matInput (keyup)="applyFilterPromote($event.target.value)" placeholder="Filter" />
+                          </mat-form-field>
+                        </div>
+                        <div class="col-8 margin-top-12 text-right">
+                          <div *ngIf="toBePromotedList.length > 0" class="float-right">
+                            <span><b>Selected Students: </b></span>
+                            <span>{{toBePromotedList.length}}</span>
                           </div>
                         </div>
-                          
-                        
-                        <table mat-table #table [dataSource]="promotedataSource" matSort class="table-100 text-center">
+                      </div>
+
+
+                      <table mat-table #sortP="matSort" [dataSource]="promotedataSource" matSort matSortActive="ID" class="table-100 text-center">
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="select">
-                          <th mat-header-cell *matHeaderCellDef >
-                            <span class="text-center"><mat-checkbox (change)="checkAllPromotionList($event)"></mat-checkbox></span>
+                          <th mat-header-cell *matHeaderCellDef>
+                            <span class="text-center">
+                              <mat-checkbox (change)="checkAllPromotionList($event)"></mat-checkbox>
+                            </span>
                           </th>
-                          <td mat-cell *matCellDef="let item" >
-                            <span class="text-center"><mat-checkbox [value]="item.no" 
-                              (change)="insertIntoToBePromotedList($event,item.action)" [checked]="promotionListAllFlag"></mat-checkbox></span>
+                          <td mat-cell *matCellDef="let item">
+                            <span class="text-center">
+                              <mat-checkbox [value]="item.no" (change)="insertIntoToBePromotedList($event,item.action)"
+                                [checked]="isSelectedP(item.no)" [disabled]="isDisabledP(item.no)" ></mat-checkbox>
+                            </span>
                           </td>
                         </ng-container>
                         <!-- Admission Column -->
@@ -136,7 +142,7 @@
                           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:50%;">
                             Student Name
                           </th>
-                          <td mat-cell *matCellDef="let item" >
+                          <td mat-cell *matCellDef="let item">
                             <span class="text-center text-capitalize">{{ item.name }}</span>
                           </td>
                         </ng-container>
@@ -155,70 +161,72 @@
                             Section
                           </th>
                           <td mat-cell *matCellDef="let item">
-                            <span class="text-center">{{ item.section }}</span>  
+                            <span class="text-center">{{ item.section }}</span>
                           </td>
-                          >
                         </ng-container>
                         <!-- Promote Column -->
                         <ng-container matColumnDef="action">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef>
                             Promote
                           </th>
                           <td mat-cell *matCellDef="let item">
-                            <span class="text-center"><i *ngIf="item.action.pmap_status !== '0' " class="fas fa-thumbs-up cursor-pointer icon-success" 
-                              (click)="promoteStudent(item)"></i></span>
-                            <span style="color:#04a20d" class="text-center cursor-pointer" [hidden]="!(item.action.pmap_status === '0') "><b>Promoted</b></span>
+                            <span class="text-center"><i *ngIf="item.action.pmap_status !== '0' "
+                                class="fas fa-thumbs-up cursor-pointer icon-success"
+                                (click)="promoteStudent(item)"></i></span>
+                            <span style="color:#04a20d" class="text-center cursor-pointer"
+                              [hidden]="!(item.action.pmap_status === '0') "><b>Promoted</b></span>
                           </td>
                         </ng-container>
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
-                        </table>
+                      </table>
 
 
 
 
-                      </div>
                     </div>
-                    <br />
-                    <br />
-                    <div class="text-center">
-                      <button mat-raised-button class="btn-success" (click)="promoteStudentInBulk()">Promote</button>
-                    </div>
-                    <br />
-                    <br />
                   </div>
+                  <br />
+                  <br />
+                  <div class="text-center" *ngIf="toBePromotedList.length > 0">
+                    <button mat-raised-button class="btn-success" (click)="promoteStudentInBulk()">Promote</button>
+                  </div>
+                  <br />
+                  <br />
                 </div>
               </div>
             </div>
-            
           </div>
 
+        </div>
 
 
-          <div class="col-6 col-padding-left-eight remove-col-padding-right">
-            <div class="container-box__white card-height-830">
-              <div class="row">
-                <!-- <div class="col-3 custom-col-10 text-center">
+
+        <div class="col-6 col-padding-left-eight remove-col-padding-right">
+          <div class="container-box__white card-height-830">
+            <div class="row">
+              <!-- <div class="col-3 custom-col-10 text-center">
                   <div class="line-divider"></div>
                 </div> -->
-                <div class="col-12 text-center">
-                  <h4 class="text-uppercase">
-                    <b>Promoted Strength of {{sessionDemote}}: {{nextSessionStudentCount}}</b>
-                  </h4>
-                </div>
-                <!-- <div class="col-3 custom-col-10 text-center">
-                  <div class="line-divider"></div>
-                </div> -->
+              <div class="col-12 text-center">
+                <h4 class="text-uppercase">
+                  <b>Promoted Strength of {{sessionDemote}}: {{nextSessionStudentCount}}</b>
+                </h4>
               </div>
-              <form [formGroup]="demoteForm">
+              <!-- <div class="col-3 custom-col-10 text-center">
+                  <div class="line-divider"></div>
+                </div> -->
+            </div>
+            <form [formGroup]="demoteForm">
               <div class="row">
                 <div class="col-6">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Enrollment Type</mat-label>
-                      <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Enrollment Type</mat-label>
+                    <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
                       [errorStateMatcher]="confirmValidParentMatcher" required>
-                      <mat-option value="">Please Select</mat-option>    
-                      <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">{{item.au_process_name}}</mat-option>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">
+                        {{item.au_process_name}}</mat-option>
                     </mat-select>
                     <mat-error>
                       Please select enrollment type
@@ -226,75 +234,74 @@
                   </mat-form-field>
                 </div>
                 <div class="col-6">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Promoted Class</mat-label>
-                      <mat-select placeholder="Promoted Class" #demoClass_id formControlName="class_id"
-                      (selectionChange)="getSectionByClassForDemotion(demoClass_id.value)" 
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Promoted Class</mat-label>
+                    <mat-select placeholder="Promoted Class" #demoClass_id formControlName="class_id"
+                      (selectionChange)="getSectionByClassForDemotion(demoClass_id.value)"
                       [errorStateMatcher]="confirmValidParentMatcher" required>
-                      <mat-option value="">Please Select</mat-option>    
-                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
-                        </mat-select>
-                        <mat-error>
-                          Please current select class
-                        </mat-error>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please current select class
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </div>
               <div class="row margin-bottom-65 ">
                 <div class="col-6">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Promoted Section</mat-label>
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Promoted Section</mat-label>
                     <mat-select placeholder="Promoted Section" formControlName="sec_id">
-                        <mat-option value="">Please Select</mat-option>  
-                      <mat-option *ngFor="let item of demotionSectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of demotionSectionArray" [value]="item.sec_id">{{item.sec_name}}
+                      </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="col-6 ">
-                  <button mat-raised-button class="btn-success margin-top-12" (click)="getDemotionList()">Generate</button>
+                  <button mat-raised-button class="btn-success margin-top-12"
+                    (click)="getDemotionList()">Generate</button>
                 </div>
               </div>
             </form>
             <div class="row">
-                <div class="col-12">
-                  <div *ngIf="demoteFlag">
-                    <div class="row">
-                      <div class="col-12">
-                        <div class="row margin-top-25">
-                          <div class="col-4 remove-col-padding-left">
-                              <mat-form-field class="form-field">
-                             
-                                  <input
-                                    matInput
-                                    (keyup)="applyFilterDemote($event.target.value)"
-                                    placeholder="Filter"
-                                    />
-                                </mat-form-field>
-                          </div>
-                          <div class="col-8 margin-top-12 text-right">
-                              <div *ngIf="toBeDemotedList.length > 0"class="float-right">
-                                  <span><b>Selected Students: </b></span>
-                                  <span>{{toBeDemotedList.length}}</span>
-                                </div>
+              <div class="col-12">
+                <div [hidden]="!demoteFlag">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="row margin-top-25">
+                        <div class="col-4 remove-col-padding-left">
+                          <mat-form-field class="form-field">
+
+                            <input matInput (keyup)="applyFilterDemote($event.target.value)" placeholder="Filter" />
+                          </mat-form-field>
+                        </div>
+                        <div class="col-8 margin-top-12 text-right">
+                          <div *ngIf="toBeDemotedList.length > 0" class="float-right">
+                            <span><b>Selected Students: </b></span>
+                            <span>{{toBeDemotedList.length}}</span>
                           </div>
                         </div>
-                          
-                        
-                        <table mat-table #table [dataSource]="demotedataSource" matSort class="table-100 text-center">
+                      </div>
+
+
+                      <table mat-table #sortD="matSort" [dataSource]="demotedataSource" matSort matSortActive="ID" class="table-100 text-center">
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="select">
-                          <th mat-header-cell *matHeaderCellDef >
+                          <th mat-header-cell *matHeaderCellDef>
                             <mat-checkbox (change)="checkAllDemotionList($event)"></mat-checkbox>
                           </th>
-                          <td mat-cell *matCellDef="let item" >
-                            <mat-checkbox [value]="item.no"  (change)="insertIntoToBeDemotedList($event,item.action)" 
-                            [checked]="demotionListAllFlag"></mat-checkbox>
+                          <td mat-cell *matCellDef="let item">
+                            <mat-checkbox [value]="item.no" (change)="insertIntoToBeDemotedList($event,item.action)"
+                              [checked]="isSelectedD(item.no)"></mat-checkbox>
                           </td>
                         </ng-container>
                         <!-- Admission Column -->
                         <ng-container matColumnDef="no">
                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                              {{promoteForm.value.enrollment_type === '4' ? 'Admission No.': 
+                            {{promoteForm.value.enrollment_type === '4' ? 'Admission No.': 
                           'Pro. Adm. No.'}}
                           </th>
                           <td mat-cell *matCellDef="let item">
@@ -307,7 +314,7 @@
                             Student Name
                           </th>
                           <td mat-cell *matCellDef="let item">
-                           <span class="text-capitalize"> {{ item.name }} </span>
+                            <span class="text-capitalize"> {{ item.name }} </span>
                           </td>
                         </ng-container>
                         <!-- Class Column -->
@@ -331,7 +338,7 @@
                         </ng-container>
                         <!-- Promote Column -->
                         <ng-container matColumnDef="action">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <th mat-header-cell *matHeaderCellDef>
                             Demote
                           </th>
                           <td mat-cell *matCellDef="let item">
@@ -341,23 +348,24 @@
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
                         >
-                        </table>
-                      </div>
+                      </table>
                     </div>
-                    <br />
-                    <br />
-                    <div class="text-center">
-                      <button mat-raised-button class="btn-danger cursor-pointer" (click)="demoteStudentInBulk()">Demote</button>
-                    </div>
-                    <br />
-                    <br />
                   </div>
+                  <br />
+                  <br />
+                  <div class="text-center" *ngIf="toBeDemotedList.length > 0">
+                    <button mat-raised-button class="btn-danger cursor-pointer"
+                      (click)="demoteStudentInBulk()">Demote</button>
+                  </div>
+                  <br />
+                  <br />
                 </div>
               </div>
             </div>
-            
           </div>
+
         </div>
       </div>
     </div>
   </div>
+</div>

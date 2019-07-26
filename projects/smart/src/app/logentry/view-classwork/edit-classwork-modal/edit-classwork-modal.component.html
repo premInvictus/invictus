@@ -16,7 +16,7 @@
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Subject</mat-label>
             <mat-select formControlName="cw_sub_id"
-                    (selectionChange)="getClassSectionByTeacherIdSubjectId();resetClassworkFormForSubjectChange()" required [disabled]="distableSubject">
+                    (selectionChange)="getClassSectionByTeacherIdSubjectId()" required [disabled]="disableSubject">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
                   </mat-select>
