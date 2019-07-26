@@ -64,6 +64,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	}
 
 	openBounced(item): void {
+		console.log(item);
 		const dialogRef = this.dialog.open(BouncedChequeModalComponent, {
 			data: item,
 			width: '800px',
@@ -75,7 +76,21 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		dialogRef.afterClosed().subscribe(result => {
 			this.getChequeControlListAll();
 		});
+	}
 
+	openCheckOperationModal(item): void {
+		console.log(item);
+		const dialogRef = this.dialog.open(BouncedChequeModalComponent, {
+			data: item,
+			width: '800px',
+			height: '50%',
+			hasBackdrop: true,
+			disableClose: true
+		});
+
+		dialogRef.afterClosed().subscribe(result => {
+			this.getChequeControlListAll();
+		});
 
 	}
 

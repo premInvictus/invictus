@@ -204,14 +204,18 @@
                         *ngIf="item.action.status === '2'" class="font-size-10"><b>Bounced</b></span>
                     </div>
                   </div>
-
-                  <div class="inline-flex margin-top-5">
+                  <!-- <div class="inline-flex margin-top-5">
                     <div class="cleared-button" [hidden]="item.action.status === '1' || item.action.status === '2'"
                       (click)="clearCheck(item.srno, item.action)">
                       <span class="font-size-10">Cleared</span></div>
                     <div class="bounce-button margin-left-10"
                       [hidden]="item.action.status === '1' || item.action.status === '2'"
                       (click)="openBounced(item.action)"><span class="font-size-10">bounced</span></div>
+                  </div> -->
+                  <div class="inline-flex margin-top-5">
+                    <div class="cleared-button" [hidden]="item.action.status === '1' || item.action.status === '2'"
+                      (click)="openCheckOperationModal(item.action)">
+                      <span class="font-size-10">Action</span></div>
                   </div>
                 </td>
               </ng-container>

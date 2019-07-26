@@ -134,6 +134,7 @@ export class AddSchedulerComponent implements OnInit {
 	}
 
 	submit() {
+		console.log(this.schedulerform);
 		if (this.schedulerform.valid) {
 			this.schedulerform.value.sc_from = this.commonAPIService.dateConvertion(this.schedulerform.value.sc_from);
 			this.schedulerform.value.sc_to = this.commonAPIService.dateConvertion(this.schedulerform.value.sc_to);
