@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { MatPaginatorI18n } from '../../shared-module/customPaginatorClass';
 import { InvoiceElement } from './invoice-element.model';
@@ -35,11 +35,15 @@ export class StudentFeeDetailComponent implements OnInit {
 	};
 	userDetail: any;
 	studentInvoiceData: any;
+	responseHtml = '';
+	paytmResult = '';
+	postURL = '';
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('table') table: ElementRef;
 	@ViewChild('paymentOrderModel') paymentOrderModel;
+	@ViewChild('paytmResponse', { read: ElementRef }) private paytmResponse: ElementRef;
 	INVOICE_ELEMENT: InvoiceElement[] = [];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
 
@@ -65,6 +69,7 @@ export class StudentFeeDetailComponent implements OnInit {
 		public qelementService: QelementService,
 		private route: ActivatedRoute,
 		private router: Router,
+		private renderer: Renderer2
 	) { }
 
 	ngOnInit() {
@@ -93,8 +98,8 @@ export class StudentFeeDetailComponent implements OnInit {
 		this.invoiceArray = [];
 		const inputJson = {
 			'processType': this.processType,
-			'inv_login_id': this.loginId,
-			//'inv_login_id': 1574,
+			// 'inv_login_id': this.loginId,
+			'inv_login_id': 1567,
 			'pageIndex': this.pageIndex,
 			'pageSize': this.invoicepagesize
 		};
@@ -174,7 +179,7 @@ export class StudentFeeDetailComponent implements OnInit {
 				srno: (index + 1),
 				invoiceno: element.inv_invoice_no,
 				inv_id: element.inv_id,
-				rpt_id : element.rpt_id,
+				rpt_id: element.rpt_id,
 				feeperiod: element.fp_name,
 				invoicedate: element.inv_invoice_date,
 				duedate: element.inv_due_date,
@@ -244,7 +249,7 @@ export class StudentFeeDetailComponent implements OnInit {
 	}
 
 	orderPayment(element) {
-		this.outStandingAmt = element.inv_fee_amount;
+		this.outStandingAmt = element.feedue;
 		this.orderMessage = 'Are you confirm to make payment?  Your Pyament is : <b>' + this.outStandingAmt + '</b>';
 		this.paymentOrderModel.openModal(this.outStandingAmt);
 	}
@@ -253,19 +258,73 @@ export class StudentFeeDetailComponent implements OnInit {
 		console.log('Do Payment');
 		const inputJson = {
 			// invoice_ids: this.studentInvoiceData['inv_ids'],
-			inv_login_id: this.loginId,
-			//inv_login_id: 1574,
+			// inv_login_id: this.loginId,
+			inv_login_id: 1567,
 			inv_process_type: this.processType,
 			out_standing_amt: this.outStandingAmt
 		};
 
 		this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
+			console.log('result', result);
 			if (result && result.status === 'ok') {
-				this.paymentOrderModel.closeDialog();
+				this.paytmResult = result.data[0];
+				//this.paymentOrderModel.closeDialog();
+				const responseHtml = { data: '', html: true, responseData: this.paytmResult };
+			// 		this.responseHtml = http.responseText;
+			// 		this.paytmResponse.nativeElement.innerHTML = http.responseText;
+				this.paymentOrderModel.openModal(responseHtml);
 			} else {
 				this.paymentOrderModel.closeDialog();
 			}
+
+			//const transactionUrl = result.data.PAYTM_TXN_URL;
+			const transactionUrl = 'https://securegw-stage.paytm.in/theia/processTransaction';
+			this.postURL = transactionUrl;
+			// const MID = result.data.MID;
+			// const ORDER_ID = result.data.ORDER_ID;
+			// const CALLBACK_URL = result.data.CALLBACK_URL;
+			// const CHANNEL_ID = result.data.CHANNEL_ID;
+			// const CUST_ID = result.data.CUST_ID;
+			// const EMAIL = result.data.EMAIL;
+			// const INDUSTRY_TYPE_ID = result.data.INDUSTRY_TYPE_ID;
+			// const IS_USER_VERIFIED = result.data.IS_USER_VERIFIED;
+			// const MSISDN = result.data.MSISDN;
+			// const TXN_AMOUNT = result.data.TXN_AMOUNT;
+			// const VERIFIED_BY = result.data.VERIFIED_BY;
+			// const WEBSITE = result.data.WEBSITE;
+			// const CHECKSUMHASH = result.data.CHECKSUM;
+
+
+			//const http = new XMLHttpRequest();
+			//const url = transactionUrl;
+			// tslint:disable-next-line: max-line-length
+			// const params = 'MID=' + result.data.MID + '&ORDER_ID=' + result.data.ORDER_ID + '&CUST_ID=' + result.data.CUST_ID + '&INDUSTRY_TYPE_ID= ' +result.data.INDUSTRY_TYPE_ID + '&CHANNEL_ID=' + result.data.CHANNEL_ID + '&TXN_AMOUNT=' + result.data.TXN_AMOUNT + '&WEBSITE= ' + result.data.WEBSITE + '&CALLBACK_URL=' + result.data.CALLBACK_URL + '&MSISDN=' + result.data.MSISDN + '&EMAIL=' + result.data.EMAIL + '&VERIFIED_BY=' + result.data.VERIFIED_BY + '&IS_USER_VERIFIED=' + result.data.IS_USER_VERIFIED + '&CHECKSUMHASH=' + result.data.CHECKSUM;
+
+			// const params = "MID=Invict94097606319802&ORDER_ID=ORDS85442934&CUST_ID=CUST001&INDUSTRY_TYPE_ID=Retail&CHANNEL_ID=WEB&TXN_AMOUNT=1&WEBSITE=WEBSTAGING&CALLBACK_URL=http%3A%2F%2Flocalhost%2Fpaytm-payment-gateway-integration-in-php%2FpgResponse.php&MSISDN=7777777777&EMAIL=youremail%40gmail.com&VERIFIED_BY=EMAIL&IS_USER_VERIFIED=YES&CHECKSUMHASH=HgqIB35j1c/VsWdtnfZQaLE2J6UZtHnpITb3LRnd97+rdgGzb98chpzJ2y3sIaeS6aCfUctF9EoIqzWf/5K/c9V2GVRRFCIHmGtpDMFraes=";
+
+
+
+			//const params = `MID=${MID}&ORDER_ID=${ORDER_ID}&CUST_ID=${CUST_ID}&INDUSTRY_TYPE_ID=${INDUSTRY_TYPE_ID}&CHANNEL_ID=${CHANNEL_ID}&TXN_AMOUNT=${TXN_AMOUNT}&WEBSITE=${WEBSITE}&CALLBACK_URL=${CALLBACK_URL}&MSISDN=${MSISDN}&EMAIL=${EMAIL}&VERIFIED_BY=${VERIFIED_BY}&IS_USER_VERIFIED=${IS_USER_VERIFIED}&CHECKSUMHASH=${CHECKSUMHASH}`;
+			// http.open('POST', url, false);
+			// http.setRequestHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8');
+			// http.setRequestHeader('Accept-Encoding', 'gzip, deflate, br');
+			// http.setRequestHeader('Accept-Language', 'Accept-Language: en-GB,en-US;q=0.9,en;q=0.8');
+			// http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+
+			// http.onreadystatechange = () => {
+			// 	if (http.readyState === 4 && http.status === 200) {
+			// 		console.log(http.responseText);
+			// 		const responseHtml = { data: '', html: http.responseText };
+			// 		this.responseHtml = http.responseText;
+			// 		this.paytmResponse.nativeElement.innerHTML = http.responseText;
+			// 		// this.paymentOrderModel.openModal(responseHtml);
+			// 	}
+			// };
+			// http.send(params);
+
 		});
+
 	}
 
 }
