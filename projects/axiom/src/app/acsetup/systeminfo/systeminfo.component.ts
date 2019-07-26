@@ -385,6 +385,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					.subscribe(
 						(result: any) => {
 							if (result && result.status === 'ok') {
+								this.getSubject();
 								this.getSubjectAll(this);
 								this.acsetupService.exportSubject(
 									{
@@ -403,9 +404,6 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			} else {
 				this.notif.showSuccessErrorMessage('Subject already exist.', 'error');
 			}
-			console.log('subject', this.subjectArray);
-
-
 		}
 	}
 
@@ -1460,6 +1458,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	}
 
 	deleteEntry(deletedData, serFnName, next) {
+		this.getSubject();
 		this.acsetupService[serFnName](deletedData).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {

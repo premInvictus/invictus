@@ -216,7 +216,6 @@ export class TimeTableComponent implements OnInit {
 					friday_id: '-',
 					saturday_id: '',
 					sunday_id: '',
-
 				};
 			}
 			for (let i = 0; i < this.XlslArray.length; i++) {

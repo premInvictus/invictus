@@ -23,11 +23,12 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	private formTopic: FormGroup;
 	private formSubtopic: FormGroup;
 	private formQsubtype: FormGroup;
-	private formQtype: FormGroup;
+	private formQtype: FormGroup; 
 	private formSkill: FormGroup;
 	private formLod: FormGroup;
 	modalRef: BsModalRef;
 	currentsec: any[];
+	subjectArray: any[] = [];
 	private editFlag = false;
 	private arrayBoard: any[] = [];
 	private arraySection: any[] = [];
@@ -274,6 +275,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		} else if (this.valueSystemInfo === 3) {
 			this.getBoardALL(this);
 			this.getSubjectAll(this);
+			this.getSubject();
 			this.formSubject.reset();
 		} else if (this.valueSystemInfo === 4) {
 			this.formClass.reset();
@@ -363,38 +365,46 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 						this.formSection.patchValue({sec_name: '', section_id: ''});
 		}
 	}
-
 	addSubject() {
 		/*Adding Form Validation for subject dropdown*/
 		if (!this.formSubject.value.sub_name) {
 			this.notif.showSuccessErrorMessage('Subject name is required', 'error');
 		}
-		if (!this.formSubject.value.board_id) {
-			this.notif.showSuccessErrorMessage('Board name is required', 'error');
-		}
-		/* Form Validation Ends */
+		// if (!this.formSubject.value.board_id) {
+		// 	this.notif.showSuccessErrorMessage('Board name is required', 'error');
+		// }
 		if (this.formSubject.valid) {
-			this.acsetupService.addSubject(this.formSubject.value)
-				.subscribe(
-					(result: any) => {
-						if (result && result.status === 'ok') {
-							this.getSubjectAll(this);
-							this.acsetupService.exportSubject(
-								{
-									board_id: this.formSubject.value.board_id,
-									sub_name: this.formSubject.value.sub_name,
+			const findex = this.subjectArray.findIndex(f => (f.sub_name).toLowerCase() === (this.formSubject.value.sub_name).toLowerCase());
+			if (findex === -1) {
+				this.acsetupService.addSubject(this.formSubject.value)
+					.subscribe(
+						(result: any) => {
+							if (result && result.status === 'ok') {
+								this.getSubject();
+								this.getSubjectAll(this);
+								this.acsetupService.exportSubject(
+									{
+										board_id: this.formSubject.value.board_id,
+										sub_name: this.formSubject.value.sub_name,
 
-								}).subscribe((result2: any) => {
-									if (result2 && result2.status === 'ok') {
-										this.notif.showSuccessErrorMessage(result2.data, 'success');
-										this.formSubject.controls.sub_name.setValue('');
-									}
-								});
+									}).subscribe((result2: any) => {
+										if (result2 && result2.status === 'ok') {
+											this.notif.showSuccessErrorMessage(result2.data, 'success');
+											this.formSubject.controls.sub_name.setValue('');
+										}
+									});
+							}
 						}
-					}
-				);
+					);
+			} else {
+				this.notif.showSuccessErrorMessage('Subject already exist.', 'error');
+			}
 		}
 	}
+
+
+
+
 
 	addClass() {
 		/*Adding Form Validation for Class dropdown*/
@@ -699,6 +709,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.arraySubject = result.data;
+					this.subjectArray = result.data;
 				}
 			}
 		);
@@ -1436,6 +1447,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	}
 
 	deleteEntry(deletedData, serFnName , next) {
+		this.getSubject();
 		this.acsetupService[serFnName](deletedData).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
