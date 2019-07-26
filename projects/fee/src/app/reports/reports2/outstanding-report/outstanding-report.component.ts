@@ -1638,12 +1638,21 @@ export class OutstandingReportComponent implements OnInit {
 				'orderBy': '',
 				'downloadAll': true
 			});
-		const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
-		const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
-		this.reportFilterForm.patchValue({
-			'from_date': firstDay,
-			'to_date': date
-		});
+		if (Number(this.sessionName.split('-')[0]) < Number(new Date().getFullYear())) {
+			const date2 = new Date(Number(this.sessionName.split('-')[0]) + 1, Number(this.schoolInfo.session_end_month), 0);
+			const firstDay2 = new Date(this.sessionName.split('-')[0], Number(this.schoolInfo.session_start_month) - 1, 1);
+			this.reportFilterForm.patchValue({
+				'from_date': firstDay2,
+				'to_date': date2
+			});
+		} else {
+			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
+			const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
+			this.reportFilterForm.patchValue({
+				'from_date': firstDay,
+				'to_date': date
+			});
+		}
 		if ($event.value) {
 			this.displyRep.emit({ report_index: 2, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'headwise') {
@@ -1659,10 +1668,6 @@ export class OutstandingReportComponent implements OnInit {
 				this.valueLabel = 'Routes';
 				this.getRoutes();
 			} else if ($event.value === 'defaulter') {
-				this.reportFilterForm.patchValue({
-					'from_date': firstDay,
-					'to_date': date
-				});
 				this.valueLabel = 'Class';
 				this.getClass();
 			}
