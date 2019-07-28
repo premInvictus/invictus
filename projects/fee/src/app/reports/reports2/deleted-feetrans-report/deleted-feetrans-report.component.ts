@@ -113,6 +113,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 	sessionName: any;
 	sessionArray: any;
 	session: any;
+	gridHeight: number;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -499,6 +500,15 @@ export class DeletedFeetransReportComponent implements OnInit {
 				obj3['reason_title'] = '';
 				obj3['mod_review_remark'] = '';
 				this.dataset.push(obj3);
+				if (this.dataset.length <= 5) {
+					this.gridHeight = 300;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 400;
+				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+					this.gridHeight = 550;
+				} else if (this.dataset.length > 20) {
+					this.gridHeight = 750;
+				}
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;

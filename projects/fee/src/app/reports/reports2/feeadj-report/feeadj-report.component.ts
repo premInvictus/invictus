@@ -113,6 +113,7 @@ export class FeeadjReportComponent implements OnInit {
 	sortResult: any[] = [];
 	dataArr: any[] = [];
 	sectionArray: any[] = [];
+	gridHeight: number;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -535,6 +536,15 @@ export class FeeadjReportComponent implements OnInit {
 				obj3['invg_adj_amount'] = this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0);
 				obj3['inv_remark'] = '';
 				this.dataset.push(obj3);
+				if (this.dataset.length <= 5) {
+					this.gridHeight = 300;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 400;
+				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+					this.gridHeight = 550;
+				} else if (this.dataset.length > 20) {
+					this.gridHeight = 750;
+				}
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;

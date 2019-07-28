@@ -114,6 +114,7 @@ export class FeeLedgerReportComponent implements OnInit {
 	sessionArray: any[] = [];
 	sessionName: any;
 	session: any = {};
+	gridHeight: number;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -539,6 +540,15 @@ export class FeeLedgerReportComponent implements OnInit {
 				this.aggregatearray.push(new Aggregators.Sum('flgr_concession'));
 				this.aggregatearray.push(new Aggregators.Sum('flgr_receipt'));
 				this.aggregatearray.push(new Aggregators.Sum('flgr_balance'));
+				if (this.dataset.length <= 5) {
+					this.gridHeight = 300;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 400;
+				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+					this.gridHeight = 550;
+				} else if (this.dataset.length > 20) {
+					this.gridHeight = 750;
+				}
 				this.tableFlag = true;
 				setTimeout(() => this.groupByClass(), 2);
 			} else {

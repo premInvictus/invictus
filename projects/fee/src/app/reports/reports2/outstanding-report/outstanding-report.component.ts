@@ -523,11 +523,11 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						this.dataset.push(obj3);
-						if (this.dataset.length < 5) {
+						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
-						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
-						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
 							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
@@ -809,11 +809,11 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						this.dataset.push(obj3);
-						if (this.dataset.length < 5) {
+						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
-						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
-						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
 							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
@@ -1009,11 +1009,11 @@ export class OutstandingReportComponent implements OnInit {
 						this.dataset.push(obj3);
 						this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
-						if (this.dataset.length < 5) {
+						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
-						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
-						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
 							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
@@ -1094,28 +1094,6 @@ export class OutstandingReportComponent implements OnInit {
 							collapsed: false,
 						},
 					},
-					// {
-					// 	id: 'invoice_created_date', name: 'Invoice. Date', field: 'invoice_created_date', sortable: true,
-					// 	filterable: true,
-					// 	width: 120,
-					// 	formatter: this.checkDateFormatter,
-					// 	filterSearchType: FieldType.dateIso,
-					// 	filter: { model: Filters.compoundDate },
-					// 	grouping: {
-					// 		getter: 'invoice_created_date',
-					// 		formatter: (g) => {
-					// 			if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-					// 				return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-					// 			} else {
-					// 				return `${''}`;
-					// 			}
-					// 		},
-					// 		aggregators: this.aggregatearray,
-					// 		aggregateCollapsed: true,
-					// 		collapsed: false
-					// 	},
-					// 	groupTotalsFormatter: this.srnTotalsFormatter,
-					// },
 					{
 						id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
 						filterable: true,
@@ -1132,18 +1110,6 @@ export class OutstandingReportComponent implements OnInit {
 							collapsed: false,
 						},
 					},
-					// {
-					// 	id: 'receipt_no',
-					// 	name: 'Invoice No.',
-					// 	field: 'receipt_no',
-					// 	sortable: true,
-					// 	width: 60,
-					// 	filterable: true,
-					// 	filterSearchType: FieldType.number,
-					// 	filter: { model: Filters.compoundInputNumber },
-					// 	formatter: this.checkReceiptFormatter,
-					// 	cssClass: 'receipt_collection_report'
-					// },
 					{
 						id: 'transport_amount',
 						name: 'Transport Amt.',
@@ -1270,11 +1236,11 @@ export class OutstandingReportComponent implements OnInit {
 						this.dataset.push(obj3);
 						this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
-						if (this.dataset.length < 5) {
+						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
-						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
-						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
 							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
@@ -1433,11 +1399,11 @@ export class OutstandingReportComponent implements OnInit {
 						this.dataset.push(obj3);
 						this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
-						if (this.dataset.length < 5) {
+						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
-						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
-						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
 							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
