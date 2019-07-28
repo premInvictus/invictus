@@ -58,6 +58,7 @@
                 [userName]="userName"
                 *ngIf="reportType === '1'"></app-collection-report>
                 <app-outstanding-report (displyRep)="displyRep($event)"
+                [userName]="userName"
                 *ngIf="reportType === '2'"></app-outstanding-report>
                 <app-fee-ledger-report *ngIf="reportType === '5'"></app-fee-ledger-report>
                 <app-deleted-feetrans-report *ngIf="reportType === '6'"></app-deleted-feetrans-report>
