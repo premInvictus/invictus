@@ -1765,8 +1765,6 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('head wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'headwisedetail') {
 			reportType = new TitleCasePipe().transform('head wise Detail outstanding report: ') + this.sessionName;
-		} else if (this.reportType === 'classwise') {
-			reportType = new TitleCasePipe().transform('class wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'routewise') {
 			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
@@ -2174,8 +2172,8 @@ export class OutstandingReportComponent implements OnInit {
 			reportType2 = new TitleCasePipe().transform('head wise detail_') + this.sessionName;
 		} else if (this.reportType === 'routewise') {
 			reportType2 = new TitleCasePipe().transform('route wise_') + this.sessionName;
-		} else if (this.reportType === 'mfr') {
-			reportType2 = new TitleCasePipe().transform('monthly fee_') + this.sessionName;
+		} else if (this.reportType === 'defaulter') {
+			reportType2 = new TitleCasePipe().transform('defaulter list_') + this.sessionName;
 		}
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
