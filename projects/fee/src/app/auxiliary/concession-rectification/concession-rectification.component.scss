@@ -2,3 +2,7 @@
     padding: 0px 0px;
     border-radius: 5%;
 }
+
+::ng-deep .mat-column-srno {
+    width: 6% !important;
+}
