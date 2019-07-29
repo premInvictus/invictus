@@ -15,6 +15,7 @@ import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details
 })
 export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
+	@ViewChild('deleteModal') deleteModal;
 	displayedColumns: string[] =
 		['srno', 'class_name', 'chequeno', 'admno', 'studentname', 'recieptno', 'amount', 'bankname', 'recieptdate',
 			'bankdeposite', 'processingdate', 'action'];
@@ -89,7 +90,10 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
-			this.getChequeControlListAll();
+			if (result.status === '1') {
+				this.getChequeControlListAll();
+			}
+			
 		});
 
 	}
@@ -249,5 +253,24 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'status': ''
 		});
 		this.getChequeControlListAll();
+	}
+	openDeleteModal(item) {
+		this.deleteModal.openModal(item);
+	}
+	approveFTR(item) {
+		console.log(item);
+		const param: any = {};
+		param.fcc_ftr_id = item.fee_transaction_id;
+		param.fcc_status = '';
+		param.ftr_status = '4';
+		console.log(param);
+		this.feeService.approveFeeTransaction(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.common.showSuccessErrorMessage(result.message, 'success');
+				this.getChequeControlListAll();
+			} else {
+				this.common.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
 	}
 }
