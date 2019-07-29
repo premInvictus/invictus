@@ -29,34 +29,4 @@
          </div>
       </div>
    </div>
-   <div class="modal-main-box" *ngIf="paytmResponsHtml">
-      <div>
-         <div>
-            <div class="row">
-               <div class="col-lg-12">
-                  <div class="close-button-content">
-                     <button mat-icon-button class="close-button" (click)="closeDialog()">
-                        <img src="/assets/images/clear-button.svg"></button>
-                  </div>
-               </div>
-            </div>
-            <br>
-            <div class="row">
-               <div class="col-lg-12">
-                  <div>
-                     <h6 class="text-center"><b>Make Payment</b></h6>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="text-center">
-            <form ngNoForm #myFormPost name="myFormPost" id="payForm" [action]="postURL" method="POST">
-               <ng-container *ngFor="let input of paytmResult">
-                  <input [name]="input.name" [value]="input.value" />
-               </ng-container>
-               <input type="submit" value="Submit" />
-            </form>
-         </div>
-      </div>
-   </div>
 </ng-template>

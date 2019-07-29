@@ -1,0 +1,8 @@
+<div class="text-center">
+  <form ngNoForm #myFormPost name="myFormPost" id="payForm" [action]="postURL" method="POST">
+     <ng-container *ngFor="let input of paytmResult">
+        <input [name]="input.name" [value]="input.value" />
+     </ng-container>
+     <input type="submit" value="Submit" />
+  </form>
+</div>

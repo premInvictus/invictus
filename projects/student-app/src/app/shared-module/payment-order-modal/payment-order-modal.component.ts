@@ -16,27 +16,19 @@ export class PaymentOrderModalComponent implements OnInit {
 	paytmResult: any;
 	paytmResponsHtml = '';
 	postURL = '';
-	constructor(private dialog: MatDialog) { }
+	constructor(private dialog: MatDialog, ) { }
 
 	ngOnInit() {
 	}
 	openModal(data) {
 		console.log('data', data);
-		const transactionUrl = 'https://securegw-stage.paytm.in/theia/processTransaction';
-		this.postURL = transactionUrl;
-		if (data.html) {
-			this.paytmResult = data.responseData;
-			this.paytmResponsHtml = data.html;
-		} else {
-			this.inputData = data;
-			this.dialogRef = this.dialog.open(this.paymentOrderModel, {
-				'height': '30vh',
-				position: {
-					'top': '20%'
-				}
-			});
-		}
-		
+		this.inputData = data;
+		this.dialogRef = this.dialog.open(this.paymentOrderModel, {
+			'height': '30vh',
+			position: {
+				'top': '20%'
+			}
+		});
 	}
 	makeOrder() {
 		this.orderOk.emit(this.inputData);

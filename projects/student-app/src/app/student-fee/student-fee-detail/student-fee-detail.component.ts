@@ -265,63 +265,21 @@ export class StudentFeeDetailComponent implements OnInit {
 		};
 
 		this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
-			console.log('result', result);
+			localStorage.setItem('paymentData', '');
 			if (result && result.status === 'ok') {
+				console.log('result.data[0]', result.data[0]);
 				this.paytmResult = result.data[0];
-				//this.paymentOrderModel.closeDialog();
-				const responseHtml = { data: '', html: true, responseData: this.paytmResult };
-			// 		this.responseHtml = http.responseText;
-			// 		this.paytmResponse.nativeElement.innerHTML = http.responseText;
-				this.paymentOrderModel.openModal(responseHtml);
+				this.paymentOrderModel.closeDialog();
+				localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
+				const hostName =  window.location.href.split('/')[2] ;
+				const newwindow = window.open('http://' + hostName + '/student/make-payment', 'LargeWindow', 'height=600,width=1300');
+				if (window.focus) {
+					newwindow.focus();
+				}
 			} else {
 				this.paymentOrderModel.closeDialog();
 			}
 
-			//const transactionUrl = result.data.PAYTM_TXN_URL;
-			const transactionUrl = 'https://securegw-stage.paytm.in/theia/processTransaction';
-			this.postURL = transactionUrl;
-			// const MID = result.data.MID;
-			// const ORDER_ID = result.data.ORDER_ID;
-			// const CALLBACK_URL = result.data.CALLBACK_URL;
-			// const CHANNEL_ID = result.data.CHANNEL_ID;
-			// const CUST_ID = result.data.CUST_ID;
-			// const EMAIL = result.data.EMAIL;
-			// const INDUSTRY_TYPE_ID = result.data.INDUSTRY_TYPE_ID;
-			// const IS_USER_VERIFIED = result.data.IS_USER_VERIFIED;
-			// const MSISDN = result.data.MSISDN;
-			// const TXN_AMOUNT = result.data.TXN_AMOUNT;
-			// const VERIFIED_BY = result.data.VERIFIED_BY;
-			// const WEBSITE = result.data.WEBSITE;
-			// const CHECKSUMHASH = result.data.CHECKSUM;
-
-
-			//const http = new XMLHttpRequest();
-			//const url = transactionUrl;
-			// tslint:disable-next-line: max-line-length
-			// const params = 'MID=' + result.data.MID + '&ORDER_ID=' + result.data.ORDER_ID + '&CUST_ID=' + result.data.CUST_ID + '&INDUSTRY_TYPE_ID= ' +result.data.INDUSTRY_TYPE_ID + '&CHANNEL_ID=' + result.data.CHANNEL_ID + '&TXN_AMOUNT=' + result.data.TXN_AMOUNT + '&WEBSITE= ' + result.data.WEBSITE + '&CALLBACK_URL=' + result.data.CALLBACK_URL + '&MSISDN=' + result.data.MSISDN + '&EMAIL=' + result.data.EMAIL + '&VERIFIED_BY=' + result.data.VERIFIED_BY + '&IS_USER_VERIFIED=' + result.data.IS_USER_VERIFIED + '&CHECKSUMHASH=' + result.data.CHECKSUM;
-
-			// const params = "MID=Invict94097606319802&ORDER_ID=ORDS85442934&CUST_ID=CUST001&INDUSTRY_TYPE_ID=Retail&CHANNEL_ID=WEB&TXN_AMOUNT=1&WEBSITE=WEBSTAGING&CALLBACK_URL=http%3A%2F%2Flocalhost%2Fpaytm-payment-gateway-integration-in-php%2FpgResponse.php&MSISDN=7777777777&EMAIL=youremail%40gmail.com&VERIFIED_BY=EMAIL&IS_USER_VERIFIED=YES&CHECKSUMHASH=HgqIB35j1c/VsWdtnfZQaLE2J6UZtHnpITb3LRnd97+rdgGzb98chpzJ2y3sIaeS6aCfUctF9EoIqzWf/5K/c9V2GVRRFCIHmGtpDMFraes=";
-
-
-
-			//const params = `MID=${MID}&ORDER_ID=${ORDER_ID}&CUST_ID=${CUST_ID}&INDUSTRY_TYPE_ID=${INDUSTRY_TYPE_ID}&CHANNEL_ID=${CHANNEL_ID}&TXN_AMOUNT=${TXN_AMOUNT}&WEBSITE=${WEBSITE}&CALLBACK_URL=${CALLBACK_URL}&MSISDN=${MSISDN}&EMAIL=${EMAIL}&VERIFIED_BY=${VERIFIED_BY}&IS_USER_VERIFIED=${IS_USER_VERIFIED}&CHECKSUMHASH=${CHECKSUMHASH}`;
-			// http.open('POST', url, false);
-			// http.setRequestHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8');
-			// http.setRequestHeader('Accept-Encoding', 'gzip, deflate, br');
-			// http.setRequestHeader('Accept-Language', 'Accept-Language: en-GB,en-US;q=0.9,en;q=0.8');
-			// http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-
-			// http.onreadystatechange = () => {
-			// 	if (http.readyState === 4 && http.status === 200) {
-			// 		console.log(http.responseText);
-			// 		const responseHtml = { data: '', html: http.responseText };
-			// 		this.responseHtml = http.responseText;
-			// 		this.paytmResponse.nativeElement.innerHTML = http.responseText;
-			// 		// this.paymentOrderModel.openModal(responseHtml);
-			// 	}
-			// };
-			// http.send(params);
 
 		});
 

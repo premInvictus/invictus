@@ -4,6 +4,7 @@ import { StudentDashboardComponent } from './student/student-dashboard/student-d
 import { UserCredentialComponent } from './user-credential/user-credential.component';
 import { AuthGuard } from '../_guards/auth.guard';
 import { ProjectComponent } from 'src/app/invictus-shared/project/project.component';
+import { MakePaymentComponent } from './../student-fee/make-payment/make-payment.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -30,6 +31,10 @@ const routes: Routes = [
 		path: 'test',
 		canActivate: [AuthGuard],
 		loadChildren: '../test-engine/test-engine.module#TestEngineModule'
+	},
+	{ 	path: 'make-payment',
+		canActivate: [AuthGuard],
+		component: MakePaymentComponent
 	}
 ];
 

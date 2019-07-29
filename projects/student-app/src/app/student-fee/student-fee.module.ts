@@ -5,6 +5,7 @@ import { SharedModuleModule } from '../shared-module/shared-module.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StudentFeeDetailComponent } from './student-fee-detail/student-fee-detail.component';
 
+
 @NgModule({
 	imports: [
 		CommonModule,
