@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
@@ -15,7 +15,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportFilterComponent } from '../../reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from '../../reports-filter-sort/report-sort/report-sort.component';
 import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
+import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+import * as Excel from 'exceljs/dist/exceljs.min.js';
+import * as ExcelProper from 'exceljs';
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
@@ -25,6 +28,7 @@ import 'jspdf-autotable';
 	styleUrls: ['./feecon-report.component.css']
 })
 export class FeeconReportComponent implements OnInit {
+	@Input() userName: any = '';
 	@Output() displyRep = new EventEmitter();
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
@@ -62,6 +66,54 @@ export class FeeconReportComponent implements OnInit {
 	schoolInfo: any = {};
 	session: any = {};
 	sessionName: any;
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR',
+
+	};
+	gridHeight: number;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -505,8 +557,23 @@ export class FeeconReportComponent implements OnInit {
 							});
 						});
 					});
+					obj3['fcg_name'] = '';
+					obj3['fcg_description'] = '';
 					obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+					obj3['approved_by'] = '';
+					obj3['mod_review_date'] = '';
+					obj3['mod_review_remark'] = '';
+					obj3['reason_title'] = '';
 					this.dataset.push(obj3);
+					if (this.dataset.length <= 5) {
+						this.gridHeight = 300;
+					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+						this.gridHeight = 400;
+					} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+						this.gridHeight = 550;
+					} else if (this.dataset.length > 20) {
+						this.gridHeight = 750;
+					}
 					this.tableFlag = true;
 				} else {
 					this.tableFlag = true;
@@ -964,26 +1031,177 @@ export class FeeconReportComponent implements OnInit {
 	}
 	exportToExcel(json: any[], excelFileName: string): void {
 		let reportType: any = '';
+		let reportType2: any = '';
+		const columns: any[] = [];
+		const columValue: any[] = [];
+		for (const item of this.columnDefinitions) {
+			columns.push({
+				key: item.id,
+				width: this.checkWidth(item.id, item.name),
+				outlineLevel: 1
+			});
+			columValue.push(item.name);
+		}
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		if (this.reportType === 'concession') {
 			reportType = new TitleCasePipe().transform('concession report: ') + this.sessionName;
+			reportType2 = new TitleCasePipe().transform('con repo_') + this.sessionName;
 		} else if (this.reportType === 'concessionAlloted') {
-			reportType = new TitleCasePipe().transform('concession allotee: ') + this.sessionName;
+			reportType = new TitleCasePipe().transform('concession allotee report: ') + this.sessionName;
+			reportType2 = new TitleCasePipe().transform('con_allotee_repo: ') + this.sessionName;
 		}
-		const rowData: any[] = [];
+		const fileName = reportType + '.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType2, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+		worksheet.getRow(4).values = columValue;
+		worksheet.columns = columns;
 		Object.keys(json).forEach(key => {
 			const obj: any = {};
 			for (const item of this.columnDefinitions) {
-				obj[item.name] = json[key][item.id];
+				obj[item.id] = json[key][item.id];
 			}
-			rowData.push(obj);
+			worksheet.addRow(obj);
 		});
-		const fileName = reportType + '.xlsx';
-		const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowData);
-		const wb: XLSX.WorkBook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, reportType);
-
-		XLSX.writeFile(wb, fileName);
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 12,
+					bold: true
+				};
+			}
+			if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 10,
+					bold: true
+				};
+			}
+			if (rowNum === 4) {
+				row.eachCell((cell) => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'bdbdbd' },
+						bgColor: { argb: 'bdbdbd' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+				row.eachCell((cell) => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+					};
+					cell.alignment = { wrapText: true, horizontal: 'center' };
+				});
+				if (rowNum % 2 === 0) {
+					row.eachCell((cell) => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+					});
+				} else {
+					row.eachCell((cell) => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'dedede' },
+							bgColor: { argb: 'dedede' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+					});
+				}
+			} else if (rowNum > 4 && rowNum === worksheet._rows.length) {
+				row.eachCell((cell) => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			}
+		});
+		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' +
+			new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+			+ ' - ' +
+			new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y');
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + this.totalRecords;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+			+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.userName;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
 	}
 	exportAsPDF() {
 		const headerData: any[] = [];
@@ -1067,6 +1285,74 @@ export class FeeconReportComponent implements OnInit {
 					lineColor: '#89a8c8',
 				},
 				theme: 'grid'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Report Filtered as: ' +
+					new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+					+ ' - ' +
+					new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['No of records: ' + this.totalRecords]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Generated On: '
+					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Generated By: ' + this.userName]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
 			});
 			doc.save(reportType + '_' + new Date() + '.pdf');
 		} else {
@@ -1161,6 +1447,74 @@ export class FeeconReportComponent implements OnInit {
 					theme: 'grid',
 				});
 			}
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Report Filtered as: ' +
+					new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+					+ ' - ' +
+					new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['No of records: ' + this.totalRecords]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Generated On: '
+					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Generated By: ' + this.userName]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
 			doc.save(reportType + '_' + new Date() + '.pdf');
 		}
 	}
@@ -1174,5 +1528,10 @@ export class FeeconReportComponent implements OnInit {
 			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
 		});
 	}
-
+	checkWidth(id, header) {
+		const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
+	}
 }
