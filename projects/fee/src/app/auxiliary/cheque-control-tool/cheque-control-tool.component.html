@@ -155,18 +155,7 @@
               <ng-container matColumnDef="bankdeposite">
                 <th mat-header-cell *matHeaderCellDef> Date of Deposit</th>
                 <td mat-cell *matCellDef="let item">
-                  <form [formGroup]="formGroupArray[item.srno - 1].formGroup">
-                    <mat-form-field appearance="outline"
-                      [hidden]="item.action.status === '1' || item.action.status === '2'"
-                      class="cheque-control-tool margin-top-5">
-                      <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
-                        formControlName="fcc_deposite_date">
-                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                      <mat-datepicker #picker1></mat-datepicker>
-                    </mat-form-field>
-                  </form>
-                  <span style="font-size: 14px" *ngIf="item.action.status === '1' || item.action.status === '2'"
-                    class="font-size-10">
+                  <span style="font-size: 14px" class="font-size-10">
                     <b>{{item.bankdeposite}}</b>
                   </span>
                 </td>
@@ -174,21 +163,13 @@
               <ng-container matColumnDef="processingdate">
                 <th mat-header-cell *matHeaderCellDef> Date of Clearence</th>
                 <td mat-cell *matCellDef="let item">
-                  <form [formGroup]="formGroupArray[item.srno - 1].formGroup">
-                    <mat-form-field appearance="outline"
-                      [hidden]="item.action.status === '1' || item.action.status === '2'"
-                      class="cheque-control-tool margin-top-5">
-                      <input matInput [matDatepicker]="picker" placeholder="Choose a date"
-                        formControlName="fcc_process_date">
-                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                  </form>
                   <span style="font-size: 14px" *ngIf="item.action.status === '2'" class="font-size-10">
-                    <b>{{item.action.dishonor_date | date : 'd-MMM-y'}}</b>
+                    <b *ngIf="item.action.dishonor_date">{{item.action.dishonor_date | date : 'd-MMM-y'}}</b>
+                    <b *ngIf="!item.action.dishonor_date">-</b>
                   </span>
                   <span style="font-size: 14px" *ngIf="item.action.status === '1'" class="font-size-10">
-                    <b>{{item.action.fcc_process_date | date : 'd-MMM-y'}}</b>
+                    <b *ngIf="item.action.fcc_process_date">{{item.action.fcc_process_date | date : 'd-MMM-y'}}</b>
+                    <b *ngIf="!item.action.fcc_process_date">-</b>
                   </span>
                 </td>
               </ng-container>
@@ -197,25 +178,35 @@
                 <td mat-cell *matCellDef="let item">
                   <div class="inline-flex margin-top-5">
                     <div class="text-center">
+                      <span style="font-size: 14px" *ngIf="item.action.status === '4'" class="font-size-10">
+                        <b *ngIf="item.action.fcc_status === 'c'">Cleared</b>
+                        <b *ngIf="item.action.fcc_status === 'b'">Bounced</b>
+                      </span>
                       <span style="font-size: 14px" *ngIf="item.action.status === '1'" class="font-size-10">
                         <b>Cleared</b>
                       </span>
                       <span [matTooltip]="item.action.fcc_remarks" style="font-size: 14px;cursor: pointer;"
-                        *ngIf="item.action.status === '2'" class="font-size-10"><b>Bounced</b></span>
+                        *ngIf="item.action.status === '2'" class="font-size-10"><b>Bounced</b>
+                      </span>
+                      <span style="font-size: 14px" *ngIf="item.action.status === '3'" class="font-size-10">
+                        <b>Deposit</b>
+                      </span>
                     </div>
                   </div>
-                  <!-- <div class="inline-flex margin-top-5">
-                    <div class="cleared-button" [hidden]="item.action.status === '1' || item.action.status === '2'"
-                      (click)="clearCheck(item.srno, item.action)">
-                      <span class="font-size-10">Cleared</span></div>
-                    <div class="bounce-button margin-left-10"
-                      [hidden]="item.action.status === '1' || item.action.status === '2'"
-                      (click)="openBounced(item.action)"><span class="font-size-10">bounced</span></div>
-                  </div> -->
                   <div class="inline-flex margin-top-5">
-                    <div class="cleared-button" [hidden]="item.action.status === '1' || item.action.status === '2'"
+                    &nbsp;<i
+                      *ngIf="item.action.status !== '4' && (item.action.status === '0' || item.action.status === '3')"
+                      class="material-icons" style="cursor: pointer"
+                      (click)="openCheckOperationModal(item.action)">list_alt</i>
+                    &nbsp;<i
+                      *ngIf="item.action.status !== '4' && (item.action.status === '2' || item.action.status === '1')"
+                      class="material-icons" style="cursor: pointer"
+                      (click)="openCheckOperationModal(item.action)">edit</i>
+                    &nbsp;<i *ngIf="item.action.status === '2' || item.action.status === '1'" class="material-icons"
+                      style="cursor: pointer" (click)="openDeleteModal(item.action)">publish</i>
+                    <!-- <div class="cleared-button" [hidden]="!(item.action.status !== '4')"
                       (click)="openCheckOperationModal(item.action)">
-                      <span class="font-size-10">Action</span></div>
+                      <span class="font-size-10">Action</span></div> -->
                   </div>
                 </td>
               </ng-container>
@@ -236,3 +227,5 @@
     </div>
   </div>
 </div>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to approve'" (deleteOk)="approveFTR($event)">
+</app-delete-modal>
