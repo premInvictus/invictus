@@ -264,6 +264,9 @@ export class FeeService {
 	addCheckControlTool(value: any) {
 		return this.http.post(environment.apiFeeUrl + '/checkControlTool/addCheckControlTool', value);
 	}
+	approveFeeTransaction(value: any) {
+		return this.http.post(environment.apiFeeUrl + '/checkControlTool/approveFeeTransaction', value);
+	}
 	getFeeLedger(value: any) {
 		this.service.startLoading();
 		if (this.processType.getProcesstype()) {

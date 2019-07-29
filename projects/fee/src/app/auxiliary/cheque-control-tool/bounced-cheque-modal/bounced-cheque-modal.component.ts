@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { FeeService, SisService } from '../../../_services';
+import { FeeService, SisService, CommonAPIService } from '../../../_services';
 @Component({
 	selector: 'app-bounced-cheque-modal',
 	templateUrl: './bounced-cheque-modal.component.html',
@@ -21,11 +21,12 @@ export class BouncedChequeModalComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data,
 		public fbuild: FormBuilder,
 		public feeService: FeeService,
-		public sisService: SisService
+		public sisService: SisService,
+		public commonAPIService: CommonAPIService
 	) { }
 
 	ngOnInit() {
-		console.log(this.data);
+		console.log('data', this.data);
 		this.buildForm();
 		this.getReason();
 		this.getBanks();
@@ -41,25 +42,28 @@ export class BouncedChequeModalComponent implements OnInit {
 		}
 		this.defaultSrc = this.studentDetails.au_profileimage ? this.studentDetails.au_profileimage : this.defaultsrc;
 		if (!this.data.fcc_status) {
-			
 			this.bouncedForm.patchValue({
 				fcc_status: 'd'
 			});
-			console.log(this.bouncedForm.value);
+		} else if (this.data.fcc_status === 'd') {
+			this.bouncedForm.patchValue({
+				fcc_status: 'c'
+			});
 		}
 	}
 	buildForm() {
 		this.bouncedForm = this.fbuild.group({
-			'ftr_deposit_bnk_id': '',
-			'fcc_deposite_date': '',
-			'fcc_ftr_id': '',
-			'fcc_dishonor_date': '',
-			'fcc_bank_code': '',
-			'fcc_reason_id': '',
-			'fcc_remarks': '',
-			'fcc_process_date': new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
-			'fcc_status': '',
-			'fcc_inv_id': ''
+			'fcc_id': this.data.fcc_id ? this.data.fcc_id : '',
+			'ftr_deposit_bnk_id': this.data.ftr_deposit_bnk_id ? this.data.ftr_deposit_bnk_id : '',
+			'fcc_deposite_date': this.data.fcc_deposite_date ? this.data.fcc_deposite_date : '',
+			'fcc_ftr_id': this.data.fee_transaction_id ? this.data.fee_transaction_id : '',
+			'fcc_dishonor_date': this.data.dishonor_date ? this.data.dishonor_date : '',
+			'fcc_bank_code': this.data.fcc_bank_code ? this.data.fcc_bank_code : '',
+			'fcc_reason_id': this.data.fcc_bank_code ? this.data.fcc_bank_code : '',
+			'fcc_remarks': this.data.fcc_remarks ? this.data.fcc_remarks : '',
+			'fcc_process_date': this.data.fcc_process_date ? this.data.fcc_process_date : '',
+			'fcc_status': this.data.fcc_status ? this.data.fcc_status : '',
+			'fcc_inv_id': this.data.invoice_id ? this.data.invoice_id : '',
 		});
 	}
 	getReason() {
@@ -79,21 +83,55 @@ export class BouncedChequeModalComponent implements OnInit {
 		});
 	}
 	closeModal() {
-		this.dialogRef.close();
+		this.dialogRef.close({status: '0'});
 	}
 	submit() {
+		console.log('bouncedForm', this.bouncedForm);
+		if (this.bouncedForm.value.fcc_status === 'c') {
+			this.bouncedForm.get('fcc_process_date').setValidators(Validators.required);
+		} else if (this.bouncedForm.value.fcc_status === 'b') {
+			this.bouncedForm.get('fcc_remarks').setValidators(Validators.required);
+			this.bouncedForm.get('fcc_dishonor_date').setValidators(Validators.required);
+		}
 		if (this.bouncedForm.valid) {
-			this.bouncedForm.patchValue({
-				'fcc_dishonor_date': new DatePipe('en-in').transform(this.bouncedForm.value.fcc_dishonor_date, 'yyyy-MM-dd'),
-				'fcc_inv_id': this.studentDetails.invoice_id,
-				'fcc_ftr_id': this.studentDetails.fee_transaction_id,
-				'fcc_reason_id': this.getReasonId(this.bouncedForm.value.fcc_bank_code)
-			});
-			this.feeService.addCheckControlTool(this.bouncedForm.value).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.dialogRef.close();
-				}
-			});
+			if (this.bouncedForm.value.fcc_status === 'd') {
+				this.bouncedForm.patchValue({
+					'fcc_deposite_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_deposite_date, 'yyyy-MM-dd'),
+					'fcc_inv_id': this.studentDetails.invoice_id,
+					'fcc_ftr_id': this.studentDetails.fee_transaction_id,
+				});
+				this.feeService.addCheckControlTool(this.bouncedForm.value).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.dialogRef.close({status: '1'});
+					}
+				});
+
+			} else if (this.bouncedForm.value.fcc_status === 'c') {
+				this.bouncedForm.patchValue({
+					'fcc_process_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_process_date, 'yyyy-MM-dd'),
+					'fcc_inv_id': this.studentDetails.invoice_id,
+					'fcc_ftr_id': this.studentDetails.fee_transaction_id,
+				});
+				this.feeService.addCheckControlTool(this.bouncedForm.value).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.dialogRef.close({status: '1'});
+					}
+				});
+			} else if (this.bouncedForm.value.fcc_status === 'b') {
+				this.bouncedForm.patchValue({
+					'fcc_dishonor_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_dishonor_date, 'yyyy-MM-dd'),
+					'fcc_inv_id': this.studentDetails.invoice_id,
+					'fcc_ftr_id': this.studentDetails.fee_transaction_id,
+					'fcc_reason_id': this.getReasonId(this.bouncedForm.value.fcc_bank_code)
+				});
+				this.feeService.addCheckControlTool(this.bouncedForm.value).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.dialogRef.close({status: '1'});
+					}
+				});
+			}
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
 	}
 	setBankcode(event) {
