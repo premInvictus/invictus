@@ -5486,7 +5486,12 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 
 
 /** Shikar Css **/
-
+.missing-fee-period {
+    color: #2e93ec !important;
+    text-decoration: underline;
+    font-weight: 600;
+    cursor: pointer;
+}
 .slickgrid-container .slick-header-columns {
     background: #c8d6e5 !important;
     height: 40px !important;

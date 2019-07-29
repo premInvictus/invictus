@@ -33,7 +33,11 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 	getConcessionRectification() {
 		this.ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<ConcessionList>(this.ELEMENT_DATA);
-		this.feeService.getConcessionRectification({pro_id: '3'}).subscribe((result: any) => {
+		const param: any = {};
+		param.pro_id = '3';
+		param.accd_fcg_status = 'pending';
+		param.accd_process_type = '4';
+		this.feeService.getConcessionRectification(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.crArray = result.data;
 				if (this.crArray.length > 0) {
@@ -42,6 +46,7 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 						this.ELEMENT_DATA.push({
 							srno: ++sno,
 							enrollment: element.accd_login_id,
+							admno: element.au_admission_no,
 							name: element.au_full_name,
 							concession: element.fcc_name,
 							action: element

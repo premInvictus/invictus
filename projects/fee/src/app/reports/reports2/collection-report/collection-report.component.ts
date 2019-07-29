@@ -7,8 +7,10 @@ import {
 	DelimiterType,
 	FileType
 } from 'angular-slickgrid';
-import * as FileSaver from 'file-saver';
+import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+import * as Excel from 'exceljs/dist/exceljs.min.js';
+import * as ExcelProper from 'exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
@@ -66,6 +68,53 @@ export class CollectionReportComponent implements OnInit {
 	dataArr: any[] = [];
 	schoolInfo: any = {};
 	sessionName: any;
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR',
+
+	};
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -577,9 +626,9 @@ export class CollectionReportComponent implements OnInit {
 						this.dataset.push(obj3);
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
-						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
-						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
 							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
@@ -777,9 +826,9 @@ export class CollectionReportComponent implements OnInit {
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
-						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
-						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
 							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
@@ -1041,9 +1090,9 @@ export class CollectionReportComponent implements OnInit {
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
-						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
-						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
 							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
@@ -1302,9 +1351,9 @@ export class CollectionReportComponent implements OnInit {
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
-						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
-						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
 							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
@@ -1574,9 +1623,9 @@ export class CollectionReportComponent implements OnInit {
 						this.aggregatearray.push(new Aggregators.Sum('stu_opening_balance'));
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
-						} else if (this.dataset.length < 10 && this.dataset.length > 5) {
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
 							this.gridHeight = 400;
-						} else if (this.dataset.length > 10 && this.dataset.length < 20) {
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
 							this.gridHeight = 550;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
@@ -2012,6 +2061,74 @@ export class CollectionReportComponent implements OnInit {
 				},
 				theme: 'grid'
 			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Report Filtered as: ' +
+					new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+					+ ' - ' +
+					new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['No of records: ' + this.totalRecords]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Generated On: '
+					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Generated By: ' + this.userName]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
 			doc.save(reportType + '_' + new Date() + '.pdf');
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
@@ -2122,6 +2239,74 @@ export class CollectionReportComponent implements OnInit {
 					theme: 'grid',
 				});
 			}
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Report Filtered as: ' +
+					new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+					+ ' - ' +
+					new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['No of records: ' + this.totalRecords]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Generated On: '
+					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Generated By: ' + this.userName]],
+				didDrawPage: function (data) {
+					doc.setFont('Roboto');
+				},
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 35,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
 			doc.save(reportType + '_' + new Date() + '.pdf');
 		}
 	}
@@ -2137,8 +2322,17 @@ export class CollectionReportComponent implements OnInit {
 		});
 		this.draggableGroupingPlugin.setDroppedGroups('stu_class_name');
 	}
-	exportToExcel(json: any[], excelFileName: string): void {
+	exportToExcel(json: any[], excelFileName: string) {
 		let reportType: any = '';
+		const columns: any[] = [];
+		const columValue: any[] = [];
+		for (const item of this.columnDefinitions) {
+			columns.push({
+				key: item.id,
+				width: this.checkWidth(item.id, item.name)
+			});
+			columValue.push(item.name);
+		}
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		if (this.reportType === 'headwise') {
 			reportType = new TitleCasePipe().transform('head wise_') + this.sessionName;
@@ -2164,96 +2358,179 @@ export class CollectionReportComponent implements OnInit {
 		} else if (this.reportType === 'mfr') {
 			reportType2 = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
 		}
-		const rowData: any[] = [];
-		const obj2: any = {};
-		const obj3: any = {};
-		const obj4: any = {};
-		for (const item of this.columnDefinitions) {
-			obj2[item.name] = item.name;
-		}
-		rowData.push(obj2);
-		for (const item of this.columnDefinitions) {
-			obj3[item.name] = item.name;
-		}
-		rowData.push(obj3);
-		for (const item of this.columnDefinitions) {
-			obj4[item.name] = item.name;
-		}
-		rowData.push(obj4);
+		const fileName = reportType + '.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+		worksheet.getCell('A2').value = reportType2;
+		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+		worksheet.getRow(4).values = columValue;
+		worksheet.columns = columns;
 		Object.keys(json).forEach(key => {
 			const obj: any = {};
 			for (const item2 of this.columnDefinitions) {
 				if (this.reportType !== 'mfr') {
 					if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-						obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
+						obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
 					}
 					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
 						&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
-						obj[item2.name] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
+						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
 					}
 					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
 						&& json[key][item2.id] === '<b>Grand Total</b>') {
-						obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
+						obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
 					}
 					if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-						obj[item2.name] = this.common.htmlToText(json[key][item2.id]);
+						obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
 					}
 				} else {
 					if (item2.id.toString().match(/Q/)) {
-						obj[item2.name] = json[key][item2.id].status;
+						obj[item2.id] = json[key][item2.id].status;
 					} else {
-						obj[item2.name] = json[key][item2.id];
+						obj[item2.id] = json[key][item2.id];
 					}
 				}
 			}
-			rowData.push(obj);
+			worksheet.addRow(obj);
 		});
-		const obj5: any = {};
-		const obj6: any = {};
-		const obj7: any = {};
-		for (const item of this.columnDefinitions) {
-			obj5[item.name] = item.name;
-		}
-		rowData.push(obj5);
-		for (const item of this.columnDefinitions) {
-			obj6[item.name] = item.name;
-		}
-		rowData.push(obj6);
-		for (const item of this.columnDefinitions) {
-			obj7[item.name] = item.name;
-		}
-		rowData.push(obj7);
-		const fileName = reportType + '.xlsx';
-		const wb: XLSX.WorkBook = XLSX.utils.book_new();
-		const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rowData);
-		const merge = XLSX.utils.decode_range('A1:AB1');
-		const merge2 = XLSX.utils.decode_range('A2:AB2');
-		const merge3 = XLSX.utils.decode_range('A3:AB3');
-		const rangeDecode = 'A' + (this.dataset.length + 5).toString() + ':' + 'AB' + (this.dataset.length + 5).toString();
-		const rangeDecode2 = 'A' + (this.dataset.length + 6).toString() + ':' + 'AB' + (this.dataset.length + 6).toString();
-		const rangeDecode3 = 'A' + (this.dataset.length + 7).toString() + ':' + 'AB' + (this.dataset.length + 7).toString();
-		const merge4 = XLSX.utils.decode_range('A' + (this.dataset.length + 5).toString() + ':' + 'AB' + (this.dataset.length + 5).toString());
-		const merge5 = XLSX.utils.decode_range('A' + (this.dataset.length + 6).toString() + ':' + 'AB' + (this.dataset.length + 6).toString());
-		const merge6 = XLSX.utils.decode_range('A' + (this.dataset.length + 7).toString() + ':' + 'AB' + (this.dataset.length + 7).toString());
-		if (!ws['!merges']) { ws['!merges'] = []; }
-		ws['!merges'].push(merge);
-		ws['!merges'].push(merge2);
-		ws['!merges'].push(merge3);
-		ws['!merges'].push(merge4);
-		ws['!merges'].push(merge5);
-		ws['!merges'].push(merge6);
-		ws.A1.v =
-			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
-		ws.A2.v = reportType2;
-		ws.A3.v = '';
-		ws[rangeDecode.split(':')[0]]['v'] = 'Generated On: ' + new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
-		ws[rangeDecode2.split(':')[0]]['v'] = 'Generated By: ' + this.userName;
-		ws[rangeDecode3.split(':')[0]]['v'] = 'Filter By: ' + 'From Date -->' +
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 12,
+					bold: true
+				};
+			}
+			if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 10,
+					bold: true
+				};
+			}
+			if (rowNum === 4) {
+				row.eachCell((cell) => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'bdbdbd' },
+						bgColor: { argb: 'bdbdbd' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+				row.eachCell((cell) => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+					};
+					cell.alignment = { wrapText: true, horizontal: 'center' };
+				});
+				if (rowNum % 2 === 0) {
+					row.eachCell((cell) => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+					});
+				} else {
+					row.eachCell((cell) => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'dedede' },
+							bgColor: { argb: 'dedede' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+					});
+				}
+			} else if (rowNum > 4 && rowNum === worksheet._rows.length) {
+				row.eachCell((cell) => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			}
+		});
+		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' +
 			new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
-			+ ' - ' + 'To Date -->'
-			+ new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y');
-		XLSX.utils.book_append_sheet(wb, ws, reportType);
-		XLSX.writeFile(wb, fileName);
+			+ ' - ' +
+			new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y');
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + this.totalRecords;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+			+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.userName;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
 	}
 	exportToFile(type = 'csv') {
 		let reportType: any = '';
@@ -2284,5 +2561,11 @@ export class CollectionReportComponent implements OnInit {
 		this.reportFilterForm.patchValue({
 			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
 		});
+	}
+	checkWidth(id, header) {
+		const res = this.dataset.map((f) => f[id] !== '-' ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
 	}
 }

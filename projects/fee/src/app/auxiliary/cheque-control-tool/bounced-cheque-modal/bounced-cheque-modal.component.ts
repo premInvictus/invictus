@@ -13,8 +13,9 @@ export class BouncedChequeModalComponent implements OnInit {
 	defaultSrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
 	bouncedForm: FormGroup;
 	reasonArray: any[] = [];
-	gender :any;
-	defaultsrc :any;
+	gender: any;
+	defaultsrc: any;
+	banks: any[] = [];
 	constructor(
 		public dialogRef: MatDialogRef<BouncedChequeModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -24,29 +25,40 @@ export class BouncedChequeModalComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		console.log(this.data);
 		this.buildForm();
 		this.getReason();
+		this.getBanks();
 		this.studentDetails = {};
 		this.studentDetails = this.data;
 		this.gender = this.studentDetails.au_gender;
-		if(this.gender === 'M'){
+		if (this.gender === 'M') {
 			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
-		}else if(this.gender === 'F'){
+		} else if (this.gender === 'F') {
 			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
-		}else{
+		} else {
 			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 		}
 		this.defaultSrc = this.studentDetails.au_profileimage ? this.studentDetails.au_profileimage : this.defaultsrc;
+		if (!this.data.fcc_status) {
+			
+			this.bouncedForm.patchValue({
+				fcc_status: 'd'
+			});
+			console.log(this.bouncedForm.value);
+		}
 	}
 	buildForm() {
 		this.bouncedForm = this.fbuild.group({
+			'ftr_deposit_bnk_id': '',
+			'fcc_deposite_date': '',
 			'fcc_ftr_id': '',
 			'fcc_dishonor_date': '',
 			'fcc_bank_code': '',
 			'fcc_reason_id': '',
 			'fcc_remarks': '',
 			'fcc_process_date': new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
-			'fcc_status': 'b',
+			'fcc_status': '',
 			'fcc_inv_id': ''
 		});
 	}
@@ -55,6 +67,14 @@ export class BouncedChequeModalComponent implements OnInit {
 		this.sisService.getReason({ reason_type: '11' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.reasonArray = result.data;
+			}
+		});
+	}
+	getBanks() {
+		this.banks = [];
+		this.feeService.getBanks({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.banks = result.data;
 			}
 		});
 	}

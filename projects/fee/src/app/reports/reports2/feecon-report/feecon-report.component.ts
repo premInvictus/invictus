@@ -430,6 +430,10 @@ export class FeeconReportComponent implements OnInit {
 										obj[key2 + k] = titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0;
 										tot = tot + (titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0);
 										obj['total'] = tot;
+										obj['approved_by'] = repoArray[Number(keys)]['approved_by'] ? repoArray[Number(keys)]['approved_by'] : '-';
+										obj['mod_review_date'] = repoArray[Number(keys)]['mod_review_date'] ? repoArray[Number(keys)]['mod_review_date'] : '-';
+										obj['mod_review_remark'] = repoArray[Number(keys)]['mod_review_remark'] ? repoArray[Number(keys)]['mod_review_remark'] : '-';
+										obj['reason_title'] = repoArray[Number(keys)]['reason_title'] ? repoArray[Number(keys)]['reason_title'] : '-';
 										k++;
 									}
 								});
@@ -450,6 +454,39 @@ export class FeeconReportComponent implements OnInit {
 							groupTotalsFormatter: this.sumTotalsFormatter
 						},
 					);
+					this.columnDefinitions.push({
+						id: 'approved_by', name: 'Approved By', field: 'approved_by',
+						sortable: true,
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						width: 140,
+					});
+					this.columnDefinitions.push({
+						id: 'mod_review_date', name: 'Approved Date', field: 'mod_review_date',
+						sortable: true,
+						formatter: this.checkDateFormatter,
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						width: 140,
+					});
+					this.columnDefinitions.push({
+						id: 'mod_review_remark', name: 'Remarks', field: 'mod_review_remark',
+						sortable: true,
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						width: 140,
+					});
+					this.columnDefinitions.push({
+						id: 'reason_title', name: 'Reasons', field: 'reason_title',
+						sortable: true,
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						width: 140,
+					});
 					const obj3: any = {};
 					obj3['id'] = 'footer';
 					obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');

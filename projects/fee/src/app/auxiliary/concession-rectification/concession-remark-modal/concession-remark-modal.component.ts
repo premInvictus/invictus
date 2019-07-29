@@ -75,6 +75,7 @@ export class ConcessionRemarkModalComponent implements OnInit {
 		this.deleteCancel.emit(this.reasonForm.value);
 	}
 	closeDialog() {
+		this.reasonForm.reset();
 		this.dialogRef.close();
 	}
 
