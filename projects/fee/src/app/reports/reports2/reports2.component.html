@@ -74,7 +74,8 @@
                 <app-feestruc-report [userName]="userName"
                 (displyRep)="displyRep($event)"
                 *ngIf="reportType === '10'"></app-feestruc-report>
-                <app-chequeclearance-report *ngIf="reportType === '11'"></app-chequeclearance-report>
+                <app-chequeclearance-report [userName]="userName" 
+                *ngIf="reportType === '11'"></app-chequeclearance-report>
                 <app-security-deposit-report *ngIf="reportType === '12'"></app-security-deposit-report>
                 <app-transport-report [userName]="userName"
                 (displyRep)="displyRep($event)"
