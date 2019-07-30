@@ -58,6 +58,7 @@ export class CollectionReportComponent implements OnInit {
 	aggregatearray: any[] = [];
 	reportFilterForm: FormGroup;
 	valueArray: any[] = [];
+	feeHeadJSON: any[] = [];
 	classDataArray: any[] = [];
 	reportTypeArray: any[] = [];
 	valueLabel: any = '';
@@ -69,6 +70,7 @@ export class CollectionReportComponent implements OnInit {
 	schoolInfo: any = {};
 	groupColumns: any[] = [];
 	sessionName: any;
+	groupLength: any;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -511,6 +513,7 @@ export class CollectionReportComponent implements OnInit {
 											});
 											feeObj['fh_name' + j] = '';
 											feeHead.push(feeObj);
+											this.feeHeadJSON.push(feeObj);
 											this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
 											j++;
 										}
@@ -2423,14 +2426,14 @@ export class CollectionReportComponent implements OnInit {
 				if (rowNum === 1) {
 					row.font = {
 						name: 'Arial',
-						size: 12,
+						size: 16,
 						bold: true
 					};
 				}
 				if (rowNum === 2) {
 					row.font = {
 						name: 'Arial',
-						size: 10,
+						size: 14,
 						bold: true
 					};
 				}
@@ -2438,7 +2441,7 @@ export class CollectionReportComponent implements OnInit {
 					row.eachCell((cell) => {
 						cell.font = {
 							name: 'Arial',
-							size: 10,
+							size: 12,
 							bold: true
 						};
 						cell.fill = {
@@ -2514,12 +2517,13 @@ export class CollectionReportComponent implements OnInit {
 		} else {
 			let obj = {};
 			let length = worksheet._rows.length + 1;
+			this.groupLength = length;
 			worksheet.eachRow((row, rowNum) => {
 				if (rowNum === 4) {
 					row.eachCell((cell) => {
 						cell.font = {
 							name: 'Arial',
-							size: 10,
+							size: 12,
 							bold: true
 						};
 						cell.fill = {
@@ -2538,6 +2542,7 @@ export class CollectionReportComponent implements OnInit {
 					});
 				}
 			});
+			let index = 0;
 			for (const item of this.dataviewObj.getGroups()) {
 				if (!item.groups) {
 					const length2 = length;
@@ -2610,7 +2615,14 @@ export class CollectionReportComponent implements OnInit {
 						worksheet.getRow(length).alignment = { horizontal: 'center' };
 					});
 					length++;
+				} else {
+					if (item.groupingKey) {
+						this.checkGroupLevel(item, worksheet);
+						this.checkLastTot(item, worksheet);
+						this.groupLength++;
+					}
 				}
+				index++;
 			}
 		}
 		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
@@ -2689,5 +2701,199 @@ export class CollectionReportComponent implements OnInit {
 		const max2 = header.toString().length;
 		const max = Math.max.apply(null, res);
 		return max2 > max ? max2 : max;
+	}
+	checkGroupLevel(item, worksheet) {
+		const count = '(' + item.count + ')';
+		worksheet.mergeCells('A' + (this.groupLength) + ':' +
+			this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+		worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(item.title) + count;
+		worksheet.getCell('A' + this.groupLength).fill = {
+			type: 'pattern',
+			pattern: 'solid',
+			fgColor: { argb: 'c8d6e5' },
+			bgColor: { argb: 'ffffff' },
+		};
+		worksheet.getCell('A' + this.groupLength).border = {
+			top: { style: 'thin' },
+			left: { style: 'thin' },
+			bottom: { style: 'thin' },
+			right: { style: 'thin' }
+		};
+		worksheet.getCell('A' + this.groupLength).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		if (item.groups) {
+			let index = 0;
+			for (const groupItem of item.groups) {
+				if (groupItem.groups) {
+					this.groupLength++;
+					this.checkGroupLevel(groupItem, worksheet);
+				} else {
+					this.groupLength = this.groupLength + index + 1;
+					worksheet.mergeCells('A' + (this.groupLength) + ':' +
+						this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+					worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(groupItem.title);
+					worksheet.getCell('A' + this.groupLength).fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'ffffff' },
+					};
+					worksheet.getCell('A' + this.groupLength).border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					worksheet.getCell('A' + this.groupLength).font = {
+						name: 'Arial',
+						size: 10,
+						bold: true
+					};
+					Object.keys(groupItem.rows).forEach(key => {
+						const obj = {};
+						for (const item2 of this.columnDefinitions) {
+							if (this.reportType !== 'mfr') {
+								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+									obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+								}
+								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+									&& item.rows[key][item2.id] !== '<b>Grand Total</b>') {
+									obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y');
+								}
+								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+									&& item.rows[key][item2.id] === '<b>Grand Total</b>') {
+									obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+								}
+								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+									obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+								}
+							} else {
+								if (item2.id.toString().match(/Q/)) {
+									obj[item2.id] = groupItem.rows[key][item2.id].status;
+								} else {
+									obj[item2.id] = groupItem.rows[key][item2.id];
+								}
+							}
+						}
+						worksheet.addRow(obj);
+						this.groupLength++;
+						worksheet.getRow(this.groupLength).fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+						worksheet.getRow(this.groupLength).border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						worksheet.getRow(this.groupLength).font = {
+							name: 'Arial',
+							size: 10,
+						};
+						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+					});
+					if (this.reportType === 'headwise') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = 'Sub Total ';
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['fp_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+						obj3['receipt_mode_name'] = '';
+						obj3['tb_name'] = '';
+						worksheet.addRow(obj3);
+						this.groupLength++;
+						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === this.groupLength) {
+								row.eachCell(cell => {
+									cell.font = {
+										bold: true,
+										name: 'Arial',
+										size: 10
+									};
+								});
+							}
+						});
+					}
+				}
+				index++;
+			}
+		}
+	}
+	checkLastTot(item, worksheet) {
+		if (this.reportType === 'headwise') {
+			const obj3: any = {};
+			obj3['id'] = 'footer';
+			obj3['srno'] = '';
+			obj3['invoice_created_date'] = 'Total ';
+			obj3['stu_admission_no'] = '';
+			obj3['stu_full_name'] = '';
+			obj3['stu_class_name'] = '';
+			obj3['receipt_id'] = '';
+			obj3['fp_name'] = '';
+			obj3['receipt_no'] = '';
+			obj3['inv_opening_balance'] = item.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+			obj3['invoice_fine_amount'] = item.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+					Object.keys(item.rows).forEach(key3 => {
+						Object.keys(item.rows[key3]).forEach(key4 => {
+							if (key4 === key2) {
+								obj3[key2] = item.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+							}
+						});
+					});
+				});
+			});
+			obj3['total'] = item.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+			obj3['receipt_mode_name'] = '';
+			obj3['tb_name'] = '';
+			worksheet.addRow(obj3);
+			this.groupLength++;
+			worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === this.groupLength) {
+					row.eachCell(cell => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: '004261' },
+							bgColor: { argb: '004261' },
+						};
+						cell.font = {
+							color: { argb: 'ffffff' },
+							bold: true,
+							name: 'Arial',
+							size: 10
+						};
+					});
+				}
+			});
+		}
 	}
 }
