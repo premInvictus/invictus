@@ -305,7 +305,9 @@ export class FeeLedgerComponent implements OnInit {
 				}
 			});
 			dialogRef.afterClosed().subscribe(result => {
-				this.getFeeLedger(this.loginId);
+				if (result.status === '1') {
+					this.getFeeLedger(this.loginId);
+				}
 			});
 		}
 	}

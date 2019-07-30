@@ -47,7 +47,7 @@
           <button *ngIf="actionFlag.unconsolidate" mat-raised-button class="btn-primary btn-unconsolidate btn-spacer"
             (click)="openUnConsolidateDialog(fetchInvId())">Un-Consolidate</button>
           <button *ngIf="actionFlag.recalculate" mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer"
-            (click)="openRecalculateDialog()">Recalutate</button>
+            (click)="openRecalculateDialog()">Re-calutate</button>
           <button *ngIf="actionFlag.deleteinvoice" mat-raised-button class="btn-primary btn-delete-rec btn-spacer"
             (click)="openDeleteDialog(fetchInvId())">Delete Invoice</button>
           <button *ngIf="actionFlag.deletereceipt" mat-raised-button class="btn-primary btn-delete-rec btn-spacer"
@@ -291,7 +291,7 @@
 </app-delete-modal>
 <app-delete-modal #deleteReceiptModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteReciptConfirm($event)">
 </app-delete-modal>
-<app-delete-modal #recalculateModal [deleteMessage]="'On recalculation all adjustments/remarks if any, will be removed!<br>
+<app-delete-modal #recalculateModal [deleteMessage]="'On re-calculation all adjustments/remarks if any, will be removed!<br>
 Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
 <app-delete-modal #consolidateModal [deleteMessage]="'Are you sure want to Consolidate?'"
   (deleteOk)="consolidateConfirm($event)"></app-delete-modal>

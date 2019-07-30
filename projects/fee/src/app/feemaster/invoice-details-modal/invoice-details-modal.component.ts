@@ -79,8 +79,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			adjustmentField: this.fb.array([])
 		});
 	}
-	closemodal(): void {
-		this.dialogRef.close();
+	closemodal(status = '1'): void {
+		this.dialogRef.close({status: status});
 	}
 	// modifyInvoice() {
 	// 	this.modificationFlag = true;
