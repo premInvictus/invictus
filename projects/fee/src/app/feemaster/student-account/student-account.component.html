@@ -122,7 +122,8 @@
                </div>
             </div>
             <div *ngIf="transportFlag" class="inline-flex margin-left-15">
-               <div *ngIf="terminationFlag && transportFlag">
+               <!-- <div>{{terminationFlag}} {{transportFlag}}</div> -->
+               <div *ngIf="terminationFlag">
                   <mat-form-field appearance="outline" class="form-field-220">
                      <mat-label>Applicable To</mat-label>
                      <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
