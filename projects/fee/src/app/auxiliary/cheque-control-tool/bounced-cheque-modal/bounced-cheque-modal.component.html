@@ -75,9 +75,9 @@
     <div class="row margin-top-25">
       <div class="col-12">
         <mat-radio-group aria-label="Select an option" formControlName="fcc_status">
-          <mat-radio-button value="d">Deposite</mat-radio-button>
-          <mat-radio-button value="c">Cleare</mat-radio-button>
-          <mat-radio-button value="b">Bounce</mat-radio-button>
+          <mat-radio-button value="d" [disabled]="bouncedForm.value.fcc_status !== 'd'">Deposite</mat-radio-button>
+          <mat-radio-button value="c" [disabled]="bouncedForm.value.fcc_status === 'd'">Clear</mat-radio-button>
+          <mat-radio-button value="b" [disabled]="bouncedForm.value.fcc_status === 'd'">Bounce</mat-radio-button>
         </mat-radio-group>
       </div>
       <br>
@@ -93,8 +93,9 @@
           </mat-form-field>
         </div>
         <div class="col-3">
-          <mat-form-field appearance="outline" class="cheque-control-tool margin-top-5">
-            <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="fcc_deposite_date">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Deposite Date</mat-label>
+            <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="fcc_deposite_date" required>
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
           </mat-form-field>
@@ -102,7 +103,8 @@
       </ng-container>
       <ng-container *ngIf="bouncedForm.value.fcc_status === 'c'">
         <div class="col-3">
-          <mat-form-field appearance="outline" class="cheque-control-tool margin-top-5">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Process Date</mat-label>
             <input matInput [matDatepicker]="picker2" placeholder="Choose a date" formControlName="fcc_process_date">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
@@ -114,7 +116,7 @@
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Dishonoured Date</mat-label>
             <input matInput [matDatepicker]="picker" placeholder="Choose Date" formControlName="fcc_dishonor_date"
-              required>
+              >
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
@@ -138,7 +140,7 @@
         <div class="col-12">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Remarks</mat-label>
-            <textarea matInput rows="4" placeholder="Remarks" formControlName="fcc_remarks" required></textarea>
+            <textarea matInput rows="4" placeholder="Remarks" formControlName="fcc_remarks"></textarea>
           </mat-form-field>
         </div>
       </ng-container>

@@ -66,14 +66,16 @@
                 *ngIf="reportType === '6'"></app-deleted-feetrans-report>
                 <app-feeadj-report [userName]="userName"
                 *ngIf="reportType === '7'"></app-feeadj-report>
-                <app-feecon-report (displyRep)="displyRep($event)"
+                <app-feecon-report [userName]="userName"
+                (displyRep)="displyRep($event)"
                 *ngIf="reportType === '8'"></app-feecon-report>
                 <app-missing-feeinv-report [userName]="userName"
                 *ngIf="reportType === '9'"></app-missing-feeinv-report>
                 <app-feestruc-report [userName]="userName"
                 (displyRep)="displyRep($event)"
                 *ngIf="reportType === '10'"></app-feestruc-report>
-                <app-chequeclearance-report *ngIf="reportType === '11'"></app-chequeclearance-report>
+                <app-chequeclearance-report [userName]="userName" 
+                *ngIf="reportType === '11'"></app-chequeclearance-report>
                 <app-security-deposit-report *ngIf="reportType === '12'"></app-security-deposit-report>
                 <app-transport-report [userName]="userName"
                 (displyRep)="displyRep($event)"
