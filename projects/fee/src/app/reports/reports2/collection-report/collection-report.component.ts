@@ -67,6 +67,7 @@ export class CollectionReportComponent implements OnInit {
 	sortResult: any[] = [];
 	dataArr: any[] = [];
 	schoolInfo: any = {};
+	groupColumns: any[] = [];
 	sessionName: any;
 	alphabetJSON = {
 		1: 'A',
@@ -321,6 +322,8 @@ export class CollectionReportComponent implements OnInit {
 				deleteIconCssClass: 'fa fa-times',
 				onGroupChanged: (e, args) => {
 					console.log(args);
+					this.groupColumns = [];
+					this.groupColumns = args.groupColumns;
 					this.onGroupChanged(args && args.groupColumns);
 				},
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
@@ -487,7 +490,7 @@ export class CollectionReportComponent implements OnInit {
 										groupTotalsFormatter: this.sumTotalsFormatter
 									}];
 							}
-							if (repoArray[Number(keys)]['fee_head_data']) {
+							if (repoArray[Number(keys)]['fee_head_data'].length > 0) {
 								let k = 0;
 								let tot = 0;
 								for (const titem of repoArray[Number(keys)]['fee_head_data']) {
@@ -528,7 +531,7 @@ export class CollectionReportComponent implements OnInit {
 											obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
 												repoArray[Number(keys)]['rpt_id'] : '-';
 											obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
-											obj['fp_name'] = repoArray[Number(keys)]['fp_name'][0] ?
+											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
 												new CapitalizePipe().transform(repoArray[Number(keys)]['fp_name'][0]) : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
 												repoArray[Number(keys)]['receipt_no'] : '-';
@@ -1680,6 +1683,8 @@ export class CollectionReportComponent implements OnInit {
 		this.gridObj.setPreHeaderPanelVisibility(!this.gridObj.getOptions().showPreHeaderPanel);
 	}
 	onCellClicked(e, args) {
+		console.log(this.groupColumns);
+		console.log(this.dataviewObj.getGroups());
 		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['receipt_id'] !== '-') {
@@ -2371,126 +2376,269 @@ export class CollectionReportComponent implements OnInit {
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.getRow(4).values = columValue;
 		worksheet.columns = columns;
-		Object.keys(json).forEach(key => {
-			const obj: any = {};
-			for (const item2 of this.columnDefinitions) {
-				if (this.reportType !== 'mfr') {
-					if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-						obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
-					}
-					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-						&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
-						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
-					}
-					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-						&& json[key][item2.id] === '<b>Grand Total</b>') {
-						obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
-					}
-					if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-						obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
-					}
-				} else {
-					if (item2.id.toString().match(/Q/)) {
-						obj[item2.id] = json[key][item2.id].status;
+		if (this.dataviewObj.getGroups().length === 0) {
+			Object.keys(json).forEach(key => {
+				const obj: any = {};
+				for (const item2 of this.columnDefinitions) {
+					if (this.reportType !== 'mfr') {
+						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+						}
+						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
+						}
+						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+							&& json[key][item2.id] === '<b>Grand Total</b>') {
+							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+						}
+						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+						}
 					} else {
-						obj[item2.id] = json[key][item2.id];
+						if (item2.id.toString().match(/Q/)) {
+							obj[item2.id] = json[key][item2.id].status;
+						} else {
+							obj[item2.id] = json[key][item2.id];
+						}
 					}
 				}
-			}
-			worksheet.addRow(obj);
-		});
-		worksheet.eachRow((row, rowNum) => {
-			if (rowNum === 1) {
-				row.font = {
-					name: 'Arial',
-					size: 12,
-					bold: true
-				};
-			}
-			if (rowNum === 2) {
-				row.font = {
-					name: 'Arial',
-					size: 10,
-					bold: true
-				};
-			}
-			if (rowNum === 4) {
-				row.eachCell((cell) => {
-					cell.font = {
+				worksheet.addRow(obj);
+			});
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === 1) {
+					row.font = {
+						name: 'Arial',
+						size: 12,
+						bold: true
+					};
+				}
+				if (rowNum === 2) {
+					row.font = {
 						name: 'Arial',
 						size: 10,
 						bold: true
 					};
-					cell.fill = {
+				}
+				if (rowNum === 4) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+							bold: true
+						};
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'bdbdbd' },
+							bgColor: { argb: 'bdbdbd' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+						};
+						cell.alignment = { wrapText: true, horizontal: 'center' };
+					});
+					if (rowNum % 2 === 0) {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					} else {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'dedede' },
+								bgColor: { argb: 'dedede' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					}
+				} else if (rowNum > 4 && rowNum === worksheet._rows.length) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+							bold: true
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				}
+			});
+		} else {
+			let length = worksheet._rows.length + 1;
+			for (const item of this.dataviewObj.getGroups()) {
+				if (!item.groups) {
+					const length2 = length;
+					console.log(length2);
+					const obj2: any = {};
+					console.log(item.rows);
+					worksheet.mergeCells('A' + (length) + ':' +
+						this.alphabetJSON[columns.length] + (length));
+					worksheet.getCell('A' + length).value = this.common.htmlToText(item.title);
+					worksheet.getCell('A' + length).fill = {
 						type: 'pattern',
 						pattern: 'solid',
-						fgColor: { argb: 'bdbdbd' },
-						bgColor: { argb: 'bdbdbd' },
+						fgColor: { argb: 'dedede' },
+						bgColor: { argb: 'dedede' },
 					};
-					cell.border = {
+					worksheet.getCell('A' + length).border = {
 						top: { style: 'thin' },
 						left: { style: 'thin' },
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
-					cell.alignment = { horizontal: 'center' };
-				});
-			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
-				row.eachCell((cell) => {
-					cell.font = {
-						name: 'Arial',
-						size: 10,
-					};
-					cell.alignment = { wrapText: true, horizontal: 'center' };
-				});
-				if (rowNum % 2 === 0) {
-					row.eachCell((cell) => {
-						cell.fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						cell.border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-					});
-				} else {
-					row.eachCell((cell) => {
-						cell.fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'dedede' },
-							bgColor: { argb: 'dedede' },
-						};
-						cell.border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-					});
-				}
-			} else if (rowNum > 4 && rowNum === worksheet._rows.length) {
-				row.eachCell((cell) => {
-					cell.font = {
+					worksheet.getCell('A' + length).font = {
 						name: 'Arial',
 						size: 10,
 						bold: true
 					};
-					cell.border = {
-						top: { style: 'thin' },
-						left: { style: 'thin' },
-						bottom: { style: 'thin' },
-						right: { style: 'thin' }
-					};
-					cell.alignment = { horizontal: 'center' };
-				});
+					worksheet.getCell('A' + length2).alignment = { horizontal: 'left' };
+					Object.keys(item.rows).forEach(key => {
+						const obj: any = {};
+						for (const item2 of this.columnDefinitions) {
+							if (this.reportType !== 'mfr') {
+								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
+								}
+								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+									&& item.rows[key][item2.id] !== '<b>Grand Total</b>') {
+									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]), 'd-MMM-y');
+								}
+								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+									&& item.rows[key][item2.id] === '<b>Grand Total</b>') {
+									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
+								}
+								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
+								}
+							} else {
+								if (item2.id.toString().match(/Q/)) {
+									obj[item2.id] = item.rows[key][item2.id].status;
+								} else {
+									obj[item2.id] = item.rows[key][item2.id];
+								}
+							}
+						}
+						worksheet.addRow(obj);
+						length++;
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum !== length2) {
+								if (rowNum === 1) {
+									row.font = {
+										name: 'Arial',
+										size: 12,
+										bold: true
+									};
+								} else if (rowNum === 2) {
+									row.font = {
+										name: 'Arial',
+										size: 10,
+										bold: true
+									};
+								} else if (rowNum === 4) {
+									row.eachCell((cell) => {
+										cell.font = {
+											name: 'Arial',
+											size: 10,
+											bold: true
+										};
+										cell.fill = {
+											type: 'pattern',
+											pattern: 'solid',
+											fgColor: { argb: 'bdbdbd' },
+											bgColor: { argb: 'bdbdbd' },
+										};
+										cell.border = {
+											top: { style: 'thin' },
+											left: { style: 'thin' },
+											bottom: { style: 'thin' },
+											right: { style: 'thin' }
+										};
+										cell.alignment = { horizontal: 'center' };
+									});
+								} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+									if (rowNum % 2 === 0) {
+										row.eachCell((cell) => {
+											cell.fill = {
+												type: 'pattern',
+												pattern: 'solid',
+												fgColor: { argb: 'ffffff' },
+												bgColor: { argb: 'ffffff' },
+											};
+											cell.border = {
+												top: { style: 'thin' },
+												left: { style: 'thin' },
+												bottom: { style: 'thin' },
+												right: { style: 'thin' }
+											};
+											cell.font = {
+												name: 'Arial',
+												size: 10,
+											};
+											cell.alignment = { wrapText: true, horizontal: 'center' };
+										});
+									} else if (rowNum % 2 !== 0) {
+										row.eachCell((cell) => {
+											cell.fill = {
+												type: 'pattern',
+												pattern: 'solid',
+												fgColor: { argb: 'dedede' },
+												bgColor: { argb: 'dedede' },
+											};
+											cell.border = {
+												top: { style: 'thin' },
+												left: { style: 'thin' },
+												bottom: { style: 'thin' },
+												right: { style: 'thin' }
+											};
+											cell.font = {
+												name: 'Arial',
+												size: 10,
+											};
+											cell.alignment = { wrapText: true, horizontal: 'center' };
+										});
+									}
+								}
+							}
+						});
+					});
+					length++;
+				}
 			}
-		});
+		}
 		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
 			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
 		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' +
