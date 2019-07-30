@@ -272,7 +272,7 @@ export class FeeService {
 		if (this.processType.getProcesstype()) {
 			value.inv_process_type = this.processType.getProcesstype();
 		}
-		return this.http.post(environment.apiFeeUrl + '/feeTransaction/getFeeLedger/', value);
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/getFeeLedger', value);
 	}
 	getHeadWiseCollection(value) {
 		this.service.startLoading();

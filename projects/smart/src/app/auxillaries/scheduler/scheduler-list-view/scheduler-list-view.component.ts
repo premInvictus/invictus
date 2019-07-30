@@ -48,7 +48,7 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 	}
 	openAddScheduler(value) {
 		const dialogRef = this.dialog.open(AddSchedulerComponent, {
-			height: '70%',
+			height: '520px',
 			width: '800px',
 			data: {
 				title: 'Edit Scheduler',

@@ -116,7 +116,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				} else {
 					this.modeFlag = false;
 				}
-				if (this.accountDetails.accd_is_terminate === 'Y' && this.transportFlag && this.modeFlag) {
+				if (this.accountDetails.accd_is_terminate === 'Y' && this.modeFlag) {
 					this.terminationFlag = true;
 					this.terminateStatus = 'Terminate Transport Facility';
 				} else {
@@ -181,21 +181,21 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		});
 	}
 	getFeeStructures() {
-		this.feeService.getFeeStructure({fs_is_hostel_fee: 0, fs_status: 1}).subscribe((result: any) => {
+		this.feeService.getFeeStructure({ fs_is_hostel_fee: 0, fs_status: 1 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feeStructureArray = result.data;
 			}
 		});
 	}
 	getConGroup() {
-		this.feeService.getConcessionGroup({fcg_is_hostel_fee: 0}).subscribe((result: any) => {
+		this.feeService.getConcessionGroup({ fcg_is_hostel_fee: 0 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.conGroupArray = result.data;
 			}
 		});
 	}
 	getHostelFeeStructures() {
-		this.feeService.getFeeStructure({ fs_is_hostel_fee: 1,fs_status:1 }).subscribe((result: any) => {
+		this.feeService.getFeeStructure({ fs_is_hostel_fee: 1, fs_status: 1 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.hostelFeeStructureArray = result.data;
 			}
@@ -211,6 +211,23 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	enableTransport($event) {
 		if ($event.checked) {
 			this.transportFlag = true;
+			if (this.accountDetails) {
+				this.getStoppages(this.accountDetails.accd_tr_id);
+				this.getSlab(this.accountDetails.accd_tsp_id);
+				this.terminationFlag = this.accountDetails.accd_is_terminate === 'N' ? false : true;
+				if (this.accountDetails.accd_transport_mode) {
+					this.modeFlag = true;
+				}
+				this.accountsForm.patchValue({
+					accd_transport_mode: this.accountDetails.accd_transport_mode,
+					accd_tr_id: this.accountDetails.accd_tr_id,
+					accd_tsp_id: this.accountDetails.accd_tsp_id,
+					accd_ts_id: this.accountDetails.accd_ts_id,
+					accd_is_terminate: this.accountDetails.accd_is_terminate === 'N' ? false : true,
+					accd_transport_from: this.accountDetails.accd_transport_from.split('-')[0] === '1970' ? '' : this.accountDetails.accd_transport_from,
+					accd_transport_to: this.accountDetails.accd_transport_to.split('-')[0] === '1970' ? '' : this.accountDetails.accd_transport_to,
+				});
+			}
 		} else {
 			this.accountsForm.patchValue({
 				accd_transport_mode: '',
@@ -383,7 +400,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
-		if (this.terminationFlag) {
+		if (this.terminationFlag && this.transportFlag) {
 			if (!this.accountsForm.value.accd_transport_to) {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
 				validateFlag = false;
@@ -494,7 +511,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_hostel_to: datePipe.transform(this.accountsForm.value.accd_hostel_to, 'yyyy-MM-dd'),
 				accd_status: this.accountsForm.value.accd_status
 			};
-				this.checkFormChangedValue();
+			this.checkFormChangedValue();
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please select required fields', 'error');
 		}

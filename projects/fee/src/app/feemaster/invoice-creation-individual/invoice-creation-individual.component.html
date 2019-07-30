@@ -84,7 +84,7 @@
           </div>
           <div class="row" *ngIf="checkStatus()">
             <div class="col-12">
-              <mat-checkbox formControlName="recalculation_flag"><span class="font-size-16 font-medium">Recalulate All
+              <mat-checkbox formControlName="recalculation_flag"><span class="font-size-16 font-medium">Recalculate All
                   Unpaid Invoices</span></mat-checkbox>
             </div>
 
@@ -119,7 +119,7 @@
               (click)="openUnConsolidateDialog(fetchInvId())">Un-Consolidate</button>
             <button *ngIf="commonAPIService.isExistUserAccessMenu('361') && this.selection.selected.length > 0"
               mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer"
-              (click)="openRecalculateDialog()">Recalutate</button>
+              (click)="openRecalculateDialog()">Recalculate</button>
             <button *ngIf="commonAPIService.isExistUserAccessMenu('362') && this.selection.selected.length > 0"
               mat-raised-button class="btn-primary btn-danger btn-spacer"
               (click)="openDeleteDialog(fetchInvId())">Delete</button>
@@ -211,15 +211,15 @@
     </div>
   </div>
 </div>
-<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)">
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)">
 </app-delete-modal>
 <app-delete-modal #recalculateModal [deleteMessage]="'On recalculation all adjustments/remarks if any, will be removed!<br>
 Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
-<app-delete-modal #consolidateModal [deleteMessage]="'Are you sure want to Consolidate'"
+<app-delete-modal #consolidateModal [deleteMessage]="'Are you sure want to Consolidate?'"
   (deleteOk)="consolidateConfirm($event)"></app-delete-modal>
-<app-delete-modal #unconsolidateModal [deleteMessage]="'Are you sure want to Un-Consolidate Selected Invoice'"
+<app-delete-modal #unconsolidateModal [deleteMessage]="'Are you sure want to Un-Consolidate Selected Invoice?'"
   (deleteOk)="unconsolidateConfirm($event)"></app-delete-modal>
-<app-delete-modal #detachReceiptModal [deleteMessage]="'Are you sure to Detach this Receipt'"
+<app-delete-modal #detachReceiptModal [deleteMessage]="'Are you sure to Detach this Receipt?'"
   (deleteOk)="detachReceiptConfirm($event)"></app-delete-modal>
 <app-delete-with-reason #deleteWithReasonModal
   [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete an Invoice'"

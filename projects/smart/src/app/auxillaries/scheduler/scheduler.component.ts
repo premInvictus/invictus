@@ -24,7 +24,7 @@ export class SchedulerComponent implements OnInit {
 	}
 	openAddScheduler() {
 		const dialogRef = this.dialog.open(AddSchedulerComponent, {
-			height: '60%',
+			height: '520px',
 			width: '800px',
 			data: {
 				title: 'Add Scheduler'

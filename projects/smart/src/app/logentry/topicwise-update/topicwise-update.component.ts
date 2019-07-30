@@ -37,7 +37,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 
 	openUpdateConfirmation(param) {
 		const dialogRef = this.dialog.open(UpdateConfirmationComponent, {
-			height: '400px',
+			height: '300px',
 			width: '550px',
 			data: {
 				tw_status: param.tw_status
