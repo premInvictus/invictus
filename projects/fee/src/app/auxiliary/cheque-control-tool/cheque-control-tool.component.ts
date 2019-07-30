@@ -18,7 +18,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('deleteModal') deleteModal;
 	displayedColumns: string[] =
 		['srno', 'class_name', 'chequeno', 'admno', 'studentname', 'recieptno', 'amount', 'bankname', 'recieptdate',
-			'bankdeposite', 'processingdate', 'action'];
+			'bankdeposite', 'processingdate', 'status', 'action'];
 	CHEQUE_ELEMENT_DATA: ChequeToolElement[] = [];
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 	formGroupArray: any[] = [];
@@ -84,7 +84,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		const dialogRef = this.dialog.open(BouncedChequeModalComponent, {
 			data: item,
 			width: '800px',
-			height: '50%',
+			height: '500px',
 			hasBackdrop: true,
 			disableClose: true
 		});
@@ -93,7 +93,6 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			if (result.status === '1') {
 				this.getChequeControlListAll();
 			}
-			
 		});
 
 	}
@@ -119,7 +118,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						amount: item.receipt_amount,
 						bankname: item.bank_name,
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
-						bankdeposite: item.fcc_deposite_date ? new DatePipe('en-in').transform(item.fcc_deposite_date, 'd-MMM-y') : '-',
+						bankdeposite: item.fcc_deposite_date ? this.common.dateConvertion(item.fcc_deposite_date, 'd-MMM-y') : '-',
 						processingdate: '',
 						action: item
 					});

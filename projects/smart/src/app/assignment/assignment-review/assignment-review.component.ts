@@ -194,8 +194,8 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 	}
 	attachmentDialog(currentAttachment) {
 		const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
-			width: '1000px',
-			height: '50%',
+			width: '950px',
+			height: '500px',
 			data: {
 				page: 'assignment',
 				title: 'Edit Assignment',
@@ -229,8 +229,8 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 	}
 	openAddAttachmentDialog() {
 		const dialogRef = this.dialog.open(AssignmentAttachmentDialogComponent, {
-			width: '1000px',
-			height: '50%',
+			width: '950px',
+			height: '500px',
 			data: {
 				page: 'assignment',
 				title: 'Add Assignment',

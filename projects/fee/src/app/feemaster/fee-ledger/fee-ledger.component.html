@@ -287,17 +287,17 @@
     </div>
   </div>
 </div>
-<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteConfirm($event)">
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)">
 </app-delete-modal>
-<app-delete-modal #deleteReceiptModal [deleteMessage]="'Are you sure want to delete'" (deleteOk)="deleteReciptConfirm($event)">
+<app-delete-modal #deleteReceiptModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteReciptConfirm($event)">
 </app-delete-modal>
 <app-delete-modal #recalculateModal [deleteMessage]="'On recalculation all adjustments/remarks if any, will be removed!<br>
 Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
-<app-delete-modal #consolidateModal [deleteMessage]="'Are you sure want to Consolidate'"
+<app-delete-modal #consolidateModal [deleteMessage]="'Are you sure want to Consolidate?'"
   (deleteOk)="consolidateConfirm($event)"></app-delete-modal>
-<app-delete-modal #unconsolidateModal [deleteMessage]="'Are you sure want to Un-Consolidate Selected Invoice'"
+<app-delete-modal #unconsolidateModal [deleteMessage]="'Are you sure want to Un-Consolidate Selected Invoice?'"
   (deleteOk)="unconsolidateConfirm($event)"></app-delete-modal>
-<app-delete-modal #detachReceiptModal [deleteMessage]="'Are you sure to Detach this Receipt'"
+<app-delete-modal #detachReceiptModal [deleteMessage]="'Are you sure to Detach this Receipt?'"
   (deleteOk)="detachReceiptConfirm($event)"></app-delete-modal>
 <app-search-dialog #searchModal [deleteMessage]="'Please Choose Receipt Number to Attach with this Invoice'"
   (deleteOk)="attachReceipt($event)">

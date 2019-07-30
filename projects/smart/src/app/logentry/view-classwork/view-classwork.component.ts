@@ -47,7 +47,7 @@ export class ViewClassworkComponent implements OnInit {
 	openEditClassworkModal(value) {
 		const dialogRef = this.dialog.open(EditClassworkModalComponent, {
 			width: '600px',
-			height: '50%',
+			height: '420px',
 			data: value
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
