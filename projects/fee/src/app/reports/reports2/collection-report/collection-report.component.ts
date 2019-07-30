@@ -543,13 +543,11 @@ export class CollectionReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
-											if (repoArray[Number(keys)]['tb_name'] && repoArray[Number(keys)]['pay_name']) {
-												obj['receipt_mode_name'] = repoArray[Number(keys)]['tb_name'] ?
-													repoArray[Number(keys)]['tb_name'] : '-';
-											} else if ((!repoArray[Number(keys)]['tb_name'] && repoArray[Number(keys)]['pay_name'])) {
-												obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
-													repoArray[Number(keys)]['pay_name'] : '-';
-											}
+											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
+												repoArray[Number(keys)]['pay_name'] : '-';
+											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
+												repoArray[Number(keys)]['tb_name'] : '-';
+
 											k++;
 										}
 									});
@@ -592,6 +590,21 @@ export class CollectionReportComponent implements OnInit {
 									aggregateCollapsed: true,
 									collapsed: false
 								},
+							},
+							{
+								id: 'tb_name', name: 'Bank Name', field: 'tb_name', sortable: true, filterable: true,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								width: 100,
+								grouping: {
+									getter: 'tb_name',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
 							}
 						);
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
@@ -626,6 +639,7 @@ export class CollectionReportComponent implements OnInit {
 						});
 						obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
+						obj3['tb_name'] = '';
 						this.dataset.push(obj3);
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
@@ -2498,21 +2512,44 @@ export class CollectionReportComponent implements OnInit {
 				}
 			});
 		} else {
+			let obj = {};
 			let length = worksheet._rows.length + 1;
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === 4) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+							bold: true
+						};
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'bdbdbd' },
+							bgColor: { argb: 'bdbdbd' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				}
+			});
 			for (const item of this.dataviewObj.getGroups()) {
 				if (!item.groups) {
 					const length2 = length;
-					console.log(length2);
 					const obj2: any = {};
-					console.log(item.rows);
 					worksheet.mergeCells('A' + (length) + ':' +
 						this.alphabetJSON[columns.length] + (length));
 					worksheet.getCell('A' + length).value = this.common.htmlToText(item.title);
 					worksheet.getCell('A' + length).fill = {
 						type: 'pattern',
 						pattern: 'solid',
-						fgColor: { argb: 'dedede' },
-						bgColor: { argb: 'dedede' },
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'ffffff' },
 					};
 					worksheet.getCell('A' + length).border = {
 						top: { style: 'thin' },
@@ -2527,7 +2564,7 @@ export class CollectionReportComponent implements OnInit {
 					};
 					worksheet.getCell('A' + length2).alignment = { horizontal: 'left' };
 					Object.keys(item.rows).forEach(key => {
-						const obj: any = {};
+						obj = {};
 						for (const item2 of this.columnDefinitions) {
 							if (this.reportType !== 'mfr') {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
@@ -2554,86 +2591,23 @@ export class CollectionReportComponent implements OnInit {
 						}
 						worksheet.addRow(obj);
 						length++;
-						worksheet.eachRow((row, rowNum) => {
-							if (rowNum !== length2) {
-								if (rowNum === 1) {
-									row.font = {
-										name: 'Arial',
-										size: 12,
-										bold: true
-									};
-								} else if (rowNum === 2) {
-									row.font = {
-										name: 'Arial',
-										size: 10,
-										bold: true
-									};
-								} else if (rowNum === 4) {
-									row.eachCell((cell) => {
-										cell.font = {
-											name: 'Arial',
-											size: 10,
-											bold: true
-										};
-										cell.fill = {
-											type: 'pattern',
-											pattern: 'solid',
-											fgColor: { argb: 'bdbdbd' },
-											bgColor: { argb: 'bdbdbd' },
-										};
-										cell.border = {
-											top: { style: 'thin' },
-											left: { style: 'thin' },
-											bottom: { style: 'thin' },
-											right: { style: 'thin' }
-										};
-										cell.alignment = { horizontal: 'center' };
-									});
-								} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
-									if (rowNum % 2 === 0) {
-										row.eachCell((cell) => {
-											cell.fill = {
-												type: 'pattern',
-												pattern: 'solid',
-												fgColor: { argb: 'ffffff' },
-												bgColor: { argb: 'ffffff' },
-											};
-											cell.border = {
-												top: { style: 'thin' },
-												left: { style: 'thin' },
-												bottom: { style: 'thin' },
-												right: { style: 'thin' }
-											};
-											cell.font = {
-												name: 'Arial',
-												size: 10,
-											};
-											cell.alignment = { wrapText: true, horizontal: 'center' };
-										});
-									} else if (rowNum % 2 !== 0) {
-										row.eachCell((cell) => {
-											cell.fill = {
-												type: 'pattern',
-												pattern: 'solid',
-												fgColor: { argb: 'dedede' },
-												bgColor: { argb: 'dedede' },
-											};
-											cell.border = {
-												top: { style: 'thin' },
-												left: { style: 'thin' },
-												bottom: { style: 'thin' },
-												right: { style: 'thin' }
-											};
-											cell.font = {
-												name: 'Arial',
-												size: 10,
-											};
-											cell.alignment = { wrapText: true, horizontal: 'center' };
-										});
-									}
-								}
-							}
-						});
+						worksheet.getRow(length).fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+						worksheet.getRow(length).border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						worksheet.getRow(length).font = {
+							name: 'Arial',
+							size: 10,
+						};
+						worksheet.getRow(length).alignment = { horizontal: 'center' };
 					});
 					length++;
 				}
