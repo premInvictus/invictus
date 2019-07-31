@@ -186,7 +186,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				this.feeRenderId = '';
 			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}

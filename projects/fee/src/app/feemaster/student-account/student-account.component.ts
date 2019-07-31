@@ -95,6 +95,18 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		});
 	}
 	getFeeAccount(au_login_id) {
+		this.accountDetails = {};
+		this.accountsForm.reset();
+		this.accountsForm.patchValue({
+			accd_transport_mode: '',
+			accd_tr_id: '',
+			accd_tsp_id: '',
+			accd_ts_id: '',
+			accd_is_terminate: 'N',
+			accd_transport_from: '',
+			accd_transport_to: '',
+			accd_remark: '',
+		});
 		this.stoppageArray = [];
 		this.slabArray = [];
 		this.transportFlag = false;
@@ -215,7 +227,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.getStoppages(this.accountDetails.accd_tr_id);
 				this.getSlab(this.accountDetails.accd_tsp_id);
 				this.terminationFlag = this.accountDetails.accd_is_terminate === 'N' ? false : true;
-				if (this.accountDetails.accd_transport_mode) {
+				if (this.accountDetails.accd_transport_mode && this.accountDetails.accd_transport_mode !== '0') {
 					this.modeFlag = true;
 				}
 				this.accountsForm.patchValue({
@@ -237,10 +249,12 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_is_terminate: 'N',
 				accd_transport_from: '',
 				accd_transport_to: '',
+				accd_remark: ''
 			});
 			this.slabArray = [];
 			this.stoppageArray = [];
 			this.transportFlag = false;
+			this.terminationFlag = false;
 		}
 	}
 	enableHostel($event) {
@@ -313,10 +327,17 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.transportFlag && this.modeFlag) {
-			if (!this.accountsForm.value.accd_tr_id &&
-				!this.accountsForm.value.accd_tsp_id &&
-				!this.accountsForm.value.accd_ts_id &&
-				!this.accountsForm.value.accd_transport_from) {
+			if (this.accountsForm.value.accd_tr_id && this.accountsForm.value.accd_tr_id !== '0' &&
+				this.accountsForm.value.accd_tsp_id && this.accountsForm.value.accd_tsp_id !== '0' &&
+				this.accountsForm.value.accd_ts_id && this.accountsForm.value.accd_ts_id !== '0' &&
+				this.accountsForm.value.accd_transport_from && this.accountsForm.value.accd_transport_from !== '0') {
+					if (this.terminationFlag) {
+						if (!this.accountsForm.value.accd_transport_to) {
+							this.accountsForm.get('accd_transport_to').markAsDirty();
+							validateFlag = false;
+						}
+					}
+			} else {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
 				this.accountsForm.get('accd_ts_id').markAsDirty();
@@ -324,12 +345,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
-		if (this.terminationFlag) {
-			if (!this.accountsForm.value.accd_transport_to) {
-				this.accountsForm.get('accd_transport_to').markAsDirty();
-				validateFlag = false;
-			}
-		} if (validateFlag) {
+		if (validateFlag) {
 			const datePipe = new DatePipe('en-in');
 			let accountJSON = {};
 			accountJSON = {
@@ -388,7 +404,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.accountsForm.get('accd_transport_mode').markAsDirty();
 			}
 		}
-		if (this.transportFlag && this.modeFlag) {
+		/* if (this.transportFlag && this.modeFlag) {
 			if (!this.accountsForm.value.accd_tr_id &&
 				!this.accountsForm.value.accd_tsp_id &&
 				!this.accountsForm.value.accd_ts_id &&
@@ -403,6 +419,25 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		if (this.terminationFlag && this.transportFlag) {
 			if (!this.accountsForm.value.accd_transport_to) {
 				this.accountsForm.get('accd_transport_to').markAsDirty();
+				validateFlag = false;
+			}
+		} */
+		if (this.transportFlag && this.modeFlag) {
+			if (this.accountsForm.value.accd_tr_id && this.accountsForm.value.accd_tr_id !== '0' &&
+				this.accountsForm.value.accd_tsp_id && this.accountsForm.value.accd_tsp_id !== '0' &&
+				this.accountsForm.value.accd_ts_id && this.accountsForm.value.accd_ts_id !== '0' &&
+				this.accountsForm.value.accd_transport_from && this.accountsForm.value.accd_transport_from !== '0') {
+					if (this.terminationFlag) {
+						if (!this.accountsForm.value.accd_transport_to) {
+							this.accountsForm.get('accd_transport_to').markAsDirty();
+							validateFlag = false;
+						}
+					}
+			} else {
+				this.accountsForm.get('accd_tr_id').markAsDirty();
+				this.accountsForm.get('accd_tsp_id').markAsDirty();
+				this.accountsForm.get('accd_ts_id').markAsDirty();
+				this.accountsForm.get('accd_transport_from').markAsDirty();
 				validateFlag = false;
 			}
 		}
@@ -627,12 +662,14 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		});
 	}
 	getSlab(value) {
-		this.slabArray = [];
-		this.feeService.getTransportSlabPerStoppages({ tsp_id: value }).subscribe((result: any) => {
+		if (value && value !== '0') {
+			this.slabArray = [];
+			this.feeService.getTransportSlabPerStoppages({ tsp_id: value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.slabArray = result.data;
 				this.slabModel = this.slabArray[0].ts_id;
 			}
 		});
+		}
 	}
 }
