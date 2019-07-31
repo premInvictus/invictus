@@ -282,7 +282,11 @@ export class OutstandingReportComponent implements OnInit {
 				dropPlaceHolderText: 'Drop a column header here to group by the column',
 				// groupIconCssClass: 'fa fa-outdent',
 				deleteIconCssClass: 'fa fa-times',
-				onGroupChanged: (e, args) => this.onGroupChanged(args && args.groupColumns),
+				onGroupChanged: (e, args) => {
+					this.groupColumns = [];
+					this.groupColumns = args.groupColumns;
+					this.onGroupChanged(args && args.groupColumns);
+				},
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
 		};
