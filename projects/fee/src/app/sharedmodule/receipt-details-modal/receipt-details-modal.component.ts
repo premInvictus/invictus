@@ -143,6 +143,19 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		this.ELEMENT_DATA = [];
 		this.invoiceTotal = 0;
 		let i = 0;
+		if (this.invoiceDetails.inv_prev_balance && Number(this.invoiceDetails.inv_prev_balance > 0)) {
+			const element = {
+				srno: ++i,
+				feehead: 'Previous Balance',
+				feedue: Number(this.invoiceDetails.inv_prev_balance),
+				concession: 0,
+				adjustment: 0,
+				netpay: Number(this.invoiceDetails.inv_prev_balance),
+				invg_id: ''
+			};
+			this.invoiceTotal += element.netpay;
+			this.ELEMENT_DATA.push(element);
+		}
 		arr.forEach(item => {
 			const element = {
 				srno: ++i,
@@ -157,7 +170,19 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			this.invoiceTotal += element.netpay;
 			this.ELEMENT_DATA.push(element);
 		});
-
+		if (this.invoiceDetails.late_fine_amt && Number(this.invoiceDetails.late_fine_amt > 0)) {
+			const element = {
+				srno: ++i,
+				feehead: 'Fine Amount',
+				feedue: Number(this.invoiceDetails.late_fine_amt),
+				concession: 0,
+				adjustment: 0,
+				netpay: Number(this.invoiceDetails.late_fine_amt),
+				invg_id: ''
+			};
+			this.invoiceTotal += element.netpay;
+			this.ELEMENT_DATA.push(element);
+		}
 		this.dataSource = new MatTableDataSource<ReceiptDetails>(this.ELEMENT_DATA);
 	}
 

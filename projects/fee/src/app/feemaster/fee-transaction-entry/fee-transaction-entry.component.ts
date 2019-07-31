@@ -194,6 +194,18 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				});
 				let pos = 1;
 				this.invoiceTotal = 0;
+				if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance > 0)) {
+					const element = {
+						srno: pos,
+						feehead: 'Previous Balance',
+						feedue: Number(this.invoice.inv_prev_balance),
+						concession: 0,
+						adjustment: 0,
+						netpay: Number(this.invoice.inv_prev_balance)
+					};
+					this.invoiceTotal += element.netpay;
+					this.INVOICE_ELEMENT_DATA.push(element);
+				}
 				for (const item of this.invoiceArray) {
 					this.INVOICE_ELEMENT_DATA.push({
 						srno: pos,
@@ -207,6 +219,18 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					// tslint:disable-next-line: max-line-length
 					this.invoiceTotal += Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
 					pos++;
+				}
+				if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
+					const element = {
+						srno: pos,
+						feehead: 'Fine Amount',
+						feedue: Number(this.invoice.inv_fine_amount),
+						concession: 0,
+						adjustment: 0,
+						netpay: Number(this.invoice.inv_fine_amount),
+					};
+					this.invoiceTotal += element.netpay;
+					this.INVOICE_ELEMENT_DATA.push(element);
 				}
 				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 			}
