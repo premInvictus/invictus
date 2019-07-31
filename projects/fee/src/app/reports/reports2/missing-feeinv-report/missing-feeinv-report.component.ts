@@ -32,6 +32,9 @@ import { CreateInvoiceModalComponent } from '../../../sharedmodule/create-invoic
 })
 export class MissingFeeinvReportComponent implements OnInit {
 	@Input() userName: any = '';
+	feeHeadJson: any[] = [];
+	groupColumns: any[] = [];
+	groupLength: any;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -626,60 +629,60 @@ export class MissingFeeinvReportComponent implements OnInit {
 	}
 	exportAsPDF() {
 		const headerData: any[] = [];
-		let rowData: any[] = [];
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		reportType = new TitleCasePipe().transform('missing fee report: ') + this.sessionName;
+		const doc = new jsPDF('l', 'mm', 'a0');
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 35,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			head: [[reportType]],
+			margin: { top: 0 },
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 35,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		const rowData: any[] = [];
 		for (const item of this.columnDefinitions) {
 			headerData.push(item.name);
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
-			Object.keys(this.dataset).forEach(key => {
-				const arr: any[] = [];
-				for (const item of this.columnDefinitions) {
-					if (item.id !== 'fp_name') {
-						arr.push(this.dataset[key][item.id]);
-					} else if (item.id === 'fp_name') {
-						let feePeriod: any = '';
-						console.log(this.dataset[key][item.id]);
-						for (const period of this.dataset[key][item.id]) {
-							feePeriod = feePeriod + period.fm_name + ',';
+			Object.keys(this.dataset).forEach((key: any) => {
+				const arr5: any[] = [];
+				for (const item2 of this.columnDefinitions) {
+					if (Number(key) < this.dataset.length - 1) {
+						if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+							|| item2.id === 'rpt_receipt_date') {
+							arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+						} else {
+							arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
-						feePeriod = feePeriod.substring(0, feePeriod.length - 1);
-						arr.push(feePeriod);
 					}
 				}
-				rowData.push(arr);
-			});
-			const doc = new jsPDF('l', 'mm', 'a0');
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [['Missing Fee invoice Report: ' + this.sessionName]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
+				rowData.push(arr5);
 			});
 			doc.autoTable({
 				head: [headerData],
@@ -687,145 +690,14 @@ export class MissingFeeinvReportComponent implements OnInit {
 				startY: 65,
 				tableLineColor: 'black',
 				didDrawPage: function (data) {
-					doc.setFontSize(22);
-					doc.setTextColor(0);
 					doc.setFontStyle('bold');
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#c8d6e5',
-					textColor: '#5e666d',
-					fontSize: 26,
-				},
-				alternateRowStyles: {
-					fillColor: '#f1f4f7'
-				},
-				useCss: true,
-				styles: {
-					fontSize: 35,
-					cellWidth: 'auto',
-					textColor: 'black',
-					lineColor: '#89a8c8',
-				},
-				theme: 'grid'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Report Filtered as: ' +
-					new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
-					+ ' - ' +
-					new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['No of records: ' + this.totalRecords]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Generated On: '
-					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Generated By: ' + this.userName]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.save('Missing Fee Invoice' + '_' + new Date() + '.pdf');
-		} else {
-			const doc = new jsPDF('l', 'mm', 'a0');
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 30,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
 
-			doc.autoTable({
-				head: [['Missing Fee invoice Report: ' + this.sessionName]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
 				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 30,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [headerData],
-				didDrawPage: function (data) {
-					doc.setFontSize(22);
-					doc.setTextColor(0);
-					doc.setFontStyle('bold');
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
+				headStyles: {
 					fontStyle: 'bold',
 					fillColor: '#c8d6e5',
 					textColor: '#5e666d',
+					fontSize: 22,
 				},
 				alternateRowStyles: {
 					fillColor: '#f1f4f7'
@@ -834,127 +706,173 @@ export class MissingFeeinvReportComponent implements OnInit {
 				styles: {
 					fontSize: 22,
 					cellWidth: 'auto',
+					textColor: 'black',
+					lineColor: '#89a8c8',
 				},
-				theme: 'striped'
+				theme: 'grid'
 			});
+		} else {
 			for (const item of this.dataviewObj.getGroups()) {
-				rowData = [];
-				Object.keys(item.rows).forEach(key => {
-					const arr: any[] = [];
-					for (const item2 of this.columnDefinitions) {
-						if (item2.id !== 'fp_name') {
-							arr.push(item.rows[key][item2.id]);
-						} else if (item2.id === 'fp_name') {
-							let feePeriod: any = '';
-							console.log(item.rows[key][item2.id]);
-							for (const period of item.rows[key][item2.id]) {
-								feePeriod = feePeriod + period.fm_name + ',';
+				const rowData2 = [];
+				if (!item.groups && item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
+					let indexPage = 0;
+					Object.keys(item.rows).forEach(key => {
+						const arr8: any[] = [];
+						for (const item2 of this.columnDefinitions) {
+							if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+								|| item2.id === 'rpt_receipt_date') {
+								arr8.push(new DatePipe('en-in').transform((item.rows[key][item2.id])));
+							} else if (item2.id !== 'fp_name') {
+								arr8.push(this.common.htmlToText(item.rows[key][item2.id]));
+							} else if (item2.id === 'fp_name') {
+								arr8.push(this.getFeePeriodFormat(item.rows[key][item2.id]));
 							}
-							feePeriod = feePeriod.substring(0, feePeriod.length - 1);
-							arr.push(feePeriod);
 						}
+						rowData2.push(arr8);
+						indexPage++;
+					});
+					doc.autoTable({
+						head: [[this.common.htmlToText(item.title)]],
+						startY: doc.previousAutoTable.finalY + 1,
+						didDrawPage: function (data) {
+							doc.setTextColor(0);
+							doc.setFontStyle('bold');
+
+						},
+						headStyles: {
+							fontStyle: 'bold',
+							fillColor: '#c8d6e5',
+							textColor: '#5e666d',
+							fontSize: 22,
+						},
+						alternateRowStyles: {
+							fillColor: '#f1f4f7'
+						},
+						useCss: true,
+						styles: {
+							fontSize: 22,
+							cellWidth: 'auto',
+						},
+						theme: 'grid'
+					});
+					doc.autoTable({
+						head: [headerData],
+						body: rowData2,
+						startY: doc.previousAutoTable.finalY + 1,
+						didDrawPage: function (data) {
+							doc.setTextColor(0);
+							doc.setFontStyle('bold');
+
+						},
+						headStyles: {
+							fontStyle: 'bold',
+							fillColor: '#c8d6e5',
+							textColor: '#5e666d',
+							fontSize: 22,
+						},
+						alternateRowStyles: {
+							fillColor: '#f1f4f7'
+						},
+						useCss: true,
+						styles: {
+							fontSize: 22,
+							cellWidth: 'auto',
+						},
+						theme: 'grid'
+					});
+				} else {
+					if (item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
+						this.checkGroupLevelPDF(item, doc, headerData);
 					}
-					rowData.push(arr);
-				});
-				doc.autoTable({
-					head: [[this.common.htmlToText(item.title)]],
-					body: rowData,
-					didDrawPage: function (data) {
-						doc.setFontSize(22);
-						doc.setTextColor(0);
-						doc.setFontStyle('bold');
-						doc.setFont('Roboto');
-					},
-					headerStyles: {
-						fontStyle: 'bold',
-						fillColor: '#c8d6e5',
-						textColor: 'black',
-						fontSize: 35,
-						halign: 'left',
-					},
-					alternateRowStyles: {
-						fillColor: '#f1f4f7'
-					},
-					useCss: true,
-					styles: {
-						fontSize: 35,
-						cellWidth: 'auto',
-						textColor: 'black',
-						lineColor: '#89a8c8',
-					},
-					theme: 'grid',
-				});
+				}
 			}
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Report Filtered as: ' +
-					new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
-					+ ' - ' +
-					new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['No of records: ' + this.totalRecords]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Generated On: '
-					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Generated By: ' + this.userName]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.save('Missing Fee Invoice' + '_' + new Date() + '.pdf');
 		}
+		if (this.groupColumns.length > 0) {
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Groupded As: ' + this.getGroupColumns(this.groupColumns)]],
+				didDrawPage: function (data) {
+				},
+				headStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 22,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+		}
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Report Filtered as: ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+				+ ' - ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['No of records: ' + this.totalRecords]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated On: '
+				+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated By: ' + this.userName]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.save(reportType + '_' + new Date() + '.pdf');
 	}
 	groupByClass() {
 		this.dataviewObj.setGrouping({
@@ -997,7 +915,19 @@ export class MissingFeeinvReportComponent implements OnInit {
 			}
 		});
 	}
-	exportToExcel(json: any[], excelFileName: string): void {
+	getFeePeriodFormat(value) {
+		if (value !== '-') {
+			let feePeriod: any = '';
+			for (const period of value) {
+				feePeriod = feePeriod + period.fm_name + ',';
+			}
+			feePeriod = feePeriod.substring(0, feePeriod.length - 1);
+			return feePeriod;
+		} else {
+			return '-';
+		}
+	}
+	exportToExcel(json: any[], excelFileName: string) {
 		let reportType: any = '';
 		const columns: any[] = [];
 		const columValue: any[] = [];
@@ -1009,135 +939,270 @@ export class MissingFeeinvReportComponent implements OnInit {
 			columValue.push(item.name);
 		}
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		const reportType2 = new TitleCasePipe().transform('missing fee_inv') + this.sessionName;
-		reportType = new TitleCasePipe().transform('missing fee invoice report: ') + this.sessionName;
+		reportType = new TitleCasePipe().transform('missin fee_') + this.sessionName;
+		let reportType2: any = '';
+		reportType2 = new TitleCasePipe().transform('missing fee report: ') + this.sessionName;
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
-		const worksheet = workbook.addWorksheet(reportType2, { properties: { showGridLines: true } },
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
-		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell('A2').value = reportType2;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.getRow(4).values = columValue;
 		worksheet.columns = columns;
-		Object.keys(json).forEach(key => {
-			const obj: any = {};
-			for (const item2 of this.columnDefinitions) {
-				if (item2.id !== 'fp_name') {
-					obj[item2.id] = json[key][item2.id];
-				} else if (item2.id === 'fp_name') {
-					let feePeriod: any = '';
-					for (const period of json[key][item2.id]) {
-						feePeriod = feePeriod + period.fm_name + ',';
+		if (this.dataviewObj.getGroups().length === 0) {
+			Object.keys(json).forEach(key => {
+				const obj: any = {};
+				for (const item2 of this.columnDefinitions) {
+					if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+						|| item2.id === 'rpt_receipt_date') {
+						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
+					} else if (item2.id !== 'fp_name') {
+						obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+					} else if (item2.id === 'fp_name') {
+						obj[item2.id] = this.getFeePeriodFormat(json[key][item2.id]);
 					}
-					feePeriod = feePeriod.substring(0, feePeriod.length - 1);
-					obj[item2.id] = feePeriod;
 				}
-			}
-			worksheet.addRow(obj);
-		});
-		worksheet.eachRow((row, rowNum) => {
-			if (rowNum === 1) {
-				row.font = {
-					name: 'Arial',
-					size: 12,
-					bold: true
-				};
-			}
-			if (rowNum === 2) {
-				row.font = {
-					name: 'Arial',
-					size: 10,
-					bold: true
-				};
-			}
-			if (rowNum === 4) {
-				row.eachCell((cell) => {
-					cell.font = {
+				worksheet.addRow(obj);
+			});
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === 1) {
+					row.font = {
 						name: 'Arial',
-						size: 10,
+						size: 16,
 						bold: true
 					};
-					cell.fill = {
+				}
+				if (rowNum === 2) {
+					row.font = {
+						name: 'Arial',
+						size: 14,
+						bold: true
+					};
+				}
+				if (rowNum === 4) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 12,
+							bold: true
+						};
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'bdbdbd' },
+							bgColor: { argb: 'bdbdbd' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+						};
+						cell.alignment = { wrapText: true, horizontal: 'center' };
+					});
+					if (rowNum % 2 === 0) {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					} else {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'dedede' },
+								bgColor: { argb: 'dedede' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					}
+				} else if (rowNum > 4 && rowNum === worksheet._rows.length) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+							bold: true
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				}
+			});
+		} else {
+			let obj = {};
+			let length = worksheet._rows.length + 1;
+			this.groupLength = length;
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === 1) {
+					row.font = {
+						name: 'Arial',
+						size: 16,
+						bold: true
+					};
+				}
+				if (rowNum === 2) {
+					row.font = {
+						name: 'Arial',
+						size: 14,
+						bold: true
+					};
+				}
+				if (rowNum === 4) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 12,
+							bold: true
+						};
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'bdbdbd' },
+							bgColor: { argb: 'bdbdbd' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				}
+			});
+			let index = 0;
+			for (const item of this.dataviewObj.getGroups()) {
+				if (!item.groups && item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
+					const length2 = length;
+					const obj2: any = {};
+					worksheet.mergeCells('A' + (length) + ':' +
+						this.alphabetJSON[columns.length] + (length));
+					worksheet.getCell('A' + length).value = this.common.htmlToText(item.title);
+					worksheet.getCell('A' + length).fill = {
 						type: 'pattern',
 						pattern: 'solid',
-						fgColor: { argb: 'bdbdbd' },
-						bgColor: { argb: 'bdbdbd' },
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'ffffff' },
 					};
-					cell.border = {
+					worksheet.getCell('A' + length).border = {
 						top: { style: 'thin' },
 						left: { style: 'thin' },
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
-					cell.alignment = { horizontal: 'center' };
-				});
-			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
-				row.eachCell((cell) => {
-					cell.font = {
+					worksheet.getCell('A' + length).font = {
 						name: 'Arial',
 						size: 10,
+						bold: true
 					};
-					cell.alignment = { wrapText: true, horizontal: 'center' };
-				});
-				if (rowNum % 2 === 0) {
-					row.eachCell((cell) => {
-						cell.fill = {
+					worksheet.getCell('A' + length2).alignment = { horizontal: 'left' };
+					let indexPage = 0;
+					Object.keys(item.rows).forEach(key => {
+						obj = {};
+						for (const item2 of this.columnDefinitions) {
+							if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+								|| item2.id === 'rpt_receipt_date') {
+								obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
+							} else if (item2.id !== 'fp_name') {
+								obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+							} else if (item2.id === 'fp_name') {
+								obj[item2.id] = this.getFeePeriodFormat(json[key][item2.id]);
+							}
+						}
+						worksheet.addRow(obj);
+						length++;
+						worksheet.getRow(length).fill = {
 							type: 'pattern',
 							pattern: 'solid',
 							fgColor: { argb: 'ffffff' },
 							bgColor: { argb: 'ffffff' },
 						};
-						cell.border = {
+						worksheet.getRow(length).border = {
 							top: { style: 'thin' },
 							left: { style: 'thin' },
 							bottom: { style: 'thin' },
 							right: { style: 'thin' }
 						};
+						worksheet.getRow(length).font = {
+							name: 'Arial',
+							size: 10,
+						};
+						worksheet.getRow(length).alignment = { horizontal: 'center' };
+						indexPage++;
 					});
+					length++;
 				} else {
-					row.eachCell((cell) => {
-						cell.fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'dedede' },
-							bgColor: { argb: 'dedede' },
-						};
-						cell.border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
+					if (item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
+						this.checkGroupLevel(item, worksheet);
+						this.groupLength++;
+					}
+				}
+				index++;
+			}
+		}
+		if (this.groupColumns.length > 0) {
+			worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
+			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === worksheet._rows.length) {
+					row.eachCell((cell: any) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+							bold: true
 						};
 					});
 				}
-			} else if (rowNum > 4 && rowNum === worksheet._rows.length) {
-				row.eachCell((cell) => {
-					cell.font = {
-						name: 'Arial',
-						size: 10,
-						bold: true
-					};
-					cell.border = {
-						top: { style: 'thin' },
-						left: { style: 'thin' },
-						bottom: { style: 'thin' },
-						right: { style: 'thin' }
-					};
-					cell.alignment = { horizontal: 'center' };
-				});
-			}
-		});
-		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
-		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' +
-			new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
-			+ ' - ' +
-			new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y');
+			});
+			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+			worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+				+ ' - ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y');
+		} else {
+			worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
+			worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+				+ ' - ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y');
+		}
 		worksheet.getCell('A' + worksheet._rows.length).font = {
 			name: 'Arial',
 			size: 10,
@@ -1178,5 +1243,203 @@ export class MissingFeeinvReportComponent implements OnInit {
 		const max2 = header.toString().length;
 		const max = Math.max.apply(null, res);
 		return max2 > max ? max2 : max;
+	}
+	checkGroupLevel(item, worksheet) {
+		worksheet.mergeCells('A' + (this.groupLength) + ':' +
+			this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+		worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(item.title);
+		worksheet.getCell('A' + this.groupLength).fill = {
+			type: 'pattern',
+			pattern: 'solid',
+			fgColor: { argb: 'c8d6e5' },
+			bgColor: { argb: 'ffffff' },
+		};
+		worksheet.getCell('A' + this.groupLength).border = {
+			top: { style: 'thin' },
+			left: { style: 'thin' },
+			bottom: { style: 'thin' },
+			right: { style: 'thin' }
+		};
+		worksheet.getCell('A' + this.groupLength).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		if (item.groups) {
+			let index = 0;
+			for (const groupItem of item.groups) {
+				if (groupItem.groups) {
+					this.groupLength++;
+					this.checkGroupLevel(groupItem, worksheet);
+				} else {
+					this.groupLength = this.groupLength + index + 1;
+					worksheet.mergeCells('A' + (this.groupLength) + ':' +
+						this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+					worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(groupItem.title);
+					worksheet.getCell('A' + this.groupLength).fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'ffffff' },
+					};
+					worksheet.getCell('A' + this.groupLength).border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					worksheet.getCell('A' + this.groupLength).font = {
+						name: 'Arial',
+						size: 10,
+						bold: true
+					};
+					Object.keys(groupItem.rows).forEach(key => {
+						const obj = {};
+						for (const item2 of this.columnDefinitions) {
+							if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+								|| item2.id === 'rpt_receipt_date') {
+								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
+							} else if (item2.id !== 'fp_name') {
+								obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+							} else if (item2.id === 'fp_name') {
+								obj[item2.id] = this.getFeePeriodFormat(groupItem.rows[key][item2.id]);
+							}
+						}
+						worksheet.addRow(obj);
+						this.groupLength++;
+						worksheet.getRow(this.groupLength).fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+						worksheet.getRow(this.groupLength).border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						worksheet.getRow(this.groupLength).font = {
+							name: 'Arial',
+							size: 10,
+						};
+						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+					});
+				}
+				index++;
+			}
+		}
+	}
+	getGroupColumns(columns) {
+		let grName = '';
+		for (const item of columns) {
+			for (const titem of this.columnDefinitions) {
+				if (item.getter === titem.id) {
+					grName = grName + titem.name + ',';
+					break;
+				}
+			}
+		}
+		return grName.substring(0, grName.length - 1);
+	}
+	checkGroupLevelPDF(item, doc, headerData) {
+		doc.autoTable({
+			head: [[this.common.htmlToText(item.title)]],
+			startY: doc.previousAutoTable.finalY + 1,
+			didDrawPage: function (data) {
+				doc.setTextColor(0);
+				doc.setFontStyle('bold');
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#c8d6e5',
+				textColor: '#5e666d',
+				fontSize: 26,
+			},
+			alternateRowStyles: {
+				fillColor: '#f1f4f7'
+			},
+			useCss: true,
+			styles: {
+				fontSize: 22,
+				cellWidth: 'auto',
+			},
+			theme: 'grid'
+		});
+		if (item.groups) {
+			let index = 0;
+			for (const groupItem of item.groups) {
+				if (groupItem.groups) {
+					this.checkGroupLevelPDF(groupItem, doc, headerData);
+				} else {
+					doc.autoTable({
+						head: [[this.common.htmlToText(groupItem.title)]],
+						startY: doc.previousAutoTable.finalY + 1,
+						didDrawPage: function (data) {
+							doc.setTextColor(0);
+							doc.setFontStyle('bold');
+
+						},
+						headStyles: {
+							fontStyle: 'bold',
+							fillColor: '#c8d6e5',
+							textColor: '#5e666d',
+							fontSize: 22,
+						},
+						alternateRowStyles: {
+							fillColor: '#f1f4f7'
+						},
+						useCss: true,
+						styles: {
+							fontSize: 22,
+							cellWidth: 'auto',
+						},
+						theme: 'grid'
+					});
+					const rowData: any[] = [];
+					Object.keys(groupItem.rows).forEach(key => {
+						const arr8: any = [];
+						for (const item2 of this.columnDefinitions) {
+							if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+								|| item2.id === 'rpt_receipt_date') {
+								arr8.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id])));
+							} else if (item2.id !== 'fp_name') {
+								arr8.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
+							} else if (item2.id === 'fp_name') {
+								arr8.push(this.getFeePeriodFormat(groupItem.rows[key][item2.id]));
+							}
+						}
+						rowData.push(arr8);
+					});
+					doc.autoTable({
+						head: [headerData],
+						body: rowData,
+						startY: doc.previousAutoTable.finalY + 1,
+						didDrawPage: function (data) {
+							doc.setTextColor(0);
+							doc.setFontStyle('bold');
+
+						},
+						headStyles: {
+							fontStyle: 'bold',
+							fillColor: '#c8d6e5',
+							textColor: '#5e666d',
+							fontSize: 22,
+						},
+						alternateRowStyles: {
+							fillColor: '#f1f4f7'
+						},
+						useCss: true,
+						styles: {
+							fontSize: 22,
+							cellWidth: 'auto',
+						},
+						theme: 'grid'
+					});
+				}
+				index++;
+			}
+		}
 	}
 }
