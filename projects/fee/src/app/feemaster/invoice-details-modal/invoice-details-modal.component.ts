@@ -101,6 +101,21 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		}
 		this.invoiceDetialsTable(this.invoiceBifurcationArray);
 	}
+	changeOpeningAndFine(item, $event) {
+		if (item.feehead === 'Fine Amount') {
+			this.modifyInvoiceForm.patchValue({
+				inv_fine_amount: $event.target.value
+			});
+			this.invoiceDetails.inv_fine_amount = $event.target.value;
+
+		} else if (item.feehead === 'Previous Balance') {
+			this.modifyInvoiceForm.patchValue({
+				inv_opening_balance: $event.target.value
+			});
+			this.invoiceDetails.inv_prev_balance = $event.target.value;
+		}
+		this.invoiceDetialsTable(this.invoiceBifurcationArray);
+	}
 	recalculateInvoice(event) {
 		this.feeService.insertInvoice({ recalculation_flag: '1', inv_id: [this.invoiceDetails.inv_id], inv_activity: 'invoice' })
 			.subscribe((result: any) => {
@@ -117,7 +132,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			this.modificationFlag = true;
 			this.adjRemark = '';
 			this.modifyInvoiceForm.patchValue({
-				'inv_opening_balance': this.invoiceDetails.inv_opening_balance,
+				'inv_opening_balance': this.invoiceDetails.inv_prev_balance,
 				'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
 				'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
 				'inv_due_date': this.invoiceDetails.inv_due_date,
@@ -191,6 +206,19 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		this.ELEMENT_DATA = [];
 		this.invoiceTotal = 0;
 		let i = 0;
+		if (this.invoiceDetails.inv_prev_balance && Number(this.invoiceDetails.inv_prev_balance > 0)) {
+			const element = {
+				srno: ++i,
+				feehead: 'Previous Balance',
+				feedue: Number(this.invoiceDetails.inv_prev_balance),
+				concession: 0,
+				adjustment: 0,
+				netpay: Number(this.invoiceDetails.inv_prev_balance),
+				invg_id: ''
+			};
+			this.invoiceTotal += element.netpay;
+			this.ELEMENT_DATA.push(element);
+		}
 		arr.forEach(item => {
 			const element = {
 				srno: ++i,
@@ -204,6 +232,19 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			this.invoiceTotal += element.netpay;
 			this.ELEMENT_DATA.push(element);
 		});
+		if (this.invoiceDetails.inv_fine_amount && Number(this.invoiceDetails.inv_fine_amount > 0)) {
+			const element = {
+				srno: ++i,
+				feehead: 'Fine Amount',
+				feedue: Number(this.invoiceDetails.inv_fine_amount),
+				concession: 0,
+				adjustment: 0,
+				netpay: Number(this.invoiceDetails.inv_fine_amount),
+				invg_id: ''
+			};
+			this.invoiceTotal += element.netpay;
+			this.ELEMENT_DATA.push(element);
+		}
 		this.dataSource = new MatTableDataSource<InvoiceDetails>(this.ELEMENT_DATA);
 	}
 	getInvoiceBifurcation(data: any) {
@@ -213,10 +254,10 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					if (result.data.length > 0) {
 						this.invoiceDetails = result.data[0];
-						this.inv_opening_balance = this.invoiceDetails.inv_opening_balance;
-						this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
+						// this.inv_opening_balance = this.invoiceDetails.inv_opening_balance;
+						// this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
 						this.modifyInvoiceForm.patchValue({
-							'inv_opening_balance': this.invoiceDetails.inv_opening_balance,
+							'inv_opening_balance': this.invoiceDetails.inv_prev_balance,
 							'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
 							'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
 							'inv_due_date': this.invoiceDetails.inv_due_date,
@@ -263,10 +304,10 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					if (result.data.length > 0) {
 						this.invoiceDetails = result.data[0];
-						this.inv_opening_balance = this.invoiceDetails.inv_opening_balance;
-						this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
+						// inv_opening_balance = this.invoiceDetails.inv_opening_balance;
+						// this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
 						this.modifyInvoiceForm.patchValue({
-							'inv_opening_balance': this.invoiceDetails.inv_opening_balance,
+							'inv_opening_balance': this.invoiceDetails.inv_prev_balance,
 							'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
 							'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
 							'inv_due_date': this.invoiceDetails.inv_due_date,
