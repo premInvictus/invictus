@@ -42,7 +42,7 @@ export class SearchDialogComponent implements OnInit {
 			'receipt_number': ''
 		});
 		this.dialogRef = this.dialog.open(this.searchDialogModal, {
-			'height': '50vh',
+			'height': '350px',
 			position: {
 				'top': '20%'
 			}
