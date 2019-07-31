@@ -2183,21 +2183,21 @@ export class CollectionReportComponent implements OnInit {
 							obj3['receipt_id'] = '';
 							obj3['fp_name'] = '';
 							obj3['receipt_no'] = '';
-							obj3['inv_opening_balance'] = this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-							obj3['invoice_fine_amount'] = this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+							obj3['inv_opening_balance'] = item.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+							obj3['invoice_fine_amount'] = item.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
 							Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 								Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-									Object.keys(this.dataset).forEach(key3 => {
-										Object.keys(this.dataset[key3]).forEach(key4 => {
+									Object.keys(item.rows).forEach(key3 => {
+										Object.keys(item.rows[key3]).forEach(key4 => {
 											if (key4 === key2) {
-												obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+												obj3[key2] = item.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
 											}
 										});
 									});
 								});
 							});
 							obj3['bank_name'] = '';
-							obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+							obj3['total'] = item.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 							obj3['receipt_mode_name'] = '';
 							obj3['tb_name'] = '';
 							for (const itemJ of this.columnDefinitions) {
@@ -2208,36 +2208,114 @@ export class CollectionReportComponent implements OnInit {
 								});
 							}
 							headerArr.push(arr);
-							doc.autoTable({
-								head: [headerData],
-								body: headerArr,
-								tableLineColor: 'black',
-								startY: doc.previousAutoTable.finalY + 0.5,
-								didDrawPage: function (data) {
-									doc.setFontStyle('bold');
-
-								},
-								headStyles: {
-									fontStyle: 'normal',
-									fillColor: '#c8d6e5',
-									textColor: '#5e666d',
-									fontSize: 22,
-								},
-								alternateRowStyles: {
-									fillColor: '#004261',
-									textColor: '#ffffff',
-									fontStyle: 'bold',
-								},
-								useCss: true,
-								styles: {
-									fontSize: 22,
-									cellWidth: 'auto',
-									textColor: 'black',
-									lineColor: '#89a8c8',
-								},
-								theme: 'grid'
-							});
 						}
+						if (this.reportType === 'modewise') {
+							const obj3: any = {};
+							const arr: any[] = [];
+							obj3['id'] = 'footer';
+							obj3['srno'] = '';
+							obj3['invoice_created_date'] = 'Total';
+							obj3['stu_admission_no'] = '';
+							obj3['stu_full_name'] = '';
+							obj3['stu_class_name'] = '';
+							obj3['receipt_id'] = '';
+							obj3['receipt_no'] = '';
+							Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+								Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+									Object.keys(item.rows).forEach(key3 => {
+										Object.keys(item.rows[key3]).forEach(key4 => {
+											if (key4 === key2) {
+												obj3[key2] = item.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+											}
+										});
+									});
+								});
+							});
+							obj3['total'] = item.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+							obj3['fp_name'] = '';
+							for (const col of this.columnDefinitions) {
+								Object.keys(obj3).forEach((key: any) => {
+									if (col.id === key) {
+										arr.push(obj3[key]);
+									}
+								});
+							}
+							headerArr.push(arr);
+						}
+						if (this.reportType === 'classwise') {
+							const obj3: any = {};
+							const arr: any[] = [];
+							obj3['id'] = 'footer';
+							obj3['srno'] = '';
+							obj3['invoice_created_date'] = 'Total';
+							obj3['stu_admission_no'] = '';
+							obj3['stu_full_name'] = '';
+							obj3['stu_class_name'] = '';
+							obj3['receipt_no'] = '';
+							obj3['rpt_amount'] = item.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+							obj3['fp_name'] = '';
+							for (const col of this.columnDefinitions) {
+								Object.keys(obj3).forEach((key: any) => {
+									if (col.id === key) {
+										arr.push(obj3[key]);
+									}
+								});
+							}
+							headerArr.push(arr);
+						}
+						if (this.reportType === 'routewise') {
+							const obj3: any = {};
+							const arr: any[] = [];
+							obj3['id'] = 'footer';
+							obj3['srno'] = '';
+							obj3['invoice_created_date'] = 'Total';
+							obj3['stu_admission_no'] = '';
+							obj3['stu_full_name'] = '';
+							obj3['stu_class_name'] = '';
+							obj3['fp_name'] = '';
+							obj3['receipt_no'] = '';
+							obj3['transport_amount'] = item.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+							obj3['route_name'] = '';
+							obj3['stoppages_name'] = '';
+							obj3['slab_name'] = '';
+							for (const col of this.columnDefinitions) {
+								Object.keys(obj3).forEach((key: any) => {
+									if (col.id === key) {
+										arr.push(obj3[key]);
+									}
+								});
+							}
+							headerArr.push(arr);
+						}
+						doc.autoTable({
+							head: [headerData],
+							body: headerArr,
+							tableLineColor: 'black',
+							startY: doc.previousAutoTable.finalY + 0.5,
+							didDrawPage: function (data) {
+								doc.setFontStyle('bold');
+
+							},
+							headStyles: {
+								fontStyle: 'normal',
+								fillColor: '#c8d6e5',
+								textColor: '#5e666d',
+								fontSize: 22,
+							},
+							alternateRowStyles: {
+								fillColor: '#004261',
+								textColor: '#ffffff',
+								fontStyle: 'bold',
+							},
+							useCss: true,
+							styles: {
+								fontSize: 22,
+								cellWidth: 'auto',
+								textColor: 'black',
+								lineColor: '#89a8c8',
+							},
+							theme: 'grid'
+						});
 					}
 				} else {
 					if (item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
