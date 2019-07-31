@@ -858,9 +858,9 @@ export class DeletedFeetransReportComponent implements OnInit {
 						for (const item2 of this.columnDefinitions) {
 							if (item2.id === 'inv_invoice_date' || item2.id === 'deleted_date'
 								|| item2.id === 'rpt_receipt_date') {
-								arr6.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+								arr6.push(new DatePipe('en-in').transform((item.rows[key][item2.id])));
 							} else {
-								arr6.push(this.common.htmlToText(this.dataset[key][item2.id]));
+								arr6.push(this.common.htmlToText(item.rows[key][item2.id]));
 							}
 						}
 						rowData2.push(arr6);
@@ -1342,9 +1342,9 @@ export class DeletedFeetransReportComponent implements OnInit {
 							if (Number(key) < this.dataset.length - 1) {
 								if (item2.id === 'invoice_created_date' || item2.id === 'deleted_date'
 									|| item2.id === 'rpt_receipt_date') {
-									obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
+									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
 								} else {
-									obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
 								}
 							}
 						}
