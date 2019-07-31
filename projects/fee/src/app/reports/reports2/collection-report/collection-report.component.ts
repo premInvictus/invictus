@@ -25,6 +25,7 @@ declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 import { group } from '@angular/animations';
+import { arrayObjectToCsvFormatter } from 'angular-slickgrid/app/modules/angular-slickgrid/formatters/arrayObjectToCsvFormatter';
 @Component({
 	selector: 'app-collection-report',
 	templateUrl: './collection-report.component.html',
@@ -164,7 +165,6 @@ export class CollectionReportComponent implements OnInit {
 		this.sisService.getSchool().subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.schoolInfo = res.data[0];
-				console.log(this.schoolInfo);
 			}
 		});
 	}
@@ -323,7 +323,6 @@ export class CollectionReportComponent implements OnInit {
 				// groupIconCssClass: 'fa fa-outdent',
 				deleteIconCssClass: 'fa fa-times',
 				onGroupChanged: (e, args) => {
-					console.log(args);
 					this.groupColumns = [];
 					this.groupColumns = args.groupColumns;
 					this.onGroupChanged(args && args.groupColumns);
@@ -615,8 +614,6 @@ export class CollectionReportComponent implements OnInit {
 						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('total'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
-						console.log(this.columnDefinitions);
-						console.log(this.dataset);
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
@@ -1017,6 +1014,7 @@ export class CollectionReportComponent implements OnInit {
 											const payObj: any = {};
 											payObj['pay_name' + j] = '';
 											feeHead.push(payObj);
+											this.feeHeadJSON.push(payObj);
 											j++;
 										}
 										if (key2 === 'pay_name') {
@@ -1103,6 +1101,7 @@ export class CollectionReportComponent implements OnInit {
 								});
 							});
 						});
+						obj3['bank_name'] = '';
 						obj3['total'] = this.dataset.map(t => t['total']).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
 						this.dataset.push(obj3);
@@ -1700,8 +1699,6 @@ export class CollectionReportComponent implements OnInit {
 		this.gridObj.setPreHeaderPanelVisibility(!this.gridObj.getOptions().showPreHeaderPanel);
 	}
 	onCellClicked(e, args) {
-		console.log(this.groupColumns);
-		console.log(this.dataviewObj.getGroups());
 		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['receipt_id'] !== '-') {
@@ -1996,225 +1993,48 @@ export class CollectionReportComponent implements OnInit {
 		} else if (this.reportType === 'mfr') {
 			reportType = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
 		}
-		let rowData: any[] = [];
+		const doc = new jsPDF('l', 'mm', 'a0');
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 35,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			head: [[reportType]],
+			margin: { top: 0 },
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 35,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		const rowData: any[] = [];
 		for (const item of this.columnDefinitions) {
 			headerData.push(item.name);
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
-			Object.keys(this.dataset).forEach(key => {
+			Object.keys(this.dataset).forEach((key: any) => {
 				const arr: any[] = [];
-				for (const item of this.columnDefinitions) {
-					if (item.id !== 'fp_name' && item.id !== 'invoice_created_date') {
-						arr.push(this.common.htmlToText(this.dataset[key][item.id]));
-					}
-					if (item.id !== 'fp_name' && item.id === 'invoice_created_date'
-						&& this.dataset[key][item.id] !== '<b>Grand Total</b>') {
-						arr.push(new DatePipe('en-in').transform((this.dataset[key][item.id]), 'd-MMM-y'));
-					}
-					if (item.id !== 'fp_name' && item.id === 'invoice_created_date'
-						&& this.dataset[key][item.id] === '<b>Grand Total</b>') {
-						arr.push(this.common.htmlToText(this.dataset[key][item.id]));
-					}
-					if (item.id !== 'invoice_created_date' && item.id === 'fp_name') {
-						arr.push(this.common.htmlToText(this.dataset[key][item.id]));
-					}
-				}
-				rowData.push(arr);
-			});
-			const doc = new jsPDF('l', 'mm', 'a0');
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [[reportType]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [headerData],
-				body: rowData,
-				startY: 65,
-				tableLineColor: 'black',
-				didDrawPage: function (data) {
-					doc.setFontSize(22);
-					doc.setTextColor(0);
-					doc.setFontStyle('bold');
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#c8d6e5',
-					textColor: '#5e666d',
-					fontSize: 26,
-				},
-				alternateRowStyles: {
-					fillColor: '#f1f4f7'
-				},
-				useCss: true,
-				styles: {
-					fontSize: 35,
-					cellWidth: 'auto',
-					textColor: 'black',
-					lineColor: '#89a8c8',
-				},
-				theme: 'grid'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Report Filtered as: ' +
-					new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
-					+ ' - ' +
-					new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['No of records: ' + this.totalRecords]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Generated On: '
-					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Generated By: ' + this.userName]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.save(reportType + '_' + new Date() + '.pdf');
-		} else {
-			const doc = new jsPDF('l', 'mm', 'a0');
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 30,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-
-			doc.autoTable({
-				head: [[reportType]],
-				margin: { top: 0 },
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 30,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				head: [headerData],
-				didDrawPage: function (data) {
-					doc.setFontSize(22);
-					doc.setTextColor(0);
-					doc.setFontStyle('bold');
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#c8d6e5',
-					textColor: '#5e666d',
-				},
-				alternateRowStyles: {
-					fillColor: '#f1f4f7'
-				},
-				useCss: true,
-				styles: {
-					fontSize: 22,
-					cellWidth: 'auto',
-				},
-				theme: 'striped'
-			});
-			for (const item of this.dataviewObj.getGroups()) {
-				rowData = [];
-				Object.keys(item.rows).forEach(key => {
-					const arr: any[] = [];
-					for (const item2 of this.columnDefinitions) {
+				for (const item2 of this.columnDefinitions) {
+					if (this.reportType !== 'mfr' && Number(key) < this.dataset.length - 1) {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
@@ -2229,108 +2049,340 @@ export class CollectionReportComponent implements OnInit {
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
 							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
+					} else if (this.reportType === 'mfr' && Number(key) < this.dataset.length - 1) {
+						if (item2.id.toString().match(/Q/)) {
+							arr.push(this.dataset[key][item2.id].status);
+						} else {
+							arr.push(this.dataset[key][item2.id]);
+						}
 					}
-					rowData.push(arr);
+				}
+				rowData.push(arr);
+			});
+			doc.autoTable({
+				head: [headerData],
+				body: rowData,
+				startY: 65,
+				tableLineColor: 'black',
+				didDrawPage: function (data) {
+					doc.setFontStyle('bold');
+
+				},
+				headStyles: {
+					fontStyle: 'bold',
+					fillColor: '#c8d6e5',
+					textColor: '#5e666d',
+					fontSize: 24,
+				},
+				alternateRowStyles: {
+					fillColor: '#f1f4f7'
+				},
+				useCss: true,
+				styles: {
+					fontSize: 22,
+					cellWidth: 'auto',
+					textColor: 'black',
+					lineColor: '#89a8c8',
+				},
+				theme: 'grid'
+			});
+			const headerArr: any[] = [];
+			if (this.reportType === 'headwise') {
+				const obj3: any = {};
+				const arr: any[] = [];
+				obj3['id'] = 'footer';
+				obj3['srno'] = '';
+				obj3['invoice_created_date'] = 'Grand Total ';
+				obj3['stu_admission_no'] = '';
+				obj3['stu_full_name'] = '';
+				obj3['stu_class_name'] = '';
+				obj3['receipt_id'] = '';
+				obj3['fp_name'] = '';
+				obj3['receipt_no'] = '';
+				obj3['inv_opening_balance'] = this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+				obj3['invoice_fine_amount'] = this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+				Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+					Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+						Object.keys(this.dataset).forEach(key3 => {
+							Object.keys(this.dataset[key3]).forEach(key4 => {
+								if (key4 === key2) {
+									obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+								}
+							});
+						});
+					});
 				});
+				obj3['bank_name'] = '';
+				obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+				obj3['receipt_mode_name'] = '';
+				obj3['tb_name'] = '';
+				for (const item of this.columnDefinitions) {
+					Object.keys(obj3).forEach((key: any) => {
+						if (item.id === key) {
+							arr.push(obj3[key]);
+						}
+					});
+				}
+				headerArr.push(arr);
 				doc.autoTable({
-					head: [[this.common.htmlToText(item.title)]],
-					body: rowData,
+					head: [headerData],
+					body: headerArr,
+					tableLineColor: 'black',
+					startY: doc.previousAutoTable.finalY + 0.5,
 					didDrawPage: function (data) {
-						doc.setFontSize(22);
-						doc.setTextColor(0);
 						doc.setFontStyle('bold');
-						doc.setFont('Roboto');
+
 					},
-					headerStyles: {
-						fontStyle: 'bold',
+					headStyles: {
+						fontStyle: 'normal',
 						fillColor: '#c8d6e5',
-						textColor: 'black',
-						fontSize: 35,
-						halign: 'left',
+						textColor: '#5e666d',
+						fontSize: 22,
 					},
 					alternateRowStyles: {
-						fillColor: '#f1f4f7'
+						fillColor: '#43A047',
+						textColor: '#ffffff',
+						fontStyle: 'bold',
 					},
 					useCss: true,
 					styles: {
-						fontSize: 35,
+						fontSize: 22,
 						cellWidth: 'auto',
 						textColor: 'black',
 						lineColor: '#89a8c8',
 					},
-					theme: 'grid',
+					theme: 'grid'
 				});
 			}
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Report Filtered as: ' +
-					new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
-					+ ' - ' +
-					new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['No of records: ' + this.totalRecords]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Generated On: '
-					+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Generated By: ' + this.userName]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 35,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-			doc.save(reportType + '_' + new Date() + '.pdf');
+		} else {
+			for (const item of this.dataviewObj.getGroups()) {
+				const rowData2 = [];
+				if (!item.groups && item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
+					let indexPage = 0;
+					Object.keys(item.rows).forEach(key => {
+						const arr: any[] = [];
+						for (const item2 of this.columnDefinitions) {
+							if (this.reportType !== 'mfr') {
+								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+									arr.push(this.common.htmlToText(item.rows[key][item2.id]));
+								}
+								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+									&& item.rows[key][item2.id] !== '<b>Grand Total</b>') {
+									arr.push(new DatePipe('en-in').transform((item.rows[key][item2.id]), 'd-MMM-y'));
+								}
+								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+									&& item.rows[key][item2.id] === '<b>Grand Total</b>') {
+									arr.push(this.common.htmlToText(item.rows[key][item2.id]));
+								}
+								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+									arr.push(this.common.htmlToText(item.rows[key][item2.id]));
+								}
+							} else {
+								if (item2.id.toString().match(/Q/)) {
+									arr.push(item.rows[key][item2.id].status);
+								} else {
+									arr.push(item.rows[key][item2.id]);
+								}
+							}
+						}
+						rowData2.push(arr);
+						indexPage++;
+					});
+					doc.autoTable({
+						head: [[this.common.htmlToText(item.title)]],
+						startY: doc.previousAutoTable.finalY + 1,
+						didDrawPage: function (data) {
+							doc.setTextColor(0);
+							doc.setFontStyle('bold');
+
+						},
+						headStyles: {
+							fontStyle: 'bold',
+							fillColor: '#c8d6e5',
+							textColor: '#5e666d',
+							fontSize: 24,
+						},
+						alternateRowStyles: {
+							fillColor: '#f1f4f7'
+						},
+						useCss: true,
+						styles: {
+							fontSize: 22,
+							cellWidth: 'auto',
+						},
+						theme: 'grid'
+					});
+					doc.autoTable({
+						head: [headerData],
+						body: rowData2,
+						startY: doc.previousAutoTable.finalY + 1,
+						didDrawPage: function (data) {
+							doc.setTextColor(0);
+							doc.setFontStyle('bold');
+
+						},
+						headStyles: {
+							fontStyle: 'bold',
+							fillColor: '#c8d6e5',
+							textColor: '#5e666d',
+							fontSize: 24,
+						},
+						alternateRowStyles: {
+							fillColor: '#f1f4f7'
+						},
+						useCss: true,
+						styles: {
+							fontSize: 22,
+							cellWidth: 'auto',
+						},
+						theme: 'grid'
+					});
+					if (indexPage === item.rows.length) {
+						const headerArr: any[] = [];
+						if (this.reportType === 'headwise') {
+							const obj3: any = {};
+							const arr: any[] = [];
+							obj3['id'] = 'footer';
+							obj3['srno'] = '';
+							obj3['invoice_created_date'] = 'Total ';
+							obj3['stu_admission_no'] = '';
+							obj3['stu_full_name'] = '';
+							obj3['stu_class_name'] = '';
+							obj3['receipt_id'] = '';
+							obj3['fp_name'] = '';
+							obj3['receipt_no'] = '';
+							obj3['inv_opening_balance'] = this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+							obj3['invoice_fine_amount'] = this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+							Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+								Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+									Object.keys(this.dataset).forEach(key3 => {
+										Object.keys(this.dataset[key3]).forEach(key4 => {
+											if (key4 === key2) {
+												obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+											}
+										});
+									});
+								});
+							});
+							obj3['bank_name'] = '';
+							obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+							obj3['receipt_mode_name'] = '';
+							obj3['tb_name'] = '';
+							for (const itemJ of this.columnDefinitions) {
+								Object.keys(obj3).forEach((key: any) => {
+									if (itemJ.id === key) {
+										arr.push(obj3[key]);
+									}
+								});
+							}
+							headerArr.push(arr);
+							doc.autoTable({
+								head: [headerData],
+								body: headerArr,
+								tableLineColor: 'black',
+								startY: doc.previousAutoTable.finalY + 0.5,
+								didDrawPage: function (data) {
+									doc.setFontStyle('bold');
+
+								},
+								headStyles: {
+									fontStyle: 'normal',
+									fillColor: '#c8d6e5',
+									textColor: '#5e666d',
+									fontSize: 22,
+								},
+								alternateRowStyles: {
+									fillColor: '#004261',
+									textColor: '#ffffff',
+									fontStyle: 'bold',
+								},
+								useCss: true,
+								styles: {
+									fontSize: 22,
+									cellWidth: 'auto',
+									textColor: 'black',
+									lineColor: '#89a8c8',
+								},
+								theme: 'grid'
+							});
+						}
+					}
+				} else {
+					if (item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
+						this.checkGroupLevelPDF(item, doc, headerData);
+					}
+				}
+			}
 		}
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Report Filtered as: ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+				+ ' - ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['No of records: ' + this.totalRecords]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated On: '
+				+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated By: ' + this.userName]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.save(reportType + '_' + new Date() + '.pdf');
 	}
 	groupByClass() {
 		this.dataviewObj.setGrouping({
@@ -2397,7 +2449,7 @@ export class CollectionReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.columnDefinitions) {
-					if (this.reportType !== 'mfr') {
+					if (this.reportType !== 'mfr' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
 						}
@@ -2412,7 +2464,7 @@ export class CollectionReportComponent implements OnInit {
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
 							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
 						}
-					} else {
+					} else if (this.reportType === 'mfr' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
 						if (item2.id.toString().match(/Q/)) {
 							obj[item2.id] = json[key][item2.id].status;
 						} else {
@@ -2519,6 +2571,20 @@ export class CollectionReportComponent implements OnInit {
 			let length = worksheet._rows.length + 1;
 			this.groupLength = length;
 			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === 1) {
+					row.font = {
+						name: 'Arial',
+						size: 16,
+						bold: true
+					};
+				}
+				if (rowNum === 2) {
+					row.font = {
+						name: 'Arial',
+						size: 14,
+						bold: true
+					};
+				}
 				if (rowNum === 4) {
 					row.eachCell((cell) => {
 						cell.font = {
@@ -2544,7 +2610,7 @@ export class CollectionReportComponent implements OnInit {
 			});
 			let index = 0;
 			for (const item of this.dataviewObj.getGroups()) {
-				if (!item.groups) {
+				if (!item.groups && item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
 					const length2 = length;
 					const obj2: any = {};
 					worksheet.mergeCells('A' + (length) + ':' +
@@ -2568,6 +2634,7 @@ export class CollectionReportComponent implements OnInit {
 						bold: true
 					};
 					worksheet.getCell('A' + length2).alignment = { horizontal: 'left' };
+					let indexPage = 0;
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
 						for (const item2 of this.columnDefinitions) {
@@ -2613,10 +2680,178 @@ export class CollectionReportComponent implements OnInit {
 							size: 10,
 						};
 						worksheet.getRow(length).alignment = { horizontal: 'center' };
+						indexPage++;
 					});
+					if (indexPage === item.rows.length) {
+						if (this.reportType === 'headwise') {
+							const obj3: any = {};
+							obj3['id'] = 'footer';
+							obj3['srno'] = '';
+							obj3['invoice_created_date'] = 'Total ';
+							obj3['stu_admission_no'] = '';
+							obj3['stu_full_name'] = '';
+							obj3['stu_class_name'] = '';
+							obj3['receipt_id'] = '';
+							obj3['fp_name'] = '';
+							obj3['receipt_no'] = '';
+							obj3['inv_opening_balance'] = item.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+							obj3['invoice_fine_amount'] = item.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+							Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+								Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+									Object.keys(item.rows).forEach(key3 => {
+										Object.keys(item.rows[key3]).forEach(key4 => {
+											if (key4 === key2) {
+												obj3[key2] = item.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+											}
+										});
+									});
+								});
+							});
+							obj3['bank_name'] = '';
+							obj3['total'] = item.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+							obj3['receipt_mode_name'] = '';
+							obj3['tb_name'] = '';
+							worksheet.addRow(obj3);
+							length++;
+							worksheet.getRow(length).alignment = { horizontal: 'center' };
+							worksheet.eachRow((row, rowNum) => {
+								if (rowNum === length) {
+									row.eachCell(cell => {
+										cell.fill = {
+											type: 'pattern',
+											pattern: 'solid',
+											fgColor: { argb: '004261' },
+											bgColor: { argb: '004261' },
+										};
+										cell.font = {
+											color: { argb: 'ffffff' },
+											bold: true,
+											name: 'Arial',
+											size: 10
+										};
+									});
+								}
+							});
+						}
+						if (this.reportType === 'modewise') {
+							const obj3: any = {};
+							obj3['id'] = 'footer';
+							obj3['srno'] = '';
+							obj3['invoice_created_date'] = 'Total';
+							obj3['stu_admission_no'] = '';
+							obj3['stu_full_name'] = '';
+							obj3['stu_class_name'] = '';
+							obj3['receipt_id'] = '';
+							obj3['receipt_no'] = '';
+							Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+								Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+									Object.keys(item.rows).forEach(key3 => {
+										Object.keys(item.rows[key3]).forEach(key4 => {
+											if (key4 === key2) {
+												obj3[key2] = item.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+											}
+										});
+									});
+								});
+							});
+							obj3['bank_name'] = '';
+							obj3['total'] = item.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+							obj3['fp_name'] = '';
+							worksheet.addRow(obj3);
+							length++;
+							worksheet.getRow(length).alignment = { horizontal: 'center' };
+							worksheet.eachRow((row, rowNum) => {
+								if (rowNum === length) {
+									row.eachCell(cell => {
+										cell.fill = {
+											type: 'pattern',
+											pattern: 'solid',
+											fgColor: { argb: '004261' },
+											bgColor: { argb: '004261' },
+										};
+										cell.font = {
+											color: { argb: 'ffffff' },
+											bold: true,
+											name: 'Arial',
+											size: 10
+										};
+									});
+								}
+							});
+						}
+						if (this.reportType === 'classwise') {
+							const obj3: any = {};
+							obj3['id'] = 'footer';
+							obj3['srno'] = '';
+							obj3['invoice_created_date'] = 'Total';
+							obj3['stu_admission_no'] = '';
+							obj3['stu_full_name'] = '';
+							obj3['stu_class_name'] = '';
+							obj3['receipt_no'] = '';
+							obj3['rpt_amount'] = item.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+							obj3['fp_name'] = '';
+							worksheet.addRow(obj3);
+							length++;
+							worksheet.getRow(length).alignment = { horizontal: 'center' };
+							worksheet.eachRow((row, rowNum) => {
+								if (rowNum === length) {
+									row.eachCell(cell => {
+										cell.fill = {
+											type: 'pattern',
+											pattern: 'solid',
+											fgColor: { argb: '004261' },
+											bgColor: { argb: '004261' },
+										};
+										cell.font = {
+											color: { argb: 'ffffff' },
+											bold: true,
+											name: 'Arial',
+											size: 10
+										};
+									});
+								}
+							});
+						}
+						if (this.reportType === 'routewise') {
+							const obj3: any = {};
+							obj3['id'] = 'footer';
+							obj3['srno'] = '';
+							obj3['invoice_created_date'] = 'Total';
+							obj3['stu_admission_no'] = '';
+							obj3['stu_full_name'] = '';
+							obj3['stu_class_name'] = '';
+							obj3['fp_name'] = '';
+							obj3['receipt_no'] = '';
+							obj3['transport_amount'] = item.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+							obj3['route_name'] = '';
+							obj3['stoppages_name'] = '';
+							obj3['slab_name'] = '';
+							worksheet.addRow(obj3);
+							length++;
+							worksheet.getRow(length).alignment = { horizontal: 'center' };
+							worksheet.eachRow((row, rowNum) => {
+								if (rowNum === length) {
+									row.eachCell(cell => {
+										cell.fill = {
+											type: 'pattern',
+											pattern: 'solid',
+											fgColor: { argb: '004261' },
+											bgColor: { argb: '004261' },
+										};
+										cell.font = {
+											color: { argb: 'ffffff' },
+											bold: true,
+											name: 'Arial',
+											size: 10
+										};
+									});
+								}
+							});
+						}
+					}
 					length++;
 				} else {
-					if (item.groupingKey) {
+					if (item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
 						this.checkGroupLevel(item, worksheet);
 						this.checkLastTot(item, worksheet);
 						this.groupLength++;
@@ -2625,12 +2860,219 @@ export class CollectionReportComponent implements OnInit {
 				index++;
 			}
 		}
-		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
-		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' +
-			new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
-			+ ' - ' +
-			new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y');
+		if (this.reportType === 'headwise') {
+			const obj3: any = {};
+			obj3['id'] = 'footer';
+			obj3['srno'] = '';
+			obj3['invoice_created_date'] = 'Grand Total ';
+			obj3['stu_admission_no'] = '';
+			obj3['stu_full_name'] = '';
+			obj3['stu_class_name'] = '';
+			obj3['receipt_id'] = '';
+			obj3['fp_name'] = '';
+			obj3['receipt_no'] = '';
+			obj3['inv_opening_balance'] = this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+			obj3['invoice_fine_amount'] = this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+					Object.keys(this.dataset).forEach(key3 => {
+						Object.keys(this.dataset[key3]).forEach(key4 => {
+							if (key4 === key2) {
+								obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+							}
+						});
+					});
+				});
+			});
+			obj3['bank_name'] = '';
+			obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+			obj3['receipt_mode_name'] = '';
+			obj3['tb_name'] = '';
+			worksheet.addRow(obj3);
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === worksheet._rows.length) {
+					row.eachCell(cell => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: '439f47' },
+							bgColor: { argb: '439f47' },
+						};
+						cell.font = {
+							color: { argb: 'ffffff' },
+							bold: true,
+							name: 'Arial',
+							size: 10
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				}
+			});
+		}
+		if (this.reportType === 'modewise') {
+			const obj3: any = {};
+			obj3['id'] = 'footer';
+			obj3['srno'] = '';
+			obj3['invoice_created_date'] = 'Grand Total';
+			obj3['stu_admission_no'] = '';
+			obj3['stu_full_name'] = '';
+			obj3['stu_class_name'] = '';
+			obj3['receipt_id'] = '';
+			obj3['receipt_no'] = '';
+			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+					Object.keys(this.dataset).forEach(key3 => {
+						Object.keys(this.dataset[key3]).forEach(key4 => {
+							if (key4 === key2) {
+								obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+							}
+						});
+					});
+				});
+			});
+			obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+			obj3['fp_name'] = '';
+			worksheet.addRow(obj3);
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === worksheet._rows.length) {
+					row.eachCell(cell => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: '439f47' },
+							bgColor: { argb: '439f47' },
+						};
+						cell.font = {
+							color: { argb: 'ffffff' },
+							bold: true,
+							name: 'Arial',
+							size: 10
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				}
+			});
+		}
+		if (this.reportType === 'classwise') {
+			const obj3: any = {};
+			obj3['id'] = 'footer';
+			obj3['srno'] = '';
+			obj3['invoice_created_date'] = 'Grand Total';
+			obj3['stu_admission_no'] = '';
+			obj3['stu_full_name'] = '';
+			obj3['stu_class_name'] = '';
+			obj3['receipt_no'] = '';
+			obj3['rpt_amount'] = this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+			obj3['fp_name'] = '';
+			worksheet.addRow(obj3);
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === worksheet._rows.length) {
+					row.eachCell(cell => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: '439f47' },
+							bgColor: { argb: '439f47' },
+						};
+						cell.font = {
+							color: { argb: 'ffffff' },
+							bold: true,
+							name: 'Arial',
+							size: 10
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				}
+			});
+		}
+		if (this.reportType === 'routewise') {
+			const obj3: any = {};
+			obj3['id'] = 'footer';
+			obj3['srno'] = '';
+			obj3['invoice_created_date'] = 'Grand Total';
+			obj3['stu_admission_no'] = '';
+			obj3['stu_full_name'] = '';
+			obj3['stu_class_name'] = '';
+			obj3['fp_name'] = '';
+			obj3['receipt_no'] = '';
+			obj3['transport_amount'] = this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+			obj3['route_name'] = '';
+			obj3['stoppages_name'] = '';
+			obj3['slab_name'] = '';
+			worksheet.addRow(obj3);
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === worksheet._rows.length) {
+					row.eachCell(cell => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: '439f47' },
+							bgColor: { argb: '439f47' },
+						};
+						cell.font = {
+							color: { argb: 'ffffff' },
+							bold: true,
+							name: 'Arial',
+							size: 10
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				}
+			});
+		}
+		if (this.groupColumns.length > 0) {
+			worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
+			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === worksheet._rows.length) {
+					row.eachCell((cell: any) => {
+						cell.font = {
+							name: 'Arial',
+							size: 10,
+							bold: true
+						};
+					});
+				}
+			});
+			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+			worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+				+ ' - ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y');
+		} else {
+			worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
+			worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
+				+ ' - ' +
+				new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y');
+		}
 		worksheet.getCell('A' + worksheet._rows.length).font = {
 			name: 'Arial',
 			size: 10,
@@ -2703,10 +3145,9 @@ export class CollectionReportComponent implements OnInit {
 		return max2 > max ? max2 : max;
 	}
 	checkGroupLevel(item, worksheet) {
-		const count = '(' + item.count + ')';
 		worksheet.mergeCells('A' + (this.groupLength) + ':' +
 			this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
-		worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(item.title) + count;
+		worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(item.title);
 		worksheet.getCell('A' + this.groupLength).fill = {
 			type: 'pattern',
 			pattern: 'solid',
@@ -2840,6 +3281,99 @@ export class CollectionReportComponent implements OnInit {
 							}
 						});
 					}
+					if (this.reportType === 'modewise') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = 'Sub Total';
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['receipt_no'] = '';
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+						obj3['fp_name'] = '';
+						worksheet.addRow(obj3);
+						this.groupLength++;
+						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === this.groupLength) {
+								row.eachCell(cell => {
+									cell.font = {
+										bold: true,
+										name: 'Arial',
+										size: 10
+									};
+								});
+							}
+						});
+					}
+					if (this.reportType === 'classwise') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = 'Sub Total';
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+						obj3['fp_name'] = '';
+						worksheet.addRow(obj3);
+						this.groupLength++;
+						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === this.groupLength) {
+								row.eachCell(cell => {
+									cell.font = {
+										bold: true,
+										name: 'Arial',
+										size: 10
+									};
+								});
+							}
+						});
+					}
+					if (this.reportType === 'routewise') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = 'Total';
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['fp_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['transport_amount'] = groupItem.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+						obj3['route_name'] = '';
+						obj3['stoppages_name'] = '';
+						obj3['slab_name'] = '';
+						worksheet.addRow(obj3);
+						this.groupLength++;
+						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === this.groupLength) {
+								row.eachCell(cell => {
+									cell.font = {
+										bold: true,
+										name: 'Arial',
+										size: 10
+									};
+								});
+							}
+						});
+					}
 				}
 				index++;
 			}
@@ -2870,6 +3404,7 @@ export class CollectionReportComponent implements OnInit {
 					});
 				});
 			});
+			obj3['bank_name'] = '';
 			obj3['total'] = item.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 			obj3['receipt_mode_name'] = '';
 			obj3['tb_name'] = '';
@@ -2894,6 +3429,247 @@ export class CollectionReportComponent implements OnInit {
 					});
 				}
 			});
+		}
+		if (this.reportType === 'modewise') {
+			const obj3: any = {};
+			obj3['id'] = 'footer';
+			obj3['srno'] = '';
+			obj3['invoice_created_date'] = 'Total';
+			obj3['stu_admission_no'] = '';
+			obj3['stu_full_name'] = '';
+			obj3['stu_class_name'] = '';
+			obj3['receipt_id'] = '';
+			obj3['receipt_no'] = '';
+			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+					Object.keys(item.rows).forEach(key3 => {
+						Object.keys(item.rows[key3]).forEach(key4 => {
+							if (key4 === key2) {
+								obj3[key2] = item.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+							}
+						});
+					});
+				});
+			});
+			obj3['bank_name'] = '';
+			obj3['total'] = item.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+			obj3['fp_name'] = '';
+			worksheet.addRow(obj3);
+			this.groupLength++;
+			worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === this.groupLength) {
+					row.eachCell(cell => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: '004261' },
+							bgColor: { argb: '004261' },
+						};
+						cell.font = {
+							color: { argb: 'ffffff' },
+							bold: true,
+							name: 'Arial',
+							size: 10
+						};
+					});
+				}
+			});
+		}
+		if (this.reportType === 'classwise') {
+			const obj3: any = {};
+			obj3['id'] = 'footer';
+			obj3['srno'] = '';
+			obj3['invoice_created_date'] = 'Total';
+			obj3['stu_admission_no'] = '';
+			obj3['stu_full_name'] = '';
+			obj3['stu_class_name'] = '';
+			obj3['receipt_no'] = '';
+			obj3['rpt_amount'] = item.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+			obj3['fp_name'] = '';
+			worksheet.addRow(obj3);
+			this.groupLength++;
+			worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === this.groupLength) {
+					row.eachCell(cell => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: '004261' },
+							bgColor: { argb: '004261' },
+						};
+						cell.font = {
+							color: { argb: 'ffffff' },
+							bold: true,
+							name: 'Arial',
+							size: 10
+						};
+					});
+				}
+			});
+		}
+		if (this.reportType === 'routewise') {
+			const obj3: any = {};
+			obj3['id'] = 'footer';
+			obj3['srno'] = '';
+			obj3['invoice_created_date'] = 'Total';
+			obj3['stu_admission_no'] = '';
+			obj3['stu_full_name'] = '';
+			obj3['stu_class_name'] = '';
+			obj3['fp_name'] = '';
+			obj3['receipt_no'] = '';
+			obj3['transport_amount'] = item.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+			obj3['route_name'] = '';
+			obj3['stoppages_name'] = '';
+			obj3['slab_name'] = '';
+			worksheet.addRow(obj3);
+			this.groupLength++;
+			worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === this.groupLength) {
+					row.eachCell(cell => {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: '004261' },
+							bgColor: { argb: '004261' },
+						};
+						cell.font = {
+							color: { argb: 'ffffff' },
+							bold: true,
+							name: 'Arial',
+							size: 10
+						};
+					});
+				}
+			});
+		}
+	}
+	getGroupColumns(columns) {
+		let grName = '';
+		for (const item of columns) {
+			for (const titem of this.columnDefinitions) {
+				if (item.getter === titem.id) {
+					grName = grName + titem.name + ',';
+					break;
+				}
+			}
+		}
+		return grName.substring(0, grName.length - 1);
+	}
+	checkGroupLevelPDF(item, doc, headerData) {
+		doc.autoTable({
+			head: [[this.common.htmlToText(item.title)]],
+			startY: doc.previousAutoTable.finalY + 1,
+			didDrawPage: function (data) {
+				doc.setTextColor(0);
+				doc.setFontStyle('bold');
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#c8d6e5',
+				textColor: '#5e666d',
+				fontSize: 26,
+			},
+			alternateRowStyles: {
+				fillColor: '#f1f4f7'
+			},
+			useCss: true,
+			styles: {
+				fontSize: 24,
+				cellWidth: 'auto',
+			},
+			theme: 'grid'
+		});
+		if (item.groups) {
+			let index = 0;
+			for (const groupItem of item.groups) {
+				if (groupItem.groups) {
+					this.checkGroupLevelPDF(groupItem, doc, headerData);
+				} else {
+					doc.autoTable({
+						head: [[this.common.htmlToText(groupItem.title)]],
+						startY: doc.previousAutoTable.finalY + 1,
+						didDrawPage: function (data) {
+							doc.setTextColor(0);
+							doc.setFontStyle('bold');
+
+						},
+						headStyles: {
+							fontStyle: 'bold',
+							fillColor: '#c8d6e5',
+							textColor: '#5e666d',
+							fontSize: 24,
+						},
+						alternateRowStyles: {
+							fillColor: '#f1f4f7'
+						},
+						useCss: true,
+						styles: {
+							fontSize: 22,
+							cellWidth: 'auto',
+						},
+						theme: 'grid'
+					});
+					const rowData: any[] = [];
+					Object.keys(groupItem.rows).forEach(key => {
+						const arr: any = [];
+						for (const item2 of this.columnDefinitions) {
+							if (this.reportType !== 'mfr') {
+								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
+								}
+								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+									&& item.rows[key][item2.id] !== '<b>Grand Total</b>') {
+									arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y'));
+								}
+								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+									&& item.rows[key][item2.id] === '<b>Grand Total</b>') {
+									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
+								}
+								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
+								}
+							} else {
+								if (item2.id.toString().match(/Q/)) {
+									arr.push(groupItem.rows[key][item2.id].status);
+								} else {
+									arr.push(groupItem.rows[key][item2.id]);
+								}
+							}
+						}
+						rowData.push(arr);
+					});
+					doc.autoTable({
+						head: [headerData],
+						body: rowData,
+						startY: doc.previousAutoTable.finalY + 1,
+						didDrawPage: function (data) {
+							doc.setTextColor(0);
+							doc.setFontStyle('bold');
+
+						},
+						headStyles: {
+							fontStyle: 'bold',
+							fillColor: '#c8d6e5',
+							textColor: '#5e666d',
+							fontSize: 24,
+						},
+						alternateRowStyles: {
+							fillColor: '#f1f4f7'
+						},
+						useCss: true,
+						styles: {
+							fontSize: 22,
+							cellWidth: 'auto',
+						},
+						theme: 'grid'
+					});
+				}
+				index++;
+			}
 		}
 	}
 }
