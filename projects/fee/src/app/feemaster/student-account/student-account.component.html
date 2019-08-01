@@ -223,7 +223,7 @@
          </div>
       </div>
       </div>
-      <mat-checkbox *ngIf="hostelFlag" [disabled]="viewOnly" class="font-size-16" (change)="hostel($event)"
+      <mat-checkbox *ngIf="hostelFlag && accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id !== '0'" [disabled]="viewOnly" class="font-size-16" (change)="hostel($event)"
          formControlName="accd_is_hostel_terminate">{{hostelStatus}}</mat-checkbox>
       <br>
       <div class="text-center margin-top-35 ">

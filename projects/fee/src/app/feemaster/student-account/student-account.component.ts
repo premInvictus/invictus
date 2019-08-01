@@ -113,6 +113,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.hostelFlag = false;
 		this.modeFlag = false;
 		this.terminationFlag = false;
+		this.hostelTerminateFlag = false;
 		this.existFlag = false;
 		this.feeService.getFeeAccount({ accd_login_id: au_login_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -163,7 +164,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_tsp_id: this.accountDetails.accd_tsp_id,
 					accd_ts_id: this.accountDetails.accd_ts_id,
 					accd_is_terminate: this.accountDetails.accd_is_terminate === 'N' ? false : true,
-					accd_is_hostel_terminate: this.accountDetails.accd_is_hostel_terminate === 'N' ? false : true,
+					accd_is_hostel_terminate: this.accountDetails.accd_is_hostel_terminate === 'Y' ? true : false,
 					accd_transport_from: this.accountDetails.accd_transport_from.split('-')[0] === '1970' ? '' : this.accountDetails.accd_transport_from,
 					accd_transport_to: this.accountDetails.accd_transport_to.split('-')[0] === '1970' ? '' : this.accountDetails.accd_transport_to,
 					accd_remark: this.accountDetails.accd_remark,
@@ -223,10 +224,11 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	enableTransport($event) {
 		if ($event.checked) {
 			this.transportFlag = true;
-			if (this.accountDetails) {
+			if (this.accountDetails && Object.keys(this.accountDetails).length > 0) {
 				this.getStoppages(this.accountDetails.accd_tr_id);
 				this.getSlab(this.accountDetails.accd_tsp_id);
-				this.terminationFlag = this.accountDetails.accd_is_terminate === 'N' ? false : true;
+				this.terminationFlag = this.accountDetails.accd_is_terminate === 'Y' ? true : false;
+				console.log('terminationFlag', this.accountDetails.accd_is_terminate === 'Y');
 				if (this.accountDetails.accd_transport_mode && this.accountDetails.accd_transport_mode !== '0') {
 					this.modeFlag = true;
 				}
@@ -268,6 +270,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_hostel_to: '',
 				accd_is_hostel_terminate: 'N',
 			});
+			this.hostelTerminateFlag = false;
 			this.hostelFlag = false;
 		}
 	}
