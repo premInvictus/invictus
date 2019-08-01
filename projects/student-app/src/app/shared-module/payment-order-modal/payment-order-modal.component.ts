@@ -13,7 +13,10 @@ export class PaymentOrderModalComponent implements OnInit {
 	@Output() orderCancel = new EventEmitter<any>();
 	dialogRef: MatDialogRef<PaymentOrderModalComponent>;
 	@ViewChild('paymentOrderModel') paymentOrderModel;
-	constructor(private dialog: MatDialog) { }
+	paytmResult: any;
+	paytmResponsHtml = '';
+	postURL = '';
+	constructor(private dialog: MatDialog, ) { }
 
 	ngOnInit() {
 	}
