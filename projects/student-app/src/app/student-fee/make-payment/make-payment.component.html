@@ -1,0 +1,17 @@
+<div class="text-center">
+      <p style="padding:14px; font-size:18px; font-weight:bold;">Are you confirm to make payment?  
+         <br/> Your Pyament is :   {{outStandingAmt}} </p>
+      <div>           
+            <form ngNoForm #myFormPost name="myFormPost" id="payForm" action="https://securegw-stage.paytm.in/theia/processTransaction" method="POST">
+               <div *ngFor="let input of paytmResult">
+                  <input type="hidden" [name]="input.name" [value]="input.value" />
+               </div>
+               <!-- <input type="submit" value="Yes" />
+               <input type="button" value="Cancel" (click)="cancelPay()"/> -->
+
+               <input type="submit" style="background:#A4De02; margin-top:10px; padding:10px 25px; color:#fff; text-decoration:none; border-radius:5px;  border:none; cursor:pointer;" value="Yes"/>
+
+               <input type="button" style="margin-left:15px; background:rgb(222, 2, 39); margin-top:10px; padding:10px 25px; color:#fff; text-decoration:none; border-radius:5px;  border:none; cursor:pointer;" value="Cancel" (click)="cancelPay()"/>
+            </form>
+         </div>
+</div>

@@ -36,6 +36,7 @@ import { MathJaxDirective } from '../mathjax.directive';
 import { OngoingTestInstructionComponent } from './ongoing-test-instruction/ongoing-test-instruction.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 import { PaymentOrderModalComponent } from './payment-order-modal/payment-order-modal.component';
+import { MakePaymentComponent } from '../student-fee/make-payment/make-payment.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -78,7 +79,8 @@ import { PaymentOrderModalComponent } from './payment-order-modal/payment-order-
 		CommonDynamicChartComponent,
 		MathJaxDirective,
 		OngoingTestInstructionComponent,
-		PaymentOrderModalComponent
+		PaymentOrderModalComponent,
+		MakePaymentComponent
 	],
 	exports: [
 		MatProgressBarModule,
@@ -109,7 +111,8 @@ import { PaymentOrderModalComponent } from './payment-order-modal/payment-order-
 		MatMenuModule,
 		CommonDynamicChartComponent,
 		MathJaxDirective,
-		PaymentOrderModalComponent
+		PaymentOrderModalComponent,
+		MakePaymentComponent
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent]
 })
