@@ -81,53 +81,54 @@
                   <mat-datepicker #picker></mat-datepicker>
                 </div>
                 <div class="inline-flex" [hidden]="!modificationFlag">
-                <i class="material-icons icon-edit" (click)="picker.open()">create</i>
+                  <i class="material-icons icon-edit" (click)="picker.open()">create</i>
+                </div>
               </div>
-              </div>
-              
+
             </div>
             <div class="row remove-top-margin">
               <div class="col-12">
                 <span class="font-size-16 font-light">Due Date: </span>
                 <span class="font-size-16 font-regular"
                   *ngIf="!(modificationFlag)">{{invoiceDetails?.inv_due_date | date:'dd MMM, yyyy'}}</span>
-              
-              <div class="inline-flex date-width-100" [hidden]="!modificationFlag">
-                <input matInput [matDatepicker]="picker1" formControlName="inv_due_date">
-                <mat-datepicker #picker1></mat-datepicker>
-              </div>
-              <div class="inline-flex" [hidden]="!modificationFlag">
-                <i class="material-icons icon-edit" (click)="picker1.open()">create</i>
-              </div>
+
+                <div class="inline-flex date-width-100" [hidden]="!modificationFlag">
+                  <input matInput [matDatepicker]="picker1" formControlName="inv_due_date">
+                  <mat-datepicker #picker1></mat-datepicker>
+                </div>
+                <div class="inline-flex" [hidden]="!modificationFlag">
+                  <i class="material-icons icon-edit" (click)="picker1.open()">create</i>
+                </div>
               </div>
             </div>
-            <div class="row">
+            <!-- <div class="row">
               <div class="col-12 remove-col-padding">
                 <div class="row remove-top-margin">
-              <div class="col-6">
-              <div *ngIf="modificationFlag">
-                <div class="font-size-16 font-bold">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Opening Balance</mat-label>
-                    <input matInput placeholder="Opening Balance" type="number" formControlName="inv_opening_balance">
-                  </mat-form-field>
+                  <div class="col-6">
+                    <div *ngIf="modificationFlag">
+                      <div class="font-size-16 font-bold">
+                        <mat-form-field appearance="outline" class="form-field">
+                          <mat-label>Opening Balance</mat-label>
+                          <input matInput placeholder="Opening Balance" type="number"
+                            formControlName="inv_opening_balance">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div *ngIf="modificationFlag">
+                      <div class="font-size-16 font-bold">
+                        <mat-form-field appearance="outline" class="form-field">
+                          <mat-label>Fine Amount</mat-label>
+                          <input matInput placeholder="Fine Amt." type="number" formControlName="inv_fine_amount">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              </div>
-            
-              <div class="col-6">
-              <div *ngIf="modificationFlag">
-                <div class="font-size-16 font-bold">
-                  <mat-form-field appearance="outline" class="form-field">
-                    <mat-label>Fine Amount</mat-label>
-                    <input matInput placeholder="Fine Amt." type="number" formControlName="inv_fine_amount">
-                  </mat-form-field>
-                </div>
-              </div>
-              </div>
-            </div>
-              </div>
-            </div>
+            </div> -->
           </div>
           <!--<div class="col-2">
             <div class="row remove-top-margin">
@@ -156,7 +157,8 @@
             </div>
           </div> -->
         </div>
-        <div class="row" [ngStyle]="{'float':!modificationFlag ? 'right' : '' }" [ngClass]="{'text-right': !modificationFlag}">
+        <div class="row" [ngStyle]="{'float':!modificationFlag ? 'right' : '' }"
+          [ngClass]="{'text-right': !modificationFlag}">
           <div class="col-12 text-right">
 
             <!--<div class="row">
@@ -176,18 +178,18 @@
                   </mat-form-field>
                 </div>
               </div>-->
-              <button
-                *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
-                mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
-                (click)="openRecalculateDialog()">Recalculate Invoice</button>
-              <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button class="make-pay-btn"
-                (click)="makePayment(invoiceDetails)">Make Payment</button>
-              <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
-                (click)="printInvoice()">Print Invoice</button>
-              <button
-                *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('355') || commonAPIService.isExistUserAccessMenu('362'))"
-                mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()">Delete</button>
-           
+            <button
+              *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
+              mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
+              (click)="openRecalculateDialog()">Recalculate Invoice</button>
+            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button class="make-pay-btn"
+              (click)="makePayment(invoiceDetails)">Make Payment</button>
+            <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
+              (click)="printInvoice()">Print Invoice</button>
+            <button
+              *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('355') || commonAPIService.isExistUserAccessMenu('362'))"
+              mat-raised-button class="btn-primary btn-danger btn-spacer" (click)="openDeleteDialog()">Delete</button>
+
           </div>
           <!--</div>-->
         </div>
@@ -210,7 +212,19 @@
         <ng-container matColumnDef="feedue">
           <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Fee Due (<span><i
                 class="fas fa-rupee-sign"></i></span>)</th>
-          <td mat-cell *matCellDef="let element"> {{element.feedue | number | zerodash}} </td>
+          <td mat-cell *matCellDef="let element">
+            <ng-template [ngIf]="modificationFlag && !element.invg_id && element.feehead !== 'Previous Balance'" [ngIfElse]="elseFeeContaintent">
+              <mat-form-field class="margin-top-10 form-field-60">
+                <input matInput type="number" [value]="element.feedue"
+                  (change)="changeOpeningAndFine(element, $event)">
+              </mat-form-field>
+            </ng-template>
+            <ng-template #elseFeeContaintent>
+              {{element.feedue | number | zerodash}}
+            </ng-template>
+
+
+          </td>
         </ng-container>
         <ng-container matColumnDef="concession">
           <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Concession (<span><i
@@ -221,8 +235,8 @@
           <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment (<span><i
                 class="fas fa-rupee-sign"></i></span>)</th>
           <td mat-cell *matCellDef="let element">
-            <ng-template [ngIf]="modificationFlag" [ngIfElse]="elseContaint">
-              <mat-form-field class="margin-top-10 form-field-50">
+            <ng-template [ngIf]="modificationFlag && element.invg_id" [ngIfElse]="elseContaint">
+              <mat-form-field class="margin-top-10 form-field-60">
                 <input matInput type="number" [value]="element.adjustment"
                   (change)="changeAdjAmt(element.invg_id, $event)">
               </mat-form-field>

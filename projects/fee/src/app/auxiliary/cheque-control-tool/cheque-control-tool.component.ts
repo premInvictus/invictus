@@ -228,7 +228,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			width: '80%',
 			height: '80vh',
 			data: {
-				invoiceNo: invoiceNo,
+				rpt_id: invoiceNo,
 				edit: edit
 			},
 			hasBackdrop: true
