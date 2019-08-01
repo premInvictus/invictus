@@ -16,6 +16,7 @@ export class AddSchedulerComponent implements OnInit {
 	classArray: any[] = [];
 	ecArray: any[] = [];
 	periodsArray = [];
+	periodsLabel = ['', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 	constructor(
 		public dialogRef: MatDialogRef<AddSchedulerComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,

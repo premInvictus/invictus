@@ -10,7 +10,7 @@ import { AddSchedulerComponent } from './add-scheduler/add-scheduler.component';
 })
 export class SchedulerComponent implements OnInit {
 
-	pageView = 'list';
+	pageView = 'calender';
 	reloadScheduler = 0;
 	constructor(
 		private sisService: SisService,
