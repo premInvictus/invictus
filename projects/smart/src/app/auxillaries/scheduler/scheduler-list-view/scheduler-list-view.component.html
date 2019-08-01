@@ -3,37 +3,45 @@
     <mat-card>
       <div class="row">
         <div class="col-12">
+            <div class="row" *ngIf="ELEMENT_DATA.length > 0">
+                <div class="col-4">
+                    <mat-form-field>
+                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                      </mat-form-field>
+                </div>
+            </div>
           <div class="row">
+            <div></div>
             <div class="col-12">
-              <table mat-table [dataSource]="dataSource" class="table-100 text-center" id="report_table">
+              <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
                 <ng-container matColumnDef="srno">
-                  <th mat-header-cell *matHeaderCellDef> S.No </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> S.No </th>
                   <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
                 </ng-container>
                 <ng-container matColumnDef="publishedon">
-                  <th mat-header-cell *matHeaderCellDef> Published On </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Published On </th>
                   <td mat-cell *matCellDef="let element"> {{element.publishedon | date: 'dd-MMM-y'}} </td>
                 </ng-container>
                 <ng-container matColumnDef="eventdate">
-                  <th mat-header-cell *matHeaderCellDef> Event Date </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Event Date </th>
                   <td mat-cell *matCellDef="let element"> {{element.eventdate}} </td>
                 </ng-container>
                 <ng-container matColumnDef="eventname">
-                  <th mat-header-cell *matHeaderCellDef> Event Name </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Event Name </th>
                   <td mat-cell *matCellDef="let element"> {{element.eventname | capitalize}} </td>
                 </ng-container>
                 <ng-container matColumnDef="eventdesc">
-                  <th mat-header-cell *matHeaderCellDef> Event Description </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Event Description </th>
                   <td mat-cell *matCellDef="let element">
                     <div [innerHtml]="element.eventdesc | capitalize | truncatetext:100"></div>
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="class">
-                  <th mat-header-cell *matHeaderCellDef> Class</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Class</th>
                   <td mat-cell *matCellDef="let element"> {{element.class}} </td>
                 </ng-container>
                 <ng-container matColumnDef="eventcategory">
-                  <th mat-header-cell *matHeaderCellDef> Event Category </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Event Category </th>
                   <td mat-cell *matCellDef="let element"> {{element.eventcategory | capitalize}} </td>
                 </ng-container>
                 <ng-container matColumnDef="action">
