@@ -1010,7 +1010,7 @@ export class FeeadjReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj5[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+							obj5[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
 						}
 					});
 				});
@@ -1019,7 +1019,7 @@ export class FeeadjReportComponent implements OnInit {
 		obj5['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
 		obj5['adjusted_by'] = '';
 		obj5['adjustment_date'] = '';
-		obj5['invg_adj_amount'] = this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0);
+		obj5['invg_adj_amount'] = (this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0)) / 2;
 		obj5['inv_remark'] = '';
 		for (const itemj of this.columnDefinitions) {
 			Object.keys(obj5).forEach((key: any) => {
@@ -1464,7 +1464,7 @@ export class FeeadjReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+							obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
 						}
 					});
 				});
@@ -1473,7 +1473,7 @@ export class FeeadjReportComponent implements OnInit {
 		obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
 		obj3['adjusted_by'] = '';
 		obj3['adjustment_date'] = '';
-		obj3['invg_adj_amount'] = this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0);
+		obj3['invg_adj_amount'] = (this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0)) / 2;
 		obj3['inv_remark'] = '';
 		worksheet.addRow(obj3);
 		worksheet.eachRow((row, rowNum) => {
