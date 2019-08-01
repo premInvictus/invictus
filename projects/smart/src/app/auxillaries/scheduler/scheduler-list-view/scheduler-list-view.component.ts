@@ -14,9 +14,10 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 
 	@Input() reloadScheduler;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
+	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('deleteModalRef') deleteModalRef;
 	ELEMENT_DATA: SchedulerList[] = [];
-	displayedColumns = ['srno', 'publishedon', 'eventdate', 'eventname', 'eventdesc', 'class', 'eventcategory', 'action'];
+	displayedColumns = ['srno', 'eventdate', 'eventname', 'eventdesc', 'class', 'eventcategory', 'publishedon', 'action'];
 	dataSource = new MatTableDataSource<SchedulerList>(this.ELEMENT_DATA);
 	nodataFlag = true;
 	schedulerArray: any[] = [];
@@ -35,9 +36,10 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
+		this.dataSource.sort = this.sort;
 	}
 	ngOnChanges() {
-    console.log('calling ngonchanges', this.reloadScheduler);
+		console.log('calling ngonchanges', this.reloadScheduler);
 		if (this.reloadScheduler > 0) {
 			this.getScheduler();
 		}
@@ -56,8 +58,8 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 			}
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
-      console.log(dresult);
-      if (dresult && dresult.reloadScheduler) {
+			console.log(dresult);
+			if (dresult && dresult.reloadScheduler) {
 				this.getScheduler();
 			}
 		});
@@ -73,7 +75,7 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 		});
 	}
 	getScheduler() {
-    console.log('in getScheduler reloadScheduler', this.reloadScheduler);
+		console.log('in getScheduler reloadScheduler', this.reloadScheduler);
 		this.smartService.getScheduler({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.ELEMENT_DATA = [];
@@ -106,6 +108,10 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 						this.ELEMENT_DATA.push(each);
 					});
 					this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+					/* this.dataSource.sort.sortChange.subscribe(() => {
+						this.paginator.pageIndex = 0;
+					}); */
+					this.dataSource.sort = this.sort;
 					this.dataSource.paginator = this.paginator;
 					this.pageLength = this.ELEMENT_DATA.length;
 					console.log(this.ELEMENT_DATA);
@@ -123,5 +129,8 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 	changePage(pageEvent: PageEvent) {
 		console.log(pageEvent);
 		// this.paginator.length = 100;
+	}
+	applyFilter(filterValue: string) {
+		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
 }
