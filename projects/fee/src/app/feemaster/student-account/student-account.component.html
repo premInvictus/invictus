@@ -199,7 +199,7 @@
                </mat-select>
             </mat-form-field>
          </div>
-         <div class="inline-flex margin-left-15">
+         <div class="inline-flex margin-left-15" *ngIf="accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id !== '0'">
             <mat-form-field appearance="outline" class="form-field-220">
                <mat-label>Appplicable From</mat-label>
                <input matInput [matDatepicker]="picker3" [max]="maxDate" [readonly]="viewOnly"

@@ -129,7 +129,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		this.sisService.addAdditionalDetails(tabTwoJSON).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				if (this.common.isExistUserAccessMenuByLabel(this.parentId, 'Accounts')) {
-				this.account.submit();
+					this.account.submit();
 				}
 				this.common.showSuccessErrorMessage('Additional Details Added Successfully', 'success');
 				const invoiceJSON = { login_id: [this.context.studentdetails.studentdetailsform.value.au_login_id] };
@@ -144,7 +144,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				}
 				if (this.processtypeService.getProcesstype() === '1' ||
 					this.processtypeService.getProcesstype() === '2' || this.processtypeService.getProcesstype() === '5') {
-						this.common.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
+					this.common.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 				} else {
 					this.common.renderTab.next({ tabMove: true });
 				}
@@ -167,11 +167,13 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	}
 	getFeeAccount(au_login_id) {
 		this.accountDetails = {};
-		this.sisService.getFeeAccount({ accd_login_id: au_login_id }).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.accountDetails = result.data[0];
-			}
-		});
+		if (au_login_id && au_login_id !== '0') {
+			this.sisService.getFeeAccount({ accd_login_id: au_login_id }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.accountDetails = result.data[0];
+				}
+			});
+		}
 	}
 	isExistUserAccessMenu(actionT) {
 		return this.context.studentdetails.isExistUserAccessMenu(actionT);
@@ -198,34 +200,38 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			documentDetails: this.doc ? this.doc.finalDocumentArray : [],
 			awardsDetails: this.skill ? this.skill.finalAwardArray : []
 		};
-		if (this.context.studentdetails.studentdetailsform.valid) {
-			this.sisService.addStudentInformation(this.context.studentdetails.studentdetailsform.value).subscribe((result1: any) => {
+		if (this.account.formValidation()) {
+			if (this.context.studentdetails.studentdetailsform.valid) {
+				this.sisService.addStudentInformation(this.context.studentdetails.studentdetailsform.value).subscribe((result1: any) => {
+					if (result1.status === 'ok') {
+					} else {
+						this.common.showSuccessErrorMessage(result1.data, 'error');
+					}
+				});
+			}
+			this.sisService.addAdditionalDetails(tabTwoJSON).subscribe((result1: any) => {
 				if (result1.status === 'ok') {
+					if (this.accountDetails && this.common.isExistUserAccessMenuByLabel(this.parentId, 'Accounts')) {
+						this.account.update();
+					} else if (!this.accountDetails && this.common.isExistUserAccessMenuByLabel(this.parentId, 'Accounts')) {
+						this.account.submit();
+					}
+					this.common.showSuccessErrorMessage(result1.data, 'success');
+					this.editOnly = false;
+					this.getAdditionalDetails(this.context.studentdetails.studentdetailsform.value.au_login_id);
+					this.getFeeAccount(this.context.studentdetails.studentdetailsform.value.au_login_id);
+					if (isview) {
+						this.common.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+					} else {
+						this.common.renderTab.next({ tabMove: true });
+					}
 				} else {
 					this.common.showSuccessErrorMessage(result1.data, 'error');
 				}
 			});
+		} else {
+			this.common.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
-		this.sisService.addAdditionalDetails(tabTwoJSON).subscribe((result1: any) => {
-			if (result1.status === 'ok') {
-				if (this.accountDetails && this.common.isExistUserAccessMenuByLabel(this.parentId, 'Accounts')) {
-				this.account.update();
-				} else if (!this.accountDetails && this.common.isExistUserAccessMenuByLabel(this.parentId, 'Accounts')) {
-					this.account.submit();
-				}
-				this.common.showSuccessErrorMessage(result1.data, 'success');
-				this.editOnly = false;
-				this.getAdditionalDetails(this.context.studentdetails.studentdetailsform.value.au_login_id);
-				this.getFeeAccount(this.context.studentdetails.studentdetailsform.value.au_login_id);
-				if (isview) {
-					this.common.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
-				} else {
-					this.common.renderTab.next({ tabMove: true });
-				}
-			} else {
-				this.common.showSuccessErrorMessage(result1.data, 'error');
-			}
-		});
 	}
 	checkFormChangedValue() {
 		this.awardsDetailsNew = [];

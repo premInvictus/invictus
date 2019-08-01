@@ -94,7 +94,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_status: 1
 		});
 	}
-	getFeeAccount(au_login_id) {
+	getFeeAccount(au_login_id) { 
 		this.accountDetails = {};
 		this.accountsForm.reset();
 		this.accountsForm.patchValue({
@@ -388,7 +388,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		let validateFlag = true;
 		if (!this.feeLoginId) {
 			validateFlag = false;
-			this.commonAPIService.showSuccessErrorMessage('Please choose a student  to proceed', 'error');
+			this.commonAPIService.showSuccessErrorMessage('Please choose a student to proceed', 'error');
 		}
 		if (!this.accountsForm.value.accd_fo_id &&
 			!this.accountsForm.value.accd_fs_id &&
@@ -404,24 +404,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.accountsForm.get('accd_transport_mode').markAsDirty();
 			}
 		}
-		/* if (this.transportFlag && this.modeFlag) {
-			if (!this.accountsForm.value.accd_tr_id &&
-				!this.accountsForm.value.accd_tsp_id &&
-				!this.accountsForm.value.accd_ts_id &&
-				!this.accountsForm.value.accd_transport_from) {
-				this.accountsForm.get('accd_tr_id').markAsDirty();
-				this.accountsForm.get('accd_tsp_id').markAsDirty();
-				this.accountsForm.get('accd_ts_id').markAsDirty();
-				this.accountsForm.get('accd_transport_from').markAsDirty();
-				validateFlag = false;
-			}
-		}
-		if (this.terminationFlag && this.transportFlag) {
-			if (!this.accountsForm.value.accd_transport_to) {
-				this.accountsForm.get('accd_transport_to').markAsDirty();
-				validateFlag = false;
-			}
-		} */
 		if (this.transportFlag && this.modeFlag) {
 			if (this.accountsForm.value.accd_tr_id && this.accountsForm.value.accd_tr_id !== '0' &&
 				this.accountsForm.value.accd_tsp_id && this.accountsForm.value.accd_tsp_id !== '0' &&
@@ -438,6 +420,17 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
 				this.accountsForm.get('accd_ts_id').markAsDirty();
 				this.accountsForm.get('accd_transport_from').markAsDirty();
+				validateFlag = false;
+			}
+		}
+
+		if (this.hostelFlag) {
+			if (this.accountsForm.value.accd_hostel_fs_id && this.accountsForm.value.accd_hostel_fs_id !== '0' &&
+			this.accountsForm.value.accd_hostel_from && this.accountsForm.value.accd_hostel_from !== '0') {
+				if (this.accountsForm.value.accd_is_hostel_terminate === 'Y' && !this.accountsForm.value.accd_hostel_to ) {
+					validateFlag = false;
+				}
+			} else {
 				validateFlag = false;
 			}
 		}
