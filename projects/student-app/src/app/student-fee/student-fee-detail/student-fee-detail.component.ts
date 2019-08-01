@@ -287,7 +287,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				// this.paymentOrderModel.closeDialog();
 				localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
 				const hostName =  window.location.href.split('/')[2] ;
-				const newwindow = window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500');
+				const newwindow = window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
 				if (window.focus) {
 					newwindow.focus();
 				}
