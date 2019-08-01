@@ -12,6 +12,7 @@ import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
+import { DatePipe } from '@angular/common';
 @Component({
 	selector: 'app-invoice-creation-bulk',
 	templateUrl: './invoice-creation-bulk.component.html',
@@ -299,6 +300,10 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		}
 	}
 	searchInvoice() {
+		this.invoiceSearchForm.patchValue({
+			'from_date': new DatePipe('en-in').transform(this.invoiceSearchForm.value['from_date'], 'yyyy-MM-dd'),
+			'to_date': new DatePipe('en-in').transform(this.invoiceSearchForm.value['to_date'], 'yyyy-MM-dd'),
+		});
 		this.getInvoice(this.invoiceSearchForm.value);
 	}
 	openDialog(invoiceNo, details, edit): void {
