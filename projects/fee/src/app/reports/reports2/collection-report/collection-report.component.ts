@@ -2338,21 +2338,21 @@ export class CollectionReportComponent implements OnInit {
 			obj3['receipt_id'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['inv_opening_balance'] = this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-			obj3['invoice_fine_amount'] = this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0)) / 2;
 			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 					Object.keys(this.dataset).forEach(key3 => {
 						Object.keys(this.dataset[key3]).forEach(key4 => {
 							if (key4 === key2) {
-								obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
 							}
 						});
 					});
 				});
 			});
 			obj3['bank_name'] = '';
-			obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
 			obj3['receipt_mode_name'] = '';
 			obj3['tb_name'] = '';
 			for (const item of this.columnDefinitions) {
@@ -2380,13 +2380,13 @@ export class CollectionReportComponent implements OnInit {
 					Object.keys(this.dataset).forEach(key3 => {
 						Object.keys(this.dataset[key3]).forEach(key4 => {
 							if (key4 === key2) {
-								obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
 							}
 						});
 					});
 				});
 			});
-			obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
 			obj3['fp_name'] = '';
 			for (const item of this.columnDefinitions) {
 				Object.keys(obj3).forEach((key: any) => {
@@ -2407,7 +2407,7 @@ export class CollectionReportComponent implements OnInit {
 			obj3['stu_full_name'] = '';
 			obj3['stu_class_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['rpt_amount'] = this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+			obj3['rpt_amount'] = (this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0)) / 2;
 			obj3['fp_name'] = '';
 			for (const item of this.columnDefinitions) {
 				Object.keys(obj3).forEach((key: any) => {
@@ -2429,7 +2429,7 @@ export class CollectionReportComponent implements OnInit {
 			obj3['stu_class_name'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['transport_amount'] = this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0)) / 2;
 			obj3['route_name'] = '';
 			obj3['stoppages_name'] = '';
 			obj3['slab_name'] = '';
@@ -3045,21 +3045,21 @@ export class CollectionReportComponent implements OnInit {
 			obj3['receipt_id'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['inv_opening_balance'] = this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-			obj3['invoice_fine_amount'] = this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0)) / 2;
 			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 					Object.keys(this.dataset).forEach(key3 => {
 						Object.keys(this.dataset[key3]).forEach(key4 => {
 							if (key4 === key2) {
-								obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
 							}
 						});
 					});
 				});
 			});
 			obj3['bank_name'] = '';
-			obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
 			obj3['receipt_mode_name'] = '';
 			obj3['tb_name'] = '';
 			worksheet.addRow(obj3);
@@ -3104,13 +3104,13 @@ export class CollectionReportComponent implements OnInit {
 					Object.keys(this.dataset).forEach(key3 => {
 						Object.keys(this.dataset[key3]).forEach(key4 => {
 							if (key4 === key2) {
-								obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
 							}
 						});
 					});
 				});
 			});
-			obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
 			obj3['fp_name'] = '';
 			worksheet.addRow(obj3);
 			worksheet.eachRow((row, rowNum) => {
@@ -3148,7 +3148,7 @@ export class CollectionReportComponent implements OnInit {
 			obj3['stu_full_name'] = '';
 			obj3['stu_class_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['rpt_amount'] = this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+			obj3['rpt_amount'] = (this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0)) / 2;
 			obj3['fp_name'] = '';
 			worksheet.addRow(obj3);
 			worksheet.eachRow((row, rowNum) => {
@@ -3187,7 +3187,7 @@ export class CollectionReportComponent implements OnInit {
 			obj3['stu_class_name'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['transport_amount'] = this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0)) / 2;
 			obj3['route_name'] = '';
 			obj3['stoppages_name'] = '';
 			obj3['slab_name'] = '';
