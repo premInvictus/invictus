@@ -1349,7 +1349,7 @@ export class FeeconReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+							obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
 						}
 					});
 				});
@@ -1357,7 +1357,7 @@ export class FeeconReportComponent implements OnInit {
 		});
 		obj3['fcg_name'] = '';
 		obj3['fcg_description'] = '';
-		obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+		obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
 		obj3['approved_by'] = '';
 		obj3['mod_review_date'] = '';
 		obj3['mod_review_remark'] = '';
@@ -1691,7 +1691,7 @@ export class FeeconReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj5[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+							obj5[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
 						}
 					});
 				});
@@ -1699,7 +1699,7 @@ export class FeeconReportComponent implements OnInit {
 		});
 		obj5['fcg_name'] = '';
 		obj5['fcg_description'] = '';
-		obj5['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+		obj5['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
 		obj5['approved_by'] = '';
 		obj5['mod_review_date'] = '';
 		obj5['mod_review_remark'] = '';

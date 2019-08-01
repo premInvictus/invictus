@@ -1247,13 +1247,13 @@ export class FeestrucReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj5[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+							obj5[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
 						}
 					});
 				});
 			});
 		});
-		obj5['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+		obj5['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
 		for (const itemj of this.columnDefinitions) {
 			Object.keys(obj5).forEach((key: any) => {
 				if (itemj.id === key) {
@@ -1689,13 +1689,13 @@ export class FeestrucReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+							obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
 						}
 					});
 				});
 			});
 		});
-		obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+		obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
 		worksheet.addRow(obj3);
 		worksheet.eachRow((row, rowNum) => {
 			if (rowNum === worksheet._rows.length) {

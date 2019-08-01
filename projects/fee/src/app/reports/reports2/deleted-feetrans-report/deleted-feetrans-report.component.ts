@@ -991,7 +991,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		obj5['invoice_no'] = '';
 		obj5['inv_id'] = '';
 		obj5['invoice_created_date'] = '';
-		obj5['invoice_amount'] = this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0);
+		obj5['invoice_amount'] = (this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0)) / 2;
 		obj5['inv_paid_status'] = '';
 		obj5['fp_name'] = '';
 		obj5['deleted_date'] = '';
@@ -1428,7 +1428,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		obj3['invoice_no'] = '';
 		obj3['inv_id'] = '';
 		obj3['invoice_created_date'] = '';
-		obj3['invoice_amount'] = this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0);
+		obj3['invoice_amount'] = (this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0)) / 2;
 		obj3['inv_paid_status'] = '';
 		obj3['fp_name'] = '';
 		obj3['deleted_date'] = '';
