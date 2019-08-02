@@ -22,8 +22,8 @@ import {
 @Component({
 	selector: 'app-monthly',
 	templateUrl: './monthly.component.html',
-	styleUrls: ['./monthly.component.css'],
-	styles: [
+	styleUrls: ['./monthly.component.css']
+	/* styles: [
 		`
 		  .fill-height {
 			flex: 1;
@@ -32,7 +32,7 @@ import {
 			align-items: stretch;
 		  }
 		`
-	]
+	] */
 })
 export class MonthlyComponent implements OnInit, OnChanges {
 	@Input() reloadScheduler;
@@ -50,7 +50,7 @@ export class MonthlyComponent implements OnInit, OnChanges {
 			secondary: '#febe36'
 		}
 	};
-
+	bgClassColorArray: any = ['step minimized holiday', 'step minimized non-teaching', 'step minimized class-spe'];
 	view: CalendarView = CalendarView.Month;
 
 	CalendarView = CalendarView;
@@ -100,46 +100,10 @@ export class MonthlyComponent implements OnInit, OnChanges {
 		this.getScheduler();
 	}
 	ngOnChanges() {
-		console.log('calling ngonchanges', this.reloadScheduler);
 		if (this.reloadScheduler > 0) {
 			this.getScheduler();
 		}
 	}
-	/* getScheduler() {
-		this.smartService.getScheduler({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.schedulerArray = result.data;
-				if (this.schedulerArray.length > 0) {
-					this.schedulerArray.forEach(element => {
-						const fromDate = moment(element.sc_from);
-						const toDate = moment(element.sc_to);
-						for (const i = fromDate; i.diff(toDate, 'days') <= 0; i.add(1, 'days')) {
-							const eachEvent: any = {};
-              const nowDate = i.toDate();
-							eachEvent.start = nowDate;
-							eachEvent.end = nowDate;
-							eachEvent.title = element.sc_title;
-							eachEvent.sc_id = element.sc_id;
-							if (element.ec_id === '1') {
-								eachEvent.color = this.colors.holiday;
-							} else if (element.ec_id === '2') {
-								eachEvent.color = this.colors.nonTeaching;
-							} else if (element.ec_id === '3') {
-								eachEvent.color = this.colors.classSpecific;
-							}
-							this.events.push(eachEvent);
-						}
-					});
-					console.log(this.events);
-					this.schedulerFlag = true;
-				}
-			} else {
-				this.schedulerFlag = true;
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-			}
-		});
-	} */
-
 	getScheduler() {
 		this.schedulerArray = [];
 		this.smartService.getScheduler({}).subscribe((result: any) => {
@@ -191,7 +155,7 @@ export class MonthlyComponent implements OnInit, OnChanges {
 				}
 			} else {
 				this.schedulerFlag = true;
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}

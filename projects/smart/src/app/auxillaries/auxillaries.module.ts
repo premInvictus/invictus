@@ -16,7 +16,7 @@ import { ClassWiseTimetableComponent } from './class-wise-timetable/class-wise-t
 import { SchedulerListViewComponent } from './scheduler/scheduler-list-view/scheduler-list-view.component';
 import { SchedulerCalenderViewComponent } from './scheduler/scheduler-calender-view/scheduler-calender-view.component';
 import { AddSchedulerComponent } from './scheduler/add-scheduler/add-scheduler.component';
-import { AngularCalendarYearViewModule } from 'angular-calendar-year-view';
+// import { AngularCalendarYearViewModule } from 'angular-calendar-year-view';
 import { YearlyComponent } from './scheduler/scheduler-calender-view/yearly/yearly.component';
 import { MonthlyComponent } from './scheduler/scheduler-calender-view/monthly/monthly.component';
 import { WeeklyComponent } from './scheduler/scheduler-calender-view/weekly/weekly.component';
@@ -27,7 +27,7 @@ import { WeeklyComponent } from './scheduler/scheduler-calender-view/weekly/week
 		AuxillariesRoutingModule,
 		LoadingModule,
 		SmartSharedModule,
-		AngularCalendarYearViewModule,
+		// AngularCalendarYearViewModule,
 		CalendarModule.forRoot({
 			provide: DateAdapter,
 			useFactory: adapterFactory
