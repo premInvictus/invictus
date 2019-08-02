@@ -44,7 +44,6 @@ export class ErpCommonService {
 		}
 
 		checkForPaymentStatus(value: any) {
-			this.service.startLoading();
 			return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/checkForPaymentStatus', value);
 		}
 }
