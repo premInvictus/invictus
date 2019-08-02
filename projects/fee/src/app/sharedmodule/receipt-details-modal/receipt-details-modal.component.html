@@ -93,10 +93,16 @@
                 {{invoiceDetails?.bnk_branch}}</span>
             </div>
           </div>
-          <div class="row" *ngIf="invoiceDetails?.pay_id != '1' && invoiceDetails?.pay_id != '2' && invoiceDetails?.pay_id != '3'">
+          <div class="row" *ngIf="invoiceDetails?.pay_id != '1' && invoiceDetails?.pay_id != '2' && invoiceDetails?.pay_id != '3' && invoiceDetails?.pay_id != '6' ">
             <div class="col-12">
               <span class="font-size-16 font-light">Transaction Id: </span><span
                 class="font-size-16 font-regular">{{invoiceDetails?.ftr_transaction_id}}</span>
+            </div>
+          </div>
+          <div class="row" *ngIf="invoiceDetails?.pay_id === '6'">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Order Id: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.trans_order_id}}</span>
             </div>
           </div>
         </div>
