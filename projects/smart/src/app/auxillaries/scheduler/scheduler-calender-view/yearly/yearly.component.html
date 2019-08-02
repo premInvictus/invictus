@@ -3,16 +3,23 @@
     <angular-calendar-year-view 
     [themecolor]="themecolor" 
     [events]="events" 
+    [yearFrom]= "getSession[0]"
+    [yearTo]= "getSession[1]"
+    [monthFrom]= "sessionStartMonth"
+    [monthTo]= "sessionEndMonth"
     [nothingToshowText]="nothingToshowText"
-    (eventClicked)="eventClicked($event)" 
-    (actionClicked)="actionClicked($event)">
+      (eventClicked)="eventClicked($event)" (actionClicked)="actionClicked($event)">
     </angular-calendar-year-view>
   </div>
   <div class="col-3">
-    <mat-vertical-stepper [linear]="true">
-      <mat-step *ngFor="let item of ecArray" [label]="item.ec_name">
-        <small *ngFor="let item1 of item.ecArray">{{item1.sc_from | date:'dd MMM, yyyy'}} - {{item1.sc_title}} <br></small>
-      </mat-step>
-    </mat-vertical-stepper>
+    <div class="steps">
+      <div *ngFor="let item of ecArray;let i =index" [class]="bgClassColorArray[i]">
+        <div class="step-header">
+          <div class="header">{{item.ec_name}}</div>
+          <div class="subheader" *ngFor="let item1 of item.ecArray">{{item1.sc_from | date:'dd MMM, yyyy'}} -
+            {{item1.sc_title}}</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -226,7 +226,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			if (this.feeDet) {
 				this.getStoppages(this.feeDet.accd_tr_id);
 				this.getSlab(this.feeDet.accd_tsp_id);
-				this.terminationFlag = this.feeDet.accd_is_terminate === 'N' ? false : true;
+				this.terminationFlag = this.feeDet.accd_is_terminate === 'Y' ? true : false;
 				if (this.feeDet.accd_transport_mode && this.feeDet.accd_transport_mode !== '0') {
 					this.modeFlag = true;
 				}
@@ -235,7 +235,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 					accd_tr_id: this.feeDet.accd_tr_id,
 					accd_tsp_id: this.feeDet.accd_tsp_id,
 					accd_ts_id: this.feeDet.accd_ts_id,
-					accd_is_terminate: this.feeDet.accd_is_terminate === 'N' ? false : true,
+					accd_is_terminate: this.feeDet.accd_is_terminate === 'Y' ? true : false,
 					accd_transport_from: this.feeDet.accd_transport_from.split('-')[0] === '1970' ? '' : this.feeDet.accd_transport_from,
 					accd_transport_to: this.feeDet.accd_transport_to.split('-')[0] === '1970' ? '' : this.feeDet.accd_transport_to,
 				});
@@ -269,6 +269,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_is_hostel_terminate: 'N',
 			});
 			this.hostelFlag = false;
+			this.hostelTerminateFlag = false;
 		}
 	}
 	getTransportMode() {
@@ -353,24 +354,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		return this.validateFlag;
 	}
 	submit() {
-		/* if (this.transportFlag && this.modeFlag) {
-			if (!this.accountsForm.value.accd_tr_id &&
-				!this.accountsForm.value.accd_tsp_id &&
-				!this.accountsForm.value.accd_ts_id &&
-				!this.accountsForm.value.accd_transport_from) {
-				this.accountsForm.get('accd_tr_id').markAsDirty();
-				this.accountsForm.get('accd_tsp_id').markAsDirty();
-				this.accountsForm.get('accd_ts_id').markAsDirty();
-				this.accountsForm.get('accd_transport_from').markAsDirty();
-				this.validateFlag = false;
-			}
-		}
-		if (this.terminationFlag) {
-			if (!this.accountsForm.value.accd_transport_to) {
-				this.accountsForm.get('accd_transport_to').markAsDirty();
-				this.validateFlag = false;
-			}
-		}  */
 		if (this.formValidation()) {
 			const datePipe = new DatePipe('en-in');
 			let accountJSON = {};
