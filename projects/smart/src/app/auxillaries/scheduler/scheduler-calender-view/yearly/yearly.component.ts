@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { SmartService, CommonAPIService } from '../../../../_services';
+import { SmartService, CommonAPIService, SisService } from '../../../../_services';
 import * as moment from 'moment';
 
 @Component({
@@ -24,46 +24,71 @@ export class YearlyComponent implements OnInit, OnChanges {
 			secondary: '#febe36'
 		}
 	};
+	bgClassColorArray: any = ['step minimized holiday', 'step minimized non-teaching', 'step minimized class-spe'];
 	events: any[] = [];
 	viewDate: Date;
 	themecolor: any = '#0a5ab3';
 	schedulerArray: any[] = [];
 	schedulerFlag = false;
 	ecArray: any[] = [];
+	ses_id;
+	sessionYear: any[] = [];
+	sessionStartMonth;
+	sessionEndMonth;
+	fromYear;
 	constructor(
 		private smartService: SmartService,
 		private commonAPIService: CommonAPIService,
+		private sisService: SisService
 	) { }
 
 	ngOnInit() {
+		this.ses_id = JSON.parse(localStorage.getItem('session')).ses_id;
 		this.viewDate = new Date();
-		console.log('yearly');
 		this.getScheduler();
+		this.getSession();
+		this.getSchool();
 	}
+	getSchool() {
+		this.sisService.getSchool().subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log(result.data);
+				if (result.data.length > 0) {
+					this.sessionStartMonth = result.data[0].session_start_month;
+					this.sessionEndMonth = result.data[0].session_end_month;
+				}
+				console.log(this.sessionEndMonth);
+				console.log(this.sessionStartMonth);
+			}
+		});
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				if (result.data.length > 0) {
+					result.data.forEach(element => {
+						if (element.ses_id === this.ses_id) {
+							const ses_name = element.ses_name;
+							this.getSession = ses_name.split('-');
+							// console.log(this.getSession);
+						}
+					});
+				}
+			}
+		});
+	}
+
 	ngOnChanges() {
-		console.log('calling ngonchanges', this.reloadScheduler);
+		// console.log('calling ngonchanges', this.reloadScheduler);
 		if (this.reloadScheduler > 0) {
 			this.getScheduler();
 		}
 	}
 
 	eventClicked(event) {
-		console.log(event);
 	}
 	actionClicked(event) {
-		console.log('action', event.action);
-		console.log('event', event.event);
 	}
-	/* getSchedulerEventCategory() {
-		this.ecArray = [];
-		this.smartService.getSchedulerEventCategory().subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.ecArray = result.data;
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-			}
-		});
-	} */
 	getScheduler() {
 		this.schedulerArray = [];
 		this.smartService.getScheduler({}).subscribe((result: any) => {
@@ -92,7 +117,7 @@ export class YearlyComponent implements OnInit, OnChanges {
 							this.events.push(eachEvent);
 						}
 					});
-					console.log(csNameSet);
+					// console.log(csNameSet);
 					csNameSet = new Set(Array.from(csNameSet).sort());
 					csNameSet.forEach(ele => {
 						const eco: any = {ec_id: '', ec_name: '', ecArray: []};
@@ -105,13 +130,13 @@ export class YearlyComponent implements OnInit, OnChanges {
 						});
 						this.ecArray.push(eco);
 					});
-					console.log(this.ecArray);
-					console.log(this.events);
+					// console.log('ecArray', this.ecArray);
+					// console.log(this.events);
 					this.schedulerFlag = true;
 				}
 			} else {
 				this.schedulerFlag = true;
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
