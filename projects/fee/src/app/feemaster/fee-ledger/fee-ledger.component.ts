@@ -29,7 +29,7 @@ export class FeeLedgerComponent implements OnInit {
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
 	displayedColumns: string[] = ['select', 'feeperiod',  'invoiceno', 'particular', 'date', 'duedate',
-		'amount', 'concession', 'adjustment', 'fine','netpayableamount', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'chqno', 'chequedate', 'remarks'];
+		'amount', 'concession', 'adjustment', 'fine','netpayableamount', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
 	dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 	selection = new SelectionModel<FeeLedgerElement>(true, []);
