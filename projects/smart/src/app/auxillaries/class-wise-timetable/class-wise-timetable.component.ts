@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
 import * as XLSX from 'xlsx';
 declare var require;
@@ -15,6 +16,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 	subjectwiseFlag = false;
 	finaldivflag = true;
+	excelTableFlag = false;
 	public classArray: any[];
 	public sectionArray: any[];
 	public subjectArray: any[];
@@ -27,6 +29,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 	session: any;
 	noOfDay: any;
 	anaimation: any;
+	schoolInfo: any = {};
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -41,6 +44,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
+		this.getSchool();
 	}
 	buildForm() {
 		this.classwiseForm = this.fbuild.group({
@@ -49,6 +53,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 			tt_subject_id: '',
 		});
 	}
+
 	//  Get Class List function
 	getClass() {
 		const classParam: any = {};
@@ -127,50 +132,87 @@ export class ClassWiseTimetableComponent implements OnInit {
 	// export excel code
 	exportAsExcel() {
 		// tslint:disable-next-line:max-line-length
-		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table')); // converts a DOM TABLE element to a worksheet
+		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table'));
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
 
+		// /* Write data starting at A2 */
+		// XLSX.utils.sheet_add_aoa(ws, [[1, 2], [2, 3], [3, 4]], { origin: "A2" });
+
+		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
+	}
+
+	getSchool() {
+		this.sisService.getSchool().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.schoolInfo = res.data[0];
+			}
+		});
 	}
 	// pdf download
 	pdfDownload() {
-		const doc = new jsPDF('landscape');
+		const doc = new jsPDF('l', 'mm', 'a0');
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 35,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
 		doc.autoTable({
 			head: [['Class Wise Time table Of ' + this.getClassName(this.classwiseForm.value.tt_class_id) + '-' +
 				this.getSectionName(this.classwiseForm.value.tt_section_id)]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},
-			headerStyles: {
+			headStyles: {
 				fontStyle: 'bold',
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'center',
-				fontSize: 15,
+				fontSize: 35,
 			},
-			useCss: true,
+			useCss: false,
 			theme: 'striped'
 		});
 		doc.autoTable({
 			html: '#report_table',
-			headerStyles: {
-				fontStyle: 'normal',
-				fillColor: '#ffffff',
-				textColor: 'black',
-				halign: 'center',
-				fontSize: 14,
+			startY: 65,
+			tableLineColor: 'black',
+			didDrawPage: function (data) {
+				doc.setFontStyle('bold');
+
 			},
-			useCss: true,
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#c8d6e5',
+				textColor: '#5e666d',
+				fontSize: 45,
+			},
+			alternateRowStyles: {
+				fillColor: '#f1f4f7'
+			},
+			useCss: false,
 			styles: {
-				fontSize: 14,
+				fontSize: 35,
 				cellWidth: 'auto',
 				textColor: 'black',
-				lineColor: 'red',
+				lineColor: '#89a8c8',
+				halign: 'center'
 			},
 			theme: 'grid'
 		});
-		doc.save('table.pdf');
+		doc.save('classwise_timetable_' + this.getClassName(this.classwiseForm.value.tt_class_id) + '-' +
+			this.getSectionName(this.classwiseForm.value.tt_section_id) + '.pdf');
 	}
 	// Timetable details based on class and section
 	getclasswisedetails() {
