@@ -90,7 +90,11 @@
             <div class="col-12">
               <span class="font-size-16 font-light">Bank Details: </span><span
                 class="font-size-16 font-regular">{{invoiceDetails?.ftr_bnk_name}},
-                {{invoiceDetails?.bnk_branch}}</span>
+                {{invoiceDetails?.bnk_branch}} 
+                <p class="font-size-16 font-regular"  [ngStyle]="{'color': invoiceDetails?.color_code ,'border': invoiceDetails?.color_code  }" *ngIf="invoiceDetails?.pay_id === '3' && invoiceDetails?.ftr_status === '2'">(Bounced)</p>
+                <p class="font-size-16 font-regular"  [ngStyle]="{'color': invoiceDetails?.color_code ,'border': invoiceDetails?.color_code }" *ngIf="invoiceDetails?.pay_id === '3' && invoiceDetails?.ftr_status === '1'">(Cleared)</p>
+                <p class="font-size-16 font-regular"  [ngStyle]="{'color': invoiceDetails?.color_code ,'border': invoiceDetails?.color_code }" *ngIf="invoiceDetails?.pay_id === '3' && invoiceDetails?.ftr_status === '3'">(Deposited)</p>
+              </span>
             </div>
           </div>
           <div class="row" *ngIf="invoiceDetails?.pay_id != '1' && invoiceDetails?.pay_id != '2' && invoiceDetails?.pay_id != '3' && invoiceDetails?.pay_id != '6' ">

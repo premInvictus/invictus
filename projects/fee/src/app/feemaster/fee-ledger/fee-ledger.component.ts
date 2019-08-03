@@ -175,6 +175,7 @@ export class FeeLedgerComponent implements OnInit {
 						mop:  item.mop,
 						chqno: item.ftr_cheque_no ? item.ftr_cheque_no : '-',
 						chequedate: item.ftr_cheque_date ? item.ftr_cheque_date : '-',
+						colorCode: item.color_code ? item.color_code : '',
 						// bank: item.tb_name ? item.tb_name : '-',
 						netpayableamount : item.net_payable_amount ? item.net_payable_amount : '0',
 						eachActionFlag: tempactionFlag,
@@ -197,6 +198,21 @@ export class FeeLedgerComponent implements OnInit {
 			}
 		});
 	}
+
+	getColor(element) {
+		console.log('element', element);
+		if (element && element.colorCode) {
+			return element.colorCode;
+		}
+	}
+
+	getBorder(element) {
+		console.log('element', element);
+		if (element && element.colorCode) {
+			return element.colorCode;
+		}
+	}
+
 	next(admno) {
 		this.FEE_LEDGER_ELEMENT = [];
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
