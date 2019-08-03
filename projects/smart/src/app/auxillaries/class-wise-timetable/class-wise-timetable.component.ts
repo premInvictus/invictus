@@ -135,10 +135,6 @@ export class ClassWiseTimetableComponent implements OnInit {
 		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table'));
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-		// /* Write data starting at A2 */
-		// XLSX.utils.sheet_add_aoa(ws, [[1, 2], [2, 3], [3, 4]], { origin: "A2" });
-
 		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
 	}
 
