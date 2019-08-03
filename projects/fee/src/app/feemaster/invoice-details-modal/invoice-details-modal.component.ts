@@ -235,7 +235,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		if (this.invoiceDetails.inv_fine_amount && Number(this.invoiceDetails.inv_fine_amount > 0)) {
 			const element = {
 				srno: ++i,
-				feehead: 'Fine Amount',
+				feehead: 'Fine & Penalties',
 				feedue: Number(this.invoiceDetails.inv_fine_amount),
 				concession: 0,
 				adjustment: 0,
