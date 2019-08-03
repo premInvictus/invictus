@@ -200,14 +200,12 @@ export class FeeLedgerComponent implements OnInit {
 	}
 
 	getColor(element) {
-		console.log('element', element);
 		if (element && element.colorCode) {
 			return element.colorCode;
 		}
 	}
 
 	getBorder(element) {
-		console.log('element', element);
 		if (element && element.colorCode) {
 			return element.colorCode;
 		}
