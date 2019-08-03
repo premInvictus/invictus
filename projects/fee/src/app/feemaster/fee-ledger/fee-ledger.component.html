@@ -72,11 +72,11 @@
                       </mat-checkbox>
                     </td>
                     <td mat-footer-cell *matFooterCellDef></td>
-                  </ng-container>
+                  </ng-container>                  
 
-                  <ng-container matColumnDef="date">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Inv. Date </th>
-                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.date}} </td>
+                  <ng-container matColumnDef="feeperiod">
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Fee Period </th>
+                    <td  width="5%" mat-cell *matCellDef="let item" class="text-nowrap" style="text-align: left !important;padding-left: 0.5%;">  {{item.feeperiod}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
@@ -91,17 +91,17 @@
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
-                  <ng-container matColumnDef="feeperiod">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Fee Period </th>
-                    <td  width="5%" mat-cell *matCellDef="let item" class="text-nowrap" style="text-align: left !important;padding-left: 0.5%;">  {{item.feeperiod}} </td>
-                    <td mat-footer-cell *matFooterCellDef></td>
-                  </ng-container>
-
                   <ng-container matColumnDef="particular">
                     <th mat-header-cell *matHeaderCellDef  class="text-nowrap"> Particulars </th>
                     <td width="15%" mat-cell *matCellDef="let item" class="text-nowrap"
                       style="text-align: left !important;padding-left: 0.5%;">
                       {{item.particular}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Inv. Date </th>
+                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.date}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
@@ -139,6 +139,13 @@
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.finetotal | number | zerodash}} </td>
                   </ng-container>
 
+                  <ng-container matColumnDef="netpayableamount">
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Net Payable (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.netpayableamount | number | zerodash}} </td>
+                    <td mat-footer-cell *matFooterCellDef> {{footerRecord.netpayabletotal | number | zerodash}} </td>
+                  </ng-container>
+
                   <ng-container matColumnDef="reciept">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amt. Rec. (<span><i class="fas fa-rupee-sign"></i></span>)
                     </th>
@@ -167,6 +174,17 @@
                   <ng-container matColumnDef="mop">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> MOP</th>
                     <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.mop | titlecase}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="chqno">
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Chqno</th>
+                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.chqno}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <ng-container matColumnDef="chequedate">
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Cheque Date</th>
+                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"> <span *ngIf="item.chequedate != '-'">{{item.chequedate | date:'d-MMM-y'}}</span> <span *ngIf="item.chequedate == '-'">{{item.chequedate}}</span> </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <ng-container matColumnDef="remarks">

@@ -223,7 +223,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
 					const element = {
 						srno: pos,
-						feehead: 'Fine Amount',
+						feehead: 'Fine & Penalties',
 						feedue: Number(this.invoice.inv_fine_amount),
 						concession: 0,
 						adjustment: 0,
