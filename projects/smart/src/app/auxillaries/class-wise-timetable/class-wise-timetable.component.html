@@ -9,12 +9,13 @@
                 </div>
                 <div class="col-8 text-right">
                     <div class="top-card-title">
-                        <a [routerLink]="['../time-table']">
-                            <button mat-raised-button class="btn-success-green margin-right-20"><i
-                                    class="fas fa-plus"></i> Add New
-                            </button></a>
+                      
                         <a [routerLink]="['../teacherwise-table']">
-                            <span class="font-size-24 font-medium">Teacher Wise</span></a>
+                            <span class="font-size-22 font-medium margin-right-20">Teacher Wise View</span></a>
+                            <a [routerLink]="['../time-table']">
+                                <button mat-raised-button class="btn-success-green "><i
+                                        class="fas fa-plus"></i> 
+                                </button></a>
                     </div>
                 </div>
             </div>
@@ -51,7 +52,7 @@
                         </mat-form-field>
                         <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
                             <mat-label>Subject</mat-label>
-                            <mat-select formControlName="tt_subject_id" required placeholder="Select Subject">
+                            <mat-select formControlName="tt_subject_id" placeholder="Select Subject">
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                     {{item.sub_name}}
@@ -109,12 +110,9 @@
                                 <td colspan="9">
                                     <img
                                         src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
-                                    <br><br><br>
-                                    <span class="font-size-20 font-bold font-color-brown">
-                                        No Data Available
-                                    </span>
+                                    <br><br><br>                        
                                     <br><span class="font-size-20 font-light font-color-brown">
-                                        Please Upload Timetable
+                                        Please Select Class and Section
                                     </span>
                                 </td>
                             </tr>
