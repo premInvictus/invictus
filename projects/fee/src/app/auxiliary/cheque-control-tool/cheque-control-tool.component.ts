@@ -17,8 +17,9 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
 	displayedColumns: string[] =
-		['srno', 'class_name', 'chequeno', 'admno', 'studentname', 'recieptno', 'amount', 'bankname', 'recieptdate',
-			'bankdeposite', 'processingdate', 'status', 'action'];
+		['srno', 'recieptdate', 'amount', 'chequeno', 'bankname', 'bankdeposite',
+			'processingdate', 'status', 'admno', 'studentname', 'class_name',
+			'action'];
 	CHEQUE_ELEMENT_DATA: ChequeToolElement[] = [];
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 	formGroupArray: any[] = [];
@@ -110,7 +111,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: pos,
-						class_name: item.sec_name ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
+						class_name: item.sec_id !== '0' ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
