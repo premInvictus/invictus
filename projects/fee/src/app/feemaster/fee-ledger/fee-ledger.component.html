@@ -66,7 +66,7 @@
                         [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
                       </mat-checkbox>
                     </th>
-                    <td width="3%" mat-cell *matCellDef="let row">
+                    <td width="3%" mat-cell *matCellDef="let row" [ngStyle]="{'background-color': getColor(row),'border': getBorder(row)}">
                       <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? manipulateAction(row) : null"
                         [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                       </mat-checkbox>
@@ -76,13 +76,13 @@
 
                   <ng-container matColumnDef="feeperiod">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Fee Period </th>
-                    <td  width="5%" mat-cell *matCellDef="let item" class="text-nowrap" style="text-align: left !important;padding-left: 0.5%;">  {{item.feeperiod}} </td>
+                    <td  width="5%" mat-cell *matCellDef="let item" class="text-nowrap" style="text-align: left !important;padding-left: 0.5%;" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">  {{item.feeperiod}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="invoiceno">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Inv. No. </th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap">
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
                       <span *ngIf="item.invoiceno != '0'"
                         class="pointer font-bold font-skyblue font-underline">
                         <a (click)="openDialog(item.action, false)">{{item.invoiceno}}</a>
@@ -93,79 +93,79 @@
 
                   <ng-container matColumnDef="particular">
                     <th mat-header-cell *matHeaderCellDef  class="text-nowrap"> Particulars </th>
-                    <td width="15%" mat-cell *matCellDef="let item" class="text-nowrap"
-                      style="text-align: left !important;padding-left: 0.5%;">
+                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"
+                      style="text-align: left !important;padding-left: 0.5%;" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
                       {{item.particular}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="date">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Inv. Date </th>
-                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.date}} </td>
+                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.date}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="duedate">
                     <th mat-header-cell *matHeaderCellDef  class="text-nowrap"> Due Date </th>
-                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.duedate | date: 'd-MMM-y'}} </td>
+                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.duedate | date: 'd-MMM-y'}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="amount">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amt. Due (<span><i class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item"  class="text-nowrap"> {{item.amount | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item"  class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.amount | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.feeduetotal | number}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="concession">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Con. (<span><i class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.concession | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.concession | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.concessiontotal | number | zerodash}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="adjustment">
                       <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Adj. (<span><i class="fas fa-rupee-sign"></i></span>)
                       </th>
-                      <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.adjustment | number | zerodash}} </td>
+                      <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.adjustment | number | zerodash}} </td>
                       <td mat-footer-cell *matFooterCellDef> {{footerRecord.adjustmenttotal | number | zerodash}} </td>
                     </ng-container>
 
                   <ng-container matColumnDef="fine">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap" > Fine (<span><i class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.fine | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.fine | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.finetotal | number | zerodash}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="netpayableamount">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Net Payable (<span><i class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.netpayableamount | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.netpayableamount | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.netpayabletotal | number | zerodash}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="reciept">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amt. Rec. (<span><i class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.reciept | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.reciept | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.receipttotal | number | zerodash}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="balance">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Balance (<span><i class="fas fa-rupee-sign"></i></span>)</th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.balance | number}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.balance | number}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.balancetotal | number}} </td>
                   </ng-container>
                   <ng-container matColumnDef="receiptdate">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Rpt. Date</th>
-                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.receiptdate | date:'d-MMM-y'}} </td>
+                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.receiptdate | date:'d-MMM-y'}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <ng-container matColumnDef="receiptno">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Rpt. No</th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap">
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
                       <span *ngIf="item.action.rpt_id" class="pointer font-bold font-skyblue font-underline">
                         <a (click)="openReceiptDialog(item.action.rpt_id, false)">{{item.receiptno}}</a>
                       </span></td>
@@ -173,27 +173,26 @@
                   </ng-container>
                   <ng-container matColumnDef="mop">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> MOP</th>
-                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.mop | titlecase}} </td>
+                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.mop | titlecase}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   
-                  <ng-container matColumnDef="chqno">
+                  <!-- <ng-container matColumnDef="chqno">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Chqno</th>
-                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"> {{item.chqno}} </td>
+                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.chqno}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <ng-container matColumnDef="chequedate">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Cheque Date</th>
-                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"> <span *ngIf="item.chequedate != '-'">{{item.chequedate | date:'d-MMM-y'}}</span> <span *ngIf="item.chequedate == '-'">{{item.chequedate}}</span> </td>
+                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> <span *ngIf="item.chequedate != '-'">{{item.chequedate | date:'d-MMM-y'}}</span> <span *ngIf="item.chequedate == '-'">{{item.chequedate}}</span> </td>
                     <td mat-footer-cell *matFooterCellDef></td>
-                  </ng-container>
+                  </ng-container> -->
                   <ng-container matColumnDef="remarks">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Remarks
-                      <span style="float:right; padding-right: 10px;"><img style="cursor: pointer"
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Remarks<span style="float:right; padding-right: 10px;"><img style="cursor: pointer"
                           src="/assets/images/xml.svg" (click)="exportAsExcel()" matTooltip="Export as excel"></span>
                     </th>
-                    <td width="40%" mat-cell *matCellDef="let item"
-                      style="text-align: left !important;padding-left: 0.5%;" class="text-nowrap">
+                    <td width="41%" mat-cell *matCellDef="let item"
+                      style="text-align: left !important;padding-left: 0.5%;" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
                       {{item.remarks | capitalize}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
