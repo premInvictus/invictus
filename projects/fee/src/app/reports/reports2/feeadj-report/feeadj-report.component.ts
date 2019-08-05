@@ -19,7 +19,7 @@ import { ReportSortComponent } from '../../reports-filter-sort/report-sort/repor
 import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import * as Excel from 'exceljs/dist/exceljs.min.js';
+import * as Excel from 'exceljs/dist/exceljs';
 import * as ExcelProper from 'exceljs';
 declare var require;
 const jsPDF = require('jspdf');
