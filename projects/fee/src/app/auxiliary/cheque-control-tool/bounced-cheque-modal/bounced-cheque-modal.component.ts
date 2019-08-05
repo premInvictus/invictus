@@ -83,16 +83,9 @@ export class BouncedChequeModalComponent implements OnInit {
 		});
 	}
 	closeModal() {
-		this.dialogRef.close({status: '0'});
+		this.dialogRef.close({ status: '0' });
 	}
 	submit() {
-		console.log('bouncedForm', this.bouncedForm);
-		if (this.bouncedForm.value.fcc_status === 'c') {
-			this.bouncedForm.get('fcc_process_date').setValidators(Validators.required);
-		} else if (this.bouncedForm.value.fcc_status === 'b') {
-			this.bouncedForm.get('fcc_remarks').setValidators(Validators.required);
-			this.bouncedForm.get('fcc_dishonor_date').setValidators(Validators.required);
-		}
 		if (this.bouncedForm.valid) {
 			if (this.bouncedForm.value.fcc_status === 'd') {
 				this.bouncedForm.patchValue({
@@ -102,7 +95,7 @@ export class BouncedChequeModalComponent implements OnInit {
 				});
 				this.feeService.addCheckControlTool(this.bouncedForm.value).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.dialogRef.close({status: '1'});
+						this.dialogRef.close({ status: '1' });
 					}
 				});
 
@@ -114,7 +107,7 @@ export class BouncedChequeModalComponent implements OnInit {
 				});
 				this.feeService.addCheckControlTool(this.bouncedForm.value).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.dialogRef.close({status: '1'});
+						this.dialogRef.close({ status: '1' });
 					}
 				});
 			} else if (this.bouncedForm.value.fcc_status === 'b') {
@@ -126,7 +119,7 @@ export class BouncedChequeModalComponent implements OnInit {
 				});
 				this.feeService.addCheckControlTool(this.bouncedForm.value).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.dialogRef.close({status: '1'});
+						this.dialogRef.close({ status: '1' });
 					}
 				});
 			}
