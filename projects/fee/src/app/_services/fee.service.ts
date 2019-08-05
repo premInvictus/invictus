@@ -259,9 +259,11 @@ export class FeeService {
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getAllBank');
 	}
 	getCheckControlList(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/checkControlTool/getCheckControlList', value);
 	}
 	addCheckControlTool(value: any) {
+		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/checkControlTool/addCheckControlTool', value);
 	}
 	approveFeeTransaction(value: any) {

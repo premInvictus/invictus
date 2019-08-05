@@ -475,8 +475,6 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			}
 		});
 	}
-
-	
 	recalculateConfirm(value) {
 		this.invoiceCreationForm.patchValue({
 			inv_id: this.fetchInvId(),
