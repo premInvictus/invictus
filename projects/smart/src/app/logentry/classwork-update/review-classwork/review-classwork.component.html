@@ -26,12 +26,17 @@
         <tbody>
           <tr class="custom-tr" *ngFor="let item of reviewArray">
             <td class="custom-td">{{item.period}}{{periodSup[item.period-1]}}</td>
-            <td class="custom-td">{{item.subjectName | capitalize}}</td>
+            <td class="custom-td" *ngIf="item.subjectName">{{item.subjectName | capitalize}}</td>
+            <td class="custom-td" *ngIf="!item.subjectName">-</td>
             <td class="custom-td">{{item.categoryName | capitalize}}</td>
-            <td class="custom-td">{{item.className | capitalize}}</td>
-            <td class="custom-td">{{item.topicName | capitalize}}</td>
-            <td class="custom-td">{{item.subtopicName | capitalize}}</td>
-            <td class="custom-td text-left"><div [innerHtml]="item.assignment | capitalize | truncatetext:100"></div></td>
+            <td class="custom-td" *ngIf="item.className">{{item.className | capitalize}}</td>
+            <td class="custom-td" *ngIf="!item.className">-</td>
+            <td class="custom-td" *ngIf="item.topicName">{{item.topicName | capitalize}}</td>
+            <td class="custom-td" *ngIf="!item.topicName">-</td>
+            <td class="custom-td" *ngIf="item.subtopicName">{{item.subtopicName | capitalize}}</td>
+            <td class="custom-td" *ngIf="!item.subtopicName">-</td>
+            <td class="custom-td text-left" *ngIf="item.assignment"><div [innerHtml]="item.assignment | capitalize | truncatetext:100"></div></td>
+            <td class="custom-td text-left" *ngIf="!item.assignment">-</td>
             <td class="custom-td text-center"><button mat-mini-fab class="btn-blue"><span
                   class="font-white font-size-16">{{item.attachments}}</span></button>
             </td>
