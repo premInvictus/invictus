@@ -93,7 +93,7 @@
 
                   <ng-container matColumnDef="particular">
                     <th mat-header-cell *matHeaderCellDef  class="text-nowrap"> Particulars </th>
-                    <td width="15%" mat-cell *matCellDef="let item" class="text-nowrap"
+                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"
                       style="text-align: left !important;padding-left: 0.5%;" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
                       {{item.particular}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
@@ -188,11 +188,10 @@
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container> -->
                   <ng-container matColumnDef="remarks">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Remarks
-                      <span style="float:right; padding-right: 10px;"><img style="cursor: pointer"
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Remarks<span style="float:right; padding-right: 10px;"><img style="cursor: pointer"
                           src="/assets/images/xml.svg" (click)="exportAsExcel()" matTooltip="Export as excel"></span>
                     </th>
-                    <td width="40%" mat-cell *matCellDef="let item"
+                    <td width="41%" mat-cell *matCellDef="let item"
                       style="text-align: left !important;padding-left: 0.5%;" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
                       {{item.remarks | capitalize}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
