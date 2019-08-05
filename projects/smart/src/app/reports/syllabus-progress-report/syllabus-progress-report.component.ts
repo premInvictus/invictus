@@ -4,7 +4,7 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 import { MatDialog } from '@angular/material/dialog';
 import * as XLSX from 'xlsx';
 declare var require;
-const jsPDF = require('jspdf');
+const jsPDF = require('jspdf'); 
 import 'jspdf-autotable';
 
 @Component({
@@ -71,7 +71,6 @@ export class SyllabusProgressReportComponent implements OnInit {
 	}
 	buildForm() {
 		this.progressReportForm = this.fbuild.group({
-			sc_from: '',
 			sc_to: '',
 			syl_class_id: '',
 			syl_section_id: '',

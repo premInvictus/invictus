@@ -12,6 +12,7 @@ import { saveAs } from 'file-saver';
 export class AddSyllabusComponent implements OnInit {
 
 	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('messageModal') messageModal;
 	todaydate = new Date();
 	activityUpdateFlag = false;
 	syllabusUpdateFlag = false;
@@ -247,6 +248,11 @@ export class AddSyllabusComponent implements OnInit {
 		this.submitParam.text = 'Add';
 		this.deleteModal.openModal(this.submitParam);
 	}
+	//  Open Final Submit Modal function
+	openMessageModal() {
+		this.submitParam.text = 'Add';
+		this.messageModal.openModal(this.submitParam);
+	}
 
 	//  Get Subject By Class function
 	getSubjectsByClass(): void {
@@ -448,7 +454,7 @@ export class AddSyllabusComponent implements OnInit {
 		if (this.syllabusDetailForm.valid) {
 			const sindex = this.subtopicIdArray.findIndex(f => f.sd_st_id === this.syllabusDetailForm.value.sd_st_id);
 			if (sindex !== -1) {
-				this.commonService.showSuccessErrorMessage('Subtopic Already added. For any manipulation please edit.', 'error');
+				this.openMessageModal();
 			} else {
 				if (this.syllabusDetailForm.value.sd_ctr_id === '1') {
 					this.subtopicIdArray.push({

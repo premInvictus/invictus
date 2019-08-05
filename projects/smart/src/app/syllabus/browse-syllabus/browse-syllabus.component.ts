@@ -27,6 +27,9 @@ export class BrowseSyllabusComponent implements OnInit {
 	param: any = {};
 	currentUser: any;
 	UnpublishParam: any = {};
+	teachingSum = 0;
+	testSum = 0;
+	revisionSum = 0;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -222,6 +225,9 @@ export class BrowseSyllabusComponent implements OnInit {
 
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
+		this.teachingSum = 0;
+		this.testSum = 0;
+		this.revisionSum = 0;
 		this.finaldivflag = false;
 		this.syllabusService.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
 			.subscribe(
@@ -246,10 +252,13 @@ export class BrowseSyllabusComponent implements OnInit {
 												let sd_period_revision: any = '';
 
 												if (this.finalSyllabusArray[i].sd_ctr_id === '1') {
+													this.teachingSum = this.teachingSum + Number(this.finalSyllabusArray[i].sd_period_req);
 													sd_period_teacher = this.finalSyllabusArray[i].sd_period_req;
 												} else if (this.finalSyllabusArray[i].sd_ctr_id === '2') {
+													this.testSum = this.testSum + Number(this.finalSyllabusArray[i].sd_period_req);
 													sd_period_test = this.finalSyllabusArray[i].sd_period_req;
 												} else {
+													this.revisionSum = this.revisionSum + Number(this.finalSyllabusArray[i].sd_period_req);
 													sd_period_revision = this.finalSyllabusArray[i].sd_period_req;
 												}
 												const spannArray: any[] = [];
