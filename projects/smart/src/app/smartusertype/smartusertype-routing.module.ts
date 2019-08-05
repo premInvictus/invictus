@@ -22,6 +22,7 @@ const routes: Routes = [
 	{
 		path: 'teacher', canActivate: [AuthGuard], component: ProjectComponent, children: [
 			{ path: '', component: TeacherDashboardComponent },
+			{ path: 'logentry', loadChildren: '../logentry/logentry.module#LogentryModule' },
 			{ path: 'assignment', loadChildren: '../assignment/assignment.module#AssignmentModule' },
 		]
 	}
