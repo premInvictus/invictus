@@ -244,7 +244,11 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 			});
 			this.patchClassBasedOnFeeHead(value.fcc_fh_id);
 		} else {
+			this.conccesionCategoryForm.controls['fcc_fh_id'].clearValidators();
 			this.schoolFlag = false;
+			this.conccesionCategoryForm.patchValue({
+				fcc_fh_id: ''
+			});
 			this.conccesionCategoryForm.controls['fcc_fh_id'].clearValidators();
 			this.classDataArray = [];
 			this.classDataArray = this.classArray;
@@ -321,7 +325,6 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 		this.conccesionCategoryForm.patchValue({
 			'fcc_head_type': $event.value
 		});
-		this.editFlag = false;
 	}
 	getClassBasedOnFeeHead($event) {
 		this.classDataArray = [];
