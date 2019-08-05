@@ -4,8 +4,12 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 import { MatDialog } from '@angular/material/dialog';
 import * as XLSX from 'xlsx';
 declare var require;
-const jsPDF = require('jspdf'); 
+import * as Excel from 'exceljs/dist/exceljs';
+const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import { TitleCasePipe } from '@angular/common';
+import { saveAs } from 'file-saver';
+import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
 
 @Component({
 	templateUrl: './syllabus-progress-report.component.html',
@@ -13,7 +17,7 @@ import 'jspdf-autotable';
 })
 export class SyllabusProgressReportComponent implements OnInit {
 	@ViewChild('remarkModel') remarkModel;
-
+	dataArr: any[] = [];
 	editRequestFlag = false;
 	finalDivFlag = true;
 	headerDivFlag = false;
@@ -44,6 +48,54 @@ export class SyllabusProgressReportComponent implements OnInit {
 	totalAvailed = 0;
 	totalAvailable = 0;
 	remarkParam: any = {};
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR',
+
+	};
+	schooInfo: any;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -157,6 +209,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
+						this.schooInfo = result.data[0];
 						this.startMonth = result.data[0].session_start_month;
 						this.endMonth = result.data[0].session_end_month;
 					}
@@ -164,12 +217,234 @@ export class SyllabusProgressReportComponent implements OnInit {
 	}
 	// export excel code
 	exportAsExcel() {
-		// tslint:disable-next-line:max-line-length
-		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table')); // converts a DOM TABLE element to a worksheet
-		const wb: XLSX.WorkBook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
+		let reportType: any = '';
+		let reportType2: any = '';
+		const columns: any = [];
+		columns.push({
+			key: 'subject_name',
+			width: this.checkWidth('subject_name', 'Subject')
+		});
+		columns.push({
+			key: 'count',
+			width: this.checkWidth('count', 'Required for Expected Completion')
+		});
+		columns.push({
+			key: 'subject_id',
+			width: this.checkWidth('subject_id', 'Availed')
+		});
+		columns.push({
+			key: 'countYear',
+			width: this.checkWidth('countYear', 'Avaliable')
+		});
+		columns.push({
+			key: 'deviation',
+			width: this.checkWidth('deviation', 'Deviation')
+		});
+		columns.push({
+			key: 'remarks',
+			width: this.checkWidth('remarks', 'Remarks')
+		});
+		columns.push({
+			key: 'remarks_by',
+			width: this.checkWidth('remarks_by', 'Remarks By')
+		});
+		reportType2 = new TitleCasePipe().transform('view syllabus repo_') + this.sessionName;
+		reportType = new TitleCasePipe().transform('view syllabus report: ') + this.sessionName;
+		const fileName = reportType + '.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[7] + '1');
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schooInfo.school_name) + ', ' + this.schooInfo.school_city + ', ' + this.schooInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[7] + '2');
+		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A4:A5');
+		worksheet.getCell('A4').value = 'Subject';
+		worksheet.mergeCells('B4:D4');
+		worksheet.getCell('B4').value = 'No. of Periods';
+		worksheet.getCell('B5').value = 'Required for Expected Completion';
+		worksheet.getCell('C5').value = 'Availed';
+		worksheet.getCell('D5').value = 'Available';
+		worksheet.mergeCells('E4:E5');
+		worksheet.getCell('E4').value = 'Deviation';
+		worksheet.mergeCells('F4:F5');
+		worksheet.getCell('F4').value = 'Remarks';
+		worksheet.mergeCells('G4:G5');
+		worksheet.getCell('G4').value = 'Remarks By';
+		worksheet.columns = columns;
+		for (const item of this.subCountArray) {
+			const obj: any = {};
+			obj['subject_name'] = item.subject_name;
+			obj['count'] = item.count;
+			if (this.periodCompletionArray[Number(item.subject_id)]) {
+				obj['subject_id'] = this.periodCompletionArray[Number(item.subject_id)];
+			} else {
+				obj['subject_id'] = '-';
+			}
+			obj['countYear'] = item.countYear - item.count;
+			if (this.periodCompletionArray[Number(item.subject_id)]) {
+				obj['deviation'] = Number(item.count) - Number(this.periodCompletionArray[Number(item.subject_id)]);
+			} else {
+				obj['deviation'] = Number(item.count);
+			}
+			if (this.remarkArray[Number(item.subject_id)]) {
+				obj['remarks'] = new CapitalizePipe().transform(this.remarkArray[Number(item.subject_id)]);
+			} else {
+				obj['remarks'] = '-';
+			}
+			if (this.createdByArray[Number(item.subject_id)] === this.currentUser.login_id) {
+				obj['remarks_by'] = '-';
+			} else if (this.createdByArray[Number(item.subject_id)] !== this.currentUser.login_id) {
+				obj['remarks_by'] = new TitleCasePipe().transform(this.UserArray[this.createdByArray[Number(item.subject_id)]]);
+			} else {
+				obj['remarks_by'] = '-';
+			}
+			worksheet.addRow(obj);
+		}
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 16,
+					bold: true
+				};
+			}
+			if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			}
+			if (rowNum === 4 || rowNum === 5) {
+				row.eachCell(cell => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true,
+						color: { argb: '636a6a' }
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'c8d6e5' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+				});
+			}
+			if (rowNum > 5 && rowNum <= worksheet._rows.length) {
+				let cellColor: any = '';
+				let fontColor: any = '';
+				row.eachCell(cell => {
+					if (cell._address.charAt(0) === 'E') {
+						if (Number(cell.model.value) > 0) {
+							cellColor = '439f47';
+							fontColor = 'ffffff';
+						} else if (Number(cell.model.value) < 0) {
+							cellColor = 'c9122b';
+							fontColor = 'ffffff';
+						} else if (Number(cell.model.value) === 0) {
+							cellColor = 'ffffff';
+							fontColor = 'black';
+						}
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: cellColor },
+							bgColor: { argb: cellColor },
+						};
+						cell.font = {
+							color: { argb: fontColor },
+							bold: true,
+							name: 'Arial',
+							size: 10
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+					} else {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+						cell.font = {
+							color: { argb: 'black' },
+							bold: false,
+							name: 'Arial',
+							size: 10
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+					}
+				});
+			}
+		});
+		const obj3: any = {};
+		obj3['subject_name'] = 'Grand Total';
+		obj3['count'] = this.dataArr.map(t => t['count']).reduce((acc, val) => acc + val, 0);
+		obj3['subject_id'] = this.dataArr.map(t => t['subject_id']).reduce((acc, val) => acc + val, 0);
+		obj3['countYear'] = this.dataArr.map(t => t['countYear']).reduce((acc, val) => acc + val, 0);
+		obj3['deviation'] = '';
+		obj3['remarks'] = '';
+		obj3['remarks_by'] = '';
+		worksheet.addRow(obj3);
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === worksheet._rows.length) {
+				row.eachCell(cell => {
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: '004261' },
+						bgColor: { argb: '004261' },
+					};
+					cell.font = {
+						color: { argb: 'ffffff' },
+						bold: true,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			}
+		});
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
 
+	}
+	checkWidth(id, header) {
+		const res = this.dataArr.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
 	}
 	// pdf download
 	pdfDownload() {
@@ -282,13 +557,13 @@ export class SyllabusProgressReportComponent implements OnInit {
 
 		}
 	}
-	// fetch details for table 
+	// fetch details for table
 	fetchDetails() {
 		this.totalAvailable = 0;
 		this.totalCompletion = 0;
 		this.totalAvailed = 0;
 		this.headerDivFlag = true;
-		this.finalDivFlag = false;
+		this.finalDivFlag = true;
 		this.subCountArray = [];
 		this.remarkArray = [];
 		this.createdByArray = [];
@@ -362,6 +637,35 @@ export class SyllabusProgressReportComponent implements OnInit {
 										}
 
 									}
+									this.dataArr = [];
+									for (const item of this.subCountArray) {
+										const obj: any = {};
+										obj['subject_name'] = item.subject_name;
+										obj['count'] = item.count;
+										if (this.periodCompletionArray[Number(item.subject_id)]) {
+											obj['subject_id'] = Number(this.periodCompletionArray[Number(item.subject_id)]);
+										} else {
+											obj['subject_id'] = 0;
+										}
+										obj['countYear'] = item.countYear - item.count;
+										if (this.periodCompletionArray[Number(item.subject_id)]) {
+											obj['deviation'] = Number(item.count) - Number(this.periodCompletionArray[Number(item.subject_id)]);
+										} else {
+											obj['deviation'] = Number(item.count);
+										}
+										if (this.remarkArray[Number(item.subject_id)]) {
+											obj['remarks'] = new CapitalizePipe().transform(this.remarkArray[Number(item.subject_id)]);
+										} else {
+											obj['remarks'] = '-';
+										}
+										if (this.createdByArray[Number(item.subject_id)] === this.currentUser.login_id) {
+											obj['remarks_by'] = '-';
+										} else {
+											obj['remarks_by'] = new TitleCasePipe().transform(this.UserArray[this.createdByArray[Number(item.subject_id)]]);
+										}
+										this.dataArr.push(obj);
+									}
+									this.finalDivFlag = false;
 								}
 							});
 						}
