@@ -14,11 +14,11 @@ import 'jspdf-autotable';
 })
 export class ComparitiveComponent implements OnInit {
 
-	editRequestFlag = false; 
+	editRequestFlag = false;
 	finalDivFlag = true;
 	headerDivFlag = false;
 	comparitiveForm: FormGroup;
-	toMin = new Date();
+	todaydate = new Date();
 	classArray: any[];
 	subjectArray: any[];
 	finalSyllabusArray: any[];
@@ -68,10 +68,6 @@ export class ComparitiveComponent implements OnInit {
 		this.buildForm();
 		this.getClass();
 		this.getSession();
-	}
-	// set minimum date for from date
-	setMinTo(event) {
-		this.toMin = event.value;
 	}
 	//  Get Class List function
 	getClass() {
@@ -251,7 +247,7 @@ export class ComparitiveComponent implements OnInit {
 		this.finalDivFlag = false;
 		this.headerDivFlag = true;
 		const param: any = {};
-		param.datefrom = this.commonService.dateConvertion(this.comparitiveForm.value.sc_from);
+		param.datefrom = this.commonService.dateConvertion(this.todaydate);
 		param.class_id = this.comparitiveForm.value.syl_class_id;
 		param.sec_id = this.comparitiveForm.value.syl_section_id;
 		param.subject_id = this.comparitiveForm.value.syl_sub_id;

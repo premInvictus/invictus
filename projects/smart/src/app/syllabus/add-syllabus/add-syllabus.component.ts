@@ -12,15 +12,16 @@ import { saveAs } from 'file-saver';
 export class AddSyllabusComponent implements OnInit {
 
 	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('messageModal') messageModal;
 	todaydate = new Date();
 	activityUpdateFlag = false;
 	syllabusUpdateFlag = false;
+	cancelFlag = false;
 	finaldivflag = true;
 	finalSubmitdivflag = false;
 	requiredField = false;
 	syllabus_flag = true;
 	details_flag = false;
-	periodDivFlag = false;
 	editRequestFlag = false;
 	hideExcelupload = true;
 	flag = true;
@@ -64,6 +65,7 @@ export class AddSyllabusComponent implements OnInit {
 	currentYear: any;
 	nextYear: any;
 	totalPeriod = 0;
+	totalPeriodTempCount = 0;
 	subtopicIdArray: any[] = [];
 	add = 'Add';
 	constructor(
@@ -189,7 +191,7 @@ export class AddSyllabusComponent implements OnInit {
 					this.topic_id_string = this.topic_id_string + this.topic_id[0] + ',';
 				}
 			}
-			this.getTopicNameById(this.topic_id_string);
+			// this.getTopicNameById(this.topic_id_string);
 			this.getSubTopicNameById(this.subtopic_id_string);
 		};
 		fileReader.readAsArrayBuffer(this.file);
@@ -220,6 +222,7 @@ export class AddSyllabusComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.subTopicJson = result.data;
+						this.addxlslDetailsList(this.finalXlslArray);
 					}
 				}
 			);
@@ -244,6 +247,11 @@ export class AddSyllabusComponent implements OnInit {
 	openSubmitModal() {
 		this.submitParam.text = 'Add';
 		this.deleteModal.openModal(this.submitParam);
+	}
+	//  Open Final Submit Modal function
+	openMessageModal() {
+		this.submitParam.text = 'Add';
+		this.messageModal.openModal(this.submitParam);
 	}
 
 	//  Get Subject By Class function
@@ -371,11 +379,13 @@ export class AddSyllabusComponent implements OnInit {
 	finalCancel() {
 		this.subtopicIdArray = [];
 		this.finalSpannedArray = [];
+		this.finalSyllabusArray = [];
 		this.finalSubmitArray = [];
 		this.finaldivflag = true;
 		this.finalSubmitdivflag = false;
 		this.syllabus_flag = true;
 		this.details_flag = false;
+		this.cancelFlag = false;
 		this.syllabusForm.patchValue({
 			'syl_class_id': '',
 			'syl_sub_id': ''
@@ -433,27 +443,24 @@ export class AddSyllabusComponent implements OnInit {
 	}
 	// Add syllabus list function
 	addDetailsList() {
+		this.totalPeriodTempCount = 0;
+		this.cancelFlag = true;
 		this.flag = true;
 		this.finaldivflag = false;
 		this.finalSubmitdivflag = true;
-		this.periodDivFlag = false;
 		if (!this.editRequestFlag) {
 			this.finalSpannedArray = [];
 		}
 		if (this.syllabusDetailForm.valid) {
-			if (this.syllabusDetailForm.value.sd_period_req === 0) {
-				this.finaldivflag = true;
-				this.finalSubmitdivflag = false;
-				this.periodDivFlag = true;
-				return false;
-			}
 			const sindex = this.subtopicIdArray.findIndex(f => f.sd_st_id === this.syllabusDetailForm.value.sd_st_id);
 			if (sindex !== -1) {
-				this.commonService.showSuccessErrorMessage('Subtopic Already added. For any manipulation please edit.', 'error');
+				this.openMessageModal();
 			} else {
-				this.subtopicIdArray.push({
-					sd_st_id: this.syllabusDetailForm.value.sd_st_id,
-				});
+				if (this.syllabusDetailForm.value.sd_ctr_id === '1') {
+					this.subtopicIdArray.push({
+						sd_st_id: this.syllabusDetailForm.value.sd_st_id,
+					});
+				}
 				this.finalSyllabusArray.push(this.syllabusDetailForm.value);
 			}
 			for (let i = 0; i < this.finalSyllabusArray.length; i++) {
@@ -510,9 +517,13 @@ export class AddSyllabusComponent implements OnInit {
 						details: spannArray,
 						total: this.finalSyllabusArray[i].sd_period_req
 					});
+					this.totalPeriodTempCount = this.totalPeriodTempCount + this.finalSyllabusArray[i].sd_period_req;
 				} else {
 					this.finalSpannedArray[findex].total = this.finalSpannedArray[findex].total + this.finalSyllabusArray[i].sd_period_req;
+					this.totalPeriodTempCount = this.totalPeriodTempCount + this.finalSyllabusArray[i].sd_period_req;
 				}
+				console.log('total', this.totalPeriodTempCount);
+
 			}
 			this.syllabusDetailForm.patchValue({
 				'sd_st_id': '',
@@ -550,9 +561,9 @@ export class AddSyllabusComponent implements OnInit {
 	}
 	// Add syllabus list function
 	addxlslDetailsList(xlsl_array) {
+		this.cancelFlag = true;
 		this.finaldivflag = false;
 		this.finalSubmitdivflag = true;
-		this.periodDivFlag = false;
 		if (!this.editRequestFlag) {
 			this.finalSpannedArray = [];
 		}
@@ -611,9 +622,12 @@ export class AddSyllabusComponent implements OnInit {
 						details: spannArray,
 						total: this.finalSyllabusArray[i].sd_period_req
 					});
+					this.totalPeriodTempCount = this.totalPeriodTempCount + this.finalSyllabusArray[i].sd_period_req;
 				} else {
 					this.finalSpannedArray[findex].total = this.finalSpannedArray[findex].total + this.finalSyllabusArray[i].sd_period_req;
+					this.totalPeriodTempCount = this.totalPeriodTempCount + this.finalSyllabusArray[i].sd_period_req;
 				}
+				console.log('total', this.totalPeriodTempCount);
 			}
 			this.syllabusDetailForm.patchValue({
 				'sd_st_id': '',
@@ -718,11 +732,30 @@ export class AddSyllabusComponent implements OnInit {
 	// Delete syllabus list function
 	deleteSyllabusList(value1, value2) {
 		if (this.finalSpannedArray[value1].details.length > 1) {
+			if (this.finalSpannedArray[value1].details[value2].sd_ctr_id === '1') {
+				const sindex = this.subtopicIdArray.findIndex(f => f.sd_st_id === this.finalSpannedArray[value1].details[value2].sd_st_id);
+				if (sindex !== -1) {
+					this.subtopicIdArray.splice(sindex, 1);
+				}
+			}
+			const findex = this.finalSyllabusArray.findIndex(f => f.sd_st_id === this.finalSpannedArray[value1].details[value2].sd_st_id);
+			if (findex !== -1) {
+				this.finalSyllabusArray.splice(findex, 1);
+			}
 			this.finalSpannedArray[value1].details.splice(value2, 1);
 		} else {
+			if (this.finalSpannedArray[value1].sd_ctr_id === '1') {
+				const sindex = this.subtopicIdArray.findIndex(f => f.sd_st_id === this.finalSpannedArray[value1].sd_st_id);
+				if (sindex !== -1) {
+					this.subtopicIdArray.splice(sindex, 1);
+				}
+			}
+			const findex = this.finalSyllabusArray.findIndex(f => f.sd_st_id === this.finalSpannedArray[value1].sd_st_id);
+			if (findex !== -1) {
+				this.finalSyllabusArray.splice(findex, 1);
+			}
 			this.finalSpannedArray.splice(value1, 1);
 		}
-		this.finalSyllabusArray.splice(value1, 1);
 		this.resetForm();
 	}
 

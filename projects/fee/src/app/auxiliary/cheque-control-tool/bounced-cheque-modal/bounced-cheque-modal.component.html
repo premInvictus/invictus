@@ -13,7 +13,6 @@
             {{studentDetails?.class_name}}-{{studentDetails?.sec_name}}</span>
         </div>
       </div>
-
     </div>
     <div class="col-1">
       <div class="vertical-line-divider"></div>
@@ -39,9 +38,6 @@
               <span class="font-size-14 font-regular">{{studentDetails?.transaction_date | date: 'd-MMM-y'}}</span><br>
             </div>
           </div>
-
-
-
         </div>
         <div class="col-6  ">
           <div class="row margin-top-10">
@@ -62,13 +58,9 @@
                 class="font-size-14 font-regular">{{studentDetails?.receipt_amount}}</span><br>
             </div>
           </div>
-
-
-
         </div>
       </div>
     </div>
-
   </div>
   <div class="line-divider-modal"></div>
   <form [formGroup]="bouncedForm">
@@ -95,9 +87,16 @@
         <div class="col-3">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Deposite Date</mat-label>
-            <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="fcc_deposite_date" required>
+            <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="fcc_deposite_date"
+              required>
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Remarks</mat-label>
+            <textarea matInput rows="4" placeholder="Remarks" formControlName="fcc_remarks" required></textarea>
           </mat-form-field>
         </div>
       </ng-container>
@@ -105,9 +104,16 @@
         <div class="col-3">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Process Date</mat-label>
-            <input matInput [matDatepicker]="picker2" placeholder="Choose a date" formControlName="fcc_process_date">
+            <input matInput [matDatepicker]="picker2" placeholder="Choose a date" formControlName="fcc_process_date"
+            required>
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-9">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Remarks</mat-label>
+            <textarea matInput rows="4" placeholder="Remarks" formControlName="fcc_remarks" required></textarea>
           </mat-form-field>
         </div>
       </ng-container>
@@ -115,16 +121,17 @@
         <div class="col-3">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Dishonoured Date</mat-label>
-            <input matInput [matDatepicker]="picker" placeholder="Choose Date" formControlName="fcc_dishonor_date"
-              >
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <input matInput [matDatepicker]="picker" [readonly]="data.fcc_status === 'b'" placeholder="Choose Date"
+              formControlName="fcc_dishonor_date" required>
+            <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="data.fcc_status === 'b'">
+            </mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </div>
         <div class="col-2">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Bank Code</mat-label>
-            <input matInput placeholder="Bank Code" formControlName="fcc_bank_code"
+            <input matInput placeholder="Bank Code" formControlName="fcc_bank_code" [readonly]="data.fcc_status === 'b'"
               (keyup.enter)="setBouncedReason($event)" (blur)="setBouncedReason($event)">
 
           </mat-form-field>
@@ -132,7 +139,8 @@
         <div class="col-7">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Reason</mat-label>
-            <mat-select placeholder="Reason" formControlName="fcc_reason_id" (selectionChange)="setBankcode($event)">
+            <mat-select placeholder="Reason" [disabled]="data.fcc_status === 'b'" formControlName="fcc_reason_id"
+              (selectionChange)="setBankcode($event)">
               <mat-option *ngFor="let item of reasonArray" [value]="item.reason_desc">{{item.reason_title}}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -140,7 +148,8 @@
         <div class="col-12">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Remarks</mat-label>
-            <textarea matInput rows="4" placeholder="Remarks" formControlName="fcc_remarks"></textarea>
+            <textarea matInput rows="4" [readonly]="data.fcc_status === 'b'" placeholder="Remarks"
+              formControlName="fcc_remarks" required></textarea>
           </mat-form-field>
         </div>
       </ng-container>
@@ -148,7 +157,8 @@
   </form>
   <div class="row text-center">
     <div class="col-12">
-      <button mat-raised-button class="btn-success" (click)="submit()">Submit</button>
+      <button mat-raised-button class="btn-success" [disabled]="((bouncedForm.value.fcc_status !== 'c' && data.fcc_status === 'b') &&
+      (bouncedForm.value.fcc_status !== 'd' && data.fcc_status === 'b'))" (click)="submit()">Submit</button>
     </div>
   </div>
 </div>

@@ -173,7 +173,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		if (this.invoiceDetails.late_fine_amt && Number(this.invoiceDetails.late_fine_amt > 0)) {
 			const element = {
 				srno: ++i,
-				feehead: 'Fine Amount',
+				feehead: 'Fine & Penalties',
 				feedue: Number(this.invoiceDetails.late_fine_amt),
 				concession: 0,
 				adjustment: 0,

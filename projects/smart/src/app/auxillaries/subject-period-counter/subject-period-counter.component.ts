@@ -40,6 +40,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 	friday = 0;
 	saturday = 0;
 	sunday = 0;
+	overallTotal = 0;
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -147,7 +148,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('daywise_table')); // converts a DOM TABLE element to a worksheet
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
+		XLSX.writeFile(wb, 'subject-period-counter_' + (new Date).getTime() + '.xlsx');
 
 	}
 	// pdf download
@@ -255,7 +256,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 			},
 			theme: 'grid'
 		});
-		doc.save('table.pdf');
+		doc.save('subject-period-counter_' + (new Date).getTime() + '.pdf');
 	}
 	// get sum of total count of subject in week
 	getSum(dety, index, sub_id) {
@@ -357,6 +358,9 @@ export class SubjectPeriodCounterComponent implements OnInit {
 													});
 													for (const item of this.daywisetableArray) {
 														for (const titem of item.dataArr) {
+															if (titem.day !== '-') {
+																this.overallTotal = this.overallTotal + (Number(titem.count) * Number(this.weekCounterArray[titem.day]));
+															}
 															if (titem.day === 'Monday') {
 																this.monday = this.monday + (Number(titem.count) * Number(this.weekCounterArray[titem.day]));
 															}
@@ -382,7 +386,6 @@ export class SubjectPeriodCounterComponent implements OnInit {
 													}
 												}
 											});
-											console.log('tav', this.daywisetableArray);
 										}
 									});
 

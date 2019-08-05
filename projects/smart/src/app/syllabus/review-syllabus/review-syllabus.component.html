@@ -80,7 +80,8 @@
                                 <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
                                     <ng-container>
                                         <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
-                                            <td class="custom-td text-left" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                            <td class="custom-td text-left" *ngIf="j == 0"
+                                                [attr.rowspan]="item.details.length">
                                                 {{getTopicName(item.sd_topic_id)}}</td>
                                             <td class="custom-td text-left" *ngIf="det.sd_ctr_id == 1">
                                                 {{det.sd_st_name}}
@@ -131,16 +132,43 @@
                                                 <i class="fas fa-thumbs-up font-color-green cursor-pointer font-size-16"
                                                     matTooltip="Publish"
                                                     (click)="openPublish(item.syl_id, item.sd_topic_id)"></i></td>
-                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
-                                                <i class="fas fa-plus"
-                                                    (click)="openAddDialog(item.syl_id, item.sd_topic_id)"
-                                                    style="cursor:pointer" title="Add"> </i></td>
+                                            <td class="custom-td" (click)="openAddDialog(item.syl_id, item.sd_topic_id)"
+                                                *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                                <i class="fas fa-plus" style="cursor:pointer" title="Add"> </i></td>
                                         </tr>
                                     </ng-container>
                                 </ng-container>
                             </ng-container>
+                            <tr class="custom-tr">
+                                <td class="custom-td">
+                                    Grand Total
+                                </td>
+                                <td class="custom-td">
+                                </td>
+                                <td class="custom-td">
+                                </td>
+                                <td class="custom-td">
+                                    {{teachingSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{testSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{revisionSum}}
+                                </td>
+                                <td class="custom-td">
+                                    {{teachingSum + testSum + revisionSum}}
+                                </td>
+                                <td class="custom-td">                                   
+                                </td>
+                                <td class="custom-td">                                   
+                                </td>
+                                <td class="custom-td">                                   
+                                </td>
+                                <td class="custom-td">                                   
+                                </td>                                
+                            </tr>
                         </tbody>
-
                         <tbody>
                             <tr class="text-center" *ngIf="finalDivFlag">
                                 <td colspan="12">

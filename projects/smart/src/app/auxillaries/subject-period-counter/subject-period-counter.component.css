@@ -14,3 +14,9 @@ td.custom-td{
     padding:0px!important;
     font-size: 16px!important;
 }
+/* .table-width-subject{
+    width:11%;
+} */
+.table-width{
+    width:10%;
+}

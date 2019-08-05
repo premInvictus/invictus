@@ -386,7 +386,7 @@
                   <div class="row">
                      <div class="col-12">
                         <div class="row">
-                           <div class="col-3">
+                           <!-- <div class="col-3">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Deposited Bank</mat-label>
                                  <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required>
@@ -395,7 +395,7 @@
                                     </mat-option>
                                  </mat-select>
                               </mat-form-field>
-                           </div>
+                           </div> -->
                            <div class="col-3">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Cheque No.</mat-label>
@@ -407,7 +407,7 @@
                            <div class="col-3">
                               <mat-form-field appearance="outline" class="form-field">
                                  <mat-label>Drawn On</mat-label>
-                                 <mat-select placeholder="Drawn On" formControlName="ftr_bnk_id" required>
+                                 <mat-select placeholder="Drawn On" formControlName="ftr_deposit_bnk_id" required>
                                     <mat-option value="">Please Select</mat-option>
                                     <mat-option *ngFor="let bank of allBanks" [value]="bank.tb_id">{{bank.tb_name}}
                                     </mat-option>
