@@ -11,7 +11,7 @@ import {
 } from 'angular-slickgrid';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import * as Excel from 'exceljs/dist/exceljs.min.js';
+import * as Excel from 'exceljs/dist/exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';

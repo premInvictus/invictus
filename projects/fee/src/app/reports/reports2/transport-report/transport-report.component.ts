@@ -11,7 +11,7 @@ import {
 } from 'angular-slickgrid';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import * as Excel from 'exceljs/dist/exceljs.min.js';
+import * as Excel from 'exceljs/dist/exceljs';
 import * as ExcelProper from 'exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
@@ -1959,7 +1959,8 @@ export class TransportReportComponent implements OnInit {
 						}
 						if (item2.id !== 'fp_name' && (item2.id === 'invoice_created_date' ||
 							item2.id === 'applicable_from' || item2.id === 'applicable_to')
-							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>' &&
+							this.dataset[key][item2.id] !== '-') {
 							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
 						}
 						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
@@ -2143,7 +2144,8 @@ export class TransportReportComponent implements OnInit {
 								}
 								if (item2.id !== 'fp_name' && (item2.id === 'invoice_created_date' ||
 									item2.id === 'applicable_from' || item2.id === 'applicable_to')
-									&& item.rows[key][item2.id] !== '<b>Grand Total</b>') {
+									&& item.rows[key][item2.id] !== '<b>Grand Total</b>' &&
+									item.rows[key][item2.id] !== '-') {
 									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]), 'd-MMM-y');
 								}
 								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
