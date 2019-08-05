@@ -20,10 +20,12 @@ import { IdcardStyle2Component } from './id-card-printing/idcard-style2/idcard-s
 import { IdcardStyle3Component } from './id-card-printing/idcard-style3/idcard-style3.component';
 import { CancelSlctcComponent } from './cancel-slctc/cancel-slctc.component';
 import { ViewSlctcComponent } from './view-slctc/view-slctc.component';
+import { BranchTransferToolComponent } from './branch-transfer-tool/branch-transfer-tool.component';
 
 const routes: Routes = [
 	{path: '', component: PromotionToolComponent},
 	{path: 'promotion-tool', component: PromotionToolComponent},
+	{path: 'branch-transfer-tool', component: BranchTransferToolComponent},
 	{path: 'shuffling-tool', component: ShufflingToolComponent},
 	{path: 'suspension', component: SuspensionComponent},
 	{path: 'change-enrolment-status', component: ChangeEnrolmentStatusComponent},
