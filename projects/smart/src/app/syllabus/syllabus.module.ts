@@ -8,6 +8,7 @@ import { ReviewSyllabusComponent } from './review-syllabus/review-syllabus.compo
 import { BrowseSyllabusComponent } from './browse-syllabus/browse-syllabus.component';
 import { SyllabusManagementComponent } from './syllabus-management/syllabus-management.component';
 import { EditSyllabusComponent } from './edit-syllabus/edit-syllabus.component';
+import { MessageModalComponent } from './message-modal/message-modal.component';
 
 @NgModule({
 	imports: [
@@ -16,6 +17,7 @@ import { EditSyllabusComponent } from './edit-syllabus/edit-syllabus.component';
 		LoadingModule,
 		SmartSharedModule,
 	],
-	declarations: [AddSyllabusComponent, ReviewSyllabusComponent, BrowseSyllabusComponent, SyllabusManagementComponent, EditSyllabusComponent]
+	// tslint:disable-next-line: max-line-length
+	declarations: [AddSyllabusComponent, ReviewSyllabusComponent, BrowseSyllabusComponent, SyllabusManagementComponent, EditSyllabusComponent, MessageModalComponent]
 })
 export class SyllabusModule { }
