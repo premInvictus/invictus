@@ -18,6 +18,8 @@ export class SystemInfoComponent implements OnInit {
 	setupUpdateFlag = false;
 	editFlag = false;
 	finaldivflag = true;
+	showConfigForm = '';
+	subArray: any[];
 	constructor(
 		private fbuild: FormBuilder,
 		private syllabusService: SmartService,
@@ -39,6 +41,14 @@ export class SystemInfoComponent implements OnInit {
 			class_id: '',
 			no_of_day: '',
 			no_of_period: '',
+			class_name: '',
+			sec_name: '',
+			sub_name: '',
+			sub_id: '',
+			topic_name: '',
+			topic_id: '',
+			sub_topic_name: '',
+			sec_id: ''
 		});
 	}
 	// delete dialog open modal function
@@ -163,5 +173,9 @@ export class SystemInfoComponent implements OnInit {
 					}
 				}
 			);
+	}
+
+	loadConfiguration(event) {
+		this.showConfigForm = event.value;
 	}
 }
