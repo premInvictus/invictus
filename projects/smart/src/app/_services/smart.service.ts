@@ -327,4 +327,69 @@ export class SmartService {
 	resetProcesstype() {
 		this.processType = null;
 	}
+
+
+	// global configuaration calls
+
+	insertClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertClass', value);
+	}
+
+	getClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getClass', value);
+	}
+
+	insertSection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertSection', value);
+	}
+
+	getSection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSection', value);
+	}
+
+	insertSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertSubject', value);
+	}
+
+	getSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSubject', value);
+	}
+
+	insertTopic(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertTopic', value);
+	}
+
+	getTopic(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getTopic', value);
+	}
+
+	insertSubTopic(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertSubTopic', value);
+	}
+
+	getSubTopic(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSubTopic', value);
+	}
+
+	insertGlobalClassSectionSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertGlobalClassSectionSubject', value);
+	}
+
+	getGlobalClassSectionSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getGlobalClassSectionSubject', value);
+	}
 }
+
+
