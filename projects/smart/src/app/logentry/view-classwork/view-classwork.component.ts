@@ -28,9 +28,11 @@ export class ViewClassworkComponent implements OnInit {
 		private axiomService: AxiomService,
 		private sisService: SisService,
 		private smartService: SmartService,
-		private commonAPIService: CommonAPIService,
+		private commonAPIService: CommonAPIService, 
 		public dialog: MatDialog
-	) { }
+	) {
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+	 }
 
 	ngOnInit() {
 		this.buildForm();
