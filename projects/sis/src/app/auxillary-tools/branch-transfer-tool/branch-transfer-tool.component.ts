@@ -25,6 +25,7 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 		au_process_type: '5', au_process_name: 'Alumini'
 	}];
 	classArray: any[] = [];
+	tclassArray: any[] = [];
 	sectionArray: any[] = [];
 	promotionSectionArray: any[] = [];
 	promoteForm: FormGroup;
@@ -54,8 +55,9 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.buildForm();
 		this.getClass();
-		this.getSession();
+		// this.getSession();
 		this.getBranch();
+		this.getBranchClassAndSession();
 		// this.sessionPromote = this.currentDate.getFullYear() - 1 + '-' + (this.currentDate.getFullYear().toString()).substring(2, 4);
 		// this.sessionDemote = this.currentDate.getFullYear() + '-' + ((this.currentDate.getFullYear() + 1).toString()).substring(2, 4);
 		this.promoteFlag = false;
@@ -84,6 +86,21 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 		this.sisService.getClass({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
+			}
+		});
+	}
+
+	getBranchClassAndSession(event) {
+		this.sessionArray = [];
+		this.tclassArray = [];
+		this.sisService.getBranchClassAndSession({br_id: event.value}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				if (result.data.classes) {
+					this.tclassArray = result.data.classes;
+				}
+				if (result.data.session) {
+					this.sessionArray = result.data.session;
+				}
 			}
 		});
 	}
@@ -222,11 +239,13 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 					to_ses_id: this.promoteForm.value.to_ses_id
 				}]
 			}).subscribe((result: any) => {
-				if (result.status === 'ok') {
+				if (result && result.status === 'ok') {
 					// tslint:disable-next-line:max-line-length
 					this.commonApiService.showSuccessErrorMessage('Student of admission number ' + item.action.au_login_id + ' has been transfered', 'success');
 					this.getPromotionList();
 					this.getCountCurrentYearStudents();
+				} else {
+					this.commonApiService.showSuccessErrorMessage(result.data, 'error');
 				}
 			});
 		}
@@ -286,6 +305,8 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 						this.toBePromotedList = [];
 						this.getPromotionList();
 						this.getCountCurrentYearStudents();
+					} else {
+						this.commonApiService.showSuccessErrorMessage(result.data, 'error');
 					}
 				});
 			}

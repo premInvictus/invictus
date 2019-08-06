@@ -605,6 +605,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/branchTransfer', value);
 	}
+	getBranchClassAndSession(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/auxiliaries/getBranchClassAndSession', value);
+	}
 	demoteStudents(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/demote', value);

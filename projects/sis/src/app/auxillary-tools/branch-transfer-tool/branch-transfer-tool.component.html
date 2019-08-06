@@ -20,7 +20,7 @@
             </div>
             <form [formGroup]="promoteForm">
               <div class="row">
-                <div class="col-6">
+                <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Enrollment Type</mat-label>
                     <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
@@ -34,7 +34,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Current Class</mat-label>
                     <mat-select placeholder="Current Class" #promoClass_id formControlName="class_id"
@@ -49,9 +49,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-6">
+                <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Section</mat-label>
                     <mat-select placeholder="Section" formControlName="sec_id">
@@ -61,23 +59,7 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-                <div class="col-6">
-                  <mat-form-field class="form-field" appearance="outline">
-                    <mat-label>New Class</mat-label>
-                    <mat-select placeholder="New Class" required formControlName="new_class_id"
-                      [errorStateMatcher]="confirmValidParentMatcher" required>
-                      <mat-option value="">Please Select</mat-option>
-                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error>
-                      Please select new class
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-6">
+                <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Sorted By</mat-label>
                     <mat-select placeholder="Sorted by" formControlName="order_by">
@@ -87,19 +69,35 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-                <div class="col-6 ">
+              </div>
+              <div class="row">
+                <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>To Branch</mat-label>
-                    <mat-select placeholder="To Branch" formControlName="br_id" required>
+                    <mat-select placeholder="To Branch" formControlName="br_id"
+                      (selectionChange)="getBranchClassAndSession($event)" required>
                       <mat-option value="">Please Select</mat-option>
-                      <mat-option *ngFor="let item of branchArray" [value]="item.br_prefix">{{item.br_name}}, {{item.br_address}}
+                      <mat-option *ngFor="let item of branchArray" [value]="item.br_prefix">{{item.br_name}},
+                        {{item.br_address}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-6 ">
+                <div class="col-3">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>New Class</mat-label>
+                    <mat-select placeholder="New Class" required formControlName="new_class_id"
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of tclassArray" [value]="item.class_id">{{item.class_name}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select new class
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-3 ">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>To Session</mat-label>
                     <mat-select placeholder="To Session" formControlName="to_ses_id" required>
@@ -109,9 +107,7 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-6 ">
+                <div class="col-3">
                   <button mat-raised-button class="btn-success margin-top-12" *ngIf="promoteForm.valid"
                     (click)="getPromotionList()">Generate</button>
                 </div>
@@ -201,9 +197,10 @@
                                 (click)="promoteStudent(item)"></i></span>
                             <span style="color:#04a20d" class="text-center cursor-pointer"
                               *ngIf="item.action.au_transfer_status === '1'"><b>Transfered</b></span> -->
-                              <span class="text-center">
-                                <i class="fas fa-thumbs-up cursor-pointer icon-success" (click)="openDeleteModal(item)"></i>
-                              </span>
+                            <span class="text-center">
+                              <i class="fas fa-thumbs-up cursor-pointer icon-success"
+                                (click)="openDeleteModal(item)"></i>
+                            </span>
                           </td>
                         </ng-container>
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
@@ -232,4 +229,5 @@
     </div>
   </div>
 </div>
-<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to transfer?'" (deleteOk)="transferConfirm($event)" ></app-delete-modal>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to transfer?'" (deleteOk)="transferConfirm($event)">
+</app-delete-modal>
