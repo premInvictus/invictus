@@ -19,39 +19,206 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <mat-form-field class="form-field" appearance="outline">
-                                                        <mat-label>Class</mat-label>
-                                                        <mat-select formControlName="class_id" required
-                                                            placeholder="Select Class" [disabled]="editFlag">
-                                                            <mat-option value="">Please select</mat-option>
-                                                            <mat-option *ngFor="let item of classArray"
-                                                                [value]="item.class_id">
-                                                                {{item.class_name}}
-                                                            </mat-option>
+                                                        <mat-label>Setup Option</mat-label>
+                                                        <mat-select (selectionChange)="loadConfiguration($event)"
+                                                            placeholder="Setup Options">
+                                                            <mat-option value="">Please Select</mat-option>
+                                                            <mat-option value="1">Class</mat-option>
+                                                            <mat-option value="2">Section</mat-option>
+                                                            <mat-option value="3">Subject</mat-option>
+                                                            <mat-option value="4">Topic</mat-option>
+                                                            <mat-option value="5">SubTopic</mat-option>
+                                                            <mat-option value="6">Class Section Subject</mat-option>
+                                                            <mat-option value="7">Class wise Setup</mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <mat-form-field class="form-field" appearance="outline">
-                                                        <mat-label>No. of Days</mat-label>
-                                                        <mat-select formControlName="no_of_day" required
-                                                            placeholder="Select Period">
-                                                            <mat-option value="">Please select</mat-option>
-                                                            <mat-option value="5">5</mat-option>
-                                                            <mat-option value="6">6</mat-option>
-                                                            <mat-option value="7">7</mat-option>
-                                                        </mat-select>
-                                                    </mat-form-field>
+                                            <div *ngIf="showConfigForm == '1'">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter Class Name</mat-label>
+                                                            <input matInput placeholder="Enter Class Name" type="text"
+                                                                formControlName="class_name">
+                                                        </mat-form-field>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <mat-form-field class="form-field" appearance="outline">
-                                                        <mat-label>No. of Periods</mat-label>
-                                                        <input matInput placeholder="Periods Required" type="number"
-                                                            formControlName="no_of_period" required>
-                                                    </mat-form-field>
+                                            <div *ngIf="showConfigForm == '2'">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter Section Name</mat-label>
+                                                            <input matInput placeholder="Enter Section Name" type="text"
+                                                                formControlName="sec_name">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="showConfigForm == '3'">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter Subject Name</mat-label>
+                                                            <input matInput placeholder="Enter Subject Name" type="text"
+                                                                formControlName="sub_name">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="showConfigForm == '4'">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Class</mat-label>
+                                                            <mat-select formControlName="class_id" required
+                                                                placeholder="Select Class" [disabled]="editFlag">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of classArray"
+                                                                    [value]="item.class_id">
+                                                                    {{item.class_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Subject</mat-label>
+                                                            <mat-select formControlName="sub_id" required
+                                                                placeholder="Select Subject" [disabled]="editFlag">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of subArray"
+                                                                    [value]="item.sub_id">
+                                                                    {{item.sub_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter Topic Name</mat-label>
+                                                            <input matInput placeholder="Enter Topic Name" type="text"
+                                                                formControlName="topic_name">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="showConfigForm == '5'">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Topic</mat-label>
+                                                            <mat-select formControlName="topic_id" required
+                                                                placeholder="Select Topic" [disabled]="editFlag">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of topicArray"
+                                                                    [value]="item.topic_id">
+                                                                    {{item.topic_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter Sub-Topic Name</mat-label>
+                                                            <input matInput placeholder="Enter Sub-Topic Name"
+                                                                type="text" formControlName="sub_topic_name">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="showConfigForm == '6'">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Class</mat-label>
+                                                            <mat-select formControlName="class_id" required
+                                                                placeholder="Select Class" [disabled]="editFlag">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of classArray"
+                                                                    [value]="item.class_id">
+                                                                    {{item.class_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Section</mat-label>
+                                                            <mat-select formControlName="sec_id" required
+                                                                placeholder="Select Section" [disabled]="editFlag">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of secArray"
+                                                                    [value]="item.sec_id">
+                                                                    {{item.sec_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Subject</mat-label>
+                                                            <mat-select formControlName="sub_id" required
+                                                                placeholder="Select Subject" [disabled]="editFlag">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of subArray"
+                                                                    [value]="item.sub_id">
+                                                                    {{item.sub_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="showConfigForm == '7'">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Class</mat-label>
+                                                            <mat-select formControlName="class_id" required
+                                                                placeholder="Select Class" [disabled]="editFlag">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of classArray"
+                                                                    [value]="item.class_id">
+                                                                    {{item.class_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>No. of Days</mat-label>
+                                                            <mat-select formControlName="no_of_day" required
+                                                                placeholder="Select Period">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option value="5">5</mat-option>
+                                                                <mat-option value="6">6</mat-option>
+                                                                <mat-option value="7">7</mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>No. of Periods</mat-label>
+                                                            <input matInput placeholder="Periods Required" type="number"
+                                                                formControlName="no_of_period" required>
+                                                        </mat-form-field>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="text-center margin-top-15">
