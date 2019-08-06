@@ -43,6 +43,7 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 	next: any;
 	orderByArray: any[] = [{ order_by: 'sec_id', order_by_name: 'Section' }];
 	@ViewChild('sortP') sortP: MatSort;
+	@ViewChild('deleteModal') deleteModal;
 
 
 	constructor(private commonApiService: CommonAPIService,
@@ -288,6 +289,17 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 					}
 				});
 			}
+		}
+	}
+
+	openDeleteModal(data = null) {
+		this.deleteModal.openModal(data);
+	}
+	transferConfirm(item) {
+		if (item) {
+			this.promoteStudent(item);
+		} else {
+			this.promoteStudentInBulk();
 		}
 	}
 
