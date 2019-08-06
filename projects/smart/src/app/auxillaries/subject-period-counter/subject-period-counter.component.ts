@@ -356,6 +356,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 															});
 														}
 													});
+													console.log(this.daywisetableArray);
 													for (const item of this.daywisetableArray) {
 														for (const titem of item.dataArr) {
 															if (titem.day !== '-') {

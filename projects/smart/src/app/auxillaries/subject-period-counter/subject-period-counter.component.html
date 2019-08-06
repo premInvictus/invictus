@@ -154,11 +154,14 @@
                                 <td class="custom-td" *ngIf="subjectPeriodForm.value.tt_subject_id !== dety.sub_id">
                                     {{getSubjectName(dety.sub_id)}}</td>
                                 <ng-container *ngFor="let items of dety.dataArr">
-                                    <td class="custom-td" *ngIf="subjectPeriodForm.value.tt_subject_id === dety.sub_id"
+                                    <td class="custom-td" *ngIf="subjectPeriodForm.value.tt_subject_id === dety.sub_id && items.day !== '-'"
                                         class="selectedColor">
                                         {{(items.count | number) * (weekCounterArray[items.day] | number) }}</td>
-                                    <td class="custom-td" *ngIf="subjectPeriodForm.value.tt_subject_id !== dety.sub_id">
+                                    <td class="custom-td" *ngIf="subjectPeriodForm.value.tt_subject_id !== dety.sub_id && items.day !== '-'">
                                         {{(items.count | number) * (weekCounterArray[items.day] | number) }}</td>
+                                        <td class="custom-td" *ngIf="subjectPeriodForm.value.tt_subject_id === dety.sub_id && items.day === '-'"
+                                        class="selectedColor">-</td>
+                                    <td class="custom-td" *ngIf="subjectPeriodForm.value.tt_subject_id !== dety.sub_id && items.day === '-'">-</td>
                                 </ng-container>
                                 <td class="custom-td" *ngIf="subjectPeriodForm.value.tt_subject_id === dety.sub_id"
                                     class="selectedColor">{{getSum(dety.dataArr , k, dety.sub_id)}}</td>
