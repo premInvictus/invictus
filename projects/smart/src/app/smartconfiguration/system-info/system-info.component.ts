@@ -33,7 +33,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
 	displayedColumns: any[] = ['position', 'name', 'order', 'action', 'modify'];
-	firstHeaderArray: any[] = ['Class Name', 'Section Name', 'Subject Name', 'Topic Name', 'SubTopic Name', 'Class Name'];
+	firstHeaderArray: any[] = ['Class Name', 'Section Name', 'Subject Name', 'Topic Name', 'SubTopic Name', 'Class Name', 'Class Name'];
 	secondHeaderArray: any[] = ['Order', 'Order', 'Order', 'Order', 'Order', 'Order'];
 	configFlag = false;
 
@@ -161,13 +161,12 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		// 	);
 
 		that.classArray = [];
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		that.smartService.getClass().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				that.classArray = result.data;
-				console.log('that.classArray', that.classArray);
 				if (that.configValue === '1') {
-					that.CONFIG_ELEMENT_DATA = [];
-					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					let pos = 1;
 					for (const item of result.data) {
 						that.CONFIG_ELEMENT_DATA.push({
@@ -191,12 +190,12 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 
 	getSection(that) {
 		that.secArray = [];
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		that.smartService.getSection().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				that.secArray = result.data;
 				if (that.configValue === '2') {
-					that.CONFIG_ELEMENT_DATA = [];
-					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					let pos = 1;
 					for (const item of result.data) {
 						that.CONFIG_ELEMENT_DATA.push({
@@ -222,6 +221,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	getSubject(that) {
 		that.subArray = [];
 		that.parentSubArray = [];
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		that.smartService.getSubject().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				that.subArray = result.data;
@@ -233,8 +234,6 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				}
 
 				if (that.configValue === '3') {
-					that.CONFIG_ELEMENT_DATA = [];
-					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					let pos = 1;
 					for (const item of result.data) {
 						that.CONFIG_ELEMENT_DATA.push({
@@ -269,12 +268,12 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		that.topicArray = [];
 		that.getClass(that);
 		that.getSubject(that);
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		that.smartService.getTopic().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				that.topicArray = result.data;
 				if (that.configValue === '4') {
-					that.CONFIG_ELEMENT_DATA = [];
-					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					let pos = 1;
 					for (const item of result.data) {
 						that.CONFIG_ELEMENT_DATA.push({
@@ -300,11 +299,11 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 
 	getSubTopic(that) {
 		that.getTopic(that);
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		that.smartService.getSubTopic().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				if (that.configValue === '5') {
-					that.CONFIG_ELEMENT_DATA = [];
-					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					let pos = 1;
 					for (const item of result.data) {
 						that.CONFIG_ELEMENT_DATA.push({
@@ -330,12 +329,11 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		that.getClass(that);
 		that.getSection(that);
 		that.getSubject(that);
-
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		that.smartService.getGlobalClassSectionSubject().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				if (that.configValue === '6') {
-					that.CONFIG_ELEMENT_DATA = [];
-					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					let pos = 1;
 					for (const item of result.data) {
 						const class_arr = [];
@@ -501,6 +499,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 
 	// get class wise day and period details
 	getDetailsCdpRelation(that) {
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		that.detailArray = [];
 		that.getClass(that);
 		that.smartService.getDetailsCdpRelation()
@@ -510,8 +510,6 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 						that.detailArray = result.data;
 
 						if (that.configValue === '7') {
-							that.CONFIG_ELEMENT_DATA = [];
-							that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 							let pos = 1;
 							for (const item of result.data) {
 								that.CONFIG_ELEMENT_DATA.push({
