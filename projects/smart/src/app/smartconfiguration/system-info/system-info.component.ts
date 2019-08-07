@@ -33,7 +33,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
 	displayedColumns: any[] = ['position', 'name', 'order', 'action', 'modify'];
-	firstHeaderArray: any[] = ['Class Name', 'Section Name', 'Subject Name', 'Topic Name', 'SubTopic Name', 'Class Name', 'Class Name'];
+	firstHeaderArray: any[] = ['Class Name', 'Section Name', 'Subject Name', 'Topic Name', 'SubTopic Name', 'Class Name'];
 	secondHeaderArray: any[] = ['Order', 'Order', 'Order', 'Order', 'Order', 'Order'];
 	configFlag = false;
 
@@ -123,6 +123,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		{
 			formGroup: this.fbuild.group({
 				gcss_id: '',
+				gcss_entry_id: '',
 				gcss_gc_id: '',
 				gcss_gs_id: '',
 				gcss_gsub_id: '',
@@ -163,6 +164,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		that.smartService.getClass().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				that.classArray = result.data;
+				console.log('that.classArray', that.classArray);
 				if (that.configValue === '1') {
 					that.CONFIG_ELEMENT_DATA = [];
 					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
@@ -336,12 +338,28 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					let pos = 1;
 					for (const item of result.data) {
+						const class_arr = [];
+						const sec_arr = [];
+						const sub_arr = [];
+						for (let ci = 0 ; ci < item.gcss_gc_id.length; ci++) {
+							const class_name = that.getClassName(item.gcss_gc_id[ci]);
+							class_arr.push(class_name);
+						}
+						for (let ci = 0 ; ci < item.gcss_gs_id.length; ci++) {
+							const sec_name = that.getSecName(item.gcss_gs_id[ci]);
+							sec_arr.push(sec_name);
+						}
+						for (let ci = 0 ; ci < item.gcss_gsub_id.length; ci++) {
+							const sub_name = that.getSubName(item.gcss_gsub_id[ci]);
+							sub_arr.push(sub_name);
+						}
 						that.CONFIG_ELEMENT_DATA.push({
 							position: pos,
-							name: item.class_name,
-							sec_name: item.sec_name,
-							sub_name: item.sub_name,
-							order: item.gcss_order,
+							class_name: class_arr.toString(),
+							sec_name: sec_arr.toString(),
+							sub_name: sub_arr.toString(),
+							entry_id: item.gcss_entry_id,
+							gcss_id: item.gcss_id,
 							action: item
 						});
 						pos++;
@@ -525,6 +543,22 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		}
 	}
 
+	getSecName(secId) {
+		for (const item of this.secArray) {
+			if (item.sec_id === secId) {
+				return item.sec_name;
+			}
+		}
+	}
+
+	getSubName(subId) {
+		for (const item of this.subArray) {
+			if (item.sub_id === subId) {
+				return item.sub_name;
+			}
+		}
+	}
+
 	getActiveStatus(value: any) {
 		if (Number(this.configValue) === 1) {
 			if (value.class_status === '1') {
@@ -606,6 +640,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				gcss_id: value.gcss_id,
+				gcss_entry_id: value.gcss_entry_id,
 				gcss_gc_id: value.gcss_gc_id,
 				gcss_gs_id: value.gcss_gs_id,
 				gcss_gsub_id: value.gcss_gsub_id,
@@ -647,7 +682,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 6) {
 			this.getClassSectionSubject(this);
-			this.displayedColumns = ['position', 'name', 'sec_name', 'sub_name', 'order', 'action', 'modify'];
+			this.displayedColumns = ['position', 'class_name', 'sec_name', 'sub_name', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 7) {
 			this.getDetailsCdpRelation(this);
@@ -714,7 +749,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertSubtopic', this.getSubTopic);
 					break;
 				case '6':
-					this.formGroupArray[value - 1].formGroup.value.mt_status = '1';
+					this.formGroupArray[value - 1].formGroup.value.gcss_status = '1';
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertGlobalClassSectionSubject', this.getClassSectionSubject);
 					break;
 				case '7':
@@ -861,6 +896,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				this.resetForm(this.configValue);
 				next(this);
 				this.commonService.showSuccessErrorMessage('Added Succesfully', 'success');
+			} else {
+				this.commonService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
@@ -871,6 +908,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				this.setupUpdateFlag = false;
 				next(this);
 				this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
+			} else {
+				this.commonService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
