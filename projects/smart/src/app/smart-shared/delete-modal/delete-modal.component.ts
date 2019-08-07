@@ -18,6 +18,10 @@ export class DeleteModalComponent implements OnInit {
 	}
 	openModal(data) {
 		this.inputData = data;
+
+		if (! (this.inputData && this.inputData.text)) {
+			this.inputData.text = 'Delete ';
+		}
 		this.dialogRef = this.dialog.open(this.deleteModal, {
 			'height': '30vh',
 			'width': '60vh',
