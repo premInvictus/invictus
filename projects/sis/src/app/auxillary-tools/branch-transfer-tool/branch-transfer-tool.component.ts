@@ -57,7 +57,6 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 		this.getClass();
 		// this.getSession();
 		this.getBranch();
-		this.getBranchClassAndSession();
 		// this.sessionPromote = this.currentDate.getFullYear() - 1 + '-' + (this.currentDate.getFullYear().toString()).substring(2, 4);
 		// this.sessionDemote = this.currentDate.getFullYear() + '-' + ((this.currentDate.getFullYear() + 1).toString()).substring(2, 4);
 		this.promoteFlag = false;
