@@ -230,8 +230,6 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					}
 				}
 
-				console.log('that.parentSubArray', that.parentSubArray);
-
 				if (that.configValue === '3') {
 					that.CONFIG_ELEMENT_DATA = [];
 					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
@@ -272,8 +270,6 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		that.smartService.getTopic().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				that.topicArray = result.data;
-				console.log('this.topicArray', that.topicArray);
-				console.log('this.configValue', that.configValue);
 				if (that.configValue === '4') {
 					that.CONFIG_ELEMENT_DATA = [];
 					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
@@ -502,7 +498,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 							for (const item of result.data) {
 								that.CONFIG_ELEMENT_DATA.push({
 									position: pos,
-									name: item.class_id,
+									name: that.getClassName(item.class_id),
 									no_of_day: item.no_of_day,
 									no_of_period: item.no_of_period,
 									action: item
@@ -519,6 +515,14 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					}
 				}
 			);
+	}
+
+	getClassName(classId) {
+		for (const item of this.classArray) {
+			if (item.class_id === classId) {
+				return item.class_name;
+			}
+		}
 	}
 
 	getActiveStatus(value: any) {
