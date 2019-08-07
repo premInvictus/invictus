@@ -258,29 +258,18 @@ export class ReviewSyllabusComponent implements OnInit {
 			return this.subjectArray[ctrIndex].sub_name;
 		}
 	}
-	// // export excel code
-	// exportAsExcel() {
-	// 	// tslint:disable-next-line:max-line-length
-	// 	const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table'));
-	// 	XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-	// 	XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
-
-	// }
-
-
-
 	// export excel code
 	exportAsExcel() {
 		let reportType: any = '';
 		let reportType2: any = '';
 		const columns: any = [];
 		columns.push({
-			key: 'sd_topic_id',
-			width: this.checkWidth('sd_topic_id', 'Topic')
+			key: 'sd_topic_name',
+			width: this.checkWidth('sd_topic_name', 'Topic')
 		});
 		columns.push({
-			key: 'sd_st_id',
-			width: this.checkWidth('sd_st_id', 'Sub Topic')
+			key: 'sd_st_name',
+			width: this.checkWidth('sd_st_name', 'Sub Topic')
 		});
 		columns.push({
 			key: 'sd_desc',
@@ -301,22 +290,6 @@ export class ReviewSyllabusComponent implements OnInit {
 		columns.push({
 			key: 'total',
 			width: this.checkWidth('total', 'Total')
-		});
-		columns.push({
-			key: 'sd_period_revision',
-			width: this.checkWidth('sd_period_revision', 'Revision')
-		});
-		columns.push({
-			key: 'sd_unpublish_reason_id',
-			width: this.checkWidth('sd_unpublish_reason_id', 'Reason')
-		});
-		columns.push({
-			key: 'sd_unpublish_remark',
-			width: this.checkWidth('sd_unpublish_remark', 'Remarks')
-		});
-		columns.push({
-			key: 'au_full_name',
-			width: this.checkWidth('au_full_name', 'Unpublisher')
 		});
 		reportType2 = new TitleCasePipe().transform('review syllabus repo_') + this.sessionName;
 		reportType = new TitleCasePipe().transform('review syllabus report: ') + this.sessionName;
@@ -344,57 +317,31 @@ export class ReviewSyllabusComponent implements OnInit {
 		worksheet.getCell('F5').value = 'Revision';
 		worksheet.mergeCells('G4:G5');
 		worksheet.getCell('G4').value = 'Total';
-		worksheet.mergeCells('H4:H5');
-		worksheet.getCell('H4').value = 'Reason to Unpublish';
 		worksheet.columns = columns;
-		this.length = worksheet._rows.length + 1;
+		this.length = worksheet._rows.length;
 		for (const item of this.finalSpannedArray) {
+			const prev = this.length + 1;
 			const obj: any = {};
 			if (item.sd_topic_id === item.details[0].sd_topic_id) {
 				for (const dety of item.details) {
-					obj['sd_topic_id'] = this.getTopicName(item.sd_topic_id);
-					if (dety.sd_ctr_id = '1') {
-						obj['sd_st_id'] = this.getSubTopicName(dety.sd_st_id);
-					} else if (dety.sd_ctr_id = '2') {
-						obj['sd_st_id'] = 'Test';
+					this.length++;
+					if (dety.sd_ctr_id === '1') {
+						worksheet.getCell('B' + this.length).value = dety.sd_st_name;
+					} else if (dety.sd_ctr_id === '2') {
+						worksheet.getCell('B' + this.length).value = 'Test';
 					} else {
-						obj['sd_st_id'] = 'Revision';
+						worksheet.getCell('B' + this.length).value = 'Revision';
 					}
-					obj['sd_desc'] = dety.sd_desc;
-					obj['sd_period_teacher'] = dety.sd_period_teacher;
-					obj['sd_period_test'] = dety.sd_period_test;
-					obj['sd_period_revision'] = dety.sd_period_revision;
-
+					worksheet.getCell('C' + this.length).value = this.commonService.htmlToText(dety.sd_desc);
+					worksheet.getCell('D' + this.length).value = dety.sd_period_teacher;
+					worksheet.getCell('E' + this.length).value = dety.sd_period_test;
+					worksheet.getCell('F' + this.length).value = dety.sd_period_revision;
 				}
+				worksheet.mergeCells('A' + prev + ':' + 'A' + this.length);
+				worksheet.getCell('A' + prev).value = this.getTopicName(item.sd_topic_id);
+				worksheet.mergeCells('G' + prev + ':' + 'G' + this.length);
+				worksheet.getCell('G' + prev).value = item.total;
 			}
-
-
-
-			// obj['sd_topic_id'] = item.subject_name;
-			// obj['count'] = item.count;
-			// if (this.periodCompletionArray[Number(item.subject_id)]) {
-			// 	obj['subject_id'] = this.periodCompletionArray[Number(item.subject_id)];
-			// } else {
-			// 	obj['subject_id'] = '-';
-			// }
-			// obj['countYear'] = item.countYear - item.count;
-			// if (this.periodCompletionArray[Number(item.subject_id)]) {
-			// 	obj['deviation'] = Number(item.count) - Number(this.periodCompletionArray[Number(item.subject_id)]);
-			// } else {
-			// 	obj['deviation'] = Number(item.count);
-			// }
-			// if (this.remarkArray[Number(item.subject_id)]) {
-			// 	obj['remarks'] = new CapitalizePipe().transform(this.remarkArray[Number(item.subject_id)]);
-			// } else {
-			// 	obj['remarks'] = '-';
-			// }
-			// if (this.createdByArray[Number(item.subject_id)] === this.currentUser.login_id) {
-			// 	obj['remarks_by'] = '-';
-			// } else if (this.createdByArray[Number(item.subject_id)] !== this.currentUser.login_id) {
-			// 	obj['remarks_by'] = new TitleCasePipe().transform(this.UserArray[this.createdByArray[Number(item.subject_id)]]);
-			// } else {
-			// 	obj['remarks_by'] = '-';
-			// }
 			worksheet.addRow(obj);
 		}
 
@@ -433,75 +380,54 @@ export class ReviewSyllabusComponent implements OnInit {
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
-					cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
 			}
 			if (rowNum > 5 && rowNum <= worksheet._rows.length) {
-				let cellColor: any = '';
-				let fontColor: any = '';
 				row.eachCell(cell => {
-					if (cell._address.charAt(0) === 'E') {
-						if (Number(cell.model.value) > 0) {
-							cellColor = '439f47';
-							fontColor = 'ffffff';
-						} else if (Number(cell.model.value) < 0) {
-							cellColor = 'c9122b';
-							fontColor = 'ffffff';
-						} else if (Number(cell.model.value) === 0) {
-							cellColor = 'ffffff';
-							fontColor = 'black';
+					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'G') {
+						if (rowNum % 2 === 0) {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
+							};
+						} else {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: '888888' },
+								bgColor: { argb: '888888' },
+							};
 						}
-						cell.fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: cellColor },
-							bgColor: { argb: cellColor },
-						};
-						cell.font = {
-							color: { argb: fontColor },
-							bold: true,
-							name: 'Arial',
-							size: 10
-						};
-						cell.border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-					} else {
-						cell.fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						cell.font = {
-							color: { argb: 'black' },
-							bold: false,
-							name: 'Arial',
-							size: 10
-						};
-						cell.border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
 					}
+					cell.font = {
+						color: { argb: 'black' },
+						bold: false,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
 			}
 		});
 		const obj3: any = {};
-		obj3['subject_name'] = 'Grand Total';
-		obj3['count'] = this.dataArr.map(t => t['count']).reduce((acc, val) => acc + val, 0);
-		obj3['subject_id'] = this.dataArr.map(t => t['subject_id']).reduce((acc, val) => acc + val, 0);
-		obj3['countYear'] = this.dataArr.map(t => t['countYear']).reduce((acc, val) => acc + val, 0);
-		obj3['deviation'] = '';
-		obj3['remarks'] = '';
-		obj3['remarks_by'] = '';
+		obj3['sd_topic_name'] = 'Grand Total';
+		obj3['sd_st_name'] = '';
+		obj3['sd_desc'] = '';
+		obj3['sd_period_teacher'] = this.dataArr.map(t => t['sd_period_teacher']).reduce((acc, val) => Number(acc) + Number(val), 0);
+		obj3['sd_period_test'] = this.dataArr.map(t => t['sd_period_test']).reduce((acc, val) => Number(acc) + Number(val), 0);
+		obj3['sd_period_revision'] = this.dataArr.map(t => t['sd_period_revision']).reduce((acc, val) => Number(acc) + Number(val), 0);
+		obj3['total'] = this.dataArr.map(t => t['sd_period_teacher']).reduce((acc, val) => Number(acc) + Number(val), 0) +
+			this.dataArr.map(t => t['sd_period_test']).reduce((acc, val) => Number(acc) + Number(val), 0) +
+			this.dataArr.map(t => t['sd_period_revision']).reduce((acc, val) => Number(acc) + Number(val), 0);
 		worksheet.addRow(obj3);
 		worksheet.eachRow((row, rowNum) => {
 			if (rowNum === worksheet._rows.length) {
@@ -534,46 +460,13 @@ export class ReviewSyllabusComponent implements OnInit {
 		});
 
 	}
+	// check the max  width of the cell
 	checkWidth(id, header) {
 		const res = this.dataArr.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
 		const max2 = header.toString().length;
 		const max = Math.max.apply(null, res);
 		return max2 > max ? max2 : max;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	// pdf download
 	pdfDownload() {
 		const doc = new jsPDF('landscape');
@@ -804,6 +697,14 @@ export class ReviewSyllabusComponent implements OnInit {
 												} else {
 													// tslint:disable-next-line: max-line-length
 													this.finalSpannedArray[findex].total = Number(this.finalSpannedArray[findex].total) + Number(this.finalSyllabusArray[i].sd_period_req);
+												}
+
+												this.dataArr = [];
+												for (const item of this.finalSpannedArray) {
+													const obj: any = {};
+													for (const dety of item.details) {
+														this.dataArr.push(dety);
+													}
 												}
 											}
 										} else {
