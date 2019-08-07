@@ -87,7 +87,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				}
 			});
 		} else {
-			this.sisService.getClass({}).subscribe((result: any) => {
+			this.smartService.getClass({}).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.classArray = result.data;
 					if (this.class_id) {
@@ -112,7 +112,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 					}
 				});
 		} else {
-			this.sisService.getSectionsByClass({ class_id: this.class_id }).subscribe((result: any) => {
+			this.smartService.getSectionsByClass({ class_id: this.class_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.sectionArray = result.data;
 				} else {
@@ -140,7 +140,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				});
 			}
 		} else {
-			this.axiomService.getSubjectsByClass({ class_id: this.class_id }).subscribe((result: any) => {
+			this.smartService.getSubjectsByClass({ class_id: this.class_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
 					if (this.sub_id) {

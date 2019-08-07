@@ -99,7 +99,7 @@ export class LogEntryReportComponent implements OnInit {
 
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.smartService.getClass({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			} else {
@@ -110,7 +110,7 @@ export class LogEntryReportComponent implements OnInit {
 
 	getSectionsByClass() {
 		this.sectionArray = [];
-		this.sisService.getSectionsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
+		this.smartService.getSectionsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.sectionArray = result.data;
 			} else {
@@ -121,7 +121,7 @@ export class LogEntryReportComponent implements OnInit {
 
 	getSubject() {
 		this.subjectArray = [];
-		this.axiomService.getSubject().subscribe((result: any) => {
+		this.smartService.getSubject({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
 			} else {

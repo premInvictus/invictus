@@ -75,7 +75,7 @@ export class ComparitiveComponent implements OnInit {
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
-		this.sisService.getClass(classParam)
+		this.syllabusService.getClassData(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -95,7 +95,7 @@ export class ComparitiveComponent implements OnInit {
 		});
 		const sectionParam: any = {};
 		sectionParam.class_id = this.comparitiveForm.value.syl_class_id;
-		this.sisService.getSectionsByClass(sectionParam)
+		this.syllabusService.getSectionsByClass(sectionParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -116,7 +116,7 @@ export class ComparitiveComponent implements OnInit {
 		this.finalDivFlag = true;
 		const subjectParam: any = {};
 		subjectParam.class_id = this.comparitiveForm.value.syl_class_id;
-		this.axiomService.getSubjectsByClass(subjectParam)
+		this.syllabusService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -131,7 +131,7 @@ export class ComparitiveComponent implements OnInit {
 
 	//  Get Topic List function
 	getTopicByClassSubject() {
-		this.axiomService.getTopicByClassSubject(this.comparitiveForm.value.syl_class_id, this.comparitiveForm.value.syl_sub_id)
+		this.syllabusService.getTopicByClassSubject(this.comparitiveForm.value.syl_class_id, this.comparitiveForm.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {

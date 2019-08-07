@@ -92,7 +92,7 @@ export class TimeTableComponent implements OnInit {
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
-		this.sisService.getClass(classParam)
+		this.syllabusService.getClassData(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -108,7 +108,7 @@ export class TimeTableComponent implements OnInit {
 	getSectionsByClass() {
 		const sectionParam: any = {};
 		sectionParam.class_id = this.uploadTimeTableForm.value.tt_class_id;
-		this.sisService.getSectionsByClass(sectionParam)
+		this.syllabusService.getSectionsByClass(sectionParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {

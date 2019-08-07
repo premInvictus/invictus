@@ -114,7 +114,7 @@ export class AddSchedulerComponent implements OnInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.smartService.getClass({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			} else {

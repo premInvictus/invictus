@@ -143,7 +143,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
-		this.sisService.getClass(classParam)
+		this.smartService.getClassData(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -162,7 +162,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 		});
 		const sectionParam: any = {};
 		sectionParam.class_id = this.progressReportForm.value.syl_class_id;
-		this.sisService.getSectionsByClass(sectionParam)
+		this.smartService.getSectionsByClass(sectionParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {

@@ -78,7 +78,7 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.smartService.getClass({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			} else {
@@ -89,7 +89,7 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 
 	getSectionsByClass() {
 		this.sectionArray = [];
-		this.sisService.getSectionsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
+		this.smartService.getSectionsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.sectionArray = result.data;
 			} else {
@@ -103,7 +103,7 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 		this.paramForm.patchValue({
 			sub_id: ''
 		});
-		this.axiomService.getSubjectsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
+		this.smartService.getSubjectsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
 			} else {
@@ -113,7 +113,7 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 	}
 	getSubject() {
 		this.subjectArray = [];
-		this.axiomService.getSubject().subscribe((result: any) => {
+		this.smartService.getSubject({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
 			} else {

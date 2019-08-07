@@ -57,7 +57,7 @@ export class ViewSyllabusComponent implements OnInit {
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
-		this.sisService.getClass(classParam)
+		this.syllabusService.getClassData(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -72,7 +72,7 @@ export class ViewSyllabusComponent implements OnInit {
 
 	getSectionsByClass() {
 		this.sectionArray = [];
-		this.sisService.getSectionsByClass({ class_id: this.reviewform.value.syl_class_id }).subscribe((result: any) => {
+		this.syllabusService.getSectionsByClass({ class_id: this.reviewform.value.syl_class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.sectionArray = result.data;
 			} else {
@@ -86,7 +86,7 @@ export class ViewSyllabusComponent implements OnInit {
 		this.finalSpannedArray = [];
 		const subjectParam: any = {};
 		subjectParam.class_id = this.reviewform.value.syl_class_id;
-		this.axiomService.getSubjectsByClass(subjectParam)
+		this.syllabusService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -101,7 +101,7 @@ export class ViewSyllabusComponent implements OnInit {
 
 	//  Get Topic List function
 	getTopicByClassSubject() {
-		this.axiomService.getTopicByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
+		this.syllabusService.getTopicByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -123,7 +123,7 @@ export class ViewSyllabusComponent implements OnInit {
 
 	//  Get Sub Topic Name
 	getSubTopicName(value): void {
-		this.axiomService.getSubtopicByTopic(value)
+		this.syllabusService.getSubTopic({st_topic_id: value})
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
