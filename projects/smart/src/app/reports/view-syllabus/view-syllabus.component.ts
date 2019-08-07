@@ -204,6 +204,9 @@ export class ViewSyllabusComponent implements OnInit {
 
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
+		this.teachingSum = 0;
+		this.testSum = 0;
+		this.revisionSum = 0;
 		if (this.reviewform.value.syl_class_id && this.reviewform.value.syl_sub_id && this.reviewform.value.syl_sec_id) {
 			this.syllabusService.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
 				.subscribe(
@@ -229,6 +232,7 @@ export class ViewSyllabusComponent implements OnInit {
 											if (result1 && result1.status === 'ok') {
 												this.finalSyllabusArray = result1.data.syllabusDetails;
 												const topicwiseDetails = result1.data.topicwiseDetails;
+												const classworkDetails = result1.data.classworkDetails;
 												const periodCoundDetails = result1.data.periodCoundDetails;
 												const scheduleDetails = result1.data.scheduleDetails;
 												const sessionStartDate = result1.data.sessionStartDate;
@@ -341,6 +345,7 @@ export class ViewSyllabusComponent implements OnInit {
 														const eachTopicStatus: any = {};
 														eachTopicStatus.statusStr = 'Yet To Start';
 														eachTopicStatus.statusDate = '';
+														eachTopicStatus.color = 'red';
 														eachTopicStatus.statusFlag = false;
 														if (topicwiseDetails && topicwiseDetails.length > 0) {
 															const findex = topicwiseDetails.findIndex(e => e.tw_topic_id === element.sd_topic_id);
@@ -350,8 +355,24 @@ export class ViewSyllabusComponent implements OnInit {
 																	eachTopicStatus.statusStr = 'Completed';
 																	eachTopicStatus.statusDate = topicwiseDetails[findex].compilation_date;
 																	eachTopicStatus.statusFlag = true;
-																} else if (tempArr.length > 0) {
-																	eachTopicStatus.statusStr = 'Inprogress';
+																	eachTopicStatus.color = 'green';
+																} else if (tempArr.length === 2) {
+																	eachTopicStatus.statusStr = 'Revision Done';
+																	eachTopicStatus.statusDate = topicwiseDetails[findex].compilation_date;
+																	eachTopicStatus.statusFlag = true;
+																	eachTopicStatus.color = 'green';
+																} else if (tempArr.length === 1) {
+																	eachTopicStatus.statusStr = 'Course Completed';
+																	eachTopicStatus.statusDate = topicwiseDetails[findex].compilation_date;
+																	eachTopicStatus.statusFlag = true;
+																	eachTopicStatus.color = 'green';
+																}
+															} else {
+																const cindex = classworkDetails.findIndex(c => c.cw_topic_id === element.sd_topic_id);
+																if (cindex !== -1) {
+																	eachTopicStatus.statusStr = 'In Progress';
+																	eachTopicStatus.color = 'yellow';
+																	eachTopicStatus.statusFlag = false;
 																}
 															}
 														}

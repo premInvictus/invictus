@@ -109,6 +109,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.subjectArray = result.data;
+						console.log(this.subjectArray);
 					} else {
 						this.subjectArray = [];
 					}
