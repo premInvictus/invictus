@@ -233,7 +233,7 @@ export class AddSyllabusComponent implements OnInit {
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
-		this.sisService.getClass(classParam)
+		this.syllabusService.getClassData(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -258,7 +258,7 @@ export class AddSyllabusComponent implements OnInit {
 	getSubjectsByClass(): void {
 		const subjectParam: any = {};
 		subjectParam.class_id = this.syllabusForm.value.syl_class_id;
-		this.axiomService.getSubjectsByClass(subjectParam)
+		this.syllabusService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -284,7 +284,7 @@ export class AddSyllabusComponent implements OnInit {
 
 	//  Get Topic List function
 	getTopicByClassSubject() {
-		this.axiomService.getTopicByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
+		this.syllabusService.getTopicByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -298,7 +298,7 @@ export class AddSyllabusComponent implements OnInit {
 
 	//  Get Subtopic List function
 	getSubtopicByTopic() {
-		this.axiomService.getSubtopicByTopic(this.syllabusDetailForm.value.sd_topic_id)
+		this.syllabusService.getSubTopic({st_topic_id: this.syllabusDetailForm.value.sd_topic_id})
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -535,7 +535,7 @@ export class AddSyllabusComponent implements OnInit {
 		}
 	}
 	excelDownload() {
-		this.axiomService.getTopicByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
+		this.syllabusService.getTopicByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {

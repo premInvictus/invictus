@@ -72,7 +72,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
-		this.sisService.getClass(classParam)
+		this.smartService.getClass(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -94,7 +94,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 		});
 		const sectionParam: any = {};
 		sectionParam.class_id = this.subjectPeriodForm.value.tt_class_id;
-		this.sisService.getSectionsByClass(sectionParam)
+		this.smartService.getSectionsByClass(sectionParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -110,7 +110,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 	getSubjectsByClass() {
 		const subjectParam: any = {};
 		subjectParam.class_id = this.subjectPeriodForm.value.tt_class_id;
-		this.axiomService.getSubjectsByClass(subjectParam)
+		this.smartService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {

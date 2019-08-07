@@ -8,14 +8,14 @@ export class AxiomService {
 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 
-	// fetch subtopic
-	getSubtopicByTopic(topic_id) {
+	// fetch subtopic , updated with global config
+	/* getSubtopicByTopic(topic_id) {
 		this.service.startLoading();
 		return this.http.get(environment.apiAxiomUrl + `/setupdetail/getSubtopicByTopic/${topic_id}`);
-	}
+	} */
 
-	// fetch topic
-	getTopicByClassSubject(class_id, subject_id) {
+	// fetch topic , updated with global config
+	/* getTopicByClassSubject(class_id, subject_id) {
 		const param: any = {};
 		if (class_id) {
 			param.class_id = class_id;
@@ -25,7 +25,8 @@ export class AxiomService {
 		}
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param);
-	}
+	} */
+	/* // updated with new api in common
 	getSubjectsByClass(value) {
 		const param: any = {};
 		if (value.class_id) {
@@ -33,7 +34,7 @@ export class AxiomService {
 		}
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/setupdetail/getSubjectsByClass', param);
-	}
+	} */
 	getAllTeacher(value) {
 		const param: any = {};
 		if (value.full_name) {
@@ -60,9 +61,10 @@ export class AxiomService {
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/users/getAllTeacher', param);
 	}
+	/* // updated with global config
 	getSubject() {
 		this.service.startLoading();
 		return this.http.get(environment.apiAxiomUrl + '/setup/subject/1');
 
-	}
+	} */
 }

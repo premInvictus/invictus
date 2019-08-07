@@ -59,6 +59,14 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/common/getSchedulerEventCategory');
 	}
+	getSectionsByClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSectionsByClass', value);
+	}
+	getSubjectsByClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSubjectsByClass', value);
+	}
 	getSubtopicCountAndDetail(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/topicwise/getSubtopicCountAndDetail', value);
@@ -371,6 +379,18 @@ export class SmartService {
 		return this.http.post(environment.apiSmartUrl + '/setup/getTopic', value);
 	}
 
+	getTopicByClassSubject(class_id, subject_id) {
+		const param: any = {};
+		if (class_id) {
+			param.topic_class_id = class_id;
+		}
+		if (subject_id) {
+			param.topic_sub_id = subject_id;
+		}
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getTopic', param);
+	}
+
 	insertSubTopic(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/setup/insertSubTopic', value);
@@ -389,6 +409,11 @@ export class SmartService {
 	getGlobalClassSectionSubject(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/setup/getGlobalClassSectionSubject', value);
+	}
+
+	getClassData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getClassData', value);
 	}
 }
 
