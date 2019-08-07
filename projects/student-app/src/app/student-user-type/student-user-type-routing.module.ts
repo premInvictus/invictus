@@ -24,6 +24,10 @@ const routes: Routes = [
 				path: 'fees',
 				loadChildren: '../student-fee/student-fee.module#StudentFeeModule'
 			},
+			{
+				path: 'academics',
+				loadChildren: '../academics/academics.module#AcademicsModule'
+			},
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]
 	},

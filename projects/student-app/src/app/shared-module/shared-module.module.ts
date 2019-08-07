@@ -29,6 +29,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
+import {MatStepperModule} from '@angular/material/stepper';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
@@ -70,6 +71,7 @@ import { MakePaymentComponent } from '../student-fee/make-payment/make-payment.c
 		LayoutModule,
 		RouterModule,
 		BsDropdownModule,
+		MatStepperModule,
 		AccordionModule.forRoot(),
 		FormsModule,
 		ReactiveFormsModule,
