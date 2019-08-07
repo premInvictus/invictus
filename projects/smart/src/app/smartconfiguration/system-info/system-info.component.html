@@ -352,14 +352,25 @@
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container
-                                                                                *ngIf="configValue == '4' || configValue == '6'"
+                                                                                *ngIf="configValue == '4'"
                                                                                 matColumnDef="class_name">
                                                                                 <th mat-header-cell *matHeaderCellDef
                                                                                     mat-sort-header>
-                                                                                    Class
+                                                                                    Class 
                                                                                 </th>
                                                                                 <td mat-cell *matCellDef="let item">
                                                                                     {{ item.class_name }}
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container
+                                                                                *ngIf="configValue == '6'"
+                                                                                matColumnDef="class_name">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Class 
+                                                                                </th>
+                                                                                <td mat-cell *matCellDef="let item">
+                                                                                       {{item.class_name}}
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container *ngIf="configValue == '6'"
@@ -369,7 +380,8 @@
                                                                                     Section
                                                                                 </th>
                                                                                 <td mat-cell *matCellDef="let item">
-                                                                                    {{ item.sec_name }}
+                                                                                    
+                                                                                        {{ item.sec_name }}
                                                                                 </td>
                                                                             </ng-container>
 
@@ -420,7 +432,7 @@
 
 
                                                                             <!-- Class Column -->
-                                                                            <ng-container *ngIf="configValue != '7'" matColumnDef="order">
+                                                                            <ng-container *ngIf="configValue != '7' && configValue != '6'" matColumnDef="order">
                                                                                 <th mat-header-cell *matHeaderCellDef
                                                                                     mat-sort-header>
                                                                                     {{secondHeaderArray[configValue-1]}}
