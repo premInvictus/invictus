@@ -20,6 +20,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	session: any;
 	param: any = {};
 	classArray: any[];
+	parentSubArray: any[];
 	secArray: any[];
 	topicArray: any[];
 	detailArray: any[];
@@ -94,6 +95,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		{
 			formGroup: this.fbuild.group({
 				sub_id: '',
+				sub_parent_id: '',
 				sub_name: '',
 				sub_order: '',
 				sub_status: ''
@@ -217,9 +219,19 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 
 	getSubject(that) {
 		that.subArray = [];
+		that.parentSubArray = [];
 		that.smartService.getSubject().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				that.subArray = result.data;
+
+				for (const pi of result.data) {
+					if (pi.sub_parent_id === '0') {
+						that.parentSubArray.push(pi);
+					}
+				}
+
+				console.log('that.parentSubArray', that.parentSubArray);
+
 				if (that.configValue === '3') {
 					that.CONFIG_ELEMENT_DATA = [];
 					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
@@ -229,6 +241,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 							position: pos,
 							name: item.sub_name,
 							order: item.sub_order,
+							sub_parent_id: that.getParentSubjectName(item.sub_parent_id),
 							action: item
 						});
 						pos++;
@@ -242,6 +255,14 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				that.subArray = [];
 			}
 		});
+	}
+
+	getParentSubjectName(parentId) {
+		for (const item of this.parentSubArray ) {
+			if (item.sub_id === parentId) {
+				return item.sub_name;
+			}
+		}
 	}
 
 	getTopic(that) {
@@ -533,7 +554,6 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 
 	formEdit(value: any) {
-		console.log('value', value);
 		if (Number(this.configValue) === 1) {
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
@@ -555,6 +575,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				sub_id: value.sub_id,
 				sub_name: value.sub_name,
+				sub_parent_id: value.sub_parent_id,
 				sub_order: value.sub_order,
 				sub_status: value.sub_status
 			});
@@ -610,7 +631,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getSubject(this);
-			this.displayedColumns = ['position', 'name', 'order', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'sub_parent_id' , 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 4) {
 			this.getTopic(this);
