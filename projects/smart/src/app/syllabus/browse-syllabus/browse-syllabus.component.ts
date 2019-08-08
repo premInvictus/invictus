@@ -433,9 +433,6 @@ export class BrowseSyllabusComponent implements OnInit {
 		const max = Math.max.apply(null, res);
 		return max2 > max ? max2 : max;
 	}
-
-
-
 	// pdf download
 	pdfDownload() {
 		const doc = new jsPDF('landscape');
@@ -603,7 +600,6 @@ export class BrowseSyllabusComponent implements OnInit {
 												}
 												this.dataArr = [];
 												for (const item of this.finalSpannedArray) {
-													const obj: any = {};
 													for (const dety of item.details) {
 														this.dataArr.push(dety);
 													}

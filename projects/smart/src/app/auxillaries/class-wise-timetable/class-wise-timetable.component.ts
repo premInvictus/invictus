@@ -132,9 +132,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 	}
 
 	// get section list according to selected class
-	getSectionsByClass() {
-		this.finaldivflag = true;
-		this.subjectwiseFlag = false;
+	getSectionsByClass() {	
 		this.classwiseForm.patchValue({
 			'tt_section_id': ''
 		});
@@ -148,6 +146,8 @@ export class ClassWiseTimetableComponent implements OnInit {
 						this.subCountArray = [];
 						this.finalCountArray = [];
 						this.classwisetableArray = [];
+						this.finaldivflag = true;
+						this.subjectwiseFlag = false;
 						this.getSubjectsByClass();
 					} else {
 						this.sectionArray = [];
@@ -155,7 +155,6 @@ export class ClassWiseTimetableComponent implements OnInit {
 				}
 			);
 	}
-
 	// get subject list according to selected class
 	getSubjectsByClass() {
 		const subjectParam: any = {};
@@ -283,7 +282,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 					cell.font = {
 						name: 'Arial',
 						size: 10,
-						bold: true,
+						bold: true, 
 						color: { argb: '636a6a' }
 					};
 					cell.fill = {

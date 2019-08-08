@@ -71,7 +71,22 @@
                         <mat-icon matPrefix>filter_list</mat-icon>
                     </mat-form-field>
                 </div>
+                <div class="col-8 text-right">
+                <div class="inline-flex btn-spacer text-right" *ngIf ="ELEMENT_DATA.length > 0 ">
+                        <div>
+                            <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+                                matTooltip="Download as Pdf" (click)="pdfDownload()" />
+                        </div>
+                    </div>
+                    <div class="inline-flex btn-spacer text-right" *ngIf ="ELEMENT_DATA.length > 0 ">
+                        <div>
+                            <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+                                matTooltip="Export as excel" (click)="exportAsExcel()" />
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="row margin-top-10">
                 <div class="col-12">
                     <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
