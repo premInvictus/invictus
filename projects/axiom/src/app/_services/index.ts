@@ -8,3 +8,4 @@ export * from './commonAPI.service';
 export *from './socket.service';
 export * from './treeview.service';
 export * from './userAccessMenu.service';
+export * from './smart.service';

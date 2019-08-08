@@ -98,7 +98,7 @@ export class ViewTeacherProfileComponent implements OnInit {
 		);
 	}
 	getAllTeacherListByName(param) {
-		this.qelementService.getUser(param).subscribe(
+		this.qelementService.getGlobalTeacher(param).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.teacherArrayByName = result.data;
@@ -107,7 +107,7 @@ export class ViewTeacherProfileComponent implements OnInit {
 		);
 	}
 	getUserDetail(param) {
-		this.qelementService.getUser(param).subscribe(
+		this.qelementService.getGlobalTeacher(param).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					if (result.data.length > 0) {

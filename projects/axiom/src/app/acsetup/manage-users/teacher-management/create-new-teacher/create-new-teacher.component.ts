@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, FormGroupDirective, NgForm, FormControl, Valida
 import { QelementService } from '../../../../questionbank/service/qelement.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AcsetupService } from '../../../../acsetup/service/acsetup.service';
-import { BreadCrumbService, UserAccessMenuService, NotificationService } from '../../../../_services/index';
+import { BreadCrumbService, UserAccessMenuService, NotificationService, SmartService } from '../../../../_services/index';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { AdminService } from '../../../../user-type/admin/services/admin.service';
 import { appConfig } from '../../../../app.config';
@@ -23,6 +23,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		private userAccessMenuService: UserAccessMenuService,
 		private fbuild: FormBuilder,
 		private qelementService: QelementService,
+		private smartService: SmartService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private notif: NotificationService,
@@ -99,7 +100,7 @@ export class CreateNewTeacherComponent implements OnInit {
 			param.role_id = '3';
 			param.login_id = this.login_id;
 			this.insertdata = true;
-			this.qelementService.getUser(param).subscribe(
+			this.qelementService.getGlobalTeacher(param).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						if (result.data.length > 0) {
@@ -378,16 +379,6 @@ export class CreateNewTeacherComponent implements OnInit {
 		);
 	}
 
-	getClass() {
-		this.qelementService.getClass().subscribe(
-			(result: any) => {
-				if (result && result.status === 'ok') {
-					this.classArray = result.data;
-				}
-			},
-		);
-	}
-
 	readUrl(event: any) {
 		this.openCropDialog(event);
 	}
@@ -416,7 +407,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		event.target.value = '';
 	}
 
-	getSubjectsByClass(): void {
+	/* getSubjectsByClass(): void {
 		this.qelementService.getSubjectsByClass(this.Cs_relation_Form.value.uc_class_id).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
@@ -438,7 +429,43 @@ export class CreateNewTeacherComponent implements OnInit {
 				}
 			},
 		);
+	} */
+
+	// changed for smart module
+	getClass() {
+		this.classArray = [];
+		this.smartService.getClass({}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.classArray = result.data;
+				}
+			}
+		);
 	}
+
+
+	getSubjectsByClass(): void {
+		this.subjectArray = [];
+		this.smartService.getSubjectsByClass({class_id: this.Cs_relation_Form.value.uc_class_id}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.subjectArray = result.data;
+				}
+			}
+		);
+	}
+
+	getSectionsByClass(): void {
+		this.sectionArray = [];
+		this.smartService.getSectionsByClass({class_id: this.Cs_relation_Form.value.uc_class_id}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.sectionArray = result.data;
+				}
+			}
+		);
+	}
+	// end
 
 	addUser() {
 		if (this.Teacher_Form.valid) {
