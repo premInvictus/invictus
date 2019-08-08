@@ -78,7 +78,7 @@
                         </div>
                     </div>
                     <table class="table table-borderd table-stripped custom-table" id="report_table">
-                        <thead class="table-skill__head text-center">
+                        <thead class="table-skill__head text-center" *ngIf="!finaldivflag">
                             <tr class="custom-tr">
                                 <th class="custom-th">Periods</th>
                                 <th class="custom-th">Monday</th>
@@ -121,7 +121,7 @@
                     </table>
                 </div>
             </div>
-            <div class="row margin-top-15" *ngIf="subjectwiseFlag">
+            <div class="row margin-top-15" *ngIf="!finaldivflag">
                 <div class="col-4">
                     <span class="font-size-20 font-bold">Subject Wise Breakup</span>
                 </div>
@@ -152,7 +152,7 @@
                 </div>
             </div> -->
         </mat-card>
-        <div class="row">
+        <div class="row"  *ngIf="!finaldivflag">
             <div class="col-12 ">
                 <mat-card class="remove-card-padding">
                     <div class="row">
