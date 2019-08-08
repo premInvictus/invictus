@@ -336,7 +336,7 @@
                                                                                     mat-sort-header>
                                                                                     {{firstHeaderArray[configValue-1]}}
                                                                                 </th>
-                                                                                <td mat-cell *matCellDef="let item">
+                                                                                <td class="left" mat-cell *matCellDef="let item">
                                                                                     <span *ngIf="item.name">{{ item.name }}</span>
                                                                                     <span *ngIf="!item.name">-</span>
                                                                                 </td>
@@ -347,7 +347,7 @@
                                                                                     mat-sort-header>
                                                                                     Topic Name
                                                                                 </th>
-                                                                                <td mat-cell *matCellDef="let item">
+                                                                                <td class="left" mat-cell *matCellDef="let item">
                                                                                     {{ item.topic_name }}
                                                                                 </td>
                                                                             </ng-container>
@@ -358,7 +358,7 @@
                                                                                     mat-sort-header>
                                                                                     Class 
                                                                                 </th>
-                                                                                <td mat-cell *matCellDef="let item">
+                                                                                <td  mat-cell *matCellDef="let item">
                                                                                     {{ item.class_name }}
                                                                                 </td>
                                                                             </ng-container>
@@ -369,7 +369,7 @@
                                                                                     mat-sort-header>
                                                                                     Class 
                                                                                 </th>
-                                                                                <td mat-cell *matCellDef="let item">
+                                                                                <td class="left" mat-cell *matCellDef="let item">
                                                                                        {{item.class_name}}
                                                                                 </td>
                                                                             </ng-container>
@@ -386,7 +386,18 @@
                                                                             </ng-container>
 
                                                                             <ng-container
-                                                                                *ngIf="configValue == '4' || configValue == '5' || configValue == '6'"
+                                                                                *ngIf="configValue == '4'"
+                                                                                matColumnDef="sub_name">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Subject
+                                                                                </th>
+                                                                                <td class="left" mat-cell *matCellDef="let item">
+                                                                                    {{ item.sub_name }}
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container
+                                                                                *ngIf="configValue == '5'"
                                                                                 matColumnDef="sub_name">
                                                                                 <th mat-header-cell *matHeaderCellDef
                                                                                     mat-sort-header>
@@ -397,13 +408,24 @@
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container
+                                                                                *ngIf="configValue == '6'"
+                                                                                matColumnDef="sub_name">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Subject
+                                                                                </th>
+                                                                                <td class = "left" mat-cell *matCellDef="let item">
+                                                                                    {{ item.sub_name }}
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container
                                                                                 *ngIf="configValue == '3'"
                                                                                 matColumnDef="sub_parent_id">
                                                                                 <th mat-header-cell *matHeaderCellDef
                                                                                     mat-sort-header>
                                                                                     Parent Subject
                                                                                 </th>
-                                                                                <td mat-cell *matCellDef="let item">
+                                                                                <td class="left" mat-cell *matCellDef="let item">
                                                                                    <span *ngIf="item.sub_parent_id">{{ item.sub_parent_id }}</span> 
                                                                                    <span *ngIf="!item.sub_parent_id">-</span> 
                                                                                 </td>
@@ -488,7 +510,7 @@
                                                                         </table>
                                                                     </div>
                                                                     <mat-paginator #paginator
-                                                                        [pageSizeOptions]=[5,10,20] [pageSize]="10">
+                                                                        [pageSizeOptions]=[5,10,20] [pageSize]="10" showFirstLastButtons>
                                                                     </mat-paginator>
                                                                 </div>
                                                             </div>
