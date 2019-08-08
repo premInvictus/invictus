@@ -744,7 +744,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					break;
 				case '5':
 					this.formGroupArray[value - 1].formGroup.value.st_status = '1';
-					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertSubtopic', this.getSubTopic);
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertSubTopic', this.getSubTopic);
 					break;
 				case '6':
 					this.formGroupArray[value - 1].formGroup.value.gcss_status = '1';
