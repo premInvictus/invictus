@@ -876,7 +876,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	applyFilter(event) { }
+	applyFilter(event) {
+		this.configDataSource.filter = event.trim().toLowerCase();
+	}
 
 	deleteCancel() { }
 
