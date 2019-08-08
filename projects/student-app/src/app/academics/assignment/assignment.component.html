@@ -1,0 +1,153 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <mat-card-title>
+        <h1 class="remove-bottom-margin font-size-24">Assignments</h1>
+      </mat-card-title>
+    </mat-card>
+  </div>
+</div>
+<div class="row margin-top-15">
+  <div class="col-6">
+    <div class="margin-top-5"><span class="font-size-16"> Today's Date : </span><span class="font-size-16 font-bold"> 19-July-2019</span></div>
+  </div>
+  <div class="col-6 text-right">
+    <button mat-button class="tab-button">Today Assignment</button>
+    <button mat-button class="tab-button">Past Assignment</button>
+
+  </div>
+</div>
+<div class="row margin-top-15">
+<div class="col-4">
+<mat-card class="student-yellow-border">
+  <mat-card-content>
+    <button mat-button class="student-small-btn font-bold">+5</button>
+    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
+    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
+    <p class="margin-top-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
+    <span>Assigned By : </span><span class="font-bold">Amit Kumar</span>
+  </mat-card-content>
+</mat-card>
+</div>
+<div class="col-4">
+<mat-card class="student-green-border">
+  <mat-card-content>
+    <button mat-button class="student-small-green font-bold">+5</button>
+    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
+    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
+    <p class="margin-top-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
+    <span>Assigned By : </span><span class="font-bold">Amit Kumar</span>
+  </mat-card-content>
+</mat-card>
+</div>
+<div class="col-4">
+<mat-card class="student-darkgreen-border">
+  <mat-card-content>
+    <button mat-button class="student-small-darkgreen font-bold">+5</button>
+    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
+    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
+    <p class="margin-top-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
+    <span>Assigned By : </span><span class="font-bold">Amit Kumar</span>
+  </mat-card-content>
+</mat-card>
+</div>
+</div>
+
+<div class="row margin-top-15">
+<div class="col-4">
+<mat-card class="student-red-border">
+  <mat-card-content>
+    <button mat-button class="student-small-red font-bold">+5</button>
+    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
+    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
+    <p class="margin-top-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
+    <span>Assigned By : </span><span class="font-bold">Amit Kumar</span>
+  </mat-card-content>
+</mat-card>
+</div>
+<div class="col-4">
+<mat-card class="student-purple-border">
+  <mat-card-content>
+    <button mat-button class="student-small-purple font-bold">+5</button>
+    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
+    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
+    <p class="margin-top-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
+    <span>Assigned By : </span><span class="font-bold">Amit Kumar</span>
+  </mat-card-content>
+</mat-card>
+</div>
+</div>
+
+
+<!--Past Ass-->
+<div class="row margin-top-15">
+  <div class="col-12">
+    <mat-vertical-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <div class="row">
+      <div class="col-11">
+      <ng-template matStepLabel><span class="font-size-20 font-bold font-skyblue">19-Jul-2019</span></ng-template>
+    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
+    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
+    <p><span>Assigned By : </span><span class="font-bold">Amit Kumar</span></p>
+    <p class="margin-top-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
+      </div>
+      <div class="col-1 ">
+      <button mat-mini-fab class="yellow-circle-button circle-button"><span class="font-white font-size-16 font-bold">+2</span></button>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-11">
+      <ng-template matStepLabel><span class="font-size-20 font-bold font-skyblue">19-Jul-2019</span></ng-template>
+    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
+    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
+    <p><span>Assigned By : </span><span class="font-bold">Amit Kumar</span></p>
+    <p class="margin-top-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
+      </div>
+      <div class="col-1 ">
+      <button mat-mini-fab class="yellow-circle-button circle-button"><span class="font-white font-size-16 font-bold">+2</span></button>
+      </div>
+    </div>
+    
+    
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <div class="row">
+      <div class="col-11">
+      <ng-template matStepLabel><span class="font-size-20 font-bold font-skyblue">20-Jul-2019</span></ng-template>
+    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
+    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
+    <p><span>Assigned By : </span><span class="font-bold">Amit Kumar</span></p>
+    <p class="margin-top-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
+      </div>
+      <div class="col-1 ">
+      <button mat-mini-fab class="yellow-circle-button circle-button"><span class="font-white font-size-16 font-bold">+2</span></button>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-11">
+      
+    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
+    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
+    <p><span>Assigned By : </span><span class="font-bold">Amit Kumar</span></p>
+    <p class="margin-top-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
+      </div>
+      <div class="col-1 ">
+      <button mat-mini-fab class="yellow-circle-button circle-button"><span class="font-white font-size-16 font-bold">+2</span></button>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    You are now done.
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>
+
+  </div>
+</div>
