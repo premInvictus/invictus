@@ -1,0 +1,119 @@
+<div class="row">
+    <div class="col-12">
+        <mat-card>
+            <div class="row">
+                <div class="col-8">
+                    <span class="font-size-24 font-medium"> Add Family</span>
+                </div>
+                <!--
+                <div class="col-4 text-right">
+                    <button mat-button class="font-size-14 font-white width-140 btn-blue">Add Family</button>
+                </div>
+-->
+            </div>
+        </mat-card>
+    </div>
+</div>
+
+
+<div class="row margin-top-15">
+    <div class="col-12">
+        <mat-card>
+            <div class="row">
+                <div class="col-10">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Admission No</mat-label>
+                        <input matInput placeholder="Admission No">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+                    <span class="font-size-20 margin-left-15 margin-right-15">OR</span>
+                    <mat-form-field class="margin-left-15 margin-right-15" appearance="outline">
+                        <mat-label>Class</mat-label>
+                        <mat-select>
+                            <mat-option></mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="margin-left-15 margin-right-15" appearance="outline">
+                        <mat-label>Section</mat-label>
+                        <mat-select>
+                            <mat-option></mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="margin-left-15 margin-right-15 width-220" appearance="outline">
+                        <mat-label>Student Name</mat-label>
+                        <input matInput>
+                    </mat-form-field>
+                </div>
+                <div class="col-2 text-right margin-top-10">
+                    <button mat-button class="font-size-14 font-white width-140 btn-blue">Add Child</button>
+                    <button mat-button class="font-size-14 margin-left-10 font-white width-140 btn-reset">Reset</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-borderd table-stripped custom-table">
+                        <thead class="table-skill__head text-center">
+                            <tr class="custom-tr">
+                                <th class="custom-th">Key Child</th>
+                                <th class="custom-th">Admission No</th>
+                                <th class="custom-th">Student Name</th>
+                                <th class="custom-th">Class</th>
+                                <th class="custom-th">Active parent</th>
+                                <th class="custom-th">Contact no</th>
+                                <th class="custom-th">Category</th>
+                                <th class="custom-th">Fee Structure</th>
+                                <th class="custom-th">Concession</th>
+                                <th class="custom-th">Transport</th>
+                                <th class="custom-th">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="custom-tr">
+                                <td class="custom-td">
+                                    <mat-radio-group aria-label="Select an option">
+                                        <mat-radio-button value="1"></mat-radio-button>
+
+                                    </mat-radio-group>
+                                </td>
+                                <td class="custom-td"><a>123456</a></td>
+                                <td class="custom-td">Rahul Kumar</td>
+                                <td class="custom-td">XII - A</td>
+                                <td class="custom-td">Vikram Kumar Singh</td>
+                                <td class="custom-td">9999988888</td>
+                                <td class="custom-td">Old Student</td>
+                                <td class="custom-td">Lorem Ipsum</td>
+                                <td class="custom-td">Tution Fee</td>
+                                <td class="custom-td">Route No. 2, Sector 62 </td>
+                                <td class="custom-td">
+                                    <i class="fas fa-trash-alt trash-icon"></i>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row margin-top-15">
+                <div class="col-12">
+                    <input type="file" multiple="true" id="upload_doc" style="display: none !important">
+                    <button mat-stroked-button class="btn-neutral"><label for="upload_doc" class="btn-document-label">Upload Declaration <i class="fas fa-cloud-upload-alt"></i></label></button>
+                </div>
+            </div>
+            <div class="row margin-top-15">
+                <div class="col-1 margin-bottom-15">
+                    <img class="btn-doc-upload-preview" src="https://icons-for-free.com/free-icons/png/512/2109135.png"><br>
+                    <button mat-button class="upload-document-delete-btn">
+                        <mat-icon class="btn-upload-icon">delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button mat-button class="font-size-14 font-white btn-success-green">Submit</button>
+                    <button mat-button class="font-size-14 font-white margin-left-10 btn-reset">Reset</button>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div>
