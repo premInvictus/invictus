@@ -11,7 +11,7 @@
       (eventClicked)="eventClicked($event)" (actionClicked)="actionClicked($event)">
     </angular-calendar-year-view>
   </div>
-  <div class="col-3">
+  <div class="col-3" *ngIf="ecArray.length > 0">
     <div class="steps">
       <div *ngFor="let item of ecArray;let i =index" [class]="bgClassColorArray[i]">
         <div class="step-header">
