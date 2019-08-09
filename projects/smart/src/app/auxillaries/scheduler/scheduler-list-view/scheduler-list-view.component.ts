@@ -17,7 +17,7 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('deleteModalRef') deleteModalRef;
 	ELEMENT_DATA: SchedulerList[] = [];
-	displayedColumns = ['srno', 'eventdate', 'eventname', 'eventdesc', 'class', 'eventcategory', 'publishedon', 'action'];
+	displayedColumns = ['srno', 'eventdate', 'eventname', 'eventdesc', 'class', 'eventcategory', 'publishedon', 'publishedby', 'action'];
 	dataSource = new MatTableDataSource<SchedulerList>(this.ELEMENT_DATA);
 	nodataFlag = true;
 	schedulerArray: any[] = [];
@@ -90,6 +90,7 @@ export class SchedulerListViewComponent implements OnInit, AfterViewInit, OnChan
 						each.srno = ++i;
 						each.sc_id = item.sc_id;
 						each.publishedon = this.commonAPIService.dateConvertion(item.sc_created_on);
+						each.publishedby = item.published_by;
 						each.eventdate = this.commonAPIService.dateConvertion(item.sc_from, 'd MMM') +
 							' - ' + this.commonAPIService.dateConvertion(item.sc_to, 'd MMM');
 						each.eventname = item.sc_title;

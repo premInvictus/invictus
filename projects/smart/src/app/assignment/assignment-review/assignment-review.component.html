@@ -96,15 +96,15 @@
             </ng-container>
             <ng-container matColumnDef="subject">
               <th mat-header-cell *matHeaderCellDef> Subject </th>
-              <td mat-cell *matCellDef="let element" style="text-align: left !important"> {{element.subject | capitalize}} </td>
+              <td mat-cell *matCellDef="let element" class="p-l-10 t-a-l" > {{element.subject | capitalize}} </td>
             </ng-container>
             <ng-container matColumnDef="topic">
               <th mat-header-cell *matHeaderCellDef> Topic </th>
-              <td mat-cell *matCellDef="let element" style="text-align: left !important"> {{element.topic | capitalize}} </td>
+              <td mat-cell *matCellDef="let element" class="p-l-10 t-a-l"> {{element.topic | capitalize}} </td>
             </ng-container>
             <ng-container matColumnDef="assignment">
               <th mat-header-cell *matHeaderCellDef> Assignment </th>
-              <td mat-cell *matCellDef="let element" style="text-align: left !important">
+              <td mat-cell *matCellDef="let element" class="p-l-10 t-a-l">
                 <div [innerHtml]="element.assignment | capitalize | truncatetext:100"></div>
               </td>
             </ng-container>
@@ -147,12 +147,12 @@
           <div *ngIf="nodataFlag && !isTeacher" class="no-records" style="text-align: center">
             <app-no-data
               [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-              [noDataText]="'No Data Available'" [subText]="'Please select class or subject'"></app-no-data>
+              [noDataText]="" [subText]="'Please select class or subject'"></app-no-data>
           </div>
           <div *ngIf="nodataFlag && isTeacher" class="no-records" style="text-align: center">
             <app-no-data
               [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-              [noDataText]="'No Data Available'"></app-no-data>
+              [noDataText]=""></app-no-data>
           </div>
         </div>
       </div>

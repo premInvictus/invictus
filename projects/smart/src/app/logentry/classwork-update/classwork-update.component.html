@@ -132,7 +132,7 @@
       </form>
       <div *ngIf="noDataFlag" class="text-center"><app-no-data 
         [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-        [noDataText]="'No Data Available'"
+        [noDataText]=""
         [subText]="'Please select teacher'"></app-no-data></div>
       <div class="row margin-top-20" *ngIf="!noDataFlag">
         <div class="col-12 text-center">
