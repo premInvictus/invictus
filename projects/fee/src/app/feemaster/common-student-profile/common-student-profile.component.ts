@@ -52,6 +52,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	@Output() key2 = new EventEmitter();
 	@Output() processTypeEmit = new EventEmitter();
 	@ViewChild('enrollmentFocus') enrollmentFocus: ElementRef;
+	@ViewChild('myInput') myInput: ElementRef;
 	studentdetailsform: FormGroup;
 	accountsForm: FormGroup;
 	studentdetails: any = {};
@@ -430,6 +431,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						}
 						this.loginId = '';
 						this.feeRenderId = '';
+
+						//myInput.select()
+						const inputElem = <HTMLInputElement>this.myInput.nativeElement;
+						inputElem.select();
 					} else {
 						// this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 						this.processtypeService.setProcesstype(this.studentRouteMoveStoreService.getProcessTypePrev());
