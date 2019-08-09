@@ -9,12 +9,12 @@
         </div>
         <div class="col-8 text-right">
           <div class="top-card-title">
+              <a [routerLink]="['../classwise-table']">
+                <span class="font-size-22 font-medium  margin-right-20">Class Wise View</span>
+              </a>
             <a [routerLink]="['../time-table']">
-              <button mat-raised-button class="btn-success-green margin-right-20"><i class="fas fa-plus"></i> Add New
-              </button></a>
-            <a [routerLink]="['../classwise-table']">
-              <span class="font-size-24 font-medium">Class Wise</span>
-            </a>
+              <button mat-raised-button class="btn-success-green"><i class="fas fa-plus"></i>
+              </button></a>           
           </div>
         </div>
       </div>
@@ -48,9 +48,8 @@
                 <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
               </mat-select>
             </mat-form-field>
-          </form>
+          </form>          
         </div>
-
       </div>
       <div class="row margin-top-0 text-right">
         <div class="col-12">
@@ -66,8 +65,8 @@
                 matTooltip="Export as excel" (click)="exportAsExcel('report_table')" />
             </div>
           </div>
-          <table class="table table-borderd table-stripped custom-table" id="report_table">
-            <thead class="table-skill__head text-center">
+          <table class="table table-borderd table-stripped custom-table" id="report_table" >
+            <thead class="table-skill__head text-center" *ngIf="!finalDivFlag">
               <tr class="custom-tr">
                 <th class="custom-th">Periods</th>
                 <th class="custom-th">Monday</th>
@@ -101,9 +100,6 @@
                   <img
                     src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
                   <br><br><br>
-                  <span class="font-size-20 font-bold font-color-brown">
-                    No Data Available
-                  </span>
                   <br><span class="font-size-20 font-light font-color-brown">
                     Please Upload Timetable
                   </span>
@@ -120,12 +116,6 @@
       </div>
       <div class="row margin-top-0 text-right" *ngIf="teacherwiseFlag">
         <div class="col-12">
-          <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="teacherwiseArray.length > 0">
-            <div>
-              <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
-                matTooltip="Export as excel" (click)="exportAsExcel('daywise_table')" />
-            </div>
-          </div>
           <table class="table table-borderd table-stripped custom-table" id="daywise_table">
             <thead class="table-skill__head text-center">
               <tr class="custom-tr">

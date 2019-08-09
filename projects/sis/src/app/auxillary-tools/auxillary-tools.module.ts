@@ -30,6 +30,7 @@ import { PrintIdCardComponent } from './id-card-printing/print-id-card/print-id-
 import { CancelSlctcComponent } from './cancel-slctc/cancel-slctc.component';
 import { ViewSlctcComponent } from './view-slctc/view-slctc.component';
 import { ViewSlctcPrintComponent } from './config-slctc/view-slctc-print/view-slctc-print.component';
+import { BranchTransferToolComponent } from './branch-transfer-tool/branch-transfer-tool.component';
 
 
 
@@ -68,7 +69,8 @@ import { ViewSlctcPrintComponent } from './config-slctc/view-slctc-print/view-sl
 		PrintIdCardComponent,
 		CancelSlctcComponent,
 		ViewSlctcComponent,
-		ViewSlctcPrintComponent
+		ViewSlctcPrintComponent,
+		BranchTransferToolComponent
 	],
 	entryComponents: [ViewIdCardComponent, PrintIdCardComponent, ViewSlctcPrintComponent]
 })

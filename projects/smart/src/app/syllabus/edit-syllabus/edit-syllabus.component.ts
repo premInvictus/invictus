@@ -85,7 +85,7 @@ export class EditSyllabusComponent implements OnInit {
 	}
 	//  Get Subtopic List function
 	getSubtopicByTopic(value) {
-		this.axiomService.getSubtopicByTopic(value)
+		this.syllabusService.getSubTopic({st_topic_id: value})
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {

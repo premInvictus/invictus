@@ -172,7 +172,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
 					Number(this.invoice.fee_amount);
 
-				
+
 				if (this.invoice.balance_amt) {
 					this.invoice.balance_amt = Number(this.invoice.balance_amt);
 					this.invoice.netPay += Number(this.invoice.balance_amt);
@@ -185,8 +185,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				if (this.invoice.netPay < 0) {
 					this.invoice.netPay = 0;
 				}
-					
-				
+
+
 				this.invoiceArray = this.invoice.invoice_bifurcation;
 				this.feeTransactionForm.patchValue({
 					'ftr_amount': this.invoice.netPay,
@@ -194,7 +194,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				});
 				let pos = 1;
 				this.invoiceTotal = 0;
-				if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance > 0)) {
+				if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance) !== 0) {
 					const element = {
 						srno: pos,
 						feehead: 'Previous Balance',
@@ -223,7 +223,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
 					const element = {
 						srno: pos,
-						feehead: 'Fine Amount',
+						feehead: 'Fine & Penalties',
 						feedue: Number(this.invoice.inv_fine_amount),
 						concession: 0,
 						adjustment: 0,
@@ -432,7 +432,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			}
 		} else if (Number(this.feeTransactionForm.value.ftr_pay_id) === 3) {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
-				this.feeTransactionForm.value.ftr_bnk_id
+				this.feeTransactionForm.value.ftr_deposit_bnk_id
 				&& this.feeTransactionForm.value.ftr_remark
 				&& this.feeTransactionForm.value.ftr_cheque_date && this.feeTransactionForm.value.ftr_cheque_no
 				&& this.feeTransactionForm.value.ftr_branch)) {
@@ -643,7 +643,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		if (event.value === 2 || event.value === '2' ) {
 			// tslint:disable-next-line: max-line-length
 			let netAmount = parseInt(this.invoice.fee_amount, 10) + parseInt(this.invoice.inv_fine_amount, 10) + parseInt(this.invoice.inv_prev_balance, 10);
-			
+
 			if (netAmount < 0) {
 				netAmount = 0;
 			}

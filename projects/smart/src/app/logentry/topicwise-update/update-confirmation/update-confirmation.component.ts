@@ -39,7 +39,14 @@ export class UpdateConfirmationComponent implements OnInit {
 		}
 	}
 	submitUpdate() {
-		this.dialogRef.close({update: true, tw_entry_date: this.tw_entry_date.toDate(), mod_review_remark: this.mod_review_remark});
+		if (this.step2Flag) {
+			this.dialogRef.close({ update: true, tw_entry_date: this.tw_entry_date.toDate(), mod_review_remark: this.mod_review_remark });
+		}
+		if (this.step3Flag) {
+			if (this.mod_review_remark) {
+				this.dialogRef.close({ update: true, tw_entry_date: this.tw_entry_date.toDate(), mod_review_remark: this.mod_review_remark });
+			}
+		}
 	}
 
 }

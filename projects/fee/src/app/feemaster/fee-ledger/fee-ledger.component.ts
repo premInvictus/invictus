@@ -28,8 +28,8 @@ export class FeeLedgerComponent implements OnInit {
 	@ViewChild('detachReceiptModal') detachReceiptModal;
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
-	displayedColumns: string[] = ['select', 'date', 'invoiceno', 'feeperiod', 'particular', 'duedate',
-		'amount', 'concession', 'adjustment', 'fine', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
+	displayedColumns: string[] = ['select', 'feeperiod', 'invoiceno', 'particular', 'date', 'duedate',
+		'amount', 'concession', 'adjustment', 'fine', 'netpayableamount', 'reciept', 'balance', 'receiptdate', 'receiptno', 'mop', 'remarks'];
 	FEE_LEDGER_ELEMENT: FeeLedgerElement[] = [];
 	dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 	selection = new SelectionModel<FeeLedgerElement>(true, []);
@@ -122,6 +122,7 @@ export class FeeLedgerComponent implements OnInit {
 					feeduetotal: 0,
 					concessiontotal: 0,
 					adjustmenttotal: 0,
+					netpayabletotal: 0,
 					receipttotal: 0,
 					finetotal: 0,
 					balancetotal: 0
@@ -154,6 +155,7 @@ export class FeeLedgerComponent implements OnInit {
 						tempactionFlag.attach = true;
 						tempactionFlag.unconsolidate = true;
 					}
+
 					element = {
 						srno: pos,
 						date: new DatePipe('en-in').transform(item.flgr_created_date, 'd-MMM-y'),
@@ -170,7 +172,12 @@ export class FeeLedgerComponent implements OnInit {
 						balance: item.flgr_balance ? item.flgr_balance : '0',
 						receiptdate: item.rpt_receipt_date,
 						receiptno: item.rpt_receipt_no,
-						mop:  (item.tb_name ? item.tb_name  : (item.pay_name ? item.pay_name : '-')),
+						mop: item.mop,
+						chqno: item.ftr_cheque_no ? item.ftr_cheque_no : '-',
+						chequedate: item.ftr_cheque_date ? item.ftr_cheque_date : '-',
+						colorCode: item.color_code ? item.color_code : '',
+						// bank: item.tb_name ? item.tb_name : '-',
+						netpayableamount: item.net_payable_amount ? item.net_payable_amount : '0',
 						eachActionFlag: tempactionFlag,
 						action: item
 					};
@@ -180,6 +187,7 @@ export class FeeLedgerComponent implements OnInit {
 					this.footerRecord.concessiontotal += Number(element.concession);
 					this.footerRecord.adjustmenttotal += Number(element.adjustment);
 					this.footerRecord.receipttotal += Number(element.reciept);
+					this.footerRecord.netpayabletotal += Number(element.netpayableamount);
 					this.footerRecord.finetotal += Number(element.fine);
 					this.footerRecord.balancetotal += Number(element.balance);
 				}
@@ -190,6 +198,19 @@ export class FeeLedgerComponent implements OnInit {
 			}
 		});
 	}
+
+	getColor(element) {
+		if (element && element.colorCode) {
+			return element.colorCode;
+		}
+	}
+
+	getBorder(element) {
+		if (element && element.colorCode) {
+			return element.colorCode;
+		}
+	}
+
 	next(admno) {
 		this.FEE_LEDGER_ELEMENT = [];
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
@@ -438,7 +459,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
-				this.feeRenderId = this.loginId;
+				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -458,7 +479,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
-				this.feeRenderId = this.loginId;
+				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -474,7 +495,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
-				this.feeRenderId = this.loginId;
+				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -487,7 +508,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
-				this.feeRenderId = this.loginId;
+				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -500,6 +521,7 @@ export class FeeLedgerComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.getFeeLedger(this.loginId);
+				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -511,7 +533,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
-				this.feeRenderId = this.loginId;
+				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -524,7 +546,7 @@ export class FeeLedgerComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
-				this.feeRenderId = this.loginId;
+				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -553,7 +575,7 @@ export class FeeLedgerComponent implements OnInit {
 			if (dresult && dresult.status) {
 				this.feeRenderId = '';
 				this.getFeeLedger(this.loginId);
-				this.feeRenderId = this.loginId;
+				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
 			}
 		});
 	}

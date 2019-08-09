@@ -1,0 +1,233 @@
+<div class="fee-container-box__grey card-height-860-lp">
+  <div class="row ">
+    <div class="col-12 remove-col-padding">
+      <div class="row remove-top-margin">
+        <div class="col-12 remove-col-padding-left remove-col-padding-right">
+          <div class="container-box__white card-height-830">
+            <div class="row">
+              <!-- <div class="col-3 custom-col-10 text-center">
+                  <div class="line-divider"></div>
+                </div> -->
+              <div class="col-12 text-center">
+                <h4 class="text-uppercase ">
+                  <!-- <b>Strength of {{sessionPromote}}: {{currentSessionStudentCount}}</b> -->
+                  <b>Branch Transfer</b>
+                </h4>
+              </div>
+              <!-- <div class="col-3 custom-col-10 text-center">
+                  <div class="line-divider"></div>
+                </div> -->
+            </div>
+            <form [formGroup]="promoteForm">
+              <div class="row">
+                <div class="col-3">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Enrollment Type</mat-label>
+                    <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">
+                        {{item.au_process_name}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select enrollment type
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-3">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Current Class</mat-label>
+                    <mat-select placeholder="Current Class" #promoClass_id formControlName="class_id"
+                      (selectionChange)="getSectionByClassForPromotion(promoClass_id.value)"
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select previous class
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-3">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Section</mat-label>
+                    <mat-select placeholder="Section" formControlName="sec_id">
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of promotionSectionArray" [value]="item.sec_id">{{item.sec_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-3">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Sorted By</mat-label>
+                    <mat-select placeholder="Sorted by" formControlName="order_by">
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of orderByArray" [value]="item.order_by">{{item.order_by_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-3">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>To Branch</mat-label>
+                    <mat-select placeholder="To Branch" formControlName="br_id"
+                      (selectionChange)="getBranchClassAndSession($event)" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of branchArray" [value]="item.br_prefix">{{item.br_name}},
+                        {{item.br_address}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-3">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>New Class</mat-label>
+                    <mat-select placeholder="New Class" required formControlName="new_class_id"
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of tclassArray" [value]="item.class_id">{{item.class_name}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select new class
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-3 ">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>To Session</mat-label>
+                    <mat-select placeholder="To Session" formControlName="to_ses_id" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">{{item.ses_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-3">
+                  <button mat-raised-button class="btn-success margin-top-12" *ngIf="promoteForm.valid"
+                    (click)="getPromotionList()">Generate</button>
+                </div>
+              </div>
+            </form>
+            <div class="row">
+              <div class="col-12">
+                <div [hidden]="!promoteFlag">
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <div class="row remove-top-margin">
+                        <div class="col-4 remove-col-padding-left">
+                          <mat-form-field>
+                            <input matInput (keyup)="applyFilterPromote($event.target.value)" placeholder="Filter" />
+                          </mat-form-field>
+                        </div>
+                        <div class="col-8 margin-top-12 text-right">
+                          <div *ngIf="toBePromotedList.length > 0" class="float-right">
+                            <span><b>Selected Students: </b></span>
+                            <span>{{toBePromotedList.length}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <table mat-table #sortP="matSort" [dataSource]="promotedataSource" matSort matSortActive="ID"
+                        class="table-100 text-center">
+                        <!-- Checkbox Column -->
+                        <ng-container matColumnDef="select">
+                          <th mat-header-cell *matHeaderCellDef>
+                            <span class="text-center">
+                              <mat-checkbox (change)="checkAllPromotionList($event)"></mat-checkbox>
+                            </span>
+                          </th>
+                          <td mat-cell *matCellDef="let item">
+                            <span class="text-center">
+                              <mat-checkbox [value]="item.no" (change)="insertIntoToBePromotedList($event,item.action)"
+                                [checked]="isSelectedP(item.no)" [disabled]="isDisabledP(item.no)"></mat-checkbox>
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- Admission Column -->
+                        <ng-container matColumnDef="no">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{promoteForm.value.enrollment_type === '4' ? 'Admission No.': 
+                          'Pro. Adm. No.'}}
+                          </th>
+                          <td mat-cell *matCellDef="let item">
+                            <span class="text-center">{{ item.em_admission_no }}</span>
+                          </td>
+                        </ng-container>
+                        <!-- Student Column -->
+                        <ng-container matColumnDef="name">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:50%;">
+                            Student Name
+                          </th>
+                          <td mat-cell *matCellDef="let item">
+                            <span class="text-center text-capitalize">{{ item.name }}</span>
+                          </td>
+                        </ng-container>
+                        <!-- Class Column -->
+                        <ng-container matColumnDef="class">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Class
+                          </th>
+                          <td mat-cell *matCellDef="let item">
+                            <span class="text-center">{{ item.class }}</span>
+                          </td>
+                        </ng-container>
+                        <!-- Section Column -->
+                        <ng-container matColumnDef="section">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Section
+                          </th>
+                          <td mat-cell *matCellDef="let item">
+                            <span class="text-center">{{ item.section }}</span>
+                          </td>
+                        </ng-container>
+                        <!-- Promote Column -->
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef>
+                            Transfer
+                          </th>
+                          <td mat-cell *matCellDef="let item">
+                            <!-- <span class="text-center"><i *ngIf="item.action.au_transfer_status === '0' "
+                                class="fas fa-thumbs-up cursor-pointer icon-success"
+                                (click)="promoteStudent(item)"></i></span>
+                            <span style="color:#04a20d" class="text-center cursor-pointer"
+                              *ngIf="item.action.au_transfer_status === '1'"><b>Transfered</b></span> -->
+                            <span class="text-center">
+                              <i class="fas fa-thumbs-up cursor-pointer icon-success"
+                                (click)="openDeleteModal(item)"></i>
+                            </span>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
+                      </table>
+
+
+
+
+                    </div>
+                  </div>
+                  <br />
+                  <br />
+                  <div class="text-center" *ngIf="toBePromotedList.length > 0">
+                    <button mat-raised-button class="btn-success" (click)="openDeleteModal()">Transfer</button>
+                  </div>
+                  <br />
+                  <br />
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to transfer?'" (deleteOk)="transferConfirm($event)">
+</app-delete-modal>

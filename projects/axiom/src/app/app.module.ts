@@ -25,6 +25,7 @@ import {
 	SocketService, TreeviewService, UserAccessMenuService, HtmlToTextService, BreadCrumbService
 } from './_services';
 import { ResolverService } from './_services/resolver.service';
+import { SmartService } from './_services/smart.service';
 import { UserTypeService } from './user-type/user-type.service';
 import { AdminService } from './user-type/admin/services/admin.service';
 import { AcsetupService } from './acsetup/service/acsetup.service';
@@ -51,6 +52,7 @@ const providers = [
 	AcsetupService,
 	QelementService,
 	QbankService,
+	SmartService,
 	ReportService];
 @NgModule({
 	imports: [

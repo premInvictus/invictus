@@ -7,9 +7,12 @@ export interface ChequeToolElement {
 	amount: any;
 	bankname: any;
 	recieptdate: any;
-	bankdeposite: any;	
+	bankdeposite: any;
+	approved_by: any;
+	entered_by: any;
 	processingdate: any;
 	action: any;
 	class_name: any;
+	remarks: any;
 
 }

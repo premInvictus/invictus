@@ -80,7 +80,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.smartService.getClass({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			} else {
@@ -94,7 +94,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 		this.paramForm.patchValue({
 			sub_id: ''
 		});
-		this.axiomService.getSubjectsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
+		this.smartService.getSubjectsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
 			} else {
@@ -104,7 +104,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 	}
 	getSubject() {
 		this.subjectArray = [];
-		this.axiomService.getSubject().subscribe((result: any) => {
+		this.smartService.getSubject({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
 			} else {

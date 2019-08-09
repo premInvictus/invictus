@@ -17,8 +17,11 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
 	displayedColumns: string[] =
-		['srno', 'class_name', 'chequeno', 'admno', 'studentname', 'recieptno', 'amount', 'bankname', 'recieptdate',
-			'bankdeposite', 'processingdate', 'status', 'action'];
+		['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname', 'bankdeposite',
+			'processingdate', 'status',
+			'entered_by', 'approved_by',
+			'admno', 'studentname', 'class_name',
+			'action', 'remarks'];
 	CHEQUE_ELEMENT_DATA: ChequeToolElement[] = [];
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 	formGroupArray: any[] = [];
@@ -34,6 +37,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		{ id: '5', name: 'Alumni No.' }
 	];
 	totalRecords: number;
+	currentUser: any;
 	constructor(public feeService: FeeService,
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
@@ -42,6 +46,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getChequeControlListAll();
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const filterModal = document.getElementById('formFlag');
 		filterModal.style.display = 'none';
 	}
@@ -110,16 +115,19 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: pos,
-						class_name: item.sec_name ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
+						class_name: item.sec_id !== '0' ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
 						recieptno: item.receipt_no,
 						amount: item.receipt_amount,
 						bankname: item.bank_name,
+						entered_by: item.created_by,
+						approved_by: item.approved_by ? item.approved_by : '-',
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
 						bankdeposite: item.fcc_deposite_date ? this.common.dateConvertion(item.fcc_deposite_date, 'd-MMM-y') : '-',
 						processingdate: '',
+						remarks: item.fcc_remarks ? item.fcc_remarks : '-',
 						action: item
 					});
 					this.formGroupArray.push({
@@ -181,9 +189,12 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						recieptno: item.receipt_no,
 						amount: item.receipt_amount,
 						bankname: item.bank_name,
+						entered_by: item.created_by,
+						approved_by: item.approved_by ? item.approved_by : '-',
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
 						bankdeposite: item.fcc_deposite_date ? new DatePipe('en-in').transform(item.fcc_deposite_date, 'd-MMM-y') : '-',
 						processingdate: '',
+						remarks: item.fcc_remarks ? item.fcc_remarks : '-',
 						action: item
 					});
 					this.formGroupArray.push({
@@ -262,6 +273,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		param.fcc_ftr_id = item.fee_transaction_id;
 		param.fcc_status = '';
 		param.ftr_status = '4';
+		param.ftr_approved_by = this.currentUser.login_id;
 		console.log(param);
 		this.feeService.approveFeeTransaction(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {

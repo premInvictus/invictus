@@ -102,7 +102,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		this.invoiceDetialsTable(this.invoiceBifurcationArray);
 	}
 	changeOpeningAndFine(item, $event) {
-		if (item.feehead === 'Fine Amount') {
+		if (item.feehead === 'Fine & Penalties') {
 			this.modifyInvoiceForm.patchValue({
 				inv_fine_amount: $event.target.value
 			});
@@ -206,7 +206,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		this.ELEMENT_DATA = [];
 		this.invoiceTotal = 0;
 		let i = 0;
-		if (this.invoiceDetails.inv_prev_balance && Number(this.invoiceDetails.inv_prev_balance > 0)) {
+		if (this.invoiceDetails.inv_prev_balance && Number(this.invoiceDetails.inv_prev_balance) !== 0) {
 			const element = {
 				srno: ++i,
 				feehead: 'Previous Balance',
@@ -232,10 +232,11 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			this.invoiceTotal += element.netpay;
 			this.ELEMENT_DATA.push(element);
 		});
-		if (this.invoiceDetails.inv_fine_amount && Number(this.invoiceDetails.inv_fine_amount > 0)) {
+		// this.invoiceDetails.inv_fine_amount && Number(this.invoiceDetails.inv_fine_amount > 0
+		if (true) {
 			const element = {
 				srno: ++i,
-				feehead: 'Fine Amount',
+				feehead: 'Fine & Penalties',
 				feedue: Number(this.invoiceDetails.inv_fine_amount),
 				concession: 0,
 				adjustment: 0,

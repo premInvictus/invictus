@@ -287,7 +287,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				// this.paymentOrderModel.closeDialog();
 				localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
 				const hostName =  window.location.href.split('/')[2] ;
-				const newwindow = window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500');
+				const newwindow = window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
 				if (window.focus) {
 					newwindow.focus();
 				}
@@ -297,7 +297,9 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 
 
 				this.payAPICall = interval(10000).subscribe(x => {
-					this.checkForPaymentStatus(ORDER_ID, MID);
+					if (ORDER_ID && MID) {
+						this.checkForPaymentStatus(ORDER_ID, MID);
+					}
 				});
 
 			} else {
@@ -321,8 +323,8 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 			if (result && result.status === 'ok') {
 				const resultData = result.data;
 				if (resultData && resultData[0]['trans_status'] === 'TXN_SUCCESS' || resultData && resultData[0]['trans_status'] === 'TXN_FAILURE') {
-					this.getStudentInvoiceDetail();
 					this.payAPICall.unsubscribe();
+					this.getStudentInvoiceDetail();
 				}
 			}
 		});

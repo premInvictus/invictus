@@ -34,7 +34,9 @@ import { PublishModalComponent } from './publish-modal/publish-modal.component';
 import { NoDataComponent } from './no-data/no-data.component';
 import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.component';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 const moment = _moment;
+import {PopoverModule} from 'ngx-bootstrap/popover';
 
 export const MY_FORMATS = {
 	parse: {
@@ -84,7 +86,8 @@ export const MY_FORMATS = {
 		CKEditorModule,
 		ImageCropperModule,
 		NgxMaskModule.forRoot(),
-		InvictusSharedModule
+		InvictusSharedModule,
+		PopoverModule.forRoot()
 	],
 	declarations: [
 		CommonDynamicChartComponent,
@@ -102,7 +105,8 @@ export const MY_FORMATS = {
 		PublishModalComponent,
 		NoDataComponent,
 		UnpublishModalComponent,
-		PreviewDocumentComponent
+		PreviewDocumentComponent,
+		AngularCalendarYearViewComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -151,7 +155,8 @@ export const MY_FORMATS = {
 		ZerodashPipe,
 		CommonDynamicChartComponent,
 		AssignmentAttachmentDialogComponent,
-		NoDataComponent, PreviewDocumentComponent
+		NoDataComponent, PreviewDocumentComponent,
+		AngularCalendarYearViewComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

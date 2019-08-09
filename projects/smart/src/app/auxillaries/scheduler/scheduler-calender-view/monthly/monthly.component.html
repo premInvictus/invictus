@@ -27,21 +27,20 @@
     </div>
   </div>
   <div class="col-3">
-    <mat-vertical-stepper [linear]="true">
-      <mat-step *ngFor="let item of ecArray" [label]="item.ec_name">
-        <small *ngFor="let item1 of item.ecArray">{{item1.sc_from | date:'dd MMM, yyyy'}} - {{item1.sc_title}}
-          <br></small>
-      </mat-step>
-    </mat-vertical-stepper>
+    <div class="steps">
+      <div *ngFor="let item of ecArray;let i =index" [class]="bgClassColorArray[i]">
+        <div class="step-header">
+          <div class="header">{{item.ec_name}}</div>
+          <div class="subheader" *ngFor="let item1 of item.ecArray">{{item1.sc_from | date:'dd MMM, yyyy'}} -
+            {{item1.sc_title}}</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <ng-template #customCellTemplate let-day="day" let-locale="locale">
-  <div class="cal-cell-top" 
-  mwlConfirmationPopover 
-  [hideConfirmButton]="true" 
-  [hideCancelButton]="true"
-  [popoverMessage]="popoverMessage" 
-  placement="right">
+  <div class="cal-cell-top" mwlConfirmationPopover [hideConfirmButton]="true" [hideCancelButton]="true"
+    [popoverMessage]="popoverMessage" placement="right">
     <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
     <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span></div>
   <div class="cell-totals">

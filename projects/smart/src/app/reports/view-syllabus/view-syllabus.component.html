@@ -121,8 +121,7 @@
                                             </td>
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
                                                 <ng-container>
-                                                    <i *ngIf="item.statusDetails.statusFlag"
-                                                        class="fas fa-check-circle font-size-40 font-color-green"></i><br>
+                                                    <i class="fas fa-check-circle font-size-40 font-color-{{item.statusDetails.color}}"></i><br>
                                                     <span
                                                         class="font-size-14 font-regular">{{item.statusDetails.statusStr}}
                                                     </span> <br>

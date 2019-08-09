@@ -4,8 +4,12 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 import { MatDialog } from '@angular/material/dialog';
 import * as XLSX from 'xlsx';
 declare var require;
+import * as Excel from 'exceljs/dist/exceljs';
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import { TitleCasePipe } from '@angular/common';
+import { saveAs } from 'file-saver';
+import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
 
 @Component({
 	selector: 'app-browse-syllabus',
@@ -20,6 +24,8 @@ export class BrowseSyllabusComponent implements OnInit {
 	public finalSyllabusArray: any[];
 	public topicArray: any[];
 	finalSpannedArray: any[] = [];
+	dataArr: any[] = [];
+	sessionArray: any[] = [];
 	editRequestFlag = false;
 	finaldivflag = true;
 	syl_id: any;
@@ -27,6 +33,60 @@ export class BrowseSyllabusComponent implements OnInit {
 	param: any = {};
 	currentUser: any;
 	UnpublishParam: any = {};
+	teachingSum = 0;
+	testSum = 0;
+	revisionSum = 0;
+	session: any;
+	sessionName: any;
+	length: any;
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR',
+
+	};
+	schooInfo: any;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -36,6 +96,7 @@ export class BrowseSyllabusComponent implements OnInit {
 		public sisService: SisService,
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.session = JSON.parse(localStorage.getItem('session'));
 	}
 	buildForm() {
 		this.reviewform = this.fbuild.group({
@@ -46,6 +107,8 @@ export class BrowseSyllabusComponent implements OnInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
+		this.getSession();
+		this.getSchool();
 	}
 
 	openunPublish(syl_id, topic_id) {
@@ -53,14 +116,36 @@ export class BrowseSyllabusComponent implements OnInit {
 		this.UnpublishParam.topic_id = topic_id;
 		this.UnpublishModal.openunpublishModal(this.UnpublishParam);
 	}
-
+	// get session name by session id
+	getSession() {
+		this.sisService.getSession()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.sessionArray[citem.ses_id] = citem.ses_name;
+						}
+						this.sessionName = this.sessionArray[this.session.ses_id];
+					}
+				});
+	}
+	// get end month and start month of school
+	getSchool() {
+		this.sisService.getSchool()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.schooInfo = result.data[0];
+					}
+				});
+	}
 	//  Get Class List function
 	getClass() {
 		this.finalSpannedArray = [];
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
-		this.sisService.getClass(classParam)
+		this.syllabusService.getClassData(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -78,7 +163,7 @@ export class BrowseSyllabusComponent implements OnInit {
 		this.finalSpannedArray = [];
 		const subjectParam: any = {};
 		subjectParam.class_id = this.reviewform.value.syl_class_id;
-		this.axiomService.getSubjectsByClass(subjectParam)
+		this.syllabusService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -93,7 +178,7 @@ export class BrowseSyllabusComponent implements OnInit {
 
 	//  Get Topic List function
 	getTopicByClassSubject() {
-		this.axiomService.getTopicByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
+		this.syllabusService.getTopicByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -115,7 +200,7 @@ export class BrowseSyllabusComponent implements OnInit {
 
 	//  Get Sub Topic Name
 	getSubTopicName(value): void {
-		this.axiomService.getSubtopicByTopic(value)
+		this.syllabusService.getSubTopic({st_topic_id: value})
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -137,14 +222,216 @@ export class BrowseSyllabusComponent implements OnInit {
 			return this.subjectArray[ctrIndex].sub_name;
 		}
 	}
+
+
 	// export excel code
 	exportAsExcel() {
-		// tslint:disable-next-line:max-line-length
-		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('report_table')); // converts a DOM TABLE element to a worksheet
-		const wb: XLSX.WorkBook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-		XLSX.writeFile(wb, 'Report_' + (new Date).getTime() + '.xlsx');
+		let reportType: any = '';
+		let reportType2: any = '';
+		const columns: any = [];
+		columns.push({
+			key: 'sd_topic_name',
+			width: this.checkWidth('sd_topic_name', 'Topic')
+		});
+		columns.push({
+			key: 'sd_st_name',
+			width: this.checkWidth('sd_st_name', 'Sub Topic')
+		});
+		columns.push({
+			key: 'sd_desc',
+			width: this.checkWidth('sd_desc', 'Description')
+		});
+		columns.push({
+			key: 'sd_period_teacher',
+			width: this.checkWidth('sd_period_teacher', 'Teaching')
+		});
+		columns.push({
+			key: 'sd_period_test',
+			width: this.checkWidth('sd_period_test', 'Test')
+		});
+		columns.push({
+			key: 'sd_period_revision',
+			width: this.checkWidth('sd_period_revision', 'Revision')
+		});
+		columns.push({
+			key: 'total',
+			width: this.checkWidth('total', 'Total')
+		});
+		reportType2 = new TitleCasePipe().transform('browse syllabus repo_') + this.sessionName;
+		reportType = new TitleCasePipe().transform('browse syllabus report: ') + this.sessionName;
+		const fileName = reportType + '.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[7] + '1');
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schooInfo.school_name) + ', ' + this.schooInfo.school_city + ', ' + this.schooInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[7] + '2');
+		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A4:A5');
+		worksheet.getCell('A4').value = 'Topic';
+		worksheet.mergeCells('B4:B5');
+		worksheet.getCell('B4').value = 'SubTopic';
+		worksheet.mergeCells('C4:C5');
+		worksheet.getCell('C4').value = 'Description';
+		worksheet.mergeCells('D4:F4');
+		worksheet.getCell('D4').value = 'No. of Period Required';
+		worksheet.getCell('D5').value = 'Teaching';
+		worksheet.getCell('E5').value = 'Test';
+		worksheet.getCell('F5').value = 'Revision';
+		worksheet.mergeCells('G4:G5');
+		worksheet.getCell('G4').value = 'Total';
+		worksheet.columns = columns;
+		this.length = worksheet._rows.length;
+		for (const item of this.finalSpannedArray) {
+			const prev = this.length + 1;
+			const obj: any = {};
+			if (item.sd_topic_id === item.details[0].sd_topic_id) {
+				for (const dety of item.details) {
+					this.length++;
+					if (dety.sd_ctr_id === '1') {
+						worksheet.getCell('B' + this.length).value = dety.sd_st_name;
+					} else if (dety.sd_ctr_id === '2') {
+						worksheet.getCell('B' + this.length).value = 'Test';
+					} else {
+						worksheet.getCell('B' + this.length).value = 'Revision';
+					}
+					worksheet.getCell('C' + this.length).value = this.commonService.htmlToText(dety.sd_desc);
+					worksheet.getCell('D' + this.length).value = dety.sd_period_teacher;
+					worksheet.getCell('E' + this.length).value = dety.sd_period_test;
+					worksheet.getCell('F' + this.length).value = dety.sd_period_revision;
+				}
+				worksheet.mergeCells('A' + prev + ':' + 'A' + this.length);
+				worksheet.getCell('A' + prev).value = this.getTopicName(item.sd_topic_id);
+				worksheet.mergeCells('G' + prev + ':' + 'G' + this.length);
+				worksheet.getCell('G' + prev).value = item.total;
+			}
+			worksheet.addRow(obj);
+		}
 
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 16,
+					bold: true
+				};
+			}
+			if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			}
+			if (rowNum === 4 || rowNum === 5) {
+				row.eachCell(cell => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true,
+						color: { argb: '636a6a' }
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'c8d6e5' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+			if (rowNum > 5 && rowNum <= worksheet._rows.length) {
+				row.eachCell(cell => {
+					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'G') {
+						if (rowNum % 2 === 0) {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
+							};
+						} else {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: '888888' },
+								bgColor: { argb: '888888' },
+							};
+						}
+					}
+					cell.font = {
+						color: { argb: 'black' },
+						bold: false,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+		});
+		const obj3: any = {};
+		obj3['sd_topic_name'] = 'Grand Total';
+		obj3['sd_st_name'] = '';
+		obj3['sd_desc'] = '';
+		obj3['sd_period_teacher'] = this.dataArr.map(t => t['sd_period_teacher']).reduce((acc, val) => Number(acc) + Number(val), 0);
+		obj3['sd_period_test'] = this.dataArr.map(t => t['sd_period_test']).reduce((acc, val) => Number(acc) + Number(val), 0);
+		obj3['sd_period_revision'] = this.dataArr.map(t => t['sd_period_revision']).reduce((acc, val) => Number(acc) + Number(val), 0);
+		obj3['total'] = this.dataArr.map(t => t['sd_period_teacher']).reduce((acc, val) => Number(acc) + Number(val), 0) +
+			this.dataArr.map(t => t['sd_period_test']).reduce((acc, val) => Number(acc) + Number(val), 0) +
+			this.dataArr.map(t => t['sd_period_revision']).reduce((acc, val) => Number(acc) + Number(val), 0);
+		worksheet.addRow(obj3);
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === worksheet._rows.length) {
+				row.eachCell(cell => {
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: '004261' },
+						bgColor: { argb: '004261' },
+					};
+					cell.font = {
+						color: { argb: 'ffffff' },
+						bold: true,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			}
+		});
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
+
+	}
+	// check the max  width of the cell
+	checkWidth(id, header) {
+		const res = this.dataArr.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
 	}
 	// pdf download
 	pdfDownload() {
@@ -222,6 +509,9 @@ export class BrowseSyllabusComponent implements OnInit {
 
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
+		this.teachingSum = 0;
+		this.testSum = 0;
+		this.revisionSum = 0;
 		this.finaldivflag = false;
 		this.syllabusService.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
 			.subscribe(
@@ -246,10 +536,13 @@ export class BrowseSyllabusComponent implements OnInit {
 												let sd_period_revision: any = '';
 
 												if (this.finalSyllabusArray[i].sd_ctr_id === '1') {
+													this.teachingSum = this.teachingSum + Number(this.finalSyllabusArray[i].sd_period_req);
 													sd_period_teacher = this.finalSyllabusArray[i].sd_period_req;
 												} else if (this.finalSyllabusArray[i].sd_ctr_id === '2') {
+													this.testSum = this.testSum + Number(this.finalSyllabusArray[i].sd_period_req);
 													sd_period_test = this.finalSyllabusArray[i].sd_period_req;
 												} else {
+													this.revisionSum = this.revisionSum + Number(this.finalSyllabusArray[i].sd_period_req);
 													sd_period_revision = this.finalSyllabusArray[i].sd_period_req;
 												}
 												const spannArray: any[] = [];
@@ -304,6 +597,12 @@ export class BrowseSyllabusComponent implements OnInit {
 												} else {
 													// tslint:disable-next-line: max-line-length
 													this.finalSpannedArray[findex].total = Number(this.finalSpannedArray[findex].total) + Number(this.finalSyllabusArray[i].sd_period_req);
+												}
+												this.dataArr = [];
+												for (const item of this.finalSpannedArray) {
+													for (const dety of item.details) {
+														this.dataArr.push(dety);
+													}
 												}
 											}
 										} else {

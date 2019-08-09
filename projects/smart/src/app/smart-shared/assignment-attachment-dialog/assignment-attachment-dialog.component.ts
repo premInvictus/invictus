@@ -63,22 +63,11 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			// tslint:disable-next-line:max-line-length
 			extraPlugins: '',
 			scayt_multiLanguageMod: true,
-			fontSize: {
-				options: [
-					9,
-					11,
-					13,
-					17,
-					19,
-					21
-				]
-			},
 			toolbar: [
 				// tslint:disable-next-line:max-line-length
 				['Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates']
 			],
 			removeDialogTabs: 'image:advanced;image:Link',
-			
 		};
 		this.ckeConfig.font_defaultLabel = 'Arial';
 		this.ckeConfig.fontSize_defaultLabel = '20';
@@ -98,7 +87,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				}
 			});
 		} else {
-			this.sisService.getClass({}).subscribe((result: any) => {
+			this.smartService.getClass({}).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.classArray = result.data;
 					if (this.class_id) {
@@ -123,7 +112,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 					}
 				});
 		} else {
-			this.sisService.getSectionsByClass({ class_id: this.class_id }).subscribe((result: any) => {
+			this.smartService.getSectionsByClass({ class_id: this.class_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.sectionArray = result.data;
 				} else {
@@ -151,7 +140,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				});
 			}
 		} else {
-			this.axiomService.getSubjectsByClass({ class_id: this.class_id }).subscribe((result: any) => {
+			this.smartService.getSubjectsByClass({ class_id: this.class_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
 					if (this.sub_id) {

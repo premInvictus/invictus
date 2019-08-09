@@ -59,6 +59,14 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSmartUrl + '/common/getSchedulerEventCategory');
 	}
+	getSectionsByClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSectionsByClass', value);
+	}
+	getSubjectsByClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSubjectsByClass', value);
+	}
 	getSubtopicCountAndDetail(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/topicwise/getSubtopicCountAndDetail', value);
@@ -327,4 +335,107 @@ export class SmartService {
 	resetProcesstype() {
 		this.processType = null;
 	}
+
+
+	// global configuaration calls
+
+	insertClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertClass', value);
+	}
+
+	getClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getClass', value);
+	}
+
+	insertSection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertSection', value);
+	}
+
+	getSection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSection', value);
+	}
+
+	insertSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertSubject', value);
+	}
+
+	getSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSubject', value);
+	}
+
+	insertTopic(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertTopic', value);
+	}
+
+	getTopic(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getTopic', value);
+	}
+
+	getTopicByClassSubject(class_id, subject_id) {
+		const param: any = {};
+		if (class_id) {
+			param.topic_class_id = class_id;
+		}
+		if (subject_id) {
+			param.topic_sub_id = subject_id;
+		}
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getTopic', param);
+	}
+
+	insertSubTopic(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertSubTopic', value);
+	}
+
+	getSubTopic(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSubTopic', value);
+	}
+
+	insertGlobalClassSectionSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/insertGlobalClassSectionSubject', value);
+	}
+
+	getGlobalClassSectionSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getGlobalClassSectionSubject', value);
+	}
+
+	downloadTopicExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/excelimportexport/downloadTopicExcel', value);
+	}
+
+	downloadSubTopicExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/excelimportexport/downloadSubTopicExcel', value);
+	}
+
+	uploadTopicExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/uploadTopic', value);
+	}
+
+	uploadSubTopicExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/uploadSubTopic', value);
+	}
+
+	getClassData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getClassData', value);
+	}
+
 }
+
+

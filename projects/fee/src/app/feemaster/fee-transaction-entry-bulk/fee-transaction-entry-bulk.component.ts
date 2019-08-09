@@ -450,7 +450,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			}
 		} else if (Number(this.feeTransactionForm2.value.ftr_pay_id) === 3) {
 			if (!(this.feeTransactionForm2.value.ftr_pay_id &&
-				this.feeTransactionForm2.value.ftr_amount && this.feeTransactionForm2.value.ftr_bnk_id
+				this.feeTransactionForm2.value.ftr_amount
 				&& this.feeTransactionForm2.value.ftr_remark
 				&& this.feeTransactionForm2.value.ftr_cheque_date && this.feeTransactionForm2.value.ftr_cheque_no
 				&& this.feeTransactionForm2.value.ftr_deposit_bnk_id && this.feeTransactionForm2.value.ftr_branch)) {
@@ -458,7 +458,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			}
 		} else {
 			if (!(this.feeTransactionForm2.value.ftr_pay_id &&
-				this.feeTransactionForm2.value.ftr_amount &&  this.feeTransactionForm2.value.ftr_transaction_id &&
+				this.feeTransactionForm2.value.ftr_amount && this.feeTransactionForm2.value.ftr_transaction_id &&
 				this.feeTransactionForm2.value.ftr_remark)) {
 				validateFlag = false;
 			}
@@ -523,7 +523,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			}
 		} else {
 			if (!(this.feeTransactionForm2.value.ftr_pay_id &&
-				this.feeTransactionForm2.value.ftr_amount &&  this.feeTransactionForm2.value.ftr_transaction_id &&
+				this.feeTransactionForm2.value.ftr_amount && this.feeTransactionForm2.value.ftr_transaction_id &&
 				this.feeTransactionForm2.value.ftr_remark)) {
 				validateFlag = false;
 			}

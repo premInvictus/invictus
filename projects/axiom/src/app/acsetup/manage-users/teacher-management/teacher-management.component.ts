@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { QelementService } from '../../../questionbank/service/qelement.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { BreadCrumbService, UserAccessMenuService, NotificationService } from '../../../_services/index';
+import { BreadCrumbService, UserAccessMenuService, NotificationService, SmartService } from '../../../_services/index';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { Element } from './teacher.model';
 
@@ -33,6 +33,7 @@ export class TeacherManagementComponent implements OnInit {
 		private fbuild: FormBuilder,
 		private breadCrumbService: BreadCrumbService,
 		private qelementService: QelementService,
+		private smartService: SmartService,
 		private notif: NotificationService) { }
 
 	ngOnInit() {
@@ -123,7 +124,7 @@ export class TeacherManagementComponent implements OnInit {
 		);
 	}
 
-	getClass(that) {
+	/* getClass(that) {
 		that.qelementService.getClass().subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
@@ -156,7 +157,44 @@ export class TeacherManagementComponent implements OnInit {
 				}
 			}
 		);
+	} */
+
+	// changed for smart module
+	getClass(that) {
+		that.smartService.getClass().subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					that.classArray = result.data;
+				}
+			}
+		);
 	}
+
+
+	getSubjectsByClass(): void {
+		this.smartService.getSubjectsByClass({class_id: this.Filter_form.value.uc_class_id}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.subjectArray = result.data;
+				} else {
+					this.subjectArray = [];
+				}
+			}
+		);
+	}
+
+	getSectionsByClass(): void {
+		this.smartService.getSectionsByClass({class_id: this.Filter_form.value.uc_class_id}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.sectionArray = result.data;
+				} else {
+					this.sectionArray = [];
+				}
+			}
+		);
+	}
+	// end
 
 	openModal = (data) => this.deleteModalRef.openDeleteModal(data);
 	deleteComCancel() {  }

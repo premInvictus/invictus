@@ -113,8 +113,10 @@
                     <td class="custom-td text-left" *ngIf="item1.st_name">{{item1.st_name | capitalize}}</td>
                     <td class="custom-td text-left" *ngIf="!item1.st_name">-</td>
                     <!-- *ngIf="item1.edit_flag == '1'" -->
-                    <td class="custom-td text-left"><i *ngIf="item1.edit_flag == '1'" class="material-icons icon-edit"
-                        (click)="openEditClassworkModal(item1)">create</i></td>
+                    <td class="custom-td text-left"  *ngIf="item1.edit_flag === '1' && currentUser.role_id === '3'"><i
+                        class="material-icons icon-edit" (click)="openEditClassworkModal(item1)">create</i></td>
+                    <td class="custom-td text-left" *ngIf="currentUser.role_id === '2'"><i 
+                        class="material-icons icon-edit" (click)="openEditClassworkModal(item1)">create</i></td>
                   <tr>
                 </tbody>
               </ng-container>

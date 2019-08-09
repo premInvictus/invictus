@@ -143,7 +143,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		this.ELEMENT_DATA = [];
 		this.invoiceTotal = 0;
 		let i = 0;
-		if (this.invoiceDetails.inv_prev_balance && Number(this.invoiceDetails.inv_prev_balance > 0)) {
+		if (this.invoiceDetails.inv_prev_balance && Number(this.invoiceDetails.inv_prev_balance) !== 0) {
 			const element = {
 				srno: ++i,
 				feehead: 'Previous Balance',
@@ -173,7 +173,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		if (this.invoiceDetails.late_fine_amt && Number(this.invoiceDetails.late_fine_amt > 0)) {
 			const element = {
 				srno: ++i,
-				feehead: 'Fine Amount',
+				feehead: 'Fine & Penalties',
 				feedue: Number(this.invoiceDetails.late_fine_amt),
 				concession: 0,
 				adjustment: 0,

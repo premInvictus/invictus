@@ -10,13 +10,6 @@
                 <div class="col-6 text-right">
                     <form [formGroup]="comparitiveForm" novalidate>
                         <div class="top-card-title-form">
-                            <mat-form-field class="form-field-150 remove-form-field-bottom-margin" appearance="outline">
-                                <mat-label>From Date</mat-label>
-                                <input matInput [matDatepicker]="picker" placeholder="Choose a date"
-                                    formControlName="sc_from" required>
-                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
-                            </mat-form-field>
                             <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
                                 appearance="outline">
                                 <mat-label>Class</mat-label>
@@ -64,7 +57,7 @@
             <div class="row" *ngIf="headerDivFlag">
                 <div class="col-4">
                     <span class="font-size-16 font-bold">As On :</span>
-                    <span class="font-light font-size-16"> {{comparitiveForm.value.sc_from | date: 'd-MMM-y'}}</span>
+                    <span class="font-light font-size-16"> {{todaydate | date: 'd-MMM-y'}}</span>
                 </div>
                 <div class="col-8 text-right">
                     <span class="font-size-16 font-bold">Class :</span>
@@ -76,12 +69,8 @@
                         {{getSubjectName(comparitiveForm.value.syl_sub_id)}}</span>
                     <span class="margin-left-10 ver-line-divider"></span>
                     <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16">
-                        {{sessionArray[seesion_id.ses_id]}}</span>
-                </div>
-            </div>
-            <div class="row margin-top-0  text-right">
-                <div class="col-12">
-                    <div class="inline-flex btn-spacer text-right margin-bottom-5"
+                        {{sessionArray[session_id.ses_id]}}</span>
+                        <div class="inline-flex btn-spacer text-right margin-bottom-5"
                         *ngIf="finalSpannedArray.length > 0">
                         <div>
                             <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
@@ -94,7 +83,11 @@
                             <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
                                 matTooltip="Export as excel" (click)="exportAsExcel()" />
                         </div>
-                    </div>
+                    </div>                        
+                </div>
+            </div>
+            <div class="row margin-top-0  text-right">
+                <div class="col-12">                    
                     <table class="table table-borderd table-stripped custom-table" id="report_table">
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
@@ -110,10 +103,10 @@
                             <tr class="custom-tr">
                                 <th class="custom-th">Teach</th>
                                 <th class="custom-th">Test</th>
-                                <th class="custom-th">Revised</th>
+                                <th class="custom-th">Revise</th>
                                 <th class="custom-th">Teach</th>
                                 <th class="custom-th">Test</th>
-                                <th class="custom-th">Revised</th>
+                                <th class="custom-th">Revise</th>
                             </tr>
                         </thead>
                         <tbody class="text-center">

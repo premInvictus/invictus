@@ -229,6 +229,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
 	}
+	getBranch(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/getBranch', value);
+	}
 	getActivity() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/siSetup/activity');
@@ -596,6 +600,14 @@ export class SisService {
 	promoteStudents(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/promote', value);
+	}
+	branchTransfer(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/auxiliaries/branchTransfer', value);
+	}
+	getBranchClassAndSession(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/auxiliaries/getBranchClassAndSession', value);
 	}
 	demoteStudents(value) {
 		this.service.startLoading();
