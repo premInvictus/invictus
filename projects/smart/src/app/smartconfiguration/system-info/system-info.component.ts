@@ -4,6 +4,8 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@angular/material';
 import { ConfigElement } from './system-info.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 @Component({
 	selector: 'app-system-info',
 	templateUrl: './system-info.component.html',
@@ -30,6 +32,10 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	finaldivflag = true;
 	showConfigForm = '';
 	subArray: any[];
+	file: any;
+	finalXlsTopicArray: any[] = [];
+	XlslArray: any[] = [];
+	arrayBuffer: any;
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
 	displayedColumns: any[] = ['position', 'name', 'order', 'action', 'modify'];
@@ -257,7 +263,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 
 	getParentSubjectName(parentId) {
-		for (const item of this.parentSubArray ) {
+		for (const item of this.parentSubArray) {
 			if (item.sub_id === parentId) {
 				return item.sub_name;
 			}
@@ -339,15 +345,15 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 						const class_arr = [];
 						const sec_arr = [];
 						const sub_arr = [];
-						for (let ci = 0 ; ci < item.gcss_gc_id.length; ci++) {
+						for (let ci = 0; ci < item.gcss_gc_id.length; ci++) {
 							const class_name = that.getClassName(item.gcss_gc_id[ci]);
 							class_arr.push(class_name);
 						}
-						for (let ci = 0 ; ci < item.gcss_gs_id.length; ci++) {
+						for (let ci = 0; ci < item.gcss_gs_id.length; ci++) {
 							const sec_name = that.getSecName(item.gcss_gs_id[ci]);
 							sec_arr.push(sec_name);
 						}
-						for (let ci = 0 ; ci < item.gcss_gsub_id.length; ci++) {
+						for (let ci = 0; ci < item.gcss_gsub_id.length; ci++) {
 							const sub_name = that.getSubName(item.gcss_gsub_id[ci]);
 							sub_arr.push(sub_name);
 						}
@@ -668,7 +674,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getSubject(this);
-			this.displayedColumns = ['position', 'name', 'sub_parent_id' , 'order', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 4) {
 			this.getTopic(this);
@@ -893,7 +899,18 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	addEntry(data, serviceName, next) {
 		this.smartService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				this.resetForm(this.configValue);
+
+				if (this.configValue === '4') {
+					this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+						topic_name: this.configValue.topic_name
+					});
+				} else if (this.configValue === '5') {
+					this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+						st_name: this.configValue.st_name
+					});
+				} else {
+					this.resetForm(this.configValue);
+				}
 				next(this);
 				this.commonService.showSuccessErrorMessage('Added Succesfully', 'success');
 			} else {
@@ -904,7 +921,17 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	updateEntry(data, serviceName, next) {
 		this.smartService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				this.resetForm(this.configValue);
+				if (this.configValue === '4') {
+					this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+						topic_name: this.configValue.topic_name
+					});
+				} else if (this.configValue === '5') {
+					this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+						st_name: this.configValue.st_name
+					});
+				} else {
+					this.resetForm(this.configValue);
+				}
 				this.setupUpdateFlag = false;
 				next(this);
 				this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
@@ -913,4 +940,137 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+
+	incomingFile(event) {
+		this.file = '';
+		this.file = event.target.files[0];
+		this.UploadTopic();
+	}
+
+	incomingSubTopicFile(event) {
+		this.file = '';
+		this.file = event.target.files[0];
+		this.UploadSubTopic();
+	}
+
+	topicExcelDownload() {
+		const value = this.configValue;
+		if (value === '4') {
+			if (!this.formGroupArray[value - 1].formGroup.value.topic_class_id) {
+				this.commonService.showSuccessErrorMessage('Please Choose Class to Download Sample Topic Excel', 'error');
+			} else if (!this.formGroupArray[value - 1].formGroup.value.topic_sub_id) {
+				this.commonService.showSuccessErrorMessage('Please Choose Subject to Download Sample Topic Excel', 'error');
+			} else {
+
+				const inputJson = {
+					class_id: this.formGroupArray[value - 1].formGroup.value.topic_class_id,
+					sub_id: this.formGroupArray[value - 1].formGroup.value.topic_sub_id
+				};
+				this.smartService.downloadTopicExcel(inputJson)
+					.subscribe(
+						(excel_r: any) => {
+							if (excel_r && excel_r.status === 'ok') {
+								const length = excel_r.data.split('/').length;
+								saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+								this.resetForm(this.configValue);
+							}
+						});
+			}
+		}
+	}
+
+	subTopicExcelDownload() {
+		const value = this.configValue;
+		if (value === '5') {
+			// console.log('this.formGroupArray[value - 1].formGroup', this.formGroupArray[value - 1].formGroup);
+			if (!this.formGroupArray[value - 1].formGroup.value.st_topic_id) {
+				this.commonService.showSuccessErrorMessage('Please Choose Topic to Download Sample SubTopic Excel', 'error');
+			} else {
+
+				const inputJson = {
+					topic_id: this.formGroupArray[value - 1].formGroup.value.st_topic_id
+				};
+				this.smartService.downloadSubTopicExcel(inputJson)
+					.subscribe(
+						(excel_r: any) => {
+							if (excel_r && excel_r.status === 'ok') {
+								const length = excel_r.data.split('/').length;
+								saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+								this.resetForm(this.configValue);
+							}
+						});
+			}
+		}
+	}
+
+	UploadTopic() {
+		this.XlslArray = [];
+		this.finalXlsTopicArray = [];
+		const fileReader = new FileReader();
+		fileReader.onload = (e) => {
+			this.arrayBuffer = fileReader.result;
+			const data = new Uint8Array(this.arrayBuffer);
+			const arr = new Array();
+			// tslint:disable-next-line: curly
+			for (let i = 0; i !== data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+			const bstr = arr.join('');
+			const workbook = XLSX.read(bstr, { type: 'binary' });
+			const first_sheet_name = workbook.SheetNames[0];
+			const worksheet = workbook.Sheets[first_sheet_name];
+			this.XlslArray = XLSX.utils.sheet_to_json(worksheet, { raw: true });
+			if (this.XlslArray.length === 0) {
+				this.commonService.showSuccessErrorMessage('Execel is blank. Please Choose another excel.', 'error');
+				return false;
+			}
+			const inputJson = { 'topic_data': this.XlslArray };
+			this.smartService.uploadTopicExcel(inputJson)
+				.subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.commonService.showSuccessErrorMessage(result.message, 'success');
+							this.getTopic(this);
+						} else {
+							this.commonService.showSuccessErrorMessage(result.message, 'error');
+						}
+					});
+		};
+		fileReader.readAsArrayBuffer(this.file);
+
+	}
+
+	UploadSubTopic() {
+		this.XlslArray = [];
+		this.finalXlsTopicArray = [];
+		const fileReader = new FileReader();
+		fileReader.onload = (e) => {
+			this.arrayBuffer = fileReader.result;
+			const data = new Uint8Array(this.arrayBuffer);
+			const arr = new Array();
+			// tslint:disable-next-line: curly
+			for (let i = 0; i !== data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+			const bstr = arr.join('');
+			const workbook = XLSX.read(bstr, { type: 'binary' });
+			const first_sheet_name = workbook.SheetNames[0];
+			const worksheet = workbook.Sheets[first_sheet_name];
+			this.XlslArray = XLSX.utils.sheet_to_json(worksheet, { raw: true });
+			if (this.XlslArray.length === 0) {
+				this.commonService.showSuccessErrorMessage('Execel is blank. Please Choose another excel.', 'error');
+				return false;
+			}
+			const inputJson = { 'subtopic_data': this.XlslArray };
+			this.smartService.uploadSubTopicExcel(inputJson)
+				.subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.commonService.showSuccessErrorMessage(result.message, 'success');
+							this.getSubTopic(this);
+						} else {
+							this.commonService.showSuccessErrorMessage(result.message, 'error');
+						}
+					});
+		};
+		fileReader.readAsArrayBuffer(this.file);
+
+	}
+
 }

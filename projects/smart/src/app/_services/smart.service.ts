@@ -67,6 +67,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getSubjectsByClass', value);
 	}
+	getSessionWithMonth(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSessionWithMonth', value);
+	}
 	getSubtopicCountAndDetail(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/topicwise/getSubtopicCountAndDetail', value);
@@ -411,10 +415,31 @@ export class SmartService {
 		return this.http.post(environment.apiSmartUrl + '/setup/getGlobalClassSectionSubject', value);
 	}
 
+	downloadTopicExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/excelimportexport/downloadTopicExcel', value);
+	}
+
+	downloadSubTopicExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/excelimportexport/downloadSubTopicExcel', value);
+	}
+
+	uploadTopicExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/uploadTopic', value);
+	}
+
+	uploadSubTopicExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/uploadSubTopic', value);
+	}
+
 	getClassData(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getClassData', value);
 	}
+
 }
 
 

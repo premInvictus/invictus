@@ -8,6 +8,9 @@ import { AuxiliaryRoutingModule } from './auxiliary-routing.module';
 import { EditRequestsComponent } from './edit-requests/edit-requests.component';
 import { ConcessionRectificationComponent } from './concession-rectification/concession-rectification.component';
 import { ConcessionRemarkModalComponent } from './concession-rectification/concession-remark-modal/concession-remark-modal.component';
+import { FamilywiseFeeRecieptComponent } from './familywise-fee-reciept/familywise-fee-reciept.component';
+import { AddFamilyComponent } from './add-family/add-family.component';
+import { FamilyInformationComponent } from './family-information/family-information.component';
 
 @NgModule({
 	imports: [
@@ -23,7 +26,10 @@ import { ConcessionRemarkModalComponent } from './concession-rectification/conce
 		ChequeControlToolComponent,
 		EditRequestsComponent,
 		ConcessionRectificationComponent,
-		ConcessionRemarkModalComponent
+		ConcessionRemarkModalComponent,
+		FamilywiseFeeRecieptComponent,
+		AddFamilyComponent,
+		FamilyInformationComponent
 	]
 })
 export class AuxiliaryModule { }
