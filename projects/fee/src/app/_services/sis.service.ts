@@ -154,6 +154,10 @@ export class SisService {
 		value.fromFee = 'fee';
 		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentInformation', value);
 	}
+	getStudentFamilyInformation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentFamilyInformation', value);
+	}
 	addStudentInformation(value) {
 		this.service.startLoading();
 		return this.http.post('/studentinfo/addStudentInformation', value);
