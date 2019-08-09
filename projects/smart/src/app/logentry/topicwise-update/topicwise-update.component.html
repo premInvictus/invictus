@@ -113,14 +113,14 @@
                 <td colspan="5">
                   <app-no-data
                     [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-                    [noDataText]="'No Data Available'" [subText]="'Please select teacher, class, section and subject'"></app-no-data>
+                    [subText]="'Please select teacher, class, section and subject'"></app-no-data>
                 </td>
               </tr>
               <tr class="text-center" *ngIf="noDataFlag && isTeacher">
                 <td colspan="5">
                   <app-no-data
                     [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-                    [noDataText]="'No Data Available'" [subText]="'Please select class, section and subject'"></app-no-data>
+                    [subText]="'Please select class, section and subject'"></app-no-data>
                 </td>
               </tr>
             </tbody>

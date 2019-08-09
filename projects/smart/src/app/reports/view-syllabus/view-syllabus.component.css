@@ -19,3 +19,7 @@ tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }
 .font-color-yellow {
     color: #f0bf05 !important;
 }
+.row-margin{
+    margin-left: 10px;
+    margin-right: 10px;
+}
