@@ -11,6 +11,7 @@ import { CommonAPIService } from '../../_services/index';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
 import { LoaderService } from 'projects/fee/src/app/_services/loader.service';
+import { RouteStore } from 'projects/fee/src/app/feemaster/student-route-move-store.service';
 
 @Component({
 	selector: 'app-top-nav',
@@ -325,6 +326,9 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 					(result: any) => {
 						if (result.status === 'ok') {
 							localStorage.clear();
+							const routeStore: RouteStore = new RouteStore();
+							routeStore.adm_no = '';
+							routeStore.login_id = '';
 							this._cookieService.removeAll();
 							this.router.navigate(['/login']);
 						} else {
