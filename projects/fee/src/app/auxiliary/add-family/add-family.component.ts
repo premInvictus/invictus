@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FeeService, CommonAPIService, SisService } from '../../_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-add-family',
@@ -9,6 +10,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 	styleUrls: ['./add-family.component.css']
 })
 export class AddFamilyComponent implements OnInit {
+	keyChildCount = 0;
 	childData: any[] = [];
 	classArray: any[] = [];
 	sectionArray: any[] = [];
@@ -20,17 +22,25 @@ export class AddFamilyComponent implements OnInit {
 		public sisService: SisService,
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private route: ActivatedRoute,
+		private router: Router
 	) { }
 
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
 		this.getSection();
+		const familyData = this.common.getFamilyData();
+		console.log('familyData', familyData);
+		if (familyData) {
+			this.getFamilyInformation(familyData);
+		}
 	}
 
 	buildForm() {
 		this.addFamilyForm = this.fbuild.group({
+			'fam_entry_number': '',
 			'family_name': '',
 			'adm_no': '',
 			'class_id': '',
@@ -56,6 +66,7 @@ export class AddFamilyComponent implements OnInit {
 
 	reset(event) {
 		this.addFamilyForm.patchValue({
+			fam_entry_number: '',
 			adm_no: '',
 			class_id: '',
 			sec_id: '',
@@ -65,6 +76,7 @@ export class AddFamilyComponent implements OnInit {
 
 	resetAll(event) {
 		this.addFamilyForm.patchValue({
+			fam_entry_number: '',
 			adm_no: '',
 			class_id: '',
 			sec_id: '',
@@ -89,6 +101,62 @@ export class AddFamilyComponent implements OnInit {
 				this.sectionArray = result.data;
 			}
 		});
+	}
+
+	getFamilyInformation(param) {
+		if (param && param.fam_entry_number) {
+			this.feeService.getFamilyInformation({fam_entry_number: param.fam_entry_number}).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					console.log('data--', result.data);
+					this.common.showSuccessErrorMessage(result.message, 'success');
+					for (let i = 0; i < result.data.length; i++) {
+						const cdata = result.data[i];
+						let class_name = '', parent_name = '';
+
+						if (cdata.sec_name) {
+							class_name = cdata.class_name + '-' + cdata.sec_name;
+						} else {
+							class_name = cdata.class_name;
+						}
+
+						if (cdata.epd_parent_honorific) {
+							parent_name = cdata.epd_parent_honorific + ' ' + cdata.epd_parent_name;
+						} else {
+							parent_name = cdata.epd_parent_honorific + ' ' + cdata.epd_parent_name;
+						}
+
+						this.addFamilyForm.patchValue({
+							family_name: cdata.fam_family_name ? cdata.fam_family_name : '',
+							fam_entry_number: cdata.fam_entry_number ? cdata.fam_entry_number : ''
+						});
+
+						console.log('this.addFamilyForm', this.addFamilyForm);
+
+						this.childData.push(
+							{
+								'stu_admission_no': cdata.au_admission_no ? cdata.au_admission_no : '0',
+								'stu_login_no': cdata.au_login_id ? cdata.au_login_id : '0',
+								'stu_name': cdata.au_full_name ? cdata.au_full_name : '-',
+								'stu_class_name': class_name,
+								'stu_active_parent_id': cdata.epd_id  ? cdata.epd_id : '0',
+								'stu_active_parent_name': parent_name ? parent_name : '-',
+								'stu_active_parent_contact_no': cdata.epd_contact_no ? cdata.epd_contact_no : '-',
+								'stu_category': cdata.fo_name ? cdata.fo_name : '-',
+								'stu_fee_structure': cdata.fs_name ? cdata.fs_name : '0',
+								'stu_fee_structure_id': cdata.fs_id ? cdata.fs_id : '-',
+								'stu_concession_group': cdata.fcg_name ? cdata.fcg_name : '-',
+								'stu_transport': cdata.tr_route_name ? cdata.tr_route_name && cdata.tsp_name ? cdata.tr_route_name + ',' + cdata.tsp_name : cdata.tr_route_name : '-',
+								'keyChild': cdata.fam_active_member ? cdata.fam_active_member : 0
+							}
+						);
+					}
+					//this.childData = [];
+					//this.resetAll('');
+				} else {
+					this.common.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		}
 	}
 
 	getStudentInformation(inputJson) {
@@ -126,16 +194,20 @@ export class AddFamilyComponent implements OnInit {
 
 						if (validateStatus) {
 							this.childData.push({
-								'stu_admission_no': this.studentdetails.em_admission_no,
-								'stu_name': this.studentdetails.au_full_name,
+								'stu_admission_no': this.studentdetails.em_admission_no ? this.studentdetails.em_admission_no : '0',
+								'stu_login_no': this.studentdetails.au_login_id ? this.studentdetails.au_login_id : '0',
+								'stu_name': this.studentdetails.au_full_name ? this.studentdetails.au_full_name : '-',
 								'stu_class_name': class_name,
+								'stu_active_parent_id': this.studentdetails.parentinfo && this.studentdetails.parentinfo[0] ? this.studentdetails.parentinfo[0]['epd_id'] : '0',
 								'stu_active_parent_name': this.studentdetails.parentinfo && this.studentdetails.parentinfo[0] ? this.studentdetails.parentinfo[0]['epd_parent_name'] : '-',
 								'stu_active_parent_contact_no': this.studentdetails.parentinfo && this.studentdetails.parentinfo[0] ? this.studentdetails.parentinfo[0]['epd_contact_no'] : '-',
 								'stu_category': this.studentdetails.fee_category ? this.studentdetails.fee_category : '-',
 								'stu_fee_structure': this.studentdetails.ead_fees_structure ? this.studentdetails.ead_fees_structure : '-',
+								'stu_fee_structure_id': this.studentdetails.ead_fees_structure_id ? this.studentdetails.ead_fees_structure_id : '0',
 								'stu_concession_group': this.studentdetails.ead_concession_category ? this.studentdetails.ead_concession_category : '-',
 								'stu_transport': this.studentdetails.ead_bus_route ? this.studentdetails.ead_bus_route && this.studentdetails.ead_pickup_point ? this.studentdetails.ead_bus_route + ',' + this.studentdetails.ead_pickup_point : this.studentdetails.ead_bus_route : '-',
-								'keyChild': 0
+								'keyChild': '0'
+
 							});
 						} else {
 							this.common.showSuccessErrorMessage('This Student Already Added in Family, Please Choose Another One !', 'error');
@@ -169,20 +241,77 @@ export class AddFamilyComponent implements OnInit {
 	}
 
 	setKeyChild(index) {
+		this.keyChildCount = 0;
 		for (let i = 0; i < this.childData.length; i++) {
-			this.childData[index]['keyChild'] = 0;
+			this.childData[i]['keyChild'] = '0';
+			this.keyChildCount = 0;
 		}
-		this.childData[index]['keyChild'] = 1;
+
+		this.childData[index]['keyChild'] = '1';
+		this.keyChildCount = 1;
+	}
+
+	getKeyChildCount() {
+		this.keyChildCount = 0;
+		for (let i = 0; i < this.childData.length; i++) {
+			if (this.childData[i]['keyChild'] === '1') {
+				this.keyChildCount++;
+			}
+		}
+		return this.keyChildCount;
 	}
 
 	addFamily() {
-		console.log('this.childData', this.childData);
+		const keyChildCount = this.getKeyChildCount();
+		if (this.addFamilyForm.value.family_name && keyChildCount === 1) {
+			const inputJson = {};
+			inputJson['childData'] = this.childData;
+			inputJson['fam_family_name'] = this.addFamilyForm.value.family_name;
+			inputJson['fam_declaration_doc_url'] = '';
+			this.feeService.addFamily(inputJson).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
+					this.childData = [];
+					this.resetAll('');
+				} else {
+					this.common.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		} else if (!keyChildCount || keyChildCount > 1) {
+			this.common.showSuccessErrorMessage('Please Choose One Key Child', 'error');
+		} else {
+			this.common.showSuccessErrorMessage('Please Enter Family Name', 'error');
+		}
+	}
+
+	updateFamily() {
+		const keyChildCount = this.getKeyChildCount();
+		if (this.addFamilyForm.value.family_name && keyChildCount === 1) {
+			const inputJson = {};
+			inputJson['childData'] = this.childData;
+			inputJson['fam_entry_number'] = this.addFamilyForm.value.fam_entry_number;
+			inputJson['fam_family_name'] = this.addFamilyForm.value.family_name;
+			inputJson['fam_declaration_doc_url'] = '';
+			this.feeService.updateFamily(inputJson).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.common.showSuccessErrorMessage(result.message, 'success');
+					this.childData = [];
+					this.resetAll('');
+				} else {
+					this.common.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		} else if (!keyChildCount || keyChildCount > 1) {
+			this.common.showSuccessErrorMessage('Please Choose One Key Child', 'error');
+		} else {
+			this.common.showSuccessErrorMessage('Please Enter Family Name', 'error');
+		}
 	}
 
 	bindImageToForm($event) {
 		let fileName = '';
 		let au_profileimage = '';
-		this.sisService.uploadDocuments([{ fileName: fileName, imagebase64: au_profileimage, module: 'profile' }]).subscribe((result: any) => {
+		this.sisService.uploadDocuments([{ fileName: fileName, imagebase64: au_profileimage, module: 'family' }]).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				// this.defaultsrc = result.data[0].file_url;
 				// this.studentdetailsform.patchValue({
@@ -200,6 +329,11 @@ export class AddFamilyComponent implements OnInit {
 				}
 			}
 		});
+	}
+
+	moveToFamilyWiseFee() {
+		this.common.setFamilyData('');
+		this.router.navigate(['../familywise-fee-reciept'], { relativeTo: this.route });
 	}
 
 }
