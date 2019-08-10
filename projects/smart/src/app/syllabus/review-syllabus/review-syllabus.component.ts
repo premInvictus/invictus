@@ -189,15 +189,16 @@ export class ReviewSyllabusComponent implements OnInit {
 					}
 				}
 			);
-		this.reviewForm.patchValue({
-			'syl_sub_id': ''
-		});
 	}
 
 	//  Get Subject By Class function
 	getSubjectsByClass(): void {
+		this.reviewForm.patchValue({
+			'syl_sub_id': ''
+		});
 		this.finalSpannedArray = [];
 		const subjectParam: any = {};
+		this.finalDivFlag = true;
 		subjectParam.class_id = this.reviewForm.value.syl_class_id;
 		this.syllabusService.getSubjectsByClass(subjectParam)
 			.subscribe(
@@ -606,11 +607,11 @@ export class ReviewSyllabusComponent implements OnInit {
 		this.teachingSum = 0;
 		this.testSum = 0;
 		this.revisionSum = 0;
-		this.finalDivFlag = false;
 		this.syllabusService.getSylIdByClassSubject(this.reviewForm.value.syl_class_id, this.reviewForm.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
+						this.finalDivFlag = false;
 						this.getTopicByClassSubject();
 						const param: any = {};
 						param.syl_id = result.data[0].syl_id;
