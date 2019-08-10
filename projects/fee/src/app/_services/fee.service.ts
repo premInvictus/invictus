@@ -395,4 +395,25 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getRouteWiseTransportReport', value);
 	}
+	addFamily(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/addFamily', value);
+	}
+	updateFamily(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/updateFamily', value);
+	}
+	deleteFamily(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/deleteFamily', value);
+	}
+	getFamilyWiseFeeReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyWiseFeeReceipt', value);
+	}
+
+	getFamilyInformation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyInformation', value);
+	}
 }
