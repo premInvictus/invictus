@@ -168,6 +168,7 @@ export class ViewSyllabusComponent implements OnInit {
 	getSubjectsByClass(): void {
 		this.finalSpannedArray = [];
 		const subjectParam: any = {};
+		this.finaldivflag = true;
 		subjectParam.class_id = this.reviewform.value.syl_class_id;
 		this.syllabusService.getSubjectsByClass(subjectParam)
 			.subscribe(
@@ -206,7 +207,7 @@ export class ViewSyllabusComponent implements OnInit {
 
 	//  Get Sub Topic Name
 	getSubTopicName(value): void {
-		this.syllabusService.getSubTopic({st_topic_id: value})
+		this.syllabusService.getSubTopic({ st_topic_id: value })
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -674,6 +675,13 @@ export class ViewSyllabusComponent implements OnInit {
 																	eachTopicStatus.color = 'yellow';
 																	eachTopicStatus.statusFlag = false;
 																}
+															}
+														} else {
+															const cindex = classworkDetails.findIndex(c => c.cw_topic_id === element.sd_topic_id);
+															if (cindex !== -1) {
+																eachTopicStatus.statusStr = 'In Progress';
+																eachTopicStatus.color = 'yellow';
+																eachTopicStatus.statusFlag = false;
 															}
 														}
 														element.statusDetails = eachTopicStatus;

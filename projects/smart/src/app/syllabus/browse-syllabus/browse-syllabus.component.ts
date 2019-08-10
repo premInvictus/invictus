@@ -153,15 +153,16 @@ export class BrowseSyllabusComponent implements OnInit {
 					}
 				}
 			);
-		this.reviewform.patchValue({
-			'syl_sub_id': ''
-		});
 	}
 
 	//  Get Subject By Class function
 	getSubjectsByClass(): void {
+		this.reviewform.patchValue({
+			'syl_sub_id': ''
+		});
 		this.finalSpannedArray = [];
 		const subjectParam: any = {};
+		this.finaldivflag = true;
 		subjectParam.class_id = this.reviewform.value.syl_class_id;
 		this.syllabusService.getSubjectsByClass(subjectParam)
 			.subscribe(
@@ -200,7 +201,7 @@ export class BrowseSyllabusComponent implements OnInit {
 
 	//  Get Sub Topic Name
 	getSubTopicName(value): void {
-		this.syllabusService.getSubTopic({st_topic_id: value})
+		this.syllabusService.getSubTopic({ st_topic_id: value })
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -222,8 +223,6 @@ export class BrowseSyllabusComponent implements OnInit {
 			return this.subjectArray[ctrIndex].sub_name;
 		}
 	}
-
-
 	// export excel code
 	exportAsExcel() {
 		let reportType: any = '';
@@ -512,11 +511,11 @@ export class BrowseSyllabusComponent implements OnInit {
 		this.teachingSum = 0;
 		this.testSum = 0;
 		this.revisionSum = 0;
-		this.finaldivflag = false;
 		this.syllabusService.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
+						this.finaldivflag = false;
 						this.getTopicByClassSubject();
 						const param: any = {};
 						param.syl_id = result.data[0].syl_id;

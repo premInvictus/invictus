@@ -10,6 +10,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 })
 export class EditSyllabusComponent implements OnInit {
 	@Input() revieweditform: FormGroup;
+	isReadOnly = false;
 	editArray: any[] = [];
 	ctrArray: any[] = [];
 	subtopicArray: any[] = [];
@@ -101,10 +102,11 @@ export class EditSyllabusComponent implements OnInit {
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
+						this.isReadOnly = true;
 						this.getSubtopicByTopic(result.data[0].sd_topic_id);
 						this.revieweditform.patchValue({
 							'class_name': result.data[0].class_name,
-							'sub_name': result.data[0].sub_name,
+							'sub_name': result.data[0].sub_name, 
 							'topic_name': result.data[0].topic_name,
 							'subtopic_name': result.data[0].sd_st_id,
 							'ctr_name': result.data[0].sd_ctr_id,
@@ -127,6 +129,7 @@ export class EditSyllabusComponent implements OnInit {
 							.subscribe(
 								(subtopic_r: any) => {
 									if (subtopic_r && subtopic_r.status === 'ok') {
+										this.isReadOnly = false;
 										for (const citem of subtopic_r.data) {
 											for (const item of this.subtopicArray) {
 												if (citem.sd_st_id === item.st_id) {
