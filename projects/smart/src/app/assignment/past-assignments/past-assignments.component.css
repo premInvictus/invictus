@@ -1,4 +1,4 @@
-td.mat-cell {
+/* td.mat-cell {
     border: 1px solid #89A8C9 !important;
     height: 35px;
     color: rgba(0,0,0,.87)!important;
@@ -14,7 +14,25 @@ th.mat-header-cell {
     color: rgba(0, 0, 0, 0.54)!important;
     font-size: 15px;
     font-family: Helvetica, Arial, sans-serif;
+} */
+  
+th.mat-header-cell{
+    color: rgba(0, 0, 0, 0.54)!important;
+    height: 40px!important;
+    padding-left:0px!important;
+    font-size: 15px!important;
 }
+td.mat-cell{
+    color: rgba(0,0,0,.87)!important;
+    height: 35px!important;
+    padding-top:0px!important;
+    padding-bottom:0px!important;
+    font-size: 16px!important;
+}
+
+tr.custom-tr:nth-child(even) td.custom-td { background: #f1f4f7 !important; } 
+
+tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }
 .reset_ass {
     color: #0d7c9e;
     font-size: 40px;
@@ -27,12 +45,15 @@ td:nth-child(1) {
 }
 td:nth-child(3) {
     text-align: left !important;
+    padding-left: 10px !important;
 }
 td:nth-child(4) {
     text-align: left !important;
+    padding-left: 10px !important;
 }
 td:nth-child(5) {
     text-align: left !important;
+    padding-left: 10px !important;
 }
 .no-records {
     border-bottom: 1px solid #89A8C9;

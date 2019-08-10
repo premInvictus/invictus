@@ -364,6 +364,7 @@ export class CreateNewTeacherComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.notif.showSuccessErrorMessage('Modules Assigned Successfully', 'success');
+						this.router.navigate(['../teacher-management'], {relativeTo: this.route});
 					}
 				});
 		}
