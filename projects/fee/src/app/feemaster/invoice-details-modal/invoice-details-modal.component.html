@@ -182,7 +182,7 @@
               *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
               mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
               (click)="openRecalculateDialog()">Recalculate Invoice</button>
-            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button class="make-pay-btn"
+            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button class="btn-primary btn-danger btn-spacer make-pay-btn"
               (click)="makePayment(invoiceDetails)">Make Payment</button>
             <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
               (click)="printInvoice()">Print Invoice</button>
