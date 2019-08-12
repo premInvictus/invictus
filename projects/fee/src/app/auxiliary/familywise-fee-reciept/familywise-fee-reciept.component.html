@@ -6,7 +6,8 @@
                     <span class="font-size-24 font-medium"> Family Wise Fee Reciept</span>
                 </div>
                 <div class="col-4 text-right">
-                    <button mat-button class="font-size-14 font-white width-140 btn-blue" (click)="moveToAddFamily()">Add Family</button>
+                    <button mat-button class="font-size-14 font-white width-140 btn-blue"
+                        (click)="moveToAddFamily()">Add Family</button>
                 </div>
             </div>
         </mat-card>
@@ -46,11 +47,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="custom-tr" *ngFor="let item of familyDetailArr"> 
+                            <tr class="custom-tr" *ngFor="let item of familyDetailArr">
                                 <td class="custom-td">
                                     <mat-checkbox></mat-checkbox>
                                 </td>
-                                <td class="custom-td"><a>{{item?.fam_family_name}} - {{item?.fam_entry_number}}</a></td>
+                                <td class="custom-td">
+                                    <span class="pointer font-bold font-skyblue font-underline">
+                                        <a (click)="goToFamilyInformation(item?.fam_entry_number)">{{item?.fam_family_name}}
+                                            - {{item?.fam_entry_number}}
+                                        </a>
+                                    </span>
+                                </td>
                                 <td class="custom-td">{{item?.epd_parent_honorific}} {{item?.epd_parent_name}}</td>
                                 <td class="custom-td">{{item?.epd_contact_no}}</td>
                                 <td class="custom-td">{{item?.au_full_name}}</td>
@@ -72,6 +79,7 @@
                     </table>
                 </div>
             </div>
+            
         </mat-card>
     </div>
 </div>

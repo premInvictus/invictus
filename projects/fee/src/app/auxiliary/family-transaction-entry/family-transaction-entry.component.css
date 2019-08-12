@@ -1,0 +1,66 @@
+.mat-column-srno {
+    width: 3% !important;
+    flex: 0 0 8% !important;
+}
+.cdk-column-feehead {
+    width: 65%!important;
+}
+@media only screen and (max-width: 1024px) {
+    .cdk-column-feehead {
+        width: 55%!important;
+    }
+}
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+@media (max-width: 2399px) and (min-width: 1900px) {
+.card-height-720 {
+    min-height: 435px !important;
+}
+}
+@media (max-width: 1899px) and (min-width: 1200px) {
+.card-height-605 {
+    min-height: 433px !important;
+}
+}
+@media (max-width: 1199px) and (min-width: 992px) {
+.card-height-605 {
+    min-height: 432px !important;
+}
+}
+.vertical-divider{
+    border-right: 2px solid #dee2e6;
+    height: 40px;
+    margin-top: 15px;
+}
+.primary{
+    font-weight: 800;
+    padding-top: 10px;
+    padding-left: 10px;
+    font-size: 20px;    
+}
+.student-profile-image-68 {
+    border-radius: 100%;
+    width: 53px;
+    height: 53px;
+}
+.margin-top-1{
+    margin-top: 1px;
+}
+.family-panel-header{
+    background-color: #7f969d;
+}
+.family-panel-header:hover{
+    background-color: #7f969d;
+}
+.btn-back{
+    background-color: #007d9e;
+    width: 120px !important;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    font-size: 13px !important;
+}
