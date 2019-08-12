@@ -135,24 +135,24 @@
       <table mat-table [dataSource]="dataSource" class="table-100 text-center">
 
         <ng-container matColumnDef="srno">
-          <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
-          <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+          <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Sr. No. </th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.srno}} </td>
         </ng-container>
         <ng-container matColumnDef="feehead">
-          <th mat-header-cell *matHeaderCellDef style="width: 50% !important;">Particulars </th>
-          <td mat-cell *matCellDef="let element" style="text-align: left !important;"> {{element.feehead | titlecase}} </td>
+          <th mat-header-cell *matHeaderCellDef style="width: 50% !important;" class="text-nowrap">Particulars </th>
+          <td mat-cell *matCellDef="let element" style="text-align: left !important;" class="text-nowrap"> {{element.feehead | titlecase}} </td>
         </ng-container>
         <ng-container matColumnDef="feedue">
-          <th mat-header-cell *matHeaderCellDef> Fee (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
-          <td mat-cell *matCellDef="let element"> {{element.feedue | number | zerodash}} </td>
+          <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Fee (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.feedue | number | zerodash}} </td>
         </ng-container>
         <ng-container matColumnDef="concession">
-          <th mat-header-cell *matHeaderCellDef> Concession (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
-          <td mat-cell *matCellDef="let element"> {{element.concession | number | zerodash}} </td>
+          <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Concession (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.concession | number | zerodash}} </td>
         </ng-container>
         <ng-container matColumnDef="adjustment">
-          <th mat-header-cell *matHeaderCellDef> Adjustment (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
-          <td mat-cell *matCellDef="let element">
+          <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Adjustment (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap">
             <ng-template [ngIf]="modificationFlag" [ngIfElse]="elseContaint">
               <mat-form-field class="form-field" style="width:50%">
                 <input matInput type="number" [value]="element.adjustment"
@@ -165,8 +165,8 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="netpay">
-          <th mat-header-cell *matHeaderCellDef> Net Payable (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
-          <td mat-cell *matCellDef="let element">{{element.netpay | number}} </td>
+          <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Net Payable (<span><i class="fas fa-rupee-sign" ></i></span>)</th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap">{{element.netpay | number}} </td>
         </ng-container>
 
 
