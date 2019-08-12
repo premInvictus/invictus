@@ -5,6 +5,7 @@ import { EditRequestsComponent } from './edit-requests/edit-requests.component';
 import { ConcessionRectificationComponent } from './concession-rectification/concession-rectification.component';
 import { FamilywiseFeeRecieptComponent } from './familywise-fee-reciept/familywise-fee-reciept.component';
 import { AddFamilyComponent } from './add-family/add-family.component';
+import { FamilyInformationComponent } from './family-information/family-information.component';
 
 
 const routes: Routes = [
@@ -13,7 +14,8 @@ const routes: Routes = [
 	{path:  'concession-rectification', component: ConcessionRectificationComponent},
 	{ path: 'familywise-fee-reciept', component: FamilywiseFeeRecieptComponent},
 	{ path: 'add-family', component: AddFamilyComponent},
-	{ path: 'familywise-fee-receipt', component: FamilywiseFeeRecieptComponent}
+	{ path: 'familywise-fee-receipt', component: FamilywiseFeeRecieptComponent},
+	{ path: 'family-information', component: FamilyInformationComponent},
 ];
 
 @NgModule({
