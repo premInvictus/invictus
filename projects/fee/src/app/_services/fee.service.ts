@@ -416,4 +416,8 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyInformation', value);
 	}
+	getFamilyOutstandingDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyOutstandingDetail', value);
+	}
 }

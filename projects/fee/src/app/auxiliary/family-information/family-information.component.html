@@ -1,17 +1,150 @@
 <div class="row">
   <div class="col-12">
-      <mat-card>
-          <div class="row">
-              <div class="col-8">
-                  <span class="font-size-24 font-medium"> Family Information</span>
-              </div>              
-          </div>
-      </mat-card>
+    <mat-card>
+      <div class="row">
+        <div class="col-8">
+          <span class="font-size-24 font-medium"> Family Information</span>
+        </div>
+      </div>
+    </mat-card>
   </div>
 </div>
 
-
-<div class="row margin-top-15">
+<div class="row margin-top-15" *ngIf="childDataArr.length > 0">
   <div class="col-12">
+    <mat-card class="card-padding-5 ">
+      <div class="row remove-top-margin">
+        <span class="primary">Primary Parent</span>
+      </div>
+      <div class="row remove-top-margin">
+        <div class="col-1 custom-fee-entry-col-5 ">
+          <div class="row">
+            <div class="col-12 text-center">
+              <img class="student-profile-image-68" [src]="defaultsrc"
+                onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
+            </div>
+          </div>
+        </div>
+        <div class="col-1 custom-fee-entry-col-12 vertical-divider">
+          <div class="row margin-top-1">
+            <div class="col-12 text-center">
+              <span class="font-size-16 font-bold">{{familyOutstandingArr.epd_parent_name}}</span><br>
+              <span class="font-size-14">{{familyOutstandingArr.epd_contact_no}}</span><br>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-1 custom-fee-entry-col-12 vertical-divider">
+          <div class="row margin-top-1">
+            <div class="col-12 text-center">
+              <span class="font-size-16 font-bold">Family No.</span><br>
+              <span class="font-size-14">{{familyOutstandingArr.fam_entry_number}}</span><br>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-1 custom-fee-entry-col-12 vertical-divider">
+          <div class="row margin-top-1">
+            <div class="col-12 text-center">
+              <span class="font-size-16 font-bold">Creation Date</span><br>
+              <span class="font-size-14">{{familyOutstandingArr.fam_created_date | date: 'd-MMM-y'}}</span><br>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 custom-fee-entry-col-12 ">
+          <div class="row margin-top-15">
+            <div class="col-12 text-center">
+              <span class="font-size-16 font-bold">Net outstanding</span><br>
+              <span class="font-size-14">{{familyOutstandingArr.family_total_outstanding_amt}}</span><br>
+            </div>
+          </div>
+        </div>
+        <div class="col-5 text-right margin-top-10 ">
+          <button mat-button class="font-size-14 font-white  btn-blue">Print
+            Summary</button>
+          <button mat-button class="font-size-14 margin-left-10 font-white  btn-pay">Pay
+            Now</button>
+        </div>
+      </div>
+
+      <div class="row margin-top-15">
+        <div class="col-12">
+          <ng-container *ngFor="let titem of childDataArr let i = index;">
+            <br>
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="i=== 0">
+                <mat-expansion-panel-header class="family-panel-header">
+                  <mat-panel-title>
+                    <span class="font-size-14 font-white  ">Admission No. :
+                      {{titem.au_admission_no}}</span>
+                    <span class="margin-left-right-15 font-white "> | </span>
+                    <span class="font-size-14 font-white">Student Name : {{titem.au_full_name}} </span>
+                    <span class="margin-left-right-15  font-white "> | </span>
+                    <span class="font-size-14 font-white "> Class : {{titem.class_name}} -
+                      {{titem.sec_name}}</span>
+                  </mat-panel-title>
+                  <span class="font-size-16 font-white text-right margin-left-right-15 "> Net Payable :
+                    {{titem.outstanding_amt}}</span>
+                </mat-expansion-panel-header>
+                <div class="row">
+                  <div class="col-12">
+                    <table class="table table-borderd table-stripped custom-table">
+                      <thead class="table-skill__head text-center">
+                        <tr class="custom-tr">
+                          <th class="custom-th">Select</th>
+                          <th class="custom-th">Invoice No.</th>
+                          <th class="custom-th">Fee Period</th>
+                          <th class="custom-th">Invoice Date</th>
+                          <th class="custom-th">Due date</th>
+                          <th class="custom-th">Status</th>
+                          <th class="custom-th">Outstanding</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngFor="let det of titem.invoice_data">
+                          <tr *ngIf="det.inv_invoice_no">
+                            <td class="custom-td ">
+                              <mat-checkbox></mat-checkbox>
+                            </td>
+                            <td class="custom-td">{{det.inv_invoice_no}}</td>
+                            <td class="custom-td">{{det.inv_fee_period}}</td>
+                            <td class="custom-td">{{det.inv_invoice_date | date: 'd-MMM-y'}}</td>
+                            <td class="custom-td">{{det.inv_due_date | date: 'd-MMM-y'}}</td>
+                            <td class="custom-td">{{det.inv_paid_status}}</td>
+                            <td class="custom-td">{{det.flgr_balance}}</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <br>
+                <br>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </ng-container>
+          <div class="row">
+            <div class="col-12">
+              <div class="grey-box ">
+                <div class="margin-right-50"><span class="font-size-16 ">Amount in
+                    Words : </span><span class="font-size-16 font-medium"> Rupees
+                    {{familyOutstandingArr.family_total_outstanding_amt | numberToWord | titlecase}} Only </span><span
+                    class="float-right font-size-16 font-medium"><span>Grand Total : </span><span
+                      class="font-size-16 font-medium">{{familyOutstandingArr.family_total_outstanding_amt}}</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row margin-top-20">
+            <div class="col-12 text-center">
+              <button mat-button class="font-size-14 font-white btn-blue">Print
+                Summary</button>
+              <button mat-button class="font-size-14 margin-left-10 font-white btn-pay">Pay
+                Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
   </div>
 </div>

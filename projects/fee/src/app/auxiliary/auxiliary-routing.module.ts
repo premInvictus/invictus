@@ -6,6 +6,7 @@ import { ConcessionRectificationComponent } from './concession-rectification/con
 import { FamilywiseFeeRecieptComponent } from './familywise-fee-reciept/familywise-fee-reciept.component';
 import { AddFamilyComponent } from './add-family/add-family.component';
 import { FamilyInformationComponent } from './family-information/family-information.component';
+import { FamilyTransactionEntryComponent } from './family-transaction-entry/family-transaction-entry.component';
 
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
 	{ path: 'add-family', component: AddFamilyComponent},
 	{ path: 'familywise-fee-receipt', component: FamilywiseFeeRecieptComponent},
 	{ path: 'family-information', component: FamilyInformationComponent},
+	{ path: 'family-transaction-entry', component: FamilyTransactionEntryComponent},
 ];
 
 @NgModule({
