@@ -53,4 +53,9 @@ export class FamilywiseFeeRecieptComponent implements OnInit {
 		});
 	}
 
+	goToFamilyInformation(familyEntryNumber) {
+		this.common.setFamilyInformation(familyEntryNumber);
+		this.router.navigate(['../family-information'], { relativeTo: this.route });
+	}
+
 }
