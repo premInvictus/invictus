@@ -11,6 +11,7 @@ import { ConcessionRemarkModalComponent } from './concession-rectification/conce
 import { FamilywiseFeeRecieptComponent } from './familywise-fee-reciept/familywise-fee-reciept.component';
 import { AddFamilyComponent } from './add-family/add-family.component';
 import { FamilyInformationComponent } from './family-information/family-information.component';
+import { FamilyTransactionEntryComponent } from './family-transaction-entry/family-transaction-entry.component';
 
 @NgModule({
 	imports: [
@@ -29,7 +30,8 @@ import { FamilyInformationComponent } from './family-information/family-informat
 		ConcessionRemarkModalComponent,
 		FamilywiseFeeRecieptComponent,
 		AddFamilyComponent,
-		FamilyInformationComponent
+		FamilyInformationComponent,
+		FamilyTransactionEntryComponent
 	]
 })
 export class AuxiliaryModule { }
