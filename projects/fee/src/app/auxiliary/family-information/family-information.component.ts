@@ -22,6 +22,8 @@ export class FamilyInformationComponent implements OnInit {
 		if (familyNumber) {
 			console.log('family number', familyNumber);
 			this.getFamilyOutstandingDetail(familyNumber);
+		} else {
+			this.router.navigate(['../familywise-fee-receipt'], { relativeTo: this.route });
 		}
 	}
 	getFamilyOutstandingDetail(familyNumber) {
@@ -33,6 +35,12 @@ export class FamilyInformationComponent implements OnInit {
 				this.childDataArr = result.data.childData;
 			}
 		});
+	}
+
+	payFamilyOutstanding(familyEntryNumber) {
+		console.log('familyEntryNumber', familyEntryNumber);
+		this.common.setFamilyInformation(familyEntryNumber);
+		this.router.navigate(['../family-transaction-entry'], { relativeTo: this.route });
 	}
 
 }
