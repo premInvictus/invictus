@@ -34,6 +34,7 @@ import { group } from '@angular/animations';
 export class OutstandingReportComponent implements OnInit {
 	@Output() displyRep = new EventEmitter();
 	@Input() userName: any = '';
+	totalRow: any;
 	groupColumns: any[] = [];
 	groupLength: any;
 	feeHeadJSON: any[] = [];
@@ -156,6 +157,15 @@ export class OutstandingReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
@@ -198,7 +208,7 @@ export class OutstandingReportComponent implements OnInit {
 			enableColumnReorder: true,
 			createFooterRow: true,
 			showFooterRow: true,
-			footerRowHeight: 21,
+			footerRowHeight: 35,
 			enableExcelCopyBuffer: true,
 			fullWidthRows: true,
 			enableAutoTooltip: true,
@@ -276,6 +286,7 @@ export class OutstandingReportComponent implements OnInit {
 				},
 				onColumnsChanged: (e, args) => {
 					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
 				},
 			},
 			draggableGrouping: {
@@ -286,6 +297,9 @@ export class OutstandingReportComponent implements OnInit {
 					this.groupColumns = [];
 					this.groupColumns = args.groupColumns;
 					this.onGroupChanged(args && args.groupColumns);
+					setTimeout(() => {
+						this.updateTotalRow(this.angularGrid.slickGrid);
+					}, 100);
 				},
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
@@ -506,6 +520,7 @@ export class OutstandingReportComponent implements OnInit {
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						console.log(this.columnDefinitions);
 						console.log(this.dataset);
+						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
@@ -514,21 +529,23 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
-						obj3['inv_opening_balance'] = this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj3['inv_opening_balance'] =
+							new DecimalPipe('en-in').transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
 								Object.keys(this.dataset).forEach(key3 => {
 									Object.keys(this.dataset[key3]).forEach(key4 => {
 										if (key4 === key2) {
-											obj3[key4] = this.dataset.map(t => t[key4]).reduce((acc, val) => acc + val, 0);
+											obj3[key4] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key4]).reduce((acc, val) => acc + val, 0));
 										}
 									});
 								});
 							});
 						});
-						obj3['invoice_fine_amount'] = this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
-						obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
-						this.dataset.push(obj3);
+						obj3['invoice_fine_amount'] =
+							new DecimalPipe('en-in').transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
+						obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
+						this.totalRow = obj3;
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
 						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -789,32 +806,35 @@ export class OutstandingReportComponent implements OnInit {
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						console.log(this.columnDefinitions);
 						console.log(this.dataset);
+						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand Total</b>';
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
-						obj3['inv_opening_balance'] = this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-						obj3['invoice_fine_amount'] = this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+						obj3['inv_opening_balance'] =
+							new DecimalPipe('en-in').transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
+						obj3['invoice_fine_amount'] =
+							new DecimalPipe('en-in').transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
 								Object.keys(this.dataset).forEach(key3 => {
 									Object.keys(this.dataset[key3]).forEach(key4 => {
 										if (key4 === key2) {
-											obj3[key4] = this.dataset.map(t => t[key4]).reduce((acc, val) => acc + val, 0);
+											obj3[key4] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key4]).reduce((acc, val) => acc + val, 0));
 										}
 									});
 								});
 							});
 						});
-						obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+						obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 						obj3['receipt_mode_name'] = '';
-						this.dataset.push(obj3);
+						this.totalRow = obj3;
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 300;
 						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -1002,17 +1022,18 @@ export class OutstandingReportComponent implements OnInit {
 							this.dataset.push(obj);
 							index++;
 						}
+						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '<b>Grand Total</b>';
+						obj3['invoice_created_date'] = '';
 						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_no'] = '';
-						obj3['rpt_amount'] = this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+						obj3['rpt_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0));
 						obj3['fp_name'] = '';
-						this.dataset.push(obj3);
+						this.totalRow = obj3;
 						this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						if (this.dataset.length <= 5) {
@@ -1226,6 +1247,7 @@ export class OutstandingReportComponent implements OnInit {
 							this.dataset.push(obj);
 							index++;
 						}
+						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
@@ -1235,11 +1257,12 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['stu_class_name'] = '';
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
-						obj3['transport_amount'] = this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+						obj3['transport_amount'] =
+							new DecimalPipe('en-in').transform(this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
 						obj3['route_name'] = '';
 						obj3['stoppages_name'] = '';
 						obj3['slab_name'] = '';
-						this.dataset.push(obj3);
+						this.totalRow = obj3;
 						this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						if (this.dataset.length <= 5) {
@@ -1394,15 +1417,16 @@ export class OutstandingReportComponent implements OnInit {
 							this.dataset.push(obj);
 							index++;
 						}
+						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
 						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
-						obj3['rpt_amount'] = this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+						obj3['rpt_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0));
 						obj3['fp_name'] = '';
-						this.dataset.push(obj3);
+						this.totalRow = obj3;
 						this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						if (this.dataset.length <= 5) {
@@ -1440,10 +1464,12 @@ export class OutstandingReportComponent implements OnInit {
 
 	collapseAllGroups() {
 		this.dataviewObj.collapseAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 
 	expandAllGroups() {
 		this.dataviewObj.expandAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
@@ -1783,21 +1809,19 @@ export class OutstandingReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr: any[] = [];
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
-						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
-						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
-							arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
-						}
-						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] === '<b>Grand Total</b>') {
-							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
-						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
+					if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+					}
+					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+						&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
+					}
+					if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+						&& this.dataset[key][item2.id] === '<b>Grand Total</b>') {
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+					}
+					if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 					}
 				}
 				rowData.push(arr);
@@ -2074,19 +2098,19 @@ export class OutstandingReportComponent implements OnInit {
 			obj3['stu_class_name'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
 			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 					Object.keys(this.dataset).forEach(key3 => {
 						Object.keys(this.dataset[key3]).forEach(key4 => {
 							if (key4 === key2) {
-								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
+								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 							}
 						});
 					});
 				});
 			});
-			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
 			obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
 			for (const itemJ of this.columnDefinitions) {
 				Object.keys(obj3).forEach((key: any) => {
@@ -2109,20 +2133,20 @@ export class OutstandingReportComponent implements OnInit {
 			obj3['receipt_id'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0)) / 2;
-			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
+			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
 			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 					Object.keys(this.dataset).forEach(key3 => {
 						Object.keys(this.dataset[key3]).forEach(key4 => {
 							if (key4 === key2) {
-								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
+								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 							}
 						});
 					});
 				});
 			});
-			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 			obj3['receipt_mode_name'] = '';
 			for (const itemJ of this.columnDefinitions) {
 				Object.keys(obj3).forEach((key: any) => {
@@ -2143,7 +2167,7 @@ export class OutstandingReportComponent implements OnInit {
 			obj3['stu_class_name'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
 			obj3['route_name'] = '';
 			obj3['stoppages_name'] = '';
 			obj3['slab_name'] = '';
@@ -2164,7 +2188,7 @@ export class OutstandingReportComponent implements OnInit {
 			obj3['stu_admission_no'] = 'Grand Total';
 			obj3['stu_full_name'] = '';
 			obj3['stu_class_name'] = '';
-			obj3['rpt_amount'] = (this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['rpt_amount'] = (this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0));
 			obj3['fp_name'] = '';
 			for (const itemJ of this.columnDefinitions) {
 				Object.keys(obj3).forEach((key: any) => {
@@ -2329,6 +2353,13 @@ export class OutstandingReportComponent implements OnInit {
 		});
 		this.draggableGroupingPlugin.setDroppedGroups('stu_class_name');
 	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
+		}
+	}
 	exportToExcel(json: any[], excelFileName: string) {
 		let reportType: any = '';
 		const columns: any[] = [];
@@ -2380,7 +2411,7 @@ export class OutstandingReportComponent implements OnInit {
 				for (const item2 of this.columnDefinitions) {
 					if (this.reportType !== 'mfr' && Number(key) < this.dataset.length - 1) {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 						}
 						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
 							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
@@ -2567,21 +2598,19 @@ export class OutstandingReportComponent implements OnInit {
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
 						for (const item2 of this.columnDefinitions) {
-							if (Number(key) < this.dataset.length - 1) {
-								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-									&& item.rows[key][item2.id] !== '<b>Grand Total</b>') {
-									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]), 'd-MMM-y');
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-									&& item.rows[key][item2.id] === '<b>Grand Total</b>') {
-									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
-								}
-								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
-								}
+							if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
+							}
+							if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+								&& item.rows[key][item2.id] !== '<b>Grand Total</b>') {
+								obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]), 'd-MMM-y');
+							}
+							if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+								&& item.rows[key][item2.id] === '<b>Grand Total</b>') {
+								obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
+							}
+							if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+								obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
 							}
 						}
 						worksheet.addRow(obj);
@@ -2786,20 +2815,20 @@ export class OutstandingReportComponent implements OnInit {
 			obj3['stu_class_name'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
 			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 					Object.keys(this.dataset).forEach(key3 => {
 						Object.keys(this.dataset[key3]).forEach(key4 => {
 							if (key4 === key2) {
-								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
+								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 							}
 						});
 					});
 				});
 			});
-			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0)) / 2;
-			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
+			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 			worksheet.addRow(obj3);
 			worksheet.eachRow((row, rowNum) => {
 				if (rowNum === worksheet._rows.length) {
@@ -2838,20 +2867,20 @@ export class OutstandingReportComponent implements OnInit {
 			obj3['receipt_id'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0)) / 2;
-			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
+			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
 			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
 					Object.keys(this.dataset).forEach(key3 => {
 						Object.keys(this.dataset[key3]).forEach(key4 => {
 							if (key4 === key2) {
-								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
+								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 							}
 						});
 					});
 				});
 			});
-			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 			obj3['receipt_mode_name'] = '';
 			worksheet.addRow(obj3);
 			worksheet.eachRow((row, rowNum) => {
@@ -2889,7 +2918,7 @@ export class OutstandingReportComponent implements OnInit {
 			obj3['stu_class_name'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
 			obj3['route_name'] = '';
 			obj3['stoppages_name'] = '';
 			obj3['slab_name'] = '';
@@ -2927,7 +2956,7 @@ export class OutstandingReportComponent implements OnInit {
 			obj3['stu_admission_no'] = 'Grand Total';
 			obj3['stu_full_name'] = '';
 			obj3['stu_class_name'] = '';
-			obj3['rpt_amount'] = (this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['rpt_amount'] = (this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0));
 			obj3['fp_name'] = '';
 			worksheet.addRow(obj3);
 			worksheet.eachRow((row, rowNum) => {
@@ -3115,7 +3144,7 @@ export class OutstandingReportComponent implements OnInit {
 						for (const item2 of this.columnDefinitions) {
 							if (this.reportType !== 'mfr') {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-									obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+									obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
 								}
 								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
 									&& item.rows[key][item2.id] !== '<b>Grand Total</b>') {
