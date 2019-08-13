@@ -182,7 +182,7 @@
               *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
               mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
               (click)="openRecalculateDialog()">Recalculate Invoice</button>
-            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button class="make-pay-btn"
+            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button class="btn-primary btn-danger btn-spacer make-pay-btn"
               (click)="makePayment(invoiceDetails)">Make Payment</button>
             <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
               (click)="printInvoice()">Print Invoice</button>
@@ -201,18 +201,18 @@
       <table mat-table [dataSource]="dataSource" class="table-100 text-center">
 
         <ng-container matColumnDef="srno">
-          <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
-          <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+          <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Sr. No. </th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.srno}} </td>
         </ng-container>
         <ng-container matColumnDef="feehead">
-          <th mat-header-cell *matHeaderCellDef style="width: 55% !important;"> Particulars </th>
-          <td mat-cell *matCellDef="let element" style="text-align: left !important;"> {{element.feehead | titlecase}}
+          <th mat-header-cell *matHeaderCellDef style="width: 55% !important;" class="text-nowrap"> Particulars </th>
+          <td mat-cell *matCellDef="let element"  class="text-nowrap" style="text-align: left !important;"> {{element.feehead | titlecase}}
           </td>
         </ng-container>
         <ng-container matColumnDef="feedue">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Fee Due (<span><i
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Fee Due (<span><i
                 class="fas fa-rupee-sign"></i></span>)</th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element"  class="text-nowrap">
             <ng-template [ngIf]="modificationFlag && !element.invg_id && element.feehead !== 'Previous Balance'" [ngIfElse]="elseFeeContaintent">
               <mat-form-field class="margin-top-10 form-field-60">
                 <input matInput type="number" [value]="element.feedue"
@@ -227,14 +227,14 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="concession">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Concession (<span><i
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Concession (<span><i
                 class="fas fa-rupee-sign"></i></span>)</th>
-          <td mat-cell *matCellDef="let element"> {{element.concession | number | zerodash}} </td>
+          <td mat-cell *matCellDef="let element"  class="text-nowrap"> {{element.concession | number | zerodash}} </td>
         </ng-container>
         <ng-container matColumnDef="adjustment">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Adjustment (<span><i
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Adjustment (<span><i
                 class="fas fa-rupee-sign"></i></span>)</th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element"  class="text-nowrap">
             <ng-template [ngIf]="modificationFlag && element.invg_id" [ngIfElse]="elseContaint">
               <mat-form-field class="margin-top-10 form-field-60">
                 <input matInput type="number" [value]="element.adjustment"
@@ -247,9 +247,9 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="netpay">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;"> Net Payable (<span><i
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Net Payable (<span><i
                 class="fas fa-rupee-sign"></i></span>)</th>
-          <td mat-cell *matCellDef="let element">{{element.netpay | number}} </td>
+          <td mat-cell *matCellDef="let element" class="text-nowrap">{{element.netpay | number}} </td>
         </ng-container>
 
 
