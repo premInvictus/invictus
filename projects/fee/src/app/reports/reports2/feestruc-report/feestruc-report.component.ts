@@ -29,6 +29,7 @@ import 'jspdf-autotable';
 })
 export class FeestrucReportComponent implements OnInit {
 	@Output() displyRep = new EventEmitter();
+	totalRow: any;
 	feeHeadJson: any[] = [];
 	groupColumns: any[] = [];
 	groupLength: any;
@@ -142,6 +143,15 @@ export class FeestrucReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
@@ -534,6 +544,7 @@ export class FeestrucReportComponent implements OnInit {
 							groupTotalsFormatter: this.sumTotalsFormatter
 						},
 					);
+					this.totalRow = {};
 					const obj3: any = {};
 					obj3['id'] = 'footer';
 					obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
@@ -545,14 +556,14 @@ export class FeestrucReportComponent implements OnInit {
 							Object.keys(this.dataset).forEach(key3 => {
 								Object.keys(this.dataset[key3]).forEach(key4 => {
 									if (key4 === key2) {
-										obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										obj3[key2] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 									}
 								});
 							});
 						});
 					});
-					obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
-					this.dataset.push(obj3);
+					obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
+					this.totalRow = obj3;
 					this.tableFlag = true;
 				} else {
 					this.tableFlag = true;
@@ -573,10 +584,12 @@ export class FeestrucReportComponent implements OnInit {
 
 	collapseAllGroups() {
 		this.dataviewObj.collapseAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 
 	expandAllGroups() {
 		this.dataviewObj.expandAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
@@ -850,7 +863,7 @@ export class FeestrucReportComponent implements OnInit {
 					enableColumnReorder: true,
 					createFooterRow: true,
 					showFooterRow: true,
-					footerRowHeight: 21,
+					footerRowHeight: 35,
 					enableExcelCopyBuffer: true,
 					fullWidthRows: true,
 					enableAutoTooltip: true,
@@ -925,6 +938,7 @@ export class FeestrucReportComponent implements OnInit {
 						},
 						onColumnsChanged: (e, args) => {
 							console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+							this.updateTotalRow(this.angularGrid.slickGrid);
 						},
 					},
 					draggableGrouping: {
@@ -935,6 +949,9 @@ export class FeestrucReportComponent implements OnInit {
 							this.groupColumns = [];
 							this.groupColumns = args.groupColumns;
 							this.onGroupChanged(args && args.groupColumns);
+							setTimeout(() => {
+								this.updateTotalRow(this.angularGrid.slickGrid);
+							}, 100);
 						},
 						onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 					}
@@ -1055,13 +1072,11 @@ export class FeestrucReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr5: any[] = [];
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
-						if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
-							|| item2.id === 'rpt_receipt_date') {
-							arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
-						} else {
-							arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
+					if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+						|| item2.id === 'rpt_receipt_date') {
+						arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+					} else {
+						arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
 					}
 				}
 				rowData.push(arr5);
@@ -1247,13 +1262,13 @@ export class FeestrucReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj5[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
+							obj5[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 						}
 					});
 				});
 			});
 		});
-		obj5['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
+		obj5['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 		for (const itemj of this.columnDefinitions) {
 			Object.keys(obj5).forEach((key: any) => {
 				if (itemj.id === key) {
@@ -1378,6 +1393,13 @@ export class FeestrucReportComponent implements OnInit {
 		});
 		doc.save(reportType + '_' + new Date() + '.pdf');
 	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
+		}
+	}
 	groupByClass() {
 		this.dataviewObj.setGrouping({
 			getter: 'stu_class_name',
@@ -1421,13 +1443,11 @@ export class FeestrucReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
-						if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
-							|| item2.id === 'rpt_receipt_date') {
-							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
-						} else {
-							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
-						}
+					if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+						|| item2.id === 'rpt_receipt_date') {
+						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
+					} else {
+						obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 					}
 				}
 				worksheet.addRow(obj);
@@ -1596,13 +1616,11 @@ export class FeestrucReportComponent implements OnInit {
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
 						for (const item2 of this.columnDefinitions) {
-							if (Number(key) < this.dataset.length - 1) {
-								if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
-									|| item2.id === 'rpt_receipt_date') {
-									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
-								} else {
-									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
-								}
+							if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+								|| item2.id === 'rpt_receipt_date') {
+								obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
+							} else {
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 							}
 						}
 						worksheet.addRow(obj);
@@ -1689,13 +1707,13 @@ export class FeestrucReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
+							obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 						}
 					});
 				});
 			});
 		});
-		obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 		worksheet.addRow(obj3);
 		worksheet.eachRow((row, rowNum) => {
 			if (rowNum === worksheet._rows.length) {
@@ -1848,7 +1866,7 @@ export class FeestrucReportComponent implements OnInit {
 								|| item2.id === 'rpt_receipt_date') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
-								obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
 							}
 						}
 						worksheet.addRow(obj);
