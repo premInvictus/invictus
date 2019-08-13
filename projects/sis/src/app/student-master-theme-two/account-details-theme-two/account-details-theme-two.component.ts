@@ -175,7 +175,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	getFeeStructures() {
-		this.feeService.getFeeStructure({ fs_is_hostel_fee: 0, fs_status:1 }).subscribe((result: any) => {
+		this.feeService.getFeeStructure({ fs_is_hostel_fee: 0, fs_status: 1 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.feeStructureArray = result.data;
 			}
@@ -189,7 +189,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	getHostelFeeStructures() {
-		this.feeService.getFeeStructure({ fs_is_hostel_fee: 1 ,fs_status:1}).subscribe((result: any) => {
+		this.feeService.getFeeStructure({ fs_is_hostel_fee: 1, fs_status: 1 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.hostelFeeStructureArray = result.data;
 			}
@@ -222,6 +222,10 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	} */
 	enableTransport($event) {
 		if ($event.checked) {
+			this.accountsForm.patchValue({
+				accd_transport_mode: '1',
+			});
+			this.modeFlag = true;
 			this.transportFlag = true;
 			if (this.feeDet) {
 				this.getStoppages(this.feeDet.accd_tr_id);
@@ -336,12 +340,12 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				this.accountsForm.value.accd_tsp_id && this.accountsForm.value.accd_tsp_id !== '0' &&
 				this.accountsForm.value.accd_ts_id && this.accountsForm.value.accd_ts_id !== '0' &&
 				this.accountsForm.value.accd_transport_from && this.accountsForm.value.accd_transport_from !== '0') {
-					if (this.terminationFlag) {
-						if (!this.accountsForm.value.accd_transport_to) {
-							this.accountsForm.get('accd_transport_to').markAsDirty();
-							this.validateFlag = false;
-						}
+				if (this.terminationFlag) {
+					if (!this.accountsForm.value.accd_transport_to) {
+						this.accountsForm.get('accd_transport_to').markAsDirty();
+						this.validateFlag = false;
 					}
+				}
 			} else {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
