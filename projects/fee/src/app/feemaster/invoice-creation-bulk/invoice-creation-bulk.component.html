@@ -7,11 +7,11 @@
                   <h1 class="remove-bottom-margin font-size-24">Invoice Creation - Bulk</h1>
                </div>
                <div class="col-6 text-right">
-                  <div class="vertical-align-sub inline-flex">
+                  <!-- <div class="vertical-align-sub inline-flex">
                      <h3 class="font-size-15 margin-top-2 remove-bottom-margin">Bulk</h3>
                      <mat-slide-toggle class="btn-spacer my-toggle" (change)="navigateIndividual()"></mat-slide-toggle>
                      <h3 class="font-size-15 margin-top-2 remove-bottom-margin btn-spacer">Individual</h3>
-                  </div>
+                  </div> -->
                </div>
             </div>
          </mat-card>
@@ -238,7 +238,7 @@
                            </ng-container>
                            <ng-container matColumnDef="studentname">
                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </th>
-                              <td mat-cell *matCellDef="let element"> {{element.studentname | titlecase}} </td>
+                              <td mat-cell *matCellDef="let element" class="text-left mar-left-5"> {{element.studentname | titlecase}} </td>
                            </ng-container>
                            <ng-container matColumnDef="classsection">
                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Class Section </th>

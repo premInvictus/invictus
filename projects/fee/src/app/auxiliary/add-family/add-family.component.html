@@ -3,7 +3,8 @@
         <mat-card>
             <div class="row">
                 <div class="col-8">
-                    <span class="font-size-24 font-medium"> Add Family</span>
+                    <span class="font-size-24 font-medium" *ngIf="!addFamilyForm.value.fam_entry_number"> Add Family</span>
+                    <span class="font-size-24 font-medium" *ngIf="addFamilyForm.value.fam_entry_number"> Update Family</span>
                 </div>
                 
                 <div class="col-4 text-right">
@@ -14,8 +15,6 @@
         </mat-card>
     </div>
 </div>
-
-
 <div class="row margin-top-15">
     <div class="col-12">
         <form [formGroup]="addFamilyForm" id="formFlag">

@@ -65,8 +65,9 @@
                                 <td class="custom-td">{{item?.no_of_students}} Students</td>
                                 <td class="custom-td">{{item?.family_outstanding_amt}}</td>
                                 <td class="custom-td">
-                                    <i class="fas fa-file-image image-icon"></i>
-                                    <span class="ver-line-divider margin-left-10"></span>
+                                    <a href="{{item.fam_declaration_doc_url}}" *ngIf="item.fam_declaration_doc_url">
+                                        <i class="fas fa-file-image image-icon"></i>
+                                        <span class="ver-line-divider margin-left-10"></span></a>
                                     <i class="fas fa-edit edit-icon" (click)="editFamily(item)"></i>
                                     <span class="ver-line-divider margin-left-10"></span>
                                     <i class="fas fa-trash-alt trash-icon" (click)="deleteFamily(item)"></i>
@@ -79,7 +80,7 @@
                     </table>
                 </div>
             </div>
-            
+
         </mat-card>
     </div>
 </div>
