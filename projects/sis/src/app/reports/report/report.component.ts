@@ -14,7 +14,7 @@ export class ReportComponent implements OnInit {
 	feeReportArray: any[] = [
 		{
 			report_id: '1',
-			report_name: 'Admission Report',
+			report_name: 'Enrollment Review',
 			report_image: '/assets/images/Fee Reports/collection_report.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',

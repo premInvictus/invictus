@@ -4,14 +4,22 @@ import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommonAPIService, SisService } from '../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import * as Excel from 'exceljs/dist/exceljs';
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
+
 
 import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
 	Filters,
-	Formatters
+	Formatters,
+	DelimiterType,
+	FileType
 } from 'angular-slickgrid';
 import { count } from 'rxjs/operators';
 
@@ -29,6 +37,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 	gridObj: any;
 	gridHeight: any;
 	tableFlag = false;
+	totalRow: any;
 
 	showDate = true;
 	showDateRange = false;
@@ -53,6 +62,37 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 	admissionReportForm: FormGroup;
 	reportProcessWiseData: any[] = [];
 	reportEnrolmentWiseData: any[] = [];
+	schoolInfo;
+	currentSession;
+	currentUser;
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z'
+	};
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
 		private router: Router,
@@ -60,7 +100,10 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 
 	ngOnInit() {
 		// this.userDataSource.sort = this.sort;
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.buildForm();
+		this.getSchool();
+		this.getSession();
 		this.gridOptions = {
 			enableDraggableGrouping: false,
 			createPreHeaderPanel: true,
@@ -72,7 +115,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			enableColumnReorder: true,
 			createFooterRow: true,
 			showFooterRow: true,
-			footerRowHeight: 21,
+			footerRowHeight: 35,
 			enableExcelCopyBuffer: true,
 			fullWidthRows: true,
 			enableAutoTooltip: true,
@@ -86,6 +129,38 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			exportOptions: {
 				sanitizeDataExport: true,
 				exportWithFormatter: true
+			},
+			gridMenu: {
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
+					iconCssClass: 'fas fa-download'
+				}
+				],
+				onCommand: (e, args) => {
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF(this.dataset);
+					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel(this.dataset);
+					}
+					if (args.command === 'export-csv') {
+						this.exportToFile('csv');
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
+				},
 			}
 		};
 	}
@@ -93,6 +168,274 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() {
 	}
 
+	exportAsPDF(json: any[]) {
+		const headerData: any[] = [];
+		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
+		const doc = new jsPDF('p', 'mm', 'a0');
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 35,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			head: [[reportType]],
+			margin: { top: 0 },
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 35,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		const rowData: any[] = [];
+		for (const item of this.columnDefinitions) {
+			headerData.push(item.name);
+		}
+		json.forEach(element => {
+			const arr: any[] = [];
+			this.columnDefinitions.forEach(element1 => {
+				arr.push(element[element1.id]);
+			});
+			rowData.push(arr);
+		});
+		if (this.totalRow) {
+			const arr: any[] = [];
+			for (const item of this.columnDefinitions) {
+				arr.push(this.totalRow[item.id]);
+			}
+			rowData.push(arr);
+		}
+		doc.autoTable({
+			head: [headerData],
+			body: rowData,
+			startY: 65,
+			tableLineColor: 'black',
+			didDrawPage: function (data) {
+				doc.setFontStyle('bold');
+
+			},
+			willDrawCell: function (data) {
+				const doc = data.doc;
+				const rows = data.table.body;
+				if (rows.length === 1) {
+				} else if (data.row.index === rows.length - 1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('22');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(67, 160, 71);
+				}
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#c8d6e5',
+				textColor: '#5e666d',
+				fontSize: 22,
+			},
+			alternateRowStyles: {
+				fillColor: '#f1f4f7'
+			},
+			useCss: true,
+			styles: {
+				fontSize: 22,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: '#89a8c8',
+			},
+			theme: 'grid'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['No of records: ' + json.length]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated On: '
+				+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated By: ' + this.currentUser.full_name]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.save(reportType + '_' + new Date() + '.pdf');
+	}
+	getSchool() {
+		this.sisService.getSchool().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.schoolInfo = res.data[0];
+			}
+		});
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				const sessionArray = result2.data;
+				const ses_id = JSON.parse(localStorage.getItem('session')).ses_id;
+				sessionArray.forEach(element => {
+					if (element.ses_id === ses_id) {
+						this.currentSession = element;
+					}
+				});
+			}
+		});
+	}
+	checkWidth(id, header) {
+		const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
+	}
+	exportToExcel(json: any[]) {
+		console.log('excel json', json);
+		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
+		const columns: any[] = [];
+		const columValue: any[] = [];
+		for (const item of this.columnDefinitions) {
+			columns.push({
+				key: item.id,
+				width: this.checkWidth(item.id, item.name)
+			});
+			columValue.push(item.name);
+		}
+		const fileName = reportType + '.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } }, { pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
+		worksheet.getCell('A1').value = new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city +
+			', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+
+		worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell('A2').alignment = { horizontal: 'left' };
+
+		worksheet.getRow(4).values = columValue;
+
+		worksheet.columns = columns;
+
+		json.forEach(element => {
+			const excelobj: any = {};
+			this.columnDefinitions.forEach(element1 => {
+				excelobj[element1.id] = Number(element[element1.id]) ? Number(element[element1.id]) : element[element1.id];
+			});
+			worksheet.addRow(excelobj);
+		});
+		worksheet.addRow(this.totalRow);
+		/* worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' + this.getParamValue();
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		}; */
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + json.length;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+			+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
+	}
+	getParamValue() {
+		const paramArr: any[] = [];
+		Object.keys(this.admissionReportForm.controls).forEach(key => {
+			console.log(key);
+			if (this.admissionReportForm.value[key]) {
+				paramArr.push(this.admissionReportForm.value[key]);
+			}
+		});
+		return paramArr;
+	}
+	getReportHeader() {
+		return this.admissionReportForm.value.reviewReport === '0' ? 'Enrollment Review' + ' Gender Wise' :
+			'Enrollment Review' + ' Enrollment Type Wise';
+	}
+	exportToFile(type) {
+		const reportType = this.getReportHeader();
+		this.angularGrid.exportService.exportToFile({
+			delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
+			filename: reportType + '_' + new Date(),
+			format: (type === 'csv') ? FileType.csv : FileType.txt
+		});
+	}
 	resetDataset() {
 		this.reportProcessWiseData = [];
 		this.dataset = [];
@@ -200,11 +543,10 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 	}
 	prepareDataSource() {
 		this.columnDefinitions = [
-			{ id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true },
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true },
-			{ id: 'Boys', name: 'Boys', field: 'Boys', sortable: true, filterable: true },
-			{ id: 'Girls', name: 'Girls', field: 'Girls', sortable: true, filterable: true },
-			{ id: 'Other', name: 'Other', field: 'Other', sortable: true, filterable: true },
+			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: false },
+			{ id: 'Boys', name: 'Boys', field: 'Boys', sortable: true, filterable: true, resizable: false },
+			{ id: 'Girls', name: 'Girls', field: 'Girls', sortable: true, filterable: true, resizable: false },
+			{ id: 'Other', name: 'Other', field: 'Other', sortable: true, filterable: true, resizable: false },
 			{ id: 'Total', name: 'Total', field: 'Total', sortable: true, filterable: true }
 		];
 		let counter = 1;
@@ -230,14 +572,14 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		}
 
 		const blankTempObj = {};
-		blankTempObj['id'] = counter;
-		blankTempObj['counter'] = 'Total';
-		blankTempObj['class_name'] = '';
+		blankTempObj['counter'] = '';
+		blankTempObj['class_name'] = 'Total';
 		blankTempObj['Boys'] = boyTotal;
 		blankTempObj['Girls'] = girlTotal;
 		blankTempObj['Other'] = otherTotal;
 		blankTempObj['Total'] = total;
-		this.dataset.push(blankTempObj);
+		// this.dataset.push(blankTempObj);
+		this.totalRow = blankTempObj;
 		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
 			this.gridHeight = 750;
@@ -248,16 +590,32 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		} else {
 			this.gridHeight = 300;
 		}
+		console.log(this.angularGrid);
+		console.log(this.gridObj);
+	}
+
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
+	}
+
+	angularGridReady(angularGrid: AngularGridInstance) {
+		this.angularGrid = angularGrid;
+		const grid = angularGrid.slickGrid; // grid object
+		this.updateTotalRow(angularGrid.slickGrid);
 	}
 
 	prepareEnrolmentDataSource() {
 		this.columnDefinitions = [
-			{ id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true },
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true },
-			{ id: 'Enquiry', name: 'Enquiry', field: 'Enquiry', sortable: true, filterable: true },
-			{ id: 'Registration', name: 'Registration', field: 'Registration', sortable: true, filterable: true },
-			{ id: 'Proadmission', name: 'Proadmission', field: 'Proadmission', sortable: true, filterable: true },
-			{ id: 'Alumini', name: 'Alumini', field: 'Alumini', sortable: true, filterable: true },
+			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: false },
+			{ id: 'Enquiry', name: 'Enquiry', field: 'Enquiry', sortable: true, filterable: true, resizable: false },
+			{ id: 'Registration', name: 'Registration', field: 'Registration', sortable: true, filterable: true, resizable: false },
+			{ id: 'Proadmission', name: 'Pro.Adm', field: 'Proadmission', sortable: true, filterable: true, resizable: false },
+			{ id: 'Alumini', name: 'Alumini', field: 'Alumini', sortable: true, filterable: true, resizable: false },
 			{ id: 'Total', name: 'Total', field: 'Total', sortable: true, filterable: true }
 		];
 		let counter = 1;
@@ -289,16 +647,16 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		}
 
 		const blankTempObj = {};
-		blankTempObj['id'] = counter;
-		blankTempObj['counter'] = 'Total';
-		blankTempObj['class_name'] = '';
+		blankTempObj['counter'] = '';
+		blankTempObj['class_name'] = 'Total';
 		blankTempObj['Enquiry'] = enqTotal;
 		blankTempObj['Registration'] = regTotal;
 		blankTempObj['Proadmission'] = proTotal;
 		blankTempObj['Admission'] = admTotal;
 		blankTempObj['Alumini'] = almTotal;
 		blankTempObj['Total'] = total;
-		this.dataset.push(blankTempObj);
+		// this.dataset.push(blankTempObj);
+		this.totalRow = blankTempObj;
 		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
 			this.gridHeight = 750;
@@ -310,7 +668,6 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			this.gridHeight = 300;
 		}
 	}
-
 
 	exportAsExcel() {
 		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
@@ -329,7 +686,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
-		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
+			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
 			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Admission Report</h2></center></div>'
 			+ printModal2.innerHTML + '</html>');
 		popupWin.document.close();
