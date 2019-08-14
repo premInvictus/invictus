@@ -31,6 +31,7 @@ import 'jspdf-autotable';
 })
 export class FeeadjReportComponent implements OnInit {
 	@Input() userName: any = '';
+	totalRow: any;
 	feeHeadJson: any[] = [];
 	alphabetJSON = {
 		1: 'A',
@@ -137,6 +138,15 @@ export class FeeadjReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
@@ -200,7 +210,7 @@ export class FeeadjReportComponent implements OnInit {
 			enableColumnReorder: true,
 			createFooterRow: true,
 			showFooterRow: true,
-			footerRowHeight: 21,
+			footerRowHeight: 35,
 			enableExcelCopyBuffer: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
@@ -278,6 +288,7 @@ export class FeeadjReportComponent implements OnInit {
 				},
 				onColumnsChanged: (e, args) => {
 					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
 				},
 			},
 			draggableGrouping: {
@@ -288,6 +299,9 @@ export class FeeadjReportComponent implements OnInit {
 					this.groupColumns = [];
 					this.groupColumns = args.groupColumns;
 					this.onGroupChanged(args && args.groupColumns);
+					setTimeout(() => {
+						this.updateTotalRow(this.angularGrid.slickGrid);
+					}, 100);
 				},
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
@@ -519,6 +533,7 @@ export class FeeadjReportComponent implements OnInit {
 					}
 				);
 				this.aggregatearray.push(new Aggregators.Sum('invg_adj_amount'));
+				this.totalRow = {};
 				const obj3: any = {};
 				obj3['id'] = 'footer';
 				obj3['srno'] = '';
@@ -532,18 +547,19 @@ export class FeeadjReportComponent implements OnInit {
 						Object.keys(this.dataset).forEach(key3 => {
 							Object.keys(this.dataset[key3]).forEach(key4 => {
 								if (key4 === key2) {
-									obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+									obj3[key2] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 								}
 							});
 						});
 					});
 				});
-				obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+				obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 				obj3['adjusted_by'] = '';
 				obj3['adjustment_date'] = '';
-				obj3['invg_adj_amount'] = this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0);
+				obj3['invg_adj_amount'] =
+					new DecimalPipe('en-in').transform(this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0));
 				obj3['inv_remark'] = '';
-				this.dataset.push(obj3);
+				this.totalRow = obj3;
 				if (this.dataset.length <= 5) {
 					this.gridHeight = 300;
 				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -572,10 +588,12 @@ export class FeeadjReportComponent implements OnInit {
 
 	collapseAllGroups() {
 		this.dataviewObj.collapseAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 
 	expandAllGroups() {
 		this.dataviewObj.expandAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
@@ -817,14 +835,12 @@ export class FeeadjReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr5: any[] = [];
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
 						if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
 							|| item2.id === 'rpt_receipt_date') {
 							arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
 						} else {
 							arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
-					}
 				}
 				rowData.push(arr5);
 			});
@@ -1010,7 +1026,7 @@ export class FeeadjReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj5[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
+							obj5[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 						}
 					});
 				});
@@ -1019,7 +1035,7 @@ export class FeeadjReportComponent implements OnInit {
 		obj5['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
 		obj5['adjusted_by'] = '';
 		obj5['adjustment_date'] = '';
-		obj5['invg_adj_amount'] = (this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+		obj5['invg_adj_amount'] = (this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0));
 		obj5['inv_remark'] = '';
 		for (const itemj of this.columnDefinitions) {
 			Object.keys(obj5).forEach((key: any) => {
@@ -1193,7 +1209,7 @@ export class FeeadjReportComponent implements OnInit {
 							|| item2.id === 'rpt_receipt_date') {
 							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
 						} else {
-							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 						}
 					}
 				}
@@ -1363,13 +1379,11 @@ export class FeeadjReportComponent implements OnInit {
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
 						for (const item2 of this.columnDefinitions) {
-							if (Number(key) < this.dataset.length - 1) {
-								if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
-									|| item2.id === 'rpt_receipt_date') {
-									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
-								} else {
-									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
-								}
+							if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+								|| item2.id === 'rpt_receipt_date') {
+								obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
+							} else {
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 							}
 						}
 						worksheet.addRow(obj);
@@ -1464,7 +1478,7 @@ export class FeeadjReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
+							obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 						}
 					});
 				});
@@ -1473,7 +1487,7 @@ export class FeeadjReportComponent implements OnInit {
 		obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
 		obj3['adjusted_by'] = '';
 		obj3['adjustment_date'] = '';
-		obj3['invg_adj_amount'] = (this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['invg_adj_amount'] = (this.dataset.map(t => t['invg_adj_amount']).reduce((acc, val) => acc + val, 0));
 		obj3['inv_remark'] = '';
 		worksheet.addRow(obj3);
 		worksheet.eachRow((row, rowNum) => {
@@ -1565,6 +1579,13 @@ export class FeeadjReportComponent implements OnInit {
 			saveAs(blob, fileName);
 		});
 	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
+		}
+	}
 	getFromDate(value) {
 		this.reportFilterForm.patchValue({
 			from_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
@@ -1647,7 +1668,7 @@ export class FeeadjReportComponent implements OnInit {
 								|| item2.id === 'rpt_receipt_date') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
-								obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
 							}
 						}
 						worksheet.addRow(obj);

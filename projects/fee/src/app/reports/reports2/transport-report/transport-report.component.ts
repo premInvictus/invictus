@@ -1190,7 +1190,7 @@ export class TransportReportComponent implements OnInit {
 		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['receipt_no'] !== '-') {
-				this.openDialogReceipt(item['receipt_no'], false);
+				this.openDialogReceipt(item['receipt_id'], false);
 			}
 		}
 		if (e.target.className === 'invoice-span-mfr') {
@@ -1264,7 +1264,7 @@ export class TransportReportComponent implements OnInit {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {
-				invoiceNo: invoiceNo,
+				rpt_id: invoiceNo,
 				edit: edit
 			},
 			hasBackdrop: true

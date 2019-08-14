@@ -223,6 +223,10 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 	enableTransport($event) {
 		if ($event.checked) {
+			this.accountsForm.patchValue({
+				accd_transport_mode: '1',
+			});
+			this.modeFlag = true;
 			this.transportFlag = true;
 			if (this.accountDetails && Object.keys(this.accountDetails).length > 0) {
 				this.getStoppages(this.accountDetails.accd_tr_id);

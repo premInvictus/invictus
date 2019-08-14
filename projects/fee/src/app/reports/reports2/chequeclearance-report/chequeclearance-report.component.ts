@@ -32,6 +32,7 @@ import 'jspdf-autotable';
 export class ChequeclearanceReportComponent implements OnInit {
 	sessionArray: any[] = [];
 	feeHeadJson: any[] = [];
+	totalRow: any;
 	groupColumns: any[] = [];
 	groupLength: any;
 	session: any = {};
@@ -137,6 +138,15 @@ export class ChequeclearanceReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
@@ -179,7 +189,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			enableColumnReorder: true,
 			createFooterRow: true,
 			showFooterRow: true,
-			footerRowHeight: 21,
+			footerRowHeight: 35,
 			enableExcelCopyBuffer: true,
 			fullWidthRows: true,
 			enableAutoTooltip: true,
@@ -257,6 +267,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				},
 				onColumnsChanged: (e, args) => {
 					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
 				},
 			},
 			draggableGrouping: {
@@ -267,6 +278,9 @@ export class ChequeclearanceReportComponent implements OnInit {
 					this.groupColumns = [];
 					this.groupColumns = args.groupColumns;
 					this.onGroupChanged(args && args.groupColumns);
+					setTimeout(() => {
+						this.updateTotalRow(this.angularGrid.slickGrid);
+					}, 100);
 				},
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
@@ -504,6 +518,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 					this.dataset.push(obj);
 					index++;
 				}
+				this.totalRow = {};
 				const obj3: any = {};
 				obj3['id'] = '';
 				obj3['srno'] = '';
@@ -517,12 +532,13 @@ export class ChequeclearanceReportComponent implements OnInit {
 				obj3['invoice_no'] = '';
 				obj3['receipt_no'] = '';
 				obj3['receipt_id'] = '';
-				obj3['receipt_amount'] = this.dataset.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0);
+				obj3['receipt_amount'] =
+					new DecimalPipe('en-in').transform(this.dataset.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0));
 				obj3['bank_name'] = '';
 				obj3['status'] = '';
 				obj3['fcc_reason_id'] = '';
 				obj3['fcc_remarks'] = '';
-				this.dataset.push(obj3);
+				this.totalRow = obj3;
 				if (this.dataset.length <= 5) {
 					this.gridHeight = 300;
 				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -551,10 +567,12 @@ export class ChequeclearanceReportComponent implements OnInit {
 
 	collapseAllGroups() {
 		this.dataviewObj.collapseAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 
 	expandAllGroups() {
 		this.dataviewObj.expandAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
@@ -601,6 +619,13 @@ export class ChequeclearanceReportComponent implements OnInit {
 			return '-';
 		} else {
 			return new DecimalPipe('en-in').transform(value);
+		}
+	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
 		}
 	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
@@ -1179,13 +1204,11 @@ export class ChequeclearanceReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
-						if (item2.id === 'cheque_date' || item2.id === 'deposite_date'
-							|| item2.id === 'dishonor_date') {
-							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
-						} else {
-							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
-						}
+					if (item2.id === 'cheque_date' || item2.id === 'deposite_date'
+						|| item2.id === 'dishonor_date') {
+						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
+					} else {
+						obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 					}
 				}
 				worksheet.addRow(obj);
@@ -1359,7 +1382,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 									|| item2.id === 'dishonor_date') {
 									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
 								} else {
-									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
+									obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 								}
 							}
 						}
@@ -1616,7 +1639,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 								|| item2.id === 'dishonor_date') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
-								obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
 							}
 						}
 						worksheet.addRow(obj);

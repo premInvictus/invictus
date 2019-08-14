@@ -258,7 +258,7 @@
 </div> -->
 
 <form [formGroup]="admissionReportForm" autocomplete="off">
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-12">
             <mat-radio-group formControlName="reviewReport" (change)="resetDataset()">
                 <mat-radio-button value="0" checked="checked">Gender Wise</mat-radio-button>
@@ -266,10 +266,16 @@
                 </mat-radio-button>
             </mat-radio-group>
         </div>
-    </div>
+    </div> -->
     <div class="row">
-        <div class="col-2 margin-top-10">
-            <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
+        <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Report Type</mat-label>
+                <mat-select placeholder="Report Type" formControlName="reviewReport" (selectionChange)="resetDataset()">
+                    <mat-option value="0" selected>Gender Wise</mat-option>
+                    <mat-option value="1">Enrolment Type Wise</mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
         <div class="col-2" *ngIf="admissionReportForm.value.reviewReport == '0'">
             <mat-form-field class="form-field" appearance="outline">
@@ -282,7 +288,7 @@
         </div>
         <div class="col-2" *ngIf="showDate">
             <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Date</mat-label>
+                <mat-label>As on</mat-label>
                 <input matInput [matDatepicker]="cpicker" placeholder="Date" formControlName="cdate">
                 <mat-datepicker-toggle matSuffix [for]="cpicker" (dateInput)="cpicker('input', $event)">
                 </mat-datepicker-toggle>
@@ -306,6 +312,9 @@
                 </mat-datepicker-toggle>
                 <mat-datepicker #tpicker></mat-datepicker>
             </mat-form-field>
+        </div>
+        <div class="col-2 margin-top-10">
+            <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
         </div>
         <div class="col-2">
             <button class="btn-success margin-top-15" mat-raised-button (click)="submit()">Submit</button>

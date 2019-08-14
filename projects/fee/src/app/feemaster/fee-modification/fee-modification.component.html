@@ -197,9 +197,9 @@
                 <div class="row">
                   <div class="col-12">
                     <mat-form-field appearance="outline" class="form-field">
-                      <mat-label>Amount</mat-label><!--[readonly]="selectedMode === '1'"-->
-                      <input matInput placeholder="Amount" type="number" formControlName="ftr_amount"
-                         required>
+                      <mat-label>Amount</mat-label>
+                      <!--[readonly]="selectedMode === '1'"-->
+                      <input matInput placeholder="Amount" type="number" formControlName="ftr_amount" required>
                     </mat-form-field>
                   </div>
                 </div>
@@ -220,16 +220,26 @@
           <div *ngIf="modifyReceiptForm.value.ftr_pay_id !== '1' && modifyReceiptForm.value.ftr_pay_id !== '2' 
        && modifyReceiptForm.value.ftr_pay_id !== '3' && modifyReceiptForm.value.ftr_pay_id !== ''">
             <div class="row">
-              <div class="col-3"></div>
-              <div class="col-6">
+              <div class="col-2"></div>
+              <div class="col-8">
                 <div class="row">
                   <div class="col-6">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Bank Name </mat-label>
+                      <mat-select placeholder="Bank Name" formControlName="ftr_bnk_id" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let bank of banks" [value]="bank.bnk_gid">{{bank.bank_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
                     <mat-form-field appearance="outline" class="form-field">
                       <mat-label>Amount</mat-label>
                       <input matInput placeholder="Amount" type="number" formControlName="ftr_amount" required>
                     </mat-form-field>
                   </div>
-                  <div class="col-6">
+                  <div class="col-3">
                     <mat-form-field appearance="outline" class="form-field">
                       <mat-label>Transaction Id</mat-label>
                       <input matInput placeholder="Transaction Id" type="number" formControlName="ftr_transaction_id"
@@ -247,10 +257,12 @@
                   </div>
                 </div>
               </div>
-              <div class="col-3">
+              <div class="col-2">
               </div>
             </div>
           </div>
+
+
           <div *ngIf="modifyReceiptForm.value.ftr_pay_id === '2'">
             <div class="row">
               <div class="col-6">
