@@ -209,7 +209,7 @@
 </div> -->
 
 <form [formGroup]="studentStrengthReportForm" autocomplete="off">
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-12 margin-top-10 ">
             <mat-radio-group formControlName="reviewReport" (change)="resetDataset()">
                 <mat-radio-button value="0" checked="checked">Summarised Report
@@ -217,14 +217,20 @@
                 <mat-radio-button class="inline-form-radio-spacing" value="1">Detailed Report</mat-radio-button>
             </mat-radio-group>
         </div>
-    </div>
+    </div> -->
     <div class="row">
-        <div class="col-2 margin-top-10">
-            <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
+        <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Report Type</mat-label>
+                <mat-select placeholder="Report Type" formControlName="reviewReport" (selectionChange)="resetDataset()">
+                    <mat-option value="0" selected>Summarised Report</mat-option>
+                    <mat-option value="1">Detailed Report</mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
         <div class="col-2" *ngIf="showDate">
             <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Date</mat-label>
+                <mat-label>As On</mat-label>
                 <input matInput [matDatepicker]="cpicker" placeholder="Date" formControlName="cdate">
                 <mat-datepicker-toggle matSuffix [for]="cpicker" (dateInput)="cpicker('input', $event)">
                 </mat-datepicker-toggle>
@@ -248,6 +254,9 @@
                 </mat-datepicker-toggle>
                 <mat-datepicker #tpicker></mat-datepicker>
             </mat-form-field>
+        </div>
+        <div class="col-2 margin-top-10">
+            <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
         </div>
         <div class="col-2">
             <button class="btn-success margin-top-12" mat-raised-button (click)="submit()">Submit</button>

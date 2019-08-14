@@ -435,7 +435,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	// changed for smart module
 	getClass() {
 		this.classArray = [];
-		this.smartService.getClass({}).subscribe(
+		this.smartService.getClass({class_status: '1'}).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.classArray = result.data;

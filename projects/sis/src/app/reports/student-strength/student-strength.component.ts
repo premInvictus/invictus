@@ -1,23 +1,32 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommonAPIService, SisService } from '../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe, DecimalPipe } from '@angular/common';
 import * as XLSX from 'xlsx';
+
+import { saveAs } from 'file-saver';
+import * as Excel from 'exceljs/dist/exceljs';
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
 
 import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
 	Filters,
-	Formatters
+	Formatters,
+	DelimiterType,
+	FileType
 } from 'angular-slickgrid';
 
 @Component({
 	selector: 'app-student-strength',
 	templateUrl: './student-strength.component.html',
-	styleUrls: ['./student-strength.component.scss']
+	styleUrls: ['./student-strength.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
 export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	columnDefinitions: Column[] = [];
@@ -28,6 +37,11 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	gridObj: any;
 	gridHeight: any;
 	tableFlag = false;
+	totalRow: any;
+	groupColumns: any[] = [];
+	aggregatearray: any[] = [];
+	selectedGroupingFields: string[] = [];
+	draggableGroupingPlugin: any;
 
 	showDate = true;
 	showDateRange = false;
@@ -38,6 +52,37 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 
 	reportSummaryData: any[] = [];
 	reportDetailData: any[] = [];
+	schoolInfo;
+	currentSession;
+	currentUser;
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z'
+	};
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
 		private router: Router,
@@ -45,11 +90,15 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 
 	ngOnInit() {
 		// this.summaryDataSource.sort = this.sort;
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.getSchool();
+		this.getSession();
 		this.buildForm();
 		this.gridOptions = {
-			enableDraggableGrouping: false,
+			enableDraggableGrouping: true,
+			enableGrouping: true,
 			createPreHeaderPanel: true,
-			showPreHeaderPanel: false,
+			showPreHeaderPanel: true,
 			enableHeaderMenu: true,
 			preHeaderPanelHeight: 40,
 			enableFiltering: true,
@@ -57,7 +106,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 			enableColumnReorder: true,
 			createFooterRow: true,
 			showFooterRow: true,
-			footerRowHeight: 21,
+			footerRowHeight: 35,
 			enableExcelCopyBuffer: true,
 			fullWidthRows: true,
 			enableAutoTooltip: true,
@@ -71,6 +120,52 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 			exportOptions: {
 				sanitizeDataExport: true,
 				exportWithFormatter: true
+			},
+			gridMenu: {
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
+					iconCssClass: 'fas fa-download'
+				}
+				],
+				onCommand: (e, args) => {
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF(this.dataset);
+					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel(this.dataset);
+					}
+					if (args.command === 'export-csv') {
+						this.exportToFile('csv');
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
+				},
+			},
+			draggableGrouping: {
+				dropPlaceHolderText: 'Drop a column header here to group by the column',
+				// groupIconCssClass: 'fa fa-outdent',
+				deleteIconCssClass: 'fa fa-times',
+				onGroupChanged: (e, args) => {
+					this.groupColumns = [];
+					this.groupColumns = args.groupColumns;
+					this.onGroupChanged(args && args.groupColumns);
+					setTimeout(() => {
+						this.updateTotalRow(this.angularGrid.slickGrid);
+					}, 100);
+				},
+				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
 		};
 	}
@@ -86,7 +181,321 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 			reviewReport: '0'
 		});
 	}
+	onGroupChanged(groups: Grouping[]) {
+		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
+			// update all Group By select dropdown
+			this.selectedGroupingFields.forEach((g, i) => {
+				this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '';
+			});
+		}
+	}
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
+	}
 
+	angularGridReady(angularGrid: AngularGridInstance) {
+		this.angularGrid = angularGrid;
+		const grid = angularGrid.slickGrid; // grid object
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+	exportAsPDF(json: any[]) {
+		const headerData: any[] = [];
+		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
+		const doc = new jsPDF('p', 'mm', 'a0');
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 35,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			head: [[reportType]],
+			margin: { top: 0 },
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 35,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		const rowData: any[] = [];
+		for (const item of this.columnDefinitions) {
+			headerData.push(item.name);
+		}
+		json.forEach(element => {
+			const arr: any[] = [];
+			this.columnDefinitions.forEach(element1 => {
+				arr.push(element[element1.id]);
+			});
+			rowData.push(arr);
+		});
+		if (this.totalRow) {
+			const arr: any[] = [];
+			for (const item of this.columnDefinitions) {
+				arr.push(this.totalRow[item.id]);
+			}
+			rowData.push(arr);
+		}
+		doc.autoTable({
+			head: [headerData],
+			body: rowData,
+			startY: 65,
+			tableLineColor: 'black',
+			didDrawPage: function (data) {
+				doc.setFontStyle('bold');
+
+			},
+			willDrawCell: function (data) {
+				const doc = data.doc;
+				const rows = data.table.body;
+				if (rows.length === 1) {
+				} else if (data.row.index === rows.length - 1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('22');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(67, 160, 71);
+				}
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#c8d6e5',
+				textColor: '#5e666d',
+				fontSize: 22,
+			},
+			alternateRowStyles: {
+				fillColor: '#f1f4f7'
+			},
+			useCss: true,
+			styles: {
+				fontSize: 22,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: '#89a8c8',
+			},
+			theme: 'grid'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Report Filtered as:  ' + this.getParamValue()]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['No of records: ' + json.length]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated On: '
+				+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated By: ' + this.currentUser.full_name]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.save(reportType + '_' + new Date() + '.pdf');
+	}
+	getSchool() {
+		this.sisService.getSchool().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.schoolInfo = res.data[0];
+			}
+		});
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				const sessionArray = result2.data;
+				const ses_id = JSON.parse(localStorage.getItem('session')).ses_id;
+				sessionArray.forEach(element => {
+					if (element.ses_id === ses_id) {
+						this.currentSession = element;
+					}
+				});
+			}
+		});
+	}
+	checkWidth(id, header) {
+		const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
+	}
+	getNumberWithZero(value: string) {
+		if (value === '0') {
+			return 0;
+		} else {
+			return Number(value) ? Number(value) : value;
+		}
+	}
+	exportToExcel(json: any[]) {
+		console.log('excel json', json);
+		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
+		const columns: any[] = [];
+		const columValue: any[] = [];
+		for (const item of this.columnDefinitions) {
+			columns.push({
+				key: item.id,
+				width: this.checkWidth(item.id, item.name)
+			});
+			columValue.push(item.name);
+		}
+		const fileName = reportType + '.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } }, { pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
+		worksheet.getCell('A1').value = new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city +
+			', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+
+		worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell('A2').alignment = { horizontal: 'left' };
+
+		worksheet.getRow(4).values = columValue;
+
+		worksheet.columns = columns;
+
+		json.forEach(element => {
+			const excelobj: any = {};
+			this.columnDefinitions.forEach(element1 => {
+				excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
+			});
+			worksheet.addRow(excelobj);
+		});
+		worksheet.addRow(this.totalRow);
+		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' + this.getParamValue();
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + json.length;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+			+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
+	}
+	getParamValue() {
+		const paramArr: any[] = [];
+		if (this.showDateRange) {
+			paramArr.push(
+				this.notif.dateConvertion(this.studentStrengthReportForm.value.fdate, 'd-MMM-y') + ' - ' +
+				this.notif.dateConvertion(this.studentStrengthReportForm.value.tdate, 'd-MMM-y'));
+		} else {
+			paramArr.push(
+				this.notif.dateConvertion(this.studentStrengthReportForm.value.cdate, 'd-MMM-y'));
+		}
+		return paramArr;
+	}
+	getReportHeader() {
+		return this.studentStrengthReportForm.value.reviewReport === '0' ? 'Student Strength' + ' Summarised Report' :
+		'Student Strength' + ' Detailed Report';
+	}
+	exportToFile(type) {
+		const reportType = this.getReportHeader();
+		this.angularGrid.exportService.exportToFile({
+			delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
+			filename: reportType + '_' + new Date(),
+			format: (type === 'csv') ? FileType.csv : FileType.txt
+		});
+	}
 	showDateToggle() {
 		this.showDate = !this.showDate;
 		this.showDateRange = !this.showDateRange;
@@ -169,11 +578,48 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	valueAndDash(value) {
 		return value && value !== '0' ? value : '-';
 	}
+	srnTotalsFormatter(totals, columnDef) {
+		console.log('totals ', totals);
+		console.log('columnDef ', columnDef);
+		if (totals.group.groups) {
+			if (totals.group.level === 0) {
+				return '<b class="total-footer-report">Total</b>';
+			}
+		} else {
+			return '<b class="total-footer-report">Total</b>';
+		}
+	}
+	sumTotalsFormatter(totals, columnDef) {
+		console.log('totals ', totals);
+		console.log('columnDef ', columnDef);
+		const val = totals.sum && totals.sum[columnDef.field];
+		if (val != null && totals.group.rows[0].class_name !== '<b>Grand Total</b>') {
+			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+		}
+		return '';
+	}
+	countTotalsFormatter(totals, columnDef) {
+		console.log('countTotalsFormatter totals ', totals);
+		console.log('countTotalsFormatter columnDef ', columnDef);
+		return '<b class="total-footer-report">' + totals.group.rows.length + '</b>';
+	}
 	prepareDataSource() {
 		this.columnDefinitions = [
-			{ id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true },
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true },
-			{ id: 'student_strength', name: 'Student Strength', field: 'student_strength', sortable: true, filterable: true }
+			/* { id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true }, */
+			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: false, width: 100,
+			grouping: {
+				getter: 'class_name',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			},
+			groupTotalsFormatter: this.srnTotalsFormatter,
+			 },
+			{ id: 'student_strength', name: 'Student Strength', field: 'student_strength', sortable: true, filterable: true,
+			groupTotalsFormatter: this.sumTotalsFormatter }
 		];
 		let counter = 1;
 		let total = 0;
@@ -194,10 +640,11 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 
 		const blankTempObj = {};
 		blankTempObj['id'] = counter;
-		blankTempObj['counter'] = 'Total';
-		blankTempObj['class_name'] = '';
+		blankTempObj['counter'] = '';
+		blankTempObj['class_name'] = 'Grand Total';
 		blankTempObj['student_strength'] = total;
-		this.dataset.push(blankTempObj);
+		this.totalRow = blankTempObj;
+		// this.dataset.push(blankTempObj);
 
 		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
@@ -209,6 +656,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		} else {
 			this.gridHeight = 300;
 		}
+		this.aggregatearray.push(new Aggregators.Sum('student_strength'));
 	}
 
 	countSecStudent(secArr) {
@@ -221,15 +669,27 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 
 	prepareDetailDataSource() {
 		this.columnDefinitions = [
-			{ id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true },
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true },
-			{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true },
-			{ id: 'student_name', name: 'Student Name', field: 'student_name', sortable: true, filterable: true },
-			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true },
+			/* { id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true }, */
+			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: false,
+			grouping: {
+				getter: 'class_name',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			},
+			groupTotalsFormatter: this.srnTotalsFormatter},
+			{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true, resizable: false,
+			groupTotalsFormatter: this.countTotalsFormatter},
+			{ id: 'student_name', name: 'Student Name', field: 'student_name', sortable: true, filterable: true, resizable: false },
+			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true, resizable: false },
 			{ id: 'process_type', name: 'Process Type', field: 'process_type', sortable: true, filterable: true }
 		];
 		let counter = 1;
 		let total = 0;
+		this.totalRow = null;
 		for (let i = 0; i < this.reportDetailData.length; i++) {
 			const tempObj = {};
 			tempObj['id'] = counter;
@@ -254,6 +714,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		} else {
 			this.gridHeight = 300;
 		}
+		this.aggregatearray.push(new Aggregators.Sum('admission_no'));
 
 	}
 

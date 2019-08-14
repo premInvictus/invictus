@@ -42,7 +42,7 @@
                         </mat-form-field>
                         <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Enter Account Number</mat-label>
-                          <input matInput placeholder="Enter Account Number..." type="number"
+                          <input matInput placeholder="Enter Account Number..."  type="text" (keypress)="numberOnly($event)"
                             formControlName="bnk_account_no">
                         </mat-form-field>
                         <mat-form-field class="form-field" appearance="outline">

@@ -39,7 +39,7 @@ export class TeacherManagementComponent implements OnInit {
 	ngOnInit() {
 		this.homeUrl = this.breadCrumbService.getUrl();
 		this.buildForm();
-		this.getClass(this);
+		this.getClass();
 		this.getAllTeacher(this);
 		this.tableCollection = true;
 	}
@@ -160,11 +160,11 @@ export class TeacherManagementComponent implements OnInit {
 	} */
 
 	// changed for smart module
-	getClass(that) {
-		that.smartService.getClass().subscribe(
+	getClass() {
+		this.smartService.getClass({class_status: '1'}).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
-					that.classArray = result.data;
+					this.classArray = result.data;
 				}
 			}
 		);
