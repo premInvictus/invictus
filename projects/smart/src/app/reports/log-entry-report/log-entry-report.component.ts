@@ -23,7 +23,7 @@ export class LogEntryReportComponent implements OnInit {
 	currentTabIndex = 0;
 	isTeacher = false;
 	session: any;
-	currentSession: any; 
+	currentSession: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -69,7 +69,7 @@ export class LogEntryReportComponent implements OnInit {
 					}
 				});
 			}
-		})
+		});
 	}
 	getTeacherInfo(event) {
 		console.log(event.target.value);
@@ -99,7 +99,7 @@ export class LogEntryReportComponent implements OnInit {
 
 	getClass() {
 		this.classArray = [];
-		this.smartService.getClass({}).subscribe((result: any) => {
+		this.smartService.getClass({class_status: '1'}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			} else {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -26,7 +26,8 @@ import { count } from 'rxjs/operators';
 @Component({
 	selector: 'app-admission-report',
 	templateUrl: './admission-report.component.html',
-	styleUrls: ['./admission-report.component.scss']
+	styleUrls: ['./admission-report.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
 export class AdmissionReportComponent implements OnInit, AfterViewInit {
 	columnDefinitions: Column[] = [];
@@ -100,8 +101,8 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 
 	ngOnInit() {
 		// this.userDataSource.sort = this.sort;
-		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.buildForm();
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getSchool();
 		this.getSession();
 		this.gridOptions = {
@@ -262,6 +263,22 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		});
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
+			head: [['Report Filtered as:  ' + this.getParamValue()]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
 			head: [['No of records: ' + json.length]],
 			didDrawPage: function (data) {
 
@@ -337,6 +354,13 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		const max = Math.max.apply(null, res);
 		return max2 > max ? max2 : max;
 	}
+	getNumberWithZero(value: string) {
+		if (value === '0') {
+			return 0;
+		} else {
+			return Number(value) ? Number(value) : value;
+		}
+	}
 	exportToExcel(json: any[]) {
 		console.log('excel json', json);
 		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
@@ -368,19 +392,19 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		json.forEach(element => {
 			const excelobj: any = {};
 			this.columnDefinitions.forEach(element1 => {
-				excelobj[element1.id] = Number(element[element1.id]) ? Number(element[element1.id]) : element[element1.id];
+				excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
 			});
 			worksheet.addRow(excelobj);
 		});
 		worksheet.addRow(this.totalRow);
-		/* worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
+		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
 			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
 		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' + this.getParamValue();
 		worksheet.getCell('A' + worksheet._rows.length).font = {
 			name: 'Arial',
 			size: 10,
 			bold: true
-		}; */
+		};
 
 		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
 			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
@@ -416,12 +440,14 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 	}
 	getParamValue() {
 		const paramArr: any[] = [];
-		Object.keys(this.admissionReportForm.controls).forEach(key => {
-			console.log(key);
-			if (this.admissionReportForm.value[key]) {
-				paramArr.push(this.admissionReportForm.value[key]);
-			}
-		});
+		if (this.showDateRange) {
+			paramArr.push(
+				this.notif.dateConvertion(this.admissionReportForm.value.fdate, 'd-MMM-y') + ' - ' +
+				this.notif.dateConvertion(this.admissionReportForm.value.tdate, 'd-MMM-y'));
+		} else {
+			paramArr.push(
+				this.notif.dateConvertion(this.admissionReportForm.value.cdate, 'd-MMM-y'));
+		}
 		return paramArr;
 	}
 	getReportHeader() {
@@ -667,29 +693,6 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		} else {
 			this.gridHeight = 300;
 		}
-	}
-
-	exportAsExcel() {
-		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
-		const wb: XLSX.WorkBook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-		/* save to file */
-		XLSX.writeFile(wb, 'AdmissionReport_' + (new Date).getTime() + '.xlsx');
-
-	}
-
-
-
-	print() {
-		const printModal2 = document.getElementById('admissionReportPrint');
-		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
-		popupWin.document.open();
-		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
-			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
-			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Admission Report</h2></center></div>'
-			+ printModal2.innerHTML + '</html>');
-		popupWin.document.close();
 	}
 
 }
