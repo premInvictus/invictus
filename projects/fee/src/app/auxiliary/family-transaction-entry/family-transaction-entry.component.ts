@@ -66,10 +66,10 @@ export class FamilyTransactionEntryComponent implements OnInit {
 		this.selectedMode = '';
 		const invDet: any = this.studentRouteMoveStoreService.getInvoiceId();
 
-		const familyNumber = this.common.getFamilyInformation();
-		if (familyNumber) {
-			console.log('family number', familyNumber);
-			this.getFamilyOutstandingDetail(familyNumber);
+		const familyData = this.common.getSelectedChildData();
+		if (familyData) {
+			console.log('family number', familyData);
+			this.getFamilyOutstandingDetail(familyData);
 		} else {
 			this.router.navigate(['../familywise-fee-receipt'], { relativeTo: this.route });
 		}
@@ -136,19 +136,27 @@ export class FamilyTransactionEntryComponent implements OnInit {
 		});
 	}
 
-	getFamilyOutstandingDetail(familyNumber) {
-		this.familyOutstandingArr = [];
-		this.childDataArr = [];
-		this.feeService.getFamilyOutstandingDetail({ fam_entry_number: familyNumber }).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				console.log('result.data', result.data);
-				this.familyOutstandingArr = result.data;
-				this.childDataArr = result.data.childData;
-				this.feeTransactionForm.patchValue({
-					'ftr_amount': this.familyOutstandingArr['family_total_outstanding_amt'],
-				});
-			}
-		});
+	getFamilyOutstandingDetail(familyData) {
+		// this.familyOutstandingArr = [];
+		// this.childDataArr = [];
+		// this.feeService.getFamilyOutstandingDetail({ fam_entry_number: familyNumber }).subscribe((result: any) => {
+		// 	if (result && result.status === 'ok') {
+		// 		console.log('result.data', result.data);
+		// 		this.familyOutstandingArr = result.data;
+		// 		this.childDataArr = result.data.childData;
+		// 		this.feeTransactionForm.patchValue({
+		// 			'ftr_amount': this.familyOutstandingArr['family_total_outstanding_amt'],
+		// 		});
+		// 	}
+		// });
+
+		this.familyOutstandingArr = familyData;
+		this.childDataArr = familyData.childData;
+		if (this.familyOutstandingArr) {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount': this.familyOutstandingArr['family_total_outstanding_amt'],
+			});
+		}
 	}
 
 	// checkEmit(process_type) {

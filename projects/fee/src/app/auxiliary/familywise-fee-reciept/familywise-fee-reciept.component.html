@@ -27,7 +27,7 @@
                     </mat-form-field>
                 </div>
                 <div class="col-6 text-right margin-top-10">
-                    <button mat-button class="font-size-14 font-white width-140 btn-darkblue">Print</button>
+                    <button *ngIf="enablePrint" mat-button class="font-size-14 font-white width-140 btn-darkblue" (click)="printFamilyInvoice()">Print</button>
                 </div>
             </div>
             <div class="row">
@@ -49,7 +49,7 @@
                         <tbody>
                             <tr class="custom-tr" *ngFor="let item of familyDetailArr">
                                 <td class="custom-td">
-                                    <mat-checkbox></mat-checkbox>
+                                    <mat-checkbox (change)="setDataForPrint($event, item)"></mat-checkbox>
                                 </td>
                                 <td class="custom-td">
                                     <span class="pointer font-bold font-skyblue font-underline">
@@ -58,19 +58,19 @@
                                         </a>
                                     </span>
                                 </td>
-                                <td class="custom-td">{{item?.epd_parent_honorific}} {{item?.epd_parent_name}}</td>
+                                <td class="custom-td">{{item?.epd_parent_name}}</td>
                                 <td class="custom-td">{{item?.epd_contact_no}}</td>
                                 <td class="custom-td">{{item?.au_full_name}}</td>
                                 <td class="custom-td">{{item?.class_name}}-{{item?.sec_name}}</td>
                                 <td class="custom-td">{{item?.no_of_students}} Students</td>
-                                <td class="custom-td">{{item?.family_outstanding_amt}}</td>
+                                <td class="custom-td">{{item?.family_outstanding_amt  | number}}</td>
                                 <td class="custom-td">
                                     <a href="{{item.fam_declaration_doc_url}}" *ngIf="item.fam_declaration_doc_url">
                                         <i class="fas fa-file-image image-icon"></i>
                                         <span class="ver-line-divider margin-left-10"></span></a>
                                     <i class="fas fa-edit edit-icon" (click)="editFamily(item)"></i>
                                     <span class="ver-line-divider margin-left-10"></span>
-                                    <i class="fas fa-trash-alt trash-icon" (click)="deleteFamily(item)"></i>
+                                    <i class="fas fa-trash-alt trash-icon" (click)="openDeleteDialog(item)"></i>
                                 </td>
                             </tr>
                             <tr *ngIf="familyDetailArr.length ==0">
@@ -84,3 +84,5 @@
         </mat-card>
     </div>
 </div>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteFamily($event)">
+</app-delete-modal>

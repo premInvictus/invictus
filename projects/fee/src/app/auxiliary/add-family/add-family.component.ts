@@ -16,6 +16,7 @@ export class AddFamilyComponent implements OnInit {
 	sectionArray: any[] = [];
 	studentdetails: any;
 	addFamilyForm: FormGroup;
+	declaration_doc_url = '';
 	@ViewChild('myInput') myInput: ElementRef;
 	constructor(
 		public feeService: FeeService,
@@ -129,6 +130,10 @@ export class AddFamilyComponent implements OnInit {
 							family_name: cdata.fam_family_name ? cdata.fam_family_name : '',
 							fam_entry_number: cdata.fam_entry_number ? cdata.fam_entry_number : ''
 						});
+
+						if (cdata.fam_declaration_doc_url) {
+							this.declaration_doc_url = cdata.fam_declaration_doc_url;
+						}
 
 						console.log('this.addFamilyForm', this.addFamilyForm);
 
@@ -335,5 +340,17 @@ export class AddFamilyComponent implements OnInit {
 		this.common.setFamilyData('');
 		this.router.navigate(['../familywise-fee-reciept'], { relativeTo: this.route });
 	}
+
+	checkThumbnail(url: any) {
+		if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
+			url.match(/gif/) || url.match(/jpeg/) ||
+			url.match(/JPG/) || url.match(/PNG/) || url.match(/BMP/) ||
+			url.match(/GIF/) || url.match(/JPEG/)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 
 }

@@ -3,12 +3,15 @@
         <mat-card>
             <div class="row">
                 <div class="col-8">
-                    <span class="font-size-24 font-medium" *ngIf="!addFamilyForm.value.fam_entry_number"> Add Family</span>
-                    <span class="font-size-24 font-medium" *ngIf="addFamilyForm.value.fam_entry_number"> Update Family</span>
+                    <span class="font-size-24 font-medium" *ngIf="!addFamilyForm.value.fam_entry_number"> Add
+                        Family</span>
+                    <span class="font-size-24 font-medium" *ngIf="addFamilyForm.value.fam_entry_number"> Update
+                        Family</span>
                 </div>
-                
+
                 <div class="col-4 text-right">
-                    <button mat-button class="font-size-14 font-white btn-blue" (click)="moveToFamilyWiseFee()">Family Wise Fee Receipt</button>
+                    <button mat-button class="font-size-14 font-white btn-blue" (click)="moveToFamilyWiseFee()">Family
+                        Wise Fee Receipt</button>
                 </div>
 
             </div>
@@ -29,7 +32,8 @@
                     <div class="col-7">
                         <mat-form-field appearance="outline">
                             <mat-label>Admission No</mat-label>
-                            <input #myInput matInput placeholder="Admission No" formControlName="adm_no" (keydown.enter)="$event.preventDefault()">
+                            <input #myInput matInput placeholder="Admission No" formControlName="adm_no"
+                                (keydown.enter)="$event.preventDefault()">
                             <mat-icon matSuffix>search</mat-icon>
                         </mat-form-field>
                         <span class="font-size-20 margin-left-15 margin-right-15">OR</span>
@@ -37,25 +41,29 @@
                             <mat-label>Class</mat-label>
                             <mat-select formControlName="class_id">
                                 <mat-option value="">Please Select Class</mat-option>
-                                <mat-option *ngFor="let item of classArray" value="item.class_id">{{item.class_name}}</mat-option>
+                                <mat-option *ngFor="let item of classArray" value="item.class_id">{{item.class_name}}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field class="margin-left-15 margin-right-15" appearance="outline">
                             <mat-label>Section</mat-label>
                             <mat-select formControlName="sec_id">
                                 <mat-option value=""> Please Select Section</mat-option>
-                                <mat-option *ngFor="let item of sectionArray" value="item.sec_id">{{item.sec_name}}</mat-option>
+                                <mat-option *ngFor="let item of sectionArray" value="item.sec_id">{{item.sec_name}}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field class="margin-left-15 margin-right-15 width-220" appearance="outline">
                             <mat-label>Student Name</mat-label>
-                            <input matInput placeholder="Student Name" formControlName="stu_name" (keydown.enter)="$event.preventDefault()">
+                            <input matInput placeholder="Student Name" formControlName="stu_name"
+                                (keydown.enter)="$event.preventDefault()">
                         </mat-form-field>
                     </div>
                     <div class="col-2 text-right margin-top-10">
-                        <button mat-button class="font-size-14 font-white width-140 btn-blue" (click)="addChild($event)">Add Child</button>
-                        <button mat-button
-                            class="font-size-14 margin-left-10 font-white width-140 btn-reset" (click)="reset()">Reset</button>
+                        <button mat-button class="font-size-14 font-white width-140 btn-blue"
+                            (click)="addChild($event)">Add Child</button>
+                        <button mat-button class="font-size-14 margin-left-10 font-white width-140 btn-reset"
+                            (click)="reset()">Reset</button>
                     </div>
 
                 </div>
@@ -81,7 +89,8 @@
                                 <tr class="custom-tr" *ngFor="let item of childData;let i=index;">
                                     <td class="custom-td">
                                         <mat-radio-group aria-label="Select an option">
-                                            <mat-radio-button value="1" (change)="setKeyChild(i)" name="keyChild" [checked]="item?.keyChild === '1' ? true : false"></mat-radio-button>
+                                            <mat-radio-button value="1" (change)="setKeyChild(i)" name="keyChild"
+                                                [checked]="item?.keyChild === '1' ? true : false"></mat-radio-button>
                                         </mat-radio-group>
                                     </td>
                                     <td class="custom-td"><a>{{item.stu_admission_no}}</a></td>
@@ -94,7 +103,8 @@
                                     <td class="custom-td">{{item.stu_concession_group}}</td>
                                     <td class="custom-td">{{item.stu_transport}}</td>
                                     <td class="custom-td">
-                                        <i class="fas fa-trash-alt trash-icon" style="cursor:pointer;" (click)="deleteChild(i)"></i>
+                                        <i class="fas fa-trash-alt trash-icon" style="cursor:pointer;"
+                                            (click)="deleteChild(i)"></i>
                                     </td>
 
                                 </tr>
@@ -108,7 +118,8 @@
 
                 <div class="row margin-top-15">
                     <div class="col-12">
-                        <input type="file" multiple="true" id="upload_doc" style="display: none !important" (change)="bindImageToForm($event)">
+                        <input type="file" multiple="true" id="upload_doc" style="display: none !important"
+                            (change)="bindImageToForm($event)">
                         <button mat-stroked-button class="btn-neutral"><label for="upload_doc"
                                 class="btn-document-label">Upload Declaration <i
                                     class="fas fa-cloud-upload-alt"></i></label></button>
@@ -116,8 +127,11 @@
                 </div>
                 <div class="row margin-top-15">
                     <div class="col-1 margin-bottom-15">
-                        <img class="btn-doc-upload-preview"
+                        <img *ngIf="checkThumbnail(declaration_doc_url)" class="btn-doc-upload-preview thumbnail-img"
+                            [src]="declaration_doc_url">
+                        <img *ngIf="!checkThumbnail(declaration_doc_url)" class="btn-doc-upload-preview thumbnail-img"
                             src="https://icons-for-free.com/free-icons/png/512/2109135.png"><br>
+                        <!-- <img class="btn-doc-upload-preview" src="{{declaration_doc_url}}"><br> -->
                         <button mat-button class="upload-document-delete-btn">
                             <mat-icon class="btn-upload-icon">delete</mat-icon>
                         </button>
@@ -125,9 +139,12 @@
                 </div>
                 <div class="row">
                     <div class="col-12 text-center">
-                        <button *ngIf="!addFamilyForm.value.fam_entry_number" mat-button class="font-size-14 font-white btn-success-green" (click)="addFamily()">Submit</button>
-                        <button *ngIf="addFamilyForm.value.fam_entry_number" mat-button class="font-size-14 font-white btn-success-green" (click)="updateFamily()">Update</button>                        
-                        <button mat-button class="font-size-14 font-white margin-left-10 btn-reset" (click)="resetAll()">Reset</button>
+                        <button *ngIf="!addFamilyForm.value.fam_entry_number" mat-button
+                            class="font-size-14 font-white btn-success-green" (click)="addFamily()">Submit</button>
+                        <button *ngIf="addFamilyForm.value.fam_entry_number" mat-button
+                            class="font-size-14 font-white btn-success-green" (click)="updateFamily()">Update</button>
+                        <button mat-button class="font-size-14 font-white margin-left-10 btn-reset"
+                            (click)="resetAll()">Reset</button>
                     </div>
                 </div>
             </mat-card>

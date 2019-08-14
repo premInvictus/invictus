@@ -55,7 +55,7 @@
           <div class="row margin-top-15">
             <div class="col-12 text-center">
               <span class="font-size-16 font-bold">Net outstanding</span><br>
-              <span class="font-size-14">{{familyOutstandingArr.family_total_outstanding_amt}}</span><br>
+              <span class="font-size-14">{{familyOutstandingArr.family_total_outstanding_amt | number}}</span><br>
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@
                       {{titem.sec_name}}</span>
                   </mat-panel-title>
                   <span class="font-size-16 font-white text-right margin-left-right-15 "> Net Payable :
-                    {{titem.outstanding_amt}}</span>
+                    {{titem.outstanding_amt  | number}}</span>
                 </mat-expansion-panel-header>
                 <div class="row">
                   <div class="col-12">
@@ -104,14 +104,14 @@
                         <ng-container *ngFor="let det of titem.invoice_data">
                           <tr *ngIf="det.inv_invoice_no">
                             <td class="custom-td ">
-                              <mat-checkbox></mat-checkbox>
+                              <mat-checkbox [checked]="det.checked" (change)="setInvoiceCheck(det.inv_invoice_no)"></mat-checkbox>
                             </td>
                             <td class="custom-td">{{det.inv_invoice_no}}</td>
                             <td class="custom-td">{{det.inv_fee_period}}</td>
                             <td class="custom-td">{{det.inv_invoice_date | date: 'd-MMM-y'}}</td>
                             <td class="custom-td">{{det.inv_due_date | date: 'd-MMM-y'}}</td>
                             <td class="custom-td">{{det.inv_paid_status}}</td>
-                            <td class="custom-td">{{det.flgr_balance}}</td>
+                            <td class="custom-td">{{det.flgr_balance  | number}}</td>
                           </tr>
                         </ng-container>
                       </tbody>
@@ -130,7 +130,7 @@
                     Words : </span><span class="font-size-16 font-medium"> Rupees
                     {{familyOutstandingArr.family_total_outstanding_amt | numberToWord | titlecase}} Only </span><span
                     class="float-right font-size-16 font-medium"><span>Grand Total : </span><span
-                      class="font-size-16 font-medium">{{familyOutstandingArr.family_total_outstanding_amt}}</span></span>
+                      class="font-size-16 font-medium">{{familyOutstandingArr.family_total_outstanding_amt  | number}}</span></span>
                 </div>
               </div>
             </div>
@@ -139,7 +139,7 @@
             <div class="col-12 text-center">
               <button mat-button class="font-size-14 font-white btn-blue">Print
                 Summary</button>
-              <button mat-button class="font-size-14 margin-left-10 font-white btn-pay">Pay
+              <button mat-button class="font-size-14 margin-left-10 font-white btn-pay" (click)="payFamilyOutstanding(familyOutstandingArr?.fam_entry_number)">Pay
                 Now</button>
             </div>
           </div>
