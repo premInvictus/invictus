@@ -149,6 +149,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		this.param.text = 'Delete';
 		this.deleteModal.openModal(this.param);
 	}
+
 	// get class list
 	getClass(that) {
 		const classParam: any = {};
@@ -193,7 +194,14 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
-
+	getActiveClass(that) {
+		this.classArray = [];
+		this.smartService.getClass({class_status: '1'}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.classArray = result.data;
+			}
+		});
+	}
 	getSection(that) {
 		that.secArray = [];
 		that.CONFIG_ELEMENT_DATA = [];
@@ -332,7 +340,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 
 	getClassSectionSubject(that) {
-		that.getClass(that);
+		that.getActiveClass(that);
 		that.getSection(that);
 		that.getSubject(that);
 		that.CONFIG_ELEMENT_DATA = [];
@@ -508,7 +516,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		that.detailArray = [];
-		that.getClass(that);
+		that.getActiveClass(that);
 		that.smartService.getDetailsCdpRelation()
 			.subscribe(
 				(result: any) => {
