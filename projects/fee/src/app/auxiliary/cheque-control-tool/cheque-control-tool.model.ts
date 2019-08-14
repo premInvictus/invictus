@@ -14,6 +14,7 @@ export interface ChequeToolElement {
 	action: any;
 	class_name: any;
 	remarks: any;
+	ftr_family_number: any;
 
 
 }

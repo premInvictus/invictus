@@ -128,7 +128,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						bankdeposite: item.fcc_deposite_date ? this.common.dateConvertion(item.fcc_deposite_date, 'd-MMM-y') : '-',
 						processingdate: '',
 						remarks: item.fcc_remarks ? item.fcc_remarks : '-',
-						action: item
+						action: item,
+						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : ''
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -195,7 +196,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						bankdeposite: item.fcc_deposite_date ? new DatePipe('en-in').transform(item.fcc_deposite_date, 'd-MMM-y') : '-',
 						processingdate: '',
 						remarks: item.fcc_remarks ? item.fcc_remarks : '-',
-						action: item
+						action: item,
+						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-'
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
