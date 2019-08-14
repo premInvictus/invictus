@@ -42,6 +42,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	aggregatearray: any[] = [];
 	selectedGroupingFields: string[] = [];
 	draggableGroupingPlugin: any;
+	groupLength: any;
 
 	showDate = true;
 	showDateRange = false;
@@ -188,6 +189,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 				this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '';
 			});
 		}
+		console.log('dataviewObj', this.dataviewObj.getGroups());
 	}
 	updateTotalRow(grid: any) {
 		let columnIdx = grid.getColumns().length;
@@ -201,6 +203,9 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
 		const grid = angularGrid.slickGrid; // grid object
+		this.gridObj = angularGrid.slickGrid; // grid object
+		this.dataviewObj = angularGrid.dataView;
+		console.log('dataviewObj', this.dataviewObj);
 		this.updateTotalRow(angularGrid.slickGrid);
 	}
 	exportAsPDF(json: any[]) {
@@ -422,15 +427,64 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		worksheet.getRow(4).values = columValue;
 
 		worksheet.columns = columns;
-
-		json.forEach(element => {
-			const excelobj: any = {};
-			this.columnDefinitions.forEach(element1 => {
-				excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
+		if (this.dataviewObj.getGroups().length === 0) {
+			json.forEach(element => {
+				const excelobj: any = {};
+				this.columnDefinitions.forEach(element1 => {
+					excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
+				});
+				worksheet.addRow(excelobj);
 			});
-			worksheet.addRow(excelobj);
-		});
-		worksheet.addRow(this.totalRow);
+			if (this.totalRow) {
+				worksheet.addRow(this.totalRow);
+			}
+		} else {
+			const obj = {};
+			const length = worksheet._rows.length + 1;
+			this.groupLength = length;
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === 1) {
+					row.font = {
+						name: 'Arial',
+						size: 16,
+						bold: true
+					};
+				}
+				if (rowNum === 2) {
+					row.font = {
+						name: 'Arial',
+						size: 14,
+						bold: true
+					};
+				}
+				if (rowNum === 4) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 12,
+							bold: true
+						};
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'bdbdbd' },
+							bgColor: { argb: 'bdbdbd' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				}
+			});
+			// iterate all groups
+			for (const item of this.dataviewObj.getGroups()) {
+
+			}
+		}
 		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
 			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
 		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' + this.getParamValue();
