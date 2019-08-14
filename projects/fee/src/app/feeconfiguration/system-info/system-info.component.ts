@@ -83,7 +83,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			'spt_receipt_format': '',
 			'spt_header_template': '',
 			'spt_footer_template': '',
-			'spt_print_format_receipt':  '',
+			'spt_print_format_receipt': '',
 			'spt_receipt_header_template': '',
 			'spt_receipt_footer_template': ''
 		});
@@ -250,8 +250,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					'spt_receipt_format': this.settings.spt_receipt_format,
 					'spt_header_template': this.settings.spt_header_template,
 					'spt_footer_template': this.settings.spt_footer_template,
-					'spt_print_format_receipt':  this.settings.spt_print_format_receipt,
-					'spt_receipt_header_template':  this.settings.spt_receipt_header_template,
+					'spt_print_format_receipt': this.settings.spt_print_format_receipt,
+					'spt_receipt_header_template': this.settings.spt_receipt_header_template,
 					'spt_receipt_footer_template': this.settings.spt_receipt_footer_template
 				});
 			}
@@ -277,8 +277,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				'spt_receipt_format': this.settings.spt_receipt_format,
 				'spt_header_template': this.settings.spt_header_template,
 				'spt_footer_template': this.settings.spt_footer_template,
-				'spt_print_format_receipt':  this.settings.spt_print_format_receipt,
-				'spt_receipt_header_template':  this.settings.spt_receipt_header_template,
+				'spt_print_format_receipt': this.settings.spt_print_format_receipt,
+				'spt_receipt_header_template': this.settings.spt_receipt_header_template,
 				'spt_receipt_footer_template': this.settings.spt_receipt_footer_template
 			});
 		} else {
@@ -288,8 +288,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				'spt_receipt_format': '',
 				'spt_header_template': '',
 				'spt_footer_template': '',
-				'spt_print_format_receipt':  '',
-				'spt_receipt_header_template':  '',
+				'spt_print_format_receipt': '',
+				'spt_receipt_header_template': '',
 				'spt_receipt_footer_template': ''
 			});
 		}
@@ -308,5 +308,13 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		} else {
 			this.receiptHeaderFooterFlag = false;
 		}
+	}
+	numberOnly(event): boolean {
+		const charCode = (event.which) ? event.which : event.keyCode;
+		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+			return false;
+		}
+		return true;
+
 	}
 }
