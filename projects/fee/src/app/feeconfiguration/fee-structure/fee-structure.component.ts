@@ -122,8 +122,9 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 						let feeHead2 = '';
 						const itemhead: any[] = [];
 						if (item.fs_structure && item.fs_structure.length > 0) {
+							console.log('fs_str', item.fs_structure);
 							for (const item1 of item.fs_structure) {
-								if (item1.fc_classfication === 'head') {
+								if (item1.fc_classfication === 'head' && item1.fh_id !== null) {
 									feeHead = feeHead + '<b><u>' + new CapitalizePipe().transform(item1.fh_name) + '(' + item1.ft_name + ')' + '</u></b><br>';
 									let classAmt = '';
 									if (item1.fh_class_amount_detail &&
@@ -131,7 +132,7 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 										for (const titem of JSON.parse(item1.fh_class_amount_detail)) {
 											classAmt = classAmt + 'Class ' +
 												titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
-												item1.fh_fm_id.length) + ', ';
+													item1.fh_fm_id.length) + ', ';
 										}
 										classAmt = classAmt.substring(0, classAmt.length - 2);
 									}
@@ -140,18 +141,20 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 								} else if (item1.fc_classfication === 'group') {
 									if (item1.fee_groups && item1.fee_groups.length > 0) {
 										for (const item2 of item1.fee_groups) {
-											let classAmt  = '';
-											feeHead2 = feeHead2 + '<b><u>' + new CapitalizePipe().transform(item2.fh_name) + '(' + item2.ft_name + ')' + '</u></b><br>';
-											if (item2.fh_class_amount_detail &&
-												JSON.parse(item2.fh_class_amount_detail).length > 0) {
-												for (const titem of JSON.parse(item2.fh_class_amount_detail)) {
-													classAmt = classAmt + 'Class ' +
-														titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
-														item2.fh_fm_id.length) + ', ';
+											if (item2.fh_id !== null) {
+												let classAmt = '';
+												feeHead2 = feeHead2 + '<b><u>' + new CapitalizePipe().transform(item2.fh_name) + '(' + item2.ft_name + ')' + '</u></b><br>';
+												if (item2.fh_class_amount_detail &&
+													JSON.parse(item2.fh_class_amount_detail).length > 0) {
+													for (const titem of JSON.parse(item2.fh_class_amount_detail)) {
+														classAmt = classAmt + 'Class ' +
+															titem.class_name + ' :' + new DecimalPipe('en-us').transform(Number(titem.head_amt) *
+																item2.fh_fm_id.length) + ', ';
+													}
+													classAmt = classAmt.substring(0, classAmt.length - 2);
 												}
-												classAmt = classAmt.substring(0, classAmt.length - 2);
+												feeHead2 = feeHead2 + classAmt + '<br>';
 											}
-											feeHead2 = feeHead2 + classAmt + '<br>';
 										}
 									}
 								}
@@ -164,7 +167,7 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 							pushitem.action = item;
 							this.ELEMENT_DATA.push(pushitem);
 						}
-						});
+					});
 					this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 					this.dataSource.paginator = this.paginator;
 					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
