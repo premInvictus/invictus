@@ -579,19 +579,31 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		return value && value !== '0' ? value : '-';
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		console.log('totals ', totals);
-		console.log('columnDef ', columnDef);
+		// console.log('srnTotalsFormatter totals ', totals);
+		// console.log('srnTotalsFormatter columnDef ', columnDef);
+		if (totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
+		if (totals.group.level === 1) {
+			return '<b class="total-footer-report">Sub Total</b>';
+		}
+		if (totals.group.level === 2) {
+			return '<b class="total-footer-report">Sub Total</b>';
+		}
+		/* if (!totals.group.groups && totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
 		if (totals.group.groups) {
 			if (totals.group.level === 0) {
 				return '<b class="total-footer-report">Total</b>';
 			}
 		} else {
-			return '<b class="total-footer-report">Total</b>';
-		}
+			return '<b class="total-footer-report">Sub Total</b>';
+		} */
 	}
 	sumTotalsFormatter(totals, columnDef) {
-		console.log('totals ', totals);
-		console.log('columnDef ', columnDef);
+		// console.log('totals ', totals);
+		// console.log('columnDef ', columnDef);
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null && totals.group.rows[0].class_name !== '<b>Grand Total</b>') {
 			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
@@ -599,8 +611,8 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		return '';
 	}
 	countTotalsFormatter(totals, columnDef) {
-		console.log('countTotalsFormatter totals ', totals);
-		console.log('countTotalsFormatter columnDef ', columnDef);
+		// console.log('countTotalsFormatter totals ', totals);
+		// console.log('countTotalsFormatter columnDef ', columnDef);
 		return '<b class="total-footer-report">' + totals.group.rows.length + '</b>';
 	}
 	prepareDataSource() {
@@ -670,7 +682,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	prepareDetailDataSource() {
 		this.columnDefinitions = [
 			/* { id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true }, */
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: false,
+			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
 			grouping: {
 				getter: 'class_name',
 				formatter: (g) => {
@@ -681,11 +693,29 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 				collapsed: false,
 			},
 			groupTotalsFormatter: this.srnTotalsFormatter},
-			{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true, resizable: false,
+			{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true, maxWidth: 100,
 			groupTotalsFormatter: this.countTotalsFormatter},
-			{ id: 'student_name', name: 'Student Name', field: 'student_name', sortable: true, filterable: true, resizable: false },
-			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true, resizable: false },
-			{ id: 'process_type', name: 'Process Type', field: 'process_type', sortable: true, filterable: true }
+			{ id: 'student_name', name: 'Student Name', field: 'student_name', sortable: true, filterable: true, maxWidth: 250 },
+			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true, maxWidth: 100,
+			grouping: {
+				getter: 'gender',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} },
+			{ id: 'process_type', name: 'Process Type', field: 'process_type', sortable: true, filterable: true,
+			grouping: {
+				getter: 'process_type',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} }
 		];
 		let counter = 1;
 		let total = 0;
