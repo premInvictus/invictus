@@ -84,6 +84,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		25: 'Y',
 		26: 'Z'
 	};
+	notFormatedCellArray: any[] = [];
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
 		private router: Router,
@@ -192,12 +193,25 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		console.log('dataviewObj', this.dataviewObj.getGroups());
 	}
 	updateTotalRow(grid: any) {
+		console.log('this.groupColumns', this.groupColumns);
 		let columnIdx = grid.getColumns().length;
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
 			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
 			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
 		}
+	}
+	getGroupColumns(columns) {
+		let grName = '';
+		for (const item of columns) {
+			for (const titem of this.columnDefinitions) {
+				if (item.getter === titem.id) {
+					grName = grName + titem.name + ',';
+					break;
+				}
+			}
+		}
+		return grName.substring(0, grName.length - 1);
 	}
 
 	angularGridReady(angularGrid: AngularGridInstance) {
@@ -248,13 +262,18 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		for (const item of this.columnDefinitions) {
 			headerData.push(item.name);
 		}
-		json.forEach(element => {
-			const arr: any[] = [];
-			this.columnDefinitions.forEach(element1 => {
-				arr.push(element[element1.id]);
+		if (this.dataviewObj.getGroups().length === 0) {
+			json.forEach(element => {
+				const arr: any[] = [];
+				this.columnDefinitions.forEach(element1 => {
+					arr.push(element[element1.id]);
+				});
+				rowData.push(arr);
 			});
-			rowData.push(arr);
-		});
+		} else {
+			// iterate all groups
+			this.checkGroupLevelPDF(this.dataviewObj.getGroups(), doc, headerData);
+		}
 		if (this.totalRow) {
 			const arr: any[] = [];
 			for (const item of this.columnDefinitions) {
@@ -265,7 +284,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		doc.autoTable({
 			head: [headerData],
 			body: rowData,
-			startY: 65,
+			startY: doc.previousAutoTable.finalY + 0.5,
 			tableLineColor: 'black',
 			didDrawPage: function (data) {
 				doc.setFontStyle('bold');
@@ -400,7 +419,388 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 			return Number(value) ? Number(value) : value;
 		}
 	}
+	checkGroupLevelPDF(item, doc, headerData) {
+		console.log('checkGroupLevel item ', item);
+		// console.log('checkGroupLevel worksheet ', worksheet);
+		if (item.length > 0) {
+			for (const groupItem of item) {
+				// add and style for groupeditem level heading
+				doc.autoTable({
+					head: [[groupItem.value + ' (' + groupItem.rows.length + ')']],
+					startY: doc.previousAutoTable.finalY + 1,
+					didDrawPage: function (data) {
+						doc.setTextColor(0);
+						doc.setFontStyle('bold');
+					},
+					headStyles: {
+						fontStyle: 'bold',
+						fillColor: '#c8d6e5',
+						textColor: '#5e666d',
+						fontSize: 26,
+					},
+					alternateRowStyles: {
+						fillColor: '#f1f4f7'
+					},
+					useCss: true,
+					styles: {
+						fontSize: 22,
+						cellWidth: 'auto',
+					},
+					theme: 'grid'
+				});
+				if (groupItem.groups) {
+					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
+					const levelArray: any[] = [];
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id === 'class_name') {
+							levelArray.push(this.getLevelFooter(groupItem.level));
+						} else if (item2.id === 'student_strength') {
+							levelArray.push( groupItem.rows.length);
+						} else if (item2.id === 'admission_no') {
+							levelArray.push( groupItem.rows.length);
+						} else {
+							levelArray.push('');
+						}
+					}
+					// style row having total
+					if (groupItem.level === 0) {
+						doc.autoTable({
+							head: [headerData],
+							body: [levelArray],
+							tableLineColor: 'black',
+							startY: doc.previousAutoTable.finalY,
+							didDrawPage: function (data) {
+								doc.setFontStyle('bold');
+							},
+							headStyles: {
+								fontStyle: 'normal',
+								fillColor: '#c8d6e5',
+								textColor: '#5e666d',
+								fontSize: 22,
+							},
+							alternateRowStyles: {
+								fillColor: '#004261',
+								textColor: '#ffffff',
+								fontStyle: 'bold',
+							},
+							useCss: true,
+							styles: {
+								fontSize: 22,
+								cellWidth: 'auto',
+								textColor: 'black',
+								lineColor: '#89a8c8',
+							},
+							theme: 'grid'
+						});
+					} else if (groupItem.level > 0) {
+						doc.autoTable({
+							head: [headerData],
+							body: [levelArray],
+							tableLineColor: 'black',
+							startY: doc.previousAutoTable.finalY,
+							didDrawPage: function (data) {
+								doc.setFontStyle('bold');
+
+							},
+							headStyles: {
+								fontStyle: 'normal',
+								fillColor: '#c8d6e5',
+								textColor: '#5e666d',
+								fontSize: 22,
+							},
+							alternateRowStyles: {
+								fillColor: '#fd8468',
+								textColor: '#ffffff',
+								fontStyle: 'bold',
+							},
+							useCss: true,
+							styles: {
+								fontSize: 22,
+								cellWidth: 'auto',
+								textColor: 'black',
+								lineColor: '#89a8c8',
+							},
+							theme: 'grid'
+						});
+					}
+
+				} else {
+					const rowData: any[] = [];
+					Object.keys(groupItem.rows).forEach(key => {
+						const earr: any[] = [];
+						for (const item2 of this.columnDefinitions) {
+							earr.push(groupItem.rows[key][item2.id]);
+						}
+						rowData.push(earr);
+					});
+					doc.autoTable({
+						head: [headerData],
+						body: rowData,
+						startY: doc.previousAutoTable.finalY + 1,
+						didDrawPage: function (data) {
+							doc.setTextColor(0);
+							doc.setFontStyle('bold');
+
+						},
+						headStyles: {
+							fontStyle: 'bold',
+							fillColor: '#c8d6e5',
+							textColor: '#5e666d',
+							fontSize: 22,
+						},
+						alternateRowStyles: {
+							fillColor: '#f1f4f7'
+						},
+						useCss: true,
+						styles: {
+							fontSize: 22,
+							cellWidth: 'auto',
+						},
+						theme: 'grid'
+					});
+					const levelArray: any[] = [];
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id === 'class_name') {
+							levelArray.push(this.getLevelFooter(groupItem.level));
+						} else if (item2.id === 'student_strength') {
+							levelArray.push( groupItem.rows.length);
+						} else if (item2.id === 'admission_no') {
+							levelArray.push( groupItem.rows.length);
+						} else {
+							levelArray.push('');
+						}
+					}
+					// style row having total
+					if (groupItem.level === 0) {
+						doc.autoTable({
+							head: [headerData],
+							body: [levelArray],
+							tableLineColor: 'black',
+							startY: doc.previousAutoTable.finalY + 0.5,
+							didDrawPage: function (data) {
+								doc.setFontStyle('bold');
+							},
+							headStyles: {
+								fontStyle: 'normal',
+								fillColor: '#c8d6e5',
+								textColor: '#5e666d',
+								fontSize: 22,
+							},
+							alternateRowStyles: {
+								fillColor: '#004261',
+								textColor: '#ffffff',
+								fontStyle: 'bold',
+							},
+							useCss: true,
+							styles: {
+								fontSize: 22,
+								cellWidth: 'auto',
+								textColor: 'black',
+								lineColor: '#89a8c8',
+							},
+							theme: 'grid'
+						});
+					} else if (groupItem.level > 0) {
+						doc.autoTable({
+							head: [headerData],
+							body: [levelArray],
+							tableLineColor: 'black',
+							startY: doc.previousAutoTable.finalY,
+							didDrawPage: function (data) {
+								doc.setFontStyle('bold');
+
+							},
+							headStyles: {
+								fontStyle: 'normal',
+								fillColor: '#c8d6e5',
+								textColor: '#5e666d',
+								fontSize: 22,
+							},
+							alternateRowStyles: {
+								fillColor: '#fd8468',
+								textColor: '#ffffff',
+								fontStyle: 'bold',
+							},
+							useCss: true,
+							styles: {
+								fontSize: 22,
+								cellWidth: 'auto',
+								textColor: 'black',
+								lineColor: '#89a8c8',
+							},
+							theme: 'grid'
+						});
+					}
+				}
+			}
+		}
+	}
+
+	checkGroupLevel(item, worksheet) {
+		console.log('checkGroupLevel item ', item);
+		// console.log('checkGroupLevel worksheet ', worksheet);
+		if (item.length > 0) {
+			for (const groupItem of item) {
+				worksheet.addRow({});
+				this.notFormatedCellArray.push(worksheet._rows.length);
+				// style for groupeditem level heading
+				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
+				this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
+				worksheet.getCell('A' + worksheet._rows.length).value = groupItem.value + ' (' + groupItem.rows.length + ')';
+				worksheet.getCell('A' + worksheet._rows.length).fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: 'c8d6e5' },
+					bgColor: { argb: 'ffffff' },
+				};
+				worksheet.getCell('A' + worksheet._rows.length).border = {
+					top: { style: 'thin' },
+					left: { style: 'thin' },
+					bottom: { style: 'thin' },
+					right: { style: 'thin' }
+				};
+				worksheet.getCell('A' + worksheet._rows.length).font = {
+					name: 'Arial',
+					size: 10,
+					bold: true
+				};
+
+				if (groupItem.groups) {
+					this.checkGroupLevel(groupItem.groups, worksheet);
+					const blankTempObj = {};
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id === 'class_name') {
+							blankTempObj[item2.id] = this.getLevelFooter(groupItem.level);
+						} else if (item2.id === 'student_strength') {
+							blankTempObj[item2.id] = groupItem.rows.length;
+						} else if (item2.id === 'admission_no') {
+							blankTempObj[item2.id] = groupItem.rows.length;
+						} else {
+							blankTempObj[item2.id] = '';
+						}
+					}
+					/* if (this.studentStrengthReportForm.value.reviewReport === '0') {
+						blankTempObj['class_name'] = this.getLevelFooter(groupItem.level);
+						blankTempObj['student_strength'] = groupItem.rows.length;
+					} else if (this.studentStrengthReportForm.value.reviewReport === '1') {
+						blankTempObj['class_name'] = this.getLevelFooter(groupItem.level);
+						blankTempObj['admission_no'] = groupItem.rows.length;
+						blankTempObj['student_name'] = '';
+						blankTempObj['gender'] = '';
+						blankTempObj['process_type'] = '';
+					} */
+					worksheet.addRow(blankTempObj);
+					this.notFormatedCellArray.push(worksheet._rows.length);
+					// style row having total
+					if (groupItem.level === 0) {
+						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+							this.columnDefinitions.forEach(element => {
+								cell.font = {
+									name: 'Arial',
+									size: 10,
+									bold: true
+								};
+								cell.alignment = { wrapText: true, horizontal: 'center' };
+								cell.fill = {
+									type: 'pattern',
+									pattern: 'solid',
+									fgColor: { argb: '004261' },
+									bgColor: { argb: '004261' },
+								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						});
+					} else if (groupItem.level > 0) {
+						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+							this.columnDefinitions.forEach(element => {
+								cell.font = {
+									name: 'Arial',
+									size: 10,
+								};
+								cell.alignment = { wrapText: true, horizontal: 'center' };
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						});
+					}
+				} else {
+					Object.keys(groupItem.rows).forEach(key => {
+						const obj = {};
+						for (const item2 of this.columnDefinitions) {
+							obj[item2.id] = groupItem.rows[key][item2.id];
+						}
+						worksheet.addRow(obj);
+					});
+					const blankTempObj = {};
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id === 'class_name') {
+							blankTempObj[item2.id] = this.getLevelFooter(groupItem.level);
+						} else if (item2.id === 'student_strength') {
+							blankTempObj[item2.id] = groupItem.rows.length;
+						} else if (item2.id === 'admission_no') {
+							blankTempObj[item2.id] = groupItem.rows.length;
+						} else {
+							blankTempObj[item2.id] = '';
+						}
+					}
+					worksheet.addRow(blankTempObj);
+					this.notFormatedCellArray.push(worksheet._rows.length);
+					// style row having total
+					if (groupItem.level === 0) {
+						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+							this.columnDefinitions.forEach(element => {
+								cell.font = {
+									name: 'Arial',
+									size: 10,
+									bold: true
+								};
+								cell.alignment = { wrapText: true, horizontal: 'center' };
+								cell.fill = {
+									type: 'pattern',
+									pattern: 'solid',
+									fgColor: { argb: '004261' },
+									bgColor: { argb: '004261' },
+								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						});
+					} else if (groupItem.level > 0) {
+						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+							this.columnDefinitions.forEach(element => {
+								cell.font = {
+									name: 'Arial',
+									size: 10,
+								};
+								cell.alignment = { wrapText: true, horizontal: 'center' };
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						});
+					}
+				}
+			}
+		}
+	}
 	exportToExcel(json: any[]) {
+		this.notFormatedCellArray = [];
 		console.log('excel json', json);
 		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
 		const columns: any[] = [];
@@ -427,6 +827,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		worksheet.getRow(4).values = columValue;
 
 		worksheet.columns = columns;
+		console.log('this.dataviewObj.getGroups()', this.dataviewObj.getGroups());
 		if (this.dataviewObj.getGroups().length === 0) {
 			json.forEach(element => {
 				const excelobj: any = {};
@@ -435,58 +836,132 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 				});
 				worksheet.addRow(excelobj);
 			});
-			if (this.totalRow) {
-				worksheet.addRow(this.totalRow);
-			}
 		} else {
-			const obj = {};
-			const length = worksheet._rows.length + 1;
-			this.groupLength = length;
-			worksheet.eachRow((row, rowNum) => {
-				if (rowNum === 1) {
-					row.font = {
+			// iterate all groups
+			this.checkGroupLevel(this.dataviewObj.getGroups(), worksheet);
+		}
+		if (this.totalRow) {
+			worksheet.addRow(this.totalRow);
+		}
+		// style grand total
+		worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+			this.columnDefinitions.forEach(element => {
+				cell.font = {
+					color: { argb: 'ffffff' },
+					bold: true,
+					name: 'Arial',
+					size: 10
+				};
+				cell.alignment = { wrapText: true, horizontal: 'center' };
+				cell.fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: '439f47' },
+					bgColor: { argb: '439f47' }
+				};
+				cell.border = {
+					top: { style: 'thin' },
+					left: { style: 'thin' },
+					bottom: { style: 'thin' },
+					right: { style: 'thin' }
+				};
+			});
+		});
+		// style all row of excel
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 16,
+					bold: true
+				};
+			} else if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			} else if (rowNum === 4) {
+				row.eachCell((cell) => {
+					cell.font = {
 						name: 'Arial',
-						size: 16,
+						size: 12,
 						bold: true
 					};
-				}
-				if (rowNum === 2) {
-					row.font = {
-						name: 'Arial',
-						size: 14,
-						bold: true
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'bdbdbd' },
+						bgColor: { argb: 'bdbdbd' },
 					};
-				}
-				if (rowNum === 4) {
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
+				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
+				if (cellIndex === -1) {
 					row.eachCell((cell) => {
 						cell.font = {
 							name: 'Arial',
-							size: 12,
-							bold: true
+							size: 10,
 						};
-						cell.fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'bdbdbd' },
-							bgColor: { argb: 'bdbdbd' },
-						};
-						cell.border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						cell.alignment = { horizontal: 'center' };
+						cell.alignment = { wrapText: true, horizontal: 'center' };
 					});
-				}
-			});
-			// iterate all groups
-			for (const item of this.dataviewObj.getGroups()) {
+					if (rowNum % 2 === 0) {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					} else {
+						row.eachCell((cell) => {
+							cell.fill = {
+								type: 'pattern',
+								pattern: 'solid',
+								fgColor: { argb: 'dedede' },
+								bgColor: { argb: 'dedede' },
+							};
+							cell.border = {
+								top: { style: 'thin' },
+								left: { style: 'thin' },
+								bottom: { style: 'thin' },
+								right: { style: 'thin' }
+							};
+						});
+					}
 
+				}
 			}
+		});
+
+		worksheet.addRow({});
+		if (this.groupColumns.length > 0) {
+			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
+			worksheet.getCell('A' + worksheet._rows.length).font = {
+				name: 'Arial',
+				size: 10,
+				bold: true
+			};
 		}
-		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
 		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' + this.getParamValue();
 		worksheet.getCell('A' + worksheet._rows.length).font = {
 			name: 'Arial',
@@ -631,6 +1106,13 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	}
 	valueAndDash(value) {
 		return value && value !== '0' ? value : '-';
+	}
+	getLevelFooter(level) {
+		if (level === 0) {
+			return 'Total';
+		} else if (level > 0) {
+			return 'Sub Total (level ' + level + ')' ;
+		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
 		// console.log('srnTotalsFormatter totals ', totals);
@@ -781,13 +1263,20 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 			tempObj['class_name'] = this.reportDetailData[i]['section'] ?
 			this.reportDetailData[i]['class'] + '-' + this.reportDetailData[i]['section'] : this.reportDetailData[i]['class'];
 			tempObj['admission_no'] = this.valueAndDash(this.reportDetailData[i]['admission_no']);
-			tempObj['student_name'] = this.valueAndDash(this.reportDetailData[i]['student_name']);
+			tempObj['student_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportDetailData[i]['student_name']));
 			tempObj['gender'] = this.valueAndDash(this.reportDetailData[i]['gender']);
 			tempObj['process_type'] = this.reportDetailData[i]['processType'] === '3' ? 'Provisional' : 'Admission';
 			total = total + this.reportDetailData[i]['Total'];
 			this.dataset.push(tempObj);
 			counter++;
 		}
+		const blankTempObj = {};
+		blankTempObj['class_name'] = 'Grand Total';
+		blankTempObj['admission_no'] = this.reportDetailData.length;
+		blankTempObj['student_name'] = '';
+		blankTempObj['gender'] = '';
+		blankTempObj['process_type'] = '';
+		this.totalRow = blankTempObj;
 		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
 			this.gridHeight = 750;
