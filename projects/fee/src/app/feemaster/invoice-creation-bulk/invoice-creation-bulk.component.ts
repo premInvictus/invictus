@@ -11,13 +11,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
 import { saveAs } from 'file-saver';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
-import { DatePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
 declare var require;
 import * as Excel from 'exceljs/dist/exceljs';
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
-import { TitleCasePipe } from '@angular/common';
 import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
 
 @Component({
@@ -46,6 +45,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	invoiceArray: any[] = [];
 	excelArray: any[] = [];
 	feePeriod: any[] = [];
+	UserArray: any[] = [];
 	invoicepagelength = 1000;
 	invoicepagesize = 10;
 	invoicepagesizeoptions = [10, 25, 50, 100];
@@ -62,6 +62,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	session: any;
 	sessionName: any;
 	length: any;
+	currentUser: any;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -139,6 +140,18 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 					}
 				});
 	}
+	// get user name and login id
+	getUserName() {
+		this.feeService.getUserName()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.UserArray[citem.au_login_id] = citem.au_full_name;
+						}
+					}
+				});
+	}
 	getClass() {
 		this.classArray = [];
 		this.sisService.getClass({}).subscribe((result: any) => {
@@ -213,7 +226,10 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		private sisService: SisService,
 		private processtypeService: ProcesstypeFeeService
 
-	) { }
+	) {
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.session = JSON.parse(localStorage.getItem('session'));
+	}
 
 	ngOnInit() {
 		localStorage.removeItem('invoiceBulkRecords');
@@ -222,6 +238,8 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.getInvoiceFeeMonths();
 		this.getInvoice(this.invoiceSearchForm.value);
 		this.getClass();
+		this.getSchool();
+		this.getSession();
 		const filterModal = document.getElementById('formFlag');
 		filterModal.style.display = 'none';
 	}
@@ -530,10 +548,6 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		let reportType2: any = '';
 		const columns: any = [];
 		columns.push({
-			key: 'sr_no',
-			width: this.checkWidth('sr_no', 'Sr No.')
-		});
-		columns.push({
 			key: 'inv_process_usr_no',
 			width: this.checkWidth('inv_process_usr_no', 'Entrollment No.')
 		});
@@ -582,47 +596,29 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		worksheet.mergeCells('A2:' + this.alphabetJSON[7] + '2');
 		worksheet.getCell('A2').value = reportType;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
-		worksheet.mergeCells('A4:A5');
-		worksheet.getCell('A4').value = 'Topic';
-		worksheet.mergeCells('B4:B5');
-		worksheet.getCell('B4').value = 'SubTopic';
-		worksheet.mergeCells('C4:C5');
-		worksheet.getCell('C4').value = 'Description';
-		worksheet.mergeCells('D4:F4');
-		worksheet.getCell('D4').value = 'No. of Period Required';
-		worksheet.getCell('D5').value = 'Teaching';
-		worksheet.getCell('E5').value = 'Test';
-		worksheet.getCell('F5').value = 'Revision';
-		worksheet.mergeCells('G4:G5');
-		worksheet.getCell('G4').value = 'Total';
+		worksheet.getCell('A4').value = 'Entrollment No.';
+		worksheet.getCell('B4').value = 'Student Name';
+		worksheet.getCell('C4').value = 'Class Section';
+		worksheet.getCell('D4').value = 'Invoice No';
+		worksheet.getCell('E4').value = 'Fee Period';
+		worksheet.getCell('F4').value = 'Invoice Date';
+		worksheet.getCell('G4').value = 'Due Date';
+		worksheet.getCell('H4').value = 'Fee Due';
+		worksheet.getCell('I4').value = 'Status';
 		worksheet.columns = columns;
 		this.length = worksheet._rows.length;
-		for (const item of this.excelArray) {
-			const prev = this.length + 1;
-			const obj: any = {};
-			if (item.sd_topic_id === item.details[0].sd_topic_id) {
-				for (const dety of item.details) {
-					this.length++;
-					if (dety.sd_ctr_id === '1') {
-						worksheet.getCell('B' + this.length).value = dety.sd_st_name;
-					} else if (dety.sd_ctr_id === '2') {
-						worksheet.getCell('B' + this.length).value = 'Test';
-					} else {
-						worksheet.getCell('B' + this.length).value = 'Revision';
-					}
-					worksheet.getCell('C' + this.length).value = this.commonAPIService.htmlToText(dety.sd_desc);
-					worksheet.getCell('D' + this.length).value = dety.sd_period_teacher;
-					worksheet.getCell('E' + this.length).value = dety.sd_period_test;
-					worksheet.getCell('F' + this.length).value = dety.sd_period_revision;
-				}
-				worksheet.mergeCells('A' + prev + ':' + 'A' + this.length);
-				worksheet.getCell('A' + prev).value = '';
-				worksheet.mergeCells('G' + prev + ':' + 'G' + this.length);
-				worksheet.getCell('G' + prev).value = item.total;
-			}
-			worksheet.addRow(obj);
+		for (const dety of this.excelArray) {
+			this.length++;
+			worksheet.getCell('A' + this.length).value = dety.inv_process_usr_no;
+			worksheet.getCell('B' + this.length).value = new TitleCasePipe().transform(dety.au_full_name);
+			worksheet.getCell('C' + this.length).value = dety.class_name + '-' + dety.sec_name;
+			worksheet.getCell('D' + this.length).value = dety.inv_invoice_no;
+			worksheet.getCell('E' + this.length).value = dety.fp_name;
+			worksheet.getCell('F' + this.length).value = new DatePipe('en-in').transform(dety.inv_invoice_date, 'd-MMM-y');
+			worksheet.getCell('G' + this.length).value = new DatePipe('en-in').transform(dety.inv_due_date, 'd-MMM-y');
+			worksheet.getCell('H' + this.length).value = this.checkReturn(dety.inv_fee_amount);
+			worksheet.getCell('I' + this.length).value = dety.inv_paid_status;
 		}
-
 		worksheet.eachRow((row, rowNum) => {
 			if (rowNum === 1) {
 				row.font = {
@@ -638,7 +634,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 					bold: true
 				};
 			}
-			if (rowNum === 4 || rowNum === 5) {
+			if (rowNum === 4) {
 				row.eachCell(cell => {
 					cell.font = {
 						name: 'Arial',
@@ -661,9 +657,9 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
 			}
-			if (rowNum > 5 && rowNum <= worksheet._rows.length) {
+			if (rowNum >= 5 && rowNum <= worksheet._rows.length) {
 				row.eachCell(cell => {
-					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'G') {
+					if (cell._address.charAt(0) !== 'A') {
 						if (rowNum % 2 === 0) {
 							cell.fill = {
 								type: 'pattern',
@@ -696,42 +692,32 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 				});
 			}
 		});
-		const obj3: any = {};
-		obj3['sd_topic_name'] = 'Grand Total';
-		obj3['sd_st_name'] = '';
-		obj3['sd_desc'] = '';
-		obj3['sd_period_teacher'] = this.dataArr.map(t => t['sd_period_teacher']).reduce((acc, val) => Number(acc) + Number(val), 0);
-		obj3['sd_period_test'] = this.dataArr.map(t => t['sd_period_test']).reduce((acc, val) => Number(acc) + Number(val), 0);
-		obj3['sd_period_revision'] = this.dataArr.map(t => t['sd_period_revision']).reduce((acc, val) => Number(acc) + Number(val), 0);
-		obj3['total'] = this.dataArr.map(t => t['sd_period_teacher']).reduce((acc, val) => Number(acc) + Number(val), 0) +
-			this.dataArr.map(t => t['sd_period_test']).reduce((acc, val) => Number(acc) + Number(val), 0) +
-			this.dataArr.map(t => t['sd_period_revision']).reduce((acc, val) => Number(acc) + Number(val), 0);
-		worksheet.addRow(obj3);
-		worksheet.eachRow((row, rowNum) => {
-			if (rowNum === worksheet._rows.length) {
-				row.eachCell(cell => {
-					cell.fill = {
-						type: 'pattern',
-						pattern: 'solid',
-						fgColor: { argb: '004261' },
-						bgColor: { argb: '004261' },
-					};
-					cell.font = {
-						color: { argb: 'ffffff' },
-						bold: true,
-						name: 'Arial',
-						size: 10
-					};
-					cell.border = {
-						top: { style: 'thin' },
-						left: { style: 'thin' },
-						bottom: { style: 'thin' },
-						right: { style: 'thin' }
-					};
-					cell.alignment = { horizontal: 'center' };
-				});
-			}
-		});
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+		this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+	worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + this.totalRecords;
+	worksheet.getCell('A' + worksheet._rows.length).font = {
+		name: 'Arial',
+		size: 10,
+		bold: true
+	};
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+			+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
+		// });
 		workbook.xlsx.writeBuffer().then(data => {
 			const blob = new Blob([data], { type: 'application/octet-stream' });
 			saveAs(blob, fileName);
@@ -740,10 +726,17 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	}
 	// check the max  width of the cell
 	checkWidth(id, header) {
-		const res = this.dataArr.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const res = this.excelArray.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
 		const max2 = header.toString().length;
 		const max = Math.max.apply(null, res);
 		return max2 > max ? max2 : max;
+	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
+		}
 	}
 	openDialog2(inv_id, editFlag) {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
