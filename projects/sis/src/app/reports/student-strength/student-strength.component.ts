@@ -42,6 +42,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	aggregatearray: any[] = [];
 	selectedGroupingFields: string[] = [];
 	draggableGroupingPlugin: any;
+	groupLength: any;
 
 	showDate = true;
 	showDateRange = false;
@@ -188,6 +189,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 				this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '';
 			});
 		}
+		console.log('dataviewObj', this.dataviewObj.getGroups());
 	}
 	updateTotalRow(grid: any) {
 		let columnIdx = grid.getColumns().length;
@@ -201,6 +203,9 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
 		const grid = angularGrid.slickGrid; // grid object
+		this.gridObj = angularGrid.slickGrid; // grid object
+		this.dataviewObj = angularGrid.dataView;
+		console.log('dataviewObj', this.dataviewObj);
 		this.updateTotalRow(angularGrid.slickGrid);
 	}
 	exportAsPDF(json: any[]) {
@@ -422,15 +427,64 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		worksheet.getRow(4).values = columValue;
 
 		worksheet.columns = columns;
-
-		json.forEach(element => {
-			const excelobj: any = {};
-			this.columnDefinitions.forEach(element1 => {
-				excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
+		if (this.dataviewObj.getGroups().length === 0) {
+			json.forEach(element => {
+				const excelobj: any = {};
+				this.columnDefinitions.forEach(element1 => {
+					excelobj[element1.id] = this.getNumberWithZero(element[element1.id]);
+				});
+				worksheet.addRow(excelobj);
 			});
-			worksheet.addRow(excelobj);
-		});
-		worksheet.addRow(this.totalRow);
+			if (this.totalRow) {
+				worksheet.addRow(this.totalRow);
+			}
+		} else {
+			const obj = {};
+			const length = worksheet._rows.length + 1;
+			this.groupLength = length;
+			worksheet.eachRow((row, rowNum) => {
+				if (rowNum === 1) {
+					row.font = {
+						name: 'Arial',
+						size: 16,
+						bold: true
+					};
+				}
+				if (rowNum === 2) {
+					row.font = {
+						name: 'Arial',
+						size: 14,
+						bold: true
+					};
+				}
+				if (rowNum === 4) {
+					row.eachCell((cell) => {
+						cell.font = {
+							name: 'Arial',
+							size: 12,
+							bold: true
+						};
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'bdbdbd' },
+							bgColor: { argb: 'bdbdbd' },
+						};
+						cell.border = {
+							top: { style: 'thin' },
+							left: { style: 'thin' },
+							bottom: { style: 'thin' },
+							right: { style: 'thin' }
+						};
+						cell.alignment = { horizontal: 'center' };
+					});
+				}
+			});
+			// iterate all groups
+			for (const item of this.dataviewObj.getGroups()) {
+
+			}
+		}
 		worksheet.mergeCells('A' + (worksheet._rows.length + 2) + ':' +
 			this.alphabetJSON[columns.length] + (worksheet._rows.length + 2));
 		worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as: ' + this.getParamValue();
@@ -579,19 +633,31 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		return value && value !== '0' ? value : '-';
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		console.log('totals ', totals);
-		console.log('columnDef ', columnDef);
+		// console.log('srnTotalsFormatter totals ', totals);
+		// console.log('srnTotalsFormatter columnDef ', columnDef);
+		if (totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
+		if (totals.group.level === 1) {
+			return '<b class="total-footer-report">Sub Total</b>';
+		}
+		if (totals.group.level === 2) {
+			return '<b class="total-footer-report">Sub Total</b>';
+		}
+		/* if (!totals.group.groups && totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
 		if (totals.group.groups) {
 			if (totals.group.level === 0) {
 				return '<b class="total-footer-report">Total</b>';
 			}
 		} else {
-			return '<b class="total-footer-report">Total</b>';
-		}
+			return '<b class="total-footer-report">Sub Total</b>';
+		} */
 	}
 	sumTotalsFormatter(totals, columnDef) {
-		console.log('totals ', totals);
-		console.log('columnDef ', columnDef);
+		// console.log('totals ', totals);
+		// console.log('columnDef ', columnDef);
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null && totals.group.rows[0].class_name !== '<b>Grand Total</b>') {
 			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
@@ -599,8 +665,8 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		return '';
 	}
 	countTotalsFormatter(totals, columnDef) {
-		console.log('countTotalsFormatter totals ', totals);
-		console.log('countTotalsFormatter columnDef ', columnDef);
+		// console.log('countTotalsFormatter totals ', totals);
+		// console.log('countTotalsFormatter columnDef ', columnDef);
 		return '<b class="total-footer-report">' + totals.group.rows.length + '</b>';
 	}
 	prepareDataSource() {
@@ -670,7 +736,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	prepareDetailDataSource() {
 		this.columnDefinitions = [
 			/* { id: 'counter', name: 'S.No.', field: 'counter', sortable: true, filterable: true }, */
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, resizable: false,
+			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
 			grouping: {
 				getter: 'class_name',
 				formatter: (g) => {
@@ -681,11 +747,29 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 				collapsed: false,
 			},
 			groupTotalsFormatter: this.srnTotalsFormatter},
-			{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true, resizable: false,
+			{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true, maxWidth: 100,
 			groupTotalsFormatter: this.countTotalsFormatter},
-			{ id: 'student_name', name: 'Student Name', field: 'student_name', sortable: true, filterable: true, resizable: false },
-			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true, resizable: false },
-			{ id: 'process_type', name: 'Process Type', field: 'process_type', sortable: true, filterable: true }
+			{ id: 'student_name', name: 'Student Name', field: 'student_name', sortable: true, filterable: true, maxWidth: 250 },
+			{ id: 'gender', name: 'Gender', field: 'gender', sortable: true, filterable: true, maxWidth: 100,
+			grouping: {
+				getter: 'gender',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} },
+			{ id: 'process_type', name: 'Process Type', field: 'process_type', sortable: true, filterable: true,
+			grouping: {
+				getter: 'process_type',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} }
 		];
 		let counter = 1;
 		let total = 0;
