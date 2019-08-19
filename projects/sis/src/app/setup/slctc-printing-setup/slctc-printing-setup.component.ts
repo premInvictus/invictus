@@ -57,20 +57,22 @@ export class SlctcPrintingSetupComponent implements OnInit {
 	buildForm() {
 		this.templateForm = this.fbuild.group({
 			usts_template: '',
-			usts_name: 'slctc'
+			usts_name: '',
+			usts_id: '1'
 		});
 	}
 	insertTemplate() {
 		this.sisService.insertSlcTcTemplateSetting(this.templateForm.value).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Template Added', 'success');
-				this.getTemplate();
+				//this.getTemplate();
 			}
 		});
 	}
 	getTemplate() {
-		this.sisService.getSlcTcTemplateSetting({}).subscribe((result: any) => {
+		this.sisService.getSlcTcTemplateSetting({ usts_id: this.templateForm.value.usts_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
+				console.log(result.data[0].usts_template);
 				this.templateForm.patchValue({
 					'usts_template': result.data[0].usts_template
 				});
