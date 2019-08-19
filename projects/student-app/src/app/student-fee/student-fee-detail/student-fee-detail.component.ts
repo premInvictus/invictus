@@ -41,7 +41,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	responseHtml = '';
 	paytmResult = '';
 	postURL = '';
-	
+
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('table') table: ElementRef;

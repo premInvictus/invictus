@@ -4,7 +4,9 @@ import { StudentFeeRoutingModule } from './student-fee-routing.module';
 import { SharedModuleModule } from '../shared-module/shared-module.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StudentFeeDetailComponent } from './student-fee-detail/student-fee-detail.component';
-
+import { FamilywiseFeeRecieptComponent } from './familywise-fee-reciept/familywise-fee-reciept.component';
+import { FamilyInformationComponent } from './family-information/family-information.component';
+import { FamilyTransactionEntryComponent } from './family-transaction-entry/family-transaction-entry.component';
 
 @NgModule({
 	imports: [
@@ -14,6 +16,6 @@ import { StudentFeeDetailComponent } from './student-fee-detail/student-fee-deta
 		ReactiveFormsModule,
 		FormsModule,
 	],
-	declarations: [StudentFeeDetailComponent]
+	declarations: [StudentFeeDetailComponent, FamilywiseFeeRecieptComponent, FamilyInformationComponent, FamilyTransactionEntryComponent]
 })
 export class StudentFeeModule { }

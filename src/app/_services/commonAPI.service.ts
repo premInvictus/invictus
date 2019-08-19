@@ -27,6 +27,9 @@ export class CommonAPIService {
 	reRenderForm = new Subject();
 	renderTab = new Subject();
 	userPrefix: any = '';
+	familyData: any;
+	familyNumber: any;
+	selectedChildData: any;
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
 		tmp.innerHTML = html;
@@ -237,6 +240,30 @@ export class CommonAPIService {
 	}
 	getUserPrefix() {
 		return this.userPrefix;
+	}
+
+	setFamilyData(value) {
+		this.familyData = value;
+	}
+
+	getFamilyData() {
+		return this.familyData;
+	}
+
+	setFamilyInformation(value) {
+		this.familyNumber = value;
+	}
+
+	getFamilyInformation() {
+		return this.familyNumber;
+	}
+
+	setSelectedChildData(value) {
+		this.selectedChildData = value;
+	}
+
+	getSelectedChildData() {
+		return this.selectedChildData;
 	}
 
 }

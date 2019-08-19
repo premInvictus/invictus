@@ -29,7 +29,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
-import {MatStepperModule} from '@angular/material/stepper';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
@@ -38,6 +38,10 @@ import { OngoingTestInstructionComponent } from './ongoing-test-instruction/ongo
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 import { PaymentOrderModalComponent } from './payment-order-modal/payment-order-modal.component';
 import { MakePaymentComponent } from '../student-fee/make-payment/make-payment.component';
+import { NumberToWordPipe } from '../_pipes/number-to-word.pipe';
+import { ZerodashPipe } from '../_pipes/zerodash.pipe';
+import { CapitalizePipe, DateformatPipe } from '../_pipes';
+import { SafePipe } from '../_pipes/safe.pipe';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -75,14 +79,17 @@ import { MakePaymentComponent } from '../student-fee/make-payment/make-payment.c
 		AccordionModule.forRoot(),
 		FormsModule,
 		ReactiveFormsModule,
-		InvictusSharedModule
+		InvictusSharedModule,
 	],
 	declarations: [
 		CommonDynamicChartComponent,
 		MathJaxDirective,
 		OngoingTestInstructionComponent,
 		PaymentOrderModalComponent,
-		MakePaymentComponent
+		MakePaymentComponent,
+		CapitalizePipe, DateformatPipe, SafePipe,
+		NumberToWordPipe,
+		ZerodashPipe
 	],
 	exports: [
 		MatProgressBarModule,
@@ -114,7 +121,10 @@ import { MakePaymentComponent } from '../student-fee/make-payment/make-payment.c
 		CommonDynamicChartComponent,
 		MathJaxDirective,
 		PaymentOrderModalComponent,
-		MakePaymentComponent
+		MakePaymentComponent,
+		CapitalizePipe, DateformatPipe, SafePipe,
+		NumberToWordPipe,
+		ZerodashPipe
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent]
 })
@@ -125,7 +135,7 @@ export class SharedModuleModule {
 			!(
 				script.type === 'text/x-mathjax-config' &&
 				script.src ===
-					'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML'
+				'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML'
 			)
 		) {
 			script.type = 'text/x-mathjax-config';

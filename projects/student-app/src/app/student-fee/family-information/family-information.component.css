@@ -1,0 +1,58 @@
+.vertical-divider{
+    border-right: 2px solid #dee2e6;
+    height: 40px;
+    margin-top: 15px;
+}
+.primary{
+    font-weight: 800;
+    padding-top: 10px;
+    padding-left: 10px;
+    font-size: 20px;    
+}
+.student-profile-image-68 {
+    border-radius: 100%;
+    width: 53px;
+    height: 53px;
+}
+.margin-top-1{
+    margin-top: 1px;
+}
+.family-panel-header{
+    background-color: #7f969d;
+}
+.family-panel-header:hover{
+    background-color: #7f969d;
+}
+@media (hover: none){
+
+}
+.mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) .mat-expansion-panel-header:hover {
+    background: #7f969d! important;
+}
+.mat-expansion-panel-header{
+    background: #7f969d! important;
+}
+.mat-expansion-panel-header , .mat-expansion-panel-header.mat-expanded {
+    height: 38px !important;
+}
+.margin-left-right-15{
+    margin-right: 15px;
+    margin-left: 15px;
+}
+.mat-expansion-indicator::after {
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    content: '';
+    display: inline-block;
+    padding: 5px;
+    transform: rotate(45deg);
+    color: white;
+    vertical-align: unset;
+}
+.btn-pay{
+    background-color: rgb(77, 184, 72);
+    width: 120px !important;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    font-size: 13px !important;
+}
