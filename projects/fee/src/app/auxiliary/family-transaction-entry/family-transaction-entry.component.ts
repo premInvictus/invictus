@@ -28,6 +28,7 @@ export class FamilyTransactionEntryComponent implements OnInit {
 	familyOutstandingArr: any[] = [];
 	studentInfo: any = {};
 	invoiceTotal: any;
+	defaultsrc = '';
 	entryModes: any[] = [];
 	payModes: any[] = [];
 	invoice: any = {};

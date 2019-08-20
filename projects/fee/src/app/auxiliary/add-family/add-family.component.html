@@ -55,7 +55,7 @@
                     <div class="col-2 text-right margin-top-10">
                         <button mat-button class="font-size-14 font-white width-140 btn-blue" (click)="addChild($event)">Add Child</button>
                         <button mat-button
-                            class="font-size-14 margin-left-10 font-white width-140 btn-reset" (click)="reset()">Reset</button>
+                            class="font-size-14 margin-left-10 font-white width-140 btn-reset" (click)="reset($event)">Reset</button>
                     </div>
 
                 </div>
@@ -127,7 +127,7 @@
                     <div class="col-12 text-center">
                         <button *ngIf="!addFamilyForm.value.fam_entry_number" mat-button class="font-size-14 font-white btn-success-green" (click)="addFamily()">Submit</button>
                         <button *ngIf="addFamilyForm.value.fam_entry_number" mat-button class="font-size-14 font-white btn-success-green" (click)="updateFamily()">Update</button>                        
-                        <button mat-button class="font-size-14 font-white margin-left-10 btn-reset" (click)="resetAll()">Reset</button>
+                        <button mat-button class="font-size-14 font-white margin-left-10 btn-reset" (click)="resetAll($event)">Reset</button>
                     </div>
                 </div>
             </mat-card>
