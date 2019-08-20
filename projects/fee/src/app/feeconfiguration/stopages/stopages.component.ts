@@ -89,14 +89,16 @@ export class StopagesComponent implements OnInit, AfterViewInit {
 		let counter = 1;
 		for (let i = 0; i < this.stoppageRoutesData.length; i++) {
 			const tempObj = {};
-			tempObj['counter'] = counter;
-			tempObj['tsp_id'] = this.stoppageRoutesData[i]['tsp_id'];
-			tempObj['stop_name'] = this.stoppageRoutesData[i]['tsp_name'];
-			tempObj['distance_from_school'] = this.stoppageRoutesData[i]['tsp_distance'];
-			tempObj['transport_slab'] = this.stoppageRoutesData[i]['ts_name'];
-			tempObj['status'] = this.stoppageRoutesData[i]['tsp_status'];
-			this.TRANSPORT_STOPPAGE_ELEMENT_DATA.push(tempObj);
-			counter++;
+			if (this.stoppageRoutesData[i]['ts_id'] !== null) {
+				tempObj['counter'] = counter;
+				tempObj['tsp_id'] = this.stoppageRoutesData[i]['tsp_id'];
+				tempObj['stop_name'] = this.stoppageRoutesData[i]['tsp_name'];
+				tempObj['distance_from_school'] = this.stoppageRoutesData[i]['tsp_distance'];
+				tempObj['transport_slab'] = this.stoppageRoutesData[i]['ts_name'];
+				tempObj['status'] = this.stoppageRoutesData[i]['tsp_status'];
+				this.TRANSPORT_STOPPAGE_ELEMENT_DATA.push(tempObj);
+				counter++;
+			}
 		}
 		this.stoppageDataSource = new MatTableDataSource(this.TRANSPORT_STOPPAGE_ELEMENT_DATA);
 		this.stoppageDataSource.sort = this.sort;

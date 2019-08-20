@@ -41,6 +41,7 @@ export class EditClassworkModalComponent implements OnInit {
 			this.getTopicByClassSubject();
 			this.getSubtopicByTopic();
 		});
+		this.disableSt({value: this.data.cw_ctr_id});
 	}
 	buildForm() {
 		return new Promise(resolve => {
@@ -50,8 +51,8 @@ export class EditClassworkModalComponent implements OnInit {
 				cw_ctr_id: this.data.cw_ctr_id,
 				cw_class_id: this.data.cw_class_id + '-' + this.data.cw_sec_id,
 				cw_sec_id: '',
-				cw_topic_id: this.data.cw_topic_id,
-				cw_st_id: this.data.cw_st_id,
+				cw_topic_id: this.data.cw_topic_id && this.data.cw_topic_id !== '0' ? this.data.cw_topic_id : '',
+				cw_st_id: this.data.cw_st_id && this.data.cw_st_id !== '0' ? this.data.cw_st_id : '',
 			});
 			console.log(this.editclassworkform.value);
 			if (this.data.cw_ctr_id === '2' || this.data.cw_ctr_id === '3' || this.data.cw_ctr_id === '5' || this.data.cw_ctr_id === '6') {
@@ -70,6 +71,18 @@ export class EditClassworkModalComponent implements OnInit {
 			return resolve();
 		});
 
+	}
+	validateForm(event) {
+		if (event.value === '2' || event.value === '3' || event.value === '5' || event.value === '6') {
+			return this.editclassworkform.value.cw_sub_id !== '0' &&
+			this.editclassworkform.value.cw_class_id !== '0' &&
+			this.editclassworkform.value.cw_topic_id !== '0';
+		}  else {
+			return this.editclassworkform.value.cw_sub_id !== '0' &&
+			this.editclassworkform.value.cw_class_id !== '0' &&
+			this.editclassworkform.value.cw_topic_id !== '0' &&
+			this.editclassworkform.value.cw_st_id !== '0';
+		}
 	}
 	disableSt(event) {
 		if (event.value === '2' || event.value === '3' || event.value === '5' || event.value === '6') {
@@ -203,6 +216,7 @@ export class EditClassworkModalComponent implements OnInit {
 			cw_st_id: '0'
 		});
 	}
+
 	getTopicByClassSubject() {
 		this.topicArray = [];
 		console.log(this.editclassworkform.value);
@@ -248,7 +262,8 @@ export class EditClassworkModalComponent implements OnInit {
 		});
 	}
 	updateClasswork() {
-		if (this.editclassworkform.valid) {
+		console.log(this.editclassworkform);
+		if (this.editclassworkform.valid && this.validateForm(this.editclassworkform.value.cw_ctr_id)) {
 			const csArray = this.editclassworkform.value.cw_class_id.split('-');
 			if (csArray.length === 2) {
 				this.editclassworkform.patchValue({

@@ -31,6 +31,7 @@ import 'jspdf-autotable';
 })
 export class DeletedFeetransReportComponent implements OnInit {
 	@Input() userName: any = '';
+	totalRow: any;
 	groupColumns: any[] = [];
 	groupLength: any;
 	alphabetJSON = {
@@ -136,6 +137,15 @@ export class DeletedFeetransReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
@@ -186,7 +196,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 			enableColumnReorder: true,
 			createFooterRow: true,
 			showFooterRow: true,
-			footerRowHeight: 21,
+			footerRowHeight: 35,
 			enableExcelCopyBuffer: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
@@ -264,6 +274,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 				},
 				onColumnsChanged: (e, args) => {
 					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
 				},
 			},
 			draggableGrouping: {
@@ -274,6 +285,9 @@ export class DeletedFeetransReportComponent implements OnInit {
 					this.groupColumns = [];
 					this.groupColumns = args.groupColumns;
 					this.onGroupChanged(args && args.groupColumns);
+					setTimeout(() => {
+						this.updateTotalRow(this.angularGrid.slickGrid);
+					}, 100);
 				},
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
@@ -501,6 +515,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 					this.dataset.push(obj);
 					index++;
 				}
+				this.totalRow = {};
 				const obj3: any = {};
 				obj3['id'] = '';
 				obj3['srno'] = '';
@@ -510,14 +525,14 @@ export class DeletedFeetransReportComponent implements OnInit {
 				obj3['invoice_no'] = '';
 				obj3['inv_id'] = '';
 				obj3['invoice_created_date'] = '';
-				obj3['invoice_amount'] = this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0);
+				obj3['invoice_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0));
 				obj3['inv_paid_status'] = '';
 				obj3['fp_name'] = '';
 				obj3['deleted_date'] = '';
 				obj3['mod_review_by'] = '';
 				obj3['reason_title'] = '';
 				obj3['mod_review_remark'] = '';
-				this.dataset.push(obj3);
+				this.totalRow = obj3;
 				if (this.dataset.length <= 5) {
 					this.gridHeight = 300;
 				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -533,6 +548,13 @@ export class DeletedFeetransReportComponent implements OnInit {
 			}
 		});
 	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
+		}
+	}
 	clearGroupsAndSelects() {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
 		this.clearGrouping();
@@ -546,10 +568,12 @@ export class DeletedFeetransReportComponent implements OnInit {
 
 	collapseAllGroups() {
 		this.dataviewObj.collapseAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 
 	expandAllGroups() {
 		this.dataviewObj.expandAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
@@ -810,14 +834,12 @@ export class DeletedFeetransReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr5: any[] = [];
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
 						if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
 							|| item2.id === 'rpt_receipt_date') {
 							arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
 						} else {
 							arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
-					}
 				}
 				rowData.push(arr5);
 			});
@@ -991,7 +1013,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		obj5['invoice_no'] = '';
 		obj5['inv_id'] = '';
 		obj5['invoice_created_date'] = '';
-		obj5['invoice_amount'] = (this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0)) / 2;
+		obj5['invoice_amount'] = (this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0));
 		obj5['inv_paid_status'] = '';
 		obj5['fp_name'] = '';
 		obj5['deleted_date'] = '';
@@ -1164,14 +1186,12 @@ export class DeletedFeetransReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
 						if (item2.id === 'invoice_created_date' || item2.id === 'deleted_date'
 							|| item2.id === 'rpt_receipt_date') {
 							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
 						} else {
-							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 						}
-					}
 				}
 				worksheet.addRow(obj);
 			});
@@ -1344,7 +1364,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 									|| item2.id === 'rpt_receipt_date') {
 									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
 								} else {
-									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
+									obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 								}
 							}
 						}
@@ -1428,7 +1448,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		obj3['invoice_no'] = '';
 		obj3['inv_id'] = '';
 		obj3['invoice_created_date'] = '';
-		obj3['invoice_amount'] = (this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['invoice_amount'] = (this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0));
 		obj3['inv_paid_status'] = '';
 		obj3['fp_name'] = '';
 		obj3['deleted_date'] = '';
@@ -1597,7 +1617,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 								|| item2.id === 'rpt_receipt_date') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
-								obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
 							}
 						}
 						worksheet.addRow(obj);

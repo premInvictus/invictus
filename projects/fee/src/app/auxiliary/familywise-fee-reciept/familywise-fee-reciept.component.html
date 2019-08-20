@@ -6,7 +6,8 @@
                     <span class="font-size-24 font-medium"> Family Wise Fee Reciept</span>
                 </div>
                 <div class="col-4 text-right">
-                    <button mat-button class="font-size-14 font-white width-140 btn-blue">Add Family</button>
+                    <button mat-button class="font-size-14 font-white width-140 btn-blue"
+                        (click)="moveToAddFamily()">Add Family</button>
                 </div>
             </div>
         </mat-card>
@@ -46,30 +47,40 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="custom-tr">
+                            <tr class="custom-tr" *ngFor="let item of familyDetailArr">
                                 <td class="custom-td">
                                     <mat-checkbox></mat-checkbox>
                                 </td>
-                                <td class="custom-td"><a>123456</a></td>
-                                <td class="custom-td">Vikram Singh Bedi</td>
-                                <td class="custom-td">9956546521</td>
-                                <td class="custom-td">Rahul Kumar Vedi</td>
-                                <td class="custom-td">XII-A</td>
-                                <td class="custom-td">5 Students</td>
-                                <td class="custom-td">5,258</td>
                                 <td class="custom-td">
-                                    <i class="fas fa-file-image image-icon"></i>
-                                    <span class="ver-line-divider margin-left-10"></span>
-                                    <i class="fas fa-edit edit-icon"></i>
-                                    <span class="ver-line-divider margin-left-10"></span>
-                                    <i class="fas fa-trash-alt trash-icon"></i>
+                                    <span class="pointer font-bold font-skyblue font-underline">
+                                        <a (click)="goToFamilyInformation(item?.fam_entry_number)">{{item?.fam_family_name}}
+                                            - {{item?.fam_entry_number}}
+                                        </a>
+                                    </span>
                                 </td>
-
+                                <td class="custom-td">{{item?.epd_parent_honorific}} {{item?.epd_parent_name}}</td>
+                                <td class="custom-td">{{item?.epd_contact_no}}</td>
+                                <td class="custom-td">{{item?.au_full_name}}</td>
+                                <td class="custom-td">{{item?.class_name}}-{{item?.sec_name}}</td>
+                                <td class="custom-td">{{item?.no_of_students}} Students</td>
+                                <td class="custom-td">{{item?.family_outstanding_amt}}</td>
+                                <td class="custom-td">
+                                    <a href="{{item.fam_declaration_doc_url}}" *ngIf="item.fam_declaration_doc_url">
+                                        <i class="fas fa-file-image image-icon"></i>
+                                        <span class="ver-line-divider margin-left-10"></span></a>
+                                    <i class="fas fa-edit edit-icon" (click)="editFamily(item)"></i>
+                                    <span class="ver-line-divider margin-left-10"></span>
+                                    <i class="fas fa-trash-alt trash-icon" (click)="deleteFamily(item)"></i>
+                                </td>
+                            </tr>
+                            <tr *ngIf="familyDetailArr.length ==0">
+                                <td colspan="9" class="text-center">No Record Found</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
         </mat-card>
     </div>
 </div>

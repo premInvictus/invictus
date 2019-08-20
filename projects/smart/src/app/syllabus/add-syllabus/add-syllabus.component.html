@@ -64,7 +64,7 @@
                     <div class="row">
                         <div class="col-12 remove-col-padding">
                             <table class="table table-borderd table-stripped custom-table">
-                                <thead class="table-skill__head text-center">
+                                <thead class="table-skill__head text-center" *ngIf="!finaldivflag">
                                     <tr class="custom-tr">
                                         <th class="custom-th" rowspan="2">Topic</th>
                                         <th class="custom-th" rowspan="2">SubTopic</th>
@@ -86,9 +86,6 @@
                                             <img
                                                 src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
                                             <br><br><br>
-                                            <span class="font-size-20 font-bold font-color-brown">
-                                                No Data Available
-                                            </span>
                                             <br><span class="font-size-20 font-light font-color-brown">
                                                 Please Update Syllabus on Click of Add Button
                                             </span>
@@ -220,7 +217,7 @@
                 <div class="col-10">
                     <div class="row">
                         <div class="col-12 remove-col-padding">
-                            <table class="table table-borderd table-stripped custom-table">
+                            <table class="table table-borderd table-stripped custom-table" >
                                 <thead class="table-skill__head text-center">
                                     <tr class="custom-tr">
                                         <th class="custom-th" rowspan="2">Topic</th>
@@ -292,9 +289,6 @@
                                             <img
                                                 src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
                                             <br><br><br>
-                                            <span class="font-size-20 font-bold font-color-brown">
-                                                No Data Available
-                                            </span>
                                             <br><span class="font-size-20 font-light font-color-brown">
                                                 Please Update Syllabus on Click of Add Button
                                             </span>

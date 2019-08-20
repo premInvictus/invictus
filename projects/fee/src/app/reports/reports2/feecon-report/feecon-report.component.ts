@@ -29,6 +29,7 @@ import 'jspdf-autotable';
 })
 export class FeeconReportComponent implements OnInit {
 	@Input() userName: any = '';
+	totalRow: any;
 	feeHeadJson: any[] = [];
 	groupColumns: any[] = [];
 	groupLength: any;
@@ -162,6 +163,15 @@ export class FeeconReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
@@ -543,6 +553,7 @@ export class FeeconReportComponent implements OnInit {
 						filter: { model: Filters.compoundInput },
 						width: 140,
 					});
+					this.totalRow = {};
 					const obj3: any = {};
 					obj3['id'] = 'footer';
 					obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
@@ -555,7 +566,7 @@ export class FeeconReportComponent implements OnInit {
 							Object.keys(this.dataset).forEach(key3 => {
 								Object.keys(this.dataset[key3]).forEach(key4 => {
 									if (key4 === key2) {
-										obj3[key2] = this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										obj3[key2] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 									}
 								});
 							});
@@ -563,12 +574,12 @@ export class FeeconReportComponent implements OnInit {
 					});
 					obj3['fcg_name'] = '';
 					obj3['fcg_description'] = '';
-					obj3['total'] = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);
+					obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 					obj3['approved_by'] = '';
 					obj3['mod_review_date'] = '';
 					obj3['mod_review_remark'] = '';
 					obj3['reason_title'] = '';
-					this.dataset.push(obj3);
+					this.totalRow = obj3;
 					if (this.dataset.length <= 5) {
 						this.gridHeight = 300;
 					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -583,6 +594,13 @@ export class FeeconReportComponent implements OnInit {
 					this.tableFlag = true;
 				}
 			});
+		}
+	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
 		}
 	}
 	resetValues() {
@@ -606,10 +624,12 @@ export class FeeconReportComponent implements OnInit {
 
 	collapseAllGroups() {
 		this.dataviewObj.collapseAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 
 	expandAllGroups() {
 		this.dataviewObj.expandAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
@@ -881,7 +901,7 @@ export class FeeconReportComponent implements OnInit {
 					enableColumnReorder: true,
 					createFooterRow: true,
 					showFooterRow: true,
-					footerRowHeight: 21,
+					footerRowHeight: 35,
 					enableExcelCopyBuffer: true,
 					fullWidthRows: true,
 					enableAutoTooltip: true,
@@ -956,6 +976,7 @@ export class FeeconReportComponent implements OnInit {
 						},
 						onColumnsChanged: (e, args) => {
 							console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+							this.updateTotalRow(this.angularGrid.slickGrid);
 						},
 					},
 					draggableGrouping: {
@@ -966,6 +987,9 @@ export class FeeconReportComponent implements OnInit {
 							this.groupColumns = [];
 							this.groupColumns = args.groupColumns;
 							this.onGroupChanged(args && args.groupColumns);
+							setTimeout(() => {
+								this.updateTotalRow(this.angularGrid.slickGrid);
+							}, 100);
 						},
 						onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 					}
@@ -1073,14 +1097,12 @@ export class FeeconReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
 						if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
 							|| item2.id === 'rpt_receipt_date') {
 							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
 						} else {
-							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 						}
-					}
 				}
 				worksheet.addRow(obj);
 			});
@@ -1248,14 +1270,12 @@ export class FeeconReportComponent implements OnInit {
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
 						for (const item2 of this.columnDefinitions) {
-							if (Number(key) < this.dataset.length - 1) {
 								if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
 									|| item2.id === 'rpt_receipt_date') {
 									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
 								} else {
-									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
+									obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 								}
-							}
 						}
 						worksheet.addRow(obj);
 						length++;
@@ -1349,7 +1369,7 @@ export class FeeconReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
+							obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 						}
 					});
 				});
@@ -1357,7 +1377,7 @@ export class FeeconReportComponent implements OnInit {
 		});
 		obj3['fcg_name'] = '';
 		obj3['fcg_description'] = '';
-		obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 		obj3['approved_by'] = '';
 		obj3['mod_review_date'] = '';
 		obj3['mod_review_remark'] = '';
@@ -1498,14 +1518,12 @@ export class FeeconReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr5: any[] = [];
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
 						if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
 							|| item2.id === 'rpt_receipt_date') {
 							arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
 						} else {
 							arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
-					}
 				}
 				rowData.push(arr5);
 			});
@@ -1691,7 +1709,7 @@ export class FeeconReportComponent implements OnInit {
 				Object.keys(this.dataset).forEach(key3 => {
 					Object.keys(this.dataset[key3]).forEach(key4 => {
 						if (key4 === key2) {
-							obj5[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0)) / 2;
+							obj5[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
 						}
 					});
 				});
@@ -1699,7 +1717,7 @@ export class FeeconReportComponent implements OnInit {
 		});
 		obj5['fcg_name'] = '';
 		obj5['fcg_description'] = '';
-		obj5['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0)) / 2;
+		obj5['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 		obj5['approved_by'] = '';
 		obj5['mod_review_date'] = '';
 		obj5['mod_review_remark'] = '';
@@ -1900,7 +1918,7 @@ export class FeeconReportComponent implements OnInit {
 								|| item2.id === 'rpt_receipt_date') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
-								obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
 							}
 						}
 						worksheet.addRow(obj);

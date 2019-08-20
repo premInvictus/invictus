@@ -160,6 +160,12 @@ export class SyllabusProgressReportComponent implements OnInit {
 		this.progressReportForm.patchValue({
 			'syl_section_id': ''
 		});
+		this.subCountArray = [];
+		this.remarkArray = [];
+		this.createdByArray = [];
+		this.periodCompletionArray = [];
+		this.finalDivFlag = true;
+		this.headerDivFlag = false;
 		const sectionParam: any = {};
 		sectionParam.class_id = this.progressReportForm.value.syl_class_id;
 		this.smartService.getSectionsByClass(sectionParam)
@@ -562,7 +568,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 		this.totalAvailable = 0;
 		this.totalCompletion = 0;
 		this.totalAvailed = 0;
-		this.headerDivFlag = true;
+		this.headerDivFlag = true; 
 		this.finalDivFlag = true;
 		this.subCountArray = [];
 		this.remarkArray = [];

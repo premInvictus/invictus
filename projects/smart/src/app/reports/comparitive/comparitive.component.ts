@@ -150,6 +150,9 @@ export class ComparitiveComponent implements OnInit {
 			'syl_section_id': '',
 			'syl_sub_id': ''
 		});
+		this.finalSpannedArray = [];
+		this.finalDivFlag = true;
+		this.headerDivFlag = false;
 		const sectionParam: any = {};
 		sectionParam.class_id = this.comparitiveForm.value.syl_class_id;
 		this.syllabusService.getSectionsByClass(sectionParam)
@@ -677,7 +680,6 @@ export class ComparitiveComponent implements OnInit {
 									this.dataArr.push(dety);
 								}
 							}
-							console.log('spanned', this.finalSpannedArray);
 						}
 						this.deviationSum = (this.teachingSum + this.testSum + this.revisionSum) - (this.cwteachingSum + this.cwtestSum + this.cwrevisionSum);
 					} else {

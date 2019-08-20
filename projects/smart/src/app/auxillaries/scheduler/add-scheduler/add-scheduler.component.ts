@@ -17,6 +17,8 @@ export class AddSchedulerComponent implements OnInit {
 	ecArray: any[] = [];
 	periodsArray = [];
 	periodsLabel = ['', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
+	minDate = new Date();
+	maxDate = new Date();
 	constructor(
 		public dialogRef: MatDialogRef<AddSchedulerComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -49,6 +51,7 @@ export class AddSchedulerComponent implements OnInit {
 		this.getSchedulerEventCategory();
 		this.getClass();
 		this.getMaxPeriod();
+		this.getSessionWithMonth();
 		if (this.data && this.data.schedulerDetails) {
 			this.setSchedulerform(this.data.schedulerDetails);
 		}
@@ -72,6 +75,20 @@ export class AddSchedulerComponent implements OnInit {
 				for (let i = 1; i <= Number(result.data.no_of_period); i++) {
 					this.periodsArray.push(i);
 				}
+			}
+		});
+	}
+	getSessionWithMonth() {
+		this.smartService.getSessionWithMonth({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const data = result.data;
+				const sessionYear = data.ses_name.split('-');
+				const ssd = sessionYear[0] + '-' + data.si_session_start_month + '-01';
+				const sed = sessionYear[1] + '-' + data.si_session_end_month + '-01';
+				console.log(ssd);
+				console.log(sed);
+				this.minDate = new Date(ssd);
+				this.maxDate = new Date(sed);
 			}
 		});
 	}
@@ -114,7 +131,7 @@ export class AddSchedulerComponent implements OnInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.smartService.getClass({}).subscribe((result: any) => {
+		this.smartService.getClass({class_status: '1'}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			} else {

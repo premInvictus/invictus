@@ -149,6 +149,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		this.param.text = 'Delete';
 		this.deleteModal.openModal(this.param);
 	}
+
 	// get class list
 	getClass(that) {
 		const classParam: any = {};
@@ -193,7 +194,14 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
-
+	getActiveClass(that) {
+		this.classArray = [];
+		this.smartService.getClass({class_status: '1'}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.classArray = result.data;
+			}
+		});
+	}
 	getSection(that) {
 		that.secArray = [];
 		that.CONFIG_ELEMENT_DATA = [];
@@ -332,7 +340,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 
 	getClassSectionSubject(that) {
-		that.getClass(that);
+		that.getActiveClass(that);
 		that.getSection(that);
 		that.getSubject(that);
 		that.CONFIG_ELEMENT_DATA = [];
@@ -508,7 +516,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		that.detailArray = [];
-		that.getClass(that);
+		that.getActiveClass(that);
 		that.smartService.getDetailsCdpRelation()
 			.subscribe(
 				(result: any) => {
@@ -983,23 +991,19 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		const value = this.configValue;
 		if (value === '5') {
 			// console.log('this.formGroupArray[value - 1].formGroup', this.formGroupArray[value - 1].formGroup);
-			if (!this.formGroupArray[value - 1].formGroup.value.st_topic_id) {
-				this.commonService.showSuccessErrorMessage('Please Choose Topic to Download Sample SubTopic Excel', 'error');
-			} else {
+			const inputJson = {
+				topic_id: this.formGroupArray[value - 1].formGroup.value.st_topic_id
+			};
+			this.smartService.downloadSubTopicExcel(inputJson)
+			.subscribe(
+				(excel_r: any) => {
+					if (excel_r && excel_r.status === 'ok') {
+						const length = excel_r.data.split('/').length;
+						saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+						this.resetForm(this.configValue);
+					}
+				});
 
-				const inputJson = {
-					topic_id: this.formGroupArray[value - 1].formGroup.value.st_topic_id
-				};
-				this.smartService.downloadSubTopicExcel(inputJson)
-					.subscribe(
-						(excel_r: any) => {
-							if (excel_r && excel_r.status === 'ok') {
-								const length = excel_r.data.split('/').length;
-								saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
-								this.resetForm(this.configValue);
-							}
-						});
-			}
 		}
 	}
 
@@ -1057,7 +1061,15 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				this.commonService.showSuccessErrorMessage('Execel is blank. Please Choose another excel.', 'error');
 				return false;
 			}
-			const inputJson = { 'subtopic_data': this.XlslArray };
+			for (let i = 0; i < this.XlslArray.length; i++) {
+				const topic_id = this.XlslArray[i].TOPIC_ID ? this.XlslArray[i].TOPIC_ID.split('-')[0] : '0';
+				const subtopic_name = this.XlslArray[i].SUBTOPIC_NAME ? this.XlslArray[i].SUBTOPIC_NAME : '';
+				this.finalXlsTopicArray.push({
+					TOPIC_ID: topic_id,
+					SUBTOPIC_NAME: subtopic_name
+				});
+			}
+			const inputJson = { 'subtopic_data': this.finalXlsTopicArray };
 			this.smartService.uploadSubTopicExcel(inputJson)
 				.subscribe(
 					(result: any) => {

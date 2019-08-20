@@ -106,6 +106,7 @@ export class MonthlyComponent implements OnInit, OnChanges {
 	}
 	getScheduler() {
 		this.schedulerArray = [];
+		this.ecArray = [];
 		this.smartService.getScheduler({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.schedulerArray = result.data;

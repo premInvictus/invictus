@@ -79,6 +79,7 @@ export class FeeLedgerReportComponent implements OnInit {
 
 	};
 	@Input() userName: any = '';
+	totalRow: any;
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
@@ -141,6 +142,15 @@ export class FeeLedgerReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
@@ -183,7 +193,7 @@ export class FeeLedgerReportComponent implements OnInit {
 			enableColumnReorder: true,
 			createFooterRow: true,
 			showFooterRow: true,
-			footerRowHeight: 21,
+			footerRowHeight: 35,
 			enableExcelCopyBuffer: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
@@ -261,6 +271,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				},
 				onColumnsChanged: (e, args) => {
 					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
 				},
 			},
 			draggableGrouping: {
@@ -271,6 +282,9 @@ export class FeeLedgerReportComponent implements OnInit {
 					this.groupColumns = [];
 					this.groupColumns = args.groupColumns;
 					this.onGroupChanged(args && args.groupColumns);
+					setTimeout(() => {
+						this.updateTotalRow(this.angularGrid.slickGrid);
+					}, 100);
 				},
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
@@ -641,6 +655,7 @@ export class FeeLedgerReportComponent implements OnInit {
 					}
 					index++;
 				}
+				this.totalRow = {};
 				const obj3: any = {};
 				obj3['id'] = 'footer';
 				obj3['stu_admission_no'] = 'Grand Total';
@@ -651,8 +666,10 @@ export class FeeLedgerReportComponent implements OnInit {
 				obj3['flgr_created_date'] = '';
 				obj3['flgr_fp_months'] = '';
 				obj3['inv_due_date'] = '';
-				obj3['flgr_adj_amount'] = this.dataset.map(t => t['flgr_adj_amount']).reduce((acc, val) => acc + val, 0);
-				obj3['inv_fine_amount'] = this.dataset.map(t => t['inv_fine_amount']).reduce((acc, val) => acc + val, 0);
+				obj3['flgr_adj_amount'] =
+					new DecimalPipe('en-in').transform(this.dataset.map(t => t['flgr_adj_amount']).reduce((acc, val) => acc + val, 0));
+				obj3['inv_fine_amount'] =
+					new DecimalPipe('en-in').transform(this.dataset.map(t => t['inv_fine_amount']).reduce((acc, val) => acc + val, 0));
 				obj3['rpt_receipt_date'] = '';
 				obj3['rpt_receipt_no'] = '';
 				obj3['pay_name'] = '';
@@ -660,12 +677,13 @@ export class FeeLedgerReportComponent implements OnInit {
 				obj3['stu_class_name'] = '';
 				obj3['flgr_particulars'] = '';
 				obj3['flgr_inv_id'] = '';
-				obj3['flgr_amount'] = this.dataset.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0);
-				obj3['flgr_concession'] = this.dataset.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0);
-				obj3['flgr_receipt'] = this.dataset.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0);
+				obj3['flgr_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0));
+				obj3['flgr_concession'] =
+					new DecimalPipe('en-in').transform(this.dataset.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0));
+				obj3['flgr_receipt'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0));
 				obj3['receipt_id'] = '';
-				obj3['flgr_balance'] = this.dataset.map(t => t['flgr_balance']).reduce((acc, val) => acc + val, 0);
-				this.dataset.push(obj3);
+				obj3['flgr_balance'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['flgr_balance']).reduce((acc, val) => acc + val, 0));
+				this.totalRow = obj3;
 				this.aggregatearray.push(new Aggregators.Sum('flgr_amount'));
 				this.aggregatearray.push(new Aggregators.Sum('flgr_concession'));
 				this.aggregatearray.push(new Aggregators.Sum('flgr_receipt'));
@@ -707,10 +725,12 @@ export class FeeLedgerReportComponent implements OnInit {
 
 	collapseAllGroups() {
 		this.dataviewObj.collapseAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 
 	expandAllGroups() {
 		this.dataviewObj.expandAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
@@ -1170,8 +1190,8 @@ export class FeeLedgerReportComponent implements OnInit {
 		obj3['flgr_created_date'] = '';
 		obj3['flgr_fp_months'] = '';
 		obj3['inv_due_date'] = '';
-		obj3['flgr_adj_amount'] = (this.dataset.map(t => t['flgr_adj_amount']).reduce((acc, val) => acc + val, 0)) / 2;
-		obj3['inv_fine_amount'] = (this.dataset.map(t => t['inv_fine_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['flgr_adj_amount'] = (this.dataset.map(t => t['flgr_adj_amount']).reduce((acc, val) => acc + val, 0));
+		obj3['inv_fine_amount'] = (this.dataset.map(t => t['inv_fine_amount']).reduce((acc, val) => acc + val, 0));
 		obj3['rpt_receipt_date'] = '';
 		obj3['rpt_receipt_no'] = '';
 		obj3['pay_name'] = '';
@@ -1179,11 +1199,11 @@ export class FeeLedgerReportComponent implements OnInit {
 		obj3['stu_class_name'] = '';
 		obj3['flgr_particulars'] = '';
 		obj3['flgr_inv_id'] = '';
-		obj3['flgr_amount'] = (this.dataset.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0)) / 2;
-		obj3['flgr_concession'] = (this.dataset.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0)) / 2;
-		obj3['flgr_receipt'] = (this.dataset.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['flgr_amount'] = (this.dataset.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0));
+		obj3['flgr_concession'] = (this.dataset.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0));
+		obj3['flgr_receipt'] = (this.dataset.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0));
 		obj3['receipt_id'] = '';
-		obj3['flgr_balance'] = (this.dataset.map(t => t['flgr_balance']).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['flgr_balance'] = (this.dataset.map(t => t['flgr_balance']).reduce((acc, val) => acc + val, 0));
 		for (const itemj of this.columnDefinitions) {
 			Object.keys(obj3).forEach((key: any) => {
 				if (itemj.id === key) {
@@ -1315,6 +1335,13 @@ export class FeeLedgerReportComponent implements OnInit {
 			}
 		});
 	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
+		}
+	}
 	exportToExcel(json: any[], excelFileName: string) {
 		let reportType: any = '';
 		const columns: any[] = [];
@@ -1347,13 +1374,11 @@ export class FeeLedgerReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
-						if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
-							|| item2.id === 'rpt_receipt_date') {
-							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
-						} else {
-							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
-						}
+					if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
+						|| item2.id === 'rpt_receipt_date') {
+						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
+					} else {
+						obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 					}
 				}
 				worksheet.addRow(obj);
@@ -1522,13 +1547,11 @@ export class FeeLedgerReportComponent implements OnInit {
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
 						for (const item2 of this.columnDefinitions) {
-							if (Number(key) < this.dataset.length - 1) {
-								if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
-									|| item2.id === 'rpt_receipt_date') {
-									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
-								} else {
-									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
-								}
+							if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
+								|| item2.id === 'rpt_receipt_date') {
+								obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
+							} else {
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 							}
 						}
 						worksheet.addRow(obj);
@@ -1620,8 +1643,8 @@ export class FeeLedgerReportComponent implements OnInit {
 		obj3['flgr_created_date'] = '';
 		obj3['flgr_fp_months'] = '';
 		obj3['inv_due_date'] = '';
-		obj3['flgr_adj_amount'] = (this.dataset.map(t => t['flgr_adj_amount']).reduce((acc, val) => acc + val, 0)) / 2;
-		obj3['inv_fine_amount'] = (this.dataset.map(t => t['inv_fine_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['flgr_adj_amount'] = (this.dataset.map(t => t['flgr_adj_amount']).reduce((acc, val) => acc + val, 0));
+		obj3['inv_fine_amount'] = (this.dataset.map(t => t['inv_fine_amount']).reduce((acc, val) => acc + val, 0));
 		obj3['rpt_receipt_date'] = '';
 		obj3['rpt_receipt_no'] = '';
 		obj3['pay_name'] = '';
@@ -1629,11 +1652,11 @@ export class FeeLedgerReportComponent implements OnInit {
 		obj3['stu_class_name'] = '';
 		obj3['flgr_particulars'] = '';
 		obj3['flgr_inv_id'] = '';
-		obj3['flgr_amount'] = (this.dataset.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0)) / 2;
-		obj3['flgr_concession'] = (this.dataset.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0)) / 2;
-		obj3['flgr_receipt'] = (this.dataset.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['flgr_amount'] = (this.dataset.map(t => t['flgr_amount']).reduce((acc, val) => acc + val, 0));
+		obj3['flgr_concession'] = (this.dataset.map(t => t['flgr_concession']).reduce((acc, val) => acc + val, 0));
+		obj3['flgr_receipt'] = (this.dataset.map(t => t['flgr_receipt']).reduce((acc, val) => acc + val, 0));
 		obj3['receipt_id'] = '';
-		obj3['flgr_balance'] = (this.dataset.map(t => t['flgr_balance']).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['flgr_balance'] = (this.dataset.map(t => t['flgr_balance']).reduce((acc, val) => acc + val, 0));
 		worksheet.addRow(obj3);
 		worksheet.eachRow((row, rowNum) => {
 			if (rowNum === worksheet._rows.length) {
@@ -1796,7 +1819,7 @@ export class FeeLedgerReportComponent implements OnInit {
 								|| item2.id === 'rpt_receipt_date') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
-								obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
 							}
 						}
 						worksheet.addRow(obj);

@@ -89,7 +89,7 @@
             <div class="row margin-top-0  text-right">
                 <div class="col-12">                    
                     <table class="table table-borderd table-stripped custom-table" id="report_table">
-                        <thead class="table-skill__head text-center">
+                        <thead class="table-skill__head text-center" *ngIf="!finalDivFlag">
                             <tr class="custom-tr">
                                 <th class="custom-th" rowspan="2">Topic</th>
                                 <th class="custom-th" rowspan="2">SubTopic</th>
@@ -171,7 +171,7 @@
                                     </ng-container>
                                 </ng-container>
                             </ng-container>
-                            <tr class="custom-tr">
+                            <tr class="custom-tr" *ngIf="!finalDivFlag">
                                 <td class="custom-td">
                                     Grand Total
                                 </td>
@@ -218,9 +218,6 @@
                                     <br>
                                     <br>
                                     <br>
-                                    <span class="font-size-20 font-bold font-color-brown">
-                                        No Data Available
-                                    </span>
                                     <br><span class="font-size-20 font-light font-color-brown">
                                         Please select Class and Subject
                                     </span>

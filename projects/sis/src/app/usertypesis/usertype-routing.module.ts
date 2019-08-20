@@ -28,6 +28,8 @@ const routes: Routes = [
 			loadChildren: '../standard-reports/standard-reports.module#StandardReportsModule'},
 			{ path: 'dynamicreports',
 			loadChildren: '../dynamic-reports/dynamic-reports.module#DynamicReportsModule'},
+			{ path: 'reports',
+			loadChildren: 'projects/sis/src/app/reports/reports.module#ReportsModule'},
 			{ path: 'setup',
 			loadChildren: '../setup/setup.module#SetupModule'},
 			{ path: 'manage-users',
