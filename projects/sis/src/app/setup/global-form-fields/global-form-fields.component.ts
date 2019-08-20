@@ -33,6 +33,14 @@ export class GlobalFormFieldsComponent implements OnInit {
 	{
 		tmap_usts_id: '2',
 		tmap_usts_type: 'Certificate'
+	},
+	{
+		tmap_usts_id: '3',
+		tmap_usts_type: 'Admit Card'
+	},
+	{
+		tmap_usts_id: '4',
+		tmap_usts_type: 'Acknowledgement'
 	}];
 	type_id: any;
 	constructor(private fbuild: FormBuilder,
