@@ -679,16 +679,6 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 							blankTempObj[item2.id] = '';
 						}
 					}
-					/* if (this.studentStrengthReportForm.value.reviewReport === '0') {
-						blankTempObj['class_name'] = this.getLevelFooter(groupItem.level);
-						blankTempObj['student_strength'] = groupItem.rows.length;
-					} else if (this.studentStrengthReportForm.value.reviewReport === '1') {
-						blankTempObj['class_name'] = this.getLevelFooter(groupItem.level);
-						blankTempObj['admission_no'] = groupItem.rows.length;
-						blankTempObj['student_name'] = '';
-						blankTempObj['gender'] = '';
-						blankTempObj['process_type'] = '';
-					} */
 					worksheet.addRow(blankTempObj);
 					this.notFormatedCellArray.push(worksheet._rows.length);
 					// style row having total
@@ -1115,27 +1105,12 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		// console.log('srnTotalsFormatter totals ', totals);
-		// console.log('srnTotalsFormatter columnDef ', columnDef);
 		if (totals.group.level === 0) {
 			return '<b class="total-footer-report">Total</b>';
 		}
-		if (totals.group.level === 1) {
-			return '<b class="total-footer-report">Sub Total</b>';
+		if (totals.group.level > 0) {
+			return '<b class="total-footer-report">Sub Total level ' + totals.group.level + ' </b>';
 		}
-		if (totals.group.level === 2) {
-			return '<b class="total-footer-report">Sub Total</b>';
-		}
-		/* if (!totals.group.groups && totals.group.level === 0) {
-			return '<b class="total-footer-report">Total</b>';
-		}
-		if (totals.group.groups) {
-			if (totals.group.level === 0) {
-				return '<b class="total-footer-report">Total</b>';
-			}
-		} else {
-			return '<b class="total-footer-report">Sub Total</b>';
-		} */
 	}
 	sumTotalsFormatter(totals, columnDef) {
 		// console.log('totals ', totals);
