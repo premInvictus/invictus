@@ -852,7 +852,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		return paramArr;
 	}
 	getReportHeader() {
-		return 'Students Alumini List';
+		return 'Students Details Report';
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();

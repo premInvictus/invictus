@@ -1,144 +1,5 @@
-<!-- <div class="fee-container-box__grey">
-    <div class="container-box__white card-height-840-lp">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h4 class="text-uppercase"><b>Withdrawal Review Report</b></h4>
-            </div>
-        </div>
-        <br>
-        <form [formGroup]="admissionReportForm" autocomplete="off">
-            <div class="row">
-                <div class="col-3" *ngIf="showDate">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Date</mat-label>
-                        <input matInput [matDatepicker]="cpicker" placeholder="Date" formControlName="cdate">
-                        <mat-datepicker-toggle matSuffix [for]="cpicker" (dateInput)="cpicker('input', $event)">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #cpicker></mat-datepicker>
-                    </mat-form-field>
-                </div>
-                <div class="col-3" *ngIf="showDateRange">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>From</mat-label>
-                        <input matInput [matDatepicker]="fpicker" placeholder="From" formControlName="fdate">
-                        <mat-datepicker-toggle matSuffix [for]="fpicker" (dateInput)="fpicker('input', $event)">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #fpicker></mat-datepicker>
-                    </mat-form-field>
-                </div>
-                <div class="col-3" *ngIf="showDateRange">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>To</mat-label>
-                        <input matInput [matDatepicker]="tpicker" placeholder="To" formControlName="tdate">
-                        <mat-datepicker-toggle matSuffix [for]="tpicker" (dateInput)="tpicker('input', $event)">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #tpicker></mat-datepicker>
-                    </mat-form-field>
-                </div>
-                <div class="col-3">
-                    <button class="btn-success margin-top-12" mat-raised-button (click)="submit()">Submit</button>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
-                </div>
-            </div>
-        </form>
-        <br>
-        <div class="row">
-            <div class="col-12">
-                <mat-form-field class="form-feild" *ngIf="REPORT_PROCESS_WISE_ELEMENT_DATA.length > 0">
-                    <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
-                </mat-form-field>
-                <div class="row" id="withdrawalReportPrint">
-                    <div class="col-12 remove-col-padding" [hidden]="!(REPORT_PROCESS_WISE_ELEMENT_DATA.length>0)"
-                        #TABLE>
-                        <table mat-table #table [dataSource]="userDataSource" matSort
-                            class="table-100 mat-elevation-z1">
-                            <ng-container matColumnDef="counter">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    S.No.
-                                </th>
-                                <td mat-cell *matCellDef="let element">
-                                    <div [innerHtml]="element.counter"></div>
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="class_name">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    Class Name
-                                </th>
-                                <td mat-cell *matCellDef="let element">
-                                    <span *ngIf="element.class_name">{{ element.class_name }}</span>
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="Boys">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    Boys
-                                </th>
-                                <td mat-cell *matCellDef="let element">
-                                    <span *ngIf="element.Boys">{{ element.Boys }}</span>
-                                </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="Girls">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    Girls
-                                </th>
-                                <td mat-cell *matCellDef="let element">
-                                    <span *ngIf="element.Girls">{{ element.Girls }}</span>
-                                </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="Other">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    Other
-                                </th>
-                                <td mat-cell *matCellDef="let element">
-                                    <span *ngIf="element.Other">{{ element.Other }}</span>
-                                </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="Total">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    Total
-                                </th>
-                                <td mat-cell *matCellDef="let element">
-                                    <div *ngIf="element.Total" [innerHTML]="element.Total"></div>
-                                </td>
-                            </ng-container>
-                            <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
-                        </table>
-                    </div>
-                    <div class="col-12" *ngIf="REPORT_PROCESS_WISE_ELEMENT_DATA.length == 0">
-                        <span style="text-align: center;"> No Record Found</span>
-                    </div>
-                </div>
-                <br>
-                <div class="row" *ngIf="REPORT_PROCESS_WISE_ELEMENT_DATA.length > 0" class="tab-margin-button-bottom">
-                    <div class="col-12">
-                        <button mat-raised-button class="btn-neutral" (click)="print()">
-                            <mat-icon class="material-icon">local_printshop</mat-icon>&nbsp;&nbsp;Print
-                        </button>
-                        <button mat-raised-button class="btn-success btn-spacer" (click)="exportAsExcel()">
-                            <mat-icon class="material-icon">publish</mat-icon>&nbsp;&nbsp;Export
-                        </button>
-                    </div>
-                </div>
-                <br>
-                <br>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <form [formGroup]="admissionReportForm" autocomplete="off">
     <div class="row">
-            <div class="col-2  margin-top-10">
-                    <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
-                </div>
         <div class="col-2" *ngIf="showDate">
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Date</mat-label>
@@ -165,6 +26,9 @@
                 </mat-datepicker-toggle>
                 <mat-datepicker #tpicker></mat-datepicker>
             </mat-form-field>
+        </div>
+        <div class="col-2  margin-top-10">
+            <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
         </div>
         <div class="col-2">
             <button class="btn-success margin-top-12" mat-raised-button (click)="submit()">Submit</button>
