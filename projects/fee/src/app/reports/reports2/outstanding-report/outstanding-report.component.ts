@@ -420,7 +420,7 @@ export class OutstandingReportComponent implements OnInit {
 										},
 									},
 									{
-										id: 'inv_opening_balance', name: 'Opening Balance', field: 'inv_opening_balance',
+										id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
 										filterable: true,
 										cssClass: 'amount-report-fee',
 										filterSearchType: FieldType.number,
@@ -707,7 +707,7 @@ export class OutstandingReportComponent implements OnInit {
 										cssClass: 'receipt_collection_report'
 									},
 									{
-										id: 'inv_opening_balance', name: 'Opening Balance', field: 'inv_opening_balance',
+										id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
 										filterable: true,
 										cssClass: 'amount-report-fee',
 										filterSearchType: FieldType.number,
