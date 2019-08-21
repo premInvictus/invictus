@@ -75,6 +75,7 @@ export class SkillAndAwardsReportComponent implements OnInit, AfterViewInit {
 		26: 'Z'
 	};
 	notFormatedCellArray: any[] = [];
+	filteredAs: any = {};
 
 	showDate = true;
 	showDateRange = false;
@@ -849,16 +850,11 @@ export class SkillAndAwardsReportComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getParamValue() {
-		const paramArr: any[] = [];
-		if (this.showDateRange) {
-			paramArr.push(
-				this.notif.dateConvertion(this.skillAwardsReportForm.value.fdate, 'd-MMM-y') + ' - ' +
-				this.notif.dateConvertion(this.skillAwardsReportForm.value.tdate, 'd-MMM-y'));
-		} else {
-			paramArr.push(
-				this.notif.dateConvertion(this.skillAwardsReportForm.value.cdate, 'd-MMM-y'));
-		}
-		return paramArr;
+		const filterArr = [];
+		Object.keys(this.filteredAs).forEach(key => {
+			filterArr.push(this.filteredAs[key]);
+		});
+		return filterArr;
 	}
 	getReportHeader() {
 		return 'Skills & Award Report';
@@ -943,9 +939,20 @@ export class SkillAndAwardsReportComponent implements OnInit, AfterViewInit {
 	reset() {
 		this.skillAwardsReportForm.reset();
 		this.resetGrid();
+		this.filteredAs = {};
 	}
+	filtered(event) {
+		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + event.source.selected.viewValue;
+		console.log(this.filteredAs);
 
+	}
 	submit() {
+		console.log(this.skillAwardsReportForm);
+		if	(this.skillAwardsReportForm.dirty) {
+			Object.keys(this.skillAwardsReportForm.controls).forEach(ele => {
+				console.log(ele);
+			});
+		}
 		this.resetGrid();
 		const inputJson = {
 			skill_id: this.skillAwardsReportForm.value.skill_id,
