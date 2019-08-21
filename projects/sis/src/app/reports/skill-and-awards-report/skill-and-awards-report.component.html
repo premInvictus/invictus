@@ -181,7 +181,7 @@
         <div class="col-2 ">
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Skills</mat-label>
-                <mat-select placeholder="Skills" formControlName="skill_id">
+                <mat-select placeholder="Skills" formControlName="skill_id" (selectionChange)="filtered($event)">
                     <mat-option *ngFor="let item of activityArray" [value]="item.act_id">{{item.act_name}}
                     </mat-option>
                 </mat-select>
@@ -190,7 +190,7 @@
         <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Level of Interest</mat-label>
-                <mat-select placeholder="Level of Interest" formControlName="loe_id">
+                <mat-select placeholder="Level of Interest" formControlName="loe_id" (selectionChange)="filtered($event)">
                     <mat-option *ngFor="let item of levelOfIntrestArray" [value]="item.loi_id">
                         {{item.loi_name}}</mat-option>
                 </mat-select>
@@ -199,7 +199,7 @@
         <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Awards</mat-label>
-                <mat-select placeholder="Awards" formControlName="award_id">
+                <mat-select placeholder="Awards" formControlName="award_id" (selectionChange)="filtered($event)">
                     <mat-option *ngFor="let item of activityArray" [value]="item.act_id">{{item.act_name}}
                     </mat-option>
                 </mat-select>
@@ -208,7 +208,7 @@
         <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Level</mat-label>
-                <mat-select placeholder="Level" formControlName="award_event_id">
+                <mat-select placeholder="Level" formControlName="award_event_id" (selectionChange)="filtered($event)">
                     <mat-option *ngFor="let item of eventArray" [value]="item.el_id">{{item.el_name}}
                     </mat-option>
                 </mat-select>
