@@ -143,9 +143,6 @@
 
 <form [formGroup]="birthdayReportForm" autocomplete="off">
     <div class="row">
-        <div class="col-2 margin-top-10">
-            <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
-        </div>
         <div class="col-2" *ngIf="showDate">
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Date</mat-label>
@@ -174,6 +171,9 @@
                 </mat-datepicker-toggle>
                 <mat-datepicker #tpicker></mat-datepicker>
             </mat-form-field>
+        </div>
+        <div class="col-2 margin-top-10">
+            <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
         </div>
         <div class="col-2">
             <button class="btn-success margin-top-12" mat-raised-button (click)="submit()">Submit</button>
