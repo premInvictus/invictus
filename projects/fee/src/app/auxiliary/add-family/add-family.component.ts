@@ -62,7 +62,18 @@ export class AddFamilyComponent implements OnInit {
 				inputJson['au_full_name'] = this.addFamilyForm.value.stu_name;
 			}
 		}
-		this.getStudentInformation(inputJson);
+
+		this.checkForChildExists(inputJson);
+	}
+
+	checkForChildExists(inputJson) {
+		this.feeService.checkChildExists(inputJson).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.getStudentInformation(inputJson);
+			} else {
+				this.common.showSuccessErrorMessage('This Student Already Added in a Family, Please Choose Another One !', 'error');
+			}
+		});
 	}
 
 	reset(event) {

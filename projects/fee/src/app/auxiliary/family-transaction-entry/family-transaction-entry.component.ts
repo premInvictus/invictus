@@ -67,13 +67,7 @@ export class FamilyTransactionEntryComponent implements OnInit {
 		this.selectedMode = '';
 		const invDet: any = this.studentRouteMoveStoreService.getInvoiceId();
 
-		const familyData = this.common.getSelectedChildData();
-		if (familyData) {
-			console.log('family number', familyData);
-			this.getFamilyOutstandingDetail(familyData);
-		} else {
-			this.router.navigate(['../familywise-fee-receipt'], { relativeTo: this.route });
-		}
+		
 
 		// if (!(invDet.inv_id)) {
 		// 	// this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
@@ -135,6 +129,14 @@ export class FamilyTransactionEntryComponent implements OnInit {
 			'ftr_deposit_bnk_id': '',
 			'saveAndPrint': ''
 		});
+
+		const familyData = this.common.getSelectedChildData();
+		if (familyData) {
+			console.log('family number', familyData);
+			this.getFamilyOutstandingDetail(familyData);
+		} else {
+			this.router.navigate(['../familywise-fee-receipt'], { relativeTo: this.route });
+		}
 	}
 
 	getFamilyOutstandingDetail(familyData) {
@@ -153,11 +155,12 @@ export class FamilyTransactionEntryComponent implements OnInit {
 
 		this.familyOutstandingArr = familyData;
 		this.childDataArr = familyData.childData;
-		if (this.familyOutstandingArr) {
-			this.feeTransactionForm.patchValue({
-				'ftr_amount': this.familyOutstandingArr['family_total_outstanding_amt'],
-			});
-		}
+		// if (this.familyOutstandingArr) {
+		// 	this.feeTransactionForm.patchValue({
+		// 		'ftr_amount': this.familyOutstandingArr['family_total_outstanding_amt'],
+		// 	});
+		// }
+		this.getSelectedMode({value: '1'});
 	}
 
 	// checkEmit(process_type) {
@@ -473,11 +476,13 @@ export class FamilyTransactionEntryComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.messsage, 'success');
 					this.reset();
-					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					// this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					this.router.navigate(['../familywise-fee-receipt'], { relativeTo: this.route });
 				} else {
 					this.common.showSuccessErrorMessage(result.messsage, 'error');
 					this.reset();
-					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					// this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					this.router.navigate(['../familywise-fee-receipt'], { relativeTo: this.route });
 				}
 			});
 		}

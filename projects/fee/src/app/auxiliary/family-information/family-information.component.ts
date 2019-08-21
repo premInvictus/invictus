@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class FamilyInformationComponent implements OnInit {
 	familyOutstandingArr: any[] = [];
 	childDataArr: any[] = [];
+	netOutstanding = 0;
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -32,6 +33,7 @@ export class FamilyInformationComponent implements OnInit {
 		this.feeService.getFamilyOutstandingDetail({ fam_entry_number: familyNumber }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.familyOutstandingArr = result.data;
+				this.netOutstanding = result.data['family_total_outstanding_amt'];
 				for (let i = 0; i < result.data.childData.length; i++) {
 					if (result.data.childData[i] && result.data.childData[i]['invoice_data']) {
 						for (let j = 0; j < result.data.childData[i]['invoice_data'].length - 1; j++) {

@@ -55,7 +55,7 @@
           <div class="row margin-top-15">
             <div class="col-12 text-center">
               <span class="font-size-16 font-bold">Net outstanding</span><br>
-              <span class="font-size-14">{{familyOutstandingArr.family_total_outstanding_amt | number}}</span><br>
+              <span class="font-size-14">{{netOutstanding | number}}</span><br>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@
           <ng-container *ngFor="let titem of childDataArr let i = index;">
             <br>
             <mat-accordion>
-              <mat-expansion-panel [expanded]="i=== 0">
+              <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header class="family-panel-header">
                   <mat-panel-title>
                     <span class="font-size-14 font-white  ">Admission No. :

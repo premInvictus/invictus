@@ -29,13 +29,14 @@ export class MakePaymentComponent implements OnInit {
 		if (this.paytmResult) {
 			for (let i = 0; i < this.paytmResult.length; i++) {
 				if (this.paytmResult[i]['name'] === 'TXN_AMOUNT') {
-					this.outStandingAmt = 	this.paytmResult[i]['value'];
+					this.outStandingAmt = this.paytmResult[i]['value'];
 				}
 			}
 		}
 	}
 
 	cancelPay() {
+		localStorage.setItem('paymentWindowStatus', '0');
 		window.parent.close();
 	}
 }

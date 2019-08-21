@@ -55,14 +55,14 @@ export class FamilywiseFeeRecieptComponent implements OnInit {
 
 	deleteFamily(value) {
 		console.log('in');
-		// this.feeService.deleteFamily(value).subscribe((result: any) => {
-		// 	if (result && result.status === 'ok') {
-		// 		this.common.showSuccessErrorMessage(result.message, 'success');
-		// 		this.getFamilyWiseFeeReceipt();
-		// 	} else {
-		// 		this.common.showSuccessErrorMessage(result.message, 'error');
-		// 	}
-		// });
+		this.feeService.deleteFamily(value).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.common.showSuccessErrorMessage(result.message, 'success');
+				this.getFamilyWiseFeeReceipt();
+			} else {
+				this.common.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
 	}
 
 	setDataForPrint(event, item) {
