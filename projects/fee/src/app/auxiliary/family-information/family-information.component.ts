@@ -53,18 +53,19 @@ export class FamilyInformationComponent implements OnInit {
 		const selectedChildInvoiceArr = [];
 		const selectedChildDataArr = [];
 		const finalArr = {
-			'epd_contact_no' : this.familyOutstandingArr['epd_contact_no'],
-			'epd_id' : this.familyOutstandingArr['epd_id'],
-			'epd_parent_honorific' : this.familyOutstandingArr['epd_parent_honorific'],
-			'epd_parent_name' : this.familyOutstandingArr['epd_parent_name'],
-			'epd_profile_image' : this.familyOutstandingArr['epd_profile_image'],
-			'epd_status' : this.familyOutstandingArr['epd_status'],
-			'fam_created_date' : this.familyOutstandingArr['fam_created_date'],
-			'fam_entry_number' : this.familyOutstandingArr['fam_entry_number'],
-			'fam_family_name' : this.familyOutstandingArr['fam_family_name'],
-			'family_total_outstanding_amt' : this.familyOutstandingArr['family_total_outstanding_amt']
+			'epd_contact_no': this.familyOutstandingArr['epd_contact_no'],
+			'epd_id': this.familyOutstandingArr['epd_id'],
+			'epd_parent_honorific': this.familyOutstandingArr['epd_parent_honorific'],
+			'epd_parent_name': this.familyOutstandingArr['epd_parent_name'],
+			'epd_profile_image': this.familyOutstandingArr['epd_profile_image'],
+			'epd_status': this.familyOutstandingArr['epd_status'],
+			'fam_created_date': this.familyOutstandingArr['fam_created_date'],
+			'fam_entry_number': this.familyOutstandingArr['fam_entry_number'],
+			'fam_family_name': this.familyOutstandingArr['fam_family_name'],
+			'family_total_outstanding_amt': this.familyOutstandingArr['family_total_outstanding_amt']
 		};
 		for (let i = 0; i < this.childDataArr.length; i++) {
+			const temp_arr = [];
 			const childData = {
 				'au_admission_no': this.childDataArr[i]['au_admission_no'],
 				'au_full_name': this.childDataArr[i]['au_full_name'],
@@ -85,19 +86,19 @@ export class FamilyInformationComponent implements OnInit {
 				'fs_name': this.childDataArr[i]['fs_name'],
 
 			};
-			if (this.childDataArr[i] && this.childDataArr[i]['invoice_data']) {
+			if (this.childDataArr[i] && this.childDataArr[i]['invoice_data'] && this.childDataArr[i]['invoice_data'].length > 1) {
 				for (let j = 0; j < this.childDataArr[i]['invoice_data'].length - 1; j++) {
 					if (this.childDataArr[i]['invoice_data'][j]['checked']) {
-						selectedChildInvoiceArr.push(this.childDataArr[i]['invoice_data'][j]);
+						temp_arr.push(this.childDataArr[i]['invoice_data'][j]);
+						selectedChildDataArr[i] = childData;
+						selectedChildDataArr[i]['invoice_data'] = temp_arr;
 					}
 				}
 			}
-
-			selectedChildDataArr[i] = childData;
-			selectedChildDataArr[i]['invoice_data'] = selectedChildInvoiceArr;
 		}
 
 		finalArr['childData'] = selectedChildDataArr;
+		console.log('finalArr', finalArr);
 		// this.common.setFamilyInformation(familyEntryNumber);
 		this.common.setSelectedChildData(finalArr);
 		this.router.navigate(['../family-transaction-entry'], { relativeTo: this.route });
@@ -108,18 +109,18 @@ export class FamilyInformationComponent implements OnInit {
 		for (let i = 0; i < this.childDataArr.length; i++) {
 			if (this.childDataArr[i] && this.childDataArr[i]['invoice_data']) {
 				for (let j = 0; j < this.childDataArr[i]['invoice_data'].length - 1; j++) {
-// tslint:disable-next-line: max-line-length
+					// tslint:disable-next-line: max-line-length
 					if (this.childDataArr[i]['invoice_data'][j]['inv_invoice_no'].toString() === checkedItem.toString()) {
 						if (this.childDataArr[i]['invoice_data'][j]['checked']) {
 							this.childDataArr[i]['invoice_data'][j]['checked'] = false;
 						} else {
 							this.childDataArr[i]['invoice_data'][j]['checked'] = true;
 						}
-						
+
 					}
-// tslint:disable-next-line: max-line-length
+					// tslint:disable-next-line: max-line-length
 					if (this.childDataArr[i]['invoice_data'][j]['inv_invoice_no'].toString() === checkedItem.toString()) {
-// tslint:disable-next-line: max-line-length
+						// tslint:disable-next-line: max-line-length
 						if (this.childDataArr[i]['invoice_data'][j]['checked']) {
 							this.childDataArr[i]['outstanding_amt'] = this.childDataArr[i]['outstanding_amt'] + Number(this.childDataArr[i]['invoice_data'][j]['flgr_balance']);
 						} else {
@@ -131,6 +132,10 @@ export class FamilyInformationComponent implements OnInit {
 				this.familyOutstandingArr['family_total_outstanding_amt'] = this.familyOutstandingArr['family_total_outstanding_amt'] + this.childDataArr[i]['outstanding_amt'];
 			}
 		}
+	}
+
+	moveToFamilyReceipt() {
+		this.router.navigate(['../familywise-fee-receipt'], { relativeTo: this.route });
 	}
 
 }

@@ -26,8 +26,8 @@
                         <mat-icon matSuffix>search</mat-icon>
                     </mat-form-field>
                 </div>
-                <div class="col-6 text-right margin-top-10">
-                    <button *ngIf="enablePrint" mat-button class="font-size-14 font-white width-140 btn-darkblue" (click)="printFamilyInvoice()">Print</button>
+                <div class="col-6 text-right margin-top-10" *ngIf="familyDetailArr.length > 0">
+                    <button mat-button class="font-size-14 font-white width-140 btn-darkblue" (click)="printFamilyInvoice()">Print</button>
                 </div>
             </div>
             <div class="row">
@@ -35,7 +35,7 @@
                     <table class="table table-borderd table-stripped custom-table">
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
-                                <th class="custom-th">Sr no.</th>
+                                <!-- <th class="custom-th">Sr no.</th> -->
                                 <th class="custom-th">Family No</th>
                                 <th class="custom-th">Primary Parent</th>
                                 <th class="custom-th">Contact No</th>
@@ -47,9 +47,9 @@
                         </thead>
                         <tbody>
                             <tr class="custom-tr" *ngFor="let item of familyDetailArr">
-                                <td class="custom-td">
+                                <!-- <td class="custom-td">
                                     <mat-checkbox (change)="setDataForPrint($event, item)"></mat-checkbox>
-                                </td>
+                                </td> -->
                                 <td class="custom-td">
                                         
                                     <span class="pointer font-bold font-skyblue font-underline">
@@ -63,12 +63,13 @@
                                         </a>
                                     </span>
                                 </td>
-                                <td class="custom-td">{{item?.epd_parent_name}}</td>
+                                <td class="custom-td text-capitalize">{{item?.epd_parent_name}}</td>
                                 <td class="custom-td">{{item?.epd_contact_no}}</td>
-                                <td class="custom-td">{{item?.au_full_name}}</td>
-                                <td class="custom-td">{{item?.class_name}}-{{item?.sec_name}}</td>
+                                <td class="custom-td text-capitalize">{{item?.au_full_name}}</td>
+                                <td *ngIf="item?.sec_name && item?.sec_name != ' '" class="custom-td text-capitalize">{{item?.class_name}}-{{item?.sec_name}}</td>
+                                <td *ngIf="!(item?.sec_name && item?.sec_name != ' ')" class="custom-td text-capitalize">{{item?.class_name}}</td>
                                 <td class="custom-td">{{item?.no_of_students}} Students</td>
-                                <td class="custom-td">{{item?.family_outstanding_amt  | number}}</td>
+                                <td class="custom-td"> &#8377; {{item?.family_outstanding_amt  | number}}</td>
                                 
                             </tr>
                             <tr *ngIf="familyDetailArr.length ==0">

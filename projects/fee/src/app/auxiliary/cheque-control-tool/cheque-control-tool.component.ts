@@ -59,6 +59,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	buildForm() {
 		this.filterForm = this.fbuild.group({
 			'inv_process_type': '',
+			'inv_process_usr_no': '',
 			'invoice_no': '',
 			'pageSize': '10',
 			'pageIndex': '0',
@@ -143,8 +144,10 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					pos++;
 				}
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
-				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
-				this.dataSource.paginator = this.paginator;
+				if (this.dataSource.paginator) {
+					this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+					this.dataSource.paginator = this.paginator;
+				}
 			}
 		});
 	}

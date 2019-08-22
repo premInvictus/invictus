@@ -32,38 +32,45 @@
                     <div class="col-7">
                         <mat-form-field appearance="outline">
                             <mat-label>Admission No</mat-label>
-                            <input #myInput matInput placeholder="Admission No" formControlName="adm_no"
-                                (keydown.enter)="$event.preventDefault()">
+                            <input class="text-capitalize" #myInput matInput placeholder="Admission No" formControlName="adm_no"
+                                (keydown.enter)="addChild($event);">
                             <mat-icon matSuffix>search</mat-icon>
                         </mat-form-field>
                         <span class="font-size-20 margin-left-15 margin-right-15">OR</span>
                         <mat-form-field class="margin-left-15 margin-right-15" appearance="outline">
                             <mat-label>Class</mat-label>
-                            <mat-select formControlName="class_id">
+                            <mat-select formControlName="class_id" (selectionChange)="getClassStudent($event)">
                                 <mat-option value="">Please Select Class</mat-option>
-                                <mat-option *ngFor="let item of classArray" value="item.class_id">{{item.class_name}}
+                                <mat-option *ngFor="let item of classArray" value="{{item.class_id}}">{{item.class_name}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field class="margin-left-15 margin-right-15" appearance="outline">
                             <mat-label>Section</mat-label>
-                            <mat-select formControlName="sec_id">
+                            <mat-select formControlName="sec_id" (selectionChange)="getClassSectionStudent($event)">
                                 <mat-option value=""> Please Select Section</mat-option>
-                                <mat-option *ngFor="let item of sectionArray" value="item.sec_id">{{item.sec_name}}
-                                </mat-option>
+                                <ng-container *ngFor="let item of sectionArray">
+                                    <mat-option *ngIf="!(item.sec_name == '' || item.sec_name == ' ')" value="{{item.sec_id}}">{{item.sec_name}}</mat-option>
+                                </ng-container>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field class="margin-left-15 margin-right-15 width-220" appearance="outline">
                             <mat-label>Student Name</mat-label>
-                            <input matInput placeholder="Student Name" formControlName="stu_name"
-                                (keydown.enter)="$event.preventDefault()">
+                            <!-- <input matInput placeholder="Student Name" formControlName="stu_name"
+                                (keydown.enter)="$event.preventDefault()"> -->
+                            <mat-select formControlName="stu_id">
+                                <mat-option value=""> Please Select Student</mat-option>
+                                <ng-container *ngFor="let item of studentData">
+                                    <mat-option  value="{{item.em_admission_no}}"><span class="text-capitalize">{{item.au_full_name}} - {{item.em_admission_no}}</span></mat-option>
+                                </ng-container>
+                            </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="col-2 text-right margin-top-10">
                         <button mat-button class="font-size-14 font-white width-140 btn-blue"
                             (click)="addChild($event)">Add Child</button>
                         <button mat-button class="font-size-14 margin-left-10 font-white width-140 btn-reset"
-                            (click)="reset()">Reset</button>
+                            (click)="reset($event)">Reset</button>
                     </div>
 
                 </div>
@@ -94,14 +101,14 @@
                                         </mat-radio-group>
                                     </td>
                                     <td class="custom-td"><a>{{item.stu_admission_no}}</a></td>
-                                    <td class="custom-td">{{item.stu_name}}</td>
-                                    <td class="custom-td">{{item.stu_class_name}}</td>
-                                    <td class="custom-td">{{item.stu_active_parent_name}}</td>
+                                    <td class="custom-td text-capitalize">{{item.stu_name}}</td>
+                                    <td class="custom-td text-capitalize">{{item.stu_class_name}}</td>
+                                    <td class="custom-td text-capitalize">{{item.stu_active_parent_name}}</td>
                                     <td class="custom-td">{{item.stu_active_parent_contact_no}}</td>
-                                    <td class="custom-td">{{item.stu_category}}</td>
-                                    <td class="custom-td">{{item.stu_fee_structure}}</td>
-                                    <td class="custom-td">{{item.stu_concession_group}}</td>
-                                    <td class="custom-td">{{item.stu_transport}}</td>
+                                    <td class="custom-td text-capitalize">{{item.stu_category}}</td>
+                                    <td class="custom-td text-capitalize">{{item.stu_fee_structure}}</td>
+                                    <td class="custom-td text-capitalize">{{item.stu_concession_group}}</td>
+                                    <td class="custom-td text-capitalize">{{item.stu_transport}}</td>
                                     <td class="custom-td">
                                         <i class="fas fa-trash-alt trash-icon" style="cursor:pointer;"
                                             (click)="deleteChild(i)"></i>
@@ -125,7 +132,7 @@
                                     class="fas fa-cloud-upload-alt"></i></label></button>
                     </div>
                 </div>
-                <div class="row margin-top-15">
+                <div class="row margin-top-15" *ngIf="declaration_doc_url">
                     <div class="col-1 margin-bottom-15">
                         <img *ngIf="checkThumbnail(declaration_doc_url)" class="btn-doc-upload-preview thumbnail-img"
                             [src]="declaration_doc_url">
@@ -144,7 +151,7 @@
                         <button *ngIf="addFamilyForm.value.fam_entry_number" mat-button
                             class="font-size-14 font-white btn-success-green" (click)="updateFamily()">Update</button>
                         <button mat-button class="font-size-14 font-white margin-left-10 btn-reset"
-                            (click)="resetAll()">Reset</button>
+                            (click)="resetAll($event)">Reset</button>
                     </div>
                 </div>
             </mat-card>

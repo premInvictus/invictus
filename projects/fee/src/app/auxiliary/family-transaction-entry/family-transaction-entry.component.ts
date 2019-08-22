@@ -23,7 +23,7 @@ export class FamilyTransactionEntryComponent implements OnInit {
 	feeLoginId: any;
 	feeTransactionForm: FormGroup;
 	invoiceArray: any[] = [];
-	familyOutstandingArr: any[] = [];
+	familyOutstandingArr: any;
 	// studentInfo: any = {};
 	invoiceTotal: any;
 	defaultsrc = '';
@@ -40,6 +40,12 @@ export class FamilyTransactionEntryComponent implements OnInit {
 	startMonth: any;
 	type: any = '';
 	feeRenderId: any = '';
+	epd_parent_name: any[];
+	epd_contact_no: any[];
+	fam_family_name: any[];
+	fam_entry_number: any[];
+	fam_created_date: any[];
+	family_total_outstanding_amt: any[];
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -64,10 +70,10 @@ export class FamilyTransactionEntryComponent implements OnInit {
 		this.getEntryModes();
 		this.getPayModes();
 		this.buildForm();
-		this.selectedMode = '';
+		this.selectedMode = '1';
 		const invDet: any = this.studentRouteMoveStoreService.getInvoiceId();
 
-		
+
 
 		// if (!(invDet.inv_id)) {
 		// 	// this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
@@ -94,22 +100,22 @@ export class FamilyTransactionEntryComponent implements OnInit {
 		// this.loginId = invDet2.login_id;
 		// this.feeLoginId = this.loginId;
 		// this.studentInfo = {};
-		this.feeTransactionForm.patchValue({
-			'ftr_emod_id': '',
-			'ftr_transaction_id': '',
-			'ftr_transaction_date': new Date(),
-			'ftr_pay_id': '1',
-			'ftr_cheque_no': '',
-			'ftr_cheque_date': '',
-			'ftr_bnk_id': '',
-			'ftr_branch': '',
-			'ftr_amount': '',
-			'ftr_remark': '',
-			'is_cheque': '',
-			'ftr_deposit_bnk_id': '',
-			'saveAndPrint': ''
-		});
-		this.selectedMode = '1';
+		// this.feeTransactionForm.patchValue({
+		// 	'ftr_emod_id': '',
+		// 	'ftr_transaction_id': '',
+		// 	'ftr_transaction_date': new Date(),
+		// 	'ftr_pay_id': '1',
+		// 	'ftr_cheque_no': '',
+		// 	'ftr_cheque_date': '',
+		// 	'ftr_bnk_id': '',
+		// 	'ftr_branch': '',
+		// 	'ftr_amount': '',
+		// 	'ftr_remark': '',
+		// 	'is_cheque': '',
+		// 	'ftr_deposit_bnk_id': '',
+		// 	'saveAndPrint': ''
+		// });
+		// this.selectedMode = '1';
 		// this.getInvoices(invDet2.inv_id);
 		// }
 	}
@@ -130,6 +136,8 @@ export class FamilyTransactionEntryComponent implements OnInit {
 			'saveAndPrint': ''
 		});
 
+		// this.selectedMode = '1';
+
 		const familyData = this.common.getSelectedChildData();
 		if (familyData) {
 			console.log('family number', familyData);
@@ -140,42 +148,19 @@ export class FamilyTransactionEntryComponent implements OnInit {
 	}
 
 	getFamilyOutstandingDetail(familyData) {
-		// this.familyOutstandingArr = [];
-		// this.childDataArr = [];
-		// this.feeService.getFamilyOutstandingDetail({ fam_entry_number: familyNumber }).subscribe((result: any) => {
-		// 	if (result && result.status === 'ok') {
-		// 		console.log('result.data', result.data);
-		// 		this.familyOutstandingArr = result.data;
-		// 		this.childDataArr = result.data.childData;
-		// 		this.feeTransactionForm.patchValue({
-		// 			'ftr_amount': this.familyOutstandingArr['family_total_outstanding_amt'],
-		// 		});
-		// 	}
-		// });
 
 		this.familyOutstandingArr = familyData;
-		this.childDataArr = familyData.childData;
-		// if (this.familyOutstandingArr) {
-		// 	this.feeTransactionForm.patchValue({
-		// 		'ftr_amount': this.familyOutstandingArr['family_total_outstanding_amt'],
-		// 	});
-		// }
-		this.getSelectedMode({value: '1'});
+		for (let i = 0; i < familyData.childData.length; i++) {
+			if (familyData.childData[i]) {
+				this.childDataArr.push(familyData.childData[i]);
+			}
+		}
+
+		// this.childDataArr = familyData.childData;
+		console.log('child final data', this.childDataArr);
+		this.getSelectedMode({ value: '1' });
 	}
 
-	// checkEmit(process_type) {
-	// 	if (process_type) {
-	// 		this.type = process_type;
-	// 		this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-	// 			if (result.status === 'ok') {
-	// 				this.lastRecordId = result.data[0].last_record;
-	// 				this.loginId = result.data[0].au_login_id;
-	// 				this.feeLoginId = this.loginId;
-	// 				this.getStudentInformation(this.lastRecordId);
-	// 			}
-	// 		});
-	// 	}
-	// }
 	getSchool() {
 		this.sisService.getSchool().subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -185,122 +170,7 @@ export class FamilyTransactionEntryComponent implements OnInit {
 			}
 		});
 	}
-	// getInvoices(inv_number) {
-	// 	this.INVOICE_ELEMENT_DATA = [];
-	// 	this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
-	// 	this.invoiceArray = [];
-	// 	const invoiceJSON: any = {
-	// 		inv_id: inv_number
-	// 	};
-	// 	this.feeService.getInvoiceBifurcation(invoiceJSON).subscribe((result: any) => {
-	// 		if (result && result.status === 'ok') {
-	// 			this.INVOICE_ELEMENT_DATA = [];
-	// 			this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
-	// 			this.invoice = {};
-	// 			this.invoice = result.data[0];
-	// 			this.invoice.netPay = this.invoice.late_fine_amt ?
-	// 				Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
-	// 				Number(this.invoice.fee_amount);
 
-
-	// 			if (this.invoice.balance_amt) {
-	// 				this.invoice.balance_amt = Number(this.invoice.balance_amt);
-	// 				this.invoice.netPay += Number(this.invoice.balance_amt);
-	// 			}
-	// 			// if (this.invoice.prev_balance) {
-	// 			// 	this.invoice.netPay += Number(this.invoice.prev_balance);
-	// 			// 	this.invoice.balance_amt += Number(this.invoice.prev_balance);
-	// 			// }
-
-	// 			if (this.invoice.netPay < 0) {
-	// 				this.invoice.netPay = 0;
-	// 			}
-
-
-	// 			this.invoiceArray = this.invoice.invoice_bifurcation;
-	// 			this.feeTransactionForm.patchValue({
-	// 				'ftr_amount': this.invoice.netPay,
-	// 				'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
-	// 			});
-	// 			let pos = 1;
-	// 			this.invoiceTotal = 0;
-	// 			if (this.invoice.inv_prev_balance && Number(this.invoice.inv_prev_balance) !== 0) {
-	// 				const element = {
-	// 					srno: pos,
-	// 					feehead: 'Previous Balance',
-	// 					feedue: Number(this.invoice.inv_prev_balance),
-	// 					concession: 0,
-	// 					adjustment: 0,
-	// 					netpay: Number(this.invoice.inv_prev_balance)
-	// 				};
-	// 				this.invoiceTotal += element.netpay;
-	// 				this.INVOICE_ELEMENT_DATA.push(element);
-	// 			}
-	// 			for (const item of this.invoiceArray) {
-	// 				this.INVOICE_ELEMENT_DATA.push({
-	// 					srno: pos,
-	// 					feehead: item.invg_fh_name,
-	// 					feedue: item.invg_fh_amount,
-	// 					concession: item.invg_fcc_amount,
-	// 					adjustment: item.invg_adj_amount,
-	// 					// tslint:disable-next-line: max-line-length
-	// 					netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
-	// 				});
-	// 				// tslint:disable-next-line: max-line-length
-	// 				this.invoiceTotal += Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
-	// 				pos++;
-	// 			}
-	// 			if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
-	// 				const element = {
-	// 					srno: pos,
-	// 					feehead: 'Fine & Penalties',
-	// 					feedue: Number(this.invoice.inv_fine_amount),
-	// 					concession: 0,
-	// 					adjustment: 0,
-	// 					netpay: Number(this.invoice.inv_fine_amount),
-	// 				};
-	// 				this.invoiceTotal += element.netpay;
-	// 				this.INVOICE_ELEMENT_DATA.push(element);
-	// 			}
-	// 			this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
-	// 		}
-	// 	});
-	// }
-	// getStudentInformation(login_id) {
-	// 	this.studentInfo = {};
-	// 	this.feeTransactionForm.patchValue({
-	// 		'inv_id': [],
-	// 		'inv_invoice_no': '',
-	// 		'login_id': '',
-	// 		'ftr_emod_id': '',
-	// 		'ftr_transaction_id': '',
-	// 		'ftr_transaction_date': new Date(),
-	// 		'ftr_pay_id': '1',
-	// 		'ftr_cheque_no': '',
-	// 		'ftr_cheque_date': '',
-	// 		'ftr_bnk_id': '',
-	// 		'ftr_branch': '',
-	// 		'ftr_amount': '',
-	// 		'ftr_remark': '',
-	// 		'is_cheque': '',
-	// 		'ftr_deposit_bnk_id': '',
-	// 		'saveAndPrint': ''
-	// 	});
-	// 	this.sisService.getStudentInformation({ au_login_id: login_id, au_status: '1' }).subscribe((result: any) => {
-	// 		if (result && result.status === 'ok') {
-	// 			this.studentInfo = result.data[0];
-	// 			this.selectedMode = '1';
-	// 			if (this.studentInfo.last_invoice_number) {
-	// 				this.getInvoices(this.studentInfo.last_invoice_number);
-	// 			} else {
-	// 				this.invoiceArray = [];
-	// 				this.INVOICE_ELEMENT_DATA = [];
-	// 				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
-	// 				this.selectedMode = '';
-	// 			}
-	// 		}
-	// 	});
-	// }
 	getEntryModes() {
 		this.feeService.getEntryMode({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -315,66 +185,7 @@ export class FamilyTransactionEntryComponent implements OnInit {
 			}
 		});
 	}
-	// next(admno) {
-	// 	this.loginId = admno;
-	// 	if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
-	// 		this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
-	// 		this.getStudentInformation(this.loginId);
-	// 	} else {
-	// 		this.getStudentInformation(this.loginId);
-	// 	}
-	// }
-	// prev(admno) {
-	// 	this.loginId = admno;
-	// 	if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
-	// 		this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
-	// 		this.getStudentInformation(this.loginId);
-	// 	} else {
-	// 		this.getStudentInformation(this.loginId);
-	// 	}
-	// }
-	// first(admno) {
-	// 	this.loginId = admno;
-	// 	if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
-	// 		this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
-	// 		this.getStudentInformation(this.loginId);
-	// 	} else {
-	// 		this.getStudentInformation(this.loginId);
-	// 	}
-	// }
-	// last(admno) {
-	// 	this.loginId = admno;
-	// 	if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
-	// 		this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
-	// 		this.getStudentInformation(this.loginId);
-	// 	} else {
-	// 		this.getStudentInformation(this.loginId);
-	// 	}
-	// }
-	// key(admno) {
-	// 	this.loginId = admno;
-	// 	if (this.studentRouteMoveStoreService.getProcessTypePrev()) {
-	// 		this.type = this.studentRouteMoveStoreService.getProcessTypePrev();
-	// 		this.getStudentInformation(this.loginId);
-	// 	} else {
-	// 		this.getStudentInformation(this.loginId);
-	// 	}
-	// }
-	// next2(admno) {
-	// 	this.feeLoginId = admno;
-	// }
-	// prev2(admno) {
-	// 	this.feeLoginId = admno;
-	// }
-	// first2(admno) {
-	// 	this.feeLoginId = admno;
-	// }
-	// last2(admno) {
-	// 	this.feeLoginId = admno;
-	// }
-	// key2(admno) {
-	// 	this.feeLoginId = admno;
-	// }
+
 	getFeePeriods() {
 		this.feePeriods = [];
 		this.feeService.getFeePeriods({}).subscribe((result: any) => {
@@ -429,9 +240,9 @@ export class FamilyTransactionEntryComponent implements OnInit {
 
 		this.feeTransactionForm.value.isFamily = true;
 		this.feeTransactionForm.value.fam_entry_number = this.familyOutstandingArr['fam_entry_number'];
-		this.feeTransactionForm.value.ftr_amount = this.familyOutstandingArr['family_total_outstanding_amt'];
+		// this.feeTransactionForm.value.ftr_amount = this.familyOutstandingArr['family_total_outstanding_amt'];
 		this.feeTransactionForm.value.ftr_emod_id = this.selectedMode;
-		this.feeTransactionForm.value.childData = this.familyOutstandingArr['childData'];
+		this.feeTransactionForm.value.childData = this.childDataArr;
 
 
 		this.feeTransactionForm.value.is_cheque = this.feeTransactionForm.value.ftr_pay_id === '3' ? true : false;
@@ -496,9 +307,9 @@ export class FamilyTransactionEntryComponent implements OnInit {
 		});
 		this.feeTransactionForm.value.isFamily = true;
 		this.feeTransactionForm.value.fam_entry_number = this.familyOutstandingArr['fam_entry_number'];
-		this.feeTransactionForm.value.ftr_amount = this.familyOutstandingArr['family_total_outstanding_amt'];
+		// this.feeTransactionForm.value.ftr_amount = this.familyOutstandingArr['family_total_outstanding_amt'];
 		this.feeTransactionForm.value.ftr_emod_id = this.selectedMode;
-		this.feeTransactionForm.value.childData = this.familyOutstandingArr['childData'];
+		this.feeTransactionForm.value.childData = this.childDataArr;
 		this.feeTransactionForm.value.is_cheque = this.feeTransactionForm.value.ftr_pay_id === '3' ? true : false;
 		let validateFlag = true;
 
@@ -549,11 +360,7 @@ export class FamilyTransactionEntryComponent implements OnInit {
 			});
 		}
 	}
-	// gotoIndividual($event) {
-	// 	if (!($event.checked)) {
-	// 		this.router.navigate(['../fee-transaction-entry-bulk'], { relativeTo: this.route });
-	// 	}
-	// }
+
 	getSelectedMode($event) {
 		this.selectedMode = $event.value;
 		if (this.selectedMode !== '1') {
@@ -588,68 +395,6 @@ export class FamilyTransactionEntryComponent implements OnInit {
 		});
 	}
 
-	// openDialog(invoiceNo, edit): void {
-	// 	const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-	// 		width: '80%',
-	// 		data: {
-	// 			inv_invoice_no: invoiceNo,
-	// 			edit: edit,
-	// 			paidStatus: 'paid'
-	// 		},
-	// 		hasBackdrop: true
-	// 	});
-
-	// 	dialogRef.afterClosed().subscribe(result2 => {
-	// 		const invDet: any = this.studentRouteMoveStoreService.getInvoiceId();
-	// 		if (!(invDet.inv_id)) {
-	// 			this.studentRouteMoveStoreService.getRouteStore().then((data: any) => {
-	// 				if (data.adm_no && data.login_id) {
-	// 					this.lastRecordId = data.adm_no;
-	// 					this.loginId = data.adm_no;
-	// 					this.feeLoginId = data.login_id;
-	// 					this.getStudentInformation(this.lastRecordId);
-	// 				} else {
-	// 					this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-	// 						if (result.status === 'ok') {
-	// 							this.lastRecordId = result.data[0].last_record;
-	// 							this.loginId = result.data[0].au_login_id;
-	// 							this.feeLoginId = this.loginId;
-	// 							this.getStudentInformation(this.lastRecordId);
-	// 						}
-	// 					});
-	// 				}
-
-	// 			});
-	// 		} else {
-	// 			const invDet2: any = this.studentRouteMoveStoreService.getInvoiceId();
-	// 			this.lastRecordId = invDet2.au_admission_no;
-	// 			this.loginId = invDet2.login_id;
-	// 			this.feeLoginId = this.loginId;
-	// 			this.studentInfo = {};
-	// 			this.feeTransactionForm.patchValue({
-	// 				'inv_id': [],
-	// 				'login_id': '',
-	// 				'inv_invoice_no': '',
-	// 				'ftr_emod_id': '',
-	// 				'ftr_transaction_id': '',
-	// 				'ftr_transaction_date': new Date(),
-	// 				'ftr_pay_id': '1',
-	// 				'ftr_cheque_no': '',
-	// 				'ftr_cheque_date': '',
-	// 				'ftr_bnk_id': '',
-	// 				'ftr_branch': '',
-	// 				'ftr_amount': '',
-	// 				'ftr_remark': '',
-	// 				'is_cheque': '',
-	// 				'ftr_deposit_bnk_id': '',
-	// 				'saveAndPrint': ''
-	// 			});
-	// 			this.selectedMode = '1';
-	// 			this.getInvoices(invDet2.inv_id);
-	// 		}
-
-	// 	});
-	// }
 	isExist(mod_id) {
 		return this.common.isExistUserAccessMenu(mod_id);
 	}
@@ -678,6 +423,7 @@ export class FamilyTransactionEntryComponent implements OnInit {
 			return false;
 		}
 	}
+
 	ngOnDestroy() {
 		this.studentRouteMoveStoreService.setInvoiceId({});
 	}

@@ -13,7 +13,7 @@ export class FamilywiseFeeRecieptComponent implements OnInit {
 	printFamilyArr: any[] = [];
 	enablePrint = false;
 	@ViewChild('deleteModal') deleteModal;
-	
+
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,

@@ -30,14 +30,14 @@ export class AppComponent implements OnInit {
 			console.error(event);
 			switch (true) {
 				case event instanceof NavigationStart: {
-					this.showLoadingFlag = true;
+					// this.showLoadingFlag = true;
 					break;
 				}
 
 				case event instanceof NavigationEnd:
 				case event instanceof NavigationCancel:
 				case event instanceof NavigationError: {
-					this.showLoadingFlag = false;
+					// this.showLoadingFlag = false;
 					break;
 				}
 				default: {

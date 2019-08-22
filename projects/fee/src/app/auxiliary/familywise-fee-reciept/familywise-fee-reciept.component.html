@@ -49,28 +49,32 @@
                         <tbody>
                             <tr class="custom-tr" *ngFor="let item of familyDetailArr">
                                 <td class="custom-td">
-                                    <mat-checkbox (change)="setDataForPrint($event, item)"></mat-checkbox>
+                                    <mat-checkbox *ngIf="item?.family_outstanding_amt > 0" (change)="setDataForPrint($event, item)"></mat-checkbox>
                                 </td>
                                 <td class="custom-td">
-                                    <span class="pointer font-bold font-skyblue font-underline">
+                                    <span class="pointer font-bold font-skyblue font-underline" *ngIf="item?.family_outstanding_amt > 0">
                                         <a (click)="goToFamilyInformation(item?.fam_entry_number)">{{item?.fam_family_name}}
                                             - {{item?.fam_entry_number}}
                                         </a>
                                     </span>
+                                    <span class="font-bold" *ngIf="item?.family_outstanding_amt == 0 || item?.family_outstanding_amt < 0">
+                                            {{item?.fam_family_name}}- {{item?.fam_entry_number}}
+                                    </span>
                                 </td>
-                                <td class="custom-td">{{item?.epd_parent_name}}</td>
+                                <td class="custom-td text-capitalize">{{item?.epd_parent_name}}</td>
                                 <td class="custom-td">{{item?.epd_contact_no}}</td>
-                                <td class="custom-td">{{item?.au_full_name}}</td>
-                                <td class="custom-td">{{item?.class_name}}-{{item?.sec_name}}</td>
+                                <td class="custom-td text-capitalize">{{item?.au_full_name}}</td>
+                                <td *ngIf="item?.sec_name && item?.sec_name != ' '" class="custom-td text-capitalize">{{item?.class_name}}-{{item?.sec_name}}</td>
+                                <td *ngIf="!(item?.sec_name && item?.sec_name != ' ')" class="custom-td text-capitalize">{{item?.class_name}}</td>
                                 <td class="custom-td">{{item?.no_of_students}} Students</td>
-                                <td class="custom-td">{{item?.family_outstanding_amt  | number}}</td>
+                                <td class="custom-td"> &#8377;  {{item?.family_outstanding_amt  | number}}</td>
                                 <td class="custom-td">
                                     <a href="{{item.fam_declaration_doc_url}}" *ngIf="item.fam_declaration_doc_url">
-                                        <i class="fas fa-file-image image-icon"></i>
+                                        <i class="fas fa-file-image image-icon pointer"></i>
                                         <span class="ver-line-divider margin-left-10"></span></a>
-                                    <i class="fas fa-edit edit-icon" (click)="editFamily(item)"></i>
+                                    <i class="fas fa-edit edit-icon pointer" (click)="editFamily(item)"></i>
                                     <span class="ver-line-divider margin-left-10"></span>
-                                    <i class="fas fa-trash-alt trash-icon" (click)="openDeleteDialog(item)"></i>
+                                    <i class="fas fa-trash-alt trash-icon pointer" (click)="openDeleteDialog(item)"></i>
                                 </td>
                             </tr>
                             <tr *ngIf="familyDetailArr.length ==0">

@@ -32,7 +32,7 @@ export class FamilyInformationComponent implements OnInit {
 			console.log('family number', familyNumber);
 			this.getFamilyOutstandingDetail(familyNumber);
 		} else {
-			this.router.navigate(['../familywise-fee-receipt'], { relativeTo: this.route });
+			this.router.navigate(['../student-familywise-fee-receipt'], { relativeTo: this.route });
 		}
 
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -133,11 +133,15 @@ export class FamilyInformationComponent implements OnInit {
 				const resultData = result.data;
 				if (resultData && resultData[0]['trans_status'] === 'TXN_SUCCESS' || resultData && resultData[0]['trans_status'] === 'TXN_FAILURE') {
 					this.payAPICall.unsubscribe();
-					this.router.navigate(['../familywise-fee-receipt'], { relativeTo: this.route });
+					this.router.navigate(['../student-familywise-fee-receipt'], { relativeTo: this.route });
 					//  this.getStudentInvoiceDetail();
 				}
 			}
 		});
+	}
+
+	moveToFamilyReceipt() {
+		this.router.navigate(['../student-familywise-fee-receipt'], { relativeTo: this.route });
 	}
 
 // 	payFamilyOutstanding(familyEntryNumber) {

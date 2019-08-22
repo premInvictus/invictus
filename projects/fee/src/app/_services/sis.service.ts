@@ -529,7 +529,7 @@ export class SisService {
 	}
 	uploadDocuments(value) {
 		this.service.startLoading();
-		return this.http.post('/documents/uploadDocuments', value);
+		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
 	}
 	getDocumentRequired() {
 		this.service.startLoading();
@@ -597,7 +597,7 @@ export class SisService {
 	}
 	getStudentsPromotionTool(value) {
 		this.service.startLoading();
-		return this.http.post('/students/getAllStudents', value);
+		return this.http.post(environment.apiSisUrl +'/students/getAllStudents', value);
 	}
 	promoteStudents(value) {
 		this.service.startLoading();
