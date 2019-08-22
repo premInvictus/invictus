@@ -515,8 +515,8 @@ export class TransportReportComponent implements OnInit {
 							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 						}
 						obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
-						obj['fp_name'] = repoArray[Number(index)]['fp_name'][0] ?
-							new CapitalizePipe().transform(repoArray[Number(index)]['fp_name'][0]) : '-';
+						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
+							repoArray[Number(index)]['fp_name'] : '-';
 						obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 							repoArray[Number(index)]['rpt_id'] : '0';
 						obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
@@ -748,8 +748,8 @@ export class TransportReportComponent implements OnInit {
 							obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 						}
 						obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
-						obj['fp_name'] = repoArray[Number(index)]['fp_name'][0] ?
-							new CapitalizePipe().transform(repoArray[Number(index)]['fp_name'][0]) : '-';
+						obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
+							repoArray[Number(index)]['fp_name'] : '-';
 						obj['receipt_id'] = repoArray[Number(index)]['invoice_id'] ?
 							repoArray[Number(index)]['invoice_id'] : '0';
 						obj['receipt_no'] = repoArray[Number(index)]['invoice_no'] ?
