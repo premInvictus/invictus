@@ -83,6 +83,7 @@ export class TransportReportComponent implements OnInit {
 		44: 'AR'
 	};
 	sessionArray: any[] = [];
+	totalRow: any;
 	session: any = {};
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
@@ -160,6 +161,14 @@ export class TransportReportComponent implements OnInit {
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
 	}
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
+	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
 			'report_type': '',
@@ -201,7 +210,7 @@ export class TransportReportComponent implements OnInit {
 			enableColumnReorder: true,
 			createFooterRow: true,
 			showFooterRow: true,
-			footerRowHeight: 21,
+			footerRowHeight: 35,
 			enableExcelCopyBuffer: true,
 			fullWidthRows: true,
 			enableAutoTooltip: true,
@@ -279,6 +288,7 @@ export class TransportReportComponent implements OnInit {
 				},
 				onColumnsChanged: (e, args) => {
 					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
 				},
 			},
 			draggableGrouping: {
@@ -289,6 +299,9 @@ export class TransportReportComponent implements OnInit {
 					this.groupColumns = [];
 					this.groupColumns = args.groupColumns;
 					this.onGroupChanged(args && args.groupColumns);
+					setTimeout(() => {
+						this.updateTotalRow(this.angularGrid.slickGrid);
+					}, 100);
 				},
 				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
 			}
@@ -532,6 +545,7 @@ export class TransportReportComponent implements OnInit {
 						this.dataset.push(obj);
 						index++;
 					}
+					this.totalRow = {};
 					const obj3: any = {};
 					obj3['id'] = 'footer';
 					obj3['srno'] = '';
@@ -541,11 +555,12 @@ export class TransportReportComponent implements OnInit {
 					obj3['stu_class_name'] = '';
 					obj3['fp_name'] = '';
 					obj3['receipt_no'] = '';
-					obj3['transport_amount'] = this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['transport_amount'] =
+						new DecimalPipe('en-in').transform(this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
 					obj3['route_name'] = '';
 					obj3['stoppages_name'] = '';
 					obj3['slab_name'] = '';
-					this.dataset.push(obj3);
+					this.totalRow = obj3;
 					this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					this.tableFlag = true;
@@ -765,6 +780,7 @@ export class TransportReportComponent implements OnInit {
 						this.dataset.push(obj);
 						index++;
 					}
+					this.totalRow = {};
 					const obj3: any = {};
 					obj3['id'] = 'footer';
 					obj3['srno'] = '';
@@ -774,11 +790,12 @@ export class TransportReportComponent implements OnInit {
 					obj3['stu_class_name'] = '';
 					obj3['fp_name'] = '';
 					obj3['receipt_no'] = '';
-					obj3['transport_amount'] = this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['transport_amount'] =
+						new DecimalPipe('en-in').transform(this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
 					obj3['route_name'] = '';
 					obj3['stoppages_name'] = '';
 					obj3['slab_name'] = '';
-					this.dataset.push(obj3);
+					this.totalRow = obj3;
 					this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
 					this.aggregatearray.push(new Aggregators.Sum('srno'));
 					this.tableFlag = true;
@@ -1125,13 +1142,14 @@ export class TransportReportComponent implements OnInit {
 						index++;
 					}
 					this.aggregatearray.push(new Aggregators.Sum('slab_amount'));
+					this.totalRow = {};
 					const obj3: any = {};
 					obj3['id'] = 'footer';
 					obj3['route_name'] = this.common.htmlToText('<b>Grand Total</b>');
 					obj3['stoppages_name'] = '';
 					obj3['slab_name'] = '';
-					obj3['slab_amount'] = this.dataset.map(t => t['slab_amount']).reduce((acc, val) => acc + val, 0);
-					this.dataset.push(obj3);
+					obj3['slab_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['slab_amount']).reduce((acc, val) => acc + val, 0));
+					this.totalRow = obj3;
 					this.tableFlag = true;
 					if (this.dataset.length <= 5) {
 						this.gridHeight = 300;
@@ -1153,6 +1171,13 @@ export class TransportReportComponent implements OnInit {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
 		this.clearGrouping();
 	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
+		}
+	}
 
 	clearGrouping() {
 		if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
@@ -1162,10 +1187,12 @@ export class TransportReportComponent implements OnInit {
 
 	collapseAllGroups() {
 		this.dataviewObj.collapseAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 
 	expandAllGroups() {
 		this.dataviewObj.expandAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
@@ -1730,7 +1757,7 @@ export class TransportReportComponent implements OnInit {
 			obj3['stu_class_name'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
 			obj3['route_name'] = '';
 			obj3['stoppages_name'] = '';
 			obj3['slab_name'] = '';
@@ -1955,7 +1982,7 @@ export class TransportReportComponent implements OnInit {
 				for (const item2 of this.columnDefinitions) {
 					if (this.reportType !== 'mfr' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 						}
 						if (item2.id !== 'fp_name' && (item2.id === 'invoice_created_date' ||
 							item2.id === 'applicable_from' || item2.id === 'applicable_to')
@@ -2140,7 +2167,7 @@ export class TransportReportComponent implements OnInit {
 						for (const item2 of this.columnDefinitions) {
 							if (this.reportType !== 'mfr' && Number(key) < this.dataset.length - 1) {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-									obj[item2.id] = this.common.htmlToText(item.rows[key][item2.id]);
+									obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 								}
 								if (item2.id !== 'fp_name' && (item2.id === 'invoice_created_date' ||
 									item2.id === 'applicable_from' || item2.id === 'applicable_to')
@@ -2273,7 +2300,7 @@ export class TransportReportComponent implements OnInit {
 			obj3['stu_class_name'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
 			obj3['route_name'] = '';
 			obj3['stoppages_name'] = '';
 			obj3['slab_name'] = '';
@@ -2314,7 +2341,7 @@ export class TransportReportComponent implements OnInit {
 			obj3['stu_class_name'] = '';
 			obj3['fp_name'] = '';
 			obj3['receipt_no'] = '';
-			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
 			obj3['route_name'] = '';
 			obj3['stoppages_name'] = '';
 			obj3['slab_name'] = '';
@@ -2463,7 +2490,7 @@ export class TransportReportComponent implements OnInit {
 						for (const item2 of this.columnDefinitions) {
 							if (this.reportType !== 'mfr') {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-									obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
+									obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
 								}
 								if (item2.id !== 'fp_name' && (item2.id === 'invoice_created_date' ||
 									item2.id === 'applicable_from' || item2.id === 'applicable_to')
