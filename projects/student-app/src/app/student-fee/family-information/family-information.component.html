@@ -28,7 +28,7 @@
         <div class="col-1 custom-fee-entry-col-12 vertical-divider">
           <div class="row margin-top-1">
             <div class="col-12 text-center">
-              <span class="font-size-16 font-bold">{{familyOutstandingArr.epd_parent_name}}</span><br>
+              <span class="font-size-16 font-bold text-nowrap">{{familyOutstandingArr.epd_parent_name}}</span><br>
               <span class="font-size-14">{{familyOutstandingArr.epd_contact_no}}</span><br>
             </div>
           </div>
@@ -59,10 +59,11 @@
             </div>
           </div>
         </div>
-        <div class="col-5 text-right margin-top-10 " *ngIf="familyOutstandingArr.family_total_outstanding_amt > 0">
-          <button mat-button class="font-size-14 font-white  btn-reset" (click)="moveToFamilyReceipt()">Back</button>
-          <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue">Print
-            Summary</button>
+        <div class="col-5 text-right margin-top-10 position-right" *ngIf="familyOutstandingArr.family_total_outstanding_amt > 0">
+          
+          
+          <button mat-button class="font-size-14  font-white  btn-back" (click)="moveToFamilyReceipt()">Back</button>
+          <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue">Print Summary</button>
           <button mat-button class="font-size-14 margin-left-10 font-white  btn-pay" (click)="orderPayment(familyOutstandingArr?.fam_entry_number)">Pay
             Now</button>
         </div>

@@ -37,7 +37,8 @@
                 </ng-container>
                 <ng-container matColumnDef="feeperiod">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Period </th>
-                  <td mat-cell *matCellDef="let element"> {{element.feeperiod}} </td>
+                  <td mat-cell *matCellDef="let element"> <span *ngIf="element.feeperiod">{{element.feeperiod}} </span>
+                    <span *ngIf="!(element.feeperiod)"> - </span> </td>
                 </ng-container>
                 <ng-container matColumnDef="invoicedate">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Date</th>
