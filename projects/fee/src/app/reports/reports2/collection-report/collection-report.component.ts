@@ -548,7 +548,7 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['rpt_id'] : '-';
 											obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
 											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
-												new CapitalizePipe().transform(repoArray[Number(keys)]['fp_name'][0]) : '-';
+												repoArray[Number(keys)]['fp_name'] : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
 												repoArray[Number(keys)]['receipt_no'] : '-';
 											obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
@@ -1354,8 +1354,8 @@ export class CollectionReportComponent implements OnInit {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 							}
 							obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
-							obj['fp_name'] = repoArray[Number(index)]['fp_name'][0] ?
-								new CapitalizePipe().transform(repoArray[Number(index)]['fp_name'][0]) : '-';
+							obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
+								repoArray[Number(index)]['fp_name'] : '-';
 							obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 								repoArray[Number(index)]['rpt_id'] : '0';
 							obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
