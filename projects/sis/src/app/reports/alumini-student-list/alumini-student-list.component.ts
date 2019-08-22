@@ -77,6 +77,11 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 	};
 	notFormatedCellArray: any[] = [];
 
+	pdfrowdata: any[] = [];
+	levelHeading: any[] = [];
+	levelTotalFooter: any[] = [];
+	levelSubtotalFooter: any[] = [];
+
 	showDate = true;
 	showDateRange = false;
 	events: any;
@@ -293,6 +298,10 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 	}
 	exportAsPDF(json: any[]) {
 		const headerData: any[] = [];
+		this.pdfrowdata = [];
+		this.levelHeading = [];
+		this.levelTotalFooter = [];
+		this.levelSubtotalFooter = [];
 		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
@@ -305,8 +314,8 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				fontStyle: 'bold',
 				fillColor: '#ffffff',
 				textColor: 'black',
-				halign: 'center',
-				fontSize: 35,
+				halign: 'left',
+				fontSize: 22,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -321,8 +330,8 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				fontStyle: 'bold',
 				fillColor: '#ffffff',
 				textColor: 'black',
-				halign: 'center',
-				fontSize: 35,
+				halign: 'left',
+				fontSize: 20,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -338,10 +347,11 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 					arr.push(element[element1.id]);
 				});
 				rowData.push(arr);
+				this.pdfrowdata.push(arr);
 			});
 		} else {
 			// iterate all groups
-			// this.checkGroupLevelPDF(this.dataviewObj.getGroups(), doc, headerData);
+			this.checkGroupLevelPDF(this.dataviewObj.getGroups(), doc, headerData);
 		}
 		if (this.totalRow) {
 			const arr: any[] = [];
@@ -349,10 +359,14 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				arr.push(this.totalRow[item.id]);
 			}
 			rowData.push(arr);
+			this.pdfrowdata.push(arr);
 		}
+		doc.levelHeading = this.levelHeading;
+		doc.levelTotalFooter = this.levelTotalFooter;
+		doc.levelSubtotalFooter = this.levelSubtotalFooter;
 		doc.autoTable({
 			head: [headerData],
-			body: rowData,
+			body: this.pdfrowdata,
 			startY: doc.previousAutoTable.finalY + 0.5,
 			tableLineColor: 'black',
 			didDrawPage: function (data) {
@@ -362,10 +376,38 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 			willDrawCell: function (data) {
 				const doc = data.doc;
 				const rows = data.table.body;
-				if (rows.length === 1) {
-				} else if (data.row.index === rows.length - 1) {
+
+				// level 0
+				const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
+				if (lfIndex !== -1) {
 					doc.setFontStyle('bold');
-					doc.setFontSize('22');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(0, 62, 120);
+				}
+
+				// level more than 0
+				const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
+				if (lsfIndex !== -1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(229, 136, 67);
+				}
+
+				// group heading
+				const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
+				if (lhIndex !== -1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#5e666d');
+					doc.setFillColor('#c8d6e5');
+				}
+
+				// grand total
+				if (data.row.index === rows.length - 1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
 					doc.setTextColor('#ffffff');
 					doc.setFillColor(67, 160, 71);
 				}
@@ -374,20 +416,38 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				fontStyle: 'bold',
 				fillColor: '#c8d6e5',
 				textColor: '#5e666d',
-				fontSize: 22,
+				fontSize: 18,
 			},
 			alternateRowStyles: {
 				fillColor: '#f1f4f7'
 			},
 			useCss: true,
 			styles: {
-				fontSize: 22,
+				fontSize: 18,
 				cellWidth: 'auto',
 				textColor: 'black',
 				lineColor: '#89a8c8',
 			},
 			theme: 'grid'
 		});
+		if (this.groupColumns.length > 0) {
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Groupded As:  ' + this.getGroupColumns(this.groupColumns)]],
+				didDrawPage: function (data) {
+
+				},
+				headStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 20,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+		}
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
 			head: [['Report Filtered as:  ' + this.getParamValue()]],
@@ -399,7 +459,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 22,
+				fontSize: 20,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -415,7 +475,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 22,
+				fontSize: 20,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -432,7 +492,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 22,
+				fontSize: 20,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -448,12 +508,71 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'left',
-				fontSize: 22,
+				fontSize: 20,
 			},
 			useCss: true,
 			theme: 'striped'
 		});
 		doc.save(reportType + '_' + new Date() + '.pdf');
+	}
+	checkGroupLevelPDF(item, doc, headerData) {
+		if (item.length > 0) {
+			for (const groupItem of item) {
+				// add and style for groupeditem level heading
+				this.pdfrowdata.push([groupItem.value + ' (' + groupItem.rows.length + ')']);
+				this.levelHeading.push(this.pdfrowdata.length - 1);
+				if (groupItem.groups) {
+					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
+					const levelArray: any[] = [];
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id === 'admission_no') {
+							levelArray.push(this.getLevelFooter(groupItem.level));
+						} else if (item2.id === 'full_name') {
+							levelArray.push( groupItem.rows.length);
+						} else {
+							levelArray.push('');
+						}
+					}
+					// style row having total
+					if (groupItem.level === 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+					} else if (groupItem.level > 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+					}
+
+				} else {
+					const rowData: any[] = [];
+					Object.keys(groupItem.rows).forEach(key => {
+						const earr: any[] = [];
+						for (const item2 of this.columnDefinitions) {
+							earr.push(groupItem.rows[key][item2.id]);
+						}
+						rowData.push(earr);
+						this.pdfrowdata.push(earr);
+					});
+					const levelArray: any[] = [];
+					for (const item2 of this.columnDefinitions) {
+						if (item2.id === 'admission_no') {
+							levelArray.push(this.getLevelFooter(groupItem.level));
+						} else if (item2.id === 'full_name') {
+							levelArray.push( groupItem.rows.length);
+						} else {
+							levelArray.push('');
+						}
+					}
+					// style row having total
+					if (groupItem.level === 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+					} else if (groupItem.level > 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+					}
+				}
+			}
+		}
 	}
 	checkGroupLevel(item, worksheet) {
 		console.log('checkGroupLevel item ', item);
@@ -988,7 +1107,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 			if (element.id === 'admission_no') {
 				blankTempObj[element.id] = 'Grand Total';
 			} else if (element.id === 'full_name') {
-				blankTempObj[element.id] = '  ' + this.dataset.length;
+				blankTempObj[element.id] = this.dataset.length;
 			} else {
 				blankTempObj[element.id] = '';
 			}
