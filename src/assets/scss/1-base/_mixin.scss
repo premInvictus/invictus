@@ -189,9 +189,16 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         height: 75%;
         margin-left: 50%;
     }
+    .height-263 {
+        height: 263px;;
+    }
 }
 
 @include respond-between(lg, xl) {
+    .height-296 {
+        height: 296px;;
+    }
+
     .fee-vertical-line-divider {
         border-left: 2px solid #dee2e6;
         height: 75%;

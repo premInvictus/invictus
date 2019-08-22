@@ -747,3 +747,12 @@ button.scheduler-circle .mat-button-wrapper {
 .btn-circle-yellow {
     color: #ebb700;
 }
+
+.float-btn-blue {
+    max-width: 20px !important;
+    background-color: #00A1DE;
+    border-top-left-radius: 15px !important; 
+    border-bottom-left-radius: 15px !important;
+    position: absolute !important;
+    right: -15px !important;
+}
