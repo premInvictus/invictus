@@ -70,25 +70,27 @@ export class FamilywiseFeeRecieptComponent implements OnInit {
 		// });
 	}
 
-	setDataForPrint(event, item) {
-		if (event.checked) {
-			this.printFamilyArr.push(item.fam_entry_number);
-		} else {
-			for (let i = 0; i < this.printFamilyArr.length; i++) {
-				if (this.printFamilyArr[i].toString() === item.fam_entry_number.toString()) {
-					this.printFamilyArr.splice(i, 1);
-				}
-			}
-		}
+	// setDataForPrint(event, item) {
+	// 	if (event.checked) {
+	// 		this.printFamilyArr.push(item.fam_entry_number);
+	// 	} else {
+	// 		for (let i = 0; i < this.printFamilyArr.length; i++) {
+	// 			if (this.printFamilyArr[i].toString() === item.fam_entry_number.toString()) {
+	// 				this.printFamilyArr.splice(i, 1);
+	// 			}
+	// 		}
+	// 	}
 
-		if (this.printFamilyArr.length > 0) {
-			this.enablePrint = true;
-		} else {
-			this.enablePrint = false;
-		}
-	}
+	// 	if (this.printFamilyArr.length > 0) {
+	// 		this.enablePrint = true;
+	// 	} else {
+	// 		this.enablePrint = false;
+	// 	}
+	// }
 
-	printFamilyInvoice() {
+	printFamilyInvoice(item) {
+		this.printFamilyArr = [];
+		this.printFamilyArr.push(item.fam_entry_number);
 		const inputJson = {'family_entry_numbers' : this.printFamilyArr, 'with_summary' : true};
 		this.erpCommonService.printFamilyInvoice(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
