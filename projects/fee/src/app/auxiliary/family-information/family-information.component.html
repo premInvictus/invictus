@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<div class="row margin-top-15" *ngIf="childDataArr.length > 0">
+<div class="row" *ngIf="childDataArr.length > 0">
   <div class="col-12">
     <mat-card class="card-padding-5 ">
       <div class="row remove-top-margin">
@@ -26,7 +26,7 @@
             </div>
           </div>
         </div>
-        <div class="col-1 custom-fee-entry-col-12 vertical-divider">
+        <div class="col-2 custom-fee-entry-col-121 vertical-divider">
           <div class="row margin-top-1">
             <div class="col-12 text-center">
               <span class="font-size-16 font-bold text-nowrap">{{familyOutstandingArr.epd_parent_name}}</span><br>
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <div class="col-1 custom-fee-entry-col-12 vertical-divider">
+        <div class="col-1 custom-fee-entry-col-121 vertical-divider">
           <div class="row margin-top-1">
             <div class="col-12 text-center">
               <span class="font-size-16 font-bold">Family No.</span><br>
@@ -133,9 +133,9 @@
             </mat-accordion>
           </ng-container>
           <div class="row">
-            <div class="col-12">
-              <div class="grey-box ">
-                <div class="margin-right-50"><span class="font-size-16 ">Amount in
+            <div class="col-12 grey-box ">
+              <div class="">
+                <div class=""><span class="font-size-16 ">Amount in
                     Words : </span><span class="font-size-16 font-medium"> Rupees
                     {{familyOutstandingArr.family_total_outstanding_amt | numberToWord | titlecase}} Only </span><span
                     class="float-right font-size-16 font-medium"><span>Grand Total : </span><span

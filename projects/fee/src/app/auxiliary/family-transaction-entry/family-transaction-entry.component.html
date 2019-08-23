@@ -1,29 +1,17 @@
-<div class="fee-container-box__grey">
-  <div class="row">
-    <div class="col-12 remove-col-padding">
-      <mat-card class="card-top-title__container">
-        <div class="row">
-          <div class="col-6">
-            <h1 class="remove-bottom-margin font-size-24">Family Transaction Entry</h1>
-          </div>
-          <div class="col-6 text-right">
-          </div>
+ 
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-8">
+          <span class="font-size-24 font-medium"> Family Transaction Entry</span>
         </div>
-      </mat-card>
-    </div>
+      </div>
+    </mat-card>
   </div>
-  <div class="row">
-    <div class="col-12 remove-col-padding">
-
-      <!-- <app-common-student-profile [loginId]="lastRecordId" (next2)="next($event)" (prev2)="prev($event)"
-             (first2)="first($event)" (last2)="last($event)" (key2)="key($event)" (next)="next2($event)"
-             (prev)="prev2($event)" (first)="first2($event)" (last)="last2($event)" (key)="key2($event)"
-             (processTypeEmit)="checkEmit($event)" [feeRenderId]="feeRenderId"></app-common-student-profile> -->
-
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12 remove-col-padding">
+</div>
+<div class="row">
+    <div class="col-12">
       <mat-card class="card-padding-5 ">
         <div class="row remove-top-margin"> 
           <span class="primary">Primary Parent</span>
@@ -37,7 +25,7 @@
               </div>
             </div>
           </div>
-          <div class="col-1 custom-fee-entry-col-12 vertical-divider">
+          <div class="col-2 custom-fee-entry-col-121 vertical-divider">
             <div class="row margin-top-1">
               <div class="col-12 text-center">
                 <span class="font-size-16 font-bold text-nowrap">{{familyOutstandingArr?.epd_parent_name}}</span><br>
@@ -46,7 +34,7 @@
             </div>
           </div>
 
-          <div class="col-1 custom-fee-entry-col-12 vertical-divider">
+          <div class="col-1 custom-fee-entry-col-121 vertical-divider">
             <div class="row margin-top-1">
               <div class="col-12 text-center">
                 <span class="font-size-16 font-bold">Family No.</span><br>
@@ -80,11 +68,11 @@
 
       </mat-card>
     </div>
-  </div>
+</div>
 
   <form [formGroup]="feeTransactionForm">
     <div class="row">
-      <div class="col-6 remove-col-padding-left">
+      <div class="col-6">
         <mat-card class="card-top-form__container card-height-605 card-height-720">
           <div class="row remove-margin">
             <div class="col-12 remove-col-padding">
@@ -181,7 +169,7 @@
           </div>
         </mat-card>
       </div>
-      <div class="col-6 remove-col-padding">
+      <div class="col-6">
         <mat-card class="card-top-form__container card-height-605 card-height-720">
           <div class="row">
             <div class="col-3"></div>
@@ -383,4 +371,3 @@
       </div>
     </div>
   </form>
-</div>

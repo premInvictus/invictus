@@ -1,14 +1,9 @@
-<div class="fee-container-box__grey">
-  <div class="row">
-    <div class="col-12 remove-col-padding">
-      <mat-card class="card-top-title__container">
+<div class="row">
+    <div class="col-12">
+      <mat-card>
         <div class="row">
-          <div class="col-6">
-            <h1 class="remove-bottom-margin font-size-24">Fee Detail</h1>
-          </div>
-          <div class="col-6 text-right">
-            <div class="vertical-align-sub inline-flex">
-            </div>
+          <div class="col-8">
+            <span class="font-size-24 font-medium"> Fee Details</span>
           </div>
         </div>
       </mat-card>
@@ -21,13 +16,14 @@
           <span>Fee Invoices</span>
         </div>
       </ng-template> -->
-      <div class="row margin-top-20">
-        <div class="col-12 remove-col-padding ">
-          <div class="row margin-top-20 ">
+      <div class="row">
+        <div class="col-12">
+          <mat-card>
+          <div class="row">
             <div class="col-12 remove-col-padding">
               <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
                 <ng-container matColumnDef="srno">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr. No. </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap"> Sr. No. </th>
                   <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
                 </ng-container>
                 <ng-container matColumnDef="invoiceno">
@@ -78,13 +74,14 @@
                 </tr>
               </table>
 
-              <table class="table-100 text-center" style="margin-top:5px;">
+              <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
                 <tr *ngIf="INVOICE_ELEMENT.length == 0">
                   <td colspan="8">No Record Found</td>
                 </tr>
               </table>
             </div>
           </div>
+        </mat-card>
         </div>
 
       </div>
@@ -193,7 +190,7 @@
     </mat-tab> -->
   <!-- </mat-tab-group> -->
 
-</div>
+
 
 <div #paytmResponse></div>
 
