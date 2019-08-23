@@ -10,7 +10,7 @@
   </div>
 </div>
 
-<div class="row margin-top-15" *ngIf="childDataArr.length > 0">
+<div class="row" *ngIf="childDataArr.length > 0">
   <div class="col-12">
     
     <mat-card class="card-padding-5 ">
@@ -73,7 +73,7 @@
       <div class="row">
         <div class="col-12">
           <ng-container>
-            <br>
+            
             <!-- <mat-accordion>
               <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header class="family-panel-header">
@@ -122,14 +122,14 @@
                     </table>
                   </div>
                 </div>
-                <br>
-                <br>
+                
+               
               <!-- </mat-expansion-panel>
             </mat-accordion> -->
           </ng-container>
           <div class="row">
-            <div class="col-12 grey-box ">
-              <div class="">
+            <div class="col-12">
+              <div class="grey-box ">
                 <div class=""><span class="font-size-16 ">Amount in
                     Words : </span><span class="font-size-16 font-medium"> Rupees
                     {{familyOutstandingArr.family_total_outstanding_amt | numberToWord | titlecase}} Only </span><span
