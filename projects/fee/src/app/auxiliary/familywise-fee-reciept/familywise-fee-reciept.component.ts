@@ -3,6 +3,7 @@ import { FeeService, CommonAPIService, SisService } from '../../_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-familywise-fee-reciept',
 	templateUrl: './familywise-fee-reciept.component.html',
@@ -89,6 +90,9 @@ export class FamilywiseFeeRecieptComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				console.log('result', result.data);
 				//this.familyDetailArr = result.data;
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
 			}
 		});
 	}

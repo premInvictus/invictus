@@ -46,6 +46,7 @@ export class FamilyTransactionEntryComponent implements OnInit {
 	fam_entry_number: any[];
 	fam_created_date: any[];
 	family_total_outstanding_amt: any[];
+	printFamilyArr: any;
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -431,5 +432,20 @@ export class FamilyTransactionEntryComponent implements OnInit {
 	backToFamilyInformation(familyEntryNumber) {
 		this.common.setFamilyInformation(familyEntryNumber);
 		this.router.navigate(['../family-information'], { relativeTo: this.route });
+	}
+
+	printFamilyInvoice(item) {
+		this.printFamilyArr = [];
+		this.printFamilyArr.push(item.fam_entry_number);
+		const inputJson = {'family_entry_numbers' : this.printFamilyArr, 'with_summary' : true};
+		this.feeService.printFamilyInvoice(inputJson).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log('result', result.data);
+				//this.familyDetailArr = result.data;
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
+			}
+		});
 	}
 }

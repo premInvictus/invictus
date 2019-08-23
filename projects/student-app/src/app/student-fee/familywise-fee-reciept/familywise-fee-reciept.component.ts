@@ -4,6 +4,7 @@ import { ErpCommonService, CommonAPIService } from '../../../../../../src/app/_s
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-familywise-fee-reciept',
 	templateUrl: './familywise-fee-reciept.component.html',
@@ -70,30 +71,35 @@ export class FamilywiseFeeRecieptComponent implements OnInit {
 		// });
 	}
 
-	setDataForPrint(event, item) {
-		if (event.checked) {
-			this.printFamilyArr.push(item.fam_entry_number);
-		} else {
-			for (let i = 0; i < this.printFamilyArr.length; i++) {
-				if (this.printFamilyArr[i].toString() === item.fam_entry_number.toString()) {
-					this.printFamilyArr.splice(i, 1);
-				}
-			}
-		}
+	// setDataForPrint(event, item) {
+	// 	if (event.checked) {
+	// 		this.printFamilyArr.push(item.fam_entry_number);
+	// 	} else {
+	// 		for (let i = 0; i < this.printFamilyArr.length; i++) {
+	// 			if (this.printFamilyArr[i].toString() === item.fam_entry_number.toString()) {
+	// 				this.printFamilyArr.splice(i, 1);
+	// 			}
+	// 		}
+	// 	}
 
-		if (this.printFamilyArr.length > 0) {
-			this.enablePrint = true;
-		} else {
-			this.enablePrint = false;
-		}
-	}
+	// 	if (this.printFamilyArr.length > 0) {
+	// 		this.enablePrint = true;
+	// 	} else {
+	// 		this.enablePrint = false;
+	// 	}
+	// }
 
-	printFamilyInvoice() {
+	printFamilyInvoice(item) {
+		this.printFamilyArr = [];
+		this.printFamilyArr.push(item.fam_entry_number);
 		const inputJson = {'family_entry_numbers' : this.printFamilyArr, 'with_summary' : true};
 		this.erpCommonService.printFamilyInvoice(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log('result', result.data);
 				//this.familyDetailArr = result.data;
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
 			}
 		});
 	}

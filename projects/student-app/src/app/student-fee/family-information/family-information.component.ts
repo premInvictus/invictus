@@ -3,6 +3,7 @@ import { ErpCommonService, CommonAPIService } from '../../../../../../src/app/_s
 import { Router, ActivatedRoute } from '@angular/router';
 import { interval } from 'rxjs';
 import { timer } from 'rxjs';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-family-information',
 	templateUrl: './family-information.component.html',
@@ -17,6 +18,7 @@ export class FamilyInformationComponent implements OnInit {
 	processType;
 	paytmResult;
 	payAPICall: any;
+	printFamilyArr: any;
 	@ViewChild('paymentOrderModel') paymentOrderModel;
 	@ViewChild('paytmResponse', { read: ElementRef }) private paytmResponse: ElementRef;
 	constructor(
@@ -142,6 +144,21 @@ export class FamilyInformationComponent implements OnInit {
 
 	moveToFamilyReceipt() {
 		this.router.navigate(['../student-familywise-fee-receipt'], { relativeTo: this.route });
+	}
+
+	printFamilyInvoice(item) {
+		this.printFamilyArr = [];
+		this.printFamilyArr.push(item.fam_entry_number);
+		const inputJson = {'family_entry_numbers' : this.printFamilyArr, 'with_summary' : true};
+		this.erpCommonService.printFamilyInvoice(inputJson).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log('result', result.data);
+				//this.familyDetailArr = result.data;
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
+			}
+		});
 	}
 
 // 	payFamilyOutstanding(familyEntryNumber) {
