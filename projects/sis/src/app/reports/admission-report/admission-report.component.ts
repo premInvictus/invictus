@@ -599,7 +599,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 
 		const blankTempObj = {};
 		blankTempObj['counter'] = '';
-		blankTempObj['class_name'] = 'Total';
+		blankTempObj['class_name'] = 'Grand Total';
 		blankTempObj['Boys'] = boyTotal;
 		blankTempObj['Girls'] = girlTotal;
 		blankTempObj['Other'] = otherTotal;
@@ -641,6 +641,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			{ id: 'Enquiry', name: 'Enquiry', field: 'Enquiry', sortable: true, filterable: true, resizable: false },
 			{ id: 'Registration', name: 'Registration', field: 'Registration', sortable: true, filterable: true, resizable: false },
 			{ id: 'Proadmission', name: 'Pro.Adm', field: 'Proadmission', sortable: true, filterable: true, resizable: false },
+			{ id: 'Admission', name: 'Admission', field: 'Admission', sortable: true, filterable: true, resizable: false },
 			{ id: 'Alumini', name: 'Alumini', field: 'Alumini', sortable: true, filterable: true, resizable: false },
 			{ id: 'Total', name: 'Total', field: 'Total', sortable: true, filterable: true }
 		];
@@ -674,7 +675,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 
 		const blankTempObj = {};
 		blankTempObj['counter'] = '';
-		blankTempObj['class_name'] = 'Total';
+		blankTempObj['class_name'] = 'Grand Total';
 		blankTempObj['Enquiry'] = enqTotal;
 		blankTempObj['Registration'] = regTotal;
 		blankTempObj['Proadmission'] = proTotal;
