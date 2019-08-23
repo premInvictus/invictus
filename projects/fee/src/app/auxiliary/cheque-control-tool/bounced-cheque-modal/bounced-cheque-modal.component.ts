@@ -86,6 +86,7 @@ export class BouncedChequeModalComponent implements OnInit {
 		this.dialogRef.close({ status: '0' });
 	}
 	submit() {
+		console.log('this.bouncedForm', this.bouncedForm);
 		if (this.bouncedForm.valid) {
 			if (this.bouncedForm.value.fcc_status === 'd') {
 				this.bouncedForm.patchValue({
@@ -112,6 +113,7 @@ export class BouncedChequeModalComponent implements OnInit {
 				});
 			} else if (this.bouncedForm.value.fcc_status === 'b') {
 				this.bouncedForm.patchValue({
+					'fcc_process_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_process_date, 'yyyy-MM-dd'),
 					'fcc_dishonor_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_dishonor_date, 'yyyy-MM-dd'),
 					'fcc_inv_id': this.studentDetails.invoice_id,
 					'fcc_ftr_id': this.studentDetails.fee_transaction_id,

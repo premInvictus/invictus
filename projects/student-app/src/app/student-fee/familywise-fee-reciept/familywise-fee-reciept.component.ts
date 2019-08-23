@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FeeService, CommonAPIService, SisService } from '../../_services';
+
+import { ErpCommonService, CommonAPIService } from '../../../../../../src/app/_services/index';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -12,13 +13,14 @@ export class FamilywiseFeeRecieptComponent implements OnInit {
 	familyDetailArr: any[] = [];
 	printFamilyArr: any[] = [];
 	enablePrint = false;
+	loginId;
+	processType;
 	@ViewChild('deleteModal') deleteModal;
 
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
-		public feeService: FeeService,
-		public sisService: SisService,
+		public erpCommonService: ErpCommonService,
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
 		public dialog: MatDialog) { }
@@ -32,9 +34,12 @@ export class FamilywiseFeeRecieptComponent implements OnInit {
 	}
 
 	getFamilyWiseFeeReceipt() {
-		const inputJson = {};
+		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.loginId = currentUser.login_id;
+		this.processType = currentUser.au_process_type;
+		const inputJson = {login_id : this.loginId , process_type : this.processType};
 		this.familyDetailArr = [];
-		this.feeService.getFamilyWiseFeeReceipt(inputJson).subscribe((result: any) => {
+		this.erpCommonService.getFamilyWiseFeeReceipt(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.familyDetailArr = result.data;
 			}
@@ -55,14 +60,14 @@ export class FamilywiseFeeRecieptComponent implements OnInit {
 
 	deleteFamily(value) {
 		console.log('in');
-		this.feeService.deleteFamily(value).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.common.showSuccessErrorMessage(result.message, 'success');
-				this.getFamilyWiseFeeReceipt();
-			} else {
-				this.common.showSuccessErrorMessage(result.message, 'error');
-			}
-		});
+		// this.erpCommonService.deleteFamily(value).subscribe((result: any) => {
+		// 	if (result && result.status === 'ok') {
+		// 		this.common.showSuccessErrorMessage(result.message, 'success');
+		// 		this.getFamilyWiseFeeReceipt();
+		// 	} else {
+		// 		this.common.showSuccessErrorMessage(result.message, 'error');
+		// 	}
+		// });
 	}
 
 	setDataForPrint(event, item) {
@@ -85,7 +90,7 @@ export class FamilywiseFeeRecieptComponent implements OnInit {
 
 	printFamilyInvoice() {
 		const inputJson = {'family_entry_numbers' : this.printFamilyArr, 'with_summary' : true};
-		this.feeService.printFamilyInvoice(inputJson).subscribe((result: any) => {
+		this.erpCommonService.printFamilyInvoice(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log('result', result.data);
 				//this.familyDetailArr = result.data;

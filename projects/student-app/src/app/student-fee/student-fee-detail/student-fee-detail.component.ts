@@ -41,7 +41,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	responseHtml = '';
 	paytmResult = '';
 	postURL = '';
-	
+
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('table') table: ElementRef;
@@ -64,6 +64,8 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	invoicepagesizeoptions = [10, 25, 50, 100];
 	outStandingAmt = 0;
 	payAPICall: any;
+	unsubscribePayAPIStatus: any;
+	paymentStatus = false;
 
 	constructor(
 		public dialog: MatDialog,
@@ -93,6 +95,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	}
 
 	ngAfterViewInit() {
+
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
 	}
@@ -275,7 +278,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				console.log('result.data[0]', result.data[0]);
 				this.paytmResult = result.data[0];
 				let ORDER_ID, MID;
-				for (let i = 0; i < this.paytmResult.length; i++ ) {
+				for (let i = 0; i < this.paytmResult.length; i++) {
 					if (this.paytmResult[i]['name'] === 'ORDER_ID') {
 						ORDER_ID = this.paytmResult[i]['value'];
 					}
@@ -286,22 +289,20 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 
 				// this.paymentOrderModel.closeDialog();
 				localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
-				const hostName =  window.location.href.split('/')[2] ;
+				const hostName = window.location.href.split('/')[2];
 				const newwindow = window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
 				if (window.focus) {
 					newwindow.focus();
-				}
-				if (window.focus) {
-					newwindow.focus();
+					localStorage.setItem('paymentWindowStatus', '1');
 				}
 
-
-				this.payAPICall = interval(10000).subscribe(x => {
-					if (ORDER_ID && MID) {
-						this.checkForPaymentStatus(ORDER_ID, MID);
-					}
-				});
-
+				if (!this.paymentStatus) {
+					this.payAPICall = interval(10000).subscribe(x => {
+						if (ORDER_ID && MID) {
+							this.checkForPaymentStatus(ORDER_ID, MID);
+						}
+					});
+				}
 			} else {
 				this.paymentOrderModel.closeDialog();
 			}
@@ -309,28 +310,38 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	checkForPaymentStatus(ORDER_ID , MID) {
-		const inputJson = {
-			// invoice_ids: this.studentInvoiceData['inv_ids'],
-			inv_login_id: this.loginId,
-			// inv_login_id: 1567,
-			inv_process_type: this.processType,
-			orderId : ORDER_ID,
-			mid : MID
-		};
+	checkForPaymentStatus(ORDER_ID, MID) {
+		const paymentWindowStatus = localStorage.getItem('paymentWindowStatus');
+		if (paymentWindowStatus === '1') {
+			const inputJson = {
+				// invoice_ids: this.studentInvoiceData['inv_ids'],	
+				inv_login_id: this.loginId,
+				// inv_login_id: 1567,
+				inv_process_type: this.processType,
+				orderId: ORDER_ID,
+				mid: MID
+			};
 
-		this.erpCommonService.checkForPaymentStatus(inputJson).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				const resultData = result.data;
-				if (resultData && resultData[0]['trans_status'] === 'TXN_SUCCESS' || resultData && resultData[0]['trans_status'] === 'TXN_FAILURE') {
-					this.payAPICall.unsubscribe();
-					this.getStudentInvoiceDetail();
+			this.erpCommonService.checkForPaymentStatus(inputJson).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					const resultData = result.data;
+					if (resultData && resultData[0]['trans_status'] === 'TXN_SUCCESS' || resultData && resultData[0]['trans_status'] === 'TXN_FAILURE') {
+						this.paymentStatus = true;
+						this.payAPICall.unsubscribe();
+						this.getStudentInvoiceDetail();
+					}
 				}
-			}
-		});
+			});
+		} else {
+			this.payAPICall.unsubscribe();
+		}
+
 	}
 
 	ngOnDestroy() {
+		if (this.payAPICall) {
+			this.payAPICall.unsubscribe();
+		}
 		this.getStudentInvoiceDetail();
 	}
 }

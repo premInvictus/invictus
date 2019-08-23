@@ -6,6 +6,9 @@ import { appConfig } from 'projects/axiom/src/app/app.config';
 import { Event } from 'projects/axiom/src/app/_models/event';
 import { SocketService, UserAccessMenuService } from 'projects/axiom/src/app/_services';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services/index';
+import { FormControl } from '@angular/forms';
+import { PreviewDocumentComponent } from '../../../shared-module/preview-document/preview-document.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-student-dashboard',
@@ -60,6 +63,15 @@ export class StudentDashboardComponent implements OnInit {
 	dataArray: any[] = [];
 	dayArray: any[] = [];
 	todaysDate = new Date();
+	sub_id;
+	assignmentArray: any[] = [];
+	currentAssignment: any;
+	currentAssignmentIndex: number;
+	assignmentPre = true;
+	assignmentNext = true;
+
+	// test
+	testView = 'past';
 
 	constructor(
 		private reportService: ReportService,
@@ -67,7 +79,8 @@ export class StudentDashboardComponent implements OnInit {
 		private service: AdminService,
 		private socketService: SocketService,
 		private userAccessMenuService: UserAccessMenuService,
-		private erpCommonService: ErpCommonService
+		private erpCommonService: ErpCommonService,
+		public dialog: MatDialog
 
 	) { }
 
@@ -173,6 +186,9 @@ export class StudentDashboardComponent implements OnInit {
 
 
 	}
+	switchView(testView) {
+		this.testView = testView;
+	}
 	getPeriodDayByClass() {
 		this.erpCommonService.getPeriodDayByClass({class_id: this.userDetail.au_class_id}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -215,6 +231,7 @@ export class StudentDashboardComponent implements OnInit {
 		this.qelementService.getScheduledExam(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.comingExamArray = result.data;
+				console.log(this.comingExamArray);
 			} else {
 				this.comingExamArray = [];
 			}
@@ -248,9 +265,62 @@ export class StudentDashboardComponent implements OnInit {
 					for (const item of this.subjectArray) {
 						this.subjectNameArray.push(item.sub_name);
 					}
+					this.getAssignment();
 				}
 			}
 		);
+	}
+	previewDocuments(attachmentArray) {
+		const attArr: any[] = [];
+		if (attachmentArray && attachmentArray.length > 0) {
+			attachmentArray.forEach(element => {
+				attArr.push({
+					file_url: element.atmt_url
+				});
+			});
+			const dialogRef = this.dialog.open(PreviewDocumentComponent, {
+				height: '80%',
+				width: '1000px',
+				data: {
+					index: '',
+					images: attArr
+				}
+			});
+		}
+	}
+	getAssignment() {
+		this.assignmentArray = [];
+		if (!this.sub_id) {
+			this.sub_id = this.subjectArray[0].sub_id;
+		}
+		const param: any = {};
+		param.class_id = this.userDetail.au_class_id;
+		param.sec_id = this.userDetail.au_sec_id;
+		param.sub_id = this.sub_id;
+		this.erpCommonService.getAssignment({class_id: this.userDetail.au_class_id, sec_id: this.userDetail.au_sec_id,
+			sub_id: this.sub_id}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.assignmentArray = result.data;
+				this.assignmentNavigate(0);
+
+			}
+		});
+	}
+
+	assignmentNavigate(index) {
+		this.currentAssignmentIndex = index;
+		this.currentAssignment = this.assignmentArray[this.currentAssignmentIndex];
+		if	(this.assignmentArray.length === 1 || this.assignmentArray.length === 0) {
+			this.assignmentPre = true;
+			this.assignmentNext = true;
+		} else if (this.currentAssignmentIndex === this.assignmentArray.length - 1) {
+			this.assignmentNext = true;
+			this.assignmentPre = false;
+		} else if (this.currentAssignmentIndex === 0) {
+			this.assignmentNext = false;
+			this.assignmentPre = true;
+		}
+
 	}
 
 	getTotalBySubject(sub_id) {

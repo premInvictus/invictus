@@ -64,4 +64,66 @@ export class ErpCommonService {
 			this.service.startLoading();
 			return this.http.post(environment.apiSmartUrl + '/assignment/getAssignment', value);
 		}
+		addFamily(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiFeeUrl + '/familyInformation/addFamily', value);
+		}
+		updateFamily(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiFeeUrl + '/familyInformation/updateFamily', value);
+		}
+		deleteFamily(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiFeeUrl + '/familyInformation/deleteFamily', value);
+		}
+		getFamilyWiseFeeReceipt(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyWiseFeeReceipt', value);
+		}
+
+		getFamilyInformation(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyInformation', value);
+		}
+		getFamilyOutstandingDetail(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyOutstandingDetail', value);
+		}
+
+		printFamilyInvoice(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiFeeUrl + '/familyInformation/printFamilyInvoice', value);
+		}
+
+		getEntryMode(value) {
+			return this.http.get(environment.apiFeeUrl + '/feeSetup/getEntryMode');
+		}
+		getPaymentMode(value) {
+			return this.http.get(environment.apiFeeUrl + '/feeSetup/getPaymentMode');
+		}
+		getFeePeriods(value) {
+			this.service.startLoading();
+			return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeePeriods');
+		}
+		getBanks(value) {
+			return this.http.get(environment.apiFeeUrl + '/feeSetup/getBanks');
+		}
+		getBanksAll(value) {
+			return this.http.get(environment.apiFeeUrl + '/feeSetup/getAllBank');
+		}
+		getCalculationMethods(value) {
+			this.service.startLoading();
+			return this.http.get(environment.apiFeeUrl + '/feeSetup/getCalculationMethods');
+		}
+		insertFeeTransaction(value: any) {
+			this.service.startLoading();
+			// if (this.processType.getProcesstype()) {
+			// 	value.inv_process_type = this.processType.getProcesstype();
+			// }
+			return this.http.post(environment.apiFeeUrl + '/feeTransaction/insertFeeTransaction', value);
+		}
+		getSchool() {
+			this.service.startLoading();
+			return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
+		}
 }

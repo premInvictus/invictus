@@ -312,36 +312,37 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	logout() {
-		this.userData = JSON.parse(this._cookieService.get('userData'));
-		if (this.userData) {
-			if (localStorage && localStorage.getItem('session')) {
-				const saveStateJSON = {
-					pro_url: this.proUrl ? this.proUrl : '',
-					ses_id: JSON.parse(localStorage.getItem('session')).ses_id
-				};
-				this.sisService.logout({
-					au_login_id: this.userData['LN'],
-					user_default_data: JSON.stringify(saveStateJSON)
-				}).subscribe(
-					(result: any) => {
-						if (result.status === 'ok') {
-							localStorage.clear();
-							const routeStore: RouteStore = new RouteStore();
-							routeStore.adm_no = '';
-							routeStore.login_id = '';
-							this._cookieService.removeAll();
-							this.router.navigate(['/login']);
-						} else {
-							this.notif.showSuccessErrorMessage('Error While Logout', 'error');
-						}
-					});
+
+		if (this._cookieService.get('userData')) {
+			this.userData = JSON.parse(this._cookieService.get('userData'));
+			if (this.userData) {
+				if (localStorage && localStorage.getItem('session')) {
+					const saveStateJSON = {
+						pro_url: this.proUrl ? this.proUrl : '',
+						ses_id: JSON.parse(localStorage.getItem('session')).ses_id
+					};
+					this.sisService.logout({
+						au_login_id: this.userData['LN'],
+						user_default_data: JSON.stringify(saveStateJSON)
+					}).subscribe(
+						(result: any) => {
+							if (result.status === 'ok') {
+								localStorage.clear();
+								const routeStore: RouteStore = new RouteStore();
+								routeStore.adm_no = '';
+								routeStore.login_id = '';
+								this._cookieService.removeAll();
+								this.router.navigate(['/login']);
+							} else {
+								this.notif.showSuccessErrorMessage('Error While Logout', 'error');
+							}
+						});
+				} else {
+					this.router.navigate(['/login']);
+				}
 			} else {
 				this.router.navigate(['/login']);
 			}
-		} else {
-			this.router.navigate(['/login']);
 		}
 	}
-
-
 }

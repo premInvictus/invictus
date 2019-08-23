@@ -17,6 +17,7 @@ export class CommonAPIService {
 	menus: any[] = [];
 	familyData: any;
 	familyNumber: any;
+	selectedChildData: any;
 	constructor(private http: HttpClient,
 		private _notificationService: NotificationsService,
 		private _cookieService: CookieService,
@@ -217,6 +218,14 @@ export class CommonAPIService {
 
 	getFamilyInformation() {
 		return this.familyNumber;
+	}
+
+	setSelectedChildData(value) {
+		this.selectedChildData = value;
+	}
+
+	getSelectedChildData() {
+		return this.selectedChildData;
 	}
 
 }
