@@ -5,10 +5,10 @@
                 <div class="col-8">
                     <span class="font-size-24 font-medium"> Family Wise Fee Reciept</span>
                 </div>
-                <div class="col-4 text-right">
+                <!-- <div class="col-4 text-right">
                     <button mat-button class="font-size-14 font-white width-140 btn-blue"
                         (click)="moveToAddFamily()">Add Family</button>
-                </div>
+                </div> -->
             </div>
         </mat-card>
     </div>
@@ -26,16 +26,16 @@
                         <mat-icon matSuffix>search</mat-icon>
                     </mat-form-field>
                 </div>
-                <div class="col-6 text-right margin-top-10">
-                    <button *ngIf="enablePrint" mat-button class="font-size-14 font-white width-140 btn-darkblue" (click)="printFamilyInvoice()">Print</button>
-                </div>
+                <!-- <div class="col-6 text-right margin-top-10" *ngIf="familyDetailArr.length > 0">
+                    <button mat-button class="font-size-14 font-white width-140 btn-darkblue" (click)="printFamilyInvoice()">Print</button>
+                </div> -->
             </div>
             <div class="row">
                 <div class="col-12">
                     <table class="table table-borderd table-stripped custom-table">
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
-                                <th class="custom-th">Sr no.</th>
+                                <!-- <th class="custom-th">Sr no.</th> -->
                                 <th class="custom-th">Family No</th>
                                 <th class="custom-th">Primary Parent</th>
                                 <th class="custom-th">Contact No</th>
@@ -48,34 +48,34 @@
                         </thead>
                         <tbody>
                             <tr class="custom-tr" *ngFor="let item of familyDetailArr">
-                                <td class="custom-td" width="4%">
-                                    <mat-checkbox *ngIf="item?.family_outstanding_amt > 0" (change)="setDataForPrint($event, item)"></mat-checkbox>
-                                </td>
+                                <!-- <td class="custom-td">
+                                    <mat-checkbox (change)="setDataForPrint($event, item)"></mat-checkbox>
+                                </td> -->
                                 <td class="custom-td" width="8%">
-                                    <span class="pointer font-bold font-skyblue font-underline" *ngIf="item?.family_outstanding_amt > 0">
-                                        <a (click)="goToFamilyInformation(item?.fam_entry_number)">{{item?.fam_family_name}}
+                                        
+                                    <span class="pointer font-bold font-skyblue font-underline">
+                                        <a *ngIf="item?.family_outstanding_amt > 0 " (click)="goToFamilyInformation(item?.fam_entry_number)">{{item?.fam_family_name}}
                                             - {{item?.fam_entry_number}}
                                         </a>
                                     </span>
-                                    <span class="font-bold" *ngIf="item?.family_outstanding_amt == 0 || item?.family_outstanding_amt < 0">
-                                            {{item?.fam_family_name}}- {{item?.fam_entry_number}}
+                                    <span class="font-bold">
+                                        <a *ngIf="!(item?.family_outstanding_amt > 0) ">{{item?.fam_family_name}}
+                                            - {{item?.fam_entry_number}}
+                                        </a>
                                     </span>
                                 </td>
-                                <td class="custom-td text-capitalize text-left" width="25%">{{item?.epd_parent_name}}</td>
-                                <td class="custom-td" width="8%">{{item?.epd_contact_no}}</td>
+                                <td class="custom-td text-capitalize text-left" width="30%">{{item?.epd_parent_name}}</td>
+                                <td class="custom-td" width="7%">{{item?.epd_contact_no}}</td>
                                 <td class="custom-td text-capitalize text-left" width="25%">{{item?.au_full_name}}</td>
-                                <td *ngIf="item?.sec_name && item?.sec_name != ' '" class="custom-td text-capitalize" width="8%">{{item?.class_name}}-{{item?.sec_name}}</td>
-                                <td *ngIf="!(item?.sec_name && item?.sec_name != ' ')" class="custom-td text-capitalize" width="8%">{{item?.class_name}}</td>
-                                <td class="custom-td" width="10%">{{item?.no_of_students}} Students</td>
-                                <td class="custom-td" width="5%"> &#8377;  {{item?.family_outstanding_amt  | number}}</td>
-                                <td class="custom-td" width="8%">
-                                    <a href="{{item.fam_declaration_doc_url}}" *ngIf="item.fam_declaration_doc_url">
-                                        <i class="fas fa-file-image image-icon pointer"></i>
-                                        <span class="ver-line-divider margin-left-10"></span></a>
-                                    <i class="fas fa-edit edit-icon pointer" (click)="editFamily(item)"></i>
-                                    <span class="ver-line-divider margin-left-10"></span>
-                                    <i class="fas fa-trash-alt trash-icon pointer" (click)="openDeleteDialog(item)"></i>
+                                <td *ngIf="item?.sec_name && item?.sec_name != ' '" class="custom-td text-capitalize" width="5%">{{item?.class_name}}-{{item?.sec_name}}</td>
+                                <td *ngIf="!(item?.sec_name && item?.sec_name != ' ')" class="custom-td text-capitalize" width="5%">{{item?.class_name}}</td>
+                                <td class="custom-td" width="8%">{{item?.no_of_students}} Students</td>
+                                <td class="custom-td" width="5%"> &#8377; {{item?.family_outstanding_amt  | number}}</td>
+                                <td class="custom-td" width="2%">  
+                                    <i *ngIf="item?.family_outstanding_amt > 0" class="fas fa-print" (click)="printFamilyInvoice(item?.fam_entry_number)" style="cursor:pointer" title="Print"></i>
+                                    <span *ngIf="!(item?.family_outstanding_amt > 0)"> - </span>
                                 </td>
+                                
                             </tr>
                             <tr *ngIf="familyDetailArr.length ==0">
                                 <td colspan="9" class="text-center">No Record Found</td>
@@ -88,5 +88,5 @@
         </mat-card>
     </div>
 </div>
-<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteFamily($event)">
-</app-delete-modal>
+<!-- <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteFamily($event)">
+</app-delete-modal> -->

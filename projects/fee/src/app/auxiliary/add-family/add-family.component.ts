@@ -14,8 +14,13 @@ export class AddFamilyComponent implements OnInit {
 	childData: any[] = [];
 	classArray: any[] = [];
 	sectionArray: any[] = [];
+	studentData: any[] = [];
 	studentdetails: any;
 	addFamilyForm: FormGroup;
+	declaration_doc_url = '';
+	currClassId = '';
+	currSectionId = '';
+	defaultsrc = '';
 	@ViewChild('myInput') myInput: ElementRef;
 	constructor(
 		public feeService: FeeService,
@@ -45,33 +50,55 @@ export class AddFamilyComponent implements OnInit {
 			'adm_no': '',
 			'class_id': '',
 			'sec_id': '',
-			'stu_name': ''
+			'stu_id': ''
 		});
 	}
 
 	addChild(event) {
+		event.preventDefault();
 		const inputJson = {};
 
 		if (this.addFamilyForm.value.adm_no) {
 			inputJson['au_login_id'] = this.addFamilyForm.value.adm_no;
 		} else {
-			if (this.addFamilyForm.value.class_id && this.addFamilyForm.value.sec_id && this.addFamilyForm.value.stu_name) {
+			if (this.addFamilyForm.value.class_id) {
 				inputJson['au_class_id'] = this.addFamilyForm.value.class_id;
+			}
+			if (this.addFamilyForm.value.sec_id) {
 				inputJson['au_sec_id'] = this.addFamilyForm.value.sec_id;
-				inputJson['au_full_name'] = this.addFamilyForm.value.stu_name;
+			}
+			if (this.addFamilyForm.value.stu_id) {
+				inputJson['au_login_id'] = this.addFamilyForm.value.stu_id;
 			}
 		}
-		this.getStudentInformation(inputJson);
+
+		if (Object.keys(inputJson).length > 0) {
+			this.checkForChildExists(inputJson);
+		} else {
+			this.common.showSuccessErrorMessage('Please choose Student to Add', 'error');
+		}
+	}
+
+	checkForChildExists(inputJson) {
+		this.feeService.checkChildExists(inputJson).subscribe((result: any) => {
+			if (result && result.status === 'error') {
+				this.common.showSuccessErrorMessage(result.message, 'error');
+			} else {
+				this.getStudentInformation(inputJson);
+			}
+		});
 	}
 
 	reset(event) {
 		this.addFamilyForm.patchValue({
-			fam_entry_number: '',
 			adm_no: '',
 			class_id: '',
 			sec_id: '',
 			stu_name: ''
 		});
+		this.currClassId = '';
+		this.currSectionId = '';
+		this.studentData = [];
 	}
 
 	resetAll(event) {
@@ -83,6 +110,9 @@ export class AddFamilyComponent implements OnInit {
 			stu_name: '',
 			family_name: ''
 		});
+		this.currClassId = '';
+		this.currSectionId = '';
+		this.studentData = [];
 	}
 
 	getClass() {
@@ -105,7 +135,7 @@ export class AddFamilyComponent implements OnInit {
 
 	getFamilyInformation(param) {
 		if (param && param.fam_entry_number) {
-			this.feeService.getFamilyInformation({fam_entry_number: param.fam_entry_number}).subscribe((result: any) => {
+			this.feeService.getFamilyInformation({ fam_entry_number: param.fam_entry_number }).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					console.log('data--', result.data);
 					this.common.showSuccessErrorMessage(result.message, 'success');
@@ -113,7 +143,7 @@ export class AddFamilyComponent implements OnInit {
 						const cdata = result.data[i];
 						let class_name = '', parent_name = '';
 
-						if (cdata.sec_name) {
+						if (cdata.sec_name && cdata.sec_name !== '' && cdata.sec_name !== ' ') {
 							class_name = cdata.class_name + '-' + cdata.sec_name;
 						} else {
 							class_name = cdata.class_name;
@@ -130,6 +160,10 @@ export class AddFamilyComponent implements OnInit {
 							fam_entry_number: cdata.fam_entry_number ? cdata.fam_entry_number : ''
 						});
 
+						if (cdata.fam_declaration_doc_url) {
+							this.declaration_doc_url = cdata.fam_declaration_doc_url;
+						}
+
 						console.log('this.addFamilyForm', this.addFamilyForm);
 
 						this.childData.push(
@@ -138,7 +172,7 @@ export class AddFamilyComponent implements OnInit {
 								'stu_login_no': cdata.au_login_id ? cdata.au_login_id : '0',
 								'stu_name': cdata.au_full_name ? cdata.au_full_name : '-',
 								'stu_class_name': class_name,
-								'stu_active_parent_id': cdata.epd_id  ? cdata.epd_id : '0',
+								'stu_active_parent_id': cdata.epd_id ? cdata.epd_id : '0',
 								'stu_active_parent_name': parent_name ? parent_name : '-',
 								'stu_active_parent_contact_no': cdata.epd_contact_no ? cdata.epd_contact_no : '-',
 								'stu_category': cdata.fo_name ? cdata.fo_name : '-',
@@ -150,8 +184,8 @@ export class AddFamilyComponent implements OnInit {
 							}
 						);
 					}
-					//this.childData = [];
-					//this.resetAll('');
+					// this.childData = [];
+					// this.resetAll('');
 				} else {
 					this.common.showSuccessErrorMessage(result.message, 'error');
 				}
@@ -173,13 +207,13 @@ export class AddFamilyComponent implements OnInit {
 							this.studentdetails = result.data[0];
 
 							this.addFamilyForm.patchValue({
-								adm_no: this.studentdetails.em_admission_no,
-								class_id: this.studentdetails.au_class_id,
-								sec_id: this.studentdetails.au_sec_id,
-								stu_name: this.studentdetails.au_full_name
+								adm_no: this.studentdetails.em_admission_no
+								// class_id: this.studentdetails.au_class_id,
+								// sec_id: this.studentdetails.au_sec_id,
+								// stu_name: this.studentdetails.au_full_name
 							});
 
-							if (this.studentdetails.sec_name) {
+							if (this.studentdetails.sec_name && this.studentdetails.sec_name !== ' ') {
 								class_name = this.studentdetails.class_name + '-' + this.studentdetails.sec_name;
 							} else {
 								class_name = this.studentdetails.class_name;
@@ -209,8 +243,10 @@ export class AddFamilyComponent implements OnInit {
 								'keyChild': '0'
 
 							});
+							this.reset('');
 						} else {
 							this.common.showSuccessErrorMessage('This Student Already Added in Family, Please Choose Another One !', 'error');
+							this.reset('');
 						}
 
 
@@ -218,6 +254,7 @@ export class AddFamilyComponent implements OnInit {
 						inputElem.select();
 					} else {
 						this.common.showSuccessErrorMessage(result.data, 'error');
+						this.reset('');
 					}
 				});
 		} else {
@@ -267,12 +304,13 @@ export class AddFamilyComponent implements OnInit {
 			const inputJson = {};
 			inputJson['childData'] = this.childData;
 			inputJson['fam_family_name'] = this.addFamilyForm.value.family_name;
-			inputJson['fam_declaration_doc_url'] = '';
+			inputJson['fam_declaration_doc_url'] = this.declaration_doc_url;
 			this.feeService.addFamily(inputJson).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.message, 'success');
 					this.childData = [];
 					this.resetAll('');
+					this.router.navigate(['../familywise-fee-reciept'], { relativeTo: this.route });
 				} else {
 					this.common.showSuccessErrorMessage(result.message, 'error');
 				}
@@ -291,12 +329,13 @@ export class AddFamilyComponent implements OnInit {
 			inputJson['childData'] = this.childData;
 			inputJson['fam_entry_number'] = this.addFamilyForm.value.fam_entry_number;
 			inputJson['fam_family_name'] = this.addFamilyForm.value.family_name;
-			inputJson['fam_declaration_doc_url'] = '';
+			inputJson['fam_declaration_doc_url'] = this.declaration_doc_url;
 			this.feeService.updateFamily(inputJson).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.message, 'success');
 					this.childData = [];
 					this.resetAll('');
+					this.router.navigate(['../familywise-fee-reciept'], { relativeTo: this.route });
 				} else {
 					this.common.showSuccessErrorMessage(result.message, 'error');
 				}
@@ -308,32 +347,88 @@ export class AddFamilyComponent implements OnInit {
 		}
 	}
 
-	bindImageToForm($event) {
-		let fileName = '';
-		let au_profileimage = '';
-		this.sisService.uploadDocuments([{ fileName: fileName, imagebase64: au_profileimage, module: 'family' }]).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				// this.defaultsrc = result.data[0].file_url;
-				// this.studentdetailsform.patchValue({
-				// 	au_profileimage: result.data[0].file_url
-				// });
-				if (result.data[0].file_url && this.addFamilyForm.value.au_login_id) {
-					this.sisService.studentImageProfileUpload({
-						au_login_id: this.addFamilyForm.value.au_login_id,
-						au_profileimage: result.data[0].file_url
-					}).subscribe((result1: any) => {
-						if (result1 && result1.status === 'ok') {
-							this.common.showSuccessErrorMessage(result1.data, 'success');
-						}
-					});
+	bindImageToForm(event) {
+
+		const file: File = event.target.files[0];
+		const fileReader: FileReader = new FileReader();
+		fileReader.onload = (e) => {
+			this.uploadImage(file.name, fileReader.result);
+		};
+		fileReader.readAsDataURL(file);
+
+		// this.sisService.uploadDocuments([{ fileName: fileName, imagebase64: au_profileimage, module: 'family' }]).subscribe((result: any) => {
+		// 	if (result.status === 'ok') {
+		// 		// this.defaultsrc = result.data[0].file_url;
+		// 		// this.studentdetailsform.patchValue({
+		// 		// 	au_profileimage: result.data[0].file_url
+		// 		// });
+		// 		if (result.data[0].file_url && this.addFamilyForm.value.au_login_id) {
+		// 			this.sisService.studentImageProfileUpload({
+		// 				au_login_id: this.addFamilyForm.value.au_login_id,
+		// 				au_profileimage: result.data[0].file_url
+		// 			}).subscribe((result1: any) => {
+		// 				if (result1 && result1.status === 'ok') {
+		// 					this.common.showSuccessErrorMessage(result1.data, 'success');
+		// 				}
+		// 			});
+		// 		}
+		// 	}
+		// });
+	}
+
+	uploadImage(fileName, au_profileimage) {
+		this.sisService.uploadDocuments([
+			{ fileName: fileName, imagebase64: au_profileimage, module: 'family' }]).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.declaration_doc_url = result.data[0].file_url;
+					// this.addFamilyForm.patchValue({
+					// 	au_profileimage: result.data[0].file_url
+					// });
 				}
-			}
-		});
+			});
 	}
 
 	moveToFamilyWiseFee() {
 		this.common.setFamilyData('');
 		this.router.navigate(['../familywise-fee-reciept'], { relativeTo: this.route });
 	}
+
+	checkThumbnail(url: any) {
+		if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
+			url.match(/gif/) || url.match(/jpeg/) ||
+			url.match(/JPG/) || url.match(/PNG/) || url.match(/BMP/) ||
+			url.match(/GIF/) || url.match(/JPEG/)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	getClassStudent(event) {
+		this.currClassId = event.value;
+		this.getAllStudent();
+	}
+
+	getClassSectionStudent(event) {
+		this.currSectionId = event.value;
+		this.getAllStudent();
+	}
+
+	getAllStudent() {
+		const inputJson = {
+			class_id: this.currClassId,
+			sec_id: this.currSectionId
+		};
+		this.studentData = [];
+		this.sisService.getStudentsPromotionTool(inputJson).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				console.log('result', result);
+				this.studentData = result.data;
+			} else {
+				this.studentData = [];
+			}
+		});
+	}
+
 
 }

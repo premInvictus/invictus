@@ -1,4 +1,3 @@
-
 <div class="row">
   <div class="col-12">
     <mat-card>
@@ -39,7 +38,7 @@
           <div class="row margin-top-1">
             <div class="col-12 text-center">
               <span class="font-size-16 font-bold">Family No.</span><br>
-              <span class="font-size-14">{{familyOutstandingArr?.fam_family_name}} - {{familyOutstandingArr.fam_entry_number}}</span><br>
+              <span class="font-size-14">{{familyOutstandingArr.fam_family_name}} - {{familyOutstandingArr.fam_entry_number}}</span><br>
             </div>
           </div>
         </div>
@@ -56,23 +55,25 @@
           <div class="row margin-top-15">
             <div class="col-12 text-center">
               <span class="font-size-16 font-bold">Net outstanding</span><br>
-              <span class="font-size-14"> &#8377; {{netOutstanding | number}}</span><br>
+              <span class="font-size-14">&#8377; {{familyOutstandingArr.family_total_outstanding_amt | number}}</span><br>
             </div>
           </div>
         </div>
-        <div class="col-5 text-right margin-top-10 position-right" *ngIf="netOutstanding > 0">                   
-          <button mat-button class="font-size-14 font-white  btn-back" (click)="moveToFamilyReceipt()">Back</button>
+        <div class="col-5 text-right margin-top-10 position-right" *ngIf="familyOutstandingArr.family_total_outstanding_amt > 0">
+          
+          
+          <button mat-button class="font-size-14  font-white  btn-back" (click)="moveToFamilyReceipt()">Back</button>
           <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue">Print Summary</button>
-          <button mat-button class="font-size-14 margin-left-10 font-white  btn-pay" (click)="payFamilyOutstanding(familyOutstandingArr?.fam_entry_number)">Pay
+          <button mat-button class="font-size-14 margin-left-10 font-white  btn-pay" (click)="orderPayment(familyOutstandingArr?.fam_entry_number)">Pay
             Now</button>
         </div>
       </div>
 
       <div class="row margin-top-15">
         <div class="col-12">
-          <ng-container *ngFor="let titem of childDataArr let i = index;">
+          <ng-container>
             <br>
-            <mat-accordion>
+            <!-- <mat-accordion>
               <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header class="family-panel-header">
                   <mat-panel-title>
@@ -86,51 +87,44 @@
                     <span *ngIf="titem.sec_name == ' ' || titem.sec_name == ''" class="font-size-14 font-white "> Class : {{titem.class_name}} </span>
                   </mat-panel-title>
                   <span class="font-size-16 font-white text-right margin-left-right-15 "> Net Payable :
-                    &#8377; {{titem.outstanding_amt  | number}}</span>
-                </mat-expansion-panel-header>
+                      &#8377; {{titem.outstanding_amt  | number}}</span>
+                </mat-expansion-panel-header> -->
                 <div class="row">
                   <div class="col-12">
                     <table class="table table-borderd table-stripped custom-table">
                       <thead class="table-skill__head text-center">
                         <tr class="custom-tr">
-                          <th class="custom-th">Select</th>
-                          <th class="custom-th">Invoice No.</th>
-                          <th class="custom-th">Fee Period</th>
-                          <th class="custom-th">Invoice Date</th>
-                          <th class="custom-th">Due date</th>
-                          <th class="custom-th">Status</th>
-                          <th class="custom-th">Outstanding</th>
+                          <th class="custom-th">Admission No.</th>
+                          <th class="custom-th">Student Name</th>
+                          <th class="custom-th">Class</th>
+                          <th class="custom-th">Net Payable</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <ng-container *ngFor="let det of titem.invoice_data">
-                          <tr *ngIf="det.inv_invoice_no">
-                            <td class="custom-td ">
-                              <mat-checkbox [checked]="det.checked" (change)="setInvoiceCheck(det.inv_invoice_no)"></mat-checkbox>
+                        <!-- *ngFor="let det of titem.invoice_data" -->
+                        <ng-container *ngFor="let titem of childDataArr let i = index;">
+                          <tr>
+                            <td class="custom-td text-capitalize" width="8%">{{titem.au_admission_no}}</td>
+                            <td class="custom-td text-capitalize text-left" width="80%">{{titem.au_full_name}}</td>
+                            <td class="custom-td"  width="5%">
+                                <span *ngIf="titem.sec_name != ' ' && titem.sec_name != ''" class="font-size-14"> {{titem.class_name}} -
+                                    {{titem.sec_name}}</span>
+                                <span *ngIf="titem.sec_name == ' ' || titem.sec_name == ''" class="font-size-14"> {{titem.class_name}} </span>
                             </td>
-                            <td class="custom-td">{{det.inv_invoice_no}}</td>
-                            <td class="custom-td">{{det.inv_fee_period}}</td>
-                            <td class="custom-td">{{det.inv_invoice_date | date: 'd-MMM-y'}}</td>
-                            <td class="custom-td">{{det.inv_due_date | date: 'd-MMM-y'}}</td>
-                            <td class="custom-td">{{det.inv_paid_status}}</td>
-                            <td class="custom-td">&#8377; {{det.flgr_balance  | number}}</td>
+                            <td class="custom-td text-right"  width="7%">&#8377; {{titem.outstanding_amt  | number}}</td>
                           </tr>                          
                         </ng-container>
-                        <ng-container *ngIf="titem.invoice_data.length == 1">
-                          <tr>
-                            <td class="custom-td" colspan="7">
-                                <p class="text-center">No Invoice Available</p>
-                            </td>
-                          </tr>
-                        </ng-container>
+                        <tr *ngIf="childDataArr.length == 0">
+                            <td colspan="4" class="text-center">No Record Found</td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
                 <br>
                 <br>
-              </mat-expansion-panel>
-            </mat-accordion>
+              <!-- </mat-expansion-panel>
+            </mat-accordion> -->
           </ng-container>
           <div class="row">
             <div class="col-12">
@@ -144,16 +138,18 @@
               </div>
             </div>
           </div>
-          <div class="row margin-top-20" *ngIf="netOutstanding > 0">
-            <div class="col-12 text-center">
+          <div class="row margin-top-20">
+            <!-- <div class="col-12 text-center" *ngIf="familyOutstandingArr.family_total_outstanding_amt > 0">
               <button mat-button class="font-size-14 font-white btn-blue">Print
                 Summary</button>
-              <button mat-button class="font-size-14 margin-left-10 font-white btn-pay" (click)="payFamilyOutstanding(familyOutstandingArr?.fam_entry_number)">Pay
+              <button mat-button class="font-size-14 margin-left-10 font-white btn-pay" (click)="orderPayment(familyOutstandingArr?.fam_entry_number)">Pay
                 Now</button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
     </mat-card>
   </div>
 </div>
+
+<div #paytmResponse></div>

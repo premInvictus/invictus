@@ -420,4 +420,13 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyOutstandingDetail', value);
 	}
+
+	printFamilyInvoice(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/printFamilyInvoice', value);
+	}
+
+	checkChildExists(value) {
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/checkChildExists', value);
+	}
 }
