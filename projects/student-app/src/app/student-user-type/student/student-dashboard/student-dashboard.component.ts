@@ -5,7 +5,7 @@ import { ReportService } from 'projects/axiom/src/app/reports/service/report.ser
 import { appConfig } from 'projects/axiom/src/app/app.config';
 import { Event } from 'projects/axiom/src/app/_models/event';
 import { SocketService, UserAccessMenuService } from 'projects/axiom/src/app/_services';
-
+import { ErpCommonService, CommonAPIService } from 'src/app/_services/index';
 
 @Component({
 	selector: 'app-student-dashboard',
@@ -55,12 +55,19 @@ export class StudentDashboardComponent implements OnInit {
 	latestMarks: any;
 	currentRank: any;
 
+	timeTableFlag = false;
+	tableData: any[] = [];
+	dataArray: any[] = [];
+	dayArray: any[] = [];
+	todaysDate = new Date();
+
 	constructor(
 		private reportService: ReportService,
 		private qelementService: QelementService,
 		private service: AdminService,
 		private socketService: SocketService,
-		private userAccessMenuService: UserAccessMenuService
+		private userAccessMenuService: UserAccessMenuService,
+		private erpCommonService: ErpCommonService
 
 	) { }
 
@@ -102,7 +109,9 @@ export class StudentDashboardComponent implements OnInit {
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.userDetail = result.data[0];
+					console.log('userDetail', this.userDetail);
 					this.getOverallPerformance();
+					this.getPeriodDayByClass();
 					this.admissionNumber = this.userDetail.au_admission_no;
 					this.className = this.userDetail.class_name;
 					this.secName = this.userDetail.sec_name;
@@ -164,6 +173,38 @@ export class StudentDashboardComponent implements OnInit {
 
 
 	}
+	getPeriodDayByClass() {
+		this.erpCommonService.getPeriodDayByClass({class_id: this.userDetail.au_class_id}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log('getPeriodDayByClass', result.data);
+			}
+		});
+	}
+	getTeacherwiseTableDetails() {
+		this.erpCommonService.getTeacherwiseTableDetails({ uc_class_id: '9', uc_sec_id: this.userDetail.au_sec_id})
+		.subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.tableData = [];
+				this.dataArray = [];
+				this.tableData = res.data.tabledata;
+				let i = 0;
+				for (const item of this.tableData) {
+					for (const titem of item) {
+						if (this.dayArray[Number(this.todaysDate.getDay())] === titem.day) {
+							this.dataArray.push({
+								index: i + 1,
+								data: titem
+							});
+						}
+					}
+					i++;
+				}
+				this.timeTableFlag = true;
+			} else {
+				this.timeTableFlag = false;
+			}
+		});
+	}
 	getComingScheduledExams() {
 		const inputJson = {
 			es_class_id: this.userDetail.au_class_id,
@@ -200,7 +241,7 @@ export class StudentDashboardComponent implements OnInit {
 
 	getSubjectsByClass(): void {
 		this.subjectArray = [];
-		this.qelementService.getSubjectsByClass(this.userDetail.au_class_id).subscribe(
+		this.erpCommonService.getSubjectsByClass({class_id: this.userDetail.au_class_id}).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;

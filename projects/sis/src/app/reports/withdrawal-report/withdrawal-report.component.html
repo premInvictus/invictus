@@ -36,7 +36,7 @@
     </div>
 </form>
 
-<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0">
+<div *ngIf="tableFlag && dataset.length > 0">
     <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
         [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)">
     </angular-slickgrid>
