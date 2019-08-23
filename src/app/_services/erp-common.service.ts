@@ -47,6 +47,23 @@ export class ErpCommonService {
 			return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/checkForPaymentStatus', value);
 		}
 
+		// smart api
+		getTeacherwiseTableDetails(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiSmartUrl + '/smttimetable/getTeacherwiseTableDetails', value);
+		}
+		getPeriodDayByClass(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiSmartUrl + '/smttimetable/getPeriodDayByClass', value);
+		}
+		getSubjectsByClass(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiSmartUrl + '/common/getSubjectsByClass', value);
+		}
+		getAssignment(value: any) {
+			this.service.startLoading();
+			return this.http.post(environment.apiSmartUrl + '/assignment/getAssignment', value);
+		}
 		addFamily(value) {
 			this.service.startLoading();
 			return this.http.post(environment.apiFeeUrl + '/familyInformation/addFamily', value);

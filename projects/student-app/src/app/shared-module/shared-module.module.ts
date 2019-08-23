@@ -42,6 +42,9 @@ import { NumberToWordPipe } from '../_pipes/number-to-word.pipe';
 import { ZerodashPipe } from '../_pipes/zerodash.pipe';
 import { CapitalizePipe, DateformatPipe } from '../_pipes';
 import { SafePipe } from '../_pipes/safe.pipe';
+import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { ImageViewerComponent } from './image-viewer/image-viewer.component';
+import { ImageViewerModule } from 'ngx-image-viewer';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -80,6 +83,7 @@ import { SafePipe } from '../_pipes/safe.pipe';
 		FormsModule,
 		ReactiveFormsModule,
 		InvictusSharedModule,
+		ImageViewerModule
 	],
 	declarations: [
 		CommonDynamicChartComponent,
@@ -89,7 +93,9 @@ import { SafePipe } from '../_pipes/safe.pipe';
 		MakePaymentComponent,
 		CapitalizePipe, DateformatPipe, SafePipe,
 		NumberToWordPipe,
-		ZerodashPipe
+		ZerodashPipe,
+		PreviewDocumentComponent,
+		ImageViewerComponent
 	],
 	exports: [
 		MatProgressBarModule,
@@ -124,9 +130,12 @@ import { SafePipe } from '../_pipes/safe.pipe';
 		MakePaymentComponent,
 		CapitalizePipe, DateformatPipe, SafePipe,
 		NumberToWordPipe,
-		ZerodashPipe
+		ZerodashPipe,
+		PreviewDocumentComponent,
+		ImageViewerComponent,
+		ImageViewerModule
 	],
-	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent]
+	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent]
 })
 export class SharedModuleModule {
 	constructor() {
