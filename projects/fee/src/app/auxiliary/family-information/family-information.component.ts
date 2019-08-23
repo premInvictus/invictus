@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FeeService, CommonAPIService, SisService } from '../../_services';
 import { Router, ActivatedRoute } from '@angular/router';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-family-information',
 	templateUrl: './family-information.component.html',
@@ -10,6 +11,7 @@ export class FamilyInformationComponent implements OnInit {
 	familyOutstandingArr: any[] = [];
 	childDataArr: any[] = [];
 	netOutstanding = 0;
+	printFamilyArr: any;
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -136,6 +138,21 @@ export class FamilyInformationComponent implements OnInit {
 
 	moveToFamilyReceipt() {
 		this.router.navigate(['../familywise-fee-receipt'], { relativeTo: this.route });
+	}
+
+	printFamilyInvoice(item) {
+		this.printFamilyArr = [];
+		this.printFamilyArr.push(item.fam_entry_number);
+		const inputJson = {'family_entry_numbers' : this.printFamilyArr, 'with_summary' : true};
+		this.feeService.printFamilyInvoice(inputJson).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log('result', result.data);
+				//this.familyDetailArr = result.data;
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
+			}
+		});
 	}
 
 }
