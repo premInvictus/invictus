@@ -337,146 +337,33 @@
 				<div class="col-1 ">
 					<select class="select-css float-right">
 						<option>Today</option>
-						<option>Apples</option>
-						<option>Bananas</option>
-						<option>Grapes</option>
-						<option>Oranges</option>
 					</select>
 				</div>
 			</div>
 			<hr class="border-bottom-grey">
-			<div class="row margin-top-15">
+			<div class="row margin-top-15" *ngIf="timeTableFlag">
 				<div class="col-12">
-					<div class="info-box info-box-blue">
-						<div class="wave-container">
-							<svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-								<path
-									d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
-									style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
-							</svg>
-						</div>
-						<div class="box-content-container">
-							<span class="font-size-30">1<sup>st</sup></span>
-							<div class="margin-top-35">
-								<span class="font-size-16">XI - A</span><br>
-								<span class="font-size-16">Hindi</span>
+					<ng-container *ngFor="let item of dayArray; let i=index">
+						<div class="info-box info-box-margin" [ngStyle]="{'background-color':item.sub_color}" >
+							<div class="wave-container">
+								<svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
+									<path
+										d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
+										style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
+								</svg>
+							</div>
+							<div class="box-content-container">
+								<span class="font-size-30">{{i+1}}<sup>{{periodSup[i]}}</sup></span>
+								<div class="margin-top-35">
+									<span class="font-size-16">{{userDetail.class_name}} - {{userDetail.sec_name}}</span><br>
+									<span class="font-size-16">{{item.subject_name}}</span>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="info-box info-box-green margin-left-20">
-						<div class="wave-container">
-							<svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-								<path
-									d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
-									style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
-							</svg>
-						</div>
-						<div class="box-content-container">
-							<span class="font-size-30">2<sup>nd</sup></span>
-							<div class="margin-top-35">
-								<span class="font-size-16">V - B</span><br>
-								<span class="font-size-16">Matematics</span>
-							</div>
-						</div>
-					</div>
-					<div class="info-box info-box-purple margin-left-20">
-						<div class="wave-container">
-							<svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-								<path
-									d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
-									style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
-							</svg>
-						</div>
-						<div class="box-content-container">
-							<span class="font-size-30">3<sup>rd</sup></span>
-							<div class="margin-top-35">
-								<span class="font-size-16">XI - A</span><br>
-								<span class="font-size-16">English</span>
-							</div>
-						</div>
-					</div>
-					<div class="info-box info-box-teal margin-left-20">
-						<div class="wave-container">
-							<svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-								<path
-									d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
-									style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
-							</svg>
-						</div>
-						<div class="box-content-container">
-							<span class="font-size-30">4<sup>th</sup></span>
-							<div class="margin-top-35">
-								<span class="font-size-16">Leisure</span><br>
-								<span class="font-size-16">Period</span>
-							</div>
-						</div>
-					</div>
-					<div class="info-box info-box-red margin-left-20">
-						<div class="wave-container">
-							<svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-								<path
-									d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
-									style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
-							</svg>
-						</div>
-						<div class="box-content-container">
-							<span class="font-size-30">5<sup>th</sup></span>
-							<div class="margin-top-35">
-								<span class="font-size-16">XII - A</span><br>
-								<span class="font-size-16">Art & Craft</span>
-							</div>
-						</div>
-					</div>
-					<div class="info-box info-box-red margin-left-20">
-						<div class="wave-container">
-							<svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-								<path
-									d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
-									style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
-							</svg>
-						</div>
-						<div class="box-content-container">
-							<span class="font-size-30">6<sup>th</sup></span>
-							<div class="margin-top-35">
-								<span class="font-size-16">XI - A</span><br>
-								<span class="font-size-16">Science</span>
-							</div>
-						</div>
-					</div>
-					<div class="info-box info-box-blue margin-left-20">
-						<div class="wave-container">
-							<svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-								<path
-									d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
-									style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
-							</svg>
-						</div>
-						<div class="box-content-container">
-							<span class="font-size-30">7<sup>th</sup></span>
-							<div class="margin-top-35">
-								<span class="font-size-16">XI - A</span><br>
-								<span class="font-size-16">Social Science</span>
-							</div>
-						</div>
-					</div>
-					<div class="info-box info-box-skyblue margin-left-20">
-						<div class="wave-container">
-							<svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-								<path
-									d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
-									style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
-							</svg>
-						</div>
-						<div class="box-content-container">
-							<span class="font-size-30">8<sup>th</sup></span>
-							<div class="margin-top-35">
-								<span class="font-size-16">XI - A</span><br>
-								<span class="font-size-16">Art & Craft</span>
-							</div>
-						</div>
-					</div>
+					</ng-container>
 				</div>
 			</div>
+			<div class="row margin-top-15" *ngIf="!timeTableFlag">No Timetable</div>
 		</mat-card>
 	</div>
 </div>
