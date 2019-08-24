@@ -72,7 +72,7 @@
                                 <td class="custom-td" width="8%">{{item?.no_of_students}} Students</td>
                                 <td class="custom-td" width="5%"> &#8377; {{item?.family_outstanding_amt  | number}}</td>
                                 <td class="custom-td" width="2%">  
-                                    <i *ngIf="item?.family_outstanding_amt > 0" class="fas fa-print" (click)="printFamilyInvoice(item)" style="cursor:pointer" title="Print"></i>
+                                    <i *ngIf="item?.family_outstanding_amt > 0 && item?.flgr_balance_available_count" class="fas fa-print" (click)="printFamilyInvoice(item)" style="cursor:pointer" title="Print"></i>
                                     <span *ngIf="!(item?.family_outstanding_amt > 0)"> - </span>
                                 </td>
                                 
