@@ -10,77 +10,47 @@
 
 <div class="row">
   <div class="col-12">
-<mat-card>
-<div class="row ">
-  <div class="col-12 text-right">
-    <div class=""><span class="font-size-16"> Today's Date : </span><span class="font-size-16 font-bold"> 19-July-2019</span></div>
+    <mat-card>
+      <div class="row ">
+        <div class="col-12 text-right">
+          <div class=""><span class="font-size-16"> Today's Date : </span><span class="font-size-16 font-bold">
+              {{curDate | date:'d-MMM-y'}}</span></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Period</th>
+                <th class="custom-th">Subject</th>
+                <th class="custom-th">Topic</th>
+                <th class="custom-th">Sub Topic</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="!noDataFlag">
+              <tr class="custom-tr" *ngFor="let item1 of classworkArray[0].cw_array">
+                  <td class="custom-td">{{item1.cw_period_id}}<sup>{{periodSup[item1.cw_period_id - 1]}}</sup></td>
+                  <td class="custom-td text-left" *ngIf="item1.sub_name">{{item1.sub_name | capitalize}}</td>
+                  <td class="custom-td text-left" *ngIf="!item1.sub_name ">-</td>
+                  <td class="custom-td text-left" *ngIf="item1.topic_name">{{item1.topic_name | capitalize}}</td>
+                  <td class="custom-td text-left" *ngIf="!item1.topic_name">-</td>
+                  <td class="custom-td text-left" *ngIf="item1.st_name">{{item1.st_name | capitalize}}</td>
+                  <td class="custom-td text-left" *ngIf="!item1.st_name">-</td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="noDataFlag">
+              <tr class="text-center">
+                <td colspan="4">
+                  <app-no-data
+                    [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                    [noDataText]="" [subText]="''"></app-no-data>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </mat-card>
   </div>
-  </div>
-  <div class="row">
-  <div class="col-12">
-  <table class="table table-borderd table-stripped custom-table" >
-                        <thead class="table-skill__head text-center">
-                            <tr class="custom-tr">
-                                <th class="custom-th" >Period</th>
-                                <th class="custom-th" >Subject</th>
-                                <th class="custom-th" >Topic</th>
-                                <th class="custom-th" >Sub Topic</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                          <tr class="custom-tr">
-                            <td class="custom-td">1<sup>st</sup></td>
-                            <td class="custom-td text-left">Science</td>
-                            <td class="custom-td text-left">Health & Hygenie</td>
-                            <td class="custom-td text-left">Introduction of Food</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td">2<sup>nd</sup></td>
-                            <td class="custom-td text-left">Science</td>
-                            <td class="custom-td text-left">Health & Hygenie</td>
-                            <td class="custom-td text-left">Introduction of Food</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td">3<sup>rd</sup></td>
-                            <td class="custom-td text-left">Science</td>
-                            <td class="custom-td text-left">Health & Hygenie</td>
-                            <td class="custom-td text-left">Introduction of Food</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td">4<sup>th</sup></td>
-                            <td class="custom-td text-left">Science</td>
-                            <td class="custom-td text-left">Health & Hygenie</td>
-                            <td class="custom-td text-left">Introduction of Food</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td">5<sup>th</sup></td>
-                            <td class="custom-td text-left">Science</td>
-                            <td class="custom-td text-left">Health & Hygenie</td>
-                            <td class="custom-td text-left">Introduction of Food</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td ">6<sup>th</sup></td>
-                            <td class="custom-td text-left">Science</td>
-                            <td class="custom-td text-left">Health & Hygenie</td>
-                            <td class="custom-td text-left">Introduction of Food</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td">7<sup>th</sup></td>
-                            <td class="custom-td text-left">Science</td>
-                            <td class="custom-td text-left">Health & Hygenie</td>
-                            <td class="custom-td text-left">Introduction of Food</td>
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td">8<sup>th</sup></td>
-                            <td class="custom-td text-left">Science</td>
-                            <td class="custom-td text-left">Health & Hygenie</td>
-                            <td class="custom-td text-left">Introduction of Food</td>
-                          </tr>
-
-                        </tbody>
-                        </table>
-  </div>
-  </div>
-  </mat-card>
- </div>
 </div>

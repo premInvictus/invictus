@@ -48,6 +48,14 @@ export class ErpCommonService {
 		}
 
 		// smart api
+		getClasswork(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiSmartUrl + '/classwork/getClasswork', value);
+		}
+		getClassSectionWiseTimeTable(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiSmartUrl + '/smttimetable/getClassSectionWiseTimeTable', value);
+		}
 		getTeacherwiseTableDetails(value) {
 			this.service.startLoading();
 			return this.http.post(environment.apiSmartUrl + '/smttimetable/getTeacherwiseTableDetails', value);

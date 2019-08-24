@@ -8,7 +8,7 @@ import { SocketService, UserAccessMenuService } from 'projects/axiom/src/app/_se
 import { ErpCommonService, CommonAPIService } from 'src/app/_services/index';
 import { FormControl } from '@angular/forms';
 import { PreviewDocumentComponent } from '../../../shared-module/preview-document/preview-document.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog'; 
 
 @Component({
 	selector: 'app-student-dashboard',
@@ -59,9 +59,9 @@ export class StudentDashboardComponent implements OnInit {
 	currentRank: any;
 
 	timeTableFlag = false;
-	tableData: any[] = [];
-	dataArray: any[] = [];
 	dayArray: any[] = [];
+	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
+	
 	todaysDate = new Date();
 	sub_id;
 	assignmentArray: any[] = [];
@@ -125,6 +125,7 @@ export class StudentDashboardComponent implements OnInit {
 					console.log('userDetail', this.userDetail);
 					this.getOverallPerformance();
 					this.getPeriodDayByClass();
+					this.getClassSectionWiseTimeTable();
 					this.admissionNumber = this.userDetail.au_admission_no;
 					this.className = this.userDetail.class_name;
 					this.secName = this.userDetail.sec_name;
@@ -186,6 +187,18 @@ export class StudentDashboardComponent implements OnInit {
 
 
 	}
+	getClassSectionWiseTimeTable() {
+		this.dayArray = [];
+		this.timeTableFlag = false;
+		this.erpCommonService.getClassSectionWiseTimeTable({class_id: this.userDetail.au_class_id,
+		sec_id: this.userDetail.au_sec_id}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log('getPeriodDayByClass', result.data);
+				this.dayArray = result.data;
+				this.timeTableFlag = true;
+			}
+		});
+	}
 	switchView(testView) {
 		this.testView = testView;
 	}
@@ -193,31 +206,6 @@ export class StudentDashboardComponent implements OnInit {
 		this.erpCommonService.getPeriodDayByClass({class_id: this.userDetail.au_class_id}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log('getPeriodDayByClass', result.data);
-			}
-		});
-	}
-	getTeacherwiseTableDetails() {
-		this.erpCommonService.getTeacherwiseTableDetails({ uc_class_id: '9', uc_sec_id: this.userDetail.au_sec_id})
-		.subscribe((res: any) => {
-			if (res && res.status === 'ok') {
-				this.tableData = [];
-				this.dataArray = [];
-				this.tableData = res.data.tabledata;
-				let i = 0;
-				for (const item of this.tableData) {
-					for (const titem of item) {
-						if (this.dayArray[Number(this.todaysDate.getDay())] === titem.day) {
-							this.dataArray.push({
-								index: i + 1,
-								data: titem
-							});
-						}
-					}
-					i++;
-				}
-				this.timeTableFlag = true;
-			} else {
-				this.timeTableFlag = false;
 			}
 		});
 	}

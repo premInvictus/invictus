@@ -45,6 +45,7 @@ import { SafePipe } from '../_pipes/safe.pipe';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 import { ImageViewerModule } from 'ngx-image-viewer';
+import { NoDataComponent } from './no-data/no-data.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -95,7 +96,8 @@ import { ImageViewerModule } from 'ngx-image-viewer';
 		NumberToWordPipe,
 		ZerodashPipe,
 		PreviewDocumentComponent,
-		ImageViewerComponent
+		ImageViewerComponent,
+		NoDataComponent
 	],
 	exports: [
 		MatProgressBarModule,
@@ -133,7 +135,8 @@ import { ImageViewerModule } from 'ngx-image-viewer';
 		ZerodashPipe,
 		PreviewDocumentComponent,
 		ImageViewerComponent,
-		ImageViewerModule
+		ImageViewerModule,
+		NoDataComponent
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent]
 })
