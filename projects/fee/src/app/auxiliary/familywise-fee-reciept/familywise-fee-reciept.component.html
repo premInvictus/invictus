@@ -49,15 +49,15 @@
                         <tbody>
                             <tr class="custom-tr" *ngFor="let item of familyDetailArr">
                                 <td class="custom-td" width="4%">
-                                    <mat-checkbox *ngIf="item?.family_outstanding_amt > 0" (change)="setDataForPrint($event, item)"></mat-checkbox>
+                                    <mat-checkbox *ngIf="item?.family_outstanding_amt > 0 && item?.flgr_balance_available_count" (change)="setDataForPrint($event, item)"></mat-checkbox>
                                 </td>
                                 <td class="custom-td" width="8%">
-                                    <span class="pointer font-bold font-skyblue font-underline" *ngIf="item?.family_outstanding_amt > 0">
+                                    <span class="pointer font-bold font-skyblue font-underline" *ngIf="item?.family_outstanding_amt > 0 && item?.flgr_balance_available_count">
                                         <a (click)="goToFamilyInformation(item?.fam_entry_number)">{{item?.fam_family_name}}
                                             - {{item?.fam_entry_number}}
                                         </a>
                                     </span>
-                                    <span class="font-bold" *ngIf="item?.family_outstanding_amt == 0 || item?.family_outstanding_amt < 0">
+                                    <span class="font-bold" *ngIf="item?.family_outstanding_amt == 0 || item?.family_outstanding_amt < 0 || !(item?.flgr_balance_available_count)">
                                             {{item?.fam_family_name}}- {{item?.fam_entry_number}}
                                     </span>
                                 </td>

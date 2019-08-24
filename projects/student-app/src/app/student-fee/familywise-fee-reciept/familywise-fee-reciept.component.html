@@ -54,12 +54,12 @@
                                 <td class="custom-td" width="8%">
                                         
                                     <span class="pointer font-bold font-skyblue font-underline">
-                                        <a *ngIf="item?.family_outstanding_amt > 0 " (click)="goToFamilyInformation(item?.fam_entry_number)">{{item?.fam_family_name}}
+                                        <a *ngIf="item?.family_outstanding_amt > 0 && item?.flgr_balance_available_count" (click)="goToFamilyInformation(item?.fam_entry_number)">{{item?.fam_family_name}}
                                             - {{item?.fam_entry_number}}
                                         </a>
                                     </span>
                                     <span class="font-bold">
-                                        <a *ngIf="!(item?.family_outstanding_amt > 0) ">{{item?.fam_family_name}}
+                                        <a *ngIf="!(item?.family_outstanding_amt > 0) ||  !(item?.flgr_balance_available_count)">{{item?.fam_family_name}}
                                             - {{item?.fam_entry_number}}
                                         </a>
                                     </span>
