@@ -48,9 +48,21 @@ export class ErpCommonService {
 		}
 
 		// smart api
+		getSubject(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiSmartUrl + '/setup/getSubject', value);
+		}
 		getClasswork(value) {
 			this.service.startLoading();
 			return this.http.post(environment.apiSmartUrl + '/classwork/getClasswork', value);
+		}
+		getClasswiseDetails(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiSmartUrl + '/smttimetable/getClasswiseDetails', value);
+		}
+		getTimeTableId(value) {
+			this.service.startLoading();
+			return this.http.post(environment.apiSmartUrl + '/smttimetable/getTimeTableId', value);
 		}
 		getClassSectionWiseTimeTable(value) {
 			this.service.startLoading();

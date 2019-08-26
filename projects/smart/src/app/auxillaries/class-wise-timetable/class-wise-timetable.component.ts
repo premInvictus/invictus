@@ -440,7 +440,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 		doc.save('classwise_timetable_' + this.getClassName(this.classwiseForm.value.tt_class_id) + '-' +
 			this.getSectionName(this.classwiseForm.value.tt_section_id) + '.pdf');
 	}
-	// Timetable details based on class and section
+	// Timetable details based on class and section 
 	getclasswisedetails() {
 		this.subCountArray = [];
 		this.finalCountArray = [];
