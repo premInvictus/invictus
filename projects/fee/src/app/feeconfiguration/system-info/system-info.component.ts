@@ -85,7 +85,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			'spt_footer_template': '',
 			'spt_print_format_receipt': '',
 			'spt_receipt_header_template': '',
-			'spt_receipt_footer_template': ''
+			'spt_receipt_footer_template': '',
+			'spt_invoice_text_color': '',
+			'spt_receipt_text_color': ''
 		});
 	}
 	loadConfiguration($event) {
@@ -252,7 +254,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					'spt_footer_template': this.settings.spt_footer_template,
 					'spt_print_format_receipt': this.settings.spt_print_format_receipt,
 					'spt_receipt_header_template': this.settings.spt_receipt_header_template,
-					'spt_receipt_footer_template': this.settings.spt_receipt_footer_template
+					'spt_receipt_footer_template': this.settings.spt_receipt_footer_template,
+					'spt_invoice_text_color' : this.settings.spt_invoice_text_color,
+					'spt_receipt_text_color' : this.settings.spt_receipt_text_color
 				});
 			}
 		});
@@ -279,7 +283,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				'spt_footer_template': this.settings.spt_footer_template,
 				'spt_print_format_receipt': this.settings.spt_print_format_receipt,
 				'spt_receipt_header_template': this.settings.spt_receipt_header_template,
-				'spt_receipt_footer_template': this.settings.spt_receipt_footer_template
+				'spt_receipt_footer_template': this.settings.spt_receipt_footer_template,
+				'spt_invoice_text_color' : this.settings.spt_invoice_text_color,
+				'spt_receipt_text_color' : this.settings.spt_receipt_text_color
 			});
 		} else {
 			this.printForm.patchValue({
@@ -290,7 +296,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				'spt_footer_template': '',
 				'spt_print_format_receipt': '',
 				'spt_receipt_header_template': '',
-				'spt_receipt_footer_template': ''
+				'spt_receipt_footer_template': '',
+				'spt_invoice_text_color' : '',
+				'spt_receipt_text_color' : ''
 			});
 		}
 	}
