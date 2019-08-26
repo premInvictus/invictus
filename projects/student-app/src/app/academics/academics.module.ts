@@ -6,13 +6,15 @@ import { AssignmentComponent } from './assignment/assignment.component';
 import { TimetableComponent } from './timetable/timetable.component';
 import { SharedModuleModule } from '../shared-module/shared-module.module';
 import {MatStepperModule} from '@angular/material/stepper';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
     AcademicsRoutingModule,
     SharedModuleModule,
-    MatStepperModule
+    MatStepperModule,
+    ReactiveFormsModule
   ],
   declarations: [ViewClassworkComponent, AssignmentComponent, TimetableComponent]
 })
