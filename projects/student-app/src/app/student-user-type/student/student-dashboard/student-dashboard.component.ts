@@ -8,7 +8,7 @@ import { SocketService, UserAccessMenuService } from 'projects/axiom/src/app/_se
 import { ErpCommonService, CommonAPIService } from 'src/app/_services/index';
 import { FormControl } from '@angular/forms';
 import { PreviewDocumentComponent } from '../../../shared-module/preview-document/preview-document.component';
-import { MatDialog } from '@angular/material/dialog'; 
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-student-dashboard',
@@ -61,7 +61,9 @@ export class StudentDashboardComponent implements OnInit {
 	timeTableFlag = false;
 	dayArray: any[] = [];
 	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
-	
+	weekArr: any[] = ['Monday', 'Tuesday', 'Wednesday', 'Thrusday', 'Friday', 'Saturday'];
+	week: any[] = ['Monday', 'Tuesday', 'Wednesday', 'Thrusday', 'Friday', 'Saturday'];
+	week_day: number;
 	todaysDate = new Date();
 	sub_id;
 	assignmentArray: any[] = [];
@@ -124,7 +126,7 @@ export class StudentDashboardComponent implements OnInit {
 					this.userDetail = result.data[0];
 					console.log('userDetail', this.userDetail);
 					this.getOverallPerformance();
-					this.getPeriodDayByClass();
+					// this.getPeriodDayByClass();
 					this.getClassSectionWiseTimeTable();
 					this.admissionNumber = this.userDetail.au_admission_no;
 					this.className = this.userDetail.class_name;
@@ -190,24 +192,31 @@ export class StudentDashboardComponent implements OnInit {
 	getClassSectionWiseTimeTable() {
 		this.dayArray = [];
 		this.timeTableFlag = false;
-		this.erpCommonService.getClassSectionWiseTimeTable({class_id: this.userDetail.au_class_id,
-		sec_id: this.userDetail.au_sec_id}).subscribe((result: any) => {
+		const param: any = {};
+		param.class_id = this.userDetail.au_class_id;
+		param.sec_id = this.userDetail.au_sec_id;
+		if (this.week_day) {
+			param.week_day = this.week_day;
+		}
+		this.erpCommonService.getClassSectionWiseTimeTable(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				console.log('getPeriodDayByClass', result.data);
-				this.dayArray = result.data;
+				this.weekArr = [];
+				this.dayArray = result.data.data;
+				this.week_day = Number(result.data.day_of_week);
+				console.log('dayArray', this.dayArray);
 				this.timeTableFlag = true;
+				for (let i = 0; i < result.data.no_of_day; i++) {
+					if (Number(result.data.today_day_of_week) - 1 === i) {
+						this.weekArr.push('Today');
+					} else {
+						this.weekArr.push(this.week[i]);
+					}
+				}
 			}
 		});
 	}
 	switchView(testView) {
 		this.testView = testView;
-	}
-	getPeriodDayByClass() {
-		this.erpCommonService.getPeriodDayByClass({class_id: this.userDetail.au_class_id}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				console.log('getPeriodDayByClass', result.data);
-			}
-		});
 	}
 	getComingScheduledExams() {
 		const inputJson = {

@@ -318,9 +318,9 @@
 				</div>
 				<div class="col-6 text-right">
 					<span class="font-size-20 font-bold font-skyblue">Good Morning,</span> <span
-						class="font-size-20 font-skyblue"> Dharmender</span>
+						class="font-size-20 font-skyblue"> {{currentUser.full_name | titlecase}}</span>
 					<br>
-					<span class="font-size-14 font-skyblue">13<sup>th</sup> April 2018</span>
+					<span class="font-size-14 font-skyblue">{{todaysDate | date:'d MMM y'}}<!-- 13<sup>th</sup> April 2018 --></span>
 				</div>
 			</div>
 		</mat-card>
@@ -335,8 +335,8 @@
 					<span class="font-size-20 font-bold">Time Table</span>
 				</div>
 				<div class="col-1 ">
-					<select class="select-css float-right">
-						<option>Today</option>
+					<select class="select-css float-right" [(ngModel)]="week_day" (change)="getClassSectionWiseTimeTable()">
+						<option *ngFor="let item of weekArr; let i = index" [value]="i+1">{{item}}</option>
 					</select>
 				</div>
 			</div>
@@ -420,7 +420,13 @@
 				</div>
 			</ng-container>
 			<ng-container *ngIf="assignmentArray.length == 0">
-				<div class="text-center">No Assignment</div>
+				<div class="text-center">
+						<img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" height="150px">
+						<br><br>
+						<span class="font-size-20 font-bold font-color-brown">
+						No Record Found
+						</span>
+				</div>
 			</ng-container>
 			</mat-card-content>
 		</mat-card>
