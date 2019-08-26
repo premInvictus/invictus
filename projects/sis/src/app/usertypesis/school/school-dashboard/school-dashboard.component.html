@@ -37,7 +37,7 @@
           <div class="row">
             <div class="col-9 tab-remove-right-padding custom-col-70 tab-custom-col-60">
               <h2><b><span
-                    *ngIf="(cardData?.Proadmission || cardData?.Admission)">{{ parseInt(cardData?.Admission) + parseInt(cardData?.Admission) }}</span>
+                    *ngIf="(cardData?.Proadmission || cardData?.Admission)">{{ parseInt(cardData?.Admission) + parseInt(cardData?.Proadmission) }}</span>
                   <span *ngIf="!(cardData?.Proadmission && cardData?.Admission)">N/A</span></b>
               </h2>
               <h6 class="hide-for-small-screen">Pr. Adm. + Admission</h6>
