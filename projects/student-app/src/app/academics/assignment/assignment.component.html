@@ -2,22 +2,53 @@
   <div class="col-12">
     <mat-card>
       <mat-card-title>
-        <h1 class="remove-bottom-margin font-size-24">Assignments</h1>
+        <form [formGroup]="paramForm" novalidate>
+          <div class="row">
+            <div class="col-8">
+              <h1 class="remove-bottom-margin font-size-24">Assignments</h1>
+            </div>
+            <div class="col-4 text-right date-margin" *ngIf="testView == 'past'">
+              <div class="row justify-content-end">
+                <div class="col-6">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>From Date</mat-label>
+                    <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from"
+                      (dateChange)="getAssignment();setMinDate()">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>To Date</mat-label>
+                    <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to"
+                      [min]="toMin" (dateChange)="getAssignment()">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
       </mat-card-title>
     </mat-card>
   </div>
 </div>
 <div class="row margin-top-15">
   <div class="col-6">
-    <div class="margin-top-5"><span class="font-size-16"> Today's Date : </span><span class="font-size-16 font-bold"> 19-July-2019</span></div>
+    <div class="margin-top-5"><span class="font-size-16"> Today's Date : </span><span
+        class="font-size-16 font-bold">{{todaysDate  | date:'d-MMM-y'}}</span></div>
   </div>
   <div class="col-6 text-right">
-    <button mat-button class="tab-button">Today Assignment</button>
-    <button mat-button class="tab-button">Past Assignment</button>
+    <button mat-button (click)="switchView('today')" [ngClass]="{'disablePage':testView == 'today'}">Today
+      Assignment</button>
+    <button mat-button (click)="switchView('past')" [ngClass]="{'disablePage':testView == 'past'}">Past
+      Assignment</button>
 
   </div>
 </div>
-<div class="row margin-top-15">
+<!-- <div class="row margin-top-15">
 <div class="col-4">
 <mat-card class="student-yellow-border">
   <mat-card-content>
@@ -76,78 +107,45 @@
   </mat-card-content>
 </mat-card>
 </div>
-</div>
+</div> -->
 
 
 <!--Past Ass-->
-<div class="row margin-top-15">
+<div class="row margin-top-15" *ngIf="assignmentFlag">
   <div class="col-12">
     <mat-vertical-stepper [linear]="isLinear" #stepper>
-  <mat-step [stepControl]="firstFormGroup">
-    <div class="row">
-      <div class="col-11">
-      <ng-template matStepLabel><span class="font-size-20 font-bold font-skyblue">19-Jul-2019</span></ng-template>
-    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
-    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
-    <p><span>Assigned By : </span><span class="font-bold">Amit Kumar</span></p>
-    <p class="margin-top-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
-      </div>
-      <div class="col-1 ">
-      <button mat-mini-fab class="yellow-circle-button circle-button"><span class="font-white font-size-16 font-bold">+2</span></button>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-11">
-      <ng-template matStepLabel><span class="font-size-20 font-bold font-skyblue">19-Jul-2019</span></ng-template>
-    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
-    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
-    <p><span>Assigned By : </span><span class="font-bold">Amit Kumar</span></p>
-    <p class="margin-top-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
-      </div>
-      <div class="col-1 ">
-      <button mat-mini-fab class="yellow-circle-button circle-button"><span class="font-white font-size-16 font-bold">+2</span></button>
-      </div>
-    </div>
-    
-    
-  </mat-step>
-  <mat-step [stepControl]="secondFormGroup">
-    <div class="row">
-      <div class="col-11">
-      <ng-template matStepLabel><span class="font-size-20 font-bold font-skyblue">20-Jul-2019</span></ng-template>
-    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
-    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
-    <p><span>Assigned By : </span><span class="font-bold">Amit Kumar</span></p>
-    <p class="margin-top-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
-      </div>
-      <div class="col-1 ">
-      <button mat-mini-fab class="yellow-circle-button circle-button"><span class="font-white font-size-16 font-bold">+2</span></button>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-11">
-      
-    <span class="font-size-20 font-bold font-skyblue">Science</span><br>
-    <span class="font-size-18 font-bold">Health & Hygenie</span><br>
-    <p><span>Assigned By : </span><span class="font-bold">Amit Kumar</span></p>
-    <p class="margin-top-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in nunc turpis. Aenean fermentum nisl a tortor iaculis feugiat. Pellentesque erat odio</p>
-      </div>
-      <div class="col-1 ">
-      <button mat-mini-fab class="yellow-circle-button circle-button"><span class="font-white font-size-16 font-bold">+2</span></button>
-      </div>
-    </div>
-  </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>Done</ng-template>
-    You are now done.
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
-    </div>
-  </mat-step>
-</mat-vertical-stepper>
+      <mat-step *ngFor="let item of assignmentArray; let i = index">
+        <ng-template matStepLabel><span
+            class="font-size-20 font-bold font-skyblue">{{item.as_entry_date | date:'d-MMM-y'}}</span></ng-template>
+        <ng-container *ngFor="let item2 of item.as_array">
+          <div class="row">
+            <div class="col-11">
+              <span class="font-size-20 font-bold font-skyblue">{{item2.sub_name | titlecase}}</span><br>
+              <span class="font-size-18 font-bold">{{item2.topic_name | titlecase}}</span><br>
+              <p><span>Assigned By : </span><span class="font-bold">{{item2.au_full_name | titlecase}}</span></p>
+              <div class="margin-top-10" [innerHTML]="item2.as_assignment_desc | titlecase"></div>
+            </div>
+            <div class="col-1 " *ngIf="item2.as_attachment.length > 0">
+              <button mat-mini-fab class="yellow-circle-button circle-button"
+                (click)="previewDocuments(item2.as_attachment)"><span
+                  class="font-white font-size-16 font-bold">+{{item2.as_attachment.length}}</span></button>
+            </div>
+          </div>
+          <hr>
+        </ng-container>
+      </mat-step>
+
+    </mat-vertical-stepper>
 
   </div>
+</div>
+<div class="row margin-top-15" *ngIf="!assignmentFlag">
+    <div class="col-12 text-center noRecord">
+      <div style="border: 1px solid #89a8c9;background-color:#ffffff">
+          <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+          [noDataText]="'No Record Found'" [subText]="''"></app-no-data>
+      </div>
+        
+    </div>
 </div>

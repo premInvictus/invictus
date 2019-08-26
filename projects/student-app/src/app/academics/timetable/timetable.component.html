@@ -10,131 +10,167 @@
 
 <div class="row">
   <div class="col-12">
-<mat-card>
-<div class="row ">
-  <div class="col-12 text-right">
-    <div class=""><span class="font-size-16"> Today's Date : </span><span class="font-size-16 font-bold"> 19-July-2019</span></div>
+    <mat-card>
+      <div class="row ">
+        <div class="col-12 text-right">
+          <div class=""><span class="font-size-16"> Today's Date : </span><span class="font-size-16 font-bold">
+              {{today | date:'d-MMM-y'}}</span></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <!-- <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Period</th>
+                <th class="custom-th">Monday</th>
+                <th class="custom-th">Tuesday</th>
+                <th class="custom-th">Wednesday</th>
+                <th class="custom-th">Thursday</th>
+                <th class="custom-th">Friday</th>
+                <th class="custom-th">Saturday</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="custom-tr">
+                <td class="custom-td">1<sup>st</sup></td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Science</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
+
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Art & Craft</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Music</td>
+
+
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td ">2<sup>nd</sup></td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Science</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
+
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Art & Craft</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Music</td>
+
+
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td ">3<sup>rd</sup></td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-yellow"></i> Science</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
+
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Art & Craft</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Music</td>
+
+
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td">4<sup>th</sup></td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Science</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
+
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Art & Craft</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-yellow"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Music</td>
+
+
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td">5<sup>th</sup></td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-yellow"></i> Science</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
+
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Art & Craft</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Music</td>
+
+
+              </tr>
+
+              <tr class="custom-tr">
+                <td class="custom-td">6<sup>th</sup></td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Science</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
+
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-yellow"></i> Art & Craft</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Music</td>
+
+
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td">7<sup>th</sup></td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Science</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
+
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Art & Craft</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-yellow"></i> Music</td>
+
+
+              </tr>
+              <tr class="custom-tr">
+                <td class="custom-td">8<sup>th</sup></td>
+                <td class="custom-td text-left"><i class="btn-circle-yellow"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Science</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Library</td>
+
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Art & Craft</td>
+                <td class="custom-td text-left "><i class="fas fa-circle btn-circle-green"></i> Math</td>
+                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Music</td>
+
+
+              </tr>
+
+
+
+            </tbody>
+          </table> -->
+          <table class="table table-borderd table-stripped custom-table" id="report_table">
+            <thead class="table-skill__head text-center" *ngIf="!finaldivflag">
+              <tr class="custom-tr">
+                <th class="custom-th">Periods</th>
+                <th class="custom-th">Monday</th>
+                <th class="custom-th">Tuesday</th>
+                <th class="custom-th">Wednesday</th>
+                <th class="custom-th">Thursday</th>
+                <th class="custom-th">Friday</th>
+                <th class="custom-th" *ngIf="noOfDay === '6' || noOfDay === '7'">Saturday</th>
+                <th class="custom-th" *ngIf="noOfDay === '7'">Saturday</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="!finaldivflag">
+              <tr class="custom-tr" *ngFor="let det of classwisetableArray;let j = index">
+                <td class="custom-td">{{j+ 1}}<sup>{{periodSup[j]}}</sup></td>
+                <ng-container *ngFor="let item of det.classwise;let i=index">
+                  <td class="custom-td text-left pad-sub" *ngIf="(item.subject_id !== '-')">
+                    <i class="fas fa-circle margin-right-10 animation" [ngStyle]="{color: getSubjectColor(item.subject_id)}"></i>
+                    {{item.subject_name}}
+                  </td>
+                  <td class="custom-td" *ngIf="item.subject_id === '-'">-</td>
+                </ng-container>
+              </tr>
+            </tbody>
+            <tbody *ngIf="finaldivflag">
+              <tr class="text-center">
+                <td colspan="7">
+                    <app-no-data
+                    [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                    [noDataText]="'No Record Found'" [subText]="''"></app-no-data>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </mat-card>
   </div>
-  </div>
-  <div class="row">
-  <div class="col-12">
-  <table class="table table-borderd table-stripped custom-table" >
-                        <thead class="table-skill__head text-center">
-                            <tr class="custom-tr">
-                                <th class="custom-th" >Period</th>
-                                <th class="custom-th" >Monday</th>
-                                <th class="custom-th" >Tuesday</th>
-                                <th class="custom-th" >Wednesday</th>
-                                <th class="custom-th" >Thursday</th>
-                                <th class="custom-th" >Friday</th>
-                                <th class="custom-th" >Saturday</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                          <tr class="custom-tr">
-                            <td class="custom-td">1<sup>st</sup></td>
-                            <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                             <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Science</td>
-                              <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
-
-                               <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green" ></i> Art & Craft</td>
-                                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                                 <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Music</td>
-                            
-
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td ">2<sup>nd</sup></td>
-                            <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                             <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Science</td>
-                              <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
-
-                               <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green" ></i> Art & Craft</td>
-                                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                                 <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Music</td>
-                            
-
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td ">3<sup>rd</sup></td>
-                            <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                             <td class="custom-td text-left"><i class="fas fa-circle btn-circle-yellow"></i> Science</td>
-                              <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
-
-                               <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red" ></i> Art & Craft</td>
-                                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                                 <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Music</td>
-                            
-
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td">4<sup>th</sup></td>
-                            <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Math</td>
-                             <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Science</td>
-                              <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
-
-                               <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green" ></i> Art & Craft</td>
-                                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-yellow"></i> Math</td>
-                                 <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Music</td>
-                            
-
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td">5<sup>th</sup></td>
-                            <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                             <td class="custom-td text-left"><i class="fas fa-circle btn-circle-yellow"></i> Science</td>
-                              <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
-
-                               <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green" ></i> Art & Craft</td>
-                                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                                 <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Music</td>
-                            
-
-                          </tr>
-
-                          <tr class="custom-tr">
-                            <td class="custom-td">6<sup>th</sup></td>
-                            <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                             <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Science</td>
-                              <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
-
-                               <td class="custom-td text-left"><i class="fas fa-circle btn-circle-yellow" ></i> Art & Craft</td>
-                                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                                 <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Music</td>
-                            
-
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td">7<sup>th</sup></td>
-                            <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                             <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Science</td>
-                              <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Library</td>
-
-                               <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green" ></i> Art & Craft</td>
-                                <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Math</td>
-                                 <td class="custom-td text-left"><i class="fas fa-circle btn-circle-yellow"></i> Music</td>
-                            
-
-                          </tr>
-                          <tr class="custom-tr">
-                            <td class="custom-td">8<sup>th</sup></td>
-                            <td class="custom-td text-left"><i class="btn-circle-yellow"></i> Math</td>
-                             <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Science</td>
-                              <td class="custom-td text-left"><i class="fas fa-circle btn-circle-red"></i> Library</td>
-
-                               <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green" ></i> Art & Craft</td>
-                                <td class="custom-td text-left "><i class="fas fa-circle btn-circle-green"></i> Math</td>
-                                 <td class="custom-td text-left"><i class="fas fa-circle btn-circle-green"></i> Music</td>
-                            
-
-                          </tr>
-
-                          
-                          
-                        </tbody>
-                        </table>
-  </div>
-  </div>
-  </mat-card>
- </div>
 </div>
