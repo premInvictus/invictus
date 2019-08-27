@@ -430,5 +430,9 @@ export class AddFamilyComponent implements OnInit {
 		});
 	}
 
+	deleteDocument() {
+		this.declaration_doc_url = '';
+	}
+
 
 }
