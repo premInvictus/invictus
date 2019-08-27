@@ -39,13 +39,17 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="row" *ngIf="sorttableflag">
+                        <div class="row" [hidden]="!sorttableflag">
                             <div class="col-12 margin-top-10">
                                 <div>
                                     <mat-form-field class="form-feild">
                                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                                     </mat-form-field>
-                                    <table mat-table [dataSource]="studentdataSource" matSort class="table-100 text-center">
+                                    <div *ngIf="loginArray.length > 0" class="float-right margin-top-12">
+                                        <span><b>Selected Students: </b></span>
+                                        <span>{{loginArray.length}}</span>
+                                    </div>
+                                    <table mat-table #sortP="matSort" matSortActive="ID" [dataSource]="studentdataSource" matSort class="table-100 text-center">
                                         <!--Select Column-->
                                         <ng-container matColumnDef="select">
                                             <th mat-header-cell *matHeaderCellDef>
@@ -53,7 +57,7 @@
                                                 </mat-checkbox>
                                             </th>
                                             <td mat-cell *matCellDef="let element">
-                                                <mat-checkbox (change)="addLogin($event)" [checked]="allShuffleFlag"
+                                                <mat-checkbox (change)="addLogin($event)" [checked]="isSelectedP(element.select)"
                                                 [value]="element.select"></mat-checkbox>
                                             </td>
                                         </ng-container>
@@ -122,7 +126,7 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="row" *ngIf="shuffletableflag">
+                        <div class="row" [hidden]="!shuffletableflag">
                             <div class="col-12">
                                 <div>
                                     <div class="row">
@@ -131,7 +135,11 @@
                                             <mat-form-field class="form-feild">
                                                 <input matInput (keyup)="applyFilter1($event.target.value)" placeholder="Filter">
                                             </mat-form-field>
-                                            <table mat-table [dataSource]="shuffledataSource" matSort class="table-100 text-center">
+                                            <div *ngIf="selectedShuffleArray.length > 0" class="float-right margin-top-12">
+                                                <span><b>Selected Students: </b></span>
+                                                <span>{{selectedShuffleArray.length}}</span>
+                                            </div>
+                                            <table mat-table #sortD="matSort" matSortActive="ID" [dataSource]="shuffledataSource" matSort class="table-100 text-center">
 
                                                 <!-- Checkbox Column -->
                                                 <ng-container matColumnDef="select">
@@ -140,7 +148,7 @@
                                                         </mat-checkbox>
                                                     </th>
                                                     <td mat-cell *matCellDef="let element">
-                                                        <mat-checkbox [checked]="allselected" (change)="$event ? selectShuffleStudent(element.select) : null" [value]="element.select"></mat-checkbox>
+                                                        <mat-checkbox [checked]="isSelectedS(element.select)" (change)="$event ? selectShuffleStudent(element.select) : null" [value]="element.select"></mat-checkbox>
                                                     </td>
                                                 </ng-container>
 
@@ -209,7 +217,7 @@
                                         <div class="col-12">
                                             <br>
                                             <br>
-                                            <div class="text-center">
+                                            <div class="text-center" *ngIf="selectedShuffleArray.length > 0">
                                                 <button mat-raised-button class="btn-green" (click)="freeze()">Freeze</button>
                                             </div>
                                             <br>
