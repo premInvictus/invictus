@@ -63,7 +63,7 @@
       </div>
       <div *ngIf="transportFlag" class="row remove-top-margin">
          <div class="col-12 remove-col-padding">
-            <span class="font-size-20 font-medium">Transport Details</span>
+            <span class="font-size-20 font-medium">Transport Details </span> <a class="pointer font-bold font-skyblue font-underline" *ngIf="(transport_history?.length > 0)" (click)="showTransport = !showTransport">View Transport History</a>
          </div>
       </div>
       <div *ngIf="transportFlag" class="row">
@@ -181,6 +181,55 @@
        </div> -->
       <mat-checkbox *ngIf="modeFlag && transportFlag" class="font-size-16" [disabled]="viewOnly"
          (change)="terminate($event)" formControlName="accd_is_terminate">{{terminateStatus}}</mat-checkbox>
+      <br/>
+      
+      <div *ngIf="showTransport">
+         <div class="row">
+            <div class="col-12">
+                <table class="table table-borderd table-stripped custom-table">
+                    <thead class="table-skill__head text-center">
+                        <tr class="custom-tr">
+                            <th class="custom-th text-nowrap">Sr no.</th>
+                            <th class="custom-th">Transport Route</th>
+                            <th class="custom-th">Transport Stoppages</th>
+                            <th class="custom-th">Applicable From</th>
+                            <th class="custom-th">Applicable To</th>
+                            <th class="custom-th">Created Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="custom-tr" *ngFor="let item of transport_history; let i=index;">
+                            <td class="custom-td" width="5%">
+                                {{i+1}}
+                            </td>
+                            <td class="custom-td text-capitalize text-left" width="15%">{{item?.uaal_created_date | date: 'd-MMM-y'}}</td>
+                            <td *ngIf="item?.uaal_status === '0'" colspan="4" class="custom-td text-capitalize text-center">Transport Opted Out</td>
+                            <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="25%">
+                              <span *ngIf="item?.tr_route_name">{{item?.tr_route_name}}</span> 
+                              <span *ngIf="!(item?.tr_route_name)">-</span> 
+                           </td>
+                            <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="25%">
+                                 <span *ngIf="item?.tsp_name">{{item?.tsp_name}}</span> 
+                                 <span *ngIf="!(item?.tsp_name)">-</span> 
+                           </td>
+                            <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="15%">
+                               <span *ngIf="item?.uaal_transport_from">{{item?.uaal_transport_from | date: 'd-MMM-y'}}</span>
+                               <span *ngIf="!(item?.uaal_transport_from)">-</span>
+                           </td>
+                            <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="15%">
+                                 <span *ngIf="item?.uaal_transport_to"> {{item?.uaal_transport_to | date: 'd-MMM-y'}}</span>
+                                 <span *ngIf="!(item?.uaal_transport_to)"> - </span>
+                           </td>
+                           
+                        </tr>
+                        <tr *ngIf="transport_history?.length ==0">
+                            <td colspan="7" class="text-center">No Record Found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
       <div *ngIf="hostelFlag" class="row remove-top-margin">
          <div class="col-12 remove-col-padding">
             <span class="font-size-20 font-medium">Hostel Details</span>
