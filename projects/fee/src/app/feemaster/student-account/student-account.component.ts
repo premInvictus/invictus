@@ -26,12 +26,14 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	stoppageArray: any[] = [];
 	slabArray: any[] = [];
 	transPortModes: any[] = [];
+	transport_history: any[] = [];
 	lastRecordId;
 	loginId: any;
 	terminateStatus: any;
 	hostelStatus: any;
 	existFlag = false;
 	hostelTerminateFlag = false;
+	showTransport = false;
 	@ViewChild('editModal') editModal;
 	@Input() viewOnly = true;
 	@Input() feeLoginId: any;
@@ -119,6 +121,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			if (result && result.status === 'ok') {
 				this.existFlag = true;
 				this.accountDetails = result.data[0];
+				this.transport_history = result.data[0]['transport_history'];
 				if (this.accountDetails.accd_is_transport === 'Y') {
 					this.transportFlag = true;
 				} else {
