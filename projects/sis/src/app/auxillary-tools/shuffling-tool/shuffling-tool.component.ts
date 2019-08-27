@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -9,9 +9,9 @@ import { Student } from './student.modal';
 	templateUrl: './shuffling-tool.component.html',
 	styleUrls: ['./shuffling-tool.component.scss']
 })
-export class ShufflingToolComponent implements OnInit {
+export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	studentsArray: any[] = [];
-	shuffleStudentsArray: any[] = [];
+	shuffleStudentsArray: any[] = []; 
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
@@ -44,10 +44,11 @@ export class ShufflingToolComponent implements OnInit {
 	];
 	studentdataSource = new MatTableDataSource(this.STUDENT_ELEMENT_DATA);
 	shuffledataSource = new MatTableDataSource(this.SHUFFLE_ELEMENT_DATA);
-
-	@ViewChild(MatSort) sort: MatSort;
 	shufflesortform: FormGroup;
 	shufflebasedform: FormGroup;
+
+	@ViewChild('sortP') sortP: MatSort;
+	@ViewChild('sortD') sortD: MatSort;
 
 	constructor(
 		private sisService: SisService,
@@ -58,8 +59,11 @@ export class ShufflingToolComponent implements OnInit {
 	ngOnInit() {
 		this.getClass();
 		this.getHouses();
-		this.studentdataSource.sort = this.sort;
 		this.buildForm();
+	}
+	ngAfterViewInit() {
+		this.studentdataSource.sort = this.sortP;
+		this.shuffledataSource.sort = this.sortD;
 	}
 	buildForm() {
 		this.shufflesortform = this.fbuild.group({
@@ -86,6 +90,7 @@ export class ShufflingToolComponent implements OnInit {
 		});
 	}
 	getSectionsByClass() {
+		this.resetTableAndSelection();
 		this.sectionArray = [];
 		this.sisService.getSectionsByClass({ class_id: this.shufflesortform.value.class_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -101,9 +106,15 @@ export class ShufflingToolComponent implements OnInit {
 			}
 		});
 	}
+	resetTableAndSelection() {
+		this.sorttableflag = false;
+		this.loginArray = [];
+		this.STUDENT_ELEMENT_DATA = [];
+		this.studentdataSource = new MatTableDataSource(this.STUDENT_ELEMENT_DATA);
+	}
 	getMasterStudentDetail() {
 		if (this.shufflesortform.valid) {
-			this.STUDENT_ELEMENT_DATA = [];
+			this.resetTableAndSelection();
 			this.shufflesortform.value.pmap_status = '1';
 			this.shufflesortform.value.enrollment_type = ['3', '4'];
 			this.sisService.getMasterStudentDetail(this.shufflesortform.value).subscribe((result: any) => {
@@ -124,6 +135,7 @@ export class ShufflingToolComponent implements OnInit {
 						nos++;
 					});
 					this.studentdataSource = new MatTableDataSource(this.STUDENT_ELEMENT_DATA);
+					this.studentdataSource.sort = this.sortP;
 				} else {
 					this.sorttableflag = false;
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
@@ -133,12 +145,16 @@ export class ShufflingToolComponent implements OnInit {
 			});
 		}
 	}
+	resetShuffleTableAndSelection() {
+		this.allselected = false;
+		this.selectedShuffleArrayValue = [];
+		this.selectedShuffleArray = [];
+		this.SHUFFLE_ELEMENT_DATA = [];
+		this.shuffledataSource = new MatTableDataSource(this.SHUFFLE_ELEMENT_DATA);
+	}
 	getShuffleStudents() {
 		if (this.shufflebasedform.valid) {
-			this.selectedShuffleArrayValue = [];
-			this.allselected = false;
-			this.SHUFFLE_ELEMENT_DATA = [];
-			this.selectedShuffleArray = [];
+			this.resetShuffleTableAndSelection();
 			const param: any = {};
 			param.class_id = this.shufflesortform.value.class_id;
 			param.order_by = this.shufflesortform.value.order_by;
@@ -168,6 +184,7 @@ export class ShufflingToolComponent implements OnInit {
 							});
 						});
 						this.shuffledataSource = new MatTableDataSource(this.SHUFFLE_ELEMENT_DATA);
+						this.shuffledataSource.sort = this.sortD;
 					} else {
 						this.shuffletableflag = false;
 						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
@@ -189,13 +206,16 @@ export class ShufflingToolComponent implements OnInit {
 		}
 	}
 
-	selectShuffleStudent(admno) {
-		const findex = this.selectedShuffleArray.findIndex(value => value === admno);
+	selectShuffleStudent(login_id) {
+		const findex = this.selectedShuffleArray.findIndex(value => value === login_id);
 		if (findex === -1) {
-			this.selectedShuffleArray.push(admno);
+			this.selectedShuffleArray.push(login_id);
 		} else {
 			this.selectedShuffleArray.splice(findex, 1);
 		}
+	}
+	isSelectedS(login_id) {
+		return this.selectedShuffleArray.findIndex(f => f === login_id) !== -1 ? true : false;
 	}
 	resetshuffletableflag() {
 		this.shuffletableflag = false;
@@ -249,15 +269,20 @@ export class ShufflingToolComponent implements OnInit {
 				this.loginArray.push(item.select);
 			}
 		} else {
+			this.loginArray = [];
 			this.allShuffleFlag = false;
 		}
 	}
 	addLogin($event) {
-		const index = this.loginArray.indexOf($event.source.value);
-		if (index === -1) {
+		if ($event.checked === true) {
 			this.loginArray.push($event.source.value);
 		} else {
+			const index = this.loginArray.indexOf($event.source.value);
 			this.loginArray.splice(index, 1);
 		}
+		console.log(this.loginArray);
+	}
+	isSelectedP(login_id) {
+		return this.loginArray.findIndex(f => f === login_id) !== -1 ? true : false;
 	}
 }

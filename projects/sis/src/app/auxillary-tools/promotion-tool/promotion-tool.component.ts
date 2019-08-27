@@ -12,7 +12,7 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 export class PromotionToolComponent implements OnInit, AfterViewInit {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	displayedColumns: any[] = ['select', 'no', 'name', 'class', 'section', 'action'];
-	PROMOTE_ELEMENT_DATA: Element[] = [];
+	PROMOTE_ELEMENT_DATA: Element[] = []; 
 	DEMOTE_ELEMENT_DATA: Element[] = [];
 	promotedataSource = new MatTableDataSource<Element>(this.PROMOTE_ELEMENT_DATA);
 	demotedataSource = new MatTableDataSource<Element>(this.DEMOTE_ELEMENT_DATA);
@@ -50,6 +50,8 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 	orderByArray: any[] = [{ order_by: 'sec_id', order_by_name: 'Section' }];
 	@ViewChild('sortP') sortP: MatSort;
 	@ViewChild('sortD') sortD: MatSort;
+	allselectedP = false;
+	allselectedD = false;
 
 
 	constructor(private commonApiService: CommonAPIService,
@@ -332,10 +334,9 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
-	checkAllPromotionList($event) {
-		this.toBePromotedList = [];
-		if ($event.checked === true) {
-			this.promotionListAllFlag = true;
+	checkAllPromotionList() {
+		this.allselectedP = this.allselectedP ? false : true;
+		if (this.allselectedP) {
 			for (const item of this.PROMOTE_ELEMENT_DATA) {
 				if (item.action.pmap_status === '1') {
 					this.toBePromotedList.push({
@@ -345,13 +346,12 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 				}
 			}
 		} else {
-			this.promotionListAllFlag = false;
+			this.toBePromotedList = [];
 		}
 	}
-	checkAllDemotionList($event) {
-		this.toBeDemotedList = [];
-		if ($event.checked === true) {
-			this.demotionListAllFlag = true;
+	checkAllDemotionList() {
+		this.allselectedD = this.allselectedD ? false : true;
+		if (this.allselectedD) {
 			for (const item of this.DEMOTE_ELEMENT_DATA) {
 				this.toBeDemotedList.push({
 					em_admission_no: item.no,
@@ -359,7 +359,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 				});
 			}
 		} else {
-			this.demotionListAllFlag = false;
+			this.toBeDemotedList = [];
 		}
 	}
 	promoteStudentInBulk() {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormGroupDirective, NgForm, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonAPIService } from '../../../../_services/index';
+import { CommonAPIService, SmartService } from '../../../../_services/index';
 import { ManageUsersService } from '../../../service/manage-users.service';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { environment } from 'src/environments/environment';
@@ -21,7 +21,8 @@ export class CreateNewTeacherComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private manageUsersService: ManageUsersService,
-		private commonAPIService: CommonAPIService
+		private commonAPIService: CommonAPIService,
+		private smartService: SmartService
 	) {
 	}
 
@@ -372,7 +373,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		);
 	}
 
-	getClass() {
+	/* getClass() {
 		this.manageUsersService.getClass().subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
@@ -380,7 +381,7 @@ export class CreateNewTeacherComponent implements OnInit {
 				}
 			},
 		);
-	}
+	} */
 
 	readUrl(event) {
 		const file = event.target.files[0];
@@ -408,7 +409,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		}
 	}
 
-	getSubjectsByClass(): void {
+	/* getSubjectsByClass(): void {
 		if (this.Cs_relation_Form.value.uc_class_id) {
 			this.manageUsersService.getSubjectsByClass(this.Cs_relation_Form.value.uc_class_id).subscribe(
 				(result: any) => {
@@ -434,6 +435,39 @@ export class CreateNewTeacherComponent implements OnInit {
 				},
 			);
 		}
+	} */
+	getClass() {
+		this.classArray = [];
+		this.smartService.getClass({class_status: '1'}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.classArray = result.data;
+				}
+			}
+		);
+	}
+
+
+	getSubjectsByClass(): void {
+		this.subjectArray = [];
+		this.smartService.getSubjectsByClass({class_id: this.Cs_relation_Form.value.uc_class_id}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.subjectArray = result.data;
+				}
+			}
+		);
+	}
+
+	getSectionsByClass(): void {
+		this.sectionArray = [];
+		this.smartService.getSectionsByClass({class_id: this.Cs_relation_Form.value.uc_class_id}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.sectionArray = result.data;
+				}
+			}
+		);
 	}
 
 	addUser() {

@@ -34,7 +34,7 @@
                                       <mat-form-field class="form-field" appearance="outline">
                                           <mat-label>Select Class</mat-label>
                                       <mat-select id="school-region" formControlName="uc_class_id"
-                                        (change)="getSubjectsByClass();getSectionsByClass()" placeholder="Select Class">
+                                        (selectionChange)="getSubjectsByClass();getSectionsByClass()" placeholder="Select Class">
                                         <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                                           {{item.class_name}}
                                         </mat-option>
