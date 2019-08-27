@@ -82,7 +82,8 @@ export class StudentDashboardComponent implements OnInit {
 		private socketService: SocketService,
 		private userAccessMenuService: UserAccessMenuService,
 		private erpCommonService: ErpCommonService,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private commonAPIService: CommonAPIService
 
 	) { }
 
@@ -294,6 +295,10 @@ export class StudentDashboardComponent implements OnInit {
 		param.class_id = this.userDetail.au_class_id;
 		param.sec_id = this.userDetail.au_sec_id;
 		param.sub_id = this.sub_id;
+		param.from = this.commonAPIService.dateConvertion(this.todaysDate);
+		param.to = this.commonAPIService.dateConvertion(this.todaysDate);
+		param.withDate = true;
+		param.as_status = [1];
 		this.erpCommonService.getAssignment({class_id: this.userDetail.au_class_id, sec_id: this.userDetail.au_sec_id,
 			sub_id: this.sub_id}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {

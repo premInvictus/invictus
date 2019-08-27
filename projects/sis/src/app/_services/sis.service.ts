@@ -743,22 +743,22 @@ export class SisService {
 	}
 	insertEmailScheduler(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSisUrl + '/notificationEmail/insertEmailScheduler', value);
+		return this.http.post(environment.apiSisUrl + '/notificationEmails/insertEmailScheduler', value);
 	}
 
 	insertEmailData(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSisUrl + '/notificationEmail/insertEmailData', value);
+		return this.http.post(environment.apiSisUrl + '/notificationEmails/insertEmailData', value);
 	}
 
 	sendEmail(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSisUrl + '/notificationEmail/sendEmail', value);
+		return this.http.post(environment.apiSisUrl + '/notificationEmails/sendEmail', value);
 	}
 
 	getNotificationEmail(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSisUrl + '/notificationEmail/getNotificationEmail', value);
+		return this.http.post(environment.apiSisUrl + '/notificationEmails/getNotificationEmail', value);
 	}
 
 	insertSMSScheduler(value) {
@@ -821,7 +821,7 @@ export class SisService {
 	}
 	deleteNotificationEmail(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSisUrl + '/notificationEmail/deleteEmailScheduler', value);
+		return this.http.post(environment.apiSisUrl + '/notificationEmails/deleteEmailScheduler', value);
 	}
 	deleteNotificationSMS(value) {
 		this.service.startLoading();

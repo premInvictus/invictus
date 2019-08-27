@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
-import { CommonAPIService } from '../../../../_services/index';
+import { CommonAPIService, SisService } from '../../../../_services/index';
 import { ManageUsersService } from '../../../service/manage-users.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -59,7 +59,8 @@ export class ViewTeacherProfileComponent implements OnInit {
 		private manageUsersService: ManageUsersService,
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
-		private router: Router
+		private router: Router,
+		private sisService: SisService
 	) { }
 	ngOnInit() {
 		this.login_id = this.route.snapshot.queryParams['login_id'];
@@ -105,7 +106,7 @@ export class ViewTeacherProfileComponent implements OnInit {
 	}
 	getUserDetail(param) {
 		if (param) {
-			this.manageUsersService.getUser(param).subscribe(
+			this.sisService.getUser(param).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						if (result.data.length > 0) {

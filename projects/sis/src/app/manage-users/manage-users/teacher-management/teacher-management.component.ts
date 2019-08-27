@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { CommonAPIService } from './../../../_services/index';
+import { CommonAPIService, SmartService} from './../../../_services/index';
 import { ManageUsersService } from './../../service/manage-users.service';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { Element } from './teacher.model';
@@ -31,13 +31,14 @@ export class TeacherManagementComponent implements OnInit {
 	constructor(
 		private commonAPIService: CommonAPIService,
 		private fbuild: FormBuilder,
-		private manageUsersService: ManageUsersService
+		private manageUsersService: ManageUsersService,
+		private smartService: SmartService
 	) { }
 
 	ngOnInit() {
 		this.homeUrl = this.commonAPIService.getUrl();
 		this.buildForm();
-		this.getClass(this);
+		this.getClass();
 		this.getAllTeacher(this);
 		this.tableCollection = true;
 	}
@@ -131,7 +132,7 @@ export class TeacherManagementComponent implements OnInit {
 		);
 	}
 
-	getClass(that) {
+	/* getClass(that) {
 		that.manageUsersService.getClass().subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
@@ -156,6 +157,40 @@ export class TeacherManagementComponent implements OnInit {
 
 	getSectionsByClass(): void {
 		this.manageUsersService.getSectionsByClass(this.Filter_form.value.uc_class_id).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.sectionArray = result.data;
+				} else {
+					this.sectionArray = [];
+				}
+			}
+		);
+	} */
+	getClass() {
+		this.smartService.getClass({class_status: '1'}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.classArray = result.data;
+				}
+			}
+		);
+	}
+
+
+	getSubjectsByClass(): void {
+		this.smartService.getSubjectsByClass({class_id: this.Filter_form.value.uc_class_id}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.subjectArray = result.data;
+				} else {
+					this.subjectArray = [];
+				}
+			}
+		);
+	}
+
+	getSectionsByClass(): void {
+		this.smartService.getSectionsByClass({class_id: this.Filter_form.value.uc_class_id}).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.sectionArray = result.data;

@@ -14,7 +14,7 @@ import { UsertypeSisModule } from './usertypesis/usertypesis.module';
 import { routing } from './app.routing';
 
 // import service
-import {CommonAPIService, SisService, ProcesstypeService, RoutingStateService} from './_services/index';
+import {CommonAPIService, SisService, ProcesstypeService, RoutingStateService, SmartService } from './_services/index';
 import {ResolverService} from './_services/resolver.service';
 
 // import component
@@ -27,7 +27,7 @@ const providers = [CommonAPIService,
 	NotificationsService,
 	RoutingStateService,
 	ResolverService,
-	LoaderService,
+	LoaderService, SmartService,
 	{provide: MAT_DATE_LOCALE, useValue: 'en-GB'}];
 @NgModule({
 	declarations: [
