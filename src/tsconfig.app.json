@@ -63,7 +63,9 @@
     "../projects/smart/src/app/reports/reports.module.ts",
     "../projects/smart/src/app/smartconfiguration/smartconfiguration.module.ts",
     "../projects/student-app/src/app/student-fee/student-fee.module.ts",
-    "../projects/student-app/src/app/academics/academics.module.ts"
+    "../projects/student-app/src/app/academics/academics.module.ts",
+    "../projects/examination/src/app/exam-shared/exam-shared.module.ts",
+    "../projects/examination/src/app/exam-user-type/exam-user-type.module.ts"
   ]
 }
 
