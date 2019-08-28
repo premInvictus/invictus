@@ -1556,7 +1556,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		});
 	}
 	checkWidth(id, header) {
-		const res = this.dataset.map((f) => f[id] !== '-' ? f[id].toString().length : 1);
+		const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
 		const max2 = header.toString().length;
 		const max = Math.max.apply(null, res);
 		return max2 > max ? max2 : max;
