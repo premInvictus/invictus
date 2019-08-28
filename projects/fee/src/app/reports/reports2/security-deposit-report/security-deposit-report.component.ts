@@ -34,7 +34,7 @@ export class SecurityDepositReportComponent implements OnInit {
 	dataset2: any[];
 	initgrid = false;
 	columnDefinitions: Column[] = [];
-	gridOptions: GridOption = {}; 
+	gridOptions: GridOption = {};
 	dataset: any[] = [];
 	angularGrid: AngularGridInstance;
 	dataviewObj: any;
