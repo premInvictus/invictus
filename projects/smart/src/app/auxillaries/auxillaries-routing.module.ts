@@ -5,6 +5,7 @@ import {SubjectPeriodCounterComponent} from '../auxillaries/subject-period-count
 import { TeacherWiseTimetableComponent } from './teacher-wise-timetable/teacher-wise-timetable.component';
 import { ClassWiseTimetableComponent } from './class-wise-timetable/class-wise-timetable.component';
 import {SchedulerComponent} from '../auxillaries/scheduler/scheduler.component';
+import { TeacherTimetableComponent } from './teacher-timetable/teacher-timetable.component';
 const routes: Routes = [
 	{
 		path: 'time-table', component: TimeTableComponent
@@ -20,6 +21,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'scheduler', component: SchedulerComponent
+	},
+	{
+		path: 'teacher', component: TeacherTimetableComponent
 	}
 ];
 @NgModule({
