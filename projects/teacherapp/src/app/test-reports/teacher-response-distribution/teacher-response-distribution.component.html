@@ -1,0 +1,70 @@
+
+<div class="row" >
+  <div class="col-lg-12 col-sm-12 col-md-12">    
+    <div *ngIf="tableCollection">
+        <div class="teacher-other-tab-table">
+            <div class="normal-table-responsive">
+      <!-- <h6>Users Table</h6> -->
+      <table class=" table dialog-table-review table-bordered" cellspacing="0">
+        <thead>
+          <tr class="dialog-table-review-header text-center">
+            <th>S.No</th>
+            <th>Topic</th>
+            <th style="width: 16.5rem;">Sub-Topic</th>
+            <th style="width: 5.6rem;">Q. No.</th>
+            <th colspan="4">Options</th>
+            <th style="width: 1.8rem;">Skipped</th>
+            <th style="width: 22.1rem">Priority</th>
+            <th style="width: 9.2rem">Type</th>
+          </tr>
+          <tr class="dialog-table-review-header text-center">
+            <th ></th>
+            <th ></th>
+            <th></th>
+            <th ></th>            
+            <th style="width: 1.2rem;">Option1</th>
+            <th style="width: 1.2rem;">Option2</th>
+            <th style="width: 1.2rem;">Option3</th>
+            <th style="width: 1.2rem;">Option4</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+         <tbody>
+            <ng-container *ngFor="let titem of testQuestionArray;let i=index">
+              <ng-container *ngFor="let sitem of titem.stArray;let sIndex=index">
+                <ng-container *ngFor="let qus of sitem.qusArray;let qusIndex=index">
+                  <tr class=" text-center">
+                    <td *ngIf="sIndex === 0 && qusIndex === 0"
+                      [attr.rowspan]="titem.row_span">{{i+1}}</td>
+                    <td *ngIf="sIndex === 0 && qusIndex === 0"
+                      [attr.rowspan]="titem.row_span">{{titem.topic_name}}</td>  
+                    <td *ngIf="qusIndex === 0"
+                      [attr.rowspan]="sitem.row_span">{{sitem.st_name}}</td>  
+                    <td >{{getQusPosition(qus.qus_id)}}</td>
+                    <td [ngStyle]="{'background':getColormcqmr(qus.options[0].qopt_answer)}">{{qus.opt1Percentage}}</td>
+                    <td [ngStyle]="{'background':getColormcqmr(qus.options[1].qopt_answer)}">{{qus.opt2Percentage}}</td>
+                    <td [ngStyle]="{'background':getColormcqmr(qus.options[2].qopt_answer)}">{{qus.opt3Percentage}}</td>
+                    <td [ngStyle]="{'background':getColormcqmr(qus.options[3].qopt_answer)}">{{qus.opt4Percentage}}</td>   
+                    <td>{{qus.skipPercentage}}</td>
+                    <td><div [innerHTML]="qus.priority"></div></td>
+                    <td>{{qus.skill_name}}</td>                  
+                 </tr>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </tbody>
+      </table>
+    </div>
+    </div>
+    <div class="float-right">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+          <span><i class="far fa-flag teacher-score-flag-green" aria-hidden="true"></i> : Optional</span>
+          <span><i class="far fa-flag teacher-score-flag-yellow" aria-hidden="true"></i> : Recommended</span>
+          <span><i class="far fa-flag teacher-score-flag-red" aria-hidden="true"></i> : Critical</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

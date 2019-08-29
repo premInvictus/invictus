@@ -1,0 +1,265 @@
+.user-table {
+  padding-top: 10px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+tr, th, td {
+  padding: 5px;
+}
+
+.btn-eye {
+margin-top: 5px;
+}
+
+.create-new-school {
+  float: right;
+  margin-right: 10px;
+}
+
+.form-group-filter {
+margin-bottom: 0rem;
+}
+
+img {
+border-radius: 50%;
+width: 35px;
+height: 35px;
+}
+
+.fa-active {
+color: #28a745;
+}
+
+.fa-edit {
+color: #0069d9;
+}
+
+.fa-delete {
+color: #dc3545;
+}
+
+.fa-thumbs-up {
+  color: #ffc108;
+}
+
+.fa-thumbs-down {
+  color: #dc3545;
+}
+
+table {
+font-size: 14px;
+}
+
+.filter-hr {
+margin-top: 0.45rem;
+}
+
+.info-box {
+background-color: #e9ecef;
+border-color: none;
+}
+
+.btn-stepfour {
+float: right;
+}
+
+.card-header {
+padding: 0rem;
+}
+
+.btn-link {
+text-decoration: none;
+color: #343a40;
+}
+
+.nav-item {
+font-size: 14px;
+}
+
+
+
+/*** custom checkboxes ***/
+
+input[type=checkbox] { display:none; } /* to hide the checkbox itself */
+input[type=checkbox] + label:before {
+font-family: FontAwesome;
+display: inline-block;
+}
+
+input[type=checkbox] + label:before { content: "\f096"; } /* unchecked icon */
+input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
+
+input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
+input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow space for check mark */
+
+/***************************/
+
+input[type=checkbox] + label:before {
+font-size: 16px;
+}
+
+.total-ques {
+float: right;
+}
+/*Form Validation CSS*/
+.alert-danger{
+width: 30% !important;
+margin-left: 73% !important;
+}
+
+#hideMe {
+-webkit-animation: cssAnimation 3s forwards;
+animation: cssAnimation 3s forwards;
+overflow: hidden;
+position: relative;
+}
+
+@keyframes cssAnimation {
+0% {
+  opacity: 1;
+}
+90% {
+  opacity: 1;
+}
+100% {
+  opacity: 0;
+}
+}
+
+@-webkit-keyframes cssAnimation {
+0% {
+  opacity: 1;
+}
+90% {
+  opacity: 1;
+}
+100% {
+  opacity: 0;
+}
+}
+/*Animation for error message if the required fields are empty*/
+.slideInRight {
+-webkit-animation-name: slideInRight;
+animation-name: slideInRight;
+-webkit-animation-duration: 1s;
+animation-duration: 1s;
+-webkit-animation-fill-mode: both;
+animation-fill-mode: both;
+}
+
+@-webkit-keyframes slideInRight {
+0% {
+  -webkit-transform: translateX(100%);
+  transform: translateX(100%);
+  visibility: visible;
+}
+100% {
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
+}
+}
+
+@keyframes slideInRight {
+0% {
+  -webkit-transform: translateX(100%);
+  transform: translateX(100%);
+  visibility: visible;
+}
+100% {
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
+}
+}
+/*Form Validation CSS Ends*/
+.page-double-backward
+{
+  background-color: #6dcff6;
+  color: #ffffff
+}
+.page-backward{
+  background-color: #eeeeee;
+  color:#23bebb
+}
+.review-selection-text
+{
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 18px;
+  text-align: center;
+  text-transform: uppercase;
+  padding-right: 190px;
+}
+.move-review-selection {
+  margin-top: -29px;
+ margin-left: 220px;
+}
+.go-back{
+  background-color: #e4e4e4;
+  border-radius: 5px !important;
+  box-shadow: none !important;
+ }
+
+.review-selection-partial {
+  margin-top: -40px;
+}
+.border-card
+{
+  border: 1px solid #fe756d;
+}
+.marks
+{
+  width: 85px;
+  height: 30px;
+  overflow: hidden;
+  border-top: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  border-bottom:1px solid #bcf2f8;
+  background: transparent;
+
+}
+
+
+.total-marks-display-partial
+{
+  padding-left: 829px;
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.move-label-total-marks-partial
+{
+  padding-left: 980px;
+  margin-top: -32px;
+}
+
+.marksTotal
+{
+  width: 85px;
+  height: 30px;
+  overflow: hidden;
+  border-bottom: 1px solid #bcf2f8;
+  background: transparent;
+  
+}
+.total-marks-partial
+{
+  margin-left: 20px;
+    height: 70px;
+    width: 1431px;
+    background-color: #f4f5f8 !important;
+    margin-top: -20px;
+    border-bottom-style:1px  solid;
+    border-bottom-color: rgba(0,0,0,.12)
+
+}
+
+.mat-cell {
+  word-break: break-word !important;
+}
+@-moz-document url-prefix() {
+  .mat-cell {
+      word-break: break-all !important;
+    }
+}

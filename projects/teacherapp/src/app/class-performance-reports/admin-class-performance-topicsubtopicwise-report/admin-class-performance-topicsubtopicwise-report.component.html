@@ -1,0 +1,75 @@
+  <div>
+      <div class="row row-remove-top-margin">
+        <div class="col-lg-12 col-mobile-view-add-ques">
+          <div >
+            <div id="printModal" >
+                <br>
+                <div *ngIf="overAllPerformanceDiv && subjectWiseArray.length == 0">
+                    <div class="row">
+                       <div class="col-lg-12">
+                          <div class="text-center">
+                             No Records Found
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                    <div class="row">
+                      <div class="col-lg-12 col-mobile-view-add-ques">
+                        <div class="row" *ngIf="overAllPerformanceDiv && subjectWiseArray.length > 0">
+                          <div class="col-lg-12 col-remove-padding">
+                              <div class="create-template-table-new normal-table-responsive">
+                                  <table class=" dialog-table-review table" cellspacing="0">
+                                    <thead>
+                                        <tr class="dialog-table-review-header custom-tr">
+                                          <th class="custom-th" style="width: 1rem !important; border-top: none !important"></th>
+                                          <th class="custom-th" style="width: 8rem !important; border-top: none !important"></th>
+                                          <th class="custom-th" style="width: 9rem !important; border-top: none !important"></th>
+                                          <th  style="border-top: none !important;"
+                                          [attr.colspan]="subjectArray.length" class="text-center custom-th">Subject</th>
+                                          <th class="custom-th" style="width: 10rem !important; border-top: none !important"></th>
+                                          <th class="custom-th" style="width: 3rem !important;border-top: none !important"></th>
+                                    </thead>
+                                  </table>
+                              <table class=" dialog-table-review table" cellspacing="0">
+                                <thead>
+                                  <tr class="dialog-table-review-header custom-tr">
+                                    <th class="text-center custom-th">S.No</th>
+                                    <th class="text-center custom-th">Admission No</th>
+                                    <th class="text-center custom-th">Name</th>
+                                    <th class="text-center custom-th" *ngFor="let item of subjectArray">
+                                      {{item.sub_name | titlecase}}
+                                    </th>
+                                    <th class="text-center custom-th">OverAll Performance</th>
+                                    <th class="text-center custom-th">Grade</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr class="table-dialog-review-row custom-tr" *ngFor="let item of subjectWiseArray; let i=index">
+                                    <td style="width: 1rem !important" scope="row" class="text-center custom-td">{{i+1}}</td>
+                                    <td style="width: 8rem !important" class="text-center custom-td">{{item.au_admission_no}}</td>
+                                    <td style="width: 9rem !important" class="text-center custom-td"> {{item.au_full_name}}</td>
+                                    <td class="text-center custom-td" *ngFor="let sub of subjectArray">
+                                      <ng-container *ngFor="let titem of item.sub_arr">
+                                        <ng-container *ngIf="titem.sub_id === sub.sub_id">
+                                          {{titem.sub_percentage ? (titem.sub_percentage) : 'A'}}
+                                        </ng-container>
+                                      </ng-container>
+                                    </td>
+                                    <td style="width: 10rem !important" class="text-center custom-td">{{item.stu_overall}}</td>
+                                    <td style="width: 3rem !important" class="text-center custom-td">
+                                      <button mat-icon class="grade-button-border" [ngStyle]="{background:getPercentageColor(item.stu_overall)}"><span class="grade-value">{{item.stu_grade}}</span></button>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <br>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>

@@ -68,7 +68,18 @@
     "../projects/examination/src/app/exam-user-type/exam-user-type.module.ts",
     "../projects/examination/src/app/grade-master/grade-master.module.ts",
     "../projects/examination/src/app/reports/reports.module.ts",
-    "../projects/examination/src/app/auxiliaries/auxiliaries.module.ts"
+    "../projects/examination/src/app/auxiliaries/auxiliaries.module.ts",
+    "../projects/teacherapp/src/app/questionbank/questionbank.module.ts",
+    "../projects/teacherapp/src/app/class-performance-reports/class-performance-reports.module.ts",
+    "../projects/teacherapp/src/app/eassessment/eassessment.module.ts",
+    "../projects/teacherapp/src/app/question-paper-setup/question-paper-setup.module.ts",
+    "../projects/teacherapp/src/app/question/question.module.ts",
+    "../projects/teacherapp/src/app/questionpaper/questionpaper.module.ts",
+    "../projects/teacherapp/src/app/questiontemplate/questiontemplate.module.ts",
+    "../projects/teacherapp/src/app/student-reports/student-reports.module.ts",
+    "../projects/teacherapp/src/app/test-reports/test-reports.module.ts",
+    "../projects/teacherapp/src/app/user-type-teacher/user-type-teacher.module.ts",
+    "../projects/teacherapp/src/app/eevaluation/eevaluation.module.ts"
   ]
 }
 
