@@ -161,7 +161,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.projectId = '4';
 			} else if (url === 'exam') {
 				this.defaultProject = 'Examination';
-				this.projectId = '11';
+				this.projectId = '5';
 			}
 		}
 	}
@@ -270,7 +270,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.proUrl = 'smart';
 			localStorage.setItem('project', JSON.stringify({ pro_url: 'smart' }));
 		}
-		if (Number(pro_id) === 11) {
+		if (Number(pro_id) === 5) {
 			this.proUrl = 'exam';
 			localStorage.setItem('project', JSON.stringify({ pro_url: 'exam' }));
 		}
@@ -300,15 +300,15 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 					this.defaultProject = 'SMART';
 					this.projectId = '4';
 				}
-				if (Number(pro_id) === 11) {
+				if (Number(pro_id) === 5) {
 					this.router.navigate(['/exam']);
 					this.defaultProject = 'Examination';
-					this.projectId = '11';
+					this.projectId = '5';
 				}
 			}
 		});
 	}
-	getSessionName(id) {
+	getSessionName(id) { 
 		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
 		if (findex !== -1) {
 			return this.sessionArray[findex].ses_name;

@@ -10,7 +10,11 @@ const routes: Routes = [
 	},
 	{
 		path: 'school', canActivate: [AuthGuard], component: ProjectComponent, children: [
-			{ path: '', component: SchoolDashboardComponent }]
+			{ path: '', component: SchoolDashboardComponent },
+			{ path: 'grade-master', loadChildren: '../grade-master/grade-master.module#GradeMasterModule' },
+			{ path: 'auxiliaries', loadChildren: '../auxiliaries/auxiliaries.module#AuxiliariesModule' },
+			{ path: 'reports', loadChildren: '../reports/reports.module#ReportsModule' }
+		]
 	}
 ];
 
