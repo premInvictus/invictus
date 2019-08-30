@@ -20,6 +20,7 @@ import { AddSchedulerComponent } from './scheduler/add-scheduler/add-scheduler.c
 import { YearlyComponent } from './scheduler/scheduler-calender-view/yearly/yearly.component';
 import { MonthlyComponent } from './scheduler/scheduler-calender-view/monthly/monthly.component';
 import { WeeklyComponent } from './scheduler/scheduler-calender-view/weekly/weekly.component';
+import { TeacherTimetableComponent } from './teacher-timetable/teacher-timetable.component';
 
 @NgModule({
 	imports: [
@@ -47,7 +48,8 @@ import { WeeklyComponent } from './scheduler/scheduler-calender-view/weekly/week
 		AddSchedulerComponent,
 		YearlyComponent,
 		MonthlyComponent,
-		WeeklyComponent
+		WeeklyComponent,
+		TeacherTimetableComponent
 	],
 	entryComponents: [AddSchedulerComponent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

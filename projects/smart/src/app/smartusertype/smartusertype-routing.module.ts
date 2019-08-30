@@ -24,6 +24,7 @@ const routes: Routes = [
 			{ path: '', component: TeacherDashboardComponent },
 			{ path: 'logentry', loadChildren: '../logentry/logentry.module#LogentryModule' },
 			{ path: 'assignment', loadChildren: '../assignment/assignment.module#AssignmentModule' },
+			{ path: 'auxillaries', loadChildren: '../auxillaries/auxillaries.module#AuxillariesModule' },
 		]
 	}
 ];
