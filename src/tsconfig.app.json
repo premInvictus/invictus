@@ -80,7 +80,10 @@
     "../projects/teacherapp/src/app/student-reports/student-reports.module.ts",
     "../projects/teacherapp/src/app/test-reports/test-reports.module.ts",
     "../projects/teacherapp/src/app/user-type-teacher/user-type-teacher.module.ts",
-    "../projects/teacherapp/src/app/eevaluation/eevaluation.module.ts"
+    "../projects/teacherapp/src/app/eevaluation/eevaluation.module.ts",
+    "../projects/teacherapp/src/app/logentry/logentry.module.ts",
+    "../projects/teacherapp/src/app/assignment/assignment.module.ts",
+    "../projects/teacherapp/src/app/auxillaries/auxillaries.module.ts",
   ]
 }
 
