@@ -1,0 +1,664 @@
+<div class="add-question-content">
+  <div class="row">
+    <div class="col-lg-12 col-mobile-view-add-ques">
+      <div class="white-box">
+        <div class="container-box__white">
+          <div class="row">
+            <div class="col-lg-12 col-mobile-view-add-ques">
+              <div class="white-box-content-title">
+                <h4 class="text-uppercase text-center"><b>Examination Configuration</b></h4>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3 col-mobile-view-add-ques">
+
+              <div class="left-side-box">
+                <div class="left-side-box-content">
+                  <div>
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Setup Option</mat-label>
+                          <mat-select (selectionChange)="loadConfiguration($event)" placeholder="Setup Options">
+                            <mat-option value="">Please Select</mat-option>
+                            <mat-option value="1">Exam</mat-option>
+                            <mat-option value="2">Sub Exam</mat-option>
+                            <mat-option value="3">Grades</mat-option>
+                            <mat-option value="4">Remarks</mat-option>
+                            <mat-option value="5">Activities</mat-option>
+                            <mat-option value="6">Report Card (Print)</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div *ngIf="configValue == '1'">
+                      <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Enter Class Name</mat-label>
+                              <input matInput placeholder="Enter Class Name" class="text-capitalize" type="text"
+                                formControlName="class_name" [errorStateMatcher]="confirmValidParentMatcher"
+                                [value]="formGroupArray[configValue-1].formGroup.get('class_name').value | capitalize"
+                                required>
+                              <mat-error>Please Enter Class Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div *ngIf="configValue == '2'">
+                      <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Enter Section Name</mat-label>
+                              <input matInput placeholder="Enter Section Name" class="text-capitalize" type="text"
+                                formControlName="sec_name" [errorStateMatcher]="confirmValidParentMatcher"
+                                [value]="formGroupArray[configValue-1].formGroup.get('sec_name').value | capitalize"
+                                required>
+                              <mat-error>Please Enter Section Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div *ngIf="configValue == '3'">
+                      <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Enter Grade Set Name</mat-label>
+                              <input matInput placeholder="Enter Grade Set Name" type="text" class="text-capitalize"
+                                formControlName="egs_name" [errorStateMatcher]="confirmValidParentMatcher"
+                                [value]="formGroupArray[configValue-1].formGroup.get('egs_name').value | capitalize"
+                                required>
+                              <mat-error>Please Enter Grade Set Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Grade Point Type</mat-label>
+                              <mat-select formControlName="egs_point_type" placeholder="Select Grade Point Type"
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher">
+                                <mat-option value="">Please Select Grade Point Type
+                                </mat-option>
+                                <mat-option *ngFor="let item of pointTypeArray" [value]="item.pt_id">
+                                  {{item.pt_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Grade Point Type</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>No. of Tiers</mat-label>
+                              <mat-select formControlName="egs_no_of_tiers" placeholder="Select No. of Tiers"
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher"
+                                (selectionChange)="prepareGradeData($event)">
+                                <mat-option value="">Please Select No. of Tiers
+                                </mat-option>
+                                <mat-option *ngFor="let item of tiersArray" [value]="item.tier_id">
+                                  {{item.tier_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose No. of Tiers</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <ng-container *ngFor="let gradeDatafrm of gradeDataFrmArr; let rowIndex=index;">
+
+                              <form [formGroup]="gradeDatafrm.formGroup">
+                                <div class="row">
+                                  <div class="col-12">
+                                    <div class="col-12">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Grade Name</mat-label>
+                                        <input matInput placeholder="Enter Grade Name" type="text"
+                                          class="text-capitalize" formControlName="egs_grade_name"
+                                          [errorStateMatcher]="confirmValidParentMatcher"
+                                          [value]="gradeDatafrm.formGroup.get('egs_grade_name').value | capitalize"
+                                          required>
+                                        <mat-error>Please Enter Grade Name</mat-error>
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-12">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Grade Value</mat-label>
+                                        <input matInput placeholder="Enter Grade Value" type="text"
+                                          class="text-capitalize" formControlName="egs_grade_value"
+                                          [errorStateMatcher]="confirmValidParentMatcher"
+                                          [value]="gradeDatafrm.formGroup.get('egs_grade_value').value | capitalize"
+                                          required>
+                                        <mat-error>Please Enter Grade Value</mat-error>
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-12">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Range Start</mat-label>
+                                        <mat-select formControlName="egs_range_start" placeholder="Select Start Range"
+                                          [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher"
+                                          (selectionChange)="prepareGradeData($event)">
+                                          <mat-option value="">Please Select Start Range
+                                          </mat-option>
+                                          <mat-option *ngFor="let item of rangeArray" [value]="item.rng_id">
+                                            {{item.rng_value}}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-12">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Range End</mat-label>
+                                        <mat-select formControlName="egs_range_end" placeholder="Select End Range"
+                                          [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher"
+                                          (selectionChange)="prepareGradeData($event)">
+                                          <mat-option value="">Please Select End Range
+                                          </mat-option>
+                                          <mat-option *ngFor="let item of rangeArray" [value]="item.rng_id">
+                                            {{item.rng_value}}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-12">
+
+                                      <button mat-raised-button class="btn-danger btn-spacer"
+                                        (click)="deleteGradeData(rowIndex)">X</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </form>
+                            </ng-container>
+                            <div class="row">
+                              <div class="col-12">
+                                <mat-form-field class="form-field" appearance="outline">
+                                  <mat-label>Grade Descripton</mat-label>
+                                  <textarea matInput placeholder="Enter Grade Description" type="text"
+                                    class="text-capitalize" formControlName="egs_description"
+                                    [errorStateMatcher]="confirmValidParentMatcher"
+                                    [value]="formGroupArray[configValue-1].formGroup.get('egs_description').value | capitalize"
+                                    required></textarea>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div *ngIf="configValue == '4'">
+                      <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Enter Remark Set Name</mat-label>
+                              <input matInput placeholder="Enter Remark Set Name" type="text" class="text-capitalize"
+                                formControlName="ers_name" [errorStateMatcher]="confirmValidParentMatcher"
+                                [value]="formGroupArray[configValue-1].formGroup.get('ers_name').value | capitalize"
+                                required>
+                              <mat-error>Please Enter Remark Set Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Grade Set</mat-label>
+                              <mat-select formControlName="ers_egs_number" placeholder="Select Grade Set"
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option value="">Please select</mat-option>
+                                <mat-option *ngFor="let item of gradeSetArray" [value]="item.egs_id">
+                                  {{item.egs_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Grade Set Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Remark Type</mat-label>
+                              <mat-select formControlName="ers_remark_type" required placeholder="Select Remark Type"
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option value="">Please Select</mat-option>
+                                <mat-option *ngFor="let item of examActivityCategoryArr" [value]="item.eac_id">
+                                  {{item.eac_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Remark Type</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Enter Remark Text</mat-label>
+                              <textarea matInput placeholder="Enter Remark Text" type="text" class="text-capitalize"
+                                formControlName="ers_remark_description" [errorStateMatcher]="confirmValidParentMatcher"
+                                [value]="formGroupArray[configValue-1].formGroup.get('ers_remark_description').value | capitalize"
+                                required></textarea>
+                              <mat-error>Please Enter Remark Text</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Remark Tone</mat-label>
+                              <mat-select formControlName="ers_remark_tone" required placeholder="Select Remark Tone"
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option value="">Please Select</mat-option>
+                                <mat-option *ngFor="let item of remarkToneArray" [value]="item.remark_tone_id">
+                                  {{item.remark_tone_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Remark Tone</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div *ngIf="configValue == '5'">
+                      <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Enter Activity Name</mat-label>
+                              <input matInput placeholder="Enter Activity Name" type="text" class="text-capitalize"
+                                formControlName="ea_name" [errorStateMatcher]="confirmValidParentMatcher"
+                                [value]="formGroupArray[configValue-1].formGroup.get('ea_name').value | capitalize"
+                                required>
+                              <mat-error>Please Enter Activity Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Activity Category</mat-label>
+                              <mat-select formControlName="ea_category_id" required placeholder="Select Category"
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option value="">Please select</mat-option>
+                                <mat-option *ngFor="let item of examActivityCategoryArr" [value]="item.eac_id">
+                                  {{item.eac_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Activity Category</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Activity Type</mat-label>
+                              <mat-select formControlName="ea_type_id" required placeholder="Select Type"
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option value="">Please select</mat-option>
+                                <mat-option *ngFor="let item of examActivityTypeArr" [value]="item.eat_id">
+                                  {{item.eat_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Activity Type</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Activity Description</mat-label>
+                              <textarea matInput placeholder="Activity Description" class="text-capitalize" type="text"
+                                formControlName="ea_description" [errorStateMatcher]="confirmValidParentMatcher"
+                                [value]="formGroupArray[configValue-1].formGroup.get('ea_description').value | capitalize"></textarea>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div *ngIf="configValue == '6'">
+                      <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Class</mat-label>
+                              <mat-select formControlName="gcss_gc_id" placeholder="Select Class" [disabled]="editFlag"
+                                multiple [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                  {{item.class_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Class Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Section</mat-label>
+                              <mat-select formControlName="gcss_gs_id" placeholder="Select Section"
+                                [disabled]="editFlag" multiple [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option *ngFor="let item of secArray" [value]="item.sec_id">
+                                  {{item.sec_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Section Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Subject</mat-label>
+                              <mat-select formControlName="gcss_gsub_id" placeholder="Select Subject"
+                                [disabled]="editFlag" multiple [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option *ngFor="let item of subArray" [value]="item.sub_id">
+                                  {{item.sub_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Subject Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="text-center margin-top-15">
+                      <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
+                        (click)="addConfiguration(configValue)">Add</button>
+                      <button *ngIf="setupUpdateFlag" mat-raised-button class="btn-success"
+                        (click)="updateConfiguration(configValue)">Update</button>
+                      <button mat-raised-button class="btn-danger btn-spacer"
+                        (click)="resetForm(configValue)">Reset</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-9  col-mobile-view-add-ques remove-col-modal-padding">
+              <div class="top-right-parameter">
+                <div class="top-right-box">
+                  <div>
+                    <div class="top-right-box-content-title">
+                      <div class="row">
+                        <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                          <div [hidden]="!configFlag">
+                            <div class="row">
+                              <div class="col-lg-12 col-mobile-view-add-ques">
+                                <div class=" mob-table-box">
+                                  <div class="example-container table-box-main">
+                                    <div class="example-header">
+                                      <mat-form-field class="form-feild">
+                                        <input matInput (keyup)="applyFilter($event.target.value)"
+                                          placeholder="Filter" />
+                                      </mat-form-field>
+                                    </div>
+                                    <table mat-table #table [dataSource]="configDataSource" matSort
+                                      class="table-100 text-center">
+                                      <!-- Position Column -->
+                                      <ng-container matColumnDef="position">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          S.No
+                                        </th>
+                                        <td mat-cell *matCellDef="let item">
+                                          {{ item.position }}
+                                        </td>
+                                      </ng-container>
+                                      <!-- Name Column -->
+                                      <ng-container matColumnDef="name">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          {{firstHeaderArray[configValue-1]}}
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.name">{{ item.name }}</span>
+                                          <span *ngIf="!item.name">-</span>
+                                        </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '3'" matColumnDef="point_type_id">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Point Type
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.point_type_id">{{ getPointType(item.point_type_id) }}</span>
+                                          <span *ngIf="!item.point_type_id">-</span>
+                                        </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '3'" matColumnDef="no_of_tiers">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          No. of Tiers
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.no_of_tiers">{{ item.no_of_tiers }}</span>
+                                          <span *ngIf="!item.no_of_tiers">-</span>
+                                        </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '3'" matColumnDef="grade_name">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Grade Name
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.grade_name">{{ item.grade_name }}</span>
+                                          <span *ngIf="!item.grade_name">-</span>
+                                        </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '3'" matColumnDef="grade_value">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Grade Value
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.grade_value">{{ item.grade_value }}</span>
+                                          <span *ngIf="!item.grade_value">-</span>
+                                        </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '3'" matColumnDef="start_range">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Start Range
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.start_range">{{ item.start_range }}</span>
+                                          <span *ngIf="!item.start_range">-</span>
+                                        </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '3'" matColumnDef="end_range">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          End Range
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.end_range">{{ item.end_range }}</span>
+                                          <span *ngIf="!item.end_range">-</span>
+                                        </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '3'" matColumnDef="grade_set_description">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Description
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.grade_set_description">{{ item.grade_set_description }}</span>
+                                          <span *ngIf="!item.grade_set_description">-</span>
+                                        </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '4'" matColumnDef="remark_grade_name">
+                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Grade Name
+                                          </th>
+                                          <td class="left" mat-cell *matCellDef="let item">
+                                            <span *ngIf="item.remark_grade_name">{{ item.remark_grade_name }}</span>
+                                            <span *ngIf="!item.remark_grade_name">-</span>
+                                          </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '4'" matColumnDef="remark_type">
+                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Remark Type
+                                          </th>
+                                          <td class="left" mat-cell *matCellDef="let item">
+                                            <span *ngIf="item.remark_type">{{ getActivityCategory(item.remark_type) }}</span>
+                                            <span *ngIf="!item.remark_type">-</span>
+                                          </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '4'" matColumnDef="remark_tone">
+                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Remark Tone
+                                          </th>
+                                          <td class="left" mat-cell *matCellDef="let item">
+                                            <span *ngIf="item.remark_tone">{{ getRemarkTone(item.remark_tone) }}</span>
+                                            <span *ngIf="!item.remark_tone">-</span>
+                                          </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '4'" matColumnDef="remark_description">
+                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Description
+                                          </th>
+                                          <td class="left" mat-cell *matCellDef="let item">
+                                            <span *ngIf="item.remark_description">{{ item.remark_description }}</span>
+                                            <span *ngIf="!item.remark_description">-</span>
+                                          </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '5'" matColumnDef="category_name">
+                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                            Category Name
+                                          </th>
+                                          <td class="left" mat-cell *matCellDef="let item">
+                                            <span *ngIf="item.category_name">{{ getActivityCategory(item.category_name) }}</span>
+                                            <span *ngIf="!item.category_name">-</span>
+                                          </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '5'" matColumnDef="type_name">
+                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Type Name
+                                          </th>
+                                          <td class="left" mat-cell *matCellDef="let item">
+                                            <span *ngIf="item.type_name">{{ getActivityType(item.type_name) }}</span>
+                                            <span *ngIf="!item.type_name">-</span>
+                                          </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '5'" matColumnDef="activity_description">
+                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Description
+                                          </th>
+                                          <td class="left" mat-cell *matCellDef="let item">
+                                            <span *ngIf="item.activity_description">{{ item.activity_description }}</span>
+                                            <span *ngIf="!item.activity_description">-</span>
+                                          </td>
+                                      </ng-container>
+
+                                      <!-- action Column -->
+                                      <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Action
+                                        </th>
+                                        <td mat-cell *matCellDef="let item">
+                                          <mat-slide-toggle class="inline-form-radio-spacing"
+                                            [checked]="getActiveStatus(item.action)" aria-hidden="true"
+                                            (click)="toggleStatus(item.action)">
+                                          </mat-slide-toggle>
+                                        </td>
+                                        >
+                                      </ng-container>
+                                      <!-- modify Column -->
+                                      <ng-container matColumnDef="modify">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Modify
+                                        </th>
+                                        <td mat-cell *matCellDef="let item">
+                                          <i class="far fa-edit table-edit-icon" data-toggle="tooltip"
+                                            data-placement="top" matTooltip="Edit" aria-hidden="true"
+                                            (click)="formEdit(item.action)"></i>
+                                          <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip"
+                                            data-placement="top" matTooltip="Delete" aria-hidden="true"
+                                            (click)="openDeleteDialog({data : item.action, type: configValue})"></i>
+                                        </td>
+                                      </ng-container>
+                                      <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns">
+                                      </tr>
+                                      <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns">
+                                      </tr>
+                                      >
+                                    </table>
+                                  </div>
+                                  <mat-paginator #paginator [pageSizeOptions]=[5,10,20] [pageSize]="10"
+                                    showFirstLastButtons>
+                                  </mat-paginator>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="col-9">
+                          <div class="row">
+                              <div class="col-12 remove-col-padding">
+                                  <table class="table table-borderd table-stripped custom-table">
+                                      <thead class="table-skill__head text-center">
+                                          <tr class="custom-tr">
+                                              <th class="custom-th" rowspan="2">Sr No.</th>
+                                              <th class="custom-th" rowspan="2">Class</th>
+                                              <th class="custom-th" rowspan="2">No. of Day </th>
+                                              <th class="custom-th" rowspan="2">No. of Period </th>
+                                              <th class="custom-th" rowspan="2">Modify</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody class="text-center">
+                                          <tr class="custom-tr" *ngFor="let det of detailArray;let j = index">
+                                              <td class="custom-td">{{j + 1}}</td>
+                                              <td class="custom-td">
+                                                  {{getSetupClass(det.class_id)}}
+                                              </td>
+                                              <td class="custom-td">
+                                                  {{det.no_of_day}}
+                                              </td>
+                                              <td class="custom-td">
+                                                  {{det.no_of_period}}
+
+                                              </td>
+                                              <td *ngIf="!viewOnly" class="custom-td">
+                                                  <i class="far fa-edit modify-icon" (click)="editSetupList(j)"
+                                                      style="cursor:pointer" title="Edit"></i>&nbsp;
+                                                  <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
+                                                      (click)="deleteSetupList(j)" style="cursor:pointer"
+                                                      title="Delete"></i>
+                                              </td>
+                                          </tr>
+                                      </tbody>
+                                      <tbody *ngIf="finaldivflag">
+                                          <tr class="text-center">
+                                              <td colspan="9">
+                                                  <img
+                                                      src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                                                  <br>
+                                                  <br>
+                                                  <br>
+                                                  <span class="font-size-20 font-bold font-color-brown">
+                                                      No Data Available
+                                                  </span>
+                                                  <br><span class="font-size-20 font-light font-color-brown">
+                                                      Please add on Click of Add Button
+                                                  </span>
+                                              </td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <app-delete-modal #deleteModal (deleteOk)="deleteClassEntry($event)"></app-delete-modal> -->
+  <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteConfirm($event)"
+    (deleteCancel)="deleteCancel()"></app-delete-modal>

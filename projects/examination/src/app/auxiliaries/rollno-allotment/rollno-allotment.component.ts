@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
+import { CommonAPIService, SisService, AxiomService, SmartService, ExamService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { Element } from './rollno.model';
 import { MatSort, MatTableDataSource, ErrorStateMatcher } from '@angular/material';
@@ -18,6 +18,7 @@ export class RollnoAllotmentComponent implements OnInit {
 	sectionArray: any[];
 	studentArray: any[];
 	currentUser: any;
+	session: any;
 	ELEMENT_DATA: Element[] = [];
 	rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	formgroupArray: any[] = [];
@@ -29,8 +30,10 @@ export class RollnoAllotmentComponent implements OnInit {
 		public commonService: CommonAPIService,
 		public axiomService: AxiomService,
 		public sisService: SisService,
+		public examService: ExamService
 	) {
-		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.session = JSON.parse(localStorage.getItem('session'));
 	}
 
 	ngOnInit() {
@@ -104,7 +107,10 @@ export class RollnoAllotmentComponent implements OnInit {
 									sec_id: this.firstForm.value.syl_section_id,
 									login_id: item.au_login_id,
 									roll_no: '',
-									board_roll_no: ''
+									board_roll_no: '',
+									session_id: this.session.ses_id,
+									created_by: this.currentUser.login_id
+
 								})
 							});
 						}
@@ -117,10 +123,12 @@ export class RollnoAllotmentComponent implements OnInit {
 	}
 	finalSubmit() {
 		for (const item of this.formgroupArray) {
-			console.log('item', item);
 			this.finalArray.push(item.formGroup.value);
 		}
-		console.log(this.finalArray);
+		this.examService.insertRollNo(this.finalArray).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+			}
+		});
 	}
 
 }

@@ -13,6 +13,7 @@ const routes: Routes = [
 			{ path: '', component: SchoolDashboardComponent },
 			{ path: 'grade-master', loadChildren: '../grade-master/grade-master.module#GradeMasterModule' },
 			{ path: 'auxiliaries', loadChildren: '../auxiliaries/auxiliaries.module#AuxiliariesModule' },
+			{ path: 'examconfiguration', loadChildren: '../exam-configuration/exam-configuration.module#ExamConfigurationModule' },
 			{ path: 'reports', loadChildren: '../reports/reports.module#ReportsModule' }
 		]
 	}
