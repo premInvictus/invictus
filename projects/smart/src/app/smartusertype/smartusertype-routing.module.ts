@@ -15,7 +15,7 @@ const routes: Routes = [
 			{ path: 'logentry', loadChildren: '../logentry/logentry.module#LogentryModule' },
 			{ path: 'assignment', loadChildren: '../assignment/assignment.module#AssignmentModule' },
 			{ path: 'auxillaries', loadChildren: '../auxillaries/auxillaries.module#AuxillariesModule' },
-			{ path: 'reports', loadChildren: '../reports/reports.module#SmartReportsModule' },
+			{ path: 'reports', loadChildren: 'projects/smart/src/app/reports/reports.module#SmartReportsModule' },
 			{ path: 'smartconfiguration', loadChildren: '../smartconfiguration/smartconfiguration.module#SmartconfigurationModule' }
 		]
 	},

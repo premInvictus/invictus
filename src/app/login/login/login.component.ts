@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
 						this.returnUrl = '/' + JSON.parse(localStorage.getItem('project')).pro_url + '/school';
 					}
 				} else if (userData['UR'] === '3') {
-					this.returnUrl = '/axiom/teacher';
+					this.returnUrl = '/teacher';
 				} else if (userData['UR'] === '4') {
 					this.returnUrl = '/student';
 				} else if (userData['UR'] === '5') {
@@ -196,7 +196,7 @@ export class LoginComponent implements OnInit {
 											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '2') {
 												this.returnUrl = returnUrl + '/school';
 											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
-												this.returnUrl = returnUrl + '/teacher';
+												this.returnUrl = '/teacher';
 											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '4') {
 												this.returnUrl = '/student';
 											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {

@@ -1,0 +1,40 @@
+.user-table {
+  padding-top: 10px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+tr, th, td {
+  padding: 8px;
+}
+
+table {
+  font-size: 14px;
+}
+
+.barStyle{
+  width: 30%;
+}
+
+.change_mat_progress{
+  display: block;
+    height: 15px;
+    overflow: hidden;
+    position: relative;
+    transition: opacity 250ms linear;
+  }
+
+  .table-top-border-remove td
+  {
+    border-top: none !important;
+  }
+
+
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #258cb3 !important;
+}
+
+::ng-deep .mat-progress-bar-buffer {
+  background: #E4E8EB !important;
+}

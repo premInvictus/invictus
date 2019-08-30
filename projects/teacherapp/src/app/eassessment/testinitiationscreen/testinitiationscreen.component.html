@@ -1,0 +1,208 @@
+<div class="add-question-content">
+    <div class="row">
+       <div class="col-lg-12 col-mobile-view-add-ques">
+          <div class="white-box">
+             <div class="white-box-content">
+                <div class="row">
+                   <div class="col-lg-12 col-mobile-view-add-ques">
+                      <div class="white-box-content-title">
+                         <span>Test Initiation Screen</span>
+                      </div>
+                   </div>
+                </div>
+                <div class="row">
+                   <div class="col-lg-12">
+                      <div>
+                         <div class="red-box-content">
+                            <div class="row">
+                               <div class="col-lg-12 col-mobile-view-add-ques">
+                                  <div class="table-box mob-table-box">
+                                     <div>
+                                        <div class="row">
+                                           <div class="col-lg-12">
+                                              <div class="example-header table-filter">
+                                                 <mat-form-field class="mob-table-filter">
+                                                    <input matInput
+                                                       (keyup)=" applyFilter($event.target.value)"
+                                                       placeholder="Filter">
+                                                    <span matPrefix>
+                                                    <i
+                                                       class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp;
+                                                    </span>
+                                                 </mat-form-field>
+                                              </div>
+                                              <br>
+                                              <mat-table
+                                              class="test-initiation-screen-table-main-structure test-initiation-table-apple"
+                                              #table [dataSource]="dataSource" matSort>
+                                              <ng-container matColumnDef="position">
+                                                 <mat-header-cell *matHeaderCellDef>S.No
+                                                 </mat-header-cell>
+                                                 <mat-cell *matCellDef="let item"> {{item.position}}
+                                                 </mat-cell>
+                                              </ng-container>
+                                              <ng-container matColumnDef="admission">
+                                                 <mat-header-cell *matHeaderCellDef>Admission No.
+                                                 </mat-header-cell>
+                                                 <mat-cell *matCellDef="let item"> {{item.loginid}}
+                                                 </mat-cell>
+                                              </ng-container>
+                                              <ng-container matColumnDef="student">
+                                                 <mat-header-cell *matHeaderCellDef>Student Name
+                                                 </mat-header-cell>
+                                                 <mat-cell *matCellDef="let item"> {{item.student}}
+                                                 </mat-cell>
+                                              </ng-container>
+                                              <ng-container matColumnDef="class">
+                                                 <mat-header-cell *matHeaderCellDef> Class
+                                                 </mat-header-cell>
+                                                 <mat-cell *matCellDef="let item"> {{item.class}}
+                                                 </mat-cell>
+                                              </ng-container>
+                                              <ng-container matColumnDef="section">
+                                                 <mat-header-cell *matHeaderCellDef>Section
+                                                 </mat-header-cell>
+                                                 <mat-cell *matCellDef="let item">{{item.section}}
+                                                 </mat-cell>
+                                              </ng-container>
+                                              <ng-container matColumnDef="lab">
+                                                 <mat-header-cell *matHeaderCellDef>Lab Location
+                                                 </mat-header-cell>
+                                                 <mat-cell *matCellDef="let item"
+                                                    class="test-init-labClr">{{item.lab}}</mat-cell>
+                                              </ng-container>
+                                              <ng-container matColumnDef="attendance">
+                                                 <mat-header-cell *matHeaderCellDef>Mark Attendence
+                                                 </mat-header-cell>
+                                                 <mat-cell *matCellDef="let item">
+                                                    <mat-checkbox class="test-init-checkbox"
+                                                    [value]="item.admission"
+                                                    (change)="getStudentAttandance(item.admission)">
+                                                    </mat-checkbox>
+                                                 </mat-cell>
+                                              </ng-container>
+                                              <mat-header-row
+                                                 class="top_header template-mat-header-row"
+                                                 *matHeaderRowDef="displayedColumns">
+                                              </mat-header-row>
+                                              <mat-row class="template-mat-row"
+                                                 *matRowDef="let row; columns: displayedColumns;">
+                                              </mat-row>
+                                              </mat-table>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="row">
+                   <div class="col-lg-12">
+                      <div class="row">
+                         <div class="col-lg-4">
+                            <mat-card class="score-card-info-card-main-box">
+                               <div class="score-card-info-car-box">
+                                  <div class="row row-remove-top-margin">
+                                     <div class="col-lg-12 remove-col-modal-padding">
+                                        <div class="row">
+                                           <div class="col-lg-4 tab-hide-col-test-init-img">
+                                              <div class="image-circle-attendence">
+                                                 <img class="teacher-score-card-tot-ques-img float-left test-initiation-card-img"
+                                                    src="/assets/images/student-img.svg"
+                                                    style="width: 100px;height: 100px;">
+                                              </div>
+                                           </div>
+                                           <div class="col-lg-8">
+                                              <div class="student-attend-card-info">
+                                                 <span
+                                                    class="teacher-score-card-dynamic-value present-student"><b>{{presentSIDArray.length}}</b></span>
+                                                 <br>
+                                                 <span>Present Students</span>
+                                                 <br>
+                                                 <hr>
+                                                 <span
+                                                    class="teacher-score-card-dynamic-value">{{studentArray.length}}</span>
+                                                 <br>
+                                                 <span>Total Students</span>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </mat-card>
+                         </div>
+                         <div class="col-lg-4">
+                            <mat-card class="score-card-info-card-main-box">
+                               <div class="score-card-info-car-box">
+                                  <div class="row row-remove-top-margin">
+                                     <div class="col-lg-12 remove-col-modal-padding">
+                                        <div class="row">
+                                           <div class="col-lg-4 tab-hide-col-test-init-img">
+                                              <div class="image-circle-attendence">
+                                                 <img class="teacher-score-card-tot-ques-img float-left test-initiation-card-img"
+                                                    src="/assets/images/desk.svg"
+                                                    style="width: 100px;height: 100px;">
+                                              </div>
+                                           </div>
+                                           <div class="col-lg-8">
+                                              <div class="student-attend-card-info">
+                                                 <span
+                                                    class="teacher-score-card-dynamic-value absent-student">
+                                                 <b>{{this.studentArray.length - presentSIDArray.length}}</b>
+                                                 </span>
+                                                 <br>
+                                                 <span>Absent Students</span>
+                                                 <br>
+                                                 <hr>
+                                                 <span
+                                                    class="teacher-score-card-dynamic-value">{{studentArray.length}}</span>
+                                                 <br>
+                                                 <span>Total Students</span>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </mat-card>
+                         </div>
+                         <div class="col-lg-4">
+                            <mat-card class="score-card-info-card-main-box control-board-card">
+                               <div class="score-card-info-car-box">
+                                  <div class="row row-remove-top-margin">
+                                     <div class="col-lg-12 remove-col-modal-padding">
+                                        <div class="row">
+                                           <div class="col-lg-12">
+                                              <span>Control Board </span>&nbsp; &nbsp;<i
+                                                 class="far fa-question-circle info-icon"
+                                                 matTooltip="Please mark attendence before starting Test"
+                                                 aria-label="Attendence"></i>
+                                              <hr>
+                                              <br>
+                                              <div class="text-center">
+                                                 <button mat-raised-button
+                                                    class="test-init-start-test-button"
+                                                    (click)="startTest()">Start Test</button>
+                                              </div>
+                                              <br>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </mat-card>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ <br>
+ <br>

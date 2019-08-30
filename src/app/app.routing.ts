@@ -8,6 +8,7 @@ import { AuthGuard } from './_guards/auth.guard';
 import { AdminAppSharedModule } from 'projects/admin-app/src/app/app.module';
 import { SmartSharedAppModule } from 'projects/smart/src/app/app.module';
 import { ExamSharedAppModule } from 'projects/examination/src/app/app.module';
+import { TeacherAppSharedModule } from 'projects/teacherapp/src/app/app.module';
 const appRoutes: Routes = [
 		{path: 'login', loadChildren: 'src/app/login/login.module#LoginModule'},
 		{path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -17,6 +18,7 @@ const appRoutes: Routes = [
 		{path: 'smart', canActivate: [AuthGuard] , loadChildren: 'projects/smart/src/app/app.module#SmartSharedAppModule'},
 		{path: 'exam', canActivate: [AuthGuard] , loadChildren: 'projects/examination/src/app/app.module#ExamSharedAppModule'},
 		{path: 'student', canActivate: [AuthGuard], loadChildren: 'projects/student-app/src/app/app.module#StudentAppSharedModule'},
+		{path: 'teacher', canActivate: [AuthGuard], loadChildren: 'projects/teacherapp/src/app/app.module#TeacherAppSharedModule'},
 		{path: 'admin', canActivate: [AuthGuard], loadChildren: 'projects/admin-app/src/app/app.module#AdminAppSharedModule'},
 		{ path: '**', redirectTo: 'login'}
 ];
@@ -30,6 +32,7 @@ const appRoutes: Routes = [
 			AdminAppSharedModule.forRoot(),
 			SmartSharedAppModule.forRoot(),
 			ExamSharedAppModule.forRoot(),
+			TeacherAppSharedModule.forRoot()
 		],
 	})
 	export class AppRoutingModule { }
