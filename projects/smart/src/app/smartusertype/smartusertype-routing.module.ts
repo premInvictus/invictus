@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards';
 import { ProjectComponent } from '../../../../../src/app/invictus-shared/project/project.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
-import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
 const routes: Routes = [
 	{
 		path: '', canActivate: [AuthGuard], redirectTo: 'school', pathMatch: 'full'
@@ -17,14 +16,6 @@ const routes: Routes = [
 			{ path: 'auxillaries', loadChildren: '../auxillaries/auxillaries.module#AuxillariesModule' },
 			{ path: 'reports', loadChildren: 'projects/smart/src/app/reports/reports.module#SmartReportsModule' },
 			{ path: 'smartconfiguration', loadChildren: '../smartconfiguration/smartconfiguration.module#SmartconfigurationModule' }
-		]
-	},
-	{
-		path: 'teacher', canActivate: [AuthGuard], component: ProjectComponent, children: [
-			{ path: '', component: TeacherDashboardComponent },
-			{ path: 'logentry', loadChildren: '../logentry/logentry.module#LogentryModule' },
-			{ path: 'assignment', loadChildren: '../assignment/assignment.module#AssignmentModule' },
-			{ path: 'auxillaries', loadChildren: '../auxillaries/auxillaries.module#AuxillariesModule' },
 		]
 	}
 ];
