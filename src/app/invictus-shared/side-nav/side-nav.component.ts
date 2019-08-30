@@ -53,7 +53,7 @@ export class SideNavComponent implements OnInit, OnChanges {
 				}
 			}
 		} else if (this.currentUser.role_id === '3') {
-			this.router.navigateByUrl('axiom/teacher');
+			this.router.navigateByUrl('teacher');
 		} else {
 			this.router.navigateByUrl('student');
 		}
@@ -130,7 +130,6 @@ export class SideNavComponent implements OnInit, OnChanges {
 			const param: any = {};
 			param.login_id = this.currentUser.login_id;
 			param.role_id = this.currentUser.role_id;
-			param.pro_id = pro_id;
 			this.userAccessMenuService.getUserAccessMenu(param).subscribe(
 				(result: any) => {
 					if (result.status === 'ok') {

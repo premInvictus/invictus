@@ -1,0 +1,113 @@
+/* .user-table {
+  padding-top: 10px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+tr, th, td {
+  padding: 5px;
+}
+
+.form-group-filter {
+  margin-bottom: 0rem;
+}
+
+img {
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+}
+
+.fa-active {
+  color: #28a745;
+}
+
+.fa-thumbs-down {
+  color: #dc3545;
+}
+
+table {
+  font-size: 14px;
+}
+
+.ques-paper-table td,th{
+  border-top :none;
+}
+
+.row {
+  font-size: 14px;
+}
+
+.sc-logo {
+  border-radius: 100%;
+  margin-bottom: 10px;
+}
+
+.max-mark {
+  float: right;
+}
+
+.top {
+  border-width: 2px;
+  border-style: dashed;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.example-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 20%;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 550px;
+}
+
+.top_header {
+  background-color: #e6e5df;
+}
+
+.mat-header-cell {
+  color: #343a40;
+  font-weight: 500;
+}
+
+a.teachercopy {
+  color:#fff;
+  text-decoration: none;
+}
+
+.mat-column-marks {
+  flex:0 0 10%;
+  margin-left: 35px;
+}
+
+@media print {  
+  .printPageButton {
+    display: none;
+  }
+}
+
+mat-header-cell:nth-child(1), mat-cell:nth-child(1) {
+  flex:0 0 8%;
+} */
+
+.table td,
+.table th {
+    padding: 0px !important;
+    border: 0px solid #89A8C9;
+}
+
+.table td {
+    vertical-align: top !important;
+}

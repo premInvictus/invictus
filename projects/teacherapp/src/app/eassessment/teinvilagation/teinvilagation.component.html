@@ -1,0 +1,222 @@
+<div class="add-question-content tab-add-question-content">
+  <div class="row">
+     <div class="col-lg-12 col-mobile-view-add-ques">
+        <div class="white-box">
+           <div class="white-box-content">
+              <div class="row">
+                 <div class="col-3 text-left">
+                    <div class="row">
+                       <div class="col-12">
+                          <div class="white-box-content-title text-left">
+                             <h4><b>Test Invigilation</b></h4>
+                          </div>
+                       </div>
+                    </div>
+                    
+                 </div>
+                 <div class="col-9 ">
+                    <div class="row">
+                       <div class="col-12 text-right">
+                          <button mat-stroked-button matTooltip="Extend the session by 5 minutes(max twice)"
+                          *ngIf="checkExtendedSession()" class="back-button test-invig-top-btn" (click)="extendSession()"><i
+                             class="fas fa-hourglass-half"></i>&nbsp; Extend Session</button>
+                          <button mat-stroked-button matTooltip="This will submit the test for all the students"
+                             class="test-invig-top-btn btn-spacer reset-button" (click)="endSession()"><i
+                             class="fas fa-hourglass-end"></i>&nbsp; End Session</button>
+                          <button mat-stroked-button matTooltip="Add Absent Students to Ongoing Test"
+                             class="test-invig-top-btn green-button submit-button  btn-spacer"
+                             (click)="showAbsentStudent=!showAbsentStudent"><i class="fas fa-user-plus"></i>&nbsp; Add
+                          Student</button>
+                       </div>
+                    </div>
+                    <div class="row">
+                       <div class="col-12 text-right">
+                          <button mat-stroked-button class="invigil-btn invigil-class-btn">Class : {{examDetail.class_name}} -
+                          {{examDetail.sec_name}}</button>
+                          <button mat-stroked-button class="invigil-btn invigil-present-btn btn-spacer">Present Students :
+                          {{presentSArray.length}}</button>
+                          <button mat-stroked-button class="invigil-btn invigil-live-btn btn-spacer">Live Students :
+                          {{liveCount.length}}</button>
+                          <button mat-stroked-button class="invigil-btn invigil-time-btn btn-spacer">Time Left : <span
+                             id="examtimer"></span></button>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <hr>
+              <div class="row">
+                 <div class="col-2"></div>
+               <div class="col-8">
+                  <div id="div1" style="width: 10.66%; float: left;margin:5px;">
+                     <div class="yellow" style="float:left;    height: 15px;
+                        width: 15px;margin-top:3px;"></div>
+                     <span style="font-size: 15px;margin-left: 5px;float:left;">Initiated</span>
+                  </div>
+                  <div id="div2" style="width: 10.66%; float: left;margin:5px;">
+                     <div class="orange" style="float:left;    height: 15px;
+                        width: 15px;margin-top:3px;"></div>
+                     <span style="font-size: 15px;margin-left: 5px;float:left;">Started</span>
+                  </div>
+                  <div id="div3" style="width: 11.66%; float: left;margin:5px;">
+                     <div class="lightgreen" style="float:left;    height: 15px;
+                        width: 15px;margin-top:3px;"></div>
+                     <span style="font-size: 15px;margin-left: 5px;float:left;">Ongoing</span>
+                  </div>
+                  <div id="div4" style="width: 13.66%; float: left;margin:5px;">
+                     <div class="green" style="float:left;    height: 15px;
+                        width: 15px;margin-top:3px;"></div>
+                     <span style="font-size: 15px;margin-left: 5px;float:left;">Submitted</span>
+                  </div>
+                  <div id="div5" style="width: 19.66%; float: left;margin:5px;">
+                     <div class="red" style="float:left;    height: 15px;
+                        width: 15px;margin-top:3px;"></div>
+                     <span style="font-size: 15px;margin-left: 5px;float:left;">Connection Error</span>
+                  </div>
+                  <div id="div6" style="width: 21.66%; float: left;margin:5px;">
+                     <div class="magenta" style="float:left;    height: 15px;
+                        width: 15px;margin-top:3px;"></div>
+                     <span style="font-size: 15px;margin-left: 5px;float:left;">Suspicious Activity</span>
+                  </div>
+               </div>
+               <div class="col-2"></div>
+            </div>
+              <div class="row">
+                 <div class="col-lg-6">
+                 </div>
+                 <div class="col-lg-6 col-mobile-view-add-ques">
+                 </div>
+              </div>
+              <div class="row remove-row--margin-top">
+                 <div class="col-lg-12 remove-padding">
+                    <div>
+                       <div class="red-box-content">
+                          <div class="row remove-row--margin-top">
+                             <div class="col-lg-12 col-mobile-view-add-ques col-remove-padding">
+                                <div class="mob-table-box test-invigilation-content">
+                                   <div>
+                                      <div class="row remove-row--margin-top">
+                                         <div class="col-lg-12">
+                                            <div class="row">
+                                               <div class="tab-test-stud-invigilation" *ngFor="let item of presentSArray;let i=index;"
+                                                  style="margin: 5px;">
+                                                  <mat-card class="score-card-info-card-main-box"
+                                                     [ngClass]="{'yellow': ((item?.studentCurrentActivity=='T100') && (item?.eva_status != '2')), 
+                                                     'orange': ((item?.studentCurrentActivity=='T101') && (item?.eva_status != '2')),
+                                                     'lightgreen': ((item?.studentCurrentActivity=='T102') &&  (item?.eva_status != '2')),
+                                                     'green': ((item?.studentCurrentActivity=='T103') || (item?.eva_status == '2')),
+                                                     'red': ((item?.studentCurrentActivity=='T104') && (item?.eva_status != '2')),
+                                                     'magenta': ((item?.studentCurrentActivity=='T105') && (item?.eva_status != '2')),
+                                                     'test-initiation-card-main': (!(item?.studentCurrentActivity) && item?.eva_status == '0')}" style="padding: 5px 10px;height: 90%;
+                                                     width: 120px;">
+                                                     <div class="score-card-info-car-box">
+                                                        <div class="row row-remove-top-margin">
+                                                           <div class="col-lg-12 remove-col-modal-padding">
+                                                              <div class="row row-remove-top-margin">
+                                                                 <div class="col-lg-12 remove-col-modal-padding">
+                                                                    <div class="row row-remove-top-margin">
+                                                                    </div>
+                                                                    <div class="row">
+                                                                       <a href="javascript:void(0)" class="info"
+                                                                          (click)="hideme[item.eva_login_id] = !hideme[item.eva_login_id]">
+                                                                          <i
+                                                                             class="fas fa-info-circle"></i>
+                                                                          <div class="tooltiptext">
+                                                                             <div class="wrap-text" style="font-size:12px;">
+                                                                                <span class="student-name-test-invi"
+                                                                                   style="margin-left:1px;">Connection Err. : <span
+                                                                                   *ngIf="item?.networkErrorCount">{{item.networkErrorCount}}</span>
+                                                                                <span style="float:right;" *ngIf="!(item?.networkErrorCount)">0</span> </span>
+                                                                                <span class="student-name-test-invi"
+                                                                                   style="margin-left:1px;">Suspicious Act. : <span
+                                                                                   *ngIf="item.suspiciousCount">{{item.suspiciousCount}}</span>
+                                                                                   <span style="float:right;" *ngIf="!(item.suspiciousCount)">0</span> </span>
+                                                                             </div>
+                                                                          </div>
+                                                                       </a>
+                                                                       <div class="col-lg-12 remove-col-modal-padding text-center">
+                                                                          <span
+                                                                             class="test-init-admission-no">{{item.au_admission_no}}</span><br>
+                                                                          <div class="wrap-text text-center" style="font-size:12px;">
+                                                                             <span class="student-name-test-invi">{{item.au_full_name}}</span>
+                                                                          </div>
+                                                                       </div>
+                                                                    </div>
+                                                                    <br>
+                                                                 </div>
+                                                              </div>
+                                                           </div>
+                                                        </div>
+                                                     </div>
+                                                  </mat-card>
+                                               </div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <br>
+              <div class="row">
+                 <div class="col-lg-12">
+                    <div class="row">
+                    </div>
+                 </div>
+              </div>
+           </div>
+           <br>
+           <div *ngIf="showAbsentStudent">
+              <div class="row">
+                 <div class="col-lg-12">
+                    <div class="white-box-content-title">
+                       <span>List of Absent Student</span>
+                    </div>
+                 </div>
+              </div>
+              <br>
+              <div class="row">
+                 <div class="col-lg-12">
+                    <div>
+                       <div class="test-invigilation-absent-table">
+                          <table class="table table-striped">
+                             <thead>
+                                <tr class="text-center">
+                                   <th>S.No</th>
+                                   <th>Admission No.</th>
+                                   <th>Student name</th>
+                                   <th>Mark Present</th>
+                                </tr>
+                             </thead>
+                             <tbody class="text-center">
+                                <tr *ngFor="let item of this.absentArray;let i=index">
+                                   <td>{{i+1}}</td>
+                                   <td>{{item.au_admission_no}}</td>
+                                   <td>{{item.au_full_name}}</td>
+                                   <td>
+                                      <button *ngIf="!disableAttendanceButton" mat-icon
+                                      style="border-radius:50px;border:none;background-color:#1577c6"
+                                      (click)="addNewStudentAttendance(item.au_login_id)">
+                                      <i class="far fa-thumbs-up" style="color:white !important"></i>
+                                      </button>
+                                      <button *ngIf="disableAttendanceButton" mat-icon
+                                      style="border-radius:50px;border:none;background-color:#FE4859"
+                                      [disabled]="disableAttendanceButton">
+                                      <i class="far fa-thumbs-down" style="color:white !important"></i>
+                                      </button>
+                                   </td>
+                                </tr>
+                             </tbody>
+                          </table>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>

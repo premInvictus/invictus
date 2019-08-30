@@ -1,0 +1,64 @@
+<div id="printModal">
+    <div *ngIf="OverallPerformanceDiv && overallPerformanceArray.length == 0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="text-center">
+                    No Records Found
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="OverallPerformanceDiv && overallPerformanceArray.length > 0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="float-right">
+                    <button class="submit-button" mat-button (click)="printOverAllPerformance()"><i
+                     class="fas fa-print dialog-table-print-icon"></i> &nbsp;Print</button>
+                </div>
+                <h4 class="text-center">Overall Student Performance</h4>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12 pd_left pd_right">
+                <div *ngIf="OverallPerformanceDiv && overallPerformanceArray.length > 0" style="overflow-x:auto;overflow-y: hidden" class="overallChart">
+                    <app-common-dynamic-chart [options]="splineChart"></app-common-dynamic-chart>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-12 col-remove-padding">
+                <div class="dialog-table-review-main admin-overall-performoance-table normal-table-responsive table-overflow">
+                    <table class="dialog-table-review table">
+                        <thead>
+                            <tr class="dialog-table-review-header custom-tr">
+                                <th class="text-center custom-th">S.No</th>
+                                <th class="text-center custom-th">Subject</th>
+                                <th class="text-center custom-th" *ngFor="let test of testArray  let a=index">
+                                    {{testArray[a]}}</th>
+                                <th class="text-center custom-th">Aggregate</th>
+                                <th class="text-center custom-th">Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of overallPerformance; let i=index" class="custom-tr">
+                                <td class="rowBold text-center custom-td" scope="row">{{i+1}}</td>
+                                <td class="text-center custom-td">{{item.sub_name}}</td>
+                                <td class="text-center custom-td" *ngFor="let tmarks of item.test"> {{tmarks}}</td>
+                                <td class="text-center custom-td"><span style="font-weight: bolder">{{item.sub_avg}}</span>
+                                </td>
+                                <td class="text-center custom-td">
+                                    <button mat-icon class="grade-button-border" [ngStyle]="{background:getPercentageColor(item.sub_avg)}"><span
+                                 class="grade-value">{{grade}}</span></button>
+                                </td>
+                            </tr>
+                            <br>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>

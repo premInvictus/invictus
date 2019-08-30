@@ -1,0 +1,19 @@
+.sub_header {
+    padding: 0.2rem !important;
+    word-break: break-word !important;
+    width: 30px !important;
+    border: 1px solid #dee2e6 !important;
+}
+.grade-value
+{
+  color: #ffffff;
+  font-weight: bolder;
+}
+.grade-button-border
+{
+  border:none !important
+}
+.create-template-table-new{
+  height: 480px !important;
+  overflow-y: scroll
+}
