@@ -1,0 +1,98 @@
+<div class="row row-remove-top-margin">
+  <div class="col-lg-12">
+    <form [formGroup]="ind_entry_form3" novalidate>
+      <div class="row">
+        <div class="col-lg-12 pd_left pd_right">
+          <div class="question-subtype-text-box">
+            <ckeditor ngDefaultControl required name="mcq-quest" id="mcq-quest" class="text-editor"
+              formControlName="qus_name" #question [config]="ckeConfig" debounce="500">
+            </ckeditor>
+          </div>
+        </div>
+      </div>
+
+      <div class="option-section">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="question-subtype-content-title-question">
+              <span>Select Value</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6">
+            <mat-card>
+              <table style="padding-right: 3px !important">
+                <tr class="text-center double-int-tr">
+                  <th>Integer</th>
+                  <th>0</th>
+                  <th>1</th>
+                  <th>2</th>
+                  <th>3</th>
+                  <th>4</th>
+                  <th>5</th>
+                  <th>6</th>
+                  <th>7</th>
+                  <th>8</th>
+                  <th>9</th>
+                </tr>
+                <tr class="text-center">
+                  <td>Integer1</td>
+                  <td class="double-option-radio" *ngFor="let item of doubleIntegerArray1">
+                    <mat-radio-group class="double-int-radio" formControlName="qopt_answer1" name="optionA"
+                      (change)="getUpperRowValue($event)">
+                      <mat-radio-button [value]="item"></mat-radio-button>
+                    </mat-radio-group>
+                  </td>
+                </tr>
+                <tr class="text-center">
+                  <td>Integer2</td>
+                  <td class="double-option-radio" *ngFor="let item of doubleIntegerArray2">
+                    <mat-radio-group class="double-int-radio" formControlName="qopt_answer2" name="optionB"
+                      (change)="getLowerRowValue($event)">
+                      <mat-radio-button [value]="item"></mat-radio-button>
+                    </mat-radio-group>
+                  </td>
+                </tr>
+              </table>
+            </mat-card>
+          </div>
+          <div class="col-lg-2">
+            <mat-card class="sing-int-card" style="margin-right: -34%">
+              <div class="text-center double-int-answer-title">
+                <span class="">Answer</span>
+              </div>
+              <table class="double-int-answer">
+                <tr class="text-center">
+                  <th>Integer1</th>
+                  <th>Integer2</th>
+                </tr>
+                <tr class="text-center">
+                  <td>{{upperRowValue}}</td>
+                  <td>{{lowerRowValue}}</td>
+                </tr>
+              </table>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="question-subtype-content-title-expanation">
+            <span>Explanation</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="question-subtype-text-box">
+            <ckeditor ngDefaultControl required name="mcq-explanation" id="mcq-explanation" class="text-editor"
+              formControlName="qus_explanation" #explanationckeditor [config]="ckeConfig" debounce="500">
+            </ckeditor>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -104,7 +104,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		// } else {
 		// 	this.innerHeight = (window.innerHeight) - 150;
 		// }
-		//console.log(this.mobileQuery);
+		// console.log(this.mobileQuery);
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getSession();
@@ -308,7 +308,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		});
 	}
-	getSessionName(id) { 
+	getSessionName(id) {
 		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
 		if (findex !== -1) {
 			return this.sessionArray[findex].ses_name;

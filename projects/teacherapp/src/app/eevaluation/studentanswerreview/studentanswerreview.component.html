@@ -1,0 +1,277 @@
+<div class="breadcrumb-section">
+  <div class="row">
+     <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+        <a><i class="breadcrumb-icon fas fa-home"></i></a>
+     </div>
+     <div class="bread-col-1 col-mobile-view-add-ques col-lg-1 ">
+        <div class="vertical-line"></div>
+     </div>
+     <div class="col-lg-10 col-mobile-view-add-ques first-breadcrumb-title-col bread-col-10">
+        <div class="first-breadcrumb-title">
+           <span class="bread-title">E-Evaluation</span>
+           <span class="bread-divider">-</span>
+           <span class="bread-link">View Test</span>
+        </div>
+     </div>
+  </div>
+</div>
+<div>
+  <div class="row">
+     <div class="col-lg-12 col-mobile-view-add-ques">
+        <div class="white-box">
+           <div class="white-box-content">
+              <div class="row">
+                 <div class="col-lg-12 col-mobile-view-add-ques">
+                    <div class="white-box-content-title">
+                       <span>Student Answer Review</span>
+                    </div>
+                 </div>
+              </div>
+              <div>
+                 <div class="row">
+                    <div class="col-lg-12">
+                       <div class="row">
+                          <div class="col-lg-8 col-ongoing-test-question-section">
+                             <div class="view-test-question-box test-question-box information-bar">
+                                <div>
+                                   <div class="row" *ngIf="hasSubjectiveDiv">
+                                      <div class="col-lg-12 ">
+                                         <div class="row">
+                                            <div class="col-lg-9">
+                                               <div class="row">
+                                                  <div class="col-lg-12 col-remove-left-padding">
+                                                     <div class="question-answer-box">
+                                                        <div class="question-answer-inner-box">
+                                                           <div class="row" *ngIf="currentQAHasEssay">
+                                                              <div class="col-lg-12 ">
+                                                                 <div class="question-display-div-content">
+                                                                    <div class="wrap-text">
+                                                                       <span class="test-question imgclassQpList"
+                                                                          [innerHTML]="currentEssay.ess_description"></span>
+                                                                    </div>
+                                                                 </div>
+                                                              </div>
+                                                           </div>
+                                                           <div class="row">
+                                                              <div class="col-lg-12 ">
+                                                                 <div class="question-display-div-content">
+                                                                    <span>Question No. {{this.currentQIdx+1}}</span>
+                                                                    <span class="float-right">Marks: {{currentLoadQuestion.qus_marks}}</span>
+                                                                    <hr>
+                                                                    <div class="wrap-text">
+                                                                       <span class="test-question imgclassQpList"
+                                                                          [MathJax]="currentLoadQuestion.qus_name"></span>
+                                                                    </div>
+                                                                 </div>
+                                                              </div>
+                                                           </div>
+                                                           <div>
+                                                              <div class="row">
+                                                                 <div class="col-lg-12">
+                                                                    <div class="option-section">
+                                                                       <div class="row row-remove-top-margin">
+                                                                          <div
+                                                                             class="col-lg-12 remove-col-modal-padding  col-mobile-view-add-ques question-subtype-col-div">
+                                                                             <div class="row row-remove-top-margin">
+                                                                                <div
+                                                                                   class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
+                                                                                   <div class="question-subtype-option-box wrap-text">
+                                                                                      <mat-form-field class="form-feild quest-sub-text-form"
+                                                                                         *ngIf="currentQuestion == null">
+                                                                                         <textarea matInput rows="10" id="answer" name="spanswer"
+                                                                                            placeholder="Student Answer" readonly>No Record</textarea>
+                                                                                      </mat-form-field>
+                                                                                      <mat-form-field class="form-feild quest-sub-text-form"
+                                                                                         *ngIf="currentQuestion != null">
+                                                                                         <textarea matInput rows="10" id="answer" name="spanswer"
+                                                                                            placeholder="Student Answer"
+                                                                                            readonly>{{htmlToText(currentQuestion.evd_qus_answer)}}</textarea>
+                                                                                      </mat-form-field>
+                                                                                   </div>
+                                                                                </div>
+                                                                             </div>
+                                                                          </div>
+                                                                       </div>
+                                                                       <br>
+                                                                    </div>
+                                                                 </div>
+                                                              </div>
+                                                              <div class="row">
+                                                                 <div class="col-lg-12">
+                                                                    <button mat-stroked-button (click)="viewCorrectAnswer()">Correct
+                                                                    Answer</button>
+                                                                 </div>
+                                                              </div>
+                                                              <div *ngIf="showCorrect">
+                                                                 <br>
+                                                                 <div id="correct-answer">
+                                                                    <div class="row">
+                                                                       <div class="col-lg-12">
+                                                                          <div class="option-section">
+                                                                             <div class="row row-remove-top-margin">
+                                                                                <div
+                                                                                   class="col-lg-12 remove-col-modal-padding  col-mobile-view-add-ques question-subtype-col-div">
+                                                                                   <div class="row row-remove-top-margin">
+                                                                                      <div
+                                                                                         class="col-lg-12 remove-col-modal-padding col-mobile-view-add-ques">
+                                                                                         <div
+                                                                                            class="question-subtype-option-box wrap-text question-display-div-content">
+                                                                                            <span>Answer No. {{this.currentQIdx+1}}</span>
+                                                                                            <hr>
+                                                                                            <mat-form-field class="form-feild quest-sub-text-form"
+                                                                                               *ngIf="currentLoadQuestion.qopt_answer == null">
+                                                                                               <textarea matInput rows="10" id="answer" name="spanswer"
+                                                                                                  placeholder="Correct Answer"
+                                                                                                  readonly>No Record</textarea>
+                                                                                            </mat-form-field>
+                                                                                            <mat-form-field class="form-feild quest-sub-text-form"
+                                                                                               *ngIf="currentLoadQuestion.qopt_answer != null">
+                                                                                               <textarea matInput rows="10" id="answer" name="spanswer"
+                                                                                                  placeholder="Correct Answer"
+                                                                                                  readonly>{{htmlToText(currentLoadQuestion.qopt_answer)}}</textarea>
+                                                                                            </mat-form-field>
+                                                                                         </div>
+                                                                                      </div>
+                                                                                   </div>
+                                                                                </div>
+                                                                             </div>
+                                                                             <br>
+                                                                          </div>
+                                                                       </div>
+                                                                    </div>
+                                                                 </div>
+                                                              </div>
+                                                              <br>
+                                                           </div>
+                                                        </div>
+                                                     </div>
+                                                  </div>
+                                               </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                               <div class="row">
+                                                  <div class="col-lg-12 col-remove-right-padding small-screen-remove-col-left-padding">
+                                                     <div class="score-box">
+                                                        <div class="row">
+                                                           <div class="col-lg-12 small-screen-remove-col-padding">
+                                                              <div class="question-display-div-content">
+                                                                 <span>Provide Score</span>
+                                                                 <hr>
+                                                              </div>
+                                                           </div>
+                                                        </div>
+                                                        <div class="row">
+                                                           <div class="col-lg-12 small-screen-remove-col-padding">
+                                                              <form [formGroup]="Marks_Review_Form" novalidate>
+                                                                 <div class="row">
+                                                                    <div class="col-lg-12 small-screen-remove-col-padding">
+                                                                       <mat-form-field class="form-field">
+                                                                          <input matInput type="text" id="example-text-input"
+                                                                             placeholder="Marks Alloted" formControlName="evd_mark_obtained" />
+                                                                       </mat-form-field>
+                                                                    </div>
+                                                                 </div>
+                                                                 <div class="form-group row">
+                                                                    <div class="col-lg-12 small-screen-remove-col-padding">
+                                                                       <mat-form-field class="form-field">
+                                                                          <input matInput type="text" placeholder="Teacher's Remarks"
+                                                                             id="example-text-input" formControlName="evd_remark" />
+                                                                       </mat-form-field>
+                                                                    </div>
+                                                                 </div>
+                                                              </form>
+                                                           </div>
+                                                        </div>
+                                                        <div class="row">
+                                                           <div class="col-lg-12 text-center small-screen-remove-col-padding">
+                                                              <button mat-mini-fab class="nav-button" (click)="firstQ()">
+                                                              <i class="fa fa-fast-backward nav-icon" aria-hidden="true"></i>
+                                                              </button>
+                                                              <button mat-mini-fab class="nav-button" (click)="previousQ()">
+                                                              <i class="fa fa-step-backward nav-icon" aria-hidden="true"></i>
+                                                              </button>
+                                                              <button mat-mini-fab class="nav-button" (click)="applyForm()">
+                                                              <i class="fa fa-step-forward nav-icon" aria-hidden="true"></i>
+                                                              </button>
+                                                              <button mat-mini-fab class="nav-button" (click)="lastQ()">
+                                                              <i class="fa fa-fast-forward nav-icon" aria-hidden="true"></i>
+                                                              </button>
+                                                           </div>
+                                                        </div>
+                                                     </div>
+                                                  </div>
+                                               </div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                          <div class="col-lg-4 col-ongoing-test-button-section">
+                             <div class="test-question-number-box table-box view-test-question-box">
+                                <div class="row">
+                                   <div class="col-lg-12">
+                                      <div class="test-time-counter">
+                                         <div class="text-center">
+                                            <span>
+                                            <span>Question List</span>
+                                            </span>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                                <div class="question-answer-box">
+                                   <div class="question-answer-inner-box">
+                                      <div class="row">
+                                         <div class="col-lg-12 remove-col-modal-padding">
+                                            <div class="row row-margin-button">
+                                               <div class="col-lg-2 row-button-margin"
+                                                  *ngFor="let item of answer_reviewArray;let i=index">
+                                                  <mat-card
+                                                  [ngStyle]="{'color':getQusColor(item.marksStatus),'border-color':getQusColor(item.marksStatus)} "
+                                                  class="test-ques-button" (click)="loadQuestion(i)">
+                                                  <span class="test-button-value">{{("0" + (i+1)).slice(-2)}}</span>
+                                                  </mat-card>
+                                               </div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                      <hr>
+                                      <div class="row">
+                                         <div class="col-lg-12">
+                                            <div class="text-center">
+                                               <span>Legend</span><br><br>
+                                            </div>
+                                            <span>
+                                            <i class="fas fa-eye fa-lg" aria-hidden="true"></i>&nbsp; Evaluated
+                                            &nbsp;&nbsp;&nbsp;&nbsp; <br><br>
+                                            <i class="fas fa-eye-slash" aria-hidden="true"></i> &nbsp; Pending</span>
+                                         </div>
+                                      </div>
+                                      <hr>
+                                      <div class="row">
+                                         <div class="col-lg-12">
+                                            <div class="text-center">
+                                               <button mat-raised-button class="submit-button" (click)="teacherFinalSubmit()">Final
+                                               Submit</button>
+                                            </div>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+<br>
+<br>
+<br>
+<br>
