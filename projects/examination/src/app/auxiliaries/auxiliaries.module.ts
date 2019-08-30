@@ -6,6 +6,8 @@ import { GradecardPrintingComponent } from './gradecard-printing/gradecard-print
 import { AdditionalSubjectComponent } from './additional-subject/additional-subject.component';
 import { CbseMarksAnalysisComponent } from './cbse-marks-analysis/cbse-marks-analysis.component';
 import { ExamSharedAppModule } from '../app.module';
+import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.component';
+import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.component';
 
 @NgModule({
   imports: [
@@ -13,6 +15,6 @@ import { ExamSharedAppModule } from '../app.module';
     AuxiliariesRoutingModule,
     ExamSharedAppModule
   ],
-  declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent]
+  declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent, RollnoAllotmentComponent, MarkAttendanceComponent]
 })
 export class AuxiliariesModule { }
