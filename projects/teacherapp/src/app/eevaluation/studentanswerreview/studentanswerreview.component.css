@@ -1,0 +1,39 @@
+.fa-eye-slash{
+    font-size: 1.25rem;
+    color: #dc3545;
+}
+.fa-eye {
+    color: #28a745;
+}
+@media screen and (max-width: 1448px) {
+    .margin-right-list {
+        padding-right: 20%;
+    }
+    .student-answer-review-eye-card{
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+}
+
+@media only screen and (max-width:460px){
+.test-question-list{
+    margin-left: 15% !important;
+}
+.ongoing-test-detail-section{
+    margin-left: 12px !important;
+    width: 281px !important;
+}
+.student-answer-review-answer-card{
+    width: 276px !important;
+    margin-left: -20px !important;
+}
+.student-answer-review-correct-answer{
+    width: 277px !important;
+    margin-top: 316% !important;
+    margin-left: -143% !important;
+}
+.detail-question-box-grey{
+    width: 277px !important;
+    margin-left: -2% !important;
+}
+}

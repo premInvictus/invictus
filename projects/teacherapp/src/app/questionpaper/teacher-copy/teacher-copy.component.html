@@ -1,0 +1,270 @@
+<br>
+<div class="white-box question-paper-margin-padding question-paper-box-scroll" *ngIf="teacherCopyPDiv">
+    <div *ngIf="teacherCopyPDiv">
+        <div id="printModal2">
+            <div class="float-left">
+                <button class="submit-button" mat-button (click)="printTeacherCopy()"><i
+            class="fas fa-print dialog-table-print-icon"></i> &nbsp;Print</button>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="logo">
+                        <img class="ques-paper-logo" src="{{hosturl+schoolInfo.school_logo}}" alt="">
+                    </div>
+                    <h6 class="qst_name_head">{{schoolInfo.school_name}}, {{schoolInfo.school_city}} </h6>
+                    <p class="text-center qst_name qp_name_head">
+                        <em>{{viewCurrentQP.qp_name}}</em>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="user-table">
+                        <table class="table question-paper-table" style="border: none" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td class="modifyWidth" style="width: 60%">
+                                        <span>Class : {{viewCurrentQP.class_name}}</span>
+                                    </td>
+                                    <td style="width: 12%">
+                                        <span>Maximum Marks : {{viewCurrentQP.tp_marks}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="modifyWidth" style="width: 60%">
+                                        <span>Subject : {{viewCurrentQP.sub_name}}</span>
+                                    </td>
+                                    <td style="width: 12%">
+                                        <span>Time Allowed : {{viewCurrentQP.tp_time_alloted }} Minutes</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h6>General Instructions </h6>
+                    <ol>
+                        <li class="qp_name">{{viewCurrentQP.ti_description }}</li>
+                    </ol>
+                    <div class="row" *ngFor="let subQuestions of subjectArrayInCurrentPaperDetails">
+                        <div class="col-lg-12 text-center">
+                            <h5>{{subQuestions.sub_name}}</h5>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12" *ngFor="let item of subQuestions.filterQuestionList;let j=index">
+                            <div *ngIf="! isEmpty(item.qlist)">
+                                <!-- <h6 class="text-center  qst_name">{{item.qst_name}}</h6> -->
+                                <div class="user-table">
+                                    <table class=" table question-table question-paper-table" style="border:none" cellspacing="0">
+                                        <tbody>
+                                            <ng-container *ngFor="let qitem of item.qlist;let i=index">
+                                                <tr *ngIf="belongToSub(qitem.qus_sub_id,subQuestions.sub_id)">
+                                                    <th class="qus_position" scope="row" valign="top" width="20">
+                                                        {{getQusPosFromCurrentQP(qitem.qus_id)}}. </th>
+                                                    <td class="ques_name" valign="top">
+                                                        <label class="imgclassQpList" [MathJax]="qitem.qus_name"></label>
+                                                        <table *ngIf="(qitem.qus_qst_id == 1) || (qitem.qus_qst_id == 2) || (qitem.qus_qst_id == 3)" width="50%">
+                                                            <tr *ngFor="let option of qitem.options;let i=index">
+                                                                <td style="width:30px" class="option_width"><label [innerHTML]="'('+optionHA[i]+')'"></label></td>
+                                                                <td style="text-align: left"><label class="imgClassExpress" [MathJax]="option.qopt_options"></label></td>
+                                                            </tr>
+                                                            <tr *ngFor="let option of qitem.options;let i=index">
+                                                                <td style="width:100px" class="option_width" *ngIf="getCorrectAnswer(option.qopt_answer)">
+                                                                    <b>Answer <span [innerHTML]="optionHA[i]"></span>:</b> </td>
+                                                                <td style="text-align: left" *ngIf="getCorrectAnswer(option.qopt_answer)"> <label class="imgClassExpress" [MathJax]="option.qopt_options"></label></td>
+                                                            </tr>
+                                                        </table>
+                                                        <table *ngIf="(qitem.qus_qst_id == 4)" width="50%">
+                                                            <tr *ngFor="let option of qitem.options;let i=index">
+                                                                <td class="option_width"><label [innerHTML]="'('+optionHA[i]+')'"></label></td>
+                                                                <td><label [MathJax]="option.qopt_options"></label></td>
+                                                                <td class="option_width"><label [innerHTML]="'('+optionmatchHA[i]+')'"></label></td>
+                                                                <td><label [MathJax]="option.qopt_options_match"></label></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Answer:</b></td>
+                                                                <td *ngFor="let option of qitem.options;let k=index">
+                                                                    {{optionHA[k]}} - {{option.qopt_answer}}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <table *ngIf="(qitem.qus_qst_id == 5)" width="50%">
+                                                            <tr *ngFor="let option of qitem.options;let j=index">
+                                                                <td class="option_width"><label [innerHTML]="'('+optionHA[j]+')'"></label></td>
+                                                                <td><label [MathJax]="option.qopt_options"></label></td>
+                                                                <td class="option_width"><label [innerHTML]="'('+optionmatchHA[j]+')'"></label></td>
+                                                                <td><label [MathJax]="qitem.options_match[j].qopt_options_match"></label></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Answer:</b></td>
+                                                                <td>
+                                                                    <div [innerHTML]="answerArray[i]"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <!--Matrix 4 *5-->
+                                                        <table *ngIf="(qitem.qus_qst_id == 13)" width="50%">
+                                                            <tr *ngFor="let option of qitem.options_match;let k=index">
+                                                                <td class="option_width">
+                                                                    <label *ngIf="k!=4" [innerHTML]="'('+optionHA[k]+')'"></label></td>
+                                                                <td>
+                                                                    <label *ngIf="k!=4" [MathJax]="qitem.options[k].qopt_options"></label>
+                                                                </td>
+                                                                <td class="option_width">
+                                                                    <label [innerHTML]="'('+optionmatchHA[k]+')'"></label></td>
+                                                                <td>
+                                                                    <label [MathJax]="qitem.options_match[k].qopt_options_match"></label>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Answer</b></td>
+                                                                <td>
+                                                                    <div [innerHTML]="answerArray_3[i]"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <!---->
+                                                        <div *ngIf="(qitem.qus_qst_id > 5 && qitem.qus_qst_id < 13)">
+                                                            <b>Answer :</b> <label [MathJax]="qitem.qopt_answer"></label>
+                                                        </div>
+                                                        <div *ngIf="(qitem.qus_qst_id == 14 || qitem.qus_qst_id == 15)">
+                                                            <b>Answer :</b> <label [MathJax]="qitem.qopt_answer"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="moveTd" valign="top" width="100">{{qitem.qus_marks}} Marks</td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  div for essay  -->
+                        <div class="col-sm-12 col-md-12 col-lg-12" *ngFor="let item of subQuestions.essayGroupQuestionArray;let j=index">
+                            <ng-container *ngIf="item.ess_sub_id == subQuestions.sub_id">
+                                <span class="my_passage" style="text-decoration: underline;font-weight: bold;font-size: 14px;text-transform: uppercase">{{item.ess_title}}</span>
+                                <br>
+                                <br>
+                                <h6 class="text-center my_passage" style="font-size:14px !important;font-weight: normal;text-align: left !important; word-break: break-all" [innerHTML]="item.ess_description"></h6>
+                                <div class="ques- paper-user-table">
+                                    <table class="table question-paper-table question-paper-table-essay" style="border:none" cellspacing="0">
+                                        <tbody>
+                                            <ng-container *ngFor="let qitem of item.essayQuestionList;let i=index">
+                                                <tr *ngIf="belongToSub(qitem.qus_sub_id,subQuestions.sub_id)">
+                                                    <th class="qus_position" scope="row" style="width: 1rem;">
+                                                        {{getQusPosFromCurrentQP(qitem.qus_id)}}</th>
+                                                    <td class="ques_name" style="width: 30rem;">
+                                                        <label class="imgclassQpList" [MathJax]="qitem.qus_name"></label>
+                                                        <br>
+                                                        <table class="table" *ngIf="(qitem.qus_qst_id == 1) || (qitem.qus_qst_id == 2) || (qitem.qus_qst_id == 3)">
+                                                            <tr class="essay-question-paper" *ngFor="let option of qitem.options;let i=index">
+                                                                <td class="option_width_essay" style="width:7%;">
+                                                                    <label [innerHTML]="'('+optionHA[i]+')'"></label></td>
+                                                                <td>
+                                                                    <label class="imgClassExpress" [MathJax]="option.qopt_options"></label>
+                                                                </td>
+                                                            </tr>
+                                                            <tr *ngFor="let option of qitem.options;let i=index">
+                                                                <td class="option_width_essay" style="width:7%;" *ngIf="getCorrectAnswer(option.qopt_answer)"><b>Answer <label
+                                      [innerHTML]="optionHA[i]"></label>:</b> </td>
+                                                                <td *ngIf="getCorrectAnswer(option.qopt_answer)"> <label class="imgClassExpress" [MathJax]="option.qopt_options"></label></td>
+                                                            </tr>
+                                                        </table>
+                                                        <table *ngIf="(qitem.qus_qst_id == 4)">
+                                                            <tr class="essay-question-paper" *ngFor="let option of qitem.options;let i=index">
+                                                                <td class="option_width_essay" style="width:8%;">
+                                                                    <label [innerHTML]="'('+optionHA[i]+')'"></label></td>
+                                                                <td>
+                                                                    <label [MathJax]="option.qopt_options"></label>
+                                                                </td>
+                                                                <td class="option_width" style="width:8%;">
+                                                                    <label [innerHTML]="'('+optionmatchHA[i]+')'"></label></td>
+                                                                <td>
+                                                                    <label [MathJax]="option.qopt_options_match"></label>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <b>Answer:</b>
+                                                                </td>
+                                                            </tr>
+                                                            <tr *ngFor="let option of qitem.options;let k=index">
+                                                                <td>
+                                                                    {{optionHA[k]}} - {{option.qopt_answer}}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <table *ngIf="(qitem.qus_qst_id == 5)">
+                                                            <tr class="essay-question-paper" *ngFor="let option of qitem.options;let i=index">
+                                                                <td class="option_width_essay" style="width:8%;">
+                                                                    <label [innerHTML]="'('+optionHA[i]+')'"></label></td>
+                                                                <td>
+                                                                    <label [MathJax]="option.qopt_options"></label>
+                                                                </td>
+                                                                <td class="option_width_essay" style="width:8%;">
+                                                                    <label [innerHTML]="'('+optionmatchHA[i]+')'"></label> - </td>
+                                                                <td>
+                                                                    <label [MathJax]="qitem.options_match[i].qopt_options_match"></label>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <b>Answer:</b>
+                                                                </td>
+                                                                <td>
+                                                                    <div [innerHTML]="answerArray_2[j]"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <!--Matrix 4 X 5-->
+                                                        <table *ngIf="(qitem.qus_qst_id == 13)">
+                                                            <tr *ngFor="let option of qitem.options_match;let k=index">
+                                                                <td class="option_width" style="width:5%;">
+                                                                    <label *ngIf="k!=4" [innerHTML]="'('+optionHA[k]+')'"></label></td>
+                                                                <td>
+                                                                    <label *ngIf="k!=4" [MathJax]="qitem.options[k].qopt_options"></label>
+                                                                </td>
+                                                                <td class="option_width" style="width:5%;">
+                                                                    <label [innerHTML]="'('+optionmatchHA[k]+')'"></label></td>
+                                                                <td>
+                                                                    <label [MathJax]="qitem.options_match[k].qopt_options_match"></label>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <b>Answer</b>
+                                                                </td>
+                                                                <td>
+                                                                    <div [innerHTML]="answerArray_4[j]"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <!--End-->
+                                                        <div *ngIf="(qitem.qus_qst_id > 5 && qitem.qus_qst_id < 13)">
+                                                            <b>Answer :</b> <label [MathJax]="qitem.qopt_answer"></label>
+                                                        </div>
+                                                        <div *ngIf="(qitem.qus_qst_id == 14 || qitem.qus_qst_id == 15)">
+                                                            <b>Answer :</b> <label [MathJax]="qitem.qopt_answer"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="moveTd" style="width: 1rem;">{{qitem.qus_marks}}</td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <!-- end of div for essay  -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>

@@ -104,7 +104,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		// } else {
 		// 	this.innerHeight = (window.innerHeight) - 150;
 		// }
-		//console.log(this.mobileQuery);
+		// console.log(this.mobileQuery);
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getSession();
@@ -159,6 +159,9 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			} else if (url === 'smart') {
 				this.defaultProject = 'SMART';
 				this.projectId = '4';
+			} else if (url === 'exam') {
+				this.defaultProject = 'Examination';
+				this.projectId = '5';
 			}
 		}
 	}
@@ -267,6 +270,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.proUrl = 'smart';
 			localStorage.setItem('project', JSON.stringify({ pro_url: 'smart' }));
 		}
+		if (Number(pro_id) === 5) {
+			this.proUrl = 'exam';
+			localStorage.setItem('project', JSON.stringify({ pro_url: 'exam' }));
+		}
 		const saveStateJSON = {
 			pro_url: this.proUrl,
 			ses_id: JSON.parse(localStorage.getItem('session')).ses_id
@@ -292,6 +299,11 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 					this.router.navigate(['/smart']);
 					this.defaultProject = 'SMART';
 					this.projectId = '4';
+				}
+				if (Number(pro_id) === 5) {
+					this.router.navigate(['/exam']);
+					this.defaultProject = 'Examination';
+					this.projectId = '5';
 				}
 			}
 		});

@@ -601,12 +601,14 @@ export class FeeLedgerReportComponent implements OnInit {
 				this.totalRecords = Number(result.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				let index = 0;
+				let k = 0;
 				for (const item of repoArray) {
 					let j = 0;
 					if (item.stu_ledger_arr && item.stu_ledger_arr.length > 0) {
 						for (const stu_arr of item.stu_ledger_arr) {
 							const obj: any = {};
-							obj['id'] = repoArray[Number(index)]['au_admission_no'] + stu_arr['rpt_receipt_no'] + j;
+							obj['id'] = repoArray[Number(index)]['au_admission_no'] + stu_arr['rpt_receipt_no'] + j + k +
+								stu_arr['rpt_receipt_date'] + stu_arr['inv_due_date'];
 							obj['stu_admission_no'] = repoArray[Number(index)]['au_admission_name'];
 							obj['au_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
 							if (repoArray[Number(index)]['sec_id'] !== '0') {
@@ -654,6 +656,7 @@ export class FeeLedgerReportComponent implements OnInit {
 						}
 					}
 					index++;
+					k++;
 				}
 				this.totalRow = {};
 				const obj3: any = {};

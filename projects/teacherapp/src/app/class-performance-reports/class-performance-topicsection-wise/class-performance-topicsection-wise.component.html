@@ -1,0 +1,43 @@
+<div class="add-question-content">
+    <div class="row row-remove-top-margin">
+       <div class="col-lg-12 col-mobile-view-add-ques">
+          <div class="white-box">
+             <div id="printModal" class="white-box-content">
+                <br>
+                <form [formGroup]="classPerformanceFilter">
+                   <div class="row">
+                      <div class="col-lg-12">
+                         <div class="float-right">
+                            <mat-form-field class="form-field">
+                               <mat-select formControlName="sub_id" #input (selectionChange)="getCurrentSubject(input.value)" 
+                               [ngModel]="subjectArray[0].sub_id"
+                               placeholder="Subject" required>
+                               <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id"> {{item.sub_name}}
+                               </mat-option>
+                               </mat-select>
+                            </mat-form-field>
+                         </div>
+                      </div>
+                   </div>
+                </form>
+                <div *ngIf="overAllPerformanceDiv && topicSectionWiseArray.length == 0">
+                   <div class="row">
+                      <div class="col-lg-12">
+                         <div class="text-center">
+                            No Records Found
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="row">
+                   <div class="col-lg-12 col-mobile-view-add-ques">
+                      <div *ngIf="overAllPerformanceDiv && topicSectionWiseArray.length > 0">
+                         <app-common-dynamic-chart [options]="columnChart"></app-common-dynamic-chart>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
