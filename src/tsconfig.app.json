@@ -69,6 +69,7 @@
     "../projects/examination/src/app/grade-master/grade-master.module.ts",
     "../projects/examination/src/app/reports/reports.module.ts",
     "../projects/examination/src/app/auxiliaries/auxiliaries.module.ts",
+    "../projects/examination/src/app/exam-configuration/exam-configuration.module.ts",
     "../projects/teacherapp/src/app/questionbank/questionbank.module.ts",
     "../projects/teacherapp/src/app/class-performance-reports/class-performance-reports.module.ts",
     "../projects/teacherapp/src/app/eassessment/eassessment.module.ts",
