@@ -43,9 +43,18 @@ import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dia
 import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/invictus-shared.module';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
+import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dialog/assignment-attachment-dialog.component';
+import { ImageViewerComponent } from './image-viewer/image-viewer.component';
+import { NoDataComponent } from './no-data/no-data.component';
+// tslint:disable-next-line:max-line-length
+import { CapitalizePipe, TruncatetextPipe, DateformatPipe, SafePipe, NumberToWordPipe, ZerodashPipe } from 'projects/teacherapp/src/app/_pipes';
+import { MatAutocompleteModule } from '@angular/material';
 @NgModule({
 	imports: [
 		CommonModule,
+		FormsModule,
+		ReactiveFormsModule,
 		MatNativeDateModule,
 		MatProgressBarModule,
 		MatSlideToggleModule,
@@ -75,12 +84,12 @@ import { ImagecropComponent } from './imagecrop/imagecrop.component';
 		LayoutModule,
 		RouterModule,
 		BsDropdownModule,
+		MatAutocompleteModule,
 		AccordionModule.forRoot(),
 		FormsModule,
 		ReactiveFormsModule,
 		InvictusSharedModule,
 		ImageCropperModule,
-
 	],
 	declarations: [
 		DeleteModalComponent,
@@ -91,10 +100,22 @@ import { ImagecropComponent } from './imagecrop/imagecrop.component';
 		OngoingTestInstructionComponent,
 		EssayDialogsComponent,
 		QuestionPaperDialogComponent,
-		ImagecropComponent
+		ImagecropComponent,
+		PreviewDocumentComponent,
+		AssignmentAttachmentDialogComponent,
+		NoDataComponent,
+		ImageViewerComponent,
+		CapitalizePipe,
+		TruncatetextPipe,
+		DateformatPipe,
+		SafePipe,
+		NumberToWordPipe,
+		ZerodashPipe,
 	],
 	exports: [
 		DeleteModalComponent,
+		FormsModule,
+		ReactiveFormsModule,
 		MatProgressBarModule,
 		MatSlideToggleModule,
 		MatDialogModule,
@@ -118,6 +139,7 @@ import { ImagecropComponent } from './imagecrop/imagecrop.component';
 		MatListModule,
 		MatCardModule,
 		MatExpansionModule,
+		MatAutocompleteModule,
 		LayoutModule,
 		MatTooltipModule,
 		MatMenuModule,
@@ -127,15 +149,28 @@ import { ImagecropComponent } from './imagecrop/imagecrop.component';
 		QuestionPaperDialogComponent,
 		AddInstructionComponent,
 		ImageCropperModule,
-		ImagecropComponent
+		ImagecropComponent,
+		PreviewDocumentComponent,
+		AssignmentAttachmentDialogComponent,
+		ImageViewerComponent,
+		CapitalizePipe,
+		TruncatetextPipe,
+		DateformatPipe,
+		SafePipe,
+		NoDataComponent,
+		NumberToWordPipe,
+		ZerodashPipe,
 	],
-	entryComponents: [ImagecropComponent, EssayDialogsComponent, QuestionPaperDialogComponent, AddInstructionComponent]
+	entryComponents: [ImagecropComponent, EssayDialogsComponent, QuestionPaperDialogComponent, AddInstructionComponent,
+		ImageViewerComponent,
+		PreviewDocumentComponent,
+		AssignmentAttachmentDialogComponent]
 })
 export class SharedModule {
 	constructor() {
 		const script: any = document.createElement('script');
 		if (!(script.type === 'text/x-mathjax-config'
-		&& script.src === 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML')) {
+			&& script.src === 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML')) {
 			script.type = 'text/x-mathjax-config';
 			script[('innerHTML')] =
 				'MathJax.Hub.Config({\n' +
