@@ -102,9 +102,11 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			formGroup: this.fbuild.group({
 				sub_id: '',
 				sub_parent_id: '',
+				sub_code: '',
 				sub_name: '',
 				sub_order: '',
-				sub_status: ''
+				sub_status: '',
+				sub_timetable: ''
 			})
 		},
 		{
@@ -253,6 +255,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 						that.CONFIG_ELEMENT_DATA.push({
 							position: pos,
 							name: item.sub_name,
+							sub_code: item.sub_code,
+							sub_timetable: item.sub_timetable,
 							order: item.sub_order,
 							sub_parent_id: that.getParentSubjectName(item.sub_parent_id),
 							action: item
@@ -627,7 +631,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				sub_name: value.sub_name,
 				sub_parent_id: value.sub_parent_id,
 				sub_order: value.sub_order,
-				sub_status: value.sub_status
+				sub_status: value.sub_status,
+				sub_code: value.sub_code,
+				sub_timetable: value.sub_timetable
 			});
 		} else if (Number(this.configValue) === 4) {
 			this.setupUpdateFlag = true;
@@ -682,7 +688,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getSubject(this);
-			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'order', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'sub_code', 'sub_timetable', 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 4) {
 			this.getTopic(this);

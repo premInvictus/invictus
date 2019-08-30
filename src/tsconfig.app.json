@@ -68,7 +68,8 @@
     "../projects/examination/src/app/exam-user-type/exam-user-type.module.ts",
     "../projects/examination/src/app/grade-master/grade-master.module.ts",
     "../projects/examination/src/app/reports/reports.module.ts",
-    "../projects/examination/src/app/auxiliaries/auxiliaries.module.ts"
+    "../projects/examination/src/app/auxiliaries/auxiliaries.module.ts",
+    "../projects/examination/src/app/exam-configuration/exam-configuration.module.ts"
   ]
 }
 
