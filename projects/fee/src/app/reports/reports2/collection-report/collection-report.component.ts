@@ -42,6 +42,7 @@ export class CollectionReportComponent implements OnInit {
 	tableFlag = false;
 	dataset1: any[];
 	gridHeight: any;
+	exportColumnDefinitions: any[] = [];
 	dataset2: any[];
 	initgrid = false;
 	columnDefinitions: Column[] = [];
@@ -365,7 +366,7 @@ export class CollectionReportComponent implements OnInit {
 				};
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.message, 'success');
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -813,7 +814,7 @@ export class CollectionReportComponent implements OnInit {
 					}];
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.message, 'success');
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -890,7 +891,7 @@ export class CollectionReportComponent implements OnInit {
 				};
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.message, 'success');
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1333,7 +1334,7 @@ export class CollectionReportComponent implements OnInit {
 					}];
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.message, 'success');
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1488,7 +1489,7 @@ export class CollectionReportComponent implements OnInit {
 					}];
 				this.feeService.getMFRReport(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.message, 'success');
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1775,24 +1776,16 @@ export class CollectionReportComponent implements OnInit {
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		if (totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>' && !totals.group.groups && totals.group.level === 0) {
+		if (totals.group.level === 0) {
 			return '<b class="total-footer-report">Total</b>';
 		}
-		if (totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>' && totals.group.groups) {
-			if (totals.group.level === 0) {
-				return '<b class="total-footer-report">Total</b>';
-			}
-		} else {
-			if (totals.group.groupingKey !== '<b>Grand Total</b>') {
-				return '<b class="total-footer-report">Sub Total</b>';
-			} else {
-				return '';
-			}
+		if (totals.group.level > 0) {
+			return '<b class="total-footer-report">Sub Total (' + totals.group.value + ') </b>';
 		}
 	}
 	getMFRFormatter(row, cell, value, columnDef, dataContext) {
 		if (value.status === 'unpaid') {
-			return '<div style="background-color:#f93435 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+			return '<div style="background-color:#4a7bec !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
 				+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
 				'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
 		} else if (value.status === 'paid') {
@@ -1803,10 +1796,10 @@ export class CollectionReportComponent implements OnInit {
 			return '<div style="background-color:#d2d8e0 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;' +
 				'border-right: 1px solid #89a8c8; border-top: 0px !important;' +
 				'border-bottom: 0px !important; border-left: 0px !important; margin: auto;">'
-				+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
-				'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
+				+ '<span style="margin-left:40px">' + '-' + '</span>' +
+				'<span>' + '' + '</span>' + '</div>';
 		} else if (value.status === 'Unpaid with fine') {
-			return '<div style="background-color:#4a7bec !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+			return '<div style="background-color:#f93435 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
 				+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
 				'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
 		} else {
@@ -2606,7 +2599,9 @@ export class CollectionReportComponent implements OnInit {
 		let reportType: any = '';
 		const columns: any[] = [];
 		const columValue: any[] = [];
-		for (const item of this.columnDefinitions) {
+		this.exportColumnDefinitions = [];
+		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+		for (const item of this.exportColumnDefinitions) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
@@ -2640,8 +2635,7 @@ export class CollectionReportComponent implements OnInit {
 		}
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
-		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
-			{ pageSetup: { fitToWidth: 7 } });
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
@@ -2654,7 +2648,7 @@ export class CollectionReportComponent implements OnInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
-				for (const item2 of this.columnDefinitions) {
+				for (const item2 of this.exportColumnDefinitions) {
 					if (this.reportType !== 'mfr' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
@@ -2672,7 +2666,7 @@ export class CollectionReportComponent implements OnInit {
 						}
 					} else if (this.reportType === 'mfr' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
 						if (item2.id.toString().match(/Q/)) {
-							obj[item2.id] = json[key][item2.id].status;
+							obj[item2.id] = json[key][item2.id].status !== 'Not Generated' ? json[key][item2.id].status : '-';
 						} else {
 							obj[item2.id] = json[key][item2.id];
 						}
@@ -2684,14 +2678,14 @@ export class CollectionReportComponent implements OnInit {
 				if (rowNum === 1) {
 					row.font = {
 						name: 'Arial',
-						size: 16,
+						size: 14,
 						bold: true
 					};
 				}
 				if (rowNum === 2) {
 					row.font = {
 						name: 'Arial',
-						size: 14,
+						size: 12,
 						bold: true
 					};
 				}
@@ -2744,8 +2738,8 @@ export class CollectionReportComponent implements OnInit {
 							cell.fill = {
 								type: 'pattern',
 								pattern: 'solid',
-								fgColor: { argb: 'dedede' },
-								bgColor: { argb: 'dedede' },
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
 							};
 							cell.border = {
 								top: { style: 'thin' },
@@ -2780,14 +2774,14 @@ export class CollectionReportComponent implements OnInit {
 				if (rowNum === 1) {
 					row.font = {
 						name: 'Arial',
-						size: 16,
+						size: 14,
 						bold: true
 					};
 				}
 				if (rowNum === 2) {
 					row.font = {
 						name: 'Arial',
-						size: 14,
+						size: 12,
 						bold: true
 					};
 				}
@@ -2843,7 +2837,7 @@ export class CollectionReportComponent implements OnInit {
 					let indexPage = 0;
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportColumnDefinitions) {
 							if (this.reportType !== 'mfr' && Number(key) < this.dataset.length - 1) {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 									obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
@@ -2861,7 +2855,8 @@ export class CollectionReportComponent implements OnInit {
 								}
 							} else if (this.reportType === 'mfr' && Number(key) < this.dataset.length - 1) {
 								if (item2.id.toString().match(/Q/)) {
-									obj[item2.id] = item.rows[key][item2.id].status;
+									obj[item2.id] = item.rows[key][item2.id].status !== 'Not Generated' ? item.rows[key][item2.id].status
+										: '-';
 								} else {
 									obj[item2.id] = item.rows[key][item2.id];
 								}
@@ -2869,23 +2864,29 @@ export class CollectionReportComponent implements OnInit {
 						}
 						worksheet.addRow(obj);
 						length++;
-						worksheet.getRow(length).fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						worksheet.getRow(length).border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						worksheet.getRow(length).font = {
-							name: 'Arial',
-							size: 10,
-						};
-						worksheet.getRow(length).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === length) {
+								row.eachCell((cell) => {
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
+									};
+									cell.font = {
+										name: 'Arial',
+										size: 10,
+									};
+									cell.alignment = { horizontal: 'center' };
+								});
+							}
+						});
 						indexPage++;
 					});
 					if (indexPage === item.rows.length) {
@@ -3352,7 +3353,7 @@ export class CollectionReportComponent implements OnInit {
 	}
 	checkGroupLevel(item, worksheet) {
 		worksheet.mergeCells('A' + (this.groupLength) + ':' +
-			this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+			this.alphabetJSON[this.exportColumnDefinitions.length] + (this.groupLength));
 		worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(item.title);
 		worksheet.getCell('A' + this.groupLength).fill = {
 			type: 'pattern',
@@ -3371,16 +3372,112 @@ export class CollectionReportComponent implements OnInit {
 			size: 10,
 			bold: true
 		};
+		worksheet.getCell('A' + this.groupLength).alignment = { horizontal: 'left' };
 		if (item.groups) {
 			let index = 0;
 			for (const groupItem of item.groups) {
 				if (groupItem.groups) {
 					this.groupLength++;
+					const obj3: any = {};
+					if (this.reportType === 'headwise') {
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = 'Sub Total';
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['fp_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+						obj3['receipt_mode_name'] = '';
+						obj3['tb_name'] = '';
+					}
+					if (this.reportType === 'modewise') {
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = 'Sub Total';
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['receipt_no'] = '';
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+						obj3['fp_name'] = '';
+					}
+					if (this.reportType === 'classwise') {
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = 'Sub Total';
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+						obj3['fp_name'] = '';
+					}
+					if (this.reportType === 'routewise') {
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = 'Sub Total';
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['fp_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['transport_amount'] = groupItem.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+						obj3['route_name'] = '';
+						obj3['stoppages_name'] = '';
+						obj3['slab_name'] = '';
+					}
+					worksheet.addRow(obj3);
+					worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+					worksheet.eachRow((row, rowNum) => {
+						if (rowNum === this.groupLength) {
+							row.eachCell(cell => {
+								cell.font = {
+									bold: true,
+									name: 'Arial',
+									size: 10
+								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						}
+					});
 					this.checkGroupLevel(groupItem, worksheet);
 				} else {
 					this.groupLength = this.groupLength + index + 1;
 					worksheet.mergeCells('A' + (this.groupLength) + ':' +
-						this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+						this.alphabetJSON[this.exportColumnDefinitions.length] + (this.groupLength));
 					worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(groupItem.title);
 					worksheet.getCell('A' + this.groupLength).fill = {
 						type: 'pattern',
@@ -3399,9 +3496,10 @@ export class CollectionReportComponent implements OnInit {
 						size: 10,
 						bold: true
 					};
+					worksheet.getCell('A' + this.groupLength).alignment = { horizontal: 'left' };
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportColumnDefinitions) {
 							if (this.reportType !== 'mfr') {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 									obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
@@ -3419,7 +3517,8 @@ export class CollectionReportComponent implements OnInit {
 								}
 							} else {
 								if (item2.id.toString().match(/Q/)) {
-									obj[item2.id] = groupItem.rows[key][item2.id].status;
+									obj[item2.id] = groupItem.rows[key][item2.id].status !== 'Not Generated' ? groupItem.rows[key][item2.id].status
+										: '-';
 								} else {
 									obj[item2.id] = groupItem.rows[key][item2.id];
 								}
@@ -3427,23 +3526,29 @@ export class CollectionReportComponent implements OnInit {
 						}
 						worksheet.addRow(obj);
 						this.groupLength++;
-						worksheet.getRow(this.groupLength).fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						worksheet.getRow(this.groupLength).border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						worksheet.getRow(this.groupLength).font = {
-							name: 'Arial',
-							size: 10,
-						};
-						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === this.groupLength) {
+								row.eachCell((cell: any) => {
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
+									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
+									cell.font = {
+										name: 'Arial',
+										size: 10,
+									};
+									cell.alignment = { horizontal: 'center' };
+								});
+							}
+						});
 					});
 					if (this.reportType === 'headwise') {
 						const obj3: any = {};
@@ -3483,6 +3588,12 @@ export class CollectionReportComponent implements OnInit {
 										name: 'Arial',
 										size: 10
 									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
 								});
 							}
 						});
@@ -3521,6 +3632,12 @@ export class CollectionReportComponent implements OnInit {
 										name: 'Arial',
 										size: 10
 									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
 								});
 							}
 						});
@@ -3546,6 +3663,12 @@ export class CollectionReportComponent implements OnInit {
 										bold: true,
 										name: 'Arial',
 										size: 10
+									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
 									};
 								});
 							}
@@ -3575,6 +3698,12 @@ export class CollectionReportComponent implements OnInit {
 										bold: true,
 										name: 'Arial',
 										size: 10
+									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
 									};
 								});
 							}
