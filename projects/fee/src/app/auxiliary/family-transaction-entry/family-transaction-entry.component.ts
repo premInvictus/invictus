@@ -257,6 +257,11 @@ export class FamilyTransactionEntryComponent implements OnInit {
 			validateFlag = false;
 		}
 
+		if (Number(this.feeTransactionForm.value.ftr_amount) < this.familyOutstandingArr['family_total_outstanding_amt']) {
+			this.common.showSuccessErrorMessage('Transaction Amount Cannot be less than the Outstanding Amt', 'error');
+			validateFlag = false;
+		}
+
 		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1) {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
 				this.feeTransactionForm.value.ftr_remark)) {
@@ -316,6 +321,10 @@ export class FamilyTransactionEntryComponent implements OnInit {
 
 		if (Number(this.feeTransactionForm.value.ftr_amount) === 0) {
 			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
+			validateFlag = false;
+		}
+		if (Number(this.feeTransactionForm.value.ftr_amount) < this.familyOutstandingArr['family_total_outstanding_amt']) {
+			this.common.showSuccessErrorMessage('Transaction Amount Cannot be less than the Outstanding Amt', 'error');
 			validateFlag = false;
 		}
 		if (this.selectedMode === '1' && !this.feeTransactionForm.value.fam_entry_number) {

@@ -67,9 +67,9 @@
     <div class="row margin-top-25">
       <div class="col-12">
         <mat-radio-group aria-label="Select an option" formControlName="fcc_status">
-          <mat-radio-button value="d" [disabled]="bouncedForm.value.fcc_status !== 'd'">Deposite</mat-radio-button>
-          <mat-radio-button value="c" [disabled]="bouncedForm.value.fcc_status === 'd'">Clear</mat-radio-button>
-          <mat-radio-button value="b" [disabled]="bouncedForm.value.fcc_status === 'd'">Bounce</mat-radio-button>
+          <mat-radio-button value="d" [disabled]="bouncedForm.value.fcc_status !== 'd'">Deposited</mat-radio-button>
+          <mat-radio-button value="c" [disabled]="bouncedForm.value.fcc_status === 'd'">Cleared</mat-radio-button>
+          <mat-radio-button value="b" [disabled]="bouncedForm.value.fcc_status === 'd'">Bounced</mat-radio-button>
         </mat-radio-group>
       </div>
       <br>
