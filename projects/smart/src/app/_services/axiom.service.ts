@@ -67,4 +67,33 @@ export class AxiomService {
 		return this.http.get(environment.apiAxiomUrl + '/setup/subject/1');
 
 	} */
+
+	getClass(param) {
+		this.service.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/setupdetail/getClassData', param);
+	}
+
+	// fetch subject based on class id
+	getSubjectsByClass(class_id) {
+		const param: any = {};
+		param.class_id = class_id;
+		this.service.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/setupdetail/getSubjectsByClass', param);
+	}
+	getTopicByClassSubject(class_id, subject_id) {
+		const param: any = {};
+		if (class_id) {
+			param.class_id = class_id;
+		}
+		if (subject_id) {
+			param.sub_id = subject_id;
+		}
+		this.service.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param);
+	}
+	// fetch subtopic
+	getSubtopicByTopic(topic_id) {
+		this.service.startLoading();
+		return this.http.get(environment.apiAxiomUrl + `/setupdetail/getSubtopicByTopic/${topic_id}`);
+	}
 }
