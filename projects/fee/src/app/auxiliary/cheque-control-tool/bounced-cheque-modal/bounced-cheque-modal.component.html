@@ -69,7 +69,7 @@
         <mat-radio-group aria-label="Select an option" formControlName="fcc_status">
           <mat-radio-button value="d" [disabled]="bouncedForm.value.fcc_status !== 'd'">Deposited</mat-radio-button>
           <mat-radio-button value="c" [disabled]="bouncedForm.value.fcc_status === 'd'">Cleared</mat-radio-button>
-          <mat-radio-button value="b" [disabled]="bouncedForm.value.fcc_status === 'd'">Bounced</mat-radio-button>
+          <mat-radio-button value="b" [disabled]="bouncedForm.value.fcc_status === 'd'">Dishonoured</mat-radio-button>
         </mat-radio-group>
       </div>
       <br>
@@ -101,16 +101,16 @@
         </div>
       </ng-container>
       <ng-container *ngIf="bouncedForm.value.fcc_status === 'c'">
-        <div class="col-3">
+        <div class="col-4">
           <mat-form-field appearance="outline" class="form-field">
-            <mat-label>Process Date</mat-label>
+            <mat-label>Processing Date</mat-label>
             <input matInput [matDatepicker]="picker2" placeholder="Choose a date" formControlName="fcc_process_date"
             required>
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
         </div>
-        <div class="col-9">
+        <div class="col-8">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Remarks</mat-label>
             <textarea matInput rows="4" placeholder="Remarks" formControlName="fcc_remarks" required></textarea>

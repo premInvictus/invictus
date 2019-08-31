@@ -153,14 +153,14 @@
                         <b *ngIf="item.action.fcc_status === 'c'"
                           style="font-size: 14px;cursor: pointer;color: green">Cleared</b>
                         <b *ngIf="item.action.fcc_status === 'b'" [matTooltip]="item.action.fcc_remarks"
-                          style="font-size: 14px;cursor: pointer;color: red">Bounced</b>
+                          style="font-size: 14px;cursor: pointer;color: red">Dishonoured</b>
                       </span>
                       <span style="font-size: 14px" *ngIf="item.action.status === '1'" class="font-size-10"
                         style="font-size: 14px;cursor: pointer;color:green">
                         <b>Cleared</b>
                       </span>
                       <span [matTooltip]="item.action.fcc_remarks" style="font-size: 14px;cursor: pointer;color: red"
-                        *ngIf="item.action.status === '2'" class="font-size-10"><b>Bounced</b>
+                        *ngIf="item.action.status === '2'" class="font-size-10"><b>Dishonoured</b>
                       </span>
                       <span style="font-size: 14px" *ngIf="item.action.status === '3'" class="font-size-10">
                         <b>Deposited</b>
