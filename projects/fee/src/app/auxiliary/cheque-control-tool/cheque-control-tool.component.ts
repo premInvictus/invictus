@@ -20,7 +20,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname', 'bankdeposite',
 			'processingdate', 'status',
 			'entered_by', 'approved_by',
-			'admno', 'studentname', 'class_name',
+			'admno', 'studentnam', 'class_name',
 			'action', 'remarks'];
 	CHEQUE_ELEMENT_DATA: ChequeToolElement[] = [];
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);

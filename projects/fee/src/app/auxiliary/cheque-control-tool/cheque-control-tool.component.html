@@ -91,7 +91,7 @@
           <div class="col-12">
             <table mat-table [dataSource]="dataSource" class="fee-table-100 text-center">
               <ng-container matColumnDef="srno">
-                <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
+                <th mat-header-cell *matHeaderCellDef  class="text-nowrap"> Sr. No. </th>
                 <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.srno}} </td>
               </ng-container>
               <ng-container matColumnDef="recieptdate">
@@ -123,7 +123,7 @@
               <ng-container matColumnDef="bankdeposite">
                 <th mat-header-cell *matHeaderCellDef> Date of Deposit</th>
                 <td mat-cell *matCellDef="let item">
-                  <span style="font-size: 14px" class="font-size-10">
+                  <span style="font-size: 14px">
                     <b>{{item.bankdeposite}}</b>
                   </span>
                 </td>
@@ -131,15 +131,15 @@
               <ng-container matColumnDef="processingdate">
                 <th mat-header-cell *matHeaderCellDef> Date of Clearence</th>
                 <td mat-cell *matCellDef="let item">
-                  <span style="font-size: 14px" *ngIf="item.action.status === '2'" class="font-size-10">
+                  <span style="font-size: 14px" *ngIf="item.action.status === '2'">
                     <b *ngIf="item.action.dishonor_date">{{item.action.dishonor_date | date : 'd-MMM-y'}}</b>
                     <b *ngIf="!item.action.dishonor_date">-</b>
                   </span>
-                  <span style="font-size: 14px" *ngIf="item.action.status === '1'" class="font-size-10">
+                  <span style="font-size: 14px" *ngIf="item.action.status === '1'">
                     <b *ngIf="item.action.fcc_process_date">{{item.action.fcc_process_date | date : 'd-MMM-y'}}</b>
                     <b *ngIf="!item.action.fcc_process_date">-</b>
                   </span>
-                  <span style="font-size: 14px" *ngIf="item.action.status === '0'" class="font-size-10">
+                  <span style="font-size: 14px" *ngIf="item.action.status === '0'">
                     <b>-</b>
                   </span>
                 </td>
@@ -149,20 +149,20 @@
                 <td mat-cell *matCellDef="let item" class="text-nowrap">
                   <div class="inline-flex margin-top-5">
                     <div class="text-center">
-                      <span style="font-size: 14px" *ngIf="item.action.status === '4'" class="font-size-10">
+                      <span style="font-size: 14px" *ngIf="item.action.status === '4'">
                         <b *ngIf="item.action.fcc_status === 'c'"
                           style="font-size: 14px;cursor: pointer;color: green">Cleared</b>
                         <b *ngIf="item.action.fcc_status === 'b'" [matTooltip]="item.action.fcc_remarks"
                           style="font-size: 14px;cursor: pointer;color: red">Bounced</b>
                       </span>
-                      <span style="font-size: 14px" *ngIf="item.action.status === '1'" class="font-size-10"
+                      <span style="font-size: 14px" *ngIf="item.action.status === '1'"
                         style="font-size: 14px;cursor: pointer;color:green">
                         <b>Cleared</b>
                       </span>
                       <span [matTooltip]="item.action.fcc_remarks" style="font-size: 14px;cursor: pointer;color: red"
-                        *ngIf="item.action.status === '2'" class="font-size-10"><b>Bounced</b>
+                        *ngIf="item.action.status === '2'"><b>Bounced</b>
                       </span>
-                      <span style="font-size: 14px" *ngIf="item.action.status === '3'" class="font-size-10">
+                      <span style="font-size: 14px" *ngIf="item.action.status === '3'">
                         <b>Deposited</b>
                       </span>
                     </div>
@@ -181,7 +181,7 @@
                 <th mat-header-cell *matHeaderCellDef> Enrollment no. </th>
                 <td mat-cell *matCellDef="let item"> {{item.admno}} </td>
               </ng-container>
-              <ng-container matColumnDef="studentname">
+              <ng-container matColumnDef="studentnam">
                 <th mat-header-cell *matHeaderCellDef> Student Name </th>
                 <td style="text-align: left !important" mat-cell *matCellDef="let item" class="text-nowrap">
                   <span class="icon-spacer">{{item.studentname | titlecase}} </span>
@@ -195,7 +195,7 @@
                 <th mat-header-cell *matHeaderCellDef> Action </th>
                 <td mat-cell *matCellDef="let item" class="text-nowrap">
                   <div class="inline-flex margin-top-5">
-                    <span style="font-size: 14px" *ngIf="item.action.status === '4'" class="font-size-10">
+                    <span style="font-size: 14px" *ngIf="item.action.status === '4'">
                       <b>Approved</b>
                     </span>
                     &nbsp;<i
