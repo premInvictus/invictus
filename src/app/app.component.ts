@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
 	showLoadingFlag;
 	constructor(private router: Router, private loaderService: CommonAPIService) {
 		this.loaderService.showLoading.subscribe((flag: boolean) => {
-			this.showLoadingFlag = flag;
+			setTimeout(() => this.showLoadingFlag = flag , 0);
 		});
 		this.router.events.subscribe((event: Event) => {
 			switch (true) {
