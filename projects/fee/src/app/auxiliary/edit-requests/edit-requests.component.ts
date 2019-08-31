@@ -236,6 +236,7 @@ export class EditRequestsComponent implements OnInit {
 			this.sisService.updateEditRequest(param).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.commonService.showSuccessErrorMessage(result.data, 'success');
+					this.viewRequestFlag = false;
 					this.getTabs();
 				}
 			});
