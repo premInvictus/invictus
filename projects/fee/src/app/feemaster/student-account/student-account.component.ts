@@ -16,6 +16,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	feeOtherCategory: any[] = [];
 	feeStructureArray: any[] = [];
 	conGroupArray: any[] = [];
+	conDesc: string;
 	hostelFeeStructureArray: any[] = [];
 	hostelConGroupArray: any[] = [];
 	transportFlag = false;
@@ -188,6 +189,10 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.existFlag = false;
 			}
 		});
+	}
+	setDescription(event) {
+		const cindex = this.conGroupArray.findIndex(e => e.fcg_id === event.value);
+		this.conDesc = this.conGroupArray[cindex].fcg_description;
 	}
 	getFeeOtherCategory() {
 		this.feeService.getFeeOthers({}).subscribe((result: any) => {
@@ -611,8 +616,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 						rff_new_field_value: new DatePipe('en-in').transform(formControl.value, 'yyyy-MM-dd'),
 						rff_old_field_value: this.accountDetails[key],
 					});
-				}
-				if (key === 'accd_is_terminate' || key === 'accd_is_transport'
+				} else if (key === 'accd_is_terminate' || key === 'accd_is_transport'
 					|| key === 'accd_is_hostel' || key === 'accd_is_hostel_terminate') {
 					sibReqArray.push({
 						rff_where_id: 'accd_id',
@@ -638,6 +642,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.finalArray.push(titem);
 			}
 		}
+		console.log(this.finalArray);
 		this.reqObj = {
 			req_login_id: JSON.parse(localStorage.getItem('currentUser')).login_id,
 			req_process_type: '4',
@@ -649,6 +654,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			req_param: []
 		};
 		if (this.finalArray.length > 0) {
+			console.log('reqObj', this.reqObj);
 			this.editModal.openModal({ data: [this.finalArray], reqParam: [this.reqObj] });
 		}
 	}
