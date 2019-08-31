@@ -1551,7 +1551,7 @@ export class TransportReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr: any[] = [];
 				for (const item2 of this.columnDefinitions) {
-					if (this.reportType !== 'mfr' && Number(key) < this.dataset.length - 1) {
+					if (this.reportType !== 'mfr') {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
@@ -1567,7 +1567,7 @@ export class TransportReportComponent implements OnInit {
 						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
 							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}
-					} else if (this.reportType === 'mfr' && Number(key) < this.dataset.length - 1) {
+					} else if (this.reportType === 'mfr') {
 						if (item2.id.toString().match(/Q/)) {
 							arr.push(this.dataset[key][item2.id].status);
 						} else {
@@ -2174,7 +2174,7 @@ export class TransportReportComponent implements OnInit {
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
 						for (const item2 of this.exportColumnDefinitions) {
-							if (this.reportType !== 'mfr' && Number(key) < this.dataset.length - 1) {
+							if (this.reportType !== 'mfr') {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 									obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 								}

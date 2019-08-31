@@ -1212,13 +1212,11 @@ export class FeeadjReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.exportColumnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
-						if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
-							|| item2.id === 'rpt_receipt_date') {
-							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
-						} else {
-							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
-						}
+					if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
+						|| item2.id === 'rpt_receipt_date') {
+						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
+					} else {
+						obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 					}
 				}
 				worksheet.addRow(obj);

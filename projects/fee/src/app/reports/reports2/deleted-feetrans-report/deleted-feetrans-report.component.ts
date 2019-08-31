@@ -1367,13 +1367,11 @@ export class DeletedFeetransReportComponent implements OnInit {
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
 						for (const item2 of this.columnDefinitions) {
-							if (Number(key) < this.dataset.length - 1) {
-								if (item2.id === 'invoice_created_date' || item2.id === 'deleted_date'
-									|| item2.id === 'rpt_receipt_date') {
-									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
-								} else {
-									obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
-								}
+							if (item2.id === 'invoice_created_date' || item2.id === 'deleted_date'
+								|| item2.id === 'rpt_receipt_date') {
+								obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
+							} else {
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 							}
 						}
 						worksheet.addRow(obj);

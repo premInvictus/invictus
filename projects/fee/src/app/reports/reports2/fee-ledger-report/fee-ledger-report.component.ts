@@ -1010,13 +1010,11 @@ export class FeeLedgerReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr5: any[] = [];
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
-						if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
-							|| item2.id === 'rpt_receipt_date') {
-							arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
-						} else {
-							arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
+					if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
+						|| item2.id === 'rpt_receipt_date') {
+						arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+					} else {
+						arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
 					}
 				}
 				rowData.push(arr5);
