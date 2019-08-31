@@ -314,6 +314,15 @@ export class ChequeclearanceReportComponent implements OnInit {
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
 				width: 80,
+				grouping: {
+					getter: 'stu_admission_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
 				groupTotalsFormatter: this.srnTotalsFormatter
 			},
 			{
@@ -1178,6 +1187,22 @@ export class ChequeclearanceReportComponent implements OnInit {
 			}
 		});
 	}
+	resetValues() {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': '',
+			'from_date': '',
+			'to_date': '',
+			'fee_value': '',
+			'hidden_value': '',
+			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
+		});
+		this.sortResult = [];
+		this.filterResult = [];
+	}
 	exportToExcel(json: any[], excelFileName: string) {
 		let reportType: any = '';
 		const columns: any[] = [];
@@ -1386,8 +1411,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 						obj = {};
 						for (const item2 of this.exportColumnDefinitions) {
 							if (Number(key) < this.dataset.length - 1) {
-								if (item2.id === 'cheque_date' || item2.id === 'deposite_date'
-									|| item2.id === 'dishonor_date') {
+								if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+									|| item2.id === 'dishonor_date') && item.rows[key][item2.id] !== '-') {
 									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
 								} else {
 									obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
@@ -1486,7 +1511,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 		obj3['invoice_no'] = '';
 		obj3['receipt_no'] = '';
 		obj3['receipt_id'] = '';
-		obj3['receipt_amount'] = (this.dataset.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['receipt_amount'] = (this.dataset.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0));
 		obj3['bank_name'] = '';
 		obj3['status'] = '';
 		obj3['fcc_reason_id'] = '';
@@ -1649,8 +1674,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
 						for (const item2 of this.columnDefinitions) {
-							if (item2.id === 'cheque_date' || item2.id === 'deposite_date'
-								|| item2.id === 'dishonor_date' && groupItem.rows[key][item2.id] !== '-') {
+							if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+								|| item2.id === 'dishonor_date') && groupItem.rows[key][item2.id] !== '-') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
 								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
