@@ -444,6 +444,7 @@
                         <mat-form-field appearance="outline" class="form-field">
                           <mat-label>Cheque Date</mat-label>
                           <input matInput [matDatepicker]="picker3" placeholder="Choose a date"
+                          [max]="currentDate"
                             formControlName="ftr_cheque_date" required>
                           <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                           <mat-datepicker #picker3></mat-datepicker>
