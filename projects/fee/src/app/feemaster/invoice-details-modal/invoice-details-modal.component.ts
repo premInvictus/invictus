@@ -184,7 +184,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		console.log('menus', this.commonAPIService.menus);
 		// this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')
 		console.log('adj--', adj);
-		if ((this.commonAPIService.isExistUserAccessMenu('352')) && this.adjRemark) {
+		if ((this.commonAPIService.isExistUserAccessMenu('365')) && this.adjRemark) {
 			this.feeService.invoiceAdjustmentRemark(adj).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
