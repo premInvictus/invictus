@@ -24,8 +24,6 @@ import {
 	HtmlToTextService,
 	BreadCrumbService,
 	SmartService,
-	SisService,
-	AxiomService,
 	UserAccessMenuService
 } from 'projects/teacherapp/src/app/_services';
 import { CommonAPIService } from 'projects/teacherapp/src/app/_services/commonAPI.service';
@@ -52,8 +50,6 @@ const providers = [
 	AdminService,
 	QelementService,
 	QbankService,
-	SisService,
-	AxiomService,
 	SmartService,
 	ReportService];
 @NgModule({

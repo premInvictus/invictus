@@ -43,18 +43,9 @@ import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dia
 import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/invictus-shared.module';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
-import { PreviewDocumentComponent } from './preview-document/preview-document.component';
-import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dialog/assignment-attachment-dialog.component';
-import { ImageViewerComponent } from './image-viewer/image-viewer.component';
-import { NoDataComponent } from './no-data/no-data.component';
-// tslint:disable-next-line:max-line-length
-import { CapitalizePipe, TruncatetextPipe, DateformatPipe, SafePipe, NumberToWordPipe, ZerodashPipe } from 'projects/teacherapp/src/app/_pipes';
-import { MatAutocompleteModule } from '@angular/material';
 @NgModule({
 	imports: [
 		CommonModule,
-		FormsModule,
-		ReactiveFormsModule,
 		MatNativeDateModule,
 		MatProgressBarModule,
 		MatSlideToggleModule,
@@ -84,12 +75,12 @@ import { MatAutocompleteModule } from '@angular/material';
 		LayoutModule,
 		RouterModule,
 		BsDropdownModule,
-		MatAutocompleteModule,
 		AccordionModule.forRoot(),
 		FormsModule,
 		ReactiveFormsModule,
 		InvictusSharedModule,
 		ImageCropperModule,
+
 	],
 	declarations: [
 		DeleteModalComponent,
@@ -100,22 +91,10 @@ import { MatAutocompleteModule } from '@angular/material';
 		OngoingTestInstructionComponent,
 		EssayDialogsComponent,
 		QuestionPaperDialogComponent,
-		ImagecropComponent,
-		PreviewDocumentComponent,
-		AssignmentAttachmentDialogComponent,
-		NoDataComponent,
-		ImageViewerComponent,
-		CapitalizePipe,
-		TruncatetextPipe,
-		DateformatPipe,
-		SafePipe,
-		NumberToWordPipe,
-		ZerodashPipe,
+		ImagecropComponent
 	],
 	exports: [
 		DeleteModalComponent,
-		FormsModule,
-		ReactiveFormsModule,
 		MatProgressBarModule,
 		MatSlideToggleModule,
 		MatDialogModule,
@@ -139,7 +118,6 @@ import { MatAutocompleteModule } from '@angular/material';
 		MatListModule,
 		MatCardModule,
 		MatExpansionModule,
-		MatAutocompleteModule,
 		LayoutModule,
 		MatTooltipModule,
 		MatMenuModule,
@@ -149,28 +127,15 @@ import { MatAutocompleteModule } from '@angular/material';
 		QuestionPaperDialogComponent,
 		AddInstructionComponent,
 		ImageCropperModule,
-		ImagecropComponent,
-		PreviewDocumentComponent,
-		AssignmentAttachmentDialogComponent,
-		ImageViewerComponent,
-		CapitalizePipe,
-		TruncatetextPipe,
-		DateformatPipe,
-		SafePipe,
-		NoDataComponent,
-		NumberToWordPipe,
-		ZerodashPipe,
+		ImagecropComponent
 	],
-	entryComponents: [ImagecropComponent, EssayDialogsComponent, QuestionPaperDialogComponent, AddInstructionComponent,
-		ImageViewerComponent,
-		PreviewDocumentComponent,
-		AssignmentAttachmentDialogComponent]
+	entryComponents: [ImagecropComponent, EssayDialogsComponent, QuestionPaperDialogComponent, AddInstructionComponent]
 })
 export class SharedModule {
 	constructor() {
 		const script: any = document.createElement('script');
 		if (!(script.type === 'text/x-mathjax-config'
-			&& script.src === 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML')) {
+		&& script.src === 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML')) {
 			script.type = 'text/x-mathjax-config';
 			script[('innerHTML')] =
 				'MathJax.Hub.Config({\n' +

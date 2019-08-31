@@ -34,4 +34,8 @@ export class AxiomService {
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/users/getAllTeacher', param);
 	}
+	getUser(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/getUser', value);
+	}
 }

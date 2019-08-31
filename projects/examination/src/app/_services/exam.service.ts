@@ -55,6 +55,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/insertReportCardSetup', value);
 	}
+	insertRollNo(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertRollNo', value);
+	}
 }
 
 

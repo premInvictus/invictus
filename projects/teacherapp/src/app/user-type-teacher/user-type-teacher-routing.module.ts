@@ -51,9 +51,6 @@ const routes: Routes = [
 				path: 'test-report',
 				loadChildren: 'projects/teacherapp/src/app/test-reports/test-reports.module#TestReportsModule'
 			},
-			{ path: 'logentry', loadChildren: 'projects/teacherapp/src/app/logentry/logentry.module#LogentryModule' },
-			{ path: 'assignment', loadChildren: 'projects/teacherapp/src/app/assignment/assignment.module#AssignmentModule' },
-			{ path: 'auxillaries', loadChildren: 'projects/teacherapp/src/app/auxillaries/auxillaries.module#AuxillariesModule' },
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]
 	},

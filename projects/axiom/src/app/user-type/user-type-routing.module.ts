@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/index';
+import { TeacherComponent } from './teacher/teacher.component';
+import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
 import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
 import { UserCredentialComponent } from './user-credential/user-credential.component';
@@ -11,6 +13,59 @@ const routes: Routes = [
 		canActivate: [AuthGuard],
 		redirectTo: 'school',
 		pathMatch: 'full'
+	},
+	{
+		path: 'teacher',
+		component: ProjectComponent,
+		canActivate: [AuthGuard],
+		children: [
+			{ path: '', component: TeacherDashboardComponent },
+			{
+				path: 'questionbank',
+				loadChildren: '../questionbank/questionbank.module#QuestionbankModule'
+			},
+			{
+				path: 'question',
+				loadChildren: '../question/question.module#QuestionModule'
+			},
+			{
+				path: 'template',
+				loadChildren: '../questiontemplate/questiontemplate.module#QuestiontemplateModule'
+			},
+			{
+				path: 'questionpaper',
+				loadChildren: '../questionpaper/questionpaper.module#QuestionpaperModule'
+			},
+			{
+				path: 'eassessment',
+				loadChildren: 'projects/axiom/src/app/eassessment/eassessment.module#EassessmentModule'
+			},
+			{
+				path: 'eevaluation',
+				loadChildren: '../eevaluation/eevaluation.module#EevaluationModule'
+			},
+			{
+				path: 'question_paper_setup',
+				loadChildren: '../question-paper-setup/question-paper-setup.module#QuestionPaperSetupModule'
+			},
+			{
+				path: 'report',
+				loadChildren: 'projects/axiom/src/app/reports/reports.module#ReportsModule'
+			},
+			{
+				path: 'class-reports',
+				loadChildren: '../class-performance-reports/class-performance-reports.module#ClassPerformanceReportsModule'
+			},
+			{
+				path: 'student-reports',
+				loadChildren: '../student-reports/student-reports.module#StudentReportsModule'
+			},
+			{
+				path: 'test-report',
+				loadChildren: '../test-reports/test-reports.module#TestReportsModule'
+			},
+			{ path: 'user-credential', component: UserCredentialComponent }
+		]
 	},
 	{
 		path: 'school',

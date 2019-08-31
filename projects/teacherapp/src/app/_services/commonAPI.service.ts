@@ -4,8 +4,6 @@ import { LoaderService } from './loader.service';
 import { CookieService } from 'ngx-cookie';
 import { Subject, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { DatePipe } from '@angular/common';
-import { NotificationsService } from 'angular2-notifications';
 
 @Injectable()
 export class CommonAPIService {
@@ -13,8 +11,7 @@ export class CommonAPIService {
 	question_subtype: any[] = [];
 	userData: any = {};
 	viewProfile = new Subject();
-	constructor(private http: HttpClient, private loaderService: LoaderService, private _cookieService: CookieService,
-		private _notificationService: NotificationsService) { }
+	constructor(private http: HttpClient, private loaderService: LoaderService, private _cookieService: CookieService) { }
 
 	getQTypeFromApi() {
 		return this.http.get(environment.apiAxiomUrl + '/setup/question_type/1');
@@ -57,35 +54,5 @@ export class CommonAPIService {
 		if (this._cookieService && this._cookieService.get('userData')) {
 			return this.userData = JSON.parse(this._cookieService.get('userData'));
 		}
-	}
-	dateConvertion(value, format = 'yyyy-MM-dd') {
-		const datePipe = new DatePipe('en-US');
-		return datePipe.transform(value, format);
-	}
-	showSuccessErrorMessage(message, type) {
-		if (type === 'success') {
-			this._notificationService.success('Success', message, {
-				timeout: 2000,
-				showProgressBar: true,
-				pauseOnHover: true
-			});
-		} else if (type === 'error') {
-			this._notificationService.error('Error', message, {
-				timeout: 2000,
-				showProgressBar: true,
-				pauseOnHover: true
-			});
-		} else if (type === 'info') {
-			this._notificationService.info('Info', message, {
-				timeout: 2000,
-				showProgressBar: true,
-				pauseOnHover: true
-			});
-		}
-	}
-	htmlToText(html: any) {
-		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
-		tmp.innerHTML = html;
-		return tmp.textContent || tmp.innerText || '';
 	}
 }

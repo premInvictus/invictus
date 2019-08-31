@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { UserTypeRoutingModule } from './user-type-routing.module';
+import { TeacherComponent } from './teacher/teacher.component';
+import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
 import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -33,6 +35,8 @@ import { UserCredentialComponent } from './user-credential/user-credential.compo
 		SharedModule,
 	],
 	declarations: [
+		TeacherComponent,
+		TeacherDashboardComponent,
 		SchoolComponent,
 		SchoolDashboardComponent,
 		UserCredentialComponent

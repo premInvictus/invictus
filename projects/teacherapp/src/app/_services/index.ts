@@ -9,5 +9,3 @@ export *from './socket.service';
 export * from './treeview.service';
 export * from './userAccessMenu.service';
 export * from './smart.service';
-export * from  './sis.service';
-export * from  './axiom.service';
