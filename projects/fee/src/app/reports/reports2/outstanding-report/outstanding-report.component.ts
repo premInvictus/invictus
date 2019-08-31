@@ -3515,7 +3515,7 @@ export class OutstandingReportComponent implements OnInit {
 	getGroupColumns(columns) {
 		let grName = '';
 		for (const item of columns) {
-			for (const titem of this.columnDefinitions) {
+			for (const titem of this.exportColumnDefinitions) {
 				if (item.getter === titem.id) {
 					grName = grName + titem.name + ',';
 					break;

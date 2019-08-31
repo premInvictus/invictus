@@ -35,6 +35,7 @@ export class MissingFeeinvReportComponent implements OnInit {
 	feeHeadJson: any[] = [];
 	groupColumns: any[] = [];
 	groupLength: any;
+	exportColumnDefinitions: any[] = [];
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -484,7 +485,12 @@ export class MissingFeeinvReportComponent implements OnInit {
 		return new DatePipe('en-in').transform(value, 'd-MMM-y');
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		return '<b class="total-footer-report">Total</b>';
+		if (totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
+		if (totals.group.level > 0) {
+			return '<b class="total-footer-report">Sub Total (' + totals.group.value + ') </b>';
+		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
@@ -931,7 +937,9 @@ export class MissingFeeinvReportComponent implements OnInit {
 		let reportType: any = '';
 		const columns: any[] = [];
 		const columValue: any[] = [];
-		for (const item of this.columnDefinitions) {
+		this.exportColumnDefinitions = [];
+		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+		for (const item of this.exportColumnDefinitions) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
@@ -958,7 +966,7 @@ export class MissingFeeinvReportComponent implements OnInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
-				for (const item2 of this.columnDefinitions) {
+				for (const item2 of this.exportColumnDefinitions) {
 					if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
 						|| item2.id === 'rpt_receipt_date') {
 						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
@@ -1034,8 +1042,8 @@ export class MissingFeeinvReportComponent implements OnInit {
 							cell.fill = {
 								type: 'pattern',
 								pattern: 'solid',
-								fgColor: { argb: 'dedede' },
-								bgColor: { argb: 'dedede' },
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
 							};
 							cell.border = {
 								top: { style: 'thin' },
@@ -1133,7 +1141,7 @@ export class MissingFeeinvReportComponent implements OnInit {
 					let indexPage = 0;
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportColumnDefinitions) {
 							if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
 								|| item2.id === 'rpt_receipt_date') {
 								obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
@@ -1145,26 +1153,31 @@ export class MissingFeeinvReportComponent implements OnInit {
 						}
 						worksheet.addRow(obj);
 						length++;
-						worksheet.getRow(length).fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						worksheet.getRow(length).border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						worksheet.getRow(length).font = {
-							name: 'Arial',
-							size: 10,
-						};
-						worksheet.getRow(length).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === length) {
+								row.eachCell((cell) => {
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
+									};
+									cell.font = {
+										name: 'Arial',
+										size: 10,
+									};
+									cell.alignment = { horizontal: 'center' };
+								});
+							}
+						});
 						indexPage++;
 					});
-					length++;
 				} else {
 					if (item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
 						this.checkGroupLevel(item, worksheet);
@@ -1246,7 +1259,7 @@ export class MissingFeeinvReportComponent implements OnInit {
 	}
 	checkGroupLevel(item, worksheet) {
 		worksheet.mergeCells('A' + (this.groupLength) + ':' +
-			this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+			this.alphabetJSON[this.exportColumnDefinitions.length] + (this.groupLength));
 		worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(item.title);
 		worksheet.getCell('A' + this.groupLength).fill = {
 			type: 'pattern',
@@ -1295,7 +1308,7 @@ export class MissingFeeinvReportComponent implements OnInit {
 					};
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportColumnDefinitions) {
 							if (item2.id === 'inv_invoice_date' || item2.id === 'adjustment_date'
 								|| item2.id === 'rpt_receipt_date') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
@@ -1306,24 +1319,24 @@ export class MissingFeeinvReportComponent implements OnInit {
 							}
 						}
 						worksheet.addRow(obj);
-						this.groupLength++;
-						worksheet.getRow(this.groupLength).fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						worksheet.getRow(this.groupLength).border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						worksheet.getRow(this.groupLength).font = {
-							name: 'Arial',
-							size: 10,
-						};
 						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === this.groupLength) {
+								row.eachCell(cell => {
+									cell.font = {
+										bold: true,
+										name: 'Arial',
+										size: 10
+									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
+								});
+							}
+						});
 					});
 				}
 				index++;
@@ -1333,7 +1346,7 @@ export class MissingFeeinvReportComponent implements OnInit {
 	getGroupColumns(columns) {
 		let grName = '';
 		for (const item of columns) {
-			for (const titem of this.columnDefinitions) {
+			for (const titem of this.exportColumnDefinitions) {
 				if (item.getter === titem.id) {
 					grName = grName + titem.name + ',';
 					break;
