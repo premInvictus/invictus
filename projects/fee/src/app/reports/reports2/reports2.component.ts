@@ -30,24 +30,24 @@ export class Reports2Component implements OnInit {
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
 		},
-		{
-			report_id: '3',
-			report_name: 'Fee Projection Report',
-			report_image: '/assets/images/Fee Reports/fee_projection.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
-		{
-			report_id: '4',
-			report_name: 'Fee Transaction Report',
-			report_image: '/assets/images/Fee Reports/fee_transaction.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
+		// {
+		// 	report_id: '3',
+		// 	report_name: 'Fee Projection Report',
+		// 	report_image: '/assets/images/Fee Reports/fee_projection.png',
+		// 	main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+		// 	report_main_image_class: '',
+		// 	report_middle_class: 'inline-flex',
+		// 	report_check_icon_class: ''
+		// },
+		// {
+		// 	report_id: '4',
+		// 	report_name: 'Fee Transaction Report',
+		// 	report_image: '/assets/images/Fee Reports/fee_transaction.png',
+		// 	main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+		// 	report_main_image_class: '',
+		// 	report_middle_class: 'inline-flex',
+		// 	report_check_icon_class: ''
+		// },
 		{
 			report_id: '5',
 			report_name: 'Fee Ledger Report',
@@ -122,24 +122,24 @@ export class Reports2Component implements OnInit {
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
 		},
-		{
-			report_id: '13',
-			report_name: 'Online Transaction Details',
-			report_image: '/assets/images/Fee Reports/online_transaction.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
-		{
-			report_id: '14',
-			report_name: 'Dynamic Report',
-			report_image: '/assets/images/Fee Reports/dynamics.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
+		// {
+		// 	report_id: '13',
+		// 	report_name: 'Online Transaction Details',
+		// 	report_image: '/assets/images/Fee Reports/online_transaction.png',
+		// 	main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+		// 	report_main_image_class: '',
+		// 	report_middle_class: 'inline-flex',
+		// 	report_check_icon_class: ''
+		// },
+		// {
+		// 	report_id: '14',
+		// 	report_name: 'Dynamic Report',
+		// 	report_image: '/assets/images/Fee Reports/dynamics.png',
+		// 	main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+		// 	report_main_image_class: '',
+		// 	report_middle_class: 'inline-flex',
+		// 	report_check_icon_class: ''
+		// },
 		{
 			report_id: '15',
 			report_name: 'Transport Report',
@@ -203,8 +203,8 @@ export class Reports2Component implements OnInit {
 			this.reportType = report_id;
 		}
 		this.previousIndex = findex;
-		setTimeout(() => this.reportFlag = false, 300);
-		setTimeout(() => this.accountFlag = true, 300);
+		setTimeout(() => this.reportFlag = false, 500);
+		setTimeout(() => this.accountFlag = true, 500);
 	}
 	switchReport() {
 		this.accountFlag = false;

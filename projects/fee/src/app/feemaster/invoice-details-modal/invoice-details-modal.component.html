@@ -77,7 +77,7 @@
                 <span class="font-size-16 font-regular"
                   *ngIf="!(modificationFlag)">{{invoiceDetails?.inv_invoice_date | date:'dd MMM, yyyy'}}</span>
                 <div class="inline-flex date-width-100" [hidden]="!modificationFlag">
-                  <input matInput [matDatepicker]="picker" formControlName="inv_invoice_date">
+                  <input matInput [matDatepicker]="picker" formControlName="inv_invoice_date" (dateChange)="changeDate($event)">
                   <mat-datepicker #picker></mat-datepicker>
                 </div>
                 <div class="inline-flex" [hidden]="!modificationFlag">
@@ -93,7 +93,7 @@
                   *ngIf="!(modificationFlag)">{{invoiceDetails?.inv_due_date | date:'dd MMM, yyyy'}}</span>
 
                 <div class="inline-flex date-width-100" [hidden]="!modificationFlag">
-                  <input matInput [matDatepicker]="picker1" formControlName="inv_due_date">
+                  <input matInput [matDatepicker]="picker1" formControlName="inv_due_date" (dateChange)="changeDueDate($event)">
                   <mat-datepicker #picker1></mat-datepicker>
                 </div>
                 <div class="inline-flex" [hidden]="!modificationFlag">

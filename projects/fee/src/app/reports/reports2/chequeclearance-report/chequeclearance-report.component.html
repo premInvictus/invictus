@@ -23,7 +23,7 @@
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>From Date</mat-label>
         <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
-        (blur)="getFromDate($event.target.value)" />
+          (blur)="getFromDate($event.target.value)" />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -32,7 +32,7 @@
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>To Date</mat-label>
         <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
-        (blur)="getToDate($event.target.value)" />
+          (blur)="getToDate($event.target.value)" />
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
         <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>
@@ -46,9 +46,11 @@
           sort
         </button>
         &nbsp;
-        <button class="btn-success text-uppercase" mat-raised-button
-          (click)="getChequeReport(reportFilterForm.value)">
+        <button class="btn-success text-uppercase" mat-raised-button (click)="getChequeReport(reportFilterForm.value)">
           generate
+        </button>
+        <button class="btn-danger text-uppercase" mat-raised-button (click)="resetValues()">
+          reset
         </button>
       </div>
     </div>
@@ -62,7 +64,7 @@
   </angular-slickgrid>
 </div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
-    <div class="text-center margin-top-20" style="margin-bottom:20px !important">
-        No Records Found
-    </div>
+  <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+    No Records Found
+  </div>
 </div>
