@@ -117,6 +117,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 	sessionArray: any;
 	session: any;
 	gridHeight: number;
+	exportColumnDefinitions: any;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -479,7 +480,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 			}];
 		this.feeService.getDeletedFeeTransactionReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.common.showSuccessErrorMessage(result.message, 'success');
+				this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 				repoArray = result.data.reportData;
 				this.totalRecords = Number(result.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -637,7 +638,12 @@ export class DeletedFeetransReportComponent implements OnInit {
 		return new DatePipe('en-in').transform(value, 'd-MMM-y');
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		return '<b class="total-footer-report">Total</b>';
+		if (totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
+		if (totals.group.level > 0) {
+			return '<b class="total-footer-report">Sub Total (' + totals.group.value + ') </b>';
+		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
@@ -834,12 +840,12 @@ export class DeletedFeetransReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr5: any[] = [];
 				for (const item2 of this.columnDefinitions) {
-						if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
-							|| item2.id === 'rpt_receipt_date') {
-							arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
-						} else {
-							arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
+					if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
+						|| item2.id === 'rpt_receipt_date') {
+						arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+					} else {
+						arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
+					}
 				}
 				rowData.push(arr5);
 			});
@@ -1158,7 +1164,9 @@ export class DeletedFeetransReportComponent implements OnInit {
 		let reportType: any = '';
 		const columns: any[] = [];
 		const columValue: any[] = [];
-		for (const item of this.columnDefinitions) {
+		this.exportColumnDefinitions = [];
+		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+		for (const item of this.exportColumnDefinitions) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
@@ -1186,12 +1194,12 @@ export class DeletedFeetransReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.columnDefinitions) {
-						if (item2.id === 'invoice_created_date' || item2.id === 'deleted_date'
-							|| item2.id === 'rpt_receipt_date') {
-							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
-						} else {
-							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
-						}
+					if (item2.id === 'invoice_created_date' || item2.id === 'deleted_date'
+						|| item2.id === 'rpt_receipt_date') {
+						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
+					} else {
+						obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
+					}
 				}
 				worksheet.addRow(obj);
 			});
@@ -1259,8 +1267,8 @@ export class DeletedFeetransReportComponent implements OnInit {
 							cell.fill = {
 								type: 'pattern',
 								pattern: 'solid',
-								fgColor: { argb: 'dedede' },
-								bgColor: { argb: 'dedede' },
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
 							};
 							cell.border = {
 								top: { style: 'thin' },
@@ -1370,23 +1378,29 @@ export class DeletedFeetransReportComponent implements OnInit {
 						}
 						worksheet.addRow(obj);
 						length++;
-						worksheet.getRow(length).fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						worksheet.getRow(length).border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						worksheet.getRow(length).font = {
-							name: 'Arial',
-							size: 10,
-						};
-						worksheet.getRow(length).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === length) {
+								row.eachCell((cell) => {
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
+									};
+									cell.font = {
+										name: 'Arial',
+										size: 10,
+									};
+									cell.alignment = { horizontal: 'center' };
+								});
+							}
+						});
 						indexPage++;
 					});
 					if (indexPage === item.rows.length) {
@@ -1622,23 +1636,29 @@ export class DeletedFeetransReportComponent implements OnInit {
 						}
 						worksheet.addRow(obj);
 						this.groupLength++;
-						worksheet.getRow(this.groupLength).fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						worksheet.getRow(this.groupLength).border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						worksheet.getRow(this.groupLength).font = {
-							name: 'Arial',
-							size: 10,
-						};
-						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === this.groupLength) {
+								row.eachCell((cell: any) => {
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
+									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
+									cell.font = {
+										name: 'Arial',
+										size: 10,
+									};
+									cell.alignment = { horizontal: 'center' };
+								});
+							}
+						});
 					});
 					const obj3: any = {};
 					obj3['id'] = '';

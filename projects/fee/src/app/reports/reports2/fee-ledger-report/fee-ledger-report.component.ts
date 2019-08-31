@@ -118,6 +118,7 @@ export class FeeLedgerReportComponent implements OnInit {
 	gridHeight: number;
 	groupColumns: any[] = [];
 	groupLength: any;
+	exportColumnDefinitions: any[];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -702,6 +703,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				}
 				this.tableFlag = true;
 				setTimeout(() => this.groupByClass(), 2);
+				this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 			} else {
 				this.tableFlag = false;
 			}
@@ -803,7 +805,12 @@ export class FeeLedgerReportComponent implements OnInit {
 		return new DatePipe('en-in').transform(value, 'd-MMM-y');
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		return '<b class="total-footer-report">Total</b>';
+		if (totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
+		if (totals.group.level > 0) {
+			return '<b class="total-footer-report">Sub Total (' + totals.group.value + ') </b>';
+		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
@@ -1349,7 +1356,9 @@ export class FeeLedgerReportComponent implements OnInit {
 		let reportType: any = '';
 		const columns: any[] = [];
 		const columValue: any[] = [];
-		for (const item of this.columnDefinitions) {
+		this.exportColumnDefinitions = [];
+		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+		for (const item of this.exportColumnDefinitions) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
@@ -1376,7 +1385,7 @@ export class FeeLedgerReportComponent implements OnInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
-				for (const item2 of this.columnDefinitions) {
+				for (const item2 of this.exportColumnDefinitions) {
 					if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
 						|| item2.id === 'rpt_receipt_date') {
 						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
@@ -1450,8 +1459,8 @@ export class FeeLedgerReportComponent implements OnInit {
 							cell.fill = {
 								type: 'pattern',
 								pattern: 'solid',
-								fgColor: { argb: 'dedede' },
-								bgColor: { argb: 'dedede' },
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
 							};
 							cell.border = {
 								top: { style: 'thin' },
@@ -1549,7 +1558,7 @@ export class FeeLedgerReportComponent implements OnInit {
 					let indexPage = 0;
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportColumnDefinitions) {
 							if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
 								|| item2.id === 'rpt_receipt_date') {
 								obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
@@ -1559,23 +1568,29 @@ export class FeeLedgerReportComponent implements OnInit {
 						}
 						worksheet.addRow(obj);
 						length++;
-						worksheet.getRow(length).fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						worksheet.getRow(length).border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						worksheet.getRow(length).font = {
-							name: 'Arial',
-							size: 10,
-						};
-						worksheet.getRow(length).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === length) {
+								row.eachCell((cell) => {
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
+									};
+									cell.font = {
+										name: 'Arial',
+										size: 10,
+									};
+									cell.alignment = { horizontal: 'center' };
+								});
+							}
+						});
 						indexPage++;
 					});
 					if (indexPage === item.rows.length) {
@@ -1796,7 +1811,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				} else {
 					this.groupLength = this.groupLength + index + 1;
 					worksheet.mergeCells('A' + (this.groupLength) + ':' +
-						this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+						this.alphabetJSON[this.exportColumnDefinitions.length] + (this.groupLength));
 					worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(groupItem.title);
 					worksheet.getCell('A' + this.groupLength).fill = {
 						type: 'pattern',
@@ -1817,7 +1832,7 @@ export class FeeLedgerReportComponent implements OnInit {
 					};
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportColumnDefinitions) {
 							if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
 								|| item2.id === 'rpt_receipt_date') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
@@ -1827,23 +1842,29 @@ export class FeeLedgerReportComponent implements OnInit {
 						}
 						worksheet.addRow(obj);
 						this.groupLength++;
-						worksheet.getRow(this.groupLength).fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						worksheet.getRow(this.groupLength).border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						worksheet.getRow(this.groupLength).font = {
-							name: 'Arial',
-							size: 10,
-						};
-						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === this.groupLength) {
+								row.eachCell((cell: any) => {
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
+									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
+									cell.font = {
+										name: 'Arial',
+										size: 10,
+									};
+									cell.alignment = { horizontal: 'center' };
+								});
+							}
+						});
 					});
 					const obj3: any = {};
 					obj3['id'] = 'footer';
@@ -1879,6 +1900,12 @@ export class FeeLedgerReportComponent implements OnInit {
 									bold: true,
 									name: 'Arial',
 									size: 10
+								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
 								};
 							});
 						}

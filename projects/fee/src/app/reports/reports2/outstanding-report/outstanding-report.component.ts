@@ -38,6 +38,7 @@ export class OutstandingReportComponent implements OnInit {
 	groupColumns: any[] = [];
 	groupLength: any;
 	feeHeadJSON: any[] = [];
+	exportColumnDefinitions: any[] = [];
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -325,7 +326,7 @@ export class OutstandingReportComponent implements OnInit {
 				};
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.message, 'success');
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -361,6 +362,7 @@ export class OutstandingReportComponent implements OnInit {
 											aggregateCollapsed: true,
 											collapsed: false
 										},
+										groupTotalsFormatter: this.srnTotalsFormatter
 									},
 									{
 										id: 'stu_full_name',
@@ -577,7 +579,7 @@ export class OutstandingReportComponent implements OnInit {
 				};
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.message, 'success');
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -990,7 +992,7 @@ export class OutstandingReportComponent implements OnInit {
 					}];
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.message, 'success');
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1209,7 +1211,7 @@ export class OutstandingReportComponent implements OnInit {
 					}];
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.message, 'success');
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1390,7 +1392,7 @@ export class OutstandingReportComponent implements OnInit {
 					}];
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.message, 'success');
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -1540,19 +1542,11 @@ export class OutstandingReportComponent implements OnInit {
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		if (totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>' && !totals.group.groups && totals.group.level === 0) {
+		if (totals.group.level === 0) {
 			return '<b class="total-footer-report">Total</b>';
 		}
-		if (totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>' && totals.group.groups) {
-			if (totals.group.level === 0) {
-				return '<b class="total-footer-report">Total</b>';
-			}
-		} else {
-			if (totals.group.groupingKey !== '<b>Grand Total</b>') {
-				return '<b class="total-footer-report">Sub Total</b>';
-			} else {
-				return '';
-			}
+		if (totals.group.level > 0) {
+			return '<b class="total-footer-report">Sub Total (' + totals.group.value + ') </b>';
 		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
@@ -2364,7 +2358,9 @@ export class OutstandingReportComponent implements OnInit {
 		let reportType: any = '';
 		const columns: any[] = [];
 		const columValue: any[] = [];
-		for (const item of this.columnDefinitions) {
+		this.exportColumnDefinitions = [];
+		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+		for (const item of this.exportColumnDefinitions) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
@@ -2408,7 +2404,7 @@ export class OutstandingReportComponent implements OnInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
-				for (const item2 of this.columnDefinitions) {
+				for (const item2 of this.exportColumnDefinitions) {
 					if (this.reportType !== 'mfr' && Number(key) < this.dataset.length - 1) {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
@@ -2498,8 +2494,8 @@ export class OutstandingReportComponent implements OnInit {
 							cell.fill = {
 								type: 'pattern',
 								pattern: 'solid',
-								fgColor: { argb: 'dedede' },
-								bgColor: { argb: 'dedede' },
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
 							};
 							cell.border = {
 								top: { style: 'thin' },
@@ -2597,7 +2593,7 @@ export class OutstandingReportComponent implements OnInit {
 					let indexPage = 0;
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportColumnDefinitions) {
 							if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 								obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 							}
@@ -2660,22 +2656,26 @@ export class OutstandingReportComponent implements OnInit {
 							obj3['total'] = item.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 							worksheet.addRow(obj3);
 							length++;
-							worksheet.getRow(length).alignment = { horizontal: 'center' };
 							worksheet.eachRow((row, rowNum) => {
 								if (rowNum === length) {
-									row.eachCell(cell => {
+									row.eachCell((cell) => {
+										cell.border = {
+											top: { style: 'thin' },
+											left: { style: 'thin' },
+											bottom: { style: 'thin' },
+											right: { style: 'thin' }
+										};
 										cell.fill = {
 											type: 'pattern',
 											pattern: 'solid',
-											fgColor: { argb: '004261' },
-											bgColor: { argb: '004261' },
+											fgColor: { argb: 'ffffff' },
+											bgColor: { argb: 'ffffff' },
 										};
 										cell.font = {
-											color: { argb: 'ffffff' },
-											bold: true,
 											name: 'Arial',
-											size: 10
+											size: 10,
 										};
+										cell.alignment = { horizontal: 'center' };
 									});
 								}
 							});
@@ -3092,7 +3092,7 @@ export class OutstandingReportComponent implements OnInit {
 	}
 	checkGroupLevel(item, worksheet) {
 		worksheet.mergeCells('A' + (this.groupLength) + ':' +
-			this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+			this.alphabetJSON[this.exportColumnDefinitions.length] + (this.groupLength));
 		worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(item.title);
 		worksheet.getCell('A' + this.groupLength).fill = {
 			type: 'pattern',
@@ -3120,7 +3120,7 @@ export class OutstandingReportComponent implements OnInit {
 				} else {
 					this.groupLength = this.groupLength + index + 1;
 					worksheet.mergeCells('A' + (this.groupLength) + ':' +
-						this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+						this.alphabetJSON[this.exportColumnDefinitions.length] + (this.groupLength));
 					worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(groupItem.title);
 					worksheet.getCell('A' + this.groupLength).fill = {
 						type: 'pattern',
@@ -3141,7 +3141,7 @@ export class OutstandingReportComponent implements OnInit {
 					};
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportColumnDefinitions) {
 							if (this.reportType !== 'mfr') {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 									obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
@@ -3167,23 +3167,29 @@ export class OutstandingReportComponent implements OnInit {
 						}
 						worksheet.addRow(obj);
 						this.groupLength++;
-						worksheet.getRow(this.groupLength).fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						worksheet.getRow(this.groupLength).border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						worksheet.getRow(this.groupLength).font = {
-							name: 'Arial',
-							size: 10,
-						};
-						worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === this.groupLength) {
+								row.eachCell((cell: any) => {
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
+									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
+									cell.font = {
+										name: 'Arial',
+										size: 10,
+									};
+									cell.alignment = { horizontal: 'center' };
+								});
+							}
+						});
 					});
 					if (this.reportType === 'headwise') {
 						const obj3: any = {};
@@ -3218,6 +3224,12 @@ export class OutstandingReportComponent implements OnInit {
 										bold: true,
 										name: 'Arial',
 										size: 10
+									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
 									};
 								});
 							}
@@ -3260,6 +3272,12 @@ export class OutstandingReportComponent implements OnInit {
 										name: 'Arial',
 										size: 10
 									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
 								});
 							}
 						});
@@ -3283,6 +3301,12 @@ export class OutstandingReportComponent implements OnInit {
 										bold: true,
 										name: 'Arial',
 										size: 10
+									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
 									};
 								});
 							}
@@ -3311,6 +3335,12 @@ export class OutstandingReportComponent implements OnInit {
 										bold: true,
 										name: 'Arial',
 										size: 10
+									};
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
 									};
 								});
 							}
