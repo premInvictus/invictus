@@ -37,6 +37,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 	groupLength: any;
 	session: any = {};
 	columnDefinitions1: Column[] = [];
+	exportColumnDefinitions: any[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
 	gridOptions2: GridOption;
@@ -313,6 +314,15 @@ export class ChequeclearanceReportComponent implements OnInit {
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
 				width: 80,
+				grouping: {
+					getter: 'stu_admission_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
 				groupTotalsFormatter: this.srnTotalsFormatter
 			},
 			{
@@ -650,7 +660,12 @@ export class ChequeclearanceReportComponent implements OnInit {
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		return '<b class="total-footer-report">Total</b>';
+		if (totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
+		if (totals.group.level > 0) {
+			return '<b class="total-footer-report">Sub Total (' + totals.group.value + ') </b>';
+		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
@@ -825,13 +840,11 @@ export class ChequeclearanceReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr5: any[] = [];
 				for (const item2 of this.columnDefinitions) {
-					if (Number(key) < this.dataset.length - 1) {
-						if (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
-							|| item2.id === 'deposite_date') {
-							arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
-						} else {
-							arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
+					if ((item2.id === 'cheque_date' || item2.id === 'dishonor_date'
+						|| item2.id === 'deposite_date') && this.dataset[key][item2.id] !== '-') {
+						arr5.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+					} else {
+						arr5.push(this.common.htmlToText(this.dataset[key][item2.id]));
 					}
 				}
 				rowData.push(arr5);
@@ -871,8 +884,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 					Object.keys(item.rows).forEach(key => {
 						const arr6: any[] = [];
 						for (const item2 of this.columnDefinitions) {
-							if (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
-								|| item2.id === 'deposite_date') {
+							if ((item2.id === 'cheque_date' || item2.id === 'dishonor_date'
+								|| item2.id === 'deposite_date') && item.rows[key][item2.id] !== '-') {
 								arr6.push(new DatePipe('en-in').transform((item.rows[key][item2.id])));
 							} else {
 								arr6.push(this.common.htmlToText(item.rows[key][item2.id]));
@@ -1172,11 +1185,29 @@ export class ChequeclearanceReportComponent implements OnInit {
 			}
 		});
 	}
+	resetValues() {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': '',
+			'from_date': '',
+			'to_date': '',
+			'fee_value': '',
+			'hidden_value': '',
+			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
+		});
+		this.sortResult = [];
+		this.filterResult = [];
+	}
 	exportToExcel(json: any[], excelFileName: string) {
 		let reportType: any = '';
 		const columns: any[] = [];
 		const columValue: any[] = [];
-		for (const item of this.columnDefinitions) {
+		this.exportColumnDefinitions = [];
+		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+		for (const item of this.exportColumnDefinitions) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
@@ -1203,9 +1234,9 @@ export class ChequeclearanceReportComponent implements OnInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
-				for (const item2 of this.columnDefinitions) {
-					if (item2.id === 'cheque_date' || item2.id === 'deposite_date'
-						|| item2.id === 'dishonor_date') {
+				for (const item2 of this.exportColumnDefinitions) {
+					if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+						|| item2.id === 'dishonor_date') && json[key][item2.id] !== '-') {
 						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
 					} else {
 						obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
@@ -1277,8 +1308,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 							cell.fill = {
 								type: 'pattern',
 								pattern: 'solid',
-								fgColor: { argb: 'dedede' },
-								bgColor: { argb: 'dedede' },
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
 							};
 							cell.border = {
 								top: { style: 'thin' },
@@ -1376,35 +1407,40 @@ export class ChequeclearanceReportComponent implements OnInit {
 					let indexPage = 0;
 					Object.keys(item.rows).forEach(key => {
 						obj = {};
-						for (const item2 of this.columnDefinitions) {
-							if (Number(key) < this.dataset.length - 1) {
-								if (item2.id === 'cheque_date' || item2.id === 'deposite_date'
-									|| item2.id === 'dishonor_date') {
-									obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
-								} else {
-									obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
-								}
+						for (const item2 of this.exportColumnDefinitions) {
+							if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+								|| item2.id === 'dishonor_date') && item.rows[key][item2.id] !== '-') {
+								obj[item2.id] = new DatePipe('en-in').transform((item.rows[key][item2.id]));
+							} else {
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(item.rows[key][item2.id]));
 							}
+
 						}
 						worksheet.addRow(obj);
 						length++;
-						worksheet.getRow(length).fill = {
-							type: 'pattern',
-							pattern: 'solid',
-							fgColor: { argb: 'ffffff' },
-							bgColor: { argb: 'ffffff' },
-						};
-						worksheet.getRow(length).border = {
-							top: { style: 'thin' },
-							left: { style: 'thin' },
-							bottom: { style: 'thin' },
-							right: { style: 'thin' }
-						};
-						worksheet.getRow(length).font = {
-							name: 'Arial',
-							size: 10,
-						};
-						worksheet.getRow(length).alignment = { horizontal: 'center' };
+						worksheet.eachRow((row, rowNum) => {
+							if (rowNum === length) {
+								row.eachCell((cell) => {
+									cell.border = {
+										top: { style: 'thin' },
+										left: { style: 'thin' },
+										bottom: { style: 'thin' },
+										right: { style: 'thin' }
+									};
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
+									};
+									cell.font = {
+										name: 'Arial',
+										size: 10,
+									};
+									cell.alignment = { horizontal: 'center' };
+								});
+							}
+						});
 						indexPage++;
 					});
 					if (indexPage === item.rows.length) {
@@ -1472,7 +1508,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 		obj3['invoice_no'] = '';
 		obj3['receipt_no'] = '';
 		obj3['receipt_id'] = '';
-		obj3['receipt_amount'] = (this.dataset.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0)) / 2;
+		obj3['receipt_amount'] = (this.dataset.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0));
 		obj3['bank_name'] = '';
 		obj3['status'] = '';
 		obj3['fcc_reason_id'] = '';
@@ -1585,7 +1621,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 	}
 	checkGroupLevel(item, worksheet) {
 		worksheet.mergeCells('A' + (this.groupLength) + ':' +
-			this.alphabetJSON[this.columnDefinitions.length] + (this.groupLength));
+			this.alphabetJSON[this.exportColumnDefinitions.length] + (this.groupLength));
 		worksheet.getCell('A' + this.groupLength).value = this.common.htmlToText(item.title);
 		worksheet.getCell('A' + this.groupLength).fill = {
 			type: 'pattern',
@@ -1635,8 +1671,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
 						for (const item2 of this.columnDefinitions) {
-							if (item2.id === 'cheque_date' || item2.id === 'deposite_date'
-								|| item2.id === 'dishonor_date') {
+							if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+								|| item2.id === 'dishonor_date') && groupItem.rows[key][item2.id] !== '-') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
 								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
@@ -1682,15 +1718,26 @@ export class ChequeclearanceReportComponent implements OnInit {
 					obj3['fcc_remarks'] = '';
 					worksheet.addRow(obj3);
 					this.groupLength++;
-					worksheet.getRow(this.groupLength).alignment = { horizontal: 'center' };
 					worksheet.eachRow((row, rowNum) => {
 						if (rowNum === this.groupLength) {
-							row.eachCell(cell => {
-								cell.font = {
-									bold: true,
-									name: 'Arial',
-									size: 10
+							row.eachCell((cell: any) => {
+								cell.fill = {
+									type: 'pattern',
+									pattern: 'solid',
+									fgColor: { argb: 'ffffff' },
+									bgColor: { argb: 'ffffff' },
 								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+								cell.font = {
+									name: 'Arial',
+									size: 10,
+								};
+								cell.alignment = { horizontal: 'center' };
 							});
 						}
 					});
