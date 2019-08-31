@@ -5,13 +5,13 @@ import { ReportsRoutingModule } from './reports-routing.module';
 import { MarksRegisterComponent } from './marks-register/marks-register.component';
 import { PerformanceReportsComponent } from './performance-reports/performance-reports.component';
 import { RecordAssessmentsComponent } from './record-assessments/record-assessments.component';
-import { ExamSharedAppModule } from '../app.module';
+import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     ReportsRoutingModule,
-    ExamSharedAppModule
+    ExamSharedModule
   ],
   declarations: [MarksRegisterComponent, PerformanceReportsComponent, RecordAssessmentsComponent]
 })

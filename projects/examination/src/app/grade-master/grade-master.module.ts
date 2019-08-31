@@ -6,13 +6,13 @@ import { StudentAcademicProfileComponent } from './student-academic-profile/stud
 import { MarksEntryComponent } from './marks-entry/marks-entry.component';
 import { RemarksEntryComponent } from './remarks-entry/remarks-entry.component';
 import { ReviewComponent } from './review/review.component';
-import { ExamSharedAppModule } from '../app.module';
+import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     GradeMasterRoutingModule,
-    ExamSharedAppModule
+    ExamSharedModule
   ],
   declarations: [StudentAcademicProfileComponent, MarksEntryComponent, RemarksEntryComponent, ReviewComponent]
 })

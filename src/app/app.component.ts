@@ -31,7 +31,6 @@ export class AppComponent implements OnInit {
 		this.router.events.subscribe((event: Event) => {
 			switch (true) {
 				case event instanceof NavigationStart: {
-					this.loaderService.startLoading();
 					this.showLoadingFlag = true;
 					break;
 				}
@@ -39,7 +38,6 @@ export class AppComponent implements OnInit {
 				case event instanceof NavigationEnd:
 				case event instanceof NavigationCancel:
 				case event instanceof NavigationError: {
-					this.loaderService.stopLoading();
 					this.showLoadingFlag = false;
 					break;
 				}

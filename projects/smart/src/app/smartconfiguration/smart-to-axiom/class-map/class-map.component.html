@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-4" *ngIf="classflag">
+    <form [formGroup]="classForm">
+      <ng-container formArrayName="classFromArray">
+        <ng-container *ngFor="let item of classFormArray.controls; let i = index" [formGroupName]="i">
+          <div class="row">
+            <div class="col-4 align-hcenter">
+              {{item.value.gclass_name}}
+            </div>
+            <div class="col-8">
+              <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                <mat-label>Class</mat-label>
+                <mat-select formControlName="class_id" multiple>
+                  <mat-option *ngFor="let item1 of cArray" [value]="item1.class_id">{{item1.class_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </form>
+    <div class="row margin-top-20">
+      <div class="col-12 text-center">
+        <button mat-raised-button class="btn-success-green" (click)="submitClass()">Submit</button>
+        <button mat-raised-button class="btn-reset margin-left-10" (click)="cancelForm()">cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -439,6 +439,14 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getClassData', value);
 	}
+	getSmartToAxiom(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSmartToAxiom', value);
+	}
+	addSmartToAxiom(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/addSmartToAxiom', value);
+	}
 
 }
 
