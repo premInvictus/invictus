@@ -59,6 +59,26 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertRollNo', value);
 	}
+	updateRollNo(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateRollNo', value);
+	}
+	getRollNoUser(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getRollNoUser', value);
+	}
+	checkRollNoForClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/checkRollNoForClass', value);
+	}
+	getAdditionalSubjectUser(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getAdditionalSubjectUser', value);
+	}
+	insertAdditionalSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertAdditionalSubject', value);
+	}
 }
 
 
