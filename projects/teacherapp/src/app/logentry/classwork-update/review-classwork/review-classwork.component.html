@@ -1,0 +1,54 @@
+<div class="modal-custom-cotainer">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Review Classwork</span><span
+          class="float-right margin-top-5"><i (click)="closemodal()"
+            class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-borderd table-stripped custom-table">
+        <thead class="table-skill__head text-center">
+          <tr class="custom-tr">
+            <th class="custom-th" width="8%">Period</th>
+            <th class="custom-th" width="8%">Subject</th>
+            <th class="custom-th" width="8%">Category</th>
+            <th class="custom-th" width="8%">Class</th>
+            <th class="custom-th" width="15%">Topic</th>
+            <th class="custom-th" width="15%">Subtopic</th>
+            <th class="custom-th" width="30%">Assignment</th>
+            <th class="custom-th" width="8%">Attachment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="custom-tr" *ngFor="let item of reviewArray">
+            <td class="custom-td">{{item.period}}{{periodSup[item.period-1]}}</td>
+            <td class="custom-td" *ngIf="item.subjectName">{{item.subjectName | capitalize}}</td>
+            <td class="custom-td" *ngIf="!item.subjectName">-</td>
+            <td class="custom-td">{{item.categoryName | capitalize}}</td>
+            <td class="custom-td" *ngIf="item.className">{{item.className | capitalize}}</td>
+            <td class="custom-td" *ngIf="!item.className">-</td>
+            <td class="custom-td" *ngIf="item.topicName">{{item.topicName | capitalize}}</td>
+            <td class="custom-td" *ngIf="!item.topicName">-</td>
+            <td class="custom-td" *ngIf="item.subtopicName">{{item.subtopicName | capitalize}}</td>
+            <td class="custom-td" *ngIf="!item.subtopicName">-</td>
+            <td class="custom-td text-left" *ngIf="item.assignment"><div [innerHtml]="item.assignment | capitalize | truncatetext:100"></div></td>
+            <td class="custom-td text-left" *ngIf="!item.assignment">-</td>
+            <td class="custom-td text-center"><button mat-mini-fab class="btn-blue"><span
+                  class="font-white font-size-16">{{item.attachments}}</span></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row margin-top-20">
+    <div class="col-12 text-center">
+      <button mat-raised-button class="btn-success-green" (click)="submitClasswork()">Submit</button>
+      <button mat-raised-button class="btn-reset margin-left-10" (click)="closemodal()">cancel</button>
+    </div>
+  </div>
+</div>

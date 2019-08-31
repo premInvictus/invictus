@@ -1,0 +1,49 @@
+<div class="modal-custom-cotainer">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Topicwise Update</span><span
+          class="float-right margin-top-5"><i (click)="closeDialog()"
+            class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="row margin-top-20">
+    <div class="col-12 text-center">
+      <span class="font-size-24 font-light"> Do you wish to </span><span class="font-size-24 font-bold">Save Changes
+        ?</span><br>
+      <span class="font-size-20 font-light"> Please Enter Date of Completion </span>
+    </div>
+  </div>
+  <div class="row margin-top-20" *ngIf="step1Flag">
+    <div class="col-12 text-center">
+      <button mat-raised-button class="btn-success-green" (click)="goToNext()">Yes</button>
+      <button mat-raised-button class="btn-reset margin-left-10" (click)="closeDialog()">No</button>
+    </div>
+  </div>
+  <div class="row margin-top-20" *ngIf="step2Flag">
+    <div class="col-12 text-center">
+      <mat-form-field class="form-field-220" appearance="outline">
+        <mat-label>Entry Date</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="tw_entry_date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row margin-top-20" *ngIf="step3Flag">
+    <div class="col-12 text-center">
+      <!-- <ckeditor [config]="ckeConfig" [(ngModel)]="mod_review_remark"></ckeditor> -->
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Reason</mat-label>
+        <textarea rows="6" matInput [(ngModel)]="mod_review_remark" required></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row margin-top-20" *ngIf="step2Flag || step3Flag">
+    <div class="col-12 text-center">
+      <button mat-raised-button class="btn-success-green" (click)="submitUpdate()">Submit</button>
+      <button mat-raised-button class="btn-reset margin-left-10" (click)="closeDialog()">cancel</button>
+    </div>
+  </div>
+</div>
