@@ -6,9 +6,9 @@
           <div class="top-card-title">
             <span class="font-size-24 font-medium">Additional Subject</span>
           </div>
-        </div>
+        </div> 
         <div class="col-6 text-right">
-          <form [formGroup]="firstForm" novalidate>
+          <form [formGroup]="firstForm" >
             <div class="top-card-title-form">
               <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
                 appearance="outline">
@@ -66,8 +66,8 @@
         <ng-container matColumnDef="subjects">
           <th mat-header-cell *matHeaderCellDef style="width:20%"> Subjects </th>
           <td mat-cell *matCellDef="let element">
-            <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
-              <mat-form-field class="form-field" appearance="outline">
+            <form *ngIf="formgroupArray.length > 0" [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
+              <mat-form-field class="form-field" appearance="outline" style="padding:0.5em;padding-bottom: 0em">
                 <mat-label>Subject</mat-label>
                 <mat-select formControlName="subjects" multiple>
                   <mat-option *ngFor="let item of element.subjects" [value]="item.sub_id">{{item.sub_name}}</mat-option>
