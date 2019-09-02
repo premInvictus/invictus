@@ -79,6 +79,14 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertAdditionalSubject', value);
 	}
+	updateAdditionalSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateAdditionalSubject', value);
+	}
+	checkAdditionalSubjectForClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/checkAdditionalSubjectForClass', value);
+	}
 }
 
 

@@ -53,6 +53,7 @@ export class AdditionalSubjectComponent implements OnInit {
 	}
 	//  Get Class List function
 	getClass() {
+		this.datareset();
 		this.sectionArray = [];
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
@@ -80,6 +81,7 @@ export class AdditionalSubjectComponent implements OnInit {
 	}
 	// get section list according to selected class
 	getSectionsByClass() {
+		this.datareset();
 		this.firstForm.patchValue({
 			'syl_section_id': ''
 		});
@@ -96,9 +98,17 @@ export class AdditionalSubjectComponent implements OnInit {
 				}
 			);
 	}
+	datareset() {
+		this.formgroupArray = [];
+		this.ELEMENT_DATA = [];
+		this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+		this.defaultFlag = false;
+		this.finalDivFlag = true;
+	}
 	finalCancel() {
 		this.formgroupArray = [];
 		this.ELEMENT_DATA = [];
+		this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 		this.defaultFlag = false;
 		this.finalDivFlag = true;
 		this.firstForm.patchValue({
@@ -109,6 +119,8 @@ export class AdditionalSubjectComponent implements OnInit {
 	fetchDetails() {
 		this.formgroupArray = [];
 		this.ELEMENT_DATA = [];
+		this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+		this.studentArray = [];
 		this.getSubjectsByClass();
 		const studentParam: any = {};
 		studentParam.au_class_id = this.firstForm.value.syl_class_id;
@@ -131,23 +143,34 @@ export class AdditionalSubjectComponent implements OnInit {
 								au_roll_no: item.r_rollno,
 								subjects: this.subjectArray,
 							});
-							counter++;
+							const subject_id = item.a_subject_id ? item.a_subject_id.replace(/\s/g, '').split(',') : [];
 							this.formgroupArray.push({
 								formGroup: this.fbuild.group({
-									class_id: this.firstForm.value.syl_class_id,
-									sec_id: this.firstForm.value.syl_section_id,
-									login_id: item.au_login_id,
-									roll_no: item.r_rollno,
-									subjects: item.a_subject_id,
-									session_id: this.session.ses_id,
-									created_by: this.currentUser.login_id
-
+									class_id: '',
+									sec_id: '',
+									login_id: '',
+									roll_no: '',
+									subjects: '',
+									session_id: '',
+									created_by: ''
 								})
 							});
+							this.formgroupArray[counter - 1].formGroup.patchValue({
+								class_id: this.firstForm.value.syl_class_id ? this.firstForm.value.syl_class_id : '',
+								sec_id: this.firstForm.value.syl_section_id ? this.firstForm.value.syl_section_id : '',
+								login_id: item.au_login_id ? item.au_login_id : '',
+								roll_no: item.r_rollno ? item.r_rollno : '',
+								subjects: subject_id,
+								session_id: this.session.ses_id ? this.session.ses_id : '',
+								created_by: this.currentUser.login_id ? this.currentUser.login_id : ''
+							});
+							counter++;
 						}
 						this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 					} else {
 						this.studentArray = [];
+						this.ELEMENT_DATA = [];
+						this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 					}
 				}
 			);
@@ -158,43 +181,31 @@ export class AdditionalSubjectComponent implements OnInit {
 			this.finalArray.push(item.formGroup.value);
 		}
 		console.log(this.finalArray);
-		// const checkParam: any = {};
-		// checkParam.au_class_id = this.firstForm.value.syl_class_id;
-		// checkParam.au_sec_id = this.firstForm.value.syl_section_id;
-		// checkParam.au_ses_id = this.session.ses_id;
-
-		this.examService.insertAdditionalSubject(this.finalArray).subscribe((result: any) => {
+		const checkParam: any = {};
+		checkParam.au_class_id = this.firstForm.value.syl_class_id;
+		checkParam.au_sec_id = this.firstForm.value.syl_section_id;
+		checkParam.au_ses_id = this.session.ses_id;
+		this.examService.checkAdditionalSubjectForClass(checkParam).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-        this.commonService.showSuccessErrorMessage('Roll No. Inserted Successfully', 'success');
+				this.examService.updateAdditionalSubject(this.finalArray).subscribe((result_u: any) => {
+					if (result_u && result_u.status === 'ok') {
+						this.finalCancel();
+						this.commonService.showSuccessErrorMessage('Additional Subject Updated Successfully', 'success');
+					} else {
+						this.commonService.showSuccessErrorMessage('Update failed', 'error');
+					}
+				});
+			} else {
+				this.examService.insertAdditionalSubject(this.finalArray).subscribe((result_i: any) => {
+					if (result_i && result_i.status === 'ok') {
+						this.finalCancel();
+						this.commonService.showSuccessErrorMessage('Additional Subject Inserted Successfully', 'success');
+					} else {
+						this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+					}
+				});
 			}
 		});
-
-
-
-
-
-
-		// this.examService.checkRollNoForClass(checkParam).subscribe((result: any) => {
-		// 	if (result && result.status === 'ok') {
-		// 		this.examService.updateRollNo(this.finalArray).subscribe((result_u: any) => {
-		// 			if (result_u && result_u.status === 'ok') {
-		// 				this.finalCancel();
-		// 				this.commonService.showSuccessErrorMessage('Roll No. Updated Successfully', 'success');
-		// 			} else {
-		// 				this.commonService.showSuccessErrorMessage('Update failed', 'error');
-		// 			}
-		// 		});
-		// 	} else {
-		// 		this.examService.insertRollNo(this.finalArray).subscribe((result_i: any) => {
-		// 			if (result_i && result_i.status === 'ok') {
-		// 				this.finalCancel();
-		// 				this.commonService.showSuccessErrorMessage('Roll No. Inserted Successfully', 'success');
-		// 			} else {
-		// 				this.commonService.showSuccessErrorMessage('Insert failed', 'error');
-		// 			}
-		// 		});
-		// 	}
-		// });
 	}
 
 }
