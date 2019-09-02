@@ -61,12 +61,12 @@ export class AxiomService {
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/users/getAllTeacher', param);
 	}
-	/* // updated with global config
+	// updated with global config
 	getSubject() {
 		this.service.startLoading();
 		return this.http.get(environment.apiAxiomUrl + '/setup/subject/1');
 
-	} */
+	}
 
 	getClass(param) {
 		this.service.startLoading();
