@@ -1,0 +1,109 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Sub-Exam Configuration</span>
+          </div>
+        </div>
+        <div class="col-6 text-right">
+
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <mat-card class="card-height-850-lp card-height-960">
+      <div class="row">
+        <div class="col-2 col-ver-line-divider">
+          <form [formGroup]="subExamForm" novalidate>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Sub Exam Name</mat-label>
+                  <input matInput placeholder="Sub Exam Name" type="text" formControlName="sexam_name" required>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Description</mat-label>
+                  <textarea placeholder="Description" required formControlName="sexam_desc" matInput
+                    rows="4"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding text-center">
+                <button mat-raised-button class="btn-add" (click)="submit()">Add</button>
+                <button *ngIf="syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
+                  (click)="updateSyllabussList()">Update</button>
+                <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-10">
+          <div class="row">
+            <div class="col-12 remove-col-padding">
+              <table mat-table #table [dataSource]="configDataSource" matSort class="table-100 text-center">
+              
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Sub Exam Name
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.name }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sexam_desc">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                   Description
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.sexam_desc }}
+                  </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Status
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    <mat-slide-toggle class="inline-form-radio-spacing" [checked]="getActiveStatus(item.status)"
+                      aria-hidden="true" (click)="toggleStatus(item.status)"></mat-slide-toggle>
+                  </td>
+                  >
+                </ng-container>
+                
+                <ng-container matColumnDef="modify">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Action
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
+                      aria-hidden="true" (click)="formEdit(item.action)"></i>
+                    <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
+                      matTooltip="Delete" aria-hidden="true"
+                      (click)="openDeleteDialog({data : item.action, type: configValue})"></i>
+                  </td>
+                </ng-container>
+                <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns">
+                </tr>
+                >
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

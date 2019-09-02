@@ -32,12 +32,18 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/insertExam', value);
 	}
-
 	insertSubExam(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/insertSubExam', value);
 	}
-
+	getSubExam(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getSubExam', value);
+	}
+	updateSubExamStatus(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/updateSubExamStatus', value);
+	}
 	insertExamGradeSetup(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/insertExamGradeSet', value);
