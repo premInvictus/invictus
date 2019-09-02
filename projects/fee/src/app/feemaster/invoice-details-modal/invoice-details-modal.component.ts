@@ -80,7 +80,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		});
 	}
 	closemodal(status = '1'): void {
-		this.dialogRef.close({status: status});
+		this.dialogRef.close({ status: status });
 	}
 	// modifyInvoice() {
 	// 	this.modificationFlag = true;
@@ -182,16 +182,17 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		adj.inv_invoice_date = new DatePipe('en-in').transform(this.modifyInvoiceForm.value.inv_invoice_date, 'yyyy-MM-dd');
 		adj.inv_due_date = new DatePipe('en-in').transform(this.modifyInvoiceForm.value.inv_due_date, 'yyyy-MM-dd');
 		console.log('menus', this.commonAPIService.menus);
-		// this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')
+		// this.commonAPIService.isExistUserAccessMenu('358') Bulk Update
+		// this.commonAPIService.isExistUserAccessMenu('365') Individual Update
 		console.log('adj--', adj);
-		if ((this.commonAPIService.isExistUserAccessMenu('365')) && this.adjRemark) {
+		if ((this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')) && this.adjRemark) {
 			this.feeService.invoiceAdjustmentRemark(adj).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.closemodal();
 				}
 			});
-		} else if (this.commonAPIService.isExistUserAccessMenu('374')) {
+		} else if (this.commonAPIService.isExistUserAccessMenu('409')) {  // when both are unchecked 
 			const param: any = {};
 			const params: any[] = [];
 			const datalist: any[] = [];
