@@ -1,3 +1,14 @@
 table {
     width: 100%;
 }
+/* .mat-form-field-wrapper{
+    padding-left: 1em !important;
+    padding-right: 1em !important;
+}
+.mat-form-field-appearance-outline .mat-form-field-wrapper{
+    margin: 0em 0em !important;
+    padding: 1em !important;
+}  */
+.mat-form-field-wrapper {
+    padding-bottom: 0em !important;
+}
