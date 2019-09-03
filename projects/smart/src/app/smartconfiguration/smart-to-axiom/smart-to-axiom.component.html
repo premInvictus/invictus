@@ -1,38 +1,71 @@
-<div class="row margin-top-0">
-  <div class="col-12 ">
-    <mat-card class="remove-card-padding">
-      <div class="row">
-        <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
-          <div class="mt-4 ml-2">
-            <span class="font-size-24 font-medium">Mapping</span>
-          </div>
-        </div>
-      </div>
-    </mat-card>
-  </div>
+<div class="row remove-top-margin">
+    <div class="col-12 ">
+        <mat-card class="remove-card-padding">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                    <div class="mt-4 ml-2">
+                        <span class="font-size-24 font-medium">SMART AXIOM Mapping</span>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </div>
 </div>
 
 <div class="row ">
-  <div class="col-12">
-    <mat-card>
-      <div class="row margin-top-10">
-        <div class="col-12">
-            <mat-tab-group>
-                <mat-tab label="Class"> 
-                  <app-class-map></app-class-map>
-                </mat-tab>
-                <mat-tab label="Subjects">
-                    <app-subjects-map></app-subjects-map>
-                </mat-tab>
-                <mat-tab label="Topic">
-                    <app-topic-map></app-topic-map>
-                </mat-tab>
-                <mat-tab label="Sub Topic">
-                    <app-subtopic-map></app-subtopic-map>
-                </mat-tab>
-              </mat-tab-group>
-        </div>
-      </div>
-    </mat-card>
-  </div>
+    <div class="col-12">
+        <mat-card>
+            <form [formGroup]="paramform">
+                <div class="row margin-top-10">
+                    <div class="col-6">
+                        <mat-tab-group (selectedIndexChange)="selected.setValue($event)" [selectedIndex]="selected.value">
+                            <mat-tab label="Class">
+                                <app-class-map></app-class-map>
+                            </mat-tab>
+                            <mat-tab label="Subjects">
+                                <app-subjects-map></app-subjects-map>
+                            </mat-tab>
+                            <mat-tab label="Topic">
+                                <app-topic-map></app-topic-map>
+                            </mat-tab>
+                            <mat-tab label="Sub Topic">
+                                <app-subtopic-map></app-subtopic-map>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                    <div class="col-6">
+                        <div class="row text-right">
+                            <div class="col-4" *ngIf="selected.value == 2 || selected.value == 3">
+                                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                                    <mat-label>Class</mat-label>
+                                    <mat-select formControlName="class_id" (selectionChange)="getGSub()">
+                                        <mat-option *ngFor="let item1 of gcArray" [value]="item1.class_id">{{item1.class_name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4" *ngIf="selected.value == 2 || selected.value == 3">
+                                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                                    <mat-label>Subject</mat-label>
+                                    <mat-select formControlName="class_id">
+                                        <mat-option *ngFor="let item1 of gsArray" [value]="item1.sub_id">{{item1.sub_name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4" *ngIf="selected.value == 3">
+                                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                                    <mat-label>Topic</mat-label>
+                                    <mat-select formControlName="class_id">
+                                        <mat-option *ngFor="let item1 of gtArray" [value]="item1.topic_id">{{item1.topic_name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </mat-card>
+    </div>
 </div>

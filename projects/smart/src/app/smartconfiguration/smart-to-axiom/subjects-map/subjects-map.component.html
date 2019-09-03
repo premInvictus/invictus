@@ -1,3 +1,30 @@
-<p>
-  subjects-map works!
-</p>
+<div class="row">
+    <div class="col-8" *ngIf="subflag">
+        <form [formGroup]="subForm">
+            <ng-container formArrayName="subFromArray">
+                <ng-container *ngFor="let item of subFormArray.controls; let i = index" [formGroupName]="i">
+                    <div class="row">
+                        <div class="col-4 align-hcenter smartTextName">
+                            {{item.value.gsub_name}}
+                        </div>
+                        <div class="col-8">
+                            <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                                <mat-label>Subject</mat-label>
+                                <mat-select formControlName="sub_id" multiple>
+                                    <mat-option *ngFor="let item1 of sArray" [value]="item1.sub_id">{{item1.sub_name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </form>
+        <div class="row margin-top-20">
+            <div class="col-12 text-center">
+                <button mat-raised-button class="btn-success-green" (click)="submitsub()">Submit</button>
+                <button mat-raised-button class="btn-reset margin-left-10" (click)="cancelForm()">cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
