@@ -1,3 +1,33 @@
-<p>
-  topic-map works!
-</p>
+<div class="row">
+    <div class="col-8" *ngIf="topicflag">
+        <form [formGroup]="topicForm">
+            <ng-container formArrayName="topicFromArray">
+                <ng-container *ngFor="let item of topicFormArray.controls; let i = index" [formGroupName]="i">
+                    <div class="row">
+                        <div class="col-4 align-hcenter smartTextName">
+                            {{item.value.gtopic_name}}
+                        </div>
+                        <div class="col-8">
+                            <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                                <mat-label>Topic</mat-label>
+                                <mat-select formControlName="topic_id" multiple>
+                                    <mat-option *ngFor="let item1 of tArray" [value]="item1.topic_id">{{item1.topic_name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </form>
+        <div class="row margin-top-20">
+            <div class="col-12 text-center">
+                <button mat-raised-button class="btn-success-green" (click)="submitsub()">Submit</button>
+                <button mat-raised-button class="btn-reset margin-left-10" (click)="cancelForm()">cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 text-right" *ngIf="!topicflag">
+        <app-no-data [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" [noDataText]="" [subText]="'Please select class and subject'"></app-no-data>
+    </div>
+</div>
