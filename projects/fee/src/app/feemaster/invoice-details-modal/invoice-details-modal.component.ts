@@ -80,12 +80,34 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		});
 	}
 	closemodal(status = '1'): void {
-		this.dialogRef.close({status: status});
+		this.dialogRef.close({ status: status });
 	}
 	// modifyInvoice() {
 	// 	this.modificationFlag = true;
 	// 	this.checkChangedFieldsArray = [];
 	// }
+	changeDate(event) {
+		console.log(event.target.value);
+		this.checkChangedFieldsArray.push({
+			rff_where_id: 'inv_id',
+			rff_where_value: this.invoiceDetails.inv_id,
+			rff_field_name: 'inv_invoice_date',
+			rff_new_field_value: this.commonAPIService.dateConvertion(event.target.value, 'yyyy-MM-dd'),
+			rff_old_field_value: this.invoiceDetails.inv_invoice_date,
+			rff_custom_data: '',
+		});
+	}
+	changeDueDate(event) {
+		console.log(event.target.value);
+		this.checkChangedFieldsArray.push({
+			rff_where_id: 'inv_id',
+			rff_where_value: this.invoiceDetails.inv_id,
+			rff_field_name: 'inv_due_date',
+			rff_new_field_value: this.commonAPIService.dateConvertion(event.target.value, 'yyyy-MM-dd'),
+			rff_old_field_value: this.invoiceDetails.inv_due_date,
+			rff_custom_data: '',
+		});
+	}
 	changeAdjAmt(invg_id, $event) {
 		const invg_id_idx = this.invoiceBifurcationArray.findIndex(item => item.invg_id === invg_id);
 		if ($event.target.value) {
@@ -103,6 +125,14 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	}
 	changeOpeningAndFine(item, $event) {
 		if (item.feehead === 'Fine & Penalties') {
+			this.checkChangedFieldsArray.push({
+				rff_where_id: 'inv_id',
+				rff_where_value: this.invoiceDetails.inv_id,
+				rff_field_name: 'inv_fine_amount',
+				rff_new_field_value: $event.target.value,
+				rff_old_field_value: this.modifyInvoiceForm.value.inv_fine_amount,
+				rff_custom_data: '',
+			});
 			this.modifyInvoiceForm.patchValue({
 				inv_fine_amount: $event.target.value
 			});
@@ -151,7 +181,9 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		adj.inv_opening_balance = this.modifyInvoiceForm.value.inv_opening_balance;
 		adj.inv_invoice_date = new DatePipe('en-in').transform(this.modifyInvoiceForm.value.inv_invoice_date, 'yyyy-MM-dd');
 		adj.inv_due_date = new DatePipe('en-in').transform(this.modifyInvoiceForm.value.inv_due_date, 'yyyy-MM-dd');
-		// this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')
+		console.log('menus', this.commonAPIService.menus);
+		// this.commonAPIService.isExistUserAccessMenu('358') Bulk Update
+		// this.commonAPIService.isExistUserAccessMenu('365') Individual Update
 		console.log('adj--', adj);
 		if ((this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')) && this.adjRemark) {
 			this.feeService.invoiceAdjustmentRemark(adj).subscribe((result: any) => {
@@ -160,7 +192,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 					this.closemodal();
 				}
 			});
-		} else {
+		} else if (this.commonAPIService.isExistUserAccessMenu('409')) {  // when both are unchecked 
 			const param: any = {};
 			const params: any[] = [];
 			const datalist: any[] = [];
@@ -189,6 +221,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('No changes to update', 'error');
 			}
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('No right to update', 'error');
 		}
 	}
 	deleteInvoice(event) {

@@ -14,7 +14,7 @@ import { CommonStudentProfileComponent } from '../../feemaster/common-student-pr
 	templateUrl: './family-transaction-entry.component.html',
 	styleUrls: ['./family-transaction-entry.component.css']
 })
-export class FamilyTransactionEntryComponent implements OnInit {
+export class FamilyTransactionEntryComponent implements OnInit, OnDestroy {
 	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	childDataArr: any[] = [];
 	selectedMode: any;
@@ -257,6 +257,11 @@ export class FamilyTransactionEntryComponent implements OnInit {
 			validateFlag = false;
 		}
 
+		if (Number(this.feeTransactionForm.value.ftr_amount) < this.familyOutstandingArr['family_total_outstanding_amt']) {
+			this.common.showSuccessErrorMessage('Transaction Amount Cannot be less than the Outstanding Amt', 'error');
+			validateFlag = false;
+		}
+
 		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1) {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
 				this.feeTransactionForm.value.ftr_remark)) {
@@ -316,6 +321,10 @@ export class FamilyTransactionEntryComponent implements OnInit {
 
 		if (Number(this.feeTransactionForm.value.ftr_amount) === 0) {
 			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
+			validateFlag = false;
+		}
+		if (Number(this.feeTransactionForm.value.ftr_amount) < this.familyOutstandingArr['family_total_outstanding_amt']) {
+			this.common.showSuccessErrorMessage('Transaction Amount Cannot be less than the Outstanding Amt', 'error');
 			validateFlag = false;
 		}
 		if (this.selectedMode === '1' && !this.feeTransactionForm.value.fam_entry_number) {
@@ -439,11 +448,11 @@ export class FamilyTransactionEntryComponent implements OnInit {
 	printFamilyInvoice(item) {
 		this.printFamilyArr = [];
 		this.printFamilyArr.push(item.fam_entry_number);
-		const inputJson = {'family_entry_numbers' : this.printFamilyArr, 'with_summary' : true};
+		const inputJson = { 'family_entry_numbers': this.printFamilyArr, 'with_summary': true };
 		this.feeService.printFamilyInvoice(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log('result', result.data);
-				//this.familyDetailArr = result.data;
+				// this.familyDetailArr = result.data;
 				const length = result.data.split('/').length;
 				saveAs(result.data, result.data.split('/')[length - 1]);
 				window.open(result.data, '_blank');

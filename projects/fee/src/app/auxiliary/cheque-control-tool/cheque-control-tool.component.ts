@@ -26,7 +26,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 	formGroupArray: any[] = [];
 	filterForm: FormGroup;
-	status: any[] = [{ status: '0', value: 'Pending' }, { status: '1', value: 'Cleared' }, { status: '2', value: 'Bounced' }];
+	status: any[] = [{ status: '0', value: 'Pending' }, { status: '1', value: 'Cleared' }, { status: '2', value: 'Dishonoured' }];
 	toggleSearch = false;
 	pageEvent: PageEvent;
 	processTypeArray: any[] = [

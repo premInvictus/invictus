@@ -1,0 +1,117 @@
+<div class="page-container" [class.example-is-mobile]="mobileQuery.matches">
+  <div>
+     <nav class="axiom-navbar-header axiom-navbar-hide-small">
+           <a mat-button (click)="sidenavOpen()" class="padding-left-8px margin-top-5"><div class="inline-flex"><div class="wrapper-menu">
+                 <div class="line-menu half start"></div>
+                 <div class="line-menu"></div>
+                 <div class="line-menu half end"></div>
+               </div><span class="header-icon-spacer header-font-color margin-top-ve5">Menu</span></div></a>
+        <a href="http://invictusdigisoft.com/" target="_blank" aria-label="axiom App" class="axiom-navbar-hide-small axiom-button mat-button" mat-button tabindex="0" aria-disabled="false">
+        <span class="mat-button-wrapper">
+        <img alt="invictus" class="axiom-invictus-logo margin-right-50" src="../../../assets/images/resvgiconsforfeemodule/company_logo.svg">
+        </span>
+        </a>
+        <button class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="schoolbranch" mat-button>
+        <img class="header-school-branch" src="../../../assets/images/resvgiconsforfeemodule/school_branch.svg"><span class="header-icon-spacer">{{schoolInfo.school_name}}</span></button>
+
+        <mat-menu #schoolbranch="matMenu">
+           <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i><span>{{schoolInfo?.school_name}}</span> </button>
+        </mat-menu>
+        <div class="header-menu-divider"></div>
+        <button class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="academicyear" mat-button>
+              <img class="header-academic-year" src="../../../assets/images/resvgiconsforfeemodule/academic year.svg"><span class="header-icon-spacer">{{getSessionName(session?.ses_id)}}</span></button>
+        <mat-menu #academicyear="matMenu">
+           <button *ngFor="let item of sessionArray" (click)="setSession(item?.ses_id)" mat-menu-item class="profile-submenu">
+              <i class="fas fa-calendar-alt"></i> 
+              {{item?.ses_name}}
+            </button>
+        </mat-menu>
+        <div class="flex-spacer"></div>
+        <a aria-label="axiom App" class="axiom-icon-button mat-button" mat-button tabindex="0" aria-disabled="false">
+        <span class="mat-button-wrapper">
+        <img class="header-notification-bell" src="../../../assets/images/resvgiconsforfeemodule/notifications.svg">
+        <img class="header-notification-dot" src="../../../assets/images/resvgiconsforfeemodule/new_notification_sign.svg"><span class="header-icon-spacer">Notifications</span>
+        <!-- <span class="notif-value">5</span> -->
+        </span>
+        </a>
+        <div class="header-menu-divider"></div>
+        <div class="dropdown">
+         <button class="axiom-icon-button mat-button username" mat-button>
+              <!-- <img class="header-avatar-img" src="../../../assets/images/resvgiconsforfeemodule/man.svg"> -->
+              <img *ngIf="showImage" alt="invictus" class="header-avatar-img" src="{{image}}"
+              onError="this.src='../../../../../../src/assets/images/resvgiconsforfeemodule/man.svg'">
+              <img *ngIf="showImageBlank" class="header-avatar-img"
+              onError="this.src='../../../../../../src/assets/images/resvgiconsforfeemodule/man.svg'"
+              src="../../../../../../src/assets/images/resvgiconsforfeemodule/man.svg">
+              <span class="header-icon-spacer header-profile-name">Hi, {{usernane}}</span></button>
+         <div class="dropdown-content">
+            <button mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
+            <a routerLink="./user-credential"><button mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i>Change Credential</button></a>
+            <a href="javascript:void(0);"><button mat-menu-item class="profile-submenu" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
+         </div>
+       </div>
+     </nav>
+     <nav class="axiom-navbar-header axiom-navbar-show-small">
+        <a aria-label="axiom App" class="mobile-menu-icon" tabindex="0" aria-disabled="false" [ngClass]="{'btn-add': !clicked, 'btn-remove': clicked}" (click)="clicked = !clicked" (click)="sidenav.toggle()">
+        <span class="mat-button-wrapper">
+        <i class="fas ham-icon" [ngClass]="{'fa-bars': !clicked, 'fa-times': clicked}"></i>
+        </span>
+        </a>
+        <div class="flex-spacer"></div>
+        <a aria-label="axiom App" class="axiom-icon-button mat-button" mat-button tabindex="0" aria-disabled="false">
+        <span class="mat-button-wrapper">
+        <i class="far fa-bell notification-icon"></i>
+        <i class="fas fa-circle notif-circle"></i>
+        <span class="notif-value">5</span>
+        </span>
+        </a>
+        <a aria-label="axiom App" class="axiom-icon-button top-profile-image" tabindex="0" aria-disabled="false">
+           <span class="mat-button-wrapper">
+              <img alt="invictus" class="axiom-profile-image" src="http://via.placeholder.com/35x35" [matMenuTriggerFor]="menu">
+              <mat-menu #menu="matMenu" class="mat-log-menu">
+                 <button  mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
+        <a routerLink="./user-credential">  <button  mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i> Change Credential</button></a>
+        
+        <a href="javascript:void(0);"><button mat-menu-item class="profile-submenu" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
+        </mat-menu>
+        </span>
+        </a>
+     </nav>
+     <nav class="axiom-navbar axiom-navbar-show-small">
+        <a class="axiom-navbar-link mat-button" mat-button tabindex="0" aria-label="false" [matMenuTriggerFor]="schoolbranch">
+           <mat-menu #schoolbranch="matMenu" *ngIf="currentUser?.role_id != 1">
+              <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i>{{schoolInfo}}</button>
+           </mat-menu>
+           <mat-menu #schoolbranch="matMenu" *ngIf="currentUser?.role_id == 1">
+              <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i>{{schoolInfo?.school_name}}</button>
+           </mat-menu>
+           <span class="mat-button-wrapper">
+           <i class="fas fa-graduation-cap top-nav-icon"></i>{{schoolInfo?.school_name}}</span>
+        </a>
+        <a class="axiom-navbar-link mat-button" mat-button tabindex="0" aria-label="false" [matMenuTriggerFor]="academicyear">
+           <mat-menu #academicyear="matMenu">
+               <button *ngFor="let item of sessionArray" mat-menu-item class="profile-submenu" (click)="setSession(item?.ses_id)">
+                     <i class="fas fa-calendar-alt"></i> 
+                     {{item?.ses_name}}
+                   </button>
+           </mat-menu>
+           <span class="mat-button-wrapper">
+           <i class="fab fa-telegram-plane top-nav-icon"></i> Year</span>
+        </a>
+     </nav>
+  </div>
+  <mat-sidenav-container class="axiom-sidebar">
+     <mat-sidenav id="sidenav" class="axiom-sidenav" #sidenav [mode]="mobileQuery.matches ? 'push' : 'side'" [fixedInViewport]="mobileQuery.matches" [opened]="true">
+     <div class="axiom-component-viewer-sidenav">
+        <div class="axiom-component-viewer-sidenav-content">
+           <app-side-nav></app-side-nav>
+        </div>
+     </div>
+     </mat-sidenav>
+     <mat-sidenav-content id="sidenav-content">
+        <div>
+           <router-outlet></router-outlet>
+        </div>
+     </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

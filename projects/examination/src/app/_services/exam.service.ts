@@ -32,12 +32,18 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/insertExam', value);
 	}
-
 	insertSubExam(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/insertSubExam', value);
 	}
-
+	getSubExam(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getSubExam', value);
+	}
+	updateSubExamStatus(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/updateSubExamStatus', value);
+	}
 	insertExamGradeSetup(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/insertExamGradeSet', value);
@@ -58,6 +64,34 @@ export class ExamService {
 	insertRollNo(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertRollNo', value);
+	}
+	updateRollNo(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateRollNo', value);
+	}
+	getRollNoUser(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getRollNoUser', value);
+	}
+	checkRollNoForClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/checkRollNoForClass', value);
+	}
+	getAdditionalSubjectUser(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getAdditionalSubjectUser', value);
+	}
+	insertAdditionalSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertAdditionalSubject', value);
+	}
+	updateAdditionalSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateAdditionalSubject', value);
+	}
+	checkAdditionalSubjectForClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/checkAdditionalSubjectForClass', value);
 	}
 }
 

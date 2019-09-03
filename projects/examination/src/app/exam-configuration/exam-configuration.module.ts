@@ -4,6 +4,8 @@ import { LoadingModule } from 'ngx-loading';
 import { ExaminationConfigurationRoutingModule } from './examination-configuration-routing.module';
 import { SetupComponent } from './setup/setup.component';
 import { ExamSharedModule } from '../exam-shared/exam-shared.module';
+import { ExamComponent } from './exam/exam.component';
+import { SubExamComponent } from './sub-exam/sub-exam.component';
 
 
 @NgModule({
@@ -13,6 +15,6 @@ import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 		ExaminationConfigurationRoutingModule,
 		ExamSharedModule
 	],
-	declarations: [SetupComponent]
+	declarations: [SetupComponent, ExamComponent, SubExamComponent]
 })
 export class ExamConfigurationModule { }

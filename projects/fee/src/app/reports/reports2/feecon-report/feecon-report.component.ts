@@ -234,7 +234,7 @@ export class FeeconReportComponent implements OnInit {
 			};
 			this.feeService.getFeeConcessionReport(collectionJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage(result.message, 'success');
+					this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 					console.log('result', result);
 					repoArray = result.data.reportData;
 					let i = 0;
@@ -352,7 +352,7 @@ export class FeeconReportComponent implements OnInit {
 			};
 			this.feeService.getFeeConcessionAllotedReport(collectionJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage(result.message, 'success');
+					this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 					this.totalRecords = Number(result.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 					repoArray = result.data.reportData;
@@ -709,7 +709,12 @@ export class FeeconReportComponent implements OnInit {
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
-		return '<b class="total-footer-report">Total</b>';
+		if (totals.group.level === 0) {
+			return '<b class="total-footer-report">Total</b>';
+		}
+		if (totals.group.level > 0) {
+			return '<b class="total-footer-report">Sub Total (' + totals.group.value + ') </b>';
+		}
 	}
 	getMFRFormatter(row, cell, value, columnDef, dataContext) {
 		if (value.status === 'unpaid') {
@@ -1113,14 +1118,14 @@ export class FeeconReportComponent implements OnInit {
 				if (rowNum === 1) {
 					row.font = {
 						name: 'Arial',
-						size: 16,
+						size: 14,
 						bold: true
 					};
 				}
 				if (rowNum === 2) {
 					row.font = {
 						name: 'Arial',
-						size: 14,
+						size: 12,
 						bold: true
 					};
 				}
@@ -1347,9 +1352,14 @@ export class FeeconReportComponent implements OnInit {
 									};
 									cell.font = {
 										color: { argb: 'ffffff' },
-										bold: true,
 										name: 'Arial',
 										size: 10
+									};
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
 									};
 								});
 							}
@@ -1412,6 +1422,12 @@ export class FeeconReportComponent implements OnInit {
 						left: { style: 'thin' },
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'ffffff' },
+						bgColor: { argb: 'ffffff' },
 					};
 					cell.alignment = { horizontal: 'center' };
 				});
@@ -1936,7 +1952,7 @@ export class FeeconReportComponent implements OnInit {
 							if (rowNum === this.groupLength) {
 								row.eachCell(cell => {
 									cell.font = {
-										bold: true,
+										bold: false,
 										name: 'Arial',
 										size: 10
 									};
@@ -1946,14 +1962,20 @@ export class FeeconReportComponent implements OnInit {
 										bottom: { style: 'thin' },
 										right: { style: 'thin' }
 									};
+									cell.fill = {
+										type: 'pattern',
+										pattern: 'solid',
+										fgColor: { argb: 'ffffff' },
+										bgColor: { argb: 'ffffff' },
+									};
 								});
 							}
 						});
 					});
 					const obj3: any = {};
 					obj3['id'] = 'footer';
-					obj3['srno'] = 'Sub Total';
-					obj3['stu_admission_no'] = '';
+					obj3['srno'] = '';
+					obj3['stu_admission_no'] = 'Sub Total';
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
 					obj3['fh_name'] = '';
@@ -1991,6 +2013,12 @@ export class FeeconReportComponent implements OnInit {
 									left: { style: 'thin' },
 									bottom: { style: 'thin' },
 									right: { style: 'thin' }
+								};
+								cell.fill = {
+									type: 'pattern',
+									pattern: 'solid',
+									fgColor: { argb: 'ffffff' },
+									bgColor: { argb: 'ffffff' },
 								};
 							});
 						}
@@ -2163,8 +2191,8 @@ export class FeeconReportComponent implements OnInit {
 					const obj3: any = {};
 					const arr: any[] = [];
 					obj3['id'] = 'footer';
-					obj3['srno'] = 'Sub Total';
-					obj3['stu_admission_no'] = '';
+					obj3['srno'] = '';
+					obj3['stu_admission_no'] = 'Sub Total';
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
 					obj3['fh_name'] = '';

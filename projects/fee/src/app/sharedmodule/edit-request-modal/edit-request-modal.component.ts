@@ -91,8 +91,9 @@ export class EditRequestModalComponent implements OnInit {
 		this.dialogRef.close();
 	}
 	getFormFields() {
+		console.log(this.inputData);
 		this.sisService.getFormFields({
-			ff_tb_id: '18'
+			ff_tb_id: this.inputData.reqParam[0].req_tab_id
 		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.formFields = result.data;
