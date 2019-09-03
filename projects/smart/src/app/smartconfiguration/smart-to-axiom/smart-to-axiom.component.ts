@@ -41,10 +41,24 @@ export class SmartToAxiomComponent implements OnInit {
     });
   }
   getGSub() {
+    this.paramform.patchValue({
+      sub_id: ''
+    });
     this.gsArray = [];
     this.smartService.getSubjectsByClass({ class_id: this.paramform.value.class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.gsArray = result.data;
+      }
+    });
+  }
+  getGtopic() {
+    this.paramform.patchValue({
+      topic_id: ''
+    });
+    this.gtArray = [];
+    this.smartService.getTopicByClassIdSubjectId({ class_id: this.paramform.value.class_id, sub_id: this.paramform.value.sub_id }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.gtArray = result.data;
       }
     });
   }
