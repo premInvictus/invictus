@@ -130,3 +130,10 @@
 .padding-bottom-10 {
     padding-bottom: 10px;
 }
+
+.top-close-btn {
+    position: absolute !important;
+    top: -31px !important;
+    z-index: 1 !important;
+    right: -19px !important;
+}

@@ -1,3 +1,82 @@
-<p>
-  review works!
-</p>
+<div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row ">
+          <div class="col-4 remove-col-padding-left margin-top-15">
+            <span class="font-size-24 ">Review</span>
+          </div>
+          <div class="col-8 remove-col-padding-right text-right">
+            <mat-form-field appearance="outline" class="form-field-150">
+              <mat-select placeholder="Class">
+                <mat-option></mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-select placeholder="Section">
+                <mat-option></mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-select placeholder="Subject">
+                <mat-option></mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-select placeholder="Term">
+                <mat-option></mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-select placeholder="Exam">
+                <mat-option></mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-select placeholder="Sub-Exam">
+                <mat-option></mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <table class="custom-table">
+          <thead>
+            <tr class="custom-tr">
+              <th rowspan="2" class="custom-th text-center">Roll No.</th>
+              <th rowspan="2"  class="custom-th text-center">Student name</th>
+              <th rowspan="2" class="custom-th text-center">Admission</th>
+              <th colspan="3" class="custom-th text-center">Social Science</th>
+            </tr>
+            <tr class="custom-tr">
+              <th class="custom-th text-center">Periodic Test I*</th>
+              <th class="custom-th text-center">Periodic Test II*</th>
+              <th class="custom-th text-center">Multiple Assessment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="custom-td text-center font-size-14">01</td>
+              <td class="custom-td text-left font-size-14"><span class="margin-left-15">Amit kumar</span> </td>
+              <td class="custom-td text-center font-size-14">2356458</td>
+              <td class="custom-td text-center font-size-14" (clcik)="openReviewDialog()">Please Enter Remarks Here</td>
+              <td class="custom-td text-center font-size-14">Please Enter Remarks Here</td>
+              <td class="custom-td text-center font-size-14">Please Enter Remarks Here</td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+          <div class="row margin-top-25">
+            <div class="col-12 text-center">
+              <button mat-button class="btn-success-green">Review</button>
+              <button mat-button class="btn-reset btn-spacer">Reset</button>
+            </div>
+          </div>
+      </mat-card>
+    </div>
+  </div>
