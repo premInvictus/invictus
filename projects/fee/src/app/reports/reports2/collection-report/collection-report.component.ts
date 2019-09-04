@@ -53,6 +53,10 @@ export class CollectionReportComponent implements OnInit {
 	dataviewObj: any;
 	draggableGroupingPlugin: any;
 	durationOrderByCount = false;
+	pdfrowdata: any[] = [];
+	levelHeading: any[] = [];
+	levelTotalFooter: any[] = [];
+	levelSubtotalFooter: any[] = [];
 	gridObj: any;
 	@Input() userName: any = '';
 	@Output() displyRep = new EventEmitter();
@@ -307,7 +311,7 @@ export class CollectionReportComponent implements OnInit {
 					}
 					if (args.command === 'exportAsPDF') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF();
+						this.exportAsPDF(this.dataset);
 					}
 					if (args.command === 'expandGroup') {
 						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
@@ -330,7 +334,6 @@ export class CollectionReportComponent implements OnInit {
 					}
 				},
 				onColumnsChanged: (e, args) => {
-					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
 					this.updateTotalRow(this.angularGrid.slickGrid);
 				},
 			},
@@ -2000,586 +2003,6 @@ export class CollectionReportComponent implements OnInit {
 			hasBackdrop: true
 		});
 	}
-	exportAsPDF() {
-		const headerData: any[] = [];
-		let reportType: any = '';
-		this.sessionName = this.getSessionName(this.session.ses_id);
-		if (this.reportType === 'headwise') {
-			reportType = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'classwise') {
-			reportType = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'modewise') {
-			reportType = new TitleCasePipe().transform('mode wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'routewise') {
-			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'mfr') {
-			reportType = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
-		}
-		const doc = new jsPDF('l', 'mm', 'a0');
-		doc.autoTable({
-			// tslint:disable-next-line:max-line-length
-			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
-			didDrawPage: function (data) {
-
-			},
-			headStyles: {
-				fontStyle: 'bold',
-				fillColor: '#ffffff',
-				textColor: 'black',
-				halign: 'center',
-				fontSize: 35,
-			},
-			useCss: true,
-			theme: 'striped'
-		});
-		doc.autoTable({
-			head: [[reportType]],
-			margin: { top: 0 },
-			didDrawPage: function (data) {
-
-			},
-			headStyles: {
-				fontStyle: 'bold',
-				fillColor: '#ffffff',
-				textColor: 'black',
-				halign: 'center',
-				fontSize: 35,
-			},
-			useCss: true,
-			theme: 'striped'
-		});
-		const rowData: any[] = [];
-		for (const item of this.columnDefinitions) {
-			headerData.push(item.name);
-		}
-		if (this.dataviewObj.getGroups().length === 0) {
-			Object.keys(this.dataset).forEach((key: any) => {
-				const arr: any[] = [];
-				for (const item2 of this.columnDefinitions) {
-					if (this.reportType !== 'mfr') {
-						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
-						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
-							arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
-						}
-						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] === '<b>Grand Total</b>') {
-							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
-						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
-					} else if (this.reportType === 'mfr') {
-						if (item2.id.toString().match(/Q/)) {
-							arr.push(this.dataset[key][item2.id].status);
-						} else {
-							arr.push(this.dataset[key][item2.id]);
-						}
-					}
-				}
-				rowData.push(arr);
-			});
-			doc.autoTable({
-				head: [headerData],
-				body: rowData,
-				startY: 65,
-				tableLineColor: 'black',
-				didDrawPage: function (data) {
-					doc.setFontStyle('bold');
-
-				},
-				headStyles: {
-					fontStyle: 'bold',
-					fillColor: '#c8d6e5',
-					textColor: '#5e666d',
-					fontSize: 22,
-				},
-				alternateRowStyles: {
-					fillColor: '#f1f4f7'
-				},
-				useCss: true,
-				styles: {
-					fontSize: 22,
-					cellWidth: 'auto',
-					textColor: 'black',
-					lineColor: '#89a8c8',
-				},
-				theme: 'grid'
-			});
-		} else {
-			for (const item of this.dataviewObj.getGroups()) {
-				const rowData2 = [];
-				if (!item.groups && item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
-					let indexPage = 0;
-					Object.keys(item.rows).forEach(key => {
-						const arr: any[] = [];
-						for (const item2 of this.columnDefinitions) {
-							if (this.reportType !== 'mfr') {
-								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-									arr.push(this.common.htmlToText(item.rows[key][item2.id]));
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-									&& item.rows[key][item2.id] !== '<b>Grand Total</b>') {
-									arr.push(new DatePipe('en-in').transform((item.rows[key][item2.id]), 'd-MMM-y'));
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-									&& item.rows[key][item2.id] === '<b>Grand Total</b>') {
-									arr.push(this.common.htmlToText(item.rows[key][item2.id]));
-								}
-								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-									arr.push(this.common.htmlToText(item.rows[key][item2.id]));
-								}
-							} else {
-								if (item2.id.toString().match(/Q/)) {
-									arr.push(item.rows[key][item2.id].status);
-								} else {
-									arr.push(item.rows[key][item2.id]);
-								}
-							}
-						}
-						rowData2.push(arr);
-						indexPage++;
-					});
-					doc.autoTable({
-						head: [[this.common.htmlToText(item.title)]],
-						startY: doc.previousAutoTable.finalY + 1,
-						didDrawPage: function (data) {
-							doc.setTextColor(0);
-							doc.setFontStyle('bold');
-
-						},
-						headStyles: {
-							fontStyle: 'bold',
-							fillColor: '#c8d6e5',
-							textColor: '#5e666d',
-							fontSize: 22,
-						},
-						alternateRowStyles: {
-							fillColor: '#f1f4f7'
-						},
-						useCss: true,
-						styles: {
-							fontSize: 22,
-							cellWidth: 'auto',
-						},
-						theme: 'grid'
-					});
-					doc.autoTable({
-						head: [headerData],
-						body: rowData2,
-						startY: doc.previousAutoTable.finalY + 1,
-						didDrawPage: function (data) {
-							doc.setTextColor(0);
-							doc.setFontStyle('bold');
-
-						},
-						headStyles: {
-							fontStyle: 'bold',
-							fillColor: '#c8d6e5',
-							textColor: '#5e666d',
-							fontSize: 22,
-						},
-						alternateRowStyles: {
-							fillColor: '#f1f4f7'
-						},
-						useCss: true,
-						styles: {
-							fontSize: 22,
-							cellWidth: 'auto',
-						},
-						theme: 'grid'
-					});
-					if (indexPage === item.rows.length) {
-						const headerArr: any[] = [];
-						if (this.reportType === 'headwise') {
-							const obj3: any = {};
-							const arr: any[] = [];
-							obj3['id'] = 'footer';
-							obj3['srno'] = '';
-							obj3['invoice_created_date'] = 'Total ';
-							obj3['stu_admission_no'] = '';
-							obj3['stu_full_name'] = '';
-							obj3['stu_class_name'] = '';
-							obj3['receipt_id'] = '';
-							obj3['fp_name'] = '';
-							obj3['receipt_no'] = '';
-							obj3['inv_opening_balance'] = item.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-							obj3['invoice_fine_amount'] = item.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
-							Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-								Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-									Object.keys(item.rows).forEach(key3 => {
-										Object.keys(item.rows[key3]).forEach(key4 => {
-											if (key4 === key2) {
-												obj3[key2] = item.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-											}
-										});
-									});
-								});
-							});
-							obj3['bank_name'] = '';
-							obj3['total'] = item.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-							obj3['receipt_mode_name'] = '';
-							obj3['tb_name'] = '';
-							for (const itemJ of this.columnDefinitions) {
-								Object.keys(obj3).forEach((key: any) => {
-									if (itemJ.id === key) {
-										arr.push(obj3[key]);
-									}
-								});
-							}
-							headerArr.push(arr);
-						}
-						if (this.reportType === 'modewise') {
-							const obj3: any = {};
-							const arr: any[] = [];
-							obj3['id'] = 'footer';
-							obj3['srno'] = '';
-							obj3['invoice_created_date'] = 'Total';
-							obj3['stu_admission_no'] = '';
-							obj3['stu_full_name'] = '';
-							obj3['stu_class_name'] = '';
-							obj3['receipt_id'] = '';
-							obj3['receipt_no'] = '';
-							Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-								Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-									Object.keys(item.rows).forEach(key3 => {
-										Object.keys(item.rows[key3]).forEach(key4 => {
-											if (key4 === key2) {
-												obj3[key2] = item.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-											}
-										});
-									});
-								});
-							});
-							obj3['total'] = item.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-							obj3['fp_name'] = '';
-							for (const col of this.columnDefinitions) {
-								Object.keys(obj3).forEach((key: any) => {
-									if (col.id === key) {
-										arr.push(obj3[key]);
-									}
-								});
-							}
-							headerArr.push(arr);
-						}
-						if (this.reportType === 'classwise') {
-							const obj3: any = {};
-							const arr: any[] = [];
-							obj3['id'] = 'footer';
-							obj3['srno'] = '';
-							obj3['invoice_created_date'] = 'Total';
-							obj3['stu_admission_no'] = '';
-							obj3['stu_full_name'] = '';
-							obj3['stu_class_name'] = '';
-							obj3['receipt_no'] = '';
-							obj3['rpt_amount'] = item.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
-							obj3['fp_name'] = '';
-							for (const col of this.columnDefinitions) {
-								Object.keys(obj3).forEach((key: any) => {
-									if (col.id === key) {
-										arr.push(obj3[key]);
-									}
-								});
-							}
-							headerArr.push(arr);
-						}
-						if (this.reportType === 'routewise') {
-							const obj3: any = {};
-							const arr: any[] = [];
-							obj3['id'] = 'footer';
-							obj3['srno'] = '';
-							obj3['invoice_created_date'] = 'Total';
-							obj3['stu_admission_no'] = '';
-							obj3['stu_full_name'] = '';
-							obj3['stu_class_name'] = '';
-							obj3['fp_name'] = '';
-							obj3['receipt_no'] = '';
-							obj3['transport_amount'] = item.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
-							obj3['route_name'] = '';
-							obj3['stoppages_name'] = '';
-							obj3['slab_name'] = '';
-							for (const col of this.columnDefinitions) {
-								Object.keys(obj3).forEach((key: any) => {
-									if (col.id === key) {
-										arr.push(obj3[key]);
-									}
-								});
-							}
-							headerArr.push(arr);
-						}
-						doc.autoTable({
-							head: [headerData],
-							body: headerArr,
-							tableLineColor: 'black',
-							startY: doc.previousAutoTable.finalY + 0.5,
-							didDrawPage: function (data) {
-								doc.setFontStyle('bold');
-
-							},
-							headStyles: {
-								fontStyle: 'normal',
-								fillColor: '#c8d6e5',
-								textColor: '#5e666d',
-								fontSize: 22,
-							},
-							alternateRowStyles: {
-								fillColor: '#004261',
-								textColor: '#ffffff',
-								fontStyle: 'bold',
-							},
-							useCss: true,
-							styles: {
-								fontSize: 22,
-								cellWidth: 'auto',
-								textColor: 'black',
-								lineColor: '#89a8c8',
-							},
-							theme: 'grid'
-						});
-					}
-				} else {
-					if (item.groupingKey && item.groupingKey !== '<b>Grand Total</b>') {
-						this.checkGroupLevelPDF(item, doc, headerData);
-						this.checkLastTotPDF(item, doc, headerData);
-					}
-				}
-			}
-		}
-		const headerArr2: any[] = [];
-		if (this.reportType === 'headwise') {
-			const obj3: any = {};
-			const arr: any[] = [];
-			obj3['id'] = 'footer';
-			obj3['srno'] = '';
-			obj3['invoice_created_date'] = 'Grand Total ';
-			obj3['stu_admission_no'] = '';
-			obj3['stu_full_name'] = '';
-			obj3['stu_class_name'] = '';
-			obj3['receipt_id'] = '';
-			obj3['fp_name'] = '';
-			obj3['receipt_no'] = '';
-			obj3['inv_opening_balance'] = (this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
-			obj3['invoice_fine_amount'] = (this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
-			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-					Object.keys(this.dataset).forEach(key3 => {
-						Object.keys(this.dataset[key3]).forEach(key4 => {
-							if (key4 === key2) {
-								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
-							}
-						});
-					});
-				});
-			});
-			obj3['bank_name'] = '';
-			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
-			obj3['receipt_mode_name'] = '';
-			obj3['tb_name'] = '';
-			for (const item of this.columnDefinitions) {
-				Object.keys(obj3).forEach((key: any) => {
-					if (item.id === key) {
-						arr.push(obj3[key]);
-					}
-				});
-			}
-			headerArr2.push(arr);
-		}
-		if (this.reportType === 'modewise') {
-			const obj3: any = {};
-			const arr: any[] = [];
-			obj3['id'] = 'footer';
-			obj3['srno'] = '';
-			obj3['invoice_created_date'] = 'Grand Total';
-			obj3['stu_admission_no'] = '';
-			obj3['stu_full_name'] = '';
-			obj3['stu_class_name'] = '';
-			obj3['receipt_id'] = '';
-			obj3['receipt_no'] = '';
-			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-					Object.keys(this.dataset).forEach(key3 => {
-						Object.keys(this.dataset[key3]).forEach(key4 => {
-							if (key4 === key2) {
-								obj3[key2] = (this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
-							}
-						});
-					});
-				});
-			});
-			obj3['total'] = (this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
-			obj3['fp_name'] = '';
-			for (const item of this.columnDefinitions) {
-				Object.keys(obj3).forEach((key: any) => {
-					if (item.id === key) {
-						arr.push(obj3[key]);
-					}
-				});
-			}
-			headerArr2.push(arr);
-		}
-		if (this.reportType === 'classwise') {
-			const obj3: any = {};
-			const arr: any[] = [];
-			obj3['id'] = 'footer';
-			obj3['srno'] = '';
-			obj3['invoice_created_date'] = 'Grand Total';
-			obj3['stu_admission_no'] = '';
-			obj3['stu_full_name'] = '';
-			obj3['stu_class_name'] = '';
-			obj3['receipt_no'] = '';
-			obj3['rpt_amount'] = (this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0));
-			obj3['fp_name'] = '';
-			for (const item of this.columnDefinitions) {
-				Object.keys(obj3).forEach((key: any) => {
-					if (item.id === key) {
-						arr.push(obj3[key]);
-					}
-				});
-			}
-			headerArr2.push(arr);
-		}
-		if (this.reportType === 'routewise') {
-			const obj3: any = {};
-			const arr: any[] = [];
-			obj3['id'] = 'footer';
-			obj3['srno'] = '';
-			obj3['invoice_created_date'] = 'Grand Total';
-			obj3['stu_admission_no'] = '';
-			obj3['stu_full_name'] = '';
-			obj3['stu_class_name'] = '';
-			obj3['fp_name'] = '';
-			obj3['receipt_no'] = '';
-			obj3['transport_amount'] = (this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
-			obj3['route_name'] = '';
-			obj3['stoppages_name'] = '';
-			obj3['slab_name'] = '';
-			for (const item of this.columnDefinitions) {
-				Object.keys(obj3).forEach((key: any) => {
-					if (item.id === key) {
-						arr.push(obj3[key]);
-					}
-				});
-			}
-			headerArr2.push(arr);
-		}
-		doc.autoTable({
-			head: [headerData],
-			body: headerArr2,
-			tableLineColor: 'black',
-			startY: doc.previousAutoTable.finalY + 0.5,
-			didDrawPage: function (data) {
-				doc.setFontStyle('bold');
-
-			},
-			headStyles: {
-				fontStyle: 'normal',
-				fillColor: '#c8d6e5',
-				textColor: '#5e666d',
-				fontSize: 22,
-			},
-			alternateRowStyles: {
-				fillColor: '#43A047',
-				textColor: '#ffffff',
-				fontStyle: 'bold',
-			},
-			useCss: true,
-			styles: {
-				fontSize: 22,
-				cellWidth: 'auto',
-				textColor: 'black',
-				lineColor: '#89a8c8',
-			},
-			theme: 'grid'
-		});
-		if (this.groupColumns.length > 0) {
-			doc.autoTable({
-				// tslint:disable-next-line:max-line-length
-				head: [['Groupded As: ' + this.getGroupColumns(this.groupColumns)]],
-				didDrawPage: function (data) {
-				},
-				headStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 22,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-		}
-		doc.autoTable({
-			// tslint:disable-next-line:max-line-length
-			head: [['Report Filtered as: ' +
-				new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'd-MMM-y')
-				+ ' - ' +
-				new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'd-MMM-y')]],
-			didDrawPage: function (data) {
-
-			},
-			headStyles: {
-				fontStyle: 'bold',
-				fillColor: '#ffffff',
-				textColor: 'black',
-				halign: 'left',
-				fontSize: 22,
-			},
-			useCss: true,
-			theme: 'striped'
-		});
-		doc.autoTable({
-			// tslint:disable-next-line:max-line-length
-			head: [['No of records: ' + this.totalRecords]],
-			didDrawPage: function (data) {
-
-			},
-			headStyles: {
-				fontStyle: 'bold',
-				fillColor: '#ffffff',
-				textColor: 'black',
-				halign: 'left',
-				fontSize: 22,
-			},
-			useCss: true,
-			theme: 'striped'
-		});
-		doc.autoTable({
-			// tslint:disable-next-line:max-line-length
-			head: [['Generated On: '
-				+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
-			didDrawPage: function (data) {
-
-			},
-			headStyles: {
-				fontStyle: 'bold',
-				fillColor: '#ffffff',
-				textColor: 'black',
-				halign: 'left',
-				fontSize: 22,
-			},
-			useCss: true,
-			theme: 'striped'
-		});
-		doc.autoTable({
-			// tslint:disable-next-line:max-line-length
-			head: [['Generated By: ' + this.userName]],
-			didDrawPage: function (data) {
-
-			},
-			headStyles: {
-				fontStyle: 'bold',
-				fillColor: '#ffffff',
-				textColor: 'black',
-				halign: 'left',
-				fontSize: 22,
-			},
-			useCss: true,
-			theme: 'striped'
-		});
-		doc.save(reportType + '_' + new Date() + '.pdf');
-	}
 	groupByClass() {
 		this.dataviewObj.setGrouping({
 			getter: 'stu_class_name',
@@ -2600,10 +2023,11 @@ export class CollectionReportComponent implements OnInit {
 		}
 	}
 	filtered(event) {
-		console.log(event);
-		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + event.source.selected.viewValue;
-		console.log(this.filteredAs);
-
+		let commonFilter: any = '';
+		for (const item of event.source.selected) {
+			commonFilter = commonFilter + item.viewValue + ',';
+		}
+		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + commonFilter.substring(0, commonFilter.length - 1);
 	}
 	getParamValue() {
 		const filterArr = [];
@@ -3211,122 +2635,275 @@ export class CollectionReportComponent implements OnInit {
 		}
 		return grName.substring(0, grName.length - 1);
 	}
-	checkGroupLevelPDF(item, doc, headerData) {
+	exportAsPDF(json: any[]) {
+		const headerData: any[] = [];
+		this.pdfrowdata = [];
+		this.levelHeading = [];
+		this.levelTotalFooter = [];
+		this.levelSubtotalFooter = [];
+		this.exportColumnDefinitions = [];
+		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		if (this.reportType === 'headwise') {
+			reportType = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'classwise') {
+			reportType = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'modewise') {
+			reportType = new TitleCasePipe().transform('mode wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'routewise') {
+			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'mfr') {
+			reportType = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
+		}
+		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
-			head: [[this.common.htmlToText(item.title)]],
-			startY: doc.previousAutoTable.finalY + 1,
+			// tslint:disable-next-line:max-line-length
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 			didDrawPage: function (data) {
-				doc.setTextColor(0);
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 22,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			head: [[reportType]],
+			margin: { top: 0 },
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		const rowData: any[] = [];
+		for (const item of this.columnDefinitions) {
+			headerData.push(item.name);
+		}
+		if (this.dataviewObj.getGroups().length === 0) {
+			Object.keys(this.dataset).forEach((key: any) => {
+				const arr: any[] = [];
+				for (const item2 of this.exportColumnDefinitions) {
+					if (this.reportType !== 'mfr') {
+						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+						}
+						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+							arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
+						}
+						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
+							&& this.dataset[key][item2.id] === '<b>Grand Total</b>') {
+							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+						}
+						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+						}
+					} else if (this.reportType === 'mfr') {
+						if (item2.id.toString().match(/Q/)) {
+							arr.push(this.dataset[key][item2.id].status);
+						} else {
+							arr.push(this.dataset[key][item2.id]);
+						}
+					}
+				}
+				rowData.push(arr);
+				this.pdfrowdata.push(arr);
+			});
+		} else {
+			// iterate all groups
+			this.checkGroupLevelPDF(this.dataviewObj.getGroups(), doc, headerData);
+		}
+		if (this.totalRow) {
+			const arr: any[] = [];
+			for (const item of this.exportColumnDefinitions) {
+				arr.push(this.totalRow[item.id]);
+			}
+			rowData.push(arr);
+			this.pdfrowdata.push(arr);
+		}
+		doc.levelHeading = this.levelHeading;
+		doc.levelTotalFooter = this.levelTotalFooter;
+		doc.levelSubtotalFooter = this.levelSubtotalFooter;
+		doc.autoTable({
+			head: [headerData],
+			body: this.pdfrowdata,
+			startY: doc.previousAutoTable.finalY + 0.5,
+			tableLineColor: 'black',
+			didDrawPage: function (data) {
 				doc.setFontStyle('bold');
 
+			},
+			willDrawCell: function (data) {
+				// tslint:disable-next-line:no-shadowed-variable
+				const doc = data.doc;
+				const rows = data.table.body;
+
+				// level 0
+				const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
+				if (lfIndex !== -1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(0, 62, 120);
+				}
+
+				// level more than 0
+				const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
+				if (lsfIndex !== -1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(229, 136, 67);
+				}
+
+				// group heading
+				const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
+				if (lhIndex !== -1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#5e666d');
+					doc.setFillColor('#c8d6e5');
+				}
+
+				// grand total
+				if (data.row.index === rows.length - 1) {
+					doc.setFontStyle('bold');
+					doc.setFontSize('18');
+					doc.setTextColor('#ffffff');
+					doc.setFillColor(67, 160, 71);
+				}
 			},
 			headStyles: {
 				fontStyle: 'bold',
 				fillColor: '#c8d6e5',
 				textColor: '#5e666d',
-				fontSize: 26,
+				fontSize: 18,
 			},
 			alternateRowStyles: {
 				fillColor: '#f1f4f7'
 			},
 			useCss: true,
 			styles: {
-				fontSize: 22,
+				fontSize: 18,
 				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: '#89a8c8',
 			},
 			theme: 'grid'
 		});
-		if (item.groups) {
-			let index = 0;
-			for (const groupItem of item.groups) {
+		if (this.groupColumns.length > 0) {
+			doc.autoTable({
+				// tslint:disable-next-line:max-line-length
+				head: [['Groupded As:  ' + this.getGroupColumns(this.groupColumns)]],
+				didDrawPage: function (data) {
+
+				},
+				headStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					halign: 'left',
+					fontSize: 20,
+				},
+				useCss: true,
+				theme: 'striped'
+			});
+		}
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Report Filtered as:  ' + this.getParamValue()]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['No of records: ' + json.length]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated On: '
+				+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			// tslint:disable-next-line:max-line-length
+			head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
+			didDrawPage: function (data) {
+
+			},
+			headStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 20,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.save(reportType + '_' + new Date() + '.pdf');
+	}
+	checkGroupLevelPDF(item, doc, headerData) {
+		if (item.length > 0) {
+			for (const groupItem of item) {
+				// add and style for groupeditem level heading
+				this.pdfrowdata.push([groupItem.value + ' (' + groupItem.rows.length + ')']);
+				this.levelHeading.push(this.pdfrowdata.length - 1);
 				if (groupItem.groups) {
-					this.checkGroupLevelPDF(groupItem, doc, headerData);
-				} else {
-					doc.autoTable({
-						head: [[this.common.htmlToText(groupItem.title)]],
-						startY: doc.previousAutoTable.finalY + 1,
-						didDrawPage: function (data) {
-							doc.setTextColor(0);
-							doc.setFontStyle('bold');
-
-						},
-						headStyles: {
-							fontStyle: 'bold',
-							fillColor: '#c8d6e5',
-							textColor: '#5e666d',
-							fontSize: 22,
-						},
-						alternateRowStyles: {
-							fillColor: '#f1f4f7'
-						},
-						useCss: true,
-						styles: {
-							fontSize: 22,
-							cellWidth: 'auto',
-						},
-						theme: 'grid'
-					});
-					const rowData: any[] = [];
-					Object.keys(groupItem.rows).forEach(key => {
-						const arr: any = [];
-						for (const item2 of this.columnDefinitions) {
-							if (this.reportType !== 'mfr') {
-								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-									&& item.rows[key][item2.id] !== '<b>Grand Total</b>') {
-									arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y'));
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-									&& item.rows[key][item2.id] === '<b>Grand Total</b>') {
-									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
-								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
-							} else {
-								if (item2.id.toString().match(/Q/)) {
-									arr.push(groupItem.rows[key][item2.id].status);
-								} else {
-									arr.push(groupItem.rows[key][item2.id]);
-								}
-							}
-						}
-						rowData.push(arr);
-					});
-					doc.autoTable({
-						head: [headerData],
-						body: rowData,
-						startY: doc.previousAutoTable.finalY + 1,
-						didDrawPage: function (data) {
-							doc.setTextColor(0);
-							doc.setFontStyle('bold');
-
-						},
-						headStyles: {
-							fontStyle: 'bold',
-							fillColor: '#c8d6e5',
-							textColor: '#5e666d',
-							fontSize: 22,
-						},
-						alternateRowStyles: {
-							fillColor: '#f1f4f7'
-						},
-						useCss: true,
-						styles: {
-							fontSize: 22,
-							cellWidth: 'auto',
-						},
-						theme: 'grid'
-					});
-					const headerArr2: any[] = [];
+					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
+					const levelArray: any[] = [];
 					if (this.reportType === 'headwise') {
 						const obj3: any = {};
-						const arr: any[] = [];
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = 'Sub Total ';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -3350,21 +2927,20 @@ export class CollectionReportComponent implements OnInit {
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
-						for (const col of this.columnDefinitions) {
+						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
-									arr.push(obj3[key]);
+									levelArray.push(obj3[key]);
 								}
 							});
 						}
-						headerArr2.push(arr);
+						this.pdfrowdata.push(levelArray);
 					}
 					if (this.reportType === 'modewise') {
 						const obj3: any = {};
-						const arr: any[] = [];
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = 'Sub Total';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -3383,42 +2959,40 @@ export class CollectionReportComponent implements OnInit {
 						});
 						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
-						for (const col of this.columnDefinitions) {
+						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
-									arr.push(obj3[key]);
+									levelArray.push(obj3[key]);
 								}
 							});
 						}
-						headerArr2.push(arr);
+						this.pdfrowdata.push(levelArray);
 					}
 					if (this.reportType === 'classwise') {
 						const obj3: any = {};
-						const arr: any[] = [];
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = 'Sub Total';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_no'] = '';
 						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
 						obj3['fp_name'] = '';
-						for (const col of this.columnDefinitions) {
+						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
-									arr.push(obj3[key]);
+									levelArray.push(obj3[key]);
 								}
 							});
 						}
-						headerArr2.push(arr);
+						this.pdfrowdata.push(levelArray);
 					}
 					if (this.reportType === 'routewise') {
 						const obj3: any = {};
-						const arr: any[] = [];
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = 'Sub Total';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
@@ -3428,195 +3002,175 @@ export class CollectionReportComponent implements OnInit {
 						obj3['route_name'] = '';
 						obj3['stoppages_name'] = '';
 						obj3['slab_name'] = '';
-						for (const col of this.columnDefinitions) {
+						for (const col of this.exportColumnDefinitions) {
 							Object.keys(obj3).forEach((key: any) => {
 								if (col.id === key) {
-									arr.push(obj3[key]);
+									levelArray.push(obj3[key]);
 								}
 							});
 						}
-						headerArr2.push(arr);
+						this.pdfrowdata.push(levelArray);
 					}
-					doc.autoTable({
-						head: [headerData],
-						body: headerArr2,
-						tableLineColor: 'black',
-						startY: doc.previousAutoTable.finalY + 0.5,
-						didDrawPage: function (data) {
-							doc.setFontStyle('bold');
+					if (groupItem.level === 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+					} else if (groupItem.level > 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+					}
 
-						},
-						headStyles: {
-							fontStyle: 'normal',
-							fillColor: '#c8d6e5',
-							textColor: '#5e666d',
-							fontSize: 22,
-						},
-						alternateRowStyles: {
-							fillColor: '#fd8468',
-							textColor: '#ffffff',
-							fontStyle: 'bold',
-						},
-						useCss: true,
-						styles: {
-							fontSize: 22,
-							cellWidth: 'auto',
-							textColor: 'black',
-							lineColor: '#89a8c8',
-						},
-						theme: 'grid'
+				} else {
+					const rowData: any[] = [];
+					Object.keys(groupItem.rows).forEach(key => {
+						const arr: any = [];
+						for (const item2 of this.exportColumnDefinitions) {
+							if (this.reportType !== 'mfr') {
+								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
+									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
+								}
+								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
+									arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y'));
+								}
+								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
+									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
+								}
+								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
+									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
+								}
+							} else {
+								if (item2.id.toString().match(/Q/)) {
+									arr.push(groupItem.rows[key][item2.id].status);
+								} else {
+									arr.push(groupItem.rows[key][item2.id]);
+								}
+							}
+						}
+						rowData.push(arr);
+						this.pdfrowdata.push(arr);
 					});
+					const levelArray: any[] = [];
+					if (this.reportType === 'headwise') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['fp_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['bank_name'] = '';
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+						obj3['receipt_mode_name'] = '';
+						obj3['tb_name'] = '';
+						for (const col of this.exportColumnDefinitions) {
+							Object.keys(obj3).forEach((key: any) => {
+								if (col.id === key) {
+									levelArray.push(obj3[key]);
+								}
+							});
+						}
+						this.pdfrowdata.push(levelArray);
+					}
+					if (this.reportType === 'modewise') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['receipt_no'] = '';
+						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
+							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
+								Object.keys(groupItem.rows).forEach(key3 => {
+									Object.keys(groupItem.rows[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
+						obj3['fp_name'] = '';
+						for (const col of this.exportColumnDefinitions) {
+							Object.keys(obj3).forEach((key: any) => {
+								if (col.id === key) {
+									levelArray.push(obj3[key]);
+								}
+							});
+						}
+						this.pdfrowdata.push(levelArray);
+					}
+					if (this.reportType === 'classwise') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
+						obj3['fp_name'] = '';
+						for (const col of this.exportColumnDefinitions) {
+							Object.keys(obj3).forEach((key: any) => {
+								if (col.id === key) {
+									levelArray.push(obj3[key]);
+								}
+							});
+						}
+						this.pdfrowdata.push(levelArray);
+					}
+					if (this.reportType === 'routewise') {
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['fp_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['transport_amount'] = groupItem.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
+						obj3['route_name'] = '';
+						obj3['stoppages_name'] = '';
+						obj3['slab_name'] = '';
+						for (const col of this.exportColumnDefinitions) {
+							Object.keys(obj3).forEach((key: any) => {
+								if (col.id === key) {
+									levelArray.push(obj3[key]);
+								}
+							});
+						}
+						this.pdfrowdata.push(levelArray);
+					}
+					// style row having total
+					if (groupItem.level === 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+					} else if (groupItem.level > 0) {
+						this.pdfrowdata.push(levelArray);
+						this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+					}
 				}
-				index++;
 			}
 		}
-	}
-	checkLastTotPDF(group2, doc, headerData) {
-		const headerArr2: any[] = [];
-		if (this.reportType === 'headwise') {
-			const obj3: any = {};
-			const arr: any[] = [];
-			obj3['id'] = 'footer';
-			obj3['srno'] = '';
-			obj3['invoice_created_date'] = 'Total ';
-			obj3['stu_admission_no'] = '';
-			obj3['stu_full_name'] = '';
-			obj3['stu_class_name'] = '';
-			obj3['receipt_id'] = '';
-			obj3['fp_name'] = '';
-			obj3['receipt_no'] = '';
-			obj3['inv_opening_balance'] = group2.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-			obj3['invoice_fine_amount'] = group2.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
-			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-					Object.keys(group2.rows).forEach(key3 => {
-						Object.keys(group2.rows[key3]).forEach(key4 => {
-							if (key4 === key2) {
-								obj3[key2] = group2.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-							}
-						});
-					});
-				});
-			});
-			obj3['bank_name'] = '';
-			obj3['total'] = group2.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-			obj3['receipt_mode_name'] = '';
-			obj3['tb_name'] = '';
-			for (const item of this.columnDefinitions) {
-				Object.keys(obj3).forEach((key: any) => {
-					if (item.id === key) {
-						arr.push(obj3[key]);
-					}
-				});
-			}
-			headerArr2.push(arr);
-		}
-		if (this.reportType === 'modewise') {
-			const obj3: any = {};
-			const arr: any[] = [];
-			obj3['id'] = 'footer';
-			obj3['srno'] = '';
-			obj3['invoice_created_date'] = 'Total';
-			obj3['stu_admission_no'] = '';
-			obj3['stu_full_name'] = '';
-			obj3['stu_class_name'] = '';
-			obj3['receipt_id'] = '';
-			obj3['receipt_no'] = '';
-			Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-				Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-					Object.keys(group2.rows).forEach(key3 => {
-						Object.keys(group2.rows[key3]).forEach(key4 => {
-							if (key4 === key2) {
-								obj3[key2] = group2.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-							}
-						});
-					});
-				});
-			});
-			obj3['total'] = group2.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-			obj3['fp_name'] = '';
-			for (const item of this.columnDefinitions) {
-				Object.keys(obj3).forEach((key: any) => {
-					if (item.id === key) {
-						arr.push(obj3[key]);
-					}
-				});
-			}
-			headerArr2.push(arr);
-		}
-		if (this.reportType === 'classwise') {
-			const obj3: any = {};
-			const arr: any[] = [];
-			obj3['id'] = 'footer';
-			obj3['srno'] = '';
-			obj3['invoice_created_date'] = 'Total';
-			obj3['stu_admission_no'] = '';
-			obj3['stu_full_name'] = '';
-			obj3['stu_class_name'] = '';
-			obj3['receipt_no'] = '';
-			obj3['rpt_amount'] = group2.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
-			obj3['fp_name'] = '';
-			for (const item of this.columnDefinitions) {
-				Object.keys(obj3).forEach((key: any) => {
-					if (item.id === key) {
-						arr.push(obj3[key]);
-					}
-				});
-			}
-			headerArr2.push(arr);
-		}
-		if (this.reportType === 'routewise') {
-			const obj3: any = {};
-			const arr: any[] = [];
-			obj3['id'] = 'footer';
-			obj3['srno'] = '';
-			obj3['invoice_created_date'] = 'Total';
-			obj3['stu_admission_no'] = '';
-			obj3['stu_full_name'] = '';
-			obj3['stu_class_name'] = '';
-			obj3['fp_name'] = '';
-			obj3['receipt_no'] = '';
-			obj3['transport_amount'] = group2.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
-			obj3['route_name'] = '';
-			obj3['stoppages_name'] = '';
-			obj3['slab_name'] = '';
-			for (const item of this.columnDefinitions) {
-				Object.keys(obj3).forEach((key: any) => {
-					if (item.id === key) {
-						arr.push(obj3[key]);
-					}
-				});
-			}
-			headerArr2.push(arr);
-		}
-		doc.autoTable({
-			head: [headerData],
-			body: headerArr2,
-			tableLineColor: 'black',
-			startY: doc.previousAutoTable.finalY + 0.5,
-			didDrawPage: function (data) {
-				doc.setFontStyle('bold');
-
-			},
-			headStyles: {
-				fontStyle: 'normal',
-				fillColor: '#c8d6e5',
-				textColor: '#5e666d',
-				fontSize: 22,
-			},
-			alternateRowStyles: {
-				fillColor: '#004261',
-				textColor: '#ffffff',
-				fontStyle: 'bold',
-			},
-			useCss: true,
-			styles: {
-				fontSize: 22,
-				cellWidth: 'auto',
-				textColor: 'black',
-				lineColor: '#89a8c8',
-			},
-			theme: 'grid'
-		});
 	}
 }
