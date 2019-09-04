@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
 import { ReportService } from 'projects/axiom/src/app/reports/service/report.service';
@@ -57,6 +57,16 @@ export class StudentDashboardComponent implements OnInit {
 	totalTest: any;
 	latestMarks: any;
 	currentRank: any;
+
+	currentExam: any;
+	currentExamIndex: number;
+	examPre = true;
+	examNext = true;
+	examArray: any[] = [];
+	axiomUserDetails: any = {
+		class_id: '',
+		sec_id: ''
+	}
 
 	timeTableFlag = false;
 	dayArray: any[] = [];
@@ -127,6 +137,7 @@ export class StudentDashboardComponent implements OnInit {
 					this.userDetail = result.data[0];
 					console.log('userDetail', this.userDetail);
 					this.getOverallPerformance();
+					this.getSmartToAxiom();
 					// this.getPeriodDayByClass();
 					this.getClassSectionWiseTimeTable();
 					this.admissionNumber = this.userDetail.au_admission_no;
@@ -148,8 +159,8 @@ export class StudentDashboardComponent implements OnInit {
 					} else {
 						this.image = this.userDetail.au_profileimage;
 					}
-					this.getPastScheduledExams();
-					this.getComingScheduledExams();
+					// this.getPastScheduledExams();
+					// this.getComingScheduledExams();
 					this.getSubjectsByClass();
 					this.getStudentReportPerSubjectMarks();
 					this.getHighestPercentageByStudentInAllExams();
@@ -190,6 +201,18 @@ export class StudentDashboardComponent implements OnInit {
 
 
 	}
+	getSmartToAxiom() {
+		const param: any = {};
+		param.tgam_config_type = '1';
+		param.tgam_global_config_id = this.userDetail.au_class_id
+		this.erpCommonService.getSmartToAxiom(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.axiomUserDetails.class_id = result.data[0].tgam_axiom_config_id;
+				this.axiomUserDetails.sec_id = this.userDetail.au_sec_id;
+				this.getComingScheduledExams();
+			}
+		})
+	}
 	getClassSectionWiseTimeTable() {
 		this.dayArray = [];
 		this.timeTableFlag = false;
@@ -218,45 +241,60 @@ export class StudentDashboardComponent implements OnInit {
 	}
 	switchView(testView) {
 		this.testView = testView;
+		console.log('testview', this.testView);
+		if (this.testView === 'past') {
+			this.getComingScheduledExams();
+		} else {
+			this.getPastScheduledExams();
+		}
 	}
 	getComingScheduledExams() {
+		this.comingExamArray = [];
+		this.examArray = [];
 		const inputJson = {
-			es_class_id: this.userDetail.au_class_id,
-			es_sec_id: this.userDetail.au_sec_id,
+			es_class_id: this.axiomUserDetails.class_id,
+			es_sec_id: this.axiomUserDetails.sec_id,
 			fetch_record: 10,
 			es_status: 'both'
 		};
 		this.qelementService.getScheduledExam(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.comingExamArray = result.data;
+				this.examArray = result.data;
+				this.examNavigate(0);
 				console.log(this.comingExamArray);
 			} else {
-				this.comingExamArray = [];
+				this.currentExam = null;
 			}
 		});
 	}
 	getPastScheduledExams() {
+		this.pastExamArray = [];
+		this.examArray = [];
 		const inputJson = {
-			es_class_id: this.userDetail.au_class_id,
-			es_sec_id: this.userDetail.au_sec_id,
+			es_class_id: this.axiomUserDetails.class_id,
+			es_sec_id: this.axiomUserDetails.sec_id,
 			fetch_record: 10,
 			es_status: '2'
 		};
 		this.qelementService.getScheduledExam(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.pastExamArray = result.data;
+				this.examArray = result.data;
+				this.examNavigate(0);
+
 			} else {
-				this.pastExamArray = [];
+				this.currentExam = null;
 			}
 		});
 	}
 	isExistUserAccessMenu(mod_id) {
 		return this.userAccessMenuService.isExistUserAccessMenu(mod_id);
-}
+	}
 
 	getSubjectsByClass(): void {
 		this.subjectArray = [];
-		this.erpCommonService.getSubjectsByClass({class_id: this.userDetail.au_class_id}).subscribe(
+		this.erpCommonService.getSubjectsByClass({ class_id: this.userDetail.au_class_id }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
@@ -299,8 +337,10 @@ export class StudentDashboardComponent implements OnInit {
 		param.to = this.commonAPIService.dateConvertion(this.todaysDate);
 		param.withDate = true;
 		param.as_status = [1];
-		this.erpCommonService.getAssignment({class_id: this.userDetail.au_class_id, sec_id: this.userDetail.au_sec_id,
-			sub_id: this.sub_id}).subscribe((result: any) => {
+		this.erpCommonService.getAssignment({
+			class_id: this.userDetail.au_class_id, sec_id: this.userDetail.au_sec_id,
+			sub_id: this.sub_id
+		}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.assignmentArray = result.data;
 				this.assignmentNavigate(0);
@@ -312,7 +352,7 @@ export class StudentDashboardComponent implements OnInit {
 	assignmentNavigate(index) {
 		this.currentAssignmentIndex = index;
 		this.currentAssignment = this.assignmentArray[this.currentAssignmentIndex];
-		if	(this.assignmentArray.length === 1 || this.assignmentArray.length === 0) {
+		if (this.assignmentArray.length === 1 || this.assignmentArray.length === 0) {
 			this.assignmentPre = true;
 			this.assignmentNext = true;
 		} else if (this.currentAssignmentIndex === this.assignmentArray.length - 1) {
@@ -321,6 +361,28 @@ export class StudentDashboardComponent implements OnInit {
 		} else if (this.currentAssignmentIndex === 0) {
 			this.assignmentNext = false;
 			this.assignmentPre = true;
+		} else {
+			this.assignmentPre = false;
+			this.assignmentNext = false;
+		}
+
+	}
+
+	examNavigate(index) {
+		this.currentExamIndex = index;
+		this.currentExam = this.examArray[this.currentExamIndex];
+		if (this.examArray.length === 1 || this.examArray.length === 0) {
+			this.examPre = true;
+			this.examNext = true;
+		} else if (this.currentExamIndex === this.examArray.length - 1) {
+			this.examNext = true;
+			this.examPre = false;
+		} else if (this.currentExamIndex === 0) {
+			this.examNext = false;
+			this.examPre = true;
+		} else {
+			this.examPre = false;
+			this.examNext = false;
 		}
 
 	}
@@ -593,20 +655,20 @@ export class StudentDashboardComponent implements OnInit {
 		this.socketService.onEvent(Event.CONNECT)
 			.subscribe(() => {
 				if (this.currentUser) {
-						const userDetail = {
-							examId: examDetail.es_id,
-							userId: this.currentUser.login_id,
-							paperId: examDetail.es_qp_id,
-							schoolId: this.currentUser.Prefix,
-							userType: this.currentUser.role_id
-						};
-						this.socketService.sendUserInformation(userDetail);
-						userDetail['action'] = appConfig.testInitiateCode;
-						this.socketService.sendUserTestActionDetail(userDetail);
-					}
+					const userDetail = {
+						examId: examDetail.es_id,
+						userId: this.currentUser.login_id,
+						paperId: examDetail.es_qp_id,
+						schoolId: this.currentUser.Prefix,
+						userType: this.currentUser.role_id
+					};
+					this.socketService.sendUserInformation(userDetail);
+					userDetail['action'] = appConfig.testInitiateCode;
+					this.socketService.sendUserTestActionDetail(userDetail);
 				}
+			}
 			);
-			this.socketService.onEvent(Event.DISCONNECT)
+		this.socketService.onEvent(Event.DISCONNECT)
 			.subscribe(() => {
 				console.log('Disconnected');
 			});

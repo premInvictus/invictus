@@ -6,144 +6,148 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class ErpCommonService {
 
-		constructor(private http: HttpClient, private service: CommonAPIService) { }
+	constructor(private http: HttpClient, private service: CommonAPIService) { }
 
-		getStudentInvoice(value) {
-				this.service.startLoading();
-				return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getStudentInvoice', value);
-		}
+	getStudentInvoice(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getStudentInvoice', value);
+	}
 
-		getFeeLedger(value: any) {
-				this.service.startLoading();
-				return this.http.post(environment.apiFeeUrl + '/feeTransaction/getFeeLedger/', value);
-		}
+	getFeeLedger(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/getFeeLedger/', value);
+	}
 
-		downloadInvoice(value: any) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/invoice/printInvoice', value);
-		}
+	downloadInvoice(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/printInvoice', value);
+	}
 
-		getStudentFeeOutstanding(value: any) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getStudentFeeOutstanding', value);
-		}
+	getStudentFeeOutstanding(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getStudentFeeOutstanding', value);
+	}
 
-		makeTransaction(value: any) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/makeTransaction', value);
-		}
+	makeTransaction(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/makeTransaction', value);
+	}
 
-		getOnlineTransaction(value: any) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getOnlineTransaction', value);
-		}
+	getOnlineTransaction(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getOnlineTransaction', value);
+	}
 
-		downloadReceipt(value: any) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/feeTransaction/printReceipt', value);
-		}
+	downloadReceipt(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/printReceipt', value);
+	}
 
-		checkForPaymentStatus(value: any) {
-			return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/checkForPaymentStatus', value);
-		}
+	checkForPaymentStatus(value: any) {
+		return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/checkForPaymentStatus', value);
+	}
 
-		// smart api
-		getSubject(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiSmartUrl + '/setup/getSubject', value);
-		}
-		getClasswork(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiSmartUrl + '/classwork/getClasswork', value);
-		}
-		getClasswiseDetails(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiSmartUrl + '/smttimetable/getClasswiseDetails', value);
-		}
-		getTimeTableId(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiSmartUrl + '/smttimetable/getTimeTableId', value);
-		}
-		getClassSectionWiseTimeTable(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiSmartUrl + '/smttimetable/getClassSectionWiseTimeTable', value);
-		}
-		getTeacherwiseTableDetails(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiSmartUrl + '/smttimetable/getTeacherwiseTableDetails', value);
-		}
-		getPeriodDayByClass(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiSmartUrl + '/smttimetable/getPeriodDayByClass', value);
-		}
-		getSubjectsByClass(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiSmartUrl + '/common/getSubjectsByClass', value);
-		}
-		getAssignment(value: any) {
-			this.service.startLoading();
-			return this.http.post(environment.apiSmartUrl + '/assignment/getAssignment', value);
-		}
-		addFamily(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/familyInformation/addFamily', value);
-		}
-		updateFamily(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/familyInformation/updateFamily', value);
-		}
-		deleteFamily(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/familyInformation/deleteFamily', value);
-		}
-		getFamilyWiseFeeReceipt(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyWiseFeeReceipt', value);
-		}
+	// smart api
+	getSmartToAxiom(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSmartToAxiom', value);
+	}
+	getSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSubject', value);
+	}
+	getClasswork(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/classwork/getClasswork', value);
+	}
+	getClasswiseDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getClasswiseDetails', value);
+	}
+	getTimeTableId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getTimeTableId', value);
+	}
+	getClassSectionWiseTimeTable(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getClassSectionWiseTimeTable', value);
+	}
+	getTeacherwiseTableDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getTeacherwiseTableDetails', value);
+	}
+	getPeriodDayByClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smttimetable/getPeriodDayByClass', value);
+	}
+	getSubjectsByClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSubjectsByClass', value);
+	}
+	getAssignment(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/assignment/getAssignment', value);
+	}
+	addFamily(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/addFamily', value);
+	}
+	updateFamily(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/updateFamily', value);
+	}
+	deleteFamily(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/deleteFamily', value);
+	}
+	getFamilyWiseFeeReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyWiseFeeReceipt', value);
+	}
 
-		getFamilyInformation(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyInformation', value);
-		}
-		getFamilyOutstandingDetail(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyOutstandingDetail', value);
-		}
+	getFamilyInformation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyInformation', value);
+	}
+	getFamilyOutstandingDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/getFamilyOutstandingDetail', value);
+	}
 
-		printFamilyInvoice(value) {
-			this.service.startLoading();
-			return this.http.post(environment.apiFeeUrl + '/familyInformation/printFamilyInvoice', value);
-		}
+	printFamilyInvoice(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/familyInformation/printFamilyInvoice', value);
+	}
 
-		getEntryMode(value) {
-			return this.http.get(environment.apiFeeUrl + '/feeSetup/getEntryMode');
-		}
-		getPaymentMode(value) {
-			return this.http.get(environment.apiFeeUrl + '/feeSetup/getPaymentMode');
-		}
-		getFeePeriods(value) {
-			this.service.startLoading();
-			return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeePeriods');
-		}
-		getBanks(value) {
-			return this.http.get(environment.apiFeeUrl + '/feeSetup/getBanks');
-		}
-		getBanksAll(value) {
-			return this.http.get(environment.apiFeeUrl + '/feeSetup/getAllBank');
-		}
-		getCalculationMethods(value) {
-			this.service.startLoading();
-			return this.http.get(environment.apiFeeUrl + '/feeSetup/getCalculationMethods');
-		}
-		insertFeeTransaction(value: any) {
-			this.service.startLoading();
-			// if (this.processType.getProcesstype()) {
-			// 	value.inv_process_type = this.processType.getProcesstype();
-			// }
-			return this.http.post(environment.apiFeeUrl + '/feeTransaction/insertFeeTransaction', value);
-		}
-		getSchool() {
-			this.service.startLoading();
-			return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
-		}
+	getEntryMode(value) {
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getEntryMode');
+	}
+	getPaymentMode(value) {
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getPaymentMode');
+	}
+	getFeePeriods(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeePeriods');
+	}
+	getBanks(value) {
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getBanks');
+	}
+	getBanksAll(value) {
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getAllBank');
+	}
+	getCalculationMethods(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getCalculationMethods');
+	}
+	insertFeeTransaction(value: any) {
+		this.service.startLoading();
+		// if (this.processType.getProcesstype()) {
+		// 	value.inv_process_type = this.processType.getProcesstype();
+		// }
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/insertFeeTransaction', value);
+	}
+	getSchool() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
+	}
 }
