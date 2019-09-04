@@ -13,7 +13,8 @@
         <div *ngIf="filterFlag && this.reportFilterForm.value.report_type" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>{{valueLabel}}</mat-label>
-                <mat-select formControlName="fee_value" [placeholder]="valueLabel" multiple>
+                <mat-select formControlName="fee_value" [placeholder]="valueLabel" multiple
+                (selectionChange)="filtered($event)">
                     <mat-option *ngFor="let item of valueArray" [value]="item.id">{{item.name}}
                     </mat-option>
                 </mat-select>

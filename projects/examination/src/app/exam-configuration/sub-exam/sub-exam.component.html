@@ -42,7 +42,7 @@
                 <div class="col-12 remove-col-padding text-center">
                   <button mat-raised-button class="btn-add"  *ngIf="viewOnly" (click)="submit()">Add</button>
                   <button *ngIf="UpdateFlag && !viewOnly" mat-raised-button class="btn-add"
-                    (click)="updateSyllabussList()">Update</button>
+                    (click)="updateSubExam()">Update</button>
                   <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>
                 </div>
               </div>
@@ -92,7 +92,7 @@
                         aria-hidden="true" (click)="formEdit(item.status)"></i>
                       <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
                         matTooltip="Delete" aria-hidden="true"
-                        (click)="openDeleteDialog({data : item.status, type: configValue})"></i>
+                        (click)="openDeleteModal(item.modify)"></i>
                     </td>
                   </ng-container>
                   <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
@@ -107,3 +107,4 @@
       </mat-card>
     </div>
   </div>
+  <app-delete-modal #deleteModal (deleteOk)="deleteSubExam($event)"></app-delete-modal>

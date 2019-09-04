@@ -13,6 +13,7 @@ import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 })
 export class SubExamComponent implements OnInit {
 	displayedColumns: string[] = ['name', 'sexam_desc', 'status', 'modify'];
+	@ViewChild('deleteModal') deleteModal;
 	subExamForm: FormGroup;
 	currentUser: any;
 	session: any;
@@ -21,6 +22,7 @@ export class SubExamComponent implements OnInit {
 	ELEMENT_DATA: Element[] = [];
 	UpdateFlag = false;
 	viewOnly = true;
+	param: any = {};
 	subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	constructor(
 		public dialog: MatDialog,
@@ -40,19 +42,33 @@ export class SubExamComponent implements OnInit {
 	}
 	buildForm() {
 		this.subExamForm = this.fbuild.group({
+			se_id: '',
 			sexam_name: '',
 			sexam_desc: '',
 		});
 	}
+	// delete dialog open modal function
+	openDeleteModal(value) {
+		this.param.se_id = value;
+		this.param.text = 'Delete';
+		this.deleteModal.openModal(this.param);
+	}
 	resetForm() {
 		this.subExamForm.patchValue({
+			'se_id': '',
 			'sexam_name': '',
 			'sexam_desc': ''
 		});
+		this.UpdateFlag = false;
+		this.viewOnly = true;
 	}
 	submit() {
 		if (this.subExamForm.valid) {
-			this.examService.insertSubExam(this.subExamForm.value).subscribe((result_i: any) => {
+			const inputJson = {
+				sexam_name: this.subExamForm.value.sexam_name,
+				sexam_desc: this.subExamForm.value.sexam_desc
+			};
+			this.examService.insertSubExam(inputJson).subscribe((result_i: any) => {
 				if (result_i && result_i.status === 'ok') {
 					this.getSubExam();
 					this.resetForm();
@@ -74,7 +90,7 @@ export class SubExamComponent implements OnInit {
 						name: new CapitalizePipe().transform(item.sexam_name),
 						sexam_desc: item.sexam_desc,
 						status: item,
-						modify: '',
+						modify: item.se_id,
 					});
 				}
 				this.subExamDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
@@ -82,7 +98,6 @@ export class SubExamComponent implements OnInit {
 		});
 	}
 	getActiveStatus(value: any) {
-		console.log(value);
 		if (value.sexam_status === '1') {
 			return true;
 		}
@@ -104,8 +119,31 @@ export class SubExamComponent implements OnInit {
 		this.UpdateFlag = true;
 		this.viewOnly = false;
 		this.subExamForm.patchValue({
+			se_id: value.se_id,
 			sexam_name: value.sexam_name,
 			sexam_desc: value.sexam_desc
+		});
+	}
+	updateSubExam() {
+		this.examService.updateSubExamStatus(this.subExamForm.value).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
+				this.getSubExam();
+				this.resetForm();
+			}
+		});
+	}
+	deleteSubExam($event) {
+		const deleteJson = {
+			se_id: $event.se_id,
+			sexam_status: '5'
+		};
+		this.examService.updateSubExamStatus(deleteJson).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.commonService.showSuccessErrorMessage('Deleted Succesfully', 'success');
+				this.getSubExam();
+				this.resetForm();
+			}
 		});
 	}
 }
