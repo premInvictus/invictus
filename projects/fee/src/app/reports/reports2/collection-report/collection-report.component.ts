@@ -2696,7 +2696,7 @@ export class CollectionReportComponent implements OnInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr: any[] = [];
-				for (const item2 of this.columnDefinitions) {
+				for (const item2 of this.exportColumnDefinitions) {
 					if (this.reportType !== 'mfr') {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
