@@ -192,7 +192,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 					this.closemodal();
 				}
 			});
-		} else if (this.commonAPIService.isExistUserAccessMenu('409')) {  // when both are unchecked 
+		} else if (this.commonAPIService.isExistUserAccessMenu('432')) {  // when both are unchecked 
 			const param: any = {};
 			const params: any[] = [];
 			const datalist: any[] = [];

@@ -27,10 +27,17 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getExamActivityType', value);
 	}
-
+	getExamCalculation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getExamCalculation', value);
+	}
 	insertExam(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/insertExam', value);
+	}
+	updateExam(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/updateExam', value);
 	}
 	insertSubExam(value) {
 		this.service.startLoading();
@@ -56,6 +63,14 @@ export class ExamService {
 	insertExamActivitySetup(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/insertExamActivity', value);
+	}
+	getExamDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getExamDetails', value);
+	}
+	deleteExam(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/deleteExam', value);
 	}
 	insertReportCardSetup(value) {
 		this.service.startLoading();

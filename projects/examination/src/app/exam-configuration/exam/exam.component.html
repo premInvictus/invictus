@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-6">
           <div class="top-card-title">
-            <span class="font-size-24 font-medium">Sub-Exam Configuration</span>
+            <span class="font-size-24 font-medium">Exam Configuration</span>
           </div>
         </div>
         <div class="col-6 text-right">
@@ -20,29 +20,119 @@
     <mat-card class="card-height-850-lp card-height-960">
       <div class="row">
         <div class="col-2 col-ver-line-divider">
-          <form [formGroup]="subExamForm" novalidate>
+          <form [formGroup]="examForm" novalidate>
             <div class="row">
               <div class="col-12 remove-col-padding">
                 <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Sub Exam Name</mat-label>
-                  <input matInput placeholder="Sub Exam Name" type="text" formControlName="sexam_name" required>
+                  <mat-label>Exam Name</mat-label>
+                  <input matInput placeholder="Exam Name" type="text" formControlName="exam_name" required>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Exam Category</mat-label>
+                  <mat-select formControlName="exam_category" required placeholder="Exam Category">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of categoryArray" [value]="item.eac_id">
+                      {{item.eac_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>No. Of Terms</mat-label>
+                  <mat-select formControlName="exam_term" required placeholder="No. Of Terms">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of termArray" [value]="item.term_id">
+                      {{item.term_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Marks Type</mat-label>
+                  <mat-select formControlName="exam_marks_type" required placeholder="Marks Type">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of gradeSetArray" [value]="item.egs_id">
+                      {{item.egs_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Class</mat-label>
+                  <mat-select formControlName="exam_class" required placeholder="Class" multiple>
+                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                      {{item.class_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Sub Exam</mat-label>
+                  <mat-select formControlName="exam_sub_exam" required placeholder="Sub Exam" multiple
+                    (selectionChange)="getMaxMarks($event)">
+                    <mat-option *ngFor="let item of subExamArray" [value]="item.se_id">
+                      {{item.sexam_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row" [hidden]="!(formGroupArray.length > 0)" *ngFor="let item of formGroupArray">
+              <div class="col-6">
+                <br>
+                {{item.sexam_name}}
+              </div>
+              <div class="col-6">
+                <form [formGroup]="item.formGroup">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Max Marks</mat-label>
+                    <input formControlName="exam_max_marks" type="number" matInput placeholder="Max Marks" required>
+                  </mat-form-field>
+                </form>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 remove-col-padding">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Calculation Type</mat-label>
+                  <mat-select formControlName="exam_calculation_rule" required placeholder="Calculation Type">
+                    <mat-option *ngFor="let item of calculationArray" [value]="item.ecr_id">
+                      {{item.ecr_name}}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
               </div>
             </div>
             <div class="row">
               <div class="col-12 remove-col-padding">
                 <mat-form-field appearance="outline" class="form-field">
-                  <mat-label>Description</mat-label>
-                  <textarea placeholder="Description" required formControlName="sexam_desc" matInput
-                    rows="4"></textarea>
+                  <mat-label>Weightage</mat-label>
+                  <textarea placeholder="Weightage" required formControlName="exam_weightage" matInput
+                    rows="2"></textarea>
                 </mat-form-field>
               </div>
             </div>
             <div class="row">
               <div class="col-12 remove-col-padding text-center">
-                <button mat-raised-button class="btn-add" (click)="submit()">Add</button>
-                <button *ngIf="syllabusUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
-                  (click)="updateSyllabussList()">Update</button>
+                <button mat-raised-button class="btn-add" *ngIf="viewOnly" (click)="saveForm()">Add</button>
+                <button *ngIf="updateFlag && !viewOnly" mat-raised-button class="btn-add"
+                  (click)="saveForm()">Update</button>
                 <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>
               </div>
             </div>
@@ -52,23 +142,71 @@
         <div class="col-10">
           <div class="row">
             <div class="col-12 remove-col-padding">
-              <table mat-table #table [dataSource]="configDataSource" matSort class="table-100 text-center">
-              
-                <ng-container matColumnDef="name">
+              <table mat-table #table [dataSource]="examDataSource" matSort class="table-100 text-center">
+                <ng-container matColumnDef="exam_name">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    Sub Exam Name
+                    Exam Name
                   </th>
                   <td mat-cell *matCellDef="let item">
-                    {{ item.name }}
+                    {{ item.exam_name }}
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="sexam_desc">
+                <ng-container matColumnDef="exam_category">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                   Description
+                    Category
                   </th>
                   <td mat-cell *matCellDef="let item">
-                    {{ item.sexam_desc }}
+                    {{ item.exam_category }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="exam_term">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    No. of Terms
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.exam_term }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="exam_class">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Class
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.exam_class }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="exam_sub_exam">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Sub Exam
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.exam_sub_exam }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="exam_sub_exam_max_marks">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Marks Type
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.exam_marks_type }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="exam_calculation_rule">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Calculation Type
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.exam_calculation_rule }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="exam_weightage">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Weightage
+                  </th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.exam_weightage }}
                   </td>
                 </ng-container>
                 
@@ -82,8 +220,8 @@
                   </td>
                   >
                 </ng-container>
-                
-                <ng-container matColumnDef="modify">
+
+                <ng-container matColumnDef="action">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Action
                   </th>
@@ -91,8 +229,7 @@
                     <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit"
                       aria-hidden="true" (click)="formEdit(item.action)"></i>
                     <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top"
-                      matTooltip="Delete" aria-hidden="true"
-                      (click)="openDeleteDialog({data : item.action, type: configValue})"></i>
+                      matTooltip="Delete" aria-hidden="true" (click)="openDeleteModal(item.modify)"></i>
                   </td>
                 </ng-container>
                 <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
@@ -107,3 +244,4 @@
     </mat-card>
   </div>
 </div>
+<app-delete-modal #deleteModal (deleteOk)="deleteExam($event)"></app-delete-modal>

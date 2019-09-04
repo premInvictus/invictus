@@ -91,3 +91,12 @@ mat-expansion-panel.bookmark-expansion-panel {
 .mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) .report-panel-header.mat-expansion-panel-header:hover {
     background: #007D9E !important;
 }
+
+.mat-expansion-panel.exam-dash-exp-panel {
+   box-shadow: none;
+   border: 1px solid #A5A5A5; 
+}
+
+.mat-expansion-panel-header {
+    border-bottom: 1px solid #A5A5A5;
+}

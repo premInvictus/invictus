@@ -92,6 +92,9 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
      .card-height-615 {
         min-height: 615px;
     }
+    .card-height-400 {
+        min-height: 400px;
+    }
     .card-height-540 {
         min-height: 540px;
     }
@@ -195,6 +198,9 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
 }
 
 @include respond-between(lg, xl) {
+    .card-height-400 {
+        min-height: 400px;
+    }
     .height-296 {
         height: 296px;;
     }

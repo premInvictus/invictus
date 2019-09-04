@@ -1,0 +1,7 @@
+::ng-deep .mat-tab-header {
+    border-bottom: none !important;
+}
+
+.param-margin {
+    margin-top: -1px;
+}

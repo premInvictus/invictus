@@ -186,3 +186,9 @@ mat-form-field.remove-form-field-bottom-margin .mat-form-field-wrapper {
 .select-css option {
     font-weight:normal;
 }
+
+.example-radio-group {
+    display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
