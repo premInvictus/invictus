@@ -85,8 +85,6 @@ export class AddSchedulerComponent implements OnInit {
 				const sessionYear = data.ses_name.split('-');
 				const ssd = sessionYear[0] + '-' + data.si_session_start_month + '-01';
 				const sed = sessionYear[1] + '-' + data.si_session_end_month + '-01';
-				console.log(ssd);
-				console.log(sed);
 				this.minDate = new Date(ssd);
 				this.maxDate = new Date(sed);
 			}
@@ -104,7 +102,7 @@ export class AddSchedulerComponent implements OnInit {
 			sc_sec: value.sc_sec,
 			sc_description: value.sc_description
 		});
-		console.log(this.schedulerform.value);
+		this.setMinTo({ value: value.sc_from });
 	}
 	setMinTo(event) {
 		this.toMin = event.value;
@@ -131,7 +129,7 @@ export class AddSchedulerComponent implements OnInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.smartService.getClass({class_status: '1'}).subscribe((result: any) => {
+		this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			} else {
@@ -152,7 +150,6 @@ export class AddSchedulerComponent implements OnInit {
 	}
 
 	submit() {
-		console.log(this.schedulerform);
 		if (this.schedulerform.valid) {
 			this.schedulerform.value.sc_from = this.commonAPIService.dateConvertion(this.schedulerform.value.sc_from);
 			this.schedulerform.value.sc_to = this.commonAPIService.dateConvertion(this.schedulerform.value.sc_to);
