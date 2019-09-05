@@ -302,7 +302,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 	}
 	checkAllStudents($event) {
 		this.checkStudents = [];
-		if ($event.checked === true) {
+		if ($event.checked) {
 			for (const item of this.BULK_ELEMENT_DATA) {
 				this.checkStudents.push({
 					no: item.no
@@ -310,6 +310,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 			}
 			this.checkAllFlag = true;
 		} else {
+			this.checkStudents = [];
 			this.checkAllFlag = false;
 		}
 	}
@@ -372,7 +373,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 			const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 			popupWin.document.open();
 			popupWin.document.write('<html> <link rel="stylesheet"' +
-			'href="../../../../../../assets/css/idcardstyle1.css">' +
+				'href="../../../../../../assets/css/idcardstyle1.css">' +
 				'<link rel="stylesheet" href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/css/bootstrap.min.css"' +
 				'integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">' +
 				'<body onload="window.print()">' + printModal2.innerHTML + '</html>');

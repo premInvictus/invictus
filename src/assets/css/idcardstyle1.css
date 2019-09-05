@@ -1,7 +1,8 @@
 .row {display: flex;}
+.margin-top-20 {margin-top: 20px !important}
 .remove-col-padding{padding-left: 0 !important;padding-right: 0 !important;}
-.container-printid-landscape {width: 324px;height: 204px;}
-        #id_card_header {padding-bottom: 2px;border-top-right-radius: 15px;
+.container-printid-landscape {width: 324px !important;height: 204px !important;}
+        #id_card_header {padding-bottom: 2px !important;;border-top-right-radius: 15px !important;margin-top: 0px !important;
         border-top-left-radius: 15px;}
         .id-card-school-logo {width: 40px;height: 40px;margin-top: 5px;}
         img {vertical-align: middle;border-style: none;}
