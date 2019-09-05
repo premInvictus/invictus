@@ -21,6 +21,7 @@ export class IssueSlctcComponent implements OnInit {
 	counter = 0;
 	currentFileChangeEvent: any;
 	requestDoc = [];
+	acknowledgement = '';
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	constructor(
 		private sisService: SisService,
@@ -34,6 +35,7 @@ export class IssueSlctcComponent implements OnInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
+		this.getAcknowledgementData();
 		this.route.queryParams.subscribe(param => {
 			if (param && param.tc_id) {
 				this.tc_id = param.tc_id;
@@ -188,5 +190,15 @@ export class IssueSlctcComponent implements OnInit {
 		} else {
 			return false;
 		}
+	}
+
+	getAcknowledgementData() {
+		this.sisService.getSlcTcTemplateSetting({ usts_id: 5 }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.acknowledgement = result.data[0].usts_template;
+			} else {
+				this.acknowledgement = '';
+			}
+		});
 	}
 }

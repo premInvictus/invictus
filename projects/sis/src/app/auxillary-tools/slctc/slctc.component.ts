@@ -154,12 +154,16 @@ export class SlctcComponent implements OnInit, OnDestroy {
 					if (result.data.length > 0) {
 						for (const item of result.data) {
 							if (this.srTable === 'PendingSlc') {
+								let sec_name = '';
+								if (item.sec_name) {
+									sec_name  = ' - ' + item.sec_name;
+								}
 								this.ELEMENT_DATA.push({
 									requestno: item.tc_id,
 									requestdate: this.commonAPIService.dateConvertion(item.tc_request_date, 'd-MMM-y'),
 									studentname: item.au_full_name,
 									admissionno: item.tc_admission_no,
-									classsection: item.class_name + ' - ' + item.sec_name,
+									classsection: item.class_name + sec_name,
 									status: item.tc_approval_status === '1' ? 'Approved' : 'Pending',
 									action: item
 								});
@@ -174,12 +178,16 @@ export class SlctcComponent implements OnInit, OnDestroy {
 								} else if (item.tc_approval_status === '5') {
 									status = 'Printed';
 								}
+								let sec_name = '';
+								if (item.sec_name) {
+									sec_name  = ' - ' + item.sec_name;
+								}
 								this.ELEMENT_DATA.push({
 									certificateno: item.tc_id,
 									certificatedate: this.commonAPIService.dateConvertion(item.tc_request_date, 'd-MMM-y'),
 									studentname: item.au_full_name,
 									admissionno: item.tc_admission_no,
-									classsection: item.class_name + ' - ' + item.sec_name,
+									classsection: item.class_name + sec_name,
 									status: status,
 									action: item
 								});

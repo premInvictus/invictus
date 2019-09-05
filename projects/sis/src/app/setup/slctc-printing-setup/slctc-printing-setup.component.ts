@@ -24,35 +24,29 @@ export class SlctcPrintingSetupComponent implements OnInit {
 		'Games playedor extra- curricular activities in which pupil usually took part- <br>(mention achievement level there)',
 		'General Comduct', 'Date of application for certificate', 'Date of issue of certificate', 'Reasons for leaving the school',
 		'Any other Remarks'];
+	templateArray = [{'usts_id': '1', 'usts_name': 'Slc/Tc Printing', 'usts_value' : 'slctc'},
+					 {'usts_id': '2', 'usts_name': 'Certificate',  'usts_value' : 'certificate'},
+					 {'usts_id': '3', 'usts_name': 'Admit card', 'usts_value' : 'admitcard'},
+					 {'usts_id': '4', 'usts_name': 'Acknowledgement', 'usts_value' : 'acknowledgement'},
+					 {'usts_id': '5', 'usts_name': 'TC Issue Acknowledgement', 'usts_value' : 'tcissueacknowledgement'},
+					 {'usts_id': '6', 'usts_name': 'TC Re-issue Acknowledgement', 'usts_value' : 'tcreissueacknowledgement'},
+					 {'usts_id': '7', 'usts_name': 'Tc Cancel Acknowledgement', 'usts_value' : 'tcancelacknowledgement'}
+					];
+	templateIndex = 0;
 	ckeConfig: any;
 	renderTable: any = '';
+	loadConfig = false;
 	constructor(private fbuild: FormBuilder,
 		private sisService: SisService,
 		private common: CommonAPIService) { }
 
 	ngOnInit() {
 		this.buildForm();
-		this.ckeConfig = {
-			allowedContent: true,
-			pasteFromWordRemoveFontStyles: false,
-			contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
-			disallowedContent: 'm:omathpara',
-			height: '800',
-			width: '100%',
-			// tslint:disable-next-line:max-line-length
-			extraPlugins: 'strinsertExt',
-			scayt_multiLanguageMod: true,
-			toolbar: [
-				// tslint:disable-next-line:max-line-length
-				['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
-					{ name: 'strinsertExt', items: ['strinsertExt'] }
-				]
-			],
-			removeDialogTabs: 'image:advanced;image:Link'
-		};
+		
 		this.getSLCTCFormConfig();
 		this.getSLCTCFormConfig2();
 		this.getTemplate();
+
 	}
 	buildForm() {
 		this.templateForm = this.fbuild.group({
@@ -62,24 +56,42 @@ export class SlctcPrintingSetupComponent implements OnInit {
 		});
 	}
 	insertTemplate() {
+		this.templateForm.value['usts_name'] = this.templateArray[this.templateIndex]['usts_value'];
+		this.templateForm.value['usts_id'] = this.templateArray[this.templateIndex]['usts_id'];
 		this.sisService.insertSlcTcTemplateSetting(this.templateForm.value).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Template Added', 'success');
-				//this.getTemplate();
+				this.templateForm.reset();
+				// this.getTemplate();
+
 			}
 		});
 	}
 	getTemplate() {
+		this.templateIndex = 0;
+		for (let i = 0; i < this.templateArray.length; i++) {
+			if (this.templateArray[i]['usts_id'] === this.templateForm.value.usts_id) {
+				this.templateIndex = i;
+				break;
+			}
+		}
 		this.sisService.getSlcTcTemplateSetting({ usts_id: this.templateForm.value.usts_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				console.log(result.data[0].usts_template);
+				// console.log(result.data[0].usts_template);
 				this.templateForm.patchValue({
-					'usts_template': result.data[0].usts_template
+					'usts_template': result.data[0].usts_template,
+					'usts_id' : result.data[0].usts_id,
+				});
+			} else {
+				this.templateForm.patchValue({
+					'usts_template': ''
 				});
 			}
 		});
 	}
-	loadPlugin(array2: any) {
+	loadPlugin() {
+		console.log('load plugin');
+		const array2 = this.configArray;
 		// tslint:disable-next-line:forin
 		if (!(CKEDITOR.plugins.registered['strinsertExt'])) {
 			CKEDITOR.plugins.add('strinsertExt', {
@@ -124,7 +136,30 @@ export class SlctcPrintingSetupComponent implements OnInit {
 					});
 				}
 			});
+
+			this.ckeConfig = {
+				allowedContent: true,
+				pasteFromWordRemoveFontStyles: false,
+				contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
+				disallowedContent: 'm:omathpara',
+				height: '800',
+				width: '100%',
+				// tslint:disable-next-line:max-line-length
+				extraPlugins: 'strinsertExt',
+				scayt_multiLanguageMod: true,
+				toolbar: [
+					// tslint:disable-next-line:max-line-length
+					['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
+						{ name: 'strinsertExt', items: ['strinsertExt'] }
+					]
+				],
+				removeDialogTabs: 'image:advanced;image:Link'
+			};
+
+			this.loadConfig = true;
 		}
+
+		// this.loadCkEditorConfiguration();
 	}
 	getSLCTCFormConfig() {
 		this.configArray = [];
@@ -139,9 +174,65 @@ export class SlctcPrintingSetupComponent implements OnInit {
 						sff_field_type: item.sff_field_type
 					});
 				}
-				this.loadPlugin(this.configArray);
+				this.loadPlugin();
 			}
 		});
+	}
+
+	loadCkEditorConfiguration() {
+		// CKEDITOR.editorConfig = ( config ) => {
+		// 	config.extraPlugins = 'strinsertExt';
+		// 	CKEDITOR.config.toolbar_Basic = [[
+		// 				// tslint:disable-next-line:max-line-length
+		// 				['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
+		// 					{ name: 'strinsertExt', items: ['strinsertExt'] }
+		// 				]
+		// 			]];
+		// 	 config.toolbar = 'Basic';
+		// 	 console.log('test', config);
+		// 	 this.ckeConfig.extraPlugins = config.extraPlugins;
+		// 	 this.ckeConfig.toolbar = config.toolbar;
+		// 	 console.log('test', config);
+		// };
+
+		const extraPlugins = 'strinsertExt';
+		const toolbar = [[
+			// tslint:disable-next-line:max-line-length
+			['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
+				{ name: 'strinsertExt', items: ['strinsertExt'] }
+			]
+		]];
+
+		this.ckeConfig['extraPlugins'] = extraPlugins;
+		this.ckeConfig.toolbar = toolbar;
+		console.log('test', this.ckeConfig);
+
+		
+		// this.ckeConfig = {
+		// 	allowedContent: true,
+		// 	pasteFromWordRemoveFontStyles: false,
+		// 	contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
+		// 	disallowedContent: 'm:omathpara',
+		// 	height: '800',
+		// 	width: '100%',
+		// 	// tslint:disable-next-line:max-line-length
+		// 	extraPlugins: 'strinsertExt',
+		// 	scayt_multiLanguageMod: true,
+		// 	toolbar: [
+		// 		// tslint:disable-next-line:max-line-length
+		// 		['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
+		// 			{ name: 'strinsertExt', items: ['strinsertExt'] }
+		// 		]
+		// 	],
+		// 	removeDialogTabs: 'image:advanced;image:Link'
+		// };
+		// // this.loadConfig = true;
+		console.log('CKEDITOR.instances', CKEDITOR.instances);
+		CKEDITOR.instances.editor1.config = this.ckeConfig;
+		// if (CKEDITOR.instances) {
+		// 	//CKEDITOR.instances.editor1.destroy();
+		// 	CKEDITOR.replace('editor1', this.ckeConfig );
+		// }
 	}
 	getSLCTCFormConfig2() {
 		this.configArray = [];
