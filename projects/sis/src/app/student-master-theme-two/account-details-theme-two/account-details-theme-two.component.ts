@@ -40,6 +40,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	@Input() feeLoginId: any;
 	validateFlag = false;
 	slabModel: any;
+	conDesc: string;
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -156,6 +157,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_ses_id: this.feeDet.ses_id,
 				accd_status: this.feeDet.accd_status
 			});
+			this.setDescription({ value: this.accountsForm.value.accd_fcg_id });
 			this.slabModel = this.feeDet.accd_ts_id;
 		} else {
 			this.accountsForm.reset();
@@ -166,6 +168,13 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.existFlag = false;
 		}
 
+	}
+	setDescription(event) {
+		this.conDesc = '';
+		const cindex = this.conGroupArray.findIndex(e => e.fcg_id === event.value);
+		if (cindex !== -1) {
+			this.conDesc = this.conGroupArray[cindex].fcg_description;
+		}
 	}
 	getFeeOtherCategory() {
 		this.feeService.getFeeOthers({}).subscribe((result: any) => {
