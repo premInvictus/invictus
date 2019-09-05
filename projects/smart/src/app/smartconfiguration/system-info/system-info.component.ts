@@ -196,7 +196,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 	getActiveClass(that) {
 		this.classArray = [];
-		this.smartService.getClass({class_status: '1'}).subscribe((result: any) => {
+		this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			}
@@ -995,14 +995,14 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				topic_id: this.formGroupArray[value - 1].formGroup.value.st_topic_id
 			};
 			this.smartService.downloadSubTopicExcel(inputJson)
-			.subscribe(
-				(excel_r: any) => {
-					if (excel_r && excel_r.status === 'ok') {
-						const length = excel_r.data.split('/').length;
-						saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
-						this.resetForm(this.configValue);
-					}
-				});
+				.subscribe(
+					(excel_r: any) => {
+						if (excel_r && excel_r.status === 'ok') {
+							const length = excel_r.data.split('/').length;
+							saveAs(excel_r.data, excel_r.data.split('/')[length - 1]);
+							this.resetForm(this.configValue);
+						}
+					});
 
 		}
 	}

@@ -84,7 +84,7 @@ export class AddSchedulerComponent implements OnInit {
 				const data = result.data;
 				const sessionYear = data.ses_name.split('-');
 				const ssd = sessionYear[0] + '-' + data.si_session_start_month + '-01';
-				const sed = sessionYear[1] + '-' + data.si_session_end_month + '-01';
+				const sed = sessionYear[1] + '-' + data.si_session_end_month + '-31';
 				this.minDate = new Date(ssd);
 				this.maxDate = new Date(sed);
 			}

@@ -109,7 +109,7 @@ export class TeacherDashboardComponent implements OnInit {
 		});
 	}
 	getSubject() {
-		this.smartService.getSubject({}).subscribe((result: any) => {
+		this.smartService.getSubject({ sub_timetable: 1 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log(result.data);
 				this.subjectArray = result.data;

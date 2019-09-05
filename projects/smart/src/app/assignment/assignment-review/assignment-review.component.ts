@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
@@ -80,7 +80,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.smartService.getClass({class_status: '1'}).subscribe((result: any) => {
+		this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			} else {
@@ -104,7 +104,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 	}
 	getSubject() {
 		this.subjectArray = [];
-		this.smartService.getSubject({}).subscribe((result: any) => {
+		this.smartService.getSubject({ sub_timetable: 1 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
 			} else {
