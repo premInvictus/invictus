@@ -99,7 +99,7 @@ export class LogEntryReportComponent implements OnInit {
 
 	getClass() {
 		this.classArray = [];
-		this.smartService.getClass({class_status: '1'}).subscribe((result: any) => {
+		this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			} else {
@@ -121,7 +121,7 @@ export class LogEntryReportComponent implements OnInit {
 
 	getSubject() {
 		this.subjectArray = [];
-		this.smartService.getSubject({}).subscribe((result: any) => {
+		this.smartService.getSubject({ sub_timetable: 1 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
 			} else {
