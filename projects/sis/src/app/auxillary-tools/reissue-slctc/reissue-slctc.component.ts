@@ -23,6 +23,7 @@ export class ReissueSlctcComponent implements OnInit {
 	counter = 0;
 	currentFileChangeEvent: any;
 	requestDoc = [];
+	acknowledgement = '';
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	constructor(
 		private sisService: SisService,
@@ -36,6 +37,7 @@ export class ReissueSlctcComponent implements OnInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
+		this.getAcknowledgementData();
 		this.route.queryParams.subscribe(param => {
 			if (param && param.tc_id) {
 				this.tc_id = param.tc_id;
@@ -223,6 +225,16 @@ export class ReissueSlctcComponent implements OnInit {
 		} else {
 			return false;
 		}
+	}
+
+	getAcknowledgementData() {
+		this.sisService.getSlcTcTemplateSetting({ usts_id: 6 }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.acknowledgement = result.data[0].usts_template;
+			} else {
+				this.acknowledgement = '';
+			}
+		});
 	}
 
 }

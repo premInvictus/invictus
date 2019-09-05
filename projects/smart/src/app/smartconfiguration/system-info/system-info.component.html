@@ -88,6 +88,56 @@
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter Subject Code</mat-label>
+                                                            <input matInput placeholder="Enter Subject Code" type="text"
+                                                                class="text-capitalize" formControlName="sub_code"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('sub_code').value | capitalize">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12  remove-col-padding">
+                                                        <mat-checkbox formControlName="sub_timetable"
+                                                            [checked]="sub_timetable === 1 ? 'checked':''">Is this a
+                                                            timetable subject ?
+                                                        </mat-checkbox>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Subject Type</mat-label>
+                                                            <mat-select formControlName="sub_type_id" required
+                                                                placeholder="Select Type" [disabled]="editFlag"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                required>
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of subjectTypeArr"
+                                                                    [value]="item.eac_id">
+                                                                    {{item.eac_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error>Please Choose Subject Type</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter Subject Color</mat-label>
+                                                            <input type="color" matInput
+                                                                placeholder="Enter Subject Color"
+                                                                class="text-capitalize" formControlName="sub_color"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('sub_color').value | capitalize">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Parent Subject</mat-label>
                                                             <mat-select formControlName="sub_parent_id"
                                                                 placeholder="Select Parent Subject"
@@ -217,28 +267,28 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                        <div class="col-12">
-                                                            <input type="file" id="file" style="display: none !important;"
-                                                                (change)="incomingSubTopicFile($event)" placeholder="Upload file"
-                                                                accept=".xls">
-                                                            <span>
-                                                                Have Topic already ?&nbsp;&nbsp;
-                                                                <label for="file"> <i
-                                                                        class="fas fa-cloud-upload-alt upload-icon-bulk"></i>
-                                                                </label>
-                                                                &nbsp;&nbsp;Upload File
-                                                            </span>
-                                                        </div>
+                                                    <div class="col-12">
+                                                        <input type="file" id="file" style="display: none !important;"
+                                                            (change)="incomingSubTopicFile($event)"
+                                                            placeholder="Upload file" accept=".xls">
+                                                        <span>
+                                                            Have Topic already ?&nbsp;&nbsp;
+                                                            <label for="file"> <i
+                                                                    class="fas fa-cloud-upload-alt upload-icon-bulk"></i>
+                                                            </label>
+                                                            &nbsp;&nbsp;Upload File
+                                                        </span>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <span (click)="subTopicExcelDownload()">
-                                                                <img style="cursor: pointer" src="/assets/images/xml.svg"
-                                                                    matTooltip="Click to Download">
-                                                                &nbsp;&nbsp;Sample Excel Sheet
-                                                            </span>
-                                                        </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <span (click)="subTopicExcelDownload()">
+                                                            <img style="cursor: pointer" src="/assets/images/xml.svg"
+                                                                matTooltip="Click to Download">
+                                                            &nbsp;&nbsp;Sample Excel Sheet
+                                                        </span>
                                                     </div>
+                                                </div>
                                             </form>
                                         </div>
                                         <div *ngIf="configValue == '6'">
@@ -487,6 +537,62 @@
                                                                                         *ngIf="item.sub_parent_id">{{ item.sub_parent_id }}</span>
                                                                                     <span
                                                                                         *ngIf="!item.sub_parent_id">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container *ngIf="configValue == '3'"
+                                                                                matColumnDef="sub_code">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Subject Code
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.sub_code">{{ item.sub_code | uppercase}}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.sub_code">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container *ngIf="configValue == '3'"
+                                                                                matColumnDef="sub_timetable">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Is TimeTable Subject
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.sub_timetable">Yes</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.sub_timetable">No</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container *ngIf="configValue == '3'"
+                                                                                matColumnDef="sub_type_name">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Subject Type
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.sub_type_name">{{item?.sub_type_name}}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.sub_type_name">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container *ngIf="configValue == '3'"
+                                                                                matColumnDef="sub_color">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Subject Color
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.sub_color">{{item?.sub_color}}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.sub_color">-</span>
                                                                                 </td>
                                                                             </ng-container>
 
