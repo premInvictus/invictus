@@ -34,7 +34,6 @@ import { group } from '@angular/animations';
 export class OutstandingReportComponent implements OnInit {
 	@Output() displyRep = new EventEmitter();
 	@Input() userName: any = '';
-	notFormatedCellArray: any[] = [];
 	totalRow: any;
 	groupColumns: any[] = [];
 	groupLength: any;
@@ -128,6 +127,7 @@ export class OutstandingReportComponent implements OnInit {
 	levelHeading: any[] = [];
 	levelTotalFooter: any[] = [];
 	levelSubtotalFooter: any[] = [];
+	notFormatedCellArray: any[] = [];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
