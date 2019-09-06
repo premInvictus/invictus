@@ -56,7 +56,7 @@ export class ExamService {
 		return this.http.post(environment.apiExamUrl + '/setup/insertExamGradeSet', value);
 	}
 
-	insertExamRemarkSetup(value) { 
+	insertExamRemarkSetup(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/insertRemarkSet', value);
 	}
@@ -108,6 +108,16 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/checkAdditionalSubjectForClass', value);
 	}
+
+	addMarksEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/addMarksEntry', value);
+	}
+	getMarksEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/getMarksEntry', value);
+	}
+
 	getUserAttendance(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getUserAttendance', value);
@@ -124,7 +134,7 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateAttendance', value);
 	}
-	
+
 }
 
 
