@@ -70,24 +70,22 @@
                     <span class="margin-left-10 ver-line-divider"></span>
                     <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16">
                         {{sessionArray[session_id.ses_id]}}</span>
-                        <div class="inline-flex btn-spacer text-right margin-bottom-5"
-                        *ngIf="finalSpannedArray.length > 0">
+                    <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="finalSpannedArray.length > 0">
                         <div>
                             <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
                                 matTooltip="Download as Pdf" (click)="pdfDownload()" />
                         </div>
                     </div>
-                    <div class="inline-flex btn-spacer text-right margin-bottom-5"
-                        *ngIf="finalSpannedArray.length > 0">
+                    <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="finalSpannedArray.length > 0">
                         <div>
                             <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
                                 matTooltip="Export as excel" (click)="exportAsExcel()" />
                         </div>
-                    </div>                        
+                    </div>
                 </div>
             </div>
             <div class="row margin-top-0  text-right">
-                <div class="col-12">                    
+                <div class="col-12">
                     <table class="table table-borderd table-stripped custom-table" id="report_table">
                         <thead class="table-skill__head text-center" *ngIf="!finalDivFlag">
                             <tr class="custom-tr">
@@ -113,8 +111,9 @@
                             <ng-container *ngFor="let item of finalSpannedArray;let i=index">
                                 <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
                                     <ng-container>
-                                        <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
-                                            <td class="custom-td text-left" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                        <tr class="custom-tr2" *ngFor="let det of item.details;let j = index">
+                                            <td class="custom-td text-left" *ngIf="j == 0"
+                                                [attr.rowspan]="item.details.length">
                                                 {{det.sd_topic_name}}</td>
                                             <td class="custom-td text-left" *ngIf="det.sd_ctr_id == 1">
                                                 {{det.sd_st_name}}
@@ -152,20 +151,31 @@
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
                                                 {{item.total1}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 1"
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 1 && det.cw_period_teacher !== 0"
                                                 [ngStyle]="{'background-color': getcolor(det.sd_period_teacher - det.cw_period_teacher)}">
                                                 {{det.sd_period_teacher - det.cw_period_teacher}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 2"
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 1 && det.cw_period_teacher === 0">
+                                                {{det.sd_period_teacher - det.cw_period_teacher}}
+                                            </td>
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 2 && det.cw_period_test !== 0"
                                                 [ngStyle]="{'background-color': getcolor(det.sd_period_test - det.cw_period_test)}">
                                                 {{det.sd_period_test - det.cw_period_test}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 3"
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 2 && det.cw_period_test === 0">
+                                                {{det.sd_period_test - det.cw_period_test}}
+                                            </td>
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 3 && det.cw_period_revision !== 0"
                                                 [ngStyle]="{'background-color': getcolor(det.sd_period_revision - det.cw_period_revision)}">
                                                 {{det.sd_period_revision - det.cw_period_revision}}
                                             </td>
-                                            <td rowspan="5" class="custom-td " *ngIf="j == 0"
+                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 3 && det.cw_period_revision === 0">
+                                                {{det.sd_period_revision - det.cw_period_revision}}
+                                            </td>
+                                            <td rowspan="5" class="custom-td " *ngIf="j == 0 && item.total1 !== 0"
                                                 [ngStyle]="{'background-color': getcolor(item.total - item.total1)}"
+                                                [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
+                                            <td rowspan="5" class="custom-td " *ngIf="j == 0 && item.total1 === 0"
                                                 [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
                                         </tr>
                                     </ng-container>
