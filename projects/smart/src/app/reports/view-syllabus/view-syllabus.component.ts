@@ -6,7 +6,7 @@ import * as XLSX from 'xlsx';
 declare var require;
 import * as Excel from 'exceljs/dist/exceljs';
 const jsPDF = require('jspdf');
-import 'jspdf-autotable';
+import 'jspdf-autotable'; 
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
 import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
@@ -531,9 +531,9 @@ export class ViewSyllabusComponent implements OnInit {
 												const scheduleDetails = result1.data.scheduleDetails;
 												const sessionStartDate = result1.data.sessionStartDate;
 												const sessionEndDate = result1.data.sessionEndDate;
-												if (!this.editRequestFlag) {
-													this.finalSpannedArray = [];
-												}
+												// if (!this.editRequestFlag) {
+												// 	this.finalSpannedArray = [];
+												// }
 												for (let i = 0; i < this.finalSyllabusArray.length; i++) {
 													let sd_period_teacher: any = '';
 													let sd_period_test: any = '';
@@ -617,7 +617,6 @@ export class ViewSyllabusComponent implements OnInit {
 														let estimateDate = '';
 														if (sessionStartDate && sessionEndDate && scheduleDetails) {
 															let notp = totalPeriodFromInitial;
-															console.log(totalPeriodFromInitial);
 															const sessionSD = moment(sessionStartDate);
 															const sessionED = moment(sessionEndDate);
 															for (const d = sessionSD; d.diff(sessionED) <= 0; d.add(1, 'days')) {
@@ -690,7 +689,6 @@ export class ViewSyllabusComponent implements OnInit {
 													});
 												}
 												this.finaldivflag = false;
-												console.log('finalSpannedArray', this.finalSpannedArray);
 											} else {
 												this.finalSpannedArray = [];
 												this.finaldivflag = true;
