@@ -108,6 +108,16 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/checkAdditionalSubjectForClass', value);
 	}
+
+	addMarksEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/addMarksEntry', value);
+	}
+	getMarksEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/getMarksEntry', value);
+	}
+
 }
 
 

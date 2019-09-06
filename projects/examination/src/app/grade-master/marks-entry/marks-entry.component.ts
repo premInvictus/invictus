@@ -145,6 +145,13 @@ export class MarksEntryComponent implements OnInit {
     if (this.paramform.value.eme_subexam_id.length > 0) {
       this.marksInputArray = [];
       this.tableDivFlag = true;
+      const param: any = {};
+      param.examEntry = this.paramform.value;
+      this.examService.getMarksEntry(param).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          console.log(result.data);
+        }
+      })
     } else {
       this.marksInputArray = [];
       this.tableDivFlag = false;
@@ -173,11 +180,17 @@ export class MarksEntryComponent implements OnInit {
     }
   }
 
-  saveForm(status = 0) {
+  saveForm(status = '0') {
     if (this.paramform.valid && this.marksInputArray.length > 0) {
       const param: any = {};
       param.examEntry = this.paramform.value;
       param.examEntryMapping = this.marksInputArray;
+      param.examEntryStatus = status;
+      this.examService.addMarksEntry(param).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          console.log(result);
+        }
+      })
     }
   }
 
