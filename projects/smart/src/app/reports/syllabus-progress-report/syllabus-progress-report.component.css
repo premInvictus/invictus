@@ -1,21 +1,30 @@
 th.custom-th{
-    color: rgba(0, 0, 0, 0.54)!important;
+    color: rgba(0, 0, 0, 0.54);
     height: 40px!important;
     padding:0px!important;
     font-size: 15px!important;
 }
 td.custom-td{
-    color: rgba(0,0,0,.87)!important;
+    color: rgba(0,0,0,.87);
     height: 35px!important;
     padding-top:0px!important;
     padding-bottom:0px!important;
     font-size: 16px!important;
 }
 /* Cells in even rows (2,4,6...) are one color */        
-tr.custom-tr:nth-child(even) td.custom-td { background: #f1f4f7 !important; }   
+::ng-deep tr.custom-tr2:nth-child(even) td.custom-td { background: #f1f4f7 ; }   
 
 /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */        
-tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }  
+::ng-deep tr.custom-tr2:nth-child(odd) td.custom-td { background: #ffffff ; }  
 .custom-width{
     width:12%;
+}
+::ng-deep.white-color{
+    background-color: #ffffff !important;
+}
+::ng-deep.green-color{
+    background-color: #28a7456b !important;
+}
+::ng-deep.red-color{
+    background-color: #dc3545a6 !important;
 }

@@ -36,6 +36,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	finalXlsTopicArray: any[] = [];
 	XlslArray: any[] = [];
 	arrayBuffer: any;
+	subjectTypeArr: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
 	displayedColumns: any[] = ['position', 'name', 'order', 'action', 'modify'];
@@ -102,9 +103,13 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			formGroup: this.fbuild.group({
 				sub_id: '',
 				sub_parent_id: '',
+				sub_code: '',
 				sub_name: '',
 				sub_order: '',
-				sub_status: ''
+				sub_status: '',
+				sub_timetable: '',
+				sub_type_id: '',
+				sub_color: '#000000'
 			})
 		},
 		{
@@ -253,6 +258,11 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 						that.CONFIG_ELEMENT_DATA.push({
 							position: pos,
 							name: item.sub_name,
+							sub_code: item.sub_code,
+							sub_timetable: item.sub_timetable,
+							sub_color: item.sub_color,
+							sub_type: item.sub_type,
+							sub_type_name: that.getSubjectTypeName(item.sub_type),
 							order: item.sub_order,
 							sub_parent_id: that.getParentSubjectName(item.sub_parent_id),
 							action: item
@@ -269,6 +279,25 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+
+	getSubjectTypeName(typeId) {
+		for (const item of this.subjectTypeArr) {
+			if (item.eac_id === typeId) {
+				return item.eac_name;
+			}
+		}
+	}
+
+	getSubjectType(that) {
+		that.smartService.getSubjectType().subscribe((result: any) => {
+			if (result.status === 'ok') {
+				that.subjectTypeArr = result.data;
+			} else {
+				that.subjectTypeArr = [];
+			}
+		});
+	}
+
 
 	getParentSubjectName(parentId) {
 		for (const item of this.parentSubArray) {
@@ -604,6 +633,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 
 	formEdit(value: any) {
+		console.log('value', value);
 		if (Number(this.configValue) === 1) {
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
@@ -627,7 +657,11 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				sub_name: value.sub_name,
 				sub_parent_id: value.sub_parent_id,
 				sub_order: value.sub_order,
-				sub_status: value.sub_status
+				sub_status: value.sub_status,
+				sub_code: value.sub_code,
+				sub_timetable: value.sub_timetable,
+				sub_type_id: value.sub_type,
+				sub_color: value.sub_color
 			});
 		} else if (Number(this.configValue) === 4) {
 			this.setupUpdateFlag = true;
@@ -681,8 +715,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.displayedColumns = ['position', 'name', 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
+			this.getSubjectType(this);
 			this.getSubject(this);
-			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'order', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'sub_code', 'sub_timetable','sub_type_name','sub_color', 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 4) {
 			this.getTopic(this);

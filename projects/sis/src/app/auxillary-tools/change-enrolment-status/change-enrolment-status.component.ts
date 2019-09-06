@@ -50,7 +50,7 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 
 	ngOnInit() {
 		this.buildForm();
-		this.getReason();
+		this.getReason(8);
 		localStorage.removeItem('change_enrolment_status_last_state');
 	}
 
@@ -163,8 +163,8 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 		}
 	}
 
-	getReason() {
-		this.sisService.getReason({ reason_type: 8 }).subscribe((result: any) => {
+	getReason(reason_type) {
+		this.sisService.getReason({ reason_type }).subscribe((result: any) => {
 			if (result) {
 				this.reasonDataArray = result.data;
 
@@ -334,6 +334,11 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 		});
 	}
 	setProcess($event) {
+		if ($event.value === '5' && this.changeEnrolmentStatusForm.value.enrolment_type !== '5') {
+			this.getReason(10);
+		} else {
+			this.getReason(8);
+		}
 		this.processType.setProcesstype($event.value);
 	}
 
