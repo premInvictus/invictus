@@ -1024,4 +1024,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentDataPerName', value);
 	}
+	downloadBulkUpdateTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/bulkUpdate/downloadBulkUpdateTemplate', value);
+	}
 }
