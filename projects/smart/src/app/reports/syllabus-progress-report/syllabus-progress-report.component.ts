@@ -521,13 +521,14 @@ export class SyllabusProgressReportComponent implements OnInit {
 		}
 	}
 	// get background color according to value range
-	getcolor(value) {
+	getcolor(value1, value2) {
+		const value = Number(value1) - Number(value2);
 		if (Number(value) === 0) {
-			return '#ffffff';
+			return 'white-color';
 		} else if (Number(value) > 0) {
-			return '#28a7456b';
+			return 'green-color';
 		} else {
-			return '#dc3545a6';
+			return 'red-color';
 		}
 	}
 	// add remarks to database
@@ -568,7 +569,7 @@ export class SyllabusProgressReportComponent implements OnInit {
 		this.totalAvailable = 0;
 		this.totalCompletion = 0;
 		this.totalAvailed = 0;
-		this.headerDivFlag = true; 
+		this.headerDivFlag = true;
 		this.finalDivFlag = true;
 		this.subCountArray = [];
 		this.remarkArray = [];
