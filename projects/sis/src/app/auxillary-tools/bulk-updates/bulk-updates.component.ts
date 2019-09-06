@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
-
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-bulk-updates',
 	templateUrl: './bulk-updates.component.html',
@@ -8,6 +8,7 @@ import { SisService, CommonAPIService } from '../../_services/index';
 })
 export class BulkUpdatesComponent implements OnInit {
 	@ViewChild('inputFile') myInputVariable: ElementRef;
+	uploadComponent: any = '';
 	constructor(
 		private sisService: SisService,
 		private commonAPIService: CommonAPIService
@@ -16,16 +17,21 @@ export class BulkUpdatesComponent implements OnInit {
 	ngOnInit() {
 	}
 	bulkupdate(event) {
-		const file = event.target.files[0];
-		const fileReader = new FileReader();
-		fileReader.onload = (e) => {
-			this.auxillarybulkupdate(file.name, fileReader.result);
-		};
-		fileReader.readAsDataURL(file);
+		console.log('this.uploadModule', this.uploadComponent);
+		if (this.uploadComponent === '') {
+			this.commonAPIService.showSuccessErrorMessage('Please choose one component for which do you wish to upload data', 'error');
+		} else {
+			const file = event.target.files[0];
+			const fileReader = new FileReader();
+			fileReader.onload = (e) => {
+				this.auxillarybulkupdate(file.name, fileReader.result);
+			};
+			fileReader.readAsDataURL(file);
+		}
 	}
 	auxillarybulkupdate(fileName, imagebase64) {
 		this.sisService.uploadBulkDocuments([
-			{ fileName: fileName, imagebase64: imagebase64, module: 'auxillary' }]).subscribe((result: any) => {
+			{ fileName: fileName, imagebase64: imagebase64, module: 'auxillary', 'component': this.uploadComponent }]).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
 					this.myInputVariable.nativeElement.value = '';
@@ -34,6 +40,28 @@ export class BulkUpdatesComponent implements OnInit {
 					this.myInputVariable.nativeElement.value = '';
 				}
 			});
+	}
+
+	loadComponent(event) {
+		this.uploadComponent = event.value;
+		console.log('this.uploadModule', this.uploadComponent);
+	}
+
+	downloadTemplate() {
+		if (this.uploadComponent === '') {
+			this.commonAPIService.showSuccessErrorMessage('Please choose one component for which do you wish to download template', 'error');
+		} else {
+			this.sisService.downloadBulkUpdateTemplate([
+				{ component: this.uploadComponent}]).subscribe((result: any) => {
+					if (result.status === 'ok') {
+						this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
+						const length = result.data.split('/').length;
+						saveAs(result.data, result.data.split('/')[length - 1]);
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Error While Downloading File', 'error');
+					}
+				});
+		}
 	}
 
 }
