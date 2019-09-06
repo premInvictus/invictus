@@ -684,5 +684,11 @@ export class StudentDashboardComponent implements OnInit {
 		const param = 'width=' + screen.width + ',height=' + screen.height + ',toolbar=0,location=0,menubar=0,status=0,resizable=0';
 		window.open(url, '_blank', param);
 	}
+	currentHour() {
+		const currentHour = this.todaysDate.getHours()
+		if (currentHour == 0 || currentHour < 12) return "Good Morning"
+		else if (currentHour <= 19) return "Good Afternon"
+		else return "Good Evening"
+	}
 
 }

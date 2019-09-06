@@ -638,7 +638,7 @@
                     <h1 class="remove-bottom-margin font-size-24">Dashboard</h1>
                 </div>
                 <div class="col-6 text-right">
-                    <span class="font-size-20 font-bold font-skyblue">Good Morning,</span> <span class="font-size-20 font-skyblue"> {{currentUser.full_name | titlecase}}</span>
+                    <span class="font-size-20 font-bold font-skyblue">{{currentHour()}},</span> <span class="font-size-20 font-skyblue"> {{currentUser.full_name | titlecase}}</span>
                     <br>
                     <span class="font-size-14 font-skyblue">{{todaysDate | date:'d MMM y'}}
             <!-- 13<sup>th</sup> April 2018 --></span>

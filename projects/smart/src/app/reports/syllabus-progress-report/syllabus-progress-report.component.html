@@ -88,7 +88,7 @@
                             </tr>
                         </thead>
                         <tbody class="text-center">
-                            <tr class="custom-tr" *ngFor="let item of subCountArray;let j = index">
+                            <tr class="custom-tr2" *ngFor="let item of subCountArray;let j = index">
                                 <td class="custom-td text-center"><span>{{item.subject_name}}</span></td>
                                 <td class="custom-td "><span>{{item.count}}</span></td>
                                 <td class="custom-td" *ngIf="periodCompletionArray[(item.subject_id | number)]">
@@ -97,12 +97,12 @@
                                     <span>-</span></td>
                                 <td class="custom-td "><span>{{item.countYear - item.count}}</span></td>
                                 <td class="custom-td  font-bold"
-                                    [ngStyle]="{'background-color': getcolor((item.count | number) - periodCompletionArray[item.subject_id | number])}"
+                                    [ngClass]="getcolor(item.count , periodCompletionArray[item.subject_id])"
                                     *ngIf="periodCompletionArray[(item.subject_id | number)]">
                                     <span>{{(item.count | number) - periodCompletionArray[item.subject_id | number] }}</span>
                                 </td>
                                 <td class="custom-td font-bold"
-                                    [ngStyle]="{'background-color': getcolor((item.count | number))}"
+                                    [ngClass]="getcolor(item.count,0)"
                                     *ngIf="!periodCompletionArray[(item.subject_id | number)]">
                                     <span>{{item.count }}</span></td>
                                 <td class="custom-td" *ngIf="remarkArray[(item.subject_id | number)]"
