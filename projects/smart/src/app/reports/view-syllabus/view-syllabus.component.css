@@ -23,3 +23,6 @@ tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }
     margin-left: 10px;
     margin-right: 10px;
 }
+.subTopic{
+    width:30%
+}

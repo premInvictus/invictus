@@ -610,9 +610,9 @@ export class ComparitiveComponent implements OnInit {
 								sd_period_teacher: sd_period_teacher,
 								sd_period_test: sd_period_test,
 								sd_period_revision: sd_period_revision,
-								cw_period_teacher: cw_period_teacher,
-								cw_period_test: cw_period_test,
-								cw_period_revision: cw_period_revision,
+								cw_period_teacher: Number(cw_period_teacher),
+								cw_period_test: Number(cw_period_test),
+								cw_period_revision: Number(cw_period_revision),
 								sd_ctr_id: this.finalSyllabusArray[i].sd_ctr_id,
 								sd_desc: this.finalSyllabusArray[i].sd_desc,
 								sd_topic_name: this.finalSyllabusArray[i].topic_name,
@@ -646,9 +646,9 @@ export class ComparitiveComponent implements OnInit {
 										sd_period_test: sd_period_test1,
 										sd_period_revision: sd_period_revision1,
 										sd_ctr_id: this.finalSyllabusArray[j].sd_ctr_id,
-										cw_period_teacher: cw_period_teacher1,
-										cw_period_test: cw_period_test1,
-										cw_period_revision: cw_period_revision1,
+										cw_period_teacher: Number(cw_period_teacher1),
+										cw_period_test: Number(cw_period_test1),
+										cw_period_revision: Number(cw_period_revision1),
 										sd_desc: this.finalSyllabusArray[j].sd_desc,
 										sd_topic_name: this.finalSyllabusArray[j].topic_name,
 										sd_st_name: this.finalSyllabusArray[j].st_name,
@@ -662,7 +662,7 @@ export class ComparitiveComponent implements OnInit {
 									sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
 									details: spannArray,
 									total: this.finalSyllabusArray[i].sd_period_req,
-									total1: this.finalSyllabusArray[i].cw_period_req,
+									total1: Number(this.finalSyllabusArray[i].cw_period_req),
 									deviation: this.finalSyllabusArray[i].sd_period_req - this.finalSyllabusArray[i].cw_period_req,
 								});
 							} else {
@@ -673,6 +673,7 @@ export class ComparitiveComponent implements OnInit {
 								// tslint:disable-next-line: max-line-length
 								this.finalSpannedArray[findex].deviation = Number(this.finalSpannedArray[findex].total) - Number(this.finalSpannedArray[findex].total1);
 							}
+							console.log('finalSpannedArray', this.finalSpannedArray);
 							this.dataArr = [];
 							for (const item of this.finalSpannedArray) {
 								const obj: any = {};
