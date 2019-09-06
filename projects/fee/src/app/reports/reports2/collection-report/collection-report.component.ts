@@ -2690,7 +2690,7 @@ export class CollectionReportComponent implements OnInit {
 			theme: 'striped'
 		});
 		const rowData: any[] = [];
-		for (const item of this.columnDefinitions) {
+		for (const item of this.exportColumnDefinitions) {
 			headerData.push(item.name);
 		}
 		if (this.dataviewObj.getGroups().length === 0) {
@@ -2934,7 +2934,6 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
-						this.pdfrowdata.push(levelArray);
 					}
 					if (this.reportType === 'modewise') {
 						const obj3: any = {};
@@ -2966,7 +2965,6 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
-						this.pdfrowdata.push(levelArray);
 					}
 					if (this.reportType === 'classwise') {
 						const obj3: any = {};
@@ -2986,7 +2984,6 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
-						this.pdfrowdata.push(levelArray);
 					}
 					if (this.reportType === 'routewise') {
 						const obj3: any = {};
@@ -3009,7 +3006,6 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
-						this.pdfrowdata.push(levelArray);
 					}
 					if (groupItem.level === 0) {
 						this.pdfrowdata.push(levelArray);
@@ -3084,7 +3080,6 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
-						this.pdfrowdata.push(levelArray);
 					}
 					if (this.reportType === 'modewise') {
 						const obj3: any = {};
@@ -3116,7 +3111,6 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
-						this.pdfrowdata.push(levelArray);
 					}
 					if (this.reportType === 'classwise') {
 						const obj3: any = {};
@@ -3136,7 +3130,6 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
-						this.pdfrowdata.push(levelArray);
 					}
 					if (this.reportType === 'routewise') {
 						const obj3: any = {};
@@ -3159,7 +3152,6 @@ export class CollectionReportComponent implements OnInit {
 								}
 							});
 						}
-						this.pdfrowdata.push(levelArray);
 					}
 					// style row having total
 					if (groupItem.level === 0) {

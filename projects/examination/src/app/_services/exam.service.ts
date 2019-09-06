@@ -108,6 +108,33 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/checkAdditionalSubjectForClass', value);
 	}
+
+	addMarksEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/addMarksEntry', value);
+	}
+	getMarksEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/getMarksEntry', value);
+	}
+
+	getUserAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getUserAttendance', value);
+	}
+	insertAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertAttendance', value);
+	}
+	checkAttendanceForClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/checkAttendanceForClass', value);
+	}
+	updateAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateAttendance', value);
+	}
+
 }
 
 

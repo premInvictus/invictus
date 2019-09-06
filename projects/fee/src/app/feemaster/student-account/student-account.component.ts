@@ -97,7 +97,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_status: 1
 		});
 	}
-	getFeeAccount(au_login_id) { 
+	getFeeAccount(au_login_id) {
 		this.accountDetails = {};
 		this.accountsForm.reset();
 		this.accountsForm.patchValue({
@@ -179,6 +179,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_ses_id: this.accountDetails.ses_id,
 					accd_status: this.accountDetails.accd_status
 				});
+				console.log('this.accountsForm.value.accd_fcg_id', this.accountsForm.value.accd_fcg_id);
+				this.setDescription({ value: this.accountsForm.value.accd_fcg_id });
 				this.slabModel = this.accountDetails.accd_ts_id;
 			} else {
 				this.accountsForm.reset();
@@ -191,8 +193,11 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		});
 	}
 	setDescription(event) {
+		this.conDesc = '';
 		const cindex = this.conGroupArray.findIndex(e => e.fcg_id === event.value);
-		this.conDesc = this.conGroupArray[cindex].fcg_description;
+		if (cindex !== -1) {
+			this.conDesc = this.conGroupArray[cindex].fcg_description;
+		}
 	}
 	getFeeOtherCategory() {
 		this.feeService.getFeeOthers({}).subscribe((result: any) => {
@@ -346,12 +351,12 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.accountsForm.value.accd_tsp_id && this.accountsForm.value.accd_tsp_id !== '0' &&
 				this.accountsForm.value.accd_ts_id && this.accountsForm.value.accd_ts_id !== '0' &&
 				this.accountsForm.value.accd_transport_from && this.accountsForm.value.accd_transport_from !== '0') {
-					if (this.terminationFlag) {
-						if (!this.accountsForm.value.accd_transport_to) {
-							this.accountsForm.get('accd_transport_to').markAsDirty();
-							validateFlag = false;
-						}
+				if (this.terminationFlag) {
+					if (!this.accountsForm.value.accd_transport_to) {
+						this.accountsForm.get('accd_transport_to').markAsDirty();
+						validateFlag = false;
 					}
+				}
 			} else {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
@@ -424,12 +429,12 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.accountsForm.value.accd_tsp_id && this.accountsForm.value.accd_tsp_id !== '0' &&
 				this.accountsForm.value.accd_ts_id && this.accountsForm.value.accd_ts_id !== '0' &&
 				this.accountsForm.value.accd_transport_from && this.accountsForm.value.accd_transport_from !== '0') {
-					if (this.terminationFlag) {
-						if (!this.accountsForm.value.accd_transport_to) {
-							this.accountsForm.get('accd_transport_to').markAsDirty();
-							validateFlag = false;
-						}
+				if (this.terminationFlag) {
+					if (!this.accountsForm.value.accd_transport_to) {
+						this.accountsForm.get('accd_transport_to').markAsDirty();
+						validateFlag = false;
 					}
+				}
 			} else {
 				this.accountsForm.get('accd_tr_id').markAsDirty();
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
@@ -441,8 +446,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 
 		if (this.hostelFlag) {
 			if (this.accountsForm.value.accd_hostel_fs_id && this.accountsForm.value.accd_hostel_fs_id !== '0' &&
-			this.accountsForm.value.accd_hostel_from && this.accountsForm.value.accd_hostel_from !== '0') {
-				if (this.accountsForm.value.accd_is_hostel_terminate === 'Y' && !this.accountsForm.value.accd_hostel_to ) {
+				this.accountsForm.value.accd_hostel_from && this.accountsForm.value.accd_hostel_from !== '0') {
+				if (this.accountsForm.value.accd_is_hostel_terminate === 'Y' && !this.accountsForm.value.accd_hostel_to) {
 					validateFlag = false;
 				}
 			} else {
@@ -674,11 +679,11 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		if (value && value !== '0') {
 			this.slabArray = [];
 			this.feeService.getTransportSlabPerStoppages({ tsp_id: value }).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.slabArray = result.data;
-				this.slabModel = this.slabArray[0].ts_id;
-			}
-		});
+				if (result && result.status === 'ok') {
+					this.slabArray = result.data;
+					this.slabModel = this.slabArray[0].ts_id;
+				}
+			});
 		}
 	}
 }

@@ -447,6 +447,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/setup/addSmartToAxiom', value);
 	}
+	getSubjectType(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSubjectType', value);
+	}
 
 }
 

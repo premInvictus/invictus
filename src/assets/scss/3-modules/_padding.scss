@@ -137,3 +137,40 @@
     z-index: 1 !important;
     right: -19px !important;
 }
+
+
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+  }
+
+  .custom-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #ffffff;
+    color: #000;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 80%;
+    left: 56%;
+    margin-left: -60px;
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+  }
+
+  .custom-tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+  }
+  
+  .custom-tooltip:hover .tooltiptext {
+    visibility: visible;
+  }

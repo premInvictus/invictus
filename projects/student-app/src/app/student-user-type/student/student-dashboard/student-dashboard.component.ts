@@ -67,6 +67,8 @@ export class StudentDashboardComponent implements OnInit {
 		class_id: '',
 		sec_id: ''
 	}
+	// test
+	testView = 'past';
 
 	timeTableFlag = false;
 	dayArray: any[] = [];
@@ -81,9 +83,6 @@ export class StudentDashboardComponent implements OnInit {
 	currentAssignmentIndex: number;
 	assignmentPre = true;
 	assignmentNext = true;
-
-	// test
-	testView = 'past';
 
 	constructor(
 		private reportService: ReportService,
@@ -204,7 +203,8 @@ export class StudentDashboardComponent implements OnInit {
 	getSmartToAxiom() {
 		const param: any = {};
 		param.tgam_config_type = '1';
-		param.tgam_global_config_id = this.userDetail.au_class_id
+		param.tgam_global_config_id = this.userDetail.au_class_id;
+		param.tgam_global_sec_id = this.userDetail.au_sec_id;
 		this.erpCommonService.getSmartToAxiom(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.axiomUserDetails.class_id = result.data[0].tgam_axiom_config_id;
@@ -683,6 +683,12 @@ export class StudentDashboardComponent implements OnInit {
 		}
 		const param = 'width=' + screen.width + ',height=' + screen.height + ',toolbar=0,location=0,menubar=0,status=0,resizable=0';
 		window.open(url, '_blank', param);
+	}
+	currentHour() {
+		const currentHour = this.todaysDate.getHours()
+		if (currentHour == 0 || currentHour < 12) return "Good Morning"
+		else if (currentHour <= 19) return "Good Afternon"
+		else return "Good Evening"
 	}
 
 }
