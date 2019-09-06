@@ -21,6 +21,7 @@ export class MarksEntryComponent implements OnInit {
   tableDivFlag = false;
   marksInputArray: any[] = [];
   marksEditable = true;
+  responseMarksArray: any[] = [];
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -143,6 +144,7 @@ export class MarksEntryComponent implements OnInit {
   }
   displayData() {
     if (this.paramform.value.eme_subexam_id.length > 0) {
+      this.responseMarksArray = [];
       this.marksInputArray = [];
       this.tableDivFlag = true;
       const param: any = {};
@@ -150,11 +152,56 @@ export class MarksEntryComponent implements OnInit {
       this.examService.getMarksEntry(param).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           console.log(result.data);
+          this.responseMarksArray = result.data;
+          if (result.data.length > 0) {
+            this.paramform.value.eme_subexam_id.forEach(selement => {
+              result.data.forEach(melement => {
+                if (selement === melement.examEntry.eme_subexam_id) {
+                  melement.examEntryMapping.forEach(element => {
+                    this.marksInputArray.push({
+                      es_id: melement.examEntry.eme_subexam_id,
+                      login_id: element.emem_login_id,
+                      mark: element.emem_marks
+                    });
+                  });
+                }
+              });
+            });
+          }
         }
       })
     } else {
       this.marksInputArray = [];
       this.tableDivFlag = false;
+    }
+  }
+  checkEditable(es_id, eme_review_status) {
+    for (const item of this.responseMarksArray) {
+      if (item.examEntry.eme_subexam_id === es_id) {
+        if (item.examEntry.eme_review_status === eme_review_status) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+  }
+
+  isAnyoneEditable(eme_review_status) {
+    let status = false;
+    for (const item of this.responseMarksArray) {
+      if (item.examEntry.eme_review_status === eme_review_status) {
+        status = true;
+        break;
+      }
+    }
+    return status;
+  }
+  getSubjectName() {
+    for (const item of this.subjectArray) {
+      if (item.sub_id === this.paramform.value.eme_sub_id) {
+        return item.sub_name;
+      }
     }
   }
   enterInputMarks(es_id, login_id, mark) {
@@ -188,7 +235,7 @@ export class MarksEntryComponent implements OnInit {
       param.examEntryStatus = status;
       this.examService.addMarksEntry(param).subscribe((result: any) => {
         if (result && result.status === 'ok') {
-          console.log(result);
+          this.displayData();
         }
       })
     }
