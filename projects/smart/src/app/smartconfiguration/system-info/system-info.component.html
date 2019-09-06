@@ -565,7 +565,7 @@
                                                                                         *ngIf="item.sub_timetable">Yes</span>
                                                                                     <span
                                                                                         *ngIf="!item.sub_timetable">No</span>
-                                                                                </td>
+                                                                                </td> 
                                                                             </ng-container>
                                                                             <ng-container *ngIf="configValue == '3'"
                                                                                 matColumnDef="sub_type_name">
@@ -589,8 +589,15 @@
                                                                                 </th>
                                                                                 <td class="left" mat-cell
                                                                                     *matCellDef="let item">
-                                                                                    <span
-                                                                                        *ngIf="item.sub_color">{{item?.sub_color}}</span>
+                                                                                    <span style="float: left;width: 60%;"
+                                                                                        *ngIf="item.sub_color">{{item?.sub_color}}
+                                                                                    </span>
+
+                                                                                    <span style="float: left">
+                                                                                        <div  [ngStyle]="{background: item?.sub_color, height:'10px',width :'10px','float':'right','margin-top':'5px','margin-left':'5px'}"></div>
+                                                                                    </span>
+                                                                                    
+                                                                                    
                                                                                     <span
                                                                                         *ngIf="!item.sub_color">-</span>
                                                                                 </td>
