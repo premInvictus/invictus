@@ -22,11 +22,28 @@ export class BulkUpdatesComponent implements OnInit {
 			this.commonAPIService.showSuccessErrorMessage('Please choose one component for which do you wish to upload data', 'error');
 		} else {
 			const file = event.target.files[0];
-			const fileReader = new FileReader();
-			fileReader.onload = (e) => {
-				this.auxillarybulkupdate(file.name, fileReader.result);
-			};
-			fileReader.readAsDataURL(file);
+			// const fileReader = new FileReader();
+			const formData = new FormData();
+			const component = this.uploadComponent;
+			formData.append('uploadFile', file, file.name);
+			formData.append('module' , 'auxillary');
+			formData.append('component', component);
+			// return this._http.post(environment.apiAxiomUrl + '/bulkupload/classUpload', formData)
+			// fileReader.onload = (e) => {
+			// 	this.auxillarybulkupdate(file.name, fileReader.result);
+			// };
+			// fileReader.readAsDataURL(file);
+			const options = { content: formData,  module : 'auxillary', component : this.uploadComponent };
+			this.sisService.uploadBulkDocuments(formData).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
+					this.myInputVariable.nativeElement.value = '';
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Uploading File', 'error');
+					this.myInputVariable.nativeElement.value = '';
+				}
+				this.myInputVariable.nativeElement.value = '';
+			});
 		}
 	}
 	auxillarybulkupdate(fileName, imagebase64) {

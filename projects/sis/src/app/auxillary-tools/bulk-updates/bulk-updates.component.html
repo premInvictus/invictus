@@ -52,8 +52,12 @@
                     save_alt
                   </i><br>
                   <span><b>Choose a file</b> or drag it here !</span>
-                  <input style="display:none;" #inputFile type="file" name="file" id="bulkupdate"
+                  <input style="display:none;" #inputFile type="file" name="uploadFile" id="bulkupdate"
                     (change)="bulkupdate($event)">
+                  <input style="display:none;" type="text" name="module" id="module"
+                    value="module">
+                    <input style="display:none;" type="text" name="component" id="component"
+                    value="{{uploadComponent}}">
                 </div>
               </div>
             </label>
