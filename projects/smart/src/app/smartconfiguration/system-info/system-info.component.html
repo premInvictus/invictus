@@ -98,8 +98,8 @@
                                                 <div class="row">
                                                     <div class="col-12  remove-col-padding">
                                                         <mat-checkbox formControlName="sub_timetable"
-                                                            [checked]="sub_timetable === '1' ? 'checked':''">Is this a
-                                                            timetable subject ?
+                                                            [checked]="formGroupArray[configValue-1].formGroup.get('sub_timetable').value === '1' ? 'checked':''">Is this a
+                                                            timetable subject ? 
                                                         </mat-checkbox>
                                                     </div>
                                                 </div>
