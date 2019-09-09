@@ -13,14 +13,15 @@
     <div *ngIf="filterFlag" class="col-1">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>{{valueLabel}}</mat-label>
-        <mat-select formControlName="fee_value" [placeholder]="valueLabel" (change)="getSectionByClass($event)">
+        <mat-select formControlName="fee_value" [placeholder]="valueLabel"
+          (selectionChange)="getSectionByClass($event);filtered($event)">
           <mat-option *ngFor="let item of valueArray" [value]="item.id">{{item.name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
     <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left"
-      *ngIf="reportType === 'transportAlloted' && filterFlag">
+      *ngIf="reportType === 'concessionAlloted' && filterFlag && hiddenValueArray4.length > 0">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Section</mat-label>
         <mat-select formControlName="hidden_value4">
@@ -34,7 +35,7 @@
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>From Date</mat-label>
         <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
-        (blur)="getFromDate($event.target.value)" />
+          (blur)="getFromDate($event.target.value)" />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -43,12 +44,12 @@
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>To Date</mat-label>
         <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
-        (blur)="getToDate($event.target.value)"/>
+          (blur)="getToDate($event.target.value)" />
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
         <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>
     </div>
-    <div *ngIf="filterFlag" style ="margin-bottom: 10px !important" class="col-4">
+    <div *ngIf="filterFlag" style="margin-bottom: 10px !important" class="col-4">
       <div class="margin-top-10">
         <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
           filter
@@ -57,8 +58,7 @@
           sort
         </button>
         &nbsp;
-        <button class="btn-success text-uppercase" mat-raised-button
-          (click)="getConReport(reportFilterForm.value)">
+        <button class="btn-success text-uppercase" mat-raised-button (click)="getConReport(reportFilterForm.value)">
           generate
         </button>
         <button class="btn-danger text-uppercase" mat-raised-button (click)="resetValues()">
@@ -77,6 +77,8 @@
 </div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
   <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+    <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+    <br>
     No Records Found
   </div>
 </div>

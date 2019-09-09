@@ -16,22 +16,21 @@ export class BulkUpdatesComponent implements OnInit {
 
 	ngOnInit() {
 	}
+
 	bulkupdate(event) {
 		console.log('this.uploadModule', this.uploadComponent);
 		if (this.uploadComponent === '') {
 			this.commonAPIService.showSuccessErrorMessage('Please choose one component for which do you wish to upload data', 'error');
 		} else {
 			const file = event.target.files[0];
-			const fileReader = new FileReader();
-			fileReader.onload = (e) => {
-				this.auxillarybulkupdate(file.name, fileReader.result);
-			};
-			fileReader.readAsDataURL(file);
-		}
-	}
-	auxillarybulkupdate(fileName, imagebase64) {
-		this.sisService.uploadBulkDocuments([
-			{ fileName: fileName, imagebase64: imagebase64, module: 'auxillary', 'component': this.uploadComponent }]).subscribe((result: any) => {
+			// const fileReader = new FileReader();
+			const formData = new FormData();
+			const component = this.uploadComponent;
+			formData.append('uploadFile', file, file.name);
+			formData.append('module' , 'auxillary');
+			formData.append('component', component);
+			const options = { content: formData,  module : 'auxillary', component : this.uploadComponent };
+			this.sisService.uploadBulkDocuments(formData).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
 					this.myInputVariable.nativeElement.value = '';
@@ -40,11 +39,12 @@ export class BulkUpdatesComponent implements OnInit {
 					this.myInputVariable.nativeElement.value = '';
 				}
 			});
+		}
 	}
 
 	loadComponent(event) {
 		this.uploadComponent = event.value;
-		console.log('this.uploadModule', this.uploadComponent);
+		this.myInputVariable.nativeElement.value = '';
 	}
 
 	downloadTemplate() {

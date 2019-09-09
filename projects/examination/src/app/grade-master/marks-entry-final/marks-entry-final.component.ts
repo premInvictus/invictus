@@ -4,11 +4,11 @@ import { AxiomService, SisService, SmartService, CommonAPIService, ExamService }
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-marks-entry',
-  templateUrl: './marks-entry.component.html',
-  styleUrls: ['./marks-entry.component.css']
+  selector: 'app-marks-entry-final',
+  templateUrl: './marks-entry-final.component.html',
+  styleUrls: ['./marks-entry-final.component.css']
 })
-export class MarksEntryComponent implements OnInit {
+export class MarksEntryFinalComponent implements OnInit {
 
   paramform: FormGroup
   classArray: any[] = [];
@@ -38,6 +38,7 @@ export class MarksEntryComponent implements OnInit {
     private commonAPIService: CommonAPIService,
     public dialog: MatDialog
   ) { }
+
 
   buildForm() {
     this.paramform = this.fbuild.group({
@@ -139,7 +140,7 @@ export class MarksEntryComponent implements OnInit {
       this.tableDivFlag = true;
       const param: any = {};
       param.examEntry = this.paramform.value;
-      param.eme_review_status = ['0', '1', '2', '3', '4'];
+      param.eme_review_status = ['3', '4'];
       this.examService.getMarksEntry(param).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           console.log(result.data);
@@ -218,7 +219,7 @@ export class MarksEntryComponent implements OnInit {
     }
   }
 
-  saveForm(status = '0') {
+  saveForm(status = '3') {
     if (this.paramform.valid && this.marksInputArray.length > 0) {
       const param: any = {};
       param.examEntry = this.paramform.value;
@@ -233,3 +234,4 @@ export class MarksEntryComponent implements OnInit {
   }
 
 }
+

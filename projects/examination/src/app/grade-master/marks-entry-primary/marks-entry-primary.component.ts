@@ -4,11 +4,11 @@ import { AxiomService, SisService, SmartService, CommonAPIService, ExamService }
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-marks-entry',
-  templateUrl: './marks-entry.component.html',
-  styleUrls: ['./marks-entry.component.css']
+  selector: 'app-marks-entry-primary',
+  templateUrl: './marks-entry-primary.component.html',
+  styleUrls: ['./marks-entry-primary.component.css']
 })
-export class MarksEntryComponent implements OnInit {
+export class MarksEntryPrimaryComponent implements OnInit {
 
   paramform: FormGroup
   classArray: any[] = [];
@@ -139,7 +139,7 @@ export class MarksEntryComponent implements OnInit {
       this.tableDivFlag = true;
       const param: any = {};
       param.examEntry = this.paramform.value;
-      param.eme_review_status = ['0', '1', '2', '3', '4'];
+      param.eme_review_status = ['1', '2', '3', '4'];
       this.examService.getMarksEntry(param).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           console.log(result.data);
@@ -169,7 +169,7 @@ export class MarksEntryComponent implements OnInit {
   checkEditable(es_id, eme_review_status) {
     for (const item of this.responseMarksArray) {
       if (item.examEntry.eme_subexam_id === es_id) {
-        if (item.examEntry.eme_review_status === eme_review_status) {
+        if (item.examEntry.eme_review_status <= eme_review_status) {
           return true;
         } else {
           return false;
@@ -218,7 +218,7 @@ export class MarksEntryComponent implements OnInit {
     }
   }
 
-  saveForm(status = '0') {
+  saveForm(status = '1') {
     if (this.paramform.valid && this.marksInputArray.length > 0) {
       const param: any = {};
       param.examEntry = this.paramform.value;
@@ -233,3 +233,4 @@ export class MarksEntryComponent implements OnInit {
   }
 
 }
+

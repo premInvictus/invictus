@@ -3,7 +3,8 @@
     <div class="col-2">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Class</mat-label>
-        <mat-select formControlName="fee_value" (selectionChange)="getSectionByClass($event)">
+        <mat-select formControlName="fee_value" (selectionChange)="getSectionByClass($event);filtered($event)"
+        placeholder="Class">
           <mat-option value="">Please Select</mat-option>
           <mat-option *ngFor="let item of valueArray" [value]="item.id">
             {{item.name}}</mat-option>
@@ -13,7 +14,8 @@
     <div *ngIf="filterFlag" class="col-2">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Section</mat-label>
-        <mat-select formControlName="hidden_value" [placeholder]="valueLabel">
+        <mat-select formControlName="hidden_value" [placeholder]="valueLabel"
+        (selectionChange)="filtered($event)">
           <mat-option *ngFor="let item of sectionArray" [value]="item.id">{{item.name}}
           </mat-option>
         </mat-select>

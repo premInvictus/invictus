@@ -651,6 +651,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				sec_status: value.sec_status
 			});
 		} else if (Number(this.configValue) === 3) {
+			console.log('value', value);
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				sub_id: value.sub_id,

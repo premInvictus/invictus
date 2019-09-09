@@ -1,3 +1,82 @@
-<p>
-  cbse-marks-analysis works!
-</p>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-6 remove-col-padding-left margin-top-15">
+          <span class="font-size-24">CBSE Marks Analysis</span>
+        </div>
+        <div class="col-6 remove-col-padding-right text-right">
+          <mat-form-field appearance="outline" class="form-field-150">
+            <mat-select placeholder="Class">
+              <mat-option></mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="inline-flex">
+            <button mat-button class="btn-success-teal btn-spacer " (click)="openUploadDialog()">Upload New</button></div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <mat-card class="remove-padding">
+      <div class="padding-15 background-color-teal">
+        <span class=" font-size-16 text-uppercase">Reports</span>
+      </div>
+      <div class="padding-15">
+        <div class="row">
+          <div class="col-2">
+            <div class="cbse-report-box text-center">
+              <span class="font-size-14 font-medium ">Marks Register</span>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="cbse-report-box text-center">
+              <span class="font-size-14 font-medium ">Best Five Subject</span>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="cbse-report-box text-center">
+              <span class="font-size-14 font-medium ">Subject Wise Analysis</span>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="cbse-report-box text-center">
+              <span class="font-size-14 font-medium ">Stream Wise Analysis</span>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="cbse-report-box text-center">
+              <span class="font-size-14 font-medium ">Trend Analysis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+        <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header class="report-panel-header">
+                <mat-panel-title>
+                  <span class="font-white font-size-16 text-uppercase">Subject Wise Analysis</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="row">
+                <div class="col-12">
+                  <div class="padding-15">
+                    
+                  <span>HighChart Goes Here</span>
+                  </div>
+                </div>
+              </div>
+             
+            </mat-expansion-panel>
+          </mat-accordion>
+  </div>
+</div>

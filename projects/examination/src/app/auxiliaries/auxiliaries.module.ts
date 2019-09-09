@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AuxiliariesRoutingModule } from './auxiliaries-routing.module';
 import { GradecardPrintingComponent } from './gradecard-printing/gradecard-printing.component';
 import { AdditionalSubjectComponent } from './additional-subject/additional-subject.component';
-import { CbseMarksAnalysisComponent } from './cbse-marks-analysis/cbse-marks-analysis.component';
+import { CbseMarksAnalysisComponent, CbseMarksUploadDialog } from './cbse-marks-analysis/cbse-marks-analysis.component';
 import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.component';
 import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.component';
 import { ExamSharedModule } from '../exam-shared/exam-shared.module';
@@ -16,6 +16,9 @@ import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 		ExamSharedModule
 	],
 	declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent,
-		RollnoAllotmentComponent, MarkAttendanceComponent]
+		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog],
+		entryComponents: [
+			CbseMarksUploadDialog
+		  ],
 })
 export class AuxiliariesModule { }
