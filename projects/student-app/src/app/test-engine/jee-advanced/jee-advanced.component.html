@@ -796,7 +796,7 @@
                   <div class="col-12">
                      <div class="notepad-bar-subject-container">
                         <span style="color:white; font-weight: bold">
-                           {{sectionDetails.subName.slice(0,3) | uppercase}} SEC {{sectionDetails.index + 1}}
+                           {{getSubjectSplice(sectionDetails) | uppercase}} SEC {{sectionDetails.index + 1}}
                         </span>
                      </div>
                   </div>
@@ -810,8 +810,8 @@
                            <br>
                            <ng-container *ngFor="let question of questionListArray;let k=index">
                               <img [src]="getQusStatuSrc(question.qus_id)" class="jee-btn-svg-numericpad"
-                                 (click)="setQuestionId(question.qus_id)">
-                              <span (click)="setQuestionId(question.qus_id)"
+                                 (click)="setQuestionId(question.qus_id);$event.stopPropagation();">
+                              <span (click)="setQuestionId(question.qus_id);$event.stopPropagation();"
                                  class="adv-jee-btn-not-onansnum1">{{k+1}}</span>
                            </ng-container>
                         </div>
