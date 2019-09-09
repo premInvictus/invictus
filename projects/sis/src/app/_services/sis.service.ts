@@ -1028,4 +1028,5 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/bulkUpdate/downloadBulkUpdateTemplate', value);
 	}
+
 }

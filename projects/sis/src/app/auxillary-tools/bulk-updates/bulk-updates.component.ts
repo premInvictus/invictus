@@ -42,6 +42,38 @@ export class BulkUpdatesComponent implements OnInit {
 		}
 	}
 
+	bulkDocumentUpdate(event) {
+		const files = event.target.files;
+		const formData = new FormData();
+		const component = this.uploadComponent;
+		console.log('file--', files);
+		if (files.length > 1) {
+			for (let i = 0; i < files.length; i++) {
+				if (files[i]['type'] === 'application/vnd.ms-excel') {
+					formData.append('uploadFile', files[i], files[i].name);
+				}
+				if (files[i]['type'] === 'application/zip') {
+					formData.append('zipFile', files[i], files[i].name);
+				}
+			}
+			formData.append('module' , 'auxillary');
+			formData.append('component', component);
+			const options = { content: formData,  module : 'auxillary', component : this.uploadComponent };
+			this.sisService.uploadBulkDocuments(formData).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
+					this.myInputVariable.nativeElement.value = '';
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Uploading File', 'error');
+					this.myInputVariable.nativeElement.value = '';
+				}
+			});
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please Choose one zip file and one excel file', 'error');
+			this.myInputVariable.nativeElement.value = '';
+		}
+	}
+
 	loadComponent(event) {
 		this.uploadComponent = event.value;
 		this.myInputVariable.nativeElement.value = '';
