@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
+import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
+import { ExamService } from '../../_services/exam.service';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -22,7 +23,10 @@ export class MarksEntryComponent implements OnInit {
   marksInputArray: any[] = [];
   marksEditable = true;
   responseMarksArray: any[] = [];
+  currentUser: any;
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    console.log(this.currentUser);
     this.buildForm();
     this.getClass();
     this.getTermList();
@@ -49,45 +53,46 @@ export class MarksEntryComponent implements OnInit {
       eme_subexam_id: ''
     })
   }
+
   getClass() {
     this.classArray = [];
-    this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
+    this.smartService.getClassByTeacherId({ teacher_id: this.currentUser.login_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.classArray = result.data;
-      } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
   }
-
   getSectionsByClass() {
     this.paramform.patchValue({
       eme_sec_id: '',
+      eme_sub_id: '',
       eme_term_id: '',
       eme_exam_id: '',
       eme_subexam_id: ''
     });
     this.tableDivFlag = false;
     this.sectionArray = [];
-    this.smartService.getSectionsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+    this.smartService.getSectionByTeacherIdClassId({
+      teacher_id: this.currentUser.login_id,
+      class_id: this.paramform.value.eme_class_id
+    }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.sectionArray = result.data;
-      } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
   }
-
   getSubjectsByClass() {
-    this.subjectArray = [];
     this.paramform.patchValue({
       eme_sub_id: ''
     });
-    this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+    this.subjectArray = [];
+    this.smartService.getSubjectByTeacherIdClassIdSectionId({
+      teacher_id: this.currentUser.login_id,
+      class_id: this.paramform.value.eme_class_id,
+      sec_id: this.paramform.value.eme_sec_id
+    }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.subjectArray = result.data;
-      } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
   }
