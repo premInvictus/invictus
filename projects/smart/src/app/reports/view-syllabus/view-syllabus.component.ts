@@ -2,15 +2,12 @@ import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
 import * as moment from 'moment/moment';
-import * as XLSX from 'xlsx';
 declare var require;
 import * as Excel from 'exceljs/dist/exceljs';
 const jsPDF = require('jspdf');
-import 'jspdf-autotable'; 
+import 'jspdf-autotable';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
-import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
-
 @Component({
 	selector: 'app-view-syllabus',
 	templateUrl: './view-syllabus.component.html',
@@ -22,6 +19,7 @@ export class ViewSyllabusComponent implements OnInit {
 	public classArray: any[];
 	sectionArray: any[] = [];
 	public subjectArray: any[];
+	startDate: any;
 	public finalSyllabusArray: any[];
 	public topicArray: any[];
 	finalSpannedArray: any[] = [];
@@ -190,6 +188,7 @@ export class ViewSyllabusComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.topicArray = result.data;
+						console.log(this.topicArray);
 					} else {
 						this.topicArray = [];
 					}
@@ -199,9 +198,11 @@ export class ViewSyllabusComponent implements OnInit {
 
 	//  Get Topic Name from existion Array for details table
 	getTopicName(value) {
-		const topIndex = this.topicArray.findIndex(f => Number(f.topic_id) === Number(value));
-		if (topIndex !== -1) {
-			return this.topicArray[topIndex].topic_name;
+		if (this.topicArray && this.topicArray.length > 0) {
+			const topIndex = this.topicArray.findIndex(f => Number(f.topic_id) === Number(value));
+			if (topIndex !== -1) {
+				return this.topicArray[topIndex].topic_name;
+			}
 		}
 	}
 
@@ -334,14 +335,14 @@ export class ViewSyllabusComponent implements OnInit {
 			if (rowNum === 1) {
 				row.font = {
 					name: 'Arial',
-					size: 16,
+					size: 14,
 					bold: true
 				};
 			}
 			if (rowNum === 2) {
 				row.font = {
 					name: 'Arial',
-					size: 14,
+					size: 12,
 					bold: true
 				};
 			}
@@ -501,6 +502,7 @@ export class ViewSyllabusComponent implements OnInit {
 		this.teachingSum = 0;
 		this.testSum = 0;
 		this.revisionSum = 0;
+		this.finalSpannedArray = [];
 		if (this.reviewform.value.syl_class_id && this.reviewform.value.syl_sub_id && this.reviewform.value.syl_sec_id) {
 			this.syllabusService.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
 				.subscribe(
@@ -530,6 +532,8 @@ export class ViewSyllabusComponent implements OnInit {
 												const periodCoundDetails = result1.data.periodCoundDetails;
 												const scheduleDetails = result1.data.scheduleDetails;
 												const sessionStartDate = result1.data.sessionStartDate;
+												this.startDate = '';
+												this.startDate = sessionStartDate;
 												const sessionEndDate = result1.data.sessionEndDate;
 												// if (!this.editRequestFlag) {
 												// 	this.finalSpannedArray = [];
@@ -676,17 +680,20 @@ export class ViewSyllabusComponent implements OnInit {
 																}
 															}
 														} else {
-															const cindex = classworkDetails.findIndex(c => c.cw_topic_id === element.sd_topic_id);
-															if (cindex !== -1) {
-																eachTopicStatus.statusStr = 'In Progress';
-																eachTopicStatus.color = 'yellow';
-																eachTopicStatus.statusFlag = false;
+															if (classworkDetails && classworkDetails.length > 0) {
+																const cindex = classworkDetails.findIndex(c => c.cw_topic_id === element.sd_topic_id);
+																if (cindex !== -1) {
+																	eachTopicStatus.statusStr = 'In Progress';
+																	eachTopicStatus.color = 'yellow';
+																	eachTopicStatus.statusFlag = false;
+																}
 															}
 														}
 														element.statusDetails = eachTopicStatus;
 														element.initialTotal = totalPeriodFromInitial;
 														element.estimateDate = estimateDate;
 													});
+													console.log(this.finalSpannedArray);
 												}
 												this.finaldivflag = false;
 											} else {
@@ -708,6 +715,25 @@ export class ViewSyllabusComponent implements OnInit {
 						}
 					}
 				);
+		}
+	}
+	getDatePeriod(date, index) {
+		if (date) {
+			if (index === 0) {
+				return new DatePipe('en-in').transform(this.startDate, 'dd MMM, yyyy') + ' - '
+					+ new DatePipe('en-in').transform(date, 'dd MMM, yyyy');
+			}
+			if (index > 0) {
+				const date2 = new Date(this.finalSpannedArray[index - 1].estimateDate).getDate() + 1;
+				let month: any = Number(new Date(this.finalSpannedArray[index - 1].estimateDate).getMonth()) + 1;
+				if (month <= 9) {
+					month = '0' + month;
+				}
+				const year = new Date(this.finalSpannedArray[index - 1].estimateDate).getFullYear();
+				const finalDate = year + '-' + month + '-' + date2;
+				return new DatePipe('en-in').transform(finalDate, 'dd MMM, yyyy') + ' - '
+					+ new DatePipe('en-in').transform(this.finalSpannedArray[index].estimateDate, 'dd MMM, yyyy');
+			}
 		}
 	}
 
