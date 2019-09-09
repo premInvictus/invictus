@@ -23,21 +23,21 @@
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                             <mat-label>Subject</mat-label>
-                            <mat-select placeholder="Subject" formControlName="eme_sub_id" required>
+                            <mat-select placeholder="Subject" formControlName="eme_sub_id" (selectionChange)="resetTableDiv()" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                             <mat-label>Term</mat-label>
-                            <mat-select placeholder="Term" formControlName="eme_term_id" required>
+                            <mat-select placeholder="Term" formControlName="eme_term_id" (selectionChange)="resetTableDiv()" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of termsArray" [value]="item.term_id">{{item.term_name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                             <mat-label>Exam</mat-label>
-                            <mat-select placeholder="Exam" formControlName="eme_exam_id" required>
+                            <mat-select placeholder="Exam" formControlName="eme_exam_id" (selectionChange)="resetTableDiv()" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}</mat-option>
                             </mat-select>
