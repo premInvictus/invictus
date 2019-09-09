@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener,  Inject, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostListener, Inject, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { JeeAdvancedInstructionscreenComponent } from './jee-advanced-instructionscreen/jee-advanced-instructionscreen.component';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
@@ -22,7 +22,7 @@ export class PendingRequest {
 	styleUrls: ['./jee-advanced.component.css']
 })
 export class JeeAdvancedComponent implements OnInit {
-	@ViewChild('questionModal')questionModal;
+	@ViewChild('questionModal') questionModal;
 	networkErrorCount = 0;
 	networkErrorCounter = 0;
 	reviewForm: FormGroup;
@@ -1591,6 +1591,11 @@ export class JeeAdvancedComponent implements OnInit {
 		this.testSummaryDiv = true;
 		this.ongoingDiv = false;
 	}
+	getSubjectSplice(item) {
+		if (item && item.subName) {
+			return item.subName.slice(0, 3);
+		}
+	}
 
 	reviewCurrentQ(rcqi) {
 		this.testSummaryDiv = false;
@@ -1721,11 +1726,13 @@ export class JeeAdvancedComponent implements OnInit {
 		this.upperRowValue = $event.srcElement.value.charAt(0) + $event.srcElement.value.charAt(1);
 	}
 	setNum(value) {
-		const previousValue = this.upperRowValue;
-		this.upperRowValue = value.toString();
-		this.upperRowValue = previousValue.toString() + value.toString();
-		if (this.upperRowValue.length > 2) {
-			this.upperRowValue = this.upperRowValue.slice(0, 2);
+		if (value) {
+			const previousValue = this.upperRowValue;
+			this.upperRowValue = value.toString();
+			this.upperRowValue = previousValue.toString() + value.toString();
+			if (this.upperRowValue && this.upperRowValue.length > 2) {
+				this.upperRowValue = this.upperRowValue.slice(0, 2);
+			}
 		}
 	}
 	getMcqChangeEvent($event) {
@@ -1925,12 +1932,14 @@ export class JeeAdvancedComponent implements OnInit {
 	}
 	getSectionWiseAnswerStatus(section: any, answerStatus) {
 		let sum = 0;
-		for (const item of section.secArray) {
-			if (item.answerStatus === answerStatus) {
-				sum++;
+		if (section && section.secArray) {
+			for (const item of section.secArray) {
+				if (item.answerStatus === answerStatus) {
+					sum++;
+				}
 			}
+			return sum;
 		}
-		return sum;
 	}
 	getAnswerStatus(answerStatus) {
 		let sum = 0;
@@ -1949,15 +1958,15 @@ export class JeeAdvancedComponent implements OnInit {
 })
 
 export class QuestionNoAdvModalComponent implements OnInit {
-	@ViewChild('quesModal')quesModal;
+	@ViewChild('quesModal') quesModal;
 	dialogRef: MatDialogRef<QuestionNoAdvModalComponent>;
 	@Output() loadQ = new EventEmitter();
 	@Input() questionsArray: any[] = [];
 	@Input() questionListArray: any[] = [];
 	@Input() sectionDetails: any = {};
-	@Input() finalSectionArray: any[]  = [];
+	@Input() finalSectionArray: any[] = [];
 	@Input() questionAnswerArray: any[] = [];
-	constructor(private dialog: MatDialog) {}
+	constructor(private dialog: MatDialog) { }
 	ngOnInit() {
 	}
 	openModal(data) {
@@ -1989,12 +1998,14 @@ export class QuestionNoAdvModalComponent implements OnInit {
 	}
 	getSectionWiseAnswerStatus(section: any, answerStatus) {
 		let sum = 0;
-		for (const item of section.secArray) {
-			if (item.answerStatus === answerStatus) {
-				sum++;
+		if (section && section.secArray) {
+			for (const item of section.secArray) {
+				if (item.answerStatus === answerStatus) {
+					sum++;
+				}
 			}
+			return sum;
 		}
-		return sum;
 	}
 	setQuestionId(qus_id) {
 		this.loadQ.emit(qus_id);
