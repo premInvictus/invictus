@@ -1,82 +1,107 @@
 <div class="row">
-    <div class="col-12">
+  <div class="col-12">
       <mat-card>
-        <div class="row ">
-          <div class="col-4 remove-col-padding-left margin-top-15">
-            <span class="font-size-24 ">Remark Entry</span>
-          </div>
-          <div class="col-8 remove-col-padding-right text-right">
-            <mat-form-field appearance="outline" class="form-field-150">
-              <mat-select placeholder="Class">
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
-              <mat-select placeholder="Section">
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
-              <mat-select placeholder="Subject">
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
-              <mat-select placeholder="Term">
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
-              <mat-select placeholder="Exam">
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
-              <mat-select placeholder="Sub-Exam">
-                <mat-option></mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
+          <form [formGroup]="paramform">
+              <div class="row ">
+                  <div class="col-4 remove-col-padding-left margin-top-15"> 
+                      <span class="font-size-24 ">Remarks Entry</span>
+                  </div>
+                  <div class="col-8 remove-col-padding-right text-right">
+                      <mat-form-field appearance="outline" class="form-field-150"> 
+                          <mat-label>Class</mat-label>
+                          <mat-select placeholder="Class" formControlName="eme_class_id" (selectionChange)="getSectionsByClass();" required>
+                              <mat-option value="">Please select</mat-option>
+                              <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                          <mat-label>Section</mat-label>
+                          <mat-select placeholder="Section" formControlName="eme_sec_id" (selectionChange)="getRollNoUser()" required>
+                              <mat-option value="">Please select</mat-option>
+                              <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option> 
+                          </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-label>Remarks Type</mat-label>
+                        <mat-select placeholder="Section" formControlName="eme_review_type" (selectionChange)="getRemarksType()" required >
+                            <mat-option value="">Please select</mat-option>
+                            <mat-option *ngFor="let item of remarksTypeArray" [value]="item.rt_id">{{item.rt_name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                      <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                          <mat-label>Subject</mat-label>
+                          <mat-select placeholder="Subject" formControlName="eme_sub_id" required>
+                              <mat-option value="">Please select</mat-option>
+                              <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                          <mat-label>Term</mat-label>
+                          <mat-select placeholder="Term" formControlName="eme_term_id" required>
+                              <mat-option value="">Please select</mat-option>
+                              <mat-option *ngFor="let item of termsArray" [value]="item.term_id">{{item.term_name}}</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                          <mat-label>Exam</mat-label>
+                          <mat-select placeholder="Exam" formControlName="eme_exam_id" required>
+                              <mat-option value="">Please select</mat-option>
+                              <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                          <mat-label>Sub-Exam</mat-label>
+                          <mat-select placeholder="Sub-Exam" formControlName="eme_subexam_id" multiple (selectionChange)="displayData()" required>
+                              <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">{{item.sexam_name}}</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                  </div>
+              </div>
+          </form>
       </mat-card>
-    </div>
   </div>
-  
-  <div class="row">
-    <div class="col-12">
+</div>
+
+<div class="row" *ngIf="tableDivFlag">
+  <div class="col-12">
       <mat-card>
-        <table class="custom-table">
-          <thead>
-            <tr class="custom-tr">
-              <th rowspan="2" class="custom-th text-center">Roll No.</th>
-              <th rowspan="2"  class="custom-th text-center">Student name</th>
-              <th rowspan="2" class="custom-th text-center">Admission</th>
-              <th colspan="3" class="custom-th text-center">Social Science</th>
-            </tr>
-            <tr class="custom-tr">
-              <th class="custom-th text-center">Periodic Test I*</th>
-              <th class="custom-th text-center">Periodic Test II*</th>
-              <th class="custom-th text-center">Multiple Assessment</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="custom-td text-center font-size-14">01</td>
-              <td class="custom-td text-left font-size-14"><span class="margin-left-15">Amit kumar</span> </td>
-              <td class="custom-td text-center font-size-14">2356458</td>
-              <td class="custom-td text-center font-size-14" (click)="openRemarkDialog()">Please Enter Remarks Here</td>
-              <td class="custom-td text-center font-size-14">Please Enter Remarks Here</td>
-              <td class="custom-td text-center font-size-14">Please Enter Remarks Here</td>
-            </tr>
-          </tbody>
-        </table>
-        <br>
+          <table class="custom-table">
+              <thead>
+                  <tr class="custom-tr">
+                      <th rowspan="2" class="custom-th text-center" width="100">Roll No.</th>
+                      <th rowspan="2" class="custom-th text-center" width="250">Student name</th>
+                      <th rowspan="2" class="custom-th text-center" width="100">Admission</th>
+                      <th [attr.colspan]="paramform.value.eme_subexam_id.length" class="custom-th text-center">{{getSubjectName() | titlecase}}</th>
+                  </tr>
+                  <tr class="custom-tr">
+                      <th class="custom-th text-center" *ngFor="let item of paramform.value.eme_subexam_id">{{getSubexamName(item) | titlecase}}</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let stu of studentArray; let s = index">
+                      <td class="custom-td text-center font-size-14">{{stu.r_rollno}}</td>
+                      <td class="custom-td text-left font-size-14"><span class="margin-left-15">{{stu.au_full_name | titlecase}}</span> </td>
+                      <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
+                      <td class="custom-td text-center font-size-14" *ngFor="let item of paramform.value.eme_subexam_id">
+                          <ng-template [ngIf]="checkEditable(item, '0')" [ngIfElse]="elseContaint">
+                              <mat-form-field class="margin-top-10 form-field-60">
+                                  <input matInput type="number" [value]="getInputMarks(item, stu.au_login_id)" (change)="enterInputMarks(item, stu.au_login_id, $event.target.value)">
+                              </mat-form-field>
+                          </ng-template>
+                          <ng-template #elseContaint>
+                              {{getInputMarks(item, stu.au_login_id)}}
+                          </ng-template>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <br>
           <div class="row margin-top-25">
-            <div class="col-12 text-center">
-              <button mat-button class="btn-success-green">Review</button>
-              <button mat-button class="btn-reset btn-spacer">Reset</button>
-            </div>
+              <div class="col-12 text-center" *ngIf="marksInputArray.length > 0 && isAnyoneEditable('0')">
+                  <button mat-button class="btn-success-green" (click)="saveForm()">Save</button>
+                  <button mat-button class="btn-success-green btn-spacer" (click)="saveForm('1')">Save & Submit</button>
+              </div>
           </div>
       </mat-card>
-    </div>
   </div>
+</div>
