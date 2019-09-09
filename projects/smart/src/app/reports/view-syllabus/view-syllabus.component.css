@@ -26,3 +26,16 @@ tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }
 .subTopic{
     width:30%
 }
+span.session_start_date {
+    position: relative;
+    font-weight: bold;
+    top: 24px;
+    font-size: 16px;
+    left: 12px;
+}
+span.session_start_date_2 {
+    position: relative;
+    top: 24px;
+    font-size: 16px;
+    left: 12px;
+}

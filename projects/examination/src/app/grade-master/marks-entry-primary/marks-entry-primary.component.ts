@@ -62,8 +62,12 @@ export class MarksEntryPrimaryComponent implements OnInit {
 
   getSectionsByClass() {
     this.paramform.patchValue({
-      eme_sec_id: ''
+      eme_sec_id: '',
+      eme_term_id: '',
+      eme_exam_id: '',
+      eme_subexam_id: ''
     });
+    this.tableDivFlag = false;
     this.sectionArray = [];
     this.smartService.getSectionsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -118,6 +122,12 @@ export class MarksEntryPrimaryComponent implements OnInit {
     });
   }
   getRollNoUser() {
+    this.paramform.patchValue({
+      eme_term_id: '',
+      eme_exam_id: '',
+      eme_subexam_id: ''
+    });
+    this.tableDivFlag = false;
     if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id) {
       this.studentArray = [];
       this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id }).subscribe((result: any) => {
@@ -230,6 +240,12 @@ export class MarksEntryPrimaryComponent implements OnInit {
         }
       })
     }
+  }
+  resetTableDiv() {
+    this.tableDivFlag = false;
+    this.paramform.patchValue({
+      eme_subexam_id: ''
+    });
   }
 
 }

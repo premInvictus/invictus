@@ -43,7 +43,7 @@
           </div>
         </div>
         <br/>
-        <div class="container-box__uploadbox">
+        <div class="container-box__uploadbox" *ngIf="uploadComponent !== '3'">
           <div class="bulk-upload-main-content">
             <label class="upload-box" for="bulkupdate">
               <div class="bulk-upload-content">
@@ -54,6 +54,26 @@
                   <span><b>Choose a file</b> or drag it here !</span>
                   <input style="display:none;" #inputFile type="file" name="uploadFile" id="bulkupdate"
                     (change)="bulkupdate($event)">
+                  <input style="display:none;" type="text" name="module" id="module"
+                    value="module">
+                    <input style="display:none;" type="text" name="component" id="component"
+                    value="{{uploadComponent}}">
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="container-box__uploadbox" *ngIf="uploadComponent === '3'">
+          <div class="bulk-upload-main-content">
+            <label class="upload-box" for="bulkupdate">
+              <div class="bulk-upload-content">
+                <div class="bulk-upload-sub-content" style="margin-top:38%">
+                  <i class="material-icons bulk-upload-icon">
+                    save_alt
+                  </i><br>
+                  <span><b>Choose a zip file and excel file</b> or drag it here !</span>
+                  <input style="display:none;" #inputFile type="file" name="uploadFile" id="bulkupdate"
+                    (change)="bulkDocumentUpdate($event)" multiple>
                   <input style="display:none;" type="text" name="module" id="module"
                     value="module">
                     <input style="display:none;" type="text" name="component" id="component"

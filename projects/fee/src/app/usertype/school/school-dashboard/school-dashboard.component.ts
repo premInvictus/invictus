@@ -59,7 +59,7 @@ export class SchoolDashboardComponent implements OnInit {
 		this.getFeeMonths();
 	}
 	getFeeOutstanding() {
-		this.feeService.getFeeOutstanding({projectionType: 'yearly'}).subscribe((result: any) => {
+		this.feeService.getFeeOutstanding({ projectionType: 'yearly' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log(result.data);
 				const feedata = result.data;
@@ -127,7 +127,7 @@ export class SchoolDashboardComponent implements OnInit {
 		};
 	}
 	getClassWiseFeeOutstanding() {
-		this.feeService.getClassWiseFeeOutstanding({projectionType: 'yearly'}).subscribe((result: any) => {
+		this.feeService.getClassWiseFeeOutstanding({ projectionType: 'yearly' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log(result.data);
 				const xcategories: string[] = [];
@@ -154,7 +154,7 @@ export class SchoolDashboardComponent implements OnInit {
 		this.feeclassoutstandingchartflag = true;
 		this.feeclassoutstandingchart = {
 			chart: {
-				type: 'spline',
+				type: 'column',
 				height: '400px'
 			},
 			title: {
@@ -184,7 +184,7 @@ export class SchoolDashboardComponent implements OnInit {
 			}]
 		};
 	}
- 	projectiontab(tabindex) {
+	projectiontab(tabindex) {
 		this.currentTabIndex = tabindex;
 		if (tabindex === 0) {
 			this.renderFeeProjectionReport(this.tabType[this.currentTabIndex], this.months);
@@ -295,7 +295,7 @@ export class SchoolDashboardComponent implements OnInit {
 				innerSize: '%'
 			},
 			title: {
-				text: '<b>' + ( new DecimalPipe('en-in').transform(this.totalreceipt)) + '<b><br><b>Total Receipt <b>',
+				text: '<b>' + (new DecimalPipe('en-in').transform(this.totalreceipt)) + '<b><br><b>Total Receipt <b>',
 				align: 'center',
 				verticalAlign: 'middle',
 				y: 25
@@ -339,7 +339,7 @@ export class SchoolDashboardComponent implements OnInit {
 		console.log('receivedSeries', receivedSeries);
 		this.feeprojectionlinechart = {
 			chart: {
-				type: 'spline',
+				type: 'column',
 				height: '400px',
 			},
 			title: {
@@ -362,15 +362,17 @@ export class SchoolDashboardComponent implements OnInit {
 					enableMouseTracking: false
 				}
 			},
-			series: [{
-				name: 'Projected',
-				color: '#66BB6A',
-				data: projectedSeries
-			}, {
-				name: 'Recieved',
-				color: '#D1D8E0',
-				data: receivedSeries
-			}]
+			series: [
+				// {
+				// 	name: 'Projected',
+				// 	color: '#66BB6A',
+				// 	data: projectedSeries
+				// },
+				{
+					name: 'Recieved',
+					color: '#66BB6A',
+					data: receivedSeries
+				}]
 		};
 	}
 

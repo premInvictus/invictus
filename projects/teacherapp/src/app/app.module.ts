@@ -10,7 +10,7 @@ import { LoadingModule } from 'ngx-loading';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { CookieModule } from 'ngx-cookie';
-import { AcsetupService} from './_services/acsetup.service';
+import { AcsetupService } from './_services/acsetup.service';
 import { MatInputModule, MatCardModule, MatTooltipModule, MatRadioModule, MatButtonModule } from '@angular/material';
 import { AuthGuard } from 'projects/teacherapp/src/app/_guards/auth.guard';
 import { RouteAccessGuard } from 'projects/teacherapp/src/app/_guards';
@@ -34,6 +34,7 @@ import { AdminService } from 'projects/teacherapp/src/app/_services/admin.servic
 import { QelementService } from 'projects/teacherapp/src/app/questionbank/service/qelement.service';
 import { QbankService } from 'projects/teacherapp/src/app/questionbank/service/qbank.service';
 import { ReportService } from 'projects/teacherapp/src/app/_services/report.service';
+import { ExamService } from 'projects/teacherapp/src/app/_services/exam.service';
 const providers = [
 	AuthGuard,
 	RouteAccessGuard,
@@ -55,7 +56,8 @@ const providers = [
 	SisService,
 	AxiomService,
 	SmartService,
-	ReportService];
+	ReportService,
+	ExamService];
 @NgModule({
 	declarations: [
 		AppComponent

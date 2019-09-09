@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
+import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
+import { ExamService } from '../../_services/exam.service';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-marks-entry',
-  templateUrl: './marks-entry.component.html',
-  styleUrls: ['./marks-entry.component.css']
+  selector: 'app-marks-entry-final',
+  templateUrl: './marks-entry-final.component.html',
+  styleUrls: ['./marks-entry-final.component.css']
 })
-export class MarksEntryComponent implements OnInit {
+export class MarksEntryFinalComponent implements OnInit {
 
   paramform: FormGroup
   classArray: any[] = [];
@@ -22,7 +23,9 @@ export class MarksEntryComponent implements OnInit {
   marksInputArray: any[] = [];
   marksEditable = true;
   responseMarksArray: any[] = [];
+  currentUser: any;
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.buildForm();
     this.getClass();
     this.getTermList();
@@ -39,6 +42,7 @@ export class MarksEntryComponent implements OnInit {
     public dialog: MatDialog
   ) { }
 
+
   buildForm() {
     this.paramform = this.fbuild.group({
       eme_class_id: '',
@@ -51,43 +55,43 @@ export class MarksEntryComponent implements OnInit {
   }
   getClass() {
     this.classArray = [];
-    this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
+    this.smartService.getClassByTeacherId({ teacher_id: this.currentUser.login_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.classArray = result.data;
-      } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
   }
-
   getSectionsByClass() {
     this.paramform.patchValue({
       eme_sec_id: '',
+      eme_sub_id: '',
       eme_term_id: '',
       eme_exam_id: '',
       eme_subexam_id: ''
     });
     this.tableDivFlag = false;
     this.sectionArray = [];
-    this.smartService.getSectionsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+    this.smartService.getSectionByTeacherIdClassId({
+      teacher_id: this.currentUser.login_id,
+      class_id: this.paramform.value.eme_class_id
+    }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.sectionArray = result.data;
-      } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
   }
-
   getSubjectsByClass() {
-    this.subjectArray = [];
     this.paramform.patchValue({
       eme_sub_id: ''
     });
-    this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+    this.subjectArray = [];
+    this.smartService.getSubjectByTeacherIdClassIdSectionId({
+      teacher_id: this.currentUser.login_id,
+      class_id: this.paramform.value.eme_class_id,
+      sec_id: this.paramform.value.eme_sec_id
+    }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.subjectArray = result.data;
-      } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
   }
@@ -122,12 +126,6 @@ export class MarksEntryComponent implements OnInit {
     });
   }
   getRollNoUser() {
-    this.paramform.patchValue({
-      eme_term_id: '',
-      eme_exam_id: '',
-      eme_subexam_id: ''
-    });
-    this.tableDivFlag = false;
     if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id) {
       this.studentArray = [];
       this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id }).subscribe((result: any) => {
@@ -149,7 +147,7 @@ export class MarksEntryComponent implements OnInit {
       this.tableDivFlag = true;
       const param: any = {};
       param.examEntry = this.paramform.value;
-      param.eme_review_status = ['0', '1', '2', '3', '4'];
+      param.eme_review_status = ['3', '4'];
       this.examService.getMarksEntry(param).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           console.log(result.data);
@@ -177,35 +175,26 @@ export class MarksEntryComponent implements OnInit {
     }
   }
   checkEditable(es_id, eme_review_status) {
-    if (this.responseMarksArray.length > 0) {
-      const rindex = this.responseMarksArray.findIndex(item => item.examEntry.eme_subexam_id === es_id);
-      if (rindex === -1) {
-        return true;
-      } else {
-        if (this.responseMarksArray[rindex].examEntry.eme_review_status === eme_review_status) {
+    for (const item of this.responseMarksArray) {
+      if (item.examEntry.eme_subexam_id === es_id) {
+        if (item.examEntry.eme_review_status === eme_review_status) {
           return true;
         } else {
           return false;
         }
       }
-    } else {
-      return true;
     }
   }
 
   isAnyoneEditable(eme_review_status) {
     let status = false;
-    if (this.responseMarksArray.length > 0) {
-      for (const item of this.responseMarksArray) {
-        if (item.examEntry.eme_review_status === eme_review_status) {
-          status = true;
-          break;
-        }
+    for (const item of this.responseMarksArray) {
+      if (item.examEntry.eme_review_status === eme_review_status) {
+        status = true;
+        break;
       }
-      return status;
-    } else {
-      return true;
     }
+    return status;
   }
   getSubjectName() {
     for (const item of this.subjectArray) {
@@ -237,7 +226,7 @@ export class MarksEntryComponent implements OnInit {
     }
   }
 
-  saveForm(status = '0') {
+  saveForm(status = '3') {
     if (this.paramform.valid && this.marksInputArray.length > 0) {
       const param: any = {};
       param.examEntry = this.paramform.value;
@@ -258,3 +247,4 @@ export class MarksEntryComponent implements OnInit {
   }
 
 }
+
