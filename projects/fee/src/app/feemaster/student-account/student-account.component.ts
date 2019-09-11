@@ -152,6 +152,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				} else {
 					this.hostelFlag = false;
 				}
+				console.log('aaaaaaaaa',this.accountDetails.accd_transport_mode);
 				this.enableMode(this.accountDetails.accd_transport_mode);
 				this.getStoppages(this.accountDetails.accd_tr_id);
 				this.getSlab(this.accountDetails.accd_tsp_id);
@@ -241,7 +242,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			});
 			this.modeFlag = true;
 			this.transportFlag = true;
-			if (this.accountDetails && Object.keys(this.accountDetails).length > 0) {
+			/*if (this.accountDetails && Object.keys(this.accountDetails).length > 0) {
 				this.getStoppages(this.accountDetails.accd_tr_id);
 				this.getSlab(this.accountDetails.accd_tsp_id);
 				this.terminationFlag = this.accountDetails.accd_is_terminate === 'Y' ? true : false;
@@ -258,14 +259,14 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_transport_from: this.accountDetails.accd_transport_from.split('-')[0] === '1970' ? '' : this.accountDetails.accd_transport_from,
 					accd_transport_to: this.accountDetails.accd_transport_to.split('-')[0] === '1970' ? '' : this.accountDetails.accd_transport_to,
 				});
-			}
+			} */
 		} else {
 			this.accountsForm.patchValue({
 				accd_transport_mode: '',
 				accd_tr_id: '',
 				accd_tsp_id: '',
 				accd_ts_id: '',
-				accd_is_terminate: 'N',
+				accd_is_terminate: false,
 				accd_transport_from: '',
 				accd_transport_to: '',
 				accd_remark: ''
@@ -275,6 +276,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.transportFlag = false;
 			this.terminationFlag = false;
 		}
+		console.log('bbbbb',this.accountsForm.value.accd_transport_mode)
 	}
 	enableHostel($event) {
 		if ($event.checked) {

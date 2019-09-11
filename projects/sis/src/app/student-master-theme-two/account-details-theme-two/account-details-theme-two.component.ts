@@ -236,7 +236,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			});
 			this.modeFlag = true;
 			this.transportFlag = true;
-			if (this.feeDet) {
+			/*if (this.feeDet) {
 				this.getStoppages(this.feeDet.accd_tr_id);
 				this.getSlab(this.feeDet.accd_tsp_id);
 				this.terminationFlag = this.feeDet.accd_is_terminate === 'Y' ? true : false;
@@ -252,14 +252,14 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 					accd_transport_from: this.feeDet.accd_transport_from.split('-')[0] === '1970' ? '' : this.feeDet.accd_transport_from,
 					accd_transport_to: this.feeDet.accd_transport_to.split('-')[0] === '1970' ? '' : this.feeDet.accd_transport_to,
 				});
-			}
+			} */
 		} else {
 			this.accountsForm.patchValue({
 				accd_transport_mode: '',
 				accd_tr_id: '',
 				accd_tsp_id: '',
 				accd_ts_id: '',
-				accd_is_terminate: 'N',
+				accd_is_terminate: false,
 				accd_transport_from: '',
 				accd_transport_to: '',
 				accd_remark: ''

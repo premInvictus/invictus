@@ -25,7 +25,6 @@ export class MarksEntryComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
     this.getClass();
-    this.getTermList();
     this.getExamDetails();
     this.getSubExam();
   }
@@ -91,11 +90,12 @@ export class MarksEntryComponent implements OnInit {
       }
     });
   }
-  getTermList() {
+  getClassTerm() {
     this.termsArray = [];
-    this.smartService.getTermList().subscribe((result: any) => {
+    this.examService.getClassTerm({class_id: this.paramform.value.eme_class_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.termsArray = result.data;
+        console.log(result.data);
+        //this.termsArray = result.data;
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
