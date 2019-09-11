@@ -98,7 +98,6 @@ export class SchoolDashboardComponent implements OnInit {
 				verticalAlign: 'middle',
 				y: 25
 			},
-
 			plotOptions: {
 				pie: {
 					innerSize: 200,
@@ -107,7 +106,7 @@ export class SchoolDashboardComponent implements OnInit {
 						enabled: false
 					},
 					colors: [
-						'#FFD558',
+						'#45aaf2',
 						'#FFA502',
 						'#F93434',
 
@@ -117,9 +116,9 @@ export class SchoolDashboardComponent implements OnInit {
 			series: [{
 				name: 'Outstanding amount',
 				data: [
-					['Less than Month', lessthanmonth],
-					['1-3 Month', month13],
-					['More than 3 Month', morethan3month],
+					['Less than 1 month', lessthanmonth],
+					['Between 2 to 3 months Month', month13],
+					['More than 3 months', morethan3month],
 
 
 				]
@@ -178,13 +177,15 @@ export class SchoolDashboardComponent implements OnInit {
 				}
 			},
 			series: [{
-				name: 'Outstanding',
+				name: 'Class Wise Outstanding',
 				color: '#FF7979',
 				data: data
 			}]
 		};
 	}
 	projectiontab(tabindex) {
+		this.feeprojectionlinechartflag = false;
+		this.feeprojectiondonutchartflag = false;
 		this.currentTabIndex = tabindex;
 		if (tabindex === 0) {
 			this.renderFeeProjectionReport(this.tabType[this.currentTabIndex], this.months);
