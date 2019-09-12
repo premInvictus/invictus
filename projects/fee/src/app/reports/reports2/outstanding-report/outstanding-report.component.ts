@@ -2794,7 +2794,7 @@ export class OutstandingReportComponent implements OnInit {
 					const rowData: any[] = [];
 					Object.keys(groupItem.rows).forEach(key => {
 						const arr: any = [];
-						for (const item2 of this.columnDefinitions) {
+						for (const item2 of this.exportColumnDefinitions) {
 							if (this.reportType !== 'mfr') {
 								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
