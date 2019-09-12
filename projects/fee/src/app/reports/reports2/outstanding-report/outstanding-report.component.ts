@@ -820,8 +820,8 @@ export class OutstandingReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
-						obj3['invoice_created_date'] = '';
-						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+						obj3['invoice_created_date'] = this.common.htmlToText('<b>Grand Total</b>');
+						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';
 						obj3['receipt_id'] = '';
@@ -1114,6 +1114,7 @@ export class OutstandingReportComponent implements OnInit {
 							aggregateCollapsed: true,
 							collapsed: false
 						},
+						groupTotalsFormatter: this.srnTotalsFormatter
 					},
 					{
 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
@@ -2321,7 +2322,8 @@ export class OutstandingReportComponent implements OnInit {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
-									bold: true
+									bold: true,
+									color: { argb: 'ffffff' }
 								};
 								cell.alignment = { wrapText: true, horizontal: 'center' };
 								cell.fill = {
