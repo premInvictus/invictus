@@ -8,6 +8,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { BouncedChequeModalComponent } from './bounced-cheque-modal/bounced-cheque-modal.component';
 import { InvoiceDetailsModalComponent } from '../../feemaster/invoice-details-modal/invoice-details-modal.component';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
+import { CapitalizePipe } from '../../_pipes';
 @Component({
 	selector: 'app-cheque-control-tool',
 	templateUrl: './cheque-control-tool.component.html',
@@ -86,7 +87,6 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	}
 
 	openCheckOperationModal(item): void {
-		console.log(item);
 		const dialogRef = this.dialog.open(BouncedChequeModalComponent, {
 			data: item,
 			width: '800px',
@@ -128,7 +128,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
 						bankdeposite: item.fcc_deposite_date ? this.common.dateConvertion(item.fcc_deposite_date, 'd-MMM-y') : '-',
 						processingdate: '',
-						remarks: item.fcc_remarks ? item.fcc_remarks : '-',
+						remarks: item.fcc_remarks ? new CapitalizePipe().transform(item.fcc_remarks) : '-',
 						action: item,
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : ''
 					});
@@ -198,7 +198,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
 						bankdeposite: item.fcc_deposite_date ? new DatePipe('en-in').transform(item.fcc_deposite_date, 'd-MMM-y') : '-',
 						processingdate: '',
-						remarks: item.fcc_remarks ? item.fcc_remarks : '-',
+						remarks: item.fcc_remarks ? new CapitalizePipe().transform(item.fcc_remarks) : '-',
 						action: item,
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-'
 					});

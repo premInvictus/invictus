@@ -26,7 +26,6 @@ export class BouncedChequeModalComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		console.log('data', this.data);
 		this.buildForm();
 		this.getReason();
 		this.getBanks();
@@ -86,9 +85,9 @@ export class BouncedChequeModalComponent implements OnInit {
 		this.dialogRef.close({ status: '0' });
 	}
 	submit() {
-		console.log('this.bouncedForm', this.bouncedForm);
-		if (this.bouncedForm.valid) {
-			if (this.bouncedForm.value.fcc_status === 'd') {
+		if (this.bouncedForm.value.fcc_status === 'd') {
+			if (this.bouncedForm.value.fcc_deposite_date && this.bouncedForm.value.fcc_remarks
+				&& this.bouncedForm.value.ftr_deposit_bnk_id) {
 				this.bouncedForm.patchValue({
 					'fcc_deposite_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_deposite_date, 'yyyy-MM-dd'),
 					'fcc_inv_id': this.studentDetails.invoice_id,
@@ -99,8 +98,11 @@ export class BouncedChequeModalComponent implements OnInit {
 						this.dialogRef.close({ status: '1' });
 					}
 				});
-
-			} else if (this.bouncedForm.value.fcc_status === 'c') {
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
+			}
+		} else if (this.bouncedForm.value.fcc_status === 'c') {
+			if (this.bouncedForm.value.fcc_process_date && this.bouncedForm.value.fcc_remarks) {
 				this.bouncedForm.patchValue({
 					'fcc_process_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_process_date, 'yyyy-MM-dd'),
 					'fcc_inv_id': this.studentDetails.invoice_id,
@@ -111,7 +113,12 @@ export class BouncedChequeModalComponent implements OnInit {
 						this.dialogRef.close({ status: '1' });
 					}
 				});
-			} else if (this.bouncedForm.value.fcc_status === 'b') {
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
+			}
+		} else if (this.bouncedForm.value.fcc_status === 'b') {
+			if (this.bouncedForm.value.fcc_dishonor_date && this.bouncedForm.value.fcc_bank_code
+				&& this.bouncedForm.value.fcc_reason_id && this.bouncedForm.value.fcc_remarks) {
 				this.bouncedForm.patchValue({
 					'fcc_process_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_process_date, 'yyyy-MM-dd'),
 					'fcc_dishonor_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_dishonor_date, 'yyyy-MM-dd'),
@@ -124,9 +131,9 @@ export class BouncedChequeModalComponent implements OnInit {
 						this.dialogRef.close({ status: '1' });
 					}
 				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
 			}
-		} else {
-			this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
 	}
 	setBankcode(event) {
