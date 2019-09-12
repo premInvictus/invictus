@@ -3,10 +3,10 @@
     <div class="col-12 remove-col-padding">
       <mat-card class="card-top-title__container">
         <div class="row">
-          <div class="col-6">
+          <div class="col-12 col-lg-6 col-sm-6">
             <h1 class="remove-bottom-margin font-size-24">Fee Transaction Entry</h1>
           </div>
-          <div class="col-6 text-right">
+          <div class="col-12 col-lg-6 col-sm-6 text-right">
             <div class="vertical-align-sub inline-flex">
               <h3 class="font-size-15 margin-top-2 remove-bottom-margin">Bulk</h3>
               <mat-slide-toggle checked="false" (change)="gotoIndividual($event)" class="btn-spacer my-toggle">
@@ -108,7 +108,7 @@
                 </div> -->
               </div>
               <div class="row ">
-                <div class="col-12 ">
+                <div class="col-12 col-lg-12 col-sm-6">
                   <button *ngFor="let item of invoiceArray" mat-stroked-button
                     class="custom-entry-button margin-left-10">
                     <span class="custom-entry-btn-text"><a (click)="openDialog(item,false)">{{item}}</a></span>
@@ -118,7 +118,7 @@
               </div>
 
               <div class="row">
-                <div class="col-6 ">
+                <div class="col-lg-6 col-12 col-sm-6">
                   <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Remarks</mat-label>
                     <textarea rows="5" matInput placeholder="Write Remarks" formControlName="ftr_remark"
