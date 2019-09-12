@@ -134,6 +134,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateAttendance', value);
 	}
+	getClassTerm(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/common/getClassTerm', value);
+	}
 
 }
 
