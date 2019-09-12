@@ -311,6 +311,11 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeConcessionAllotedReport', value);
 	}
+	getFeeConcessionAllotedSummaryReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeConcessionAllotedSummaryReport', value);
+	}
+	
 	getFeeAdjustmentReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeAdjustmentReport', value);
