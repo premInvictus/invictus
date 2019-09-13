@@ -20,6 +20,7 @@ export class RemarksEntryComponent implements OnInit {
 	studentArray: any[] = [];
 	tableDivFlag = false;
 	marksInputArray: any[] = [];
+	marksInputArray2: any[] = [];
 	marksEditable = true;
 	responseMarksArray: any[] = [];
 	remarksTypeArray: any[] = [
@@ -152,7 +153,8 @@ export class RemarksEntryComponent implements OnInit {
 		if (this.paramform.value.ere_sub_exam_id.length > 0) {
 			this.responseMarksArray = [];
 			this.marksInputArray = [];
-			this.tableDivFlag = true; 
+			this.marksInputArray2 = [];
+			this.tableDivFlag = true;
 			const param: any = {};
 			param.examEntry = this.paramform.value;
 			this.examService.getRemarksEntry(param).subscribe((result: any) => {
@@ -176,10 +178,33 @@ export class RemarksEntryComponent implements OnInit {
 					}
 				}
 			});
+
+			this.examService.getMarksforRemarksEntry(param).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					if (result.data.length > 0) {
+						this.paramform.value.ere_sub_exam_id.forEach(selement => {
+							result.data.forEach(melement => {
+								if (selement === melement.examEntry.eme_subexam_id) {
+									melement.examEntryMapping.forEach(element => {
+										this.marksInputArray2.push({
+											es_id: melement.examEntry.eme_subexam_id,
+											login_id: element.emem_login_id,											
+											mark: element.emem_marks
+										});
+									});
+								}
+							});
+						});
+					}
+				}
+			});
+			console.log('marksInputArray', this.marksInputArray2);
 		} else {
 			this.marksInputArray = [];
+			this.marksInputArray2 = [];
 			this.tableDivFlag = false;
 		}
+	
 	}
 	checkEditable(es_id, ere_review_status) {
 		if (this.responseMarksArray.length > 0) {
@@ -231,10 +256,19 @@ export class RemarksEntryComponent implements OnInit {
 		console.log(this.marksInputArray);
 	}
 
-	getInputMarks(es_id, login_id) {
+	getInputRemarks(es_id, login_id) {
 		const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
 		if (ind !== -1) {
-			return this.marksInputArray[ind].mark;
+			return this.marksInputArray[ind].remarks;
+		} else {
+			return '';
+		}
+	}
+
+	getInputMarks(es_id, login_id) {
+		const ind = this.marksInputArray2.findIndex(e => e.es_id === es_id && e.login_id === login_id);
+		if (ind !== -1) {
+			return this.marksInputArray2[ind].mark;
 		} else {
 			return '';
 		}

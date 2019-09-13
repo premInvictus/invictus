@@ -116,6 +116,10 @@ export class ExamService {
 	getMarksEntry(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/marksEntry/getMarksEntry', value);
+	}	
+	getMarksforRemarksEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/gradeMaster/getMarksforRemarksEntry', value);
 	}
 	getRemarksEntry(value) {
 		this.service.startLoading();
