@@ -385,7 +385,7 @@ export class ClassworkUpdateComponent implements OnInit {
 									}
 									if (key === 'cw_entry_date') {
 										eachFormGroup.patchValue({
-											cw_entry_date: ''
+											cw_entry_date: this.commonAPIService.dateConvertion(this.classworkforForm.value.cw_entry_date)
 										});
 									}
 								}
