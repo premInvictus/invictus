@@ -280,6 +280,10 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getHeadWiseCollection', value);
 	}
+	getFeeCollectionSummaryReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeCollectionSummaryReport', value);
+	}
 	getMissingFeeInvoiceReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getMissingFeeInvoiceReport', value);

@@ -1,59 +1,62 @@
 <div class="row">
   <div class="col-12">
     <mat-card>
-      <div class="row">
-        <div class="col-6 remove-col-padding-left margin-top-15">
-          <span class="font-size-24">Grade Card Printing</span>
+      <form [formGroup]="paramform">
+        <div class="row">
+          <div class="col-6 remove-col-padding-left margin-top-15">
+            <span class="font-size-24">Grade Card Printing</span>
+          </div>
+          <div class="col-6 remove-col-padding-right text-right">
+            <mat-form-field appearance="outline" class="form-field-150">
+              <mat-label>Class</mat-label>
+              <mat-select placeholder="Class" formControlName="eme_class_id"
+                (selectionChange)="getSectionsByClass();getSubjectsByClass();getClassTerm();getExamDetails()" required>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-label>Section</mat-label>
+              <mat-select placeholder="Section" formControlName="eme_sec_id" (selectionChange)="getRollNoUser()"
+                required>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-label>Term</mat-label>
+              <mat-select placeholder="Term" formControlName="eme_term_id" (selectionChange)="displayData();" required>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
-        <div class="col-6 remove-col-padding-right text-right">
-          <mat-form-field appearance="outline" class="form-field-150">
-            <mat-label>Class</mat-label>
-            <mat-select placeholder="Class">
-
-              <mat-option></mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
-            <mat-label>Section</mat-label>
-            <mat-select placeholder="Secion">
-              <mat-option></mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
-            <mat-label>Term</mat-label>
-            <mat-select placeholder="Term">
-              <mat-option></mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
+      </form>
     </mat-card>
   </div>
 </div>
 
-<div class="row">
+<div class="row" *ngIf="tableDivFlag">
   <div class="col-12">
     <mat-card>
       <div class="row">
-        <div class="col-3">
-
-        </div>
-        <div class="col-6">
+        <div class="col-12">
           <div class="row">
             <div class="col-6">
-                <mat-form-field appearance="legacy">
-                    <input matInput class="margin-left-15">
-                    <mat-icon matPrefix>filter_list</mat-icon>
-                  </mat-form-field>
+              <mat-form-field appearance="legacy">
+                <input matInput (keyup)="applyFilter($event.target.value)">
+                <mat-icon matPrefix>filter_list</mat-icon>
+              </mat-form-field>
             </div>
-            <div class="col-6 text-right">
+            <div class="col-6 text-right" *ngIf="selection.selected.length > 0">
               <button mat-button class="btn-success-purple text-capitalize">Lock</button>
               <button mat-button class="btn-success-blue btn-spacer text-capitalize">Print</button>
             </div>
           </div>
           <div class="row remove-top-margin">
             <div class="col-12">
-              <table class="custom-table">
+              <!-- <table class="custom-table">
                 <thead>
                   <tr class="custom-tr">
                     <th class="custom-th text-center">Select</th>
@@ -80,14 +83,80 @@
                         class="margin-left-15 ver-line-divider"></span><i class="fas fa-print  icon-skyblue"></i></td>
                   </tr>
                 </tbody>
+              </table> -->
+              <table mat-table [dataSource]="dataSource" class="table-100 text-center">
+
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                    </mat-checkbox> -->
+                    Select
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)" [disabled]="row.status === '0'" [aria-label]="checkboxLabel(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="au_admission_no">
+                  <th mat-header-cell *matHeaderCellDef> Admission No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.au_admission_no}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="au_full_name">
+                  <th mat-header-cell *matHeaderCellDef> Student Name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.au_full_name}} </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="r_rollno">
+                  <th mat-header-cell *matHeaderCellDef> Roll No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.r_rollno}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="class_name">
+                  <th mat-header-cell *matHeaderCellDef> Class </th>
+                  <td mat-cell *matCellDef="let element"> {{element.class_name}} </td>
+                </ng-container>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                  <td mat-cell *matCellDef="let element"> {{element.status === '1' ? 'cleared' : 'uncleared' | titlecase}} </td>
+                </ng-container>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> Action </th>
+                  <td mat-cell *matCellDef="let element"> 
+                    <span *ngIf="element.status === '1'"><i class="fas fa-lock icon-purple"></i><span class="ver-line-divider margin-left-15"></span></span>
+                    <span *ngIf="element.status === '1'"> <i class="fas fa-print icon-skyblue"></i><span class="margin-left-15 ver-line-divider"></span></span>
+                    <i class="fas fa-eye icon-green"></i>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
               </table>
             </div>
           </div>
         </div>
-        <div class="col-3">
-
-        </div>
       </div>
     </mat-card>
   </div>
+</div>
+<div class="row" *ngIf="!tableDivFlag">
+    <div class="col-12 text-center">
+        <mat-card>
+            <app-no-data 
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" 
+            [noDataText]="" [subText]="'Please select class, section and term'"></app-no-data>
+        </mat-card>
+    </div>
 </div>

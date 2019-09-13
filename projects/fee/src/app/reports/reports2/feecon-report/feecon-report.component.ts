@@ -674,6 +674,7 @@ export class FeeconReportComponent implements OnInit {
 										collapsed: false,
 									},
 									width: 140,
+									groupTotalsFormatter: this.srnTotalsFormatter
 								},
 								{
 									id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name',
@@ -709,8 +710,7 @@ export class FeeconReportComponent implements OnInit {
 										aggregators: this.aggregatearray,
 										aggregateCollapsed: true,
 										collapsed: false,
-									},
-									groupTotalsFormatter: this.srnTotalsFormatter
+									}
 								},
 								{
 									id: 'fcg_description',
@@ -728,27 +728,6 @@ export class FeeconReportComponent implements OnInit {
 							let tot = 0;
 							for (const titem of repoArray[Number(keys)]['stu_concession_arr']) {
 								Object.keys(titem).forEach((key2: any) => {
-									// if (key2 === 'fh_name' && Number(keys) === 0) {
-									// 	const feeObj: any = {};
-									// 	this.columnDefinitions.push({
-									// 		id: 'fh_name' + j,
-									// 		name: new CapitalizePipe().transform(titem[key2]),
-									// 		field: 'fh_name' + j,
-									// 		cssClass: 'amount-report-fee',
-									// 		sortable: true,
-									// 		filterable: true,
-									// 		filterSearchType: FieldType.number,
-									// 		filter: { model: Filters.compoundInput },
-									// 		formatter: this.checkFeeFormatter,
-									// 		groupTotalsFormatter: this.sumTotalsFormatter
-									// 	});
-									// 	feeObj['fh_name' + j] = '';
-									// 	feeHead.push(feeObj);
-									// 	this.feeHeadJson.push(feeObj);
-									// 	this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
-									// 	j++;
-									// }
-									// if (key2 === 'fh_name') {
 										obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys 
 										obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
 											(Number(keys) + 1);
@@ -761,7 +740,6 @@ export class FeeconReportComponent implements OnInit {
 										} else {
 											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
 										}
-										// obj['fh_name'] = repoArray[Number(keys)]['stu_concession_arr']['fh_name'];
 										obj['fcg_name'] = repoArray[Number(keys)]['fcg_name'];
 										obj['fcg_description'] = repoArray[Number(keys)]['fcg_description'];
 										obj[key2 + k] = titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0;
@@ -772,7 +750,6 @@ export class FeeconReportComponent implements OnInit {
 										obj['mod_review_remark'] = repoArray[Number(keys)]['mod_review_remark'] ? repoArray[Number(keys)]['mod_review_remark'] : '-';
 										obj['reason_title'] = repoArray[Number(keys)]['reason_title'] ? repoArray[Number(keys)]['reason_title'] : '-';
 										k++;
-									// }
 								});
 							}
 						}
@@ -827,22 +804,10 @@ export class FeeconReportComponent implements OnInit {
 					this.totalRow = {};
 					const obj3: any = {};
 					obj3['id'] = 'footer';
-					obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
+					obj3['srno'] = '';
 					obj3['stu_admission_no'] = '';
-					obj3['stu_full_name'] = '';
+					obj3['stu_full_name'] = this.common.htmlToText('<b>Grand Total</b>');
 					obj3['stu_class_name'] = '';
-					// obj3['fh_name'] = '';
-					// Object.keys(feeHead).forEach((key: any) => {
-					// 	Object.keys(feeHead[key]).forEach(key2 => {
-					// 		Object.keys(this.dataset).forEach(key3 => {
-					// 			Object.keys(this.dataset[key3]).forEach(key4 => {
-					// 				if (key4 === key2) {
-					// 					obj3[key2] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
-					// 				}
-					// 			});
-					// 		});
-					// 	});
-					// });
 					obj3['fcg_name'] = '';
 					obj3['fcg_description'] = '';
 					obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
@@ -860,6 +825,7 @@ export class FeeconReportComponent implements OnInit {
 					} else if (this.dataset.length > 20) {
 						this.gridHeight = 750;
 					}
+					this.aggregatearray.push(new Aggregators.Sum('total'));
 					this.tableFlag = true;
 				} else {
 					this.tableFlag = true;
@@ -1701,11 +1667,7 @@ export class FeeconReportComponent implements OnInit {
 		});
 	}
 	filtered(event) {
-		let commonFilter: any = '';
-		for (const item of event.source.selected) {
-			commonFilter = commonFilter + item.viewValue + ',';
-		}
-		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + commonFilter.substring(0, commonFilter.length - 1);
+		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + event.source.selected.viewValue;
 	}
 	getParamValue() {
 		const filterArr = [];
@@ -1756,8 +1718,8 @@ export class FeeconReportComponent implements OnInit {
 					const obj3: any = {};
 					obj3['id'] = 'footer';
 					obj3['srno'] = '';
-					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
-					obj3['stu_full_name'] = '';
+					obj3['stu_admission_no'] = '';
+					obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 					obj3['stu_class_name'] = '';
 					obj3['fh_name'] = '';
 					Object.keys(this.feeHeadJson).forEach((key: any) => {
@@ -1839,8 +1801,8 @@ export class FeeconReportComponent implements OnInit {
 					const obj3: any = {};
 					obj3['id'] = 'footer';
 					obj3['srno'] = '';
-					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
-					obj3['stu_full_name'] = '';
+					obj3['stu_admission_no'] = '';
+					obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 					obj3['stu_class_name'] = '';
 					obj3['fh_name'] = '';
 					Object.keys(this.feeHeadJson).forEach((key: any) => {
@@ -1869,7 +1831,8 @@ export class FeeconReportComponent implements OnInit {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
-									bold: true
+									bold: true,
+									color: { argb: 'ffffff' }
 								};
 								cell.alignment = { wrapText: true, horizontal: 'center' };
 								cell.fill = {

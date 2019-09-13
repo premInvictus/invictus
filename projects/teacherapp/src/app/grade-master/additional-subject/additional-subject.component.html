@@ -1,0 +1,104 @@
+<div class="row">
+    <div class="col-12 ">
+      <mat-card class="remove-card-padding">
+        <div class="row">
+          <div class="col-6">
+            <div class="top-card-title">
+              <span class="font-size-24 font-medium">Additional Subject</span>
+            </div>
+          </div> 
+          <div class="col-6 text-right">
+            <form [formGroup]="firstForm" >
+              <div class="top-card-title-form">
+                <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
+                  appearance="outline">
+                  <mat-label>Class</mat-label>
+                  <mat-select formControlName="syl_class_id" (selectionChange)="getSectionsByClass()" required
+                    placeholder="Select Class" disabled>
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                      {{item.class_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+                  <mat-label>Section</mat-label>
+                  <mat-select formControlName="syl_section_id" (selectionChange)="fetchDetails()" required
+                    placeholder="Select Section" disabled>
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                      {{item.sec_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </form>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row ">
+    <div class="col-12">
+      <mat-card>
+        <table mat-table [dataSource]="rollNoDataSource" class="mat-elevation-z8" *ngIf="defaultFlag">
+  
+          <ng-container matColumnDef="sr_no">
+            <th mat-header-cell *matHeaderCellDef> Sr No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.sr_no}}.</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="au_admission_no">
+            <th mat-header-cell *matHeaderCellDef> Admission No. </th>
+            <td mat-cell *matCellDef="let element">{{element.au_admission_no}}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="au_full_name">
+            <th mat-header-cell *matHeaderCellDef> Student Name </th>
+            <td mat-cell *matCellDef="let element" class="text-left margin-left-10"> {{element.au_full_name}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="au_roll_no">
+            <th mat-header-cell *matHeaderCellDef style="width:20%"> Roll No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.au_roll_no}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="subjects">
+            <th mat-header-cell *matHeaderCellDef style="width:20%"> Subjects </th>
+            <td mat-cell *matCellDef="let element">
+              <form *ngIf="formgroupArray.length > 0" [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
+                <mat-form-field class="form-field" appearance="outline" style="padding:0.5em;padding-bottom: 0em">
+                  <mat-label>Subject</mat-label>
+                  <mat-select formControlName="subjects" multiple>
+                    <mat-option *ngFor="let item of element.subjects" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </form>
+            </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <table>
+          <tbody *ngIf="finalDivFlag">
+            <tr class="text-center">
+              <td colspan="12">
+                <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                <br><br><br>
+                <br><span class="font-size-20 font-light font-color-brown">
+                    You are not a class teacher of any Class
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="row margin-top-20" *ngIf="defaultFlag">
+          <div class="col-12 text-center">
+            <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
+            <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>

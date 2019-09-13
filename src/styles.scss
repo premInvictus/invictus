@@ -5492,6 +5492,9 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
     font-weight: 600;
     cursor: pointer;
 }
+.slickgrid-container .slick-header-columns .slick-header-column.ui-state-default {
+    line-height: 15px !important;
+}
 .ui-state-default.slick-footerrow-column {
     text-align: end;
     font-size: 16px;

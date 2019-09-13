@@ -32,7 +32,7 @@
                             <mat-label>Term</mat-label>
                             <mat-select placeholder="Term" formControlName="eme_term_id" (selectionChange)="resetTableDiv()" required>
                                 <mat-option value="">Please select</mat-option>
-                                <mat-option *ngFor="let item of termsArray" [value]="item">{{item}}</mat-option>
+                                <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">

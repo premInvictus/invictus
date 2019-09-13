@@ -34,6 +34,7 @@ import { EditRequestModalComponent } from './edit-request-modal/edit-request-mod
 import { InvoiceDetailsModalComponent } from '../feemaster/invoice-details-modal/invoice-details-modal.component';
 import { NumberToWordPipe } from '../_pipes/number-to-word.pipe';
 import { ZerodashPipe } from '../_pipes/zerodash.pipe';
+import { IndianCurrency } from '../_pipes/ indianCurrency.pipe';
 import { ReceiptDetailsModalComponent } from './receipt-details-modal/receipt-details-modal.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 import { SearchViaStudentComponent } from './search-via-student/search-via-student.component';
@@ -101,6 +102,7 @@ export const MY_FORMATS = {
 		EditRequestModalComponent,
 		CapitalizePipe,
 		DateformatPipe,
+		IndianCurrency,
 		SafePipe,
 		ImageViewerComponent,
 		InvoiceDetailsModalComponent,
@@ -153,7 +155,8 @@ export const MY_FORMATS = {
 		CommonDynamicChartComponent,
 		DeleteWithReasonComponent,
 		CreateInvoiceModalComponent,
-		SearchDialogComponent
+		SearchDialogComponent,
+		IndianCurrency
 	],
 	entryComponents: [
 		DeleteModalComponent,
