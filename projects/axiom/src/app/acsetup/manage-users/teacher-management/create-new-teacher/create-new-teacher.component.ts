@@ -69,7 +69,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	insertdata = false;
 	designation: any;
 	events: string[] = [];
-
+	ctValue: any;
 	config = TreeviewConfig.create({
 		hasAllCheckBox: true,
 		hasFilter: true,
@@ -96,44 +96,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		this.buildForm();
 		this.login_id = this.route.snapshot.queryParams['login_id'];
 		if (this.route.snapshot.queryParams['login_id']) {
-			const param: any = {};
-			param.role_id = '3';
-			param.login_id = this.login_id;
-			this.insertdata = true;
-			this.qelementService.getGlobalTeacher(param).subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						if (result.data.length > 0) {
-							this.updateFlag = true;
-							this.userDetails = result.data[0];
-							const csrelationdetail = this.userDetails.cs_relations[0];
-							this.Teacher_Form.patchValue({
-								au_login_id: this.userDetails.au_login_id,
-								au_full_name: this.userDetails.au_full_name,
-								au_username: this.userDetails.au_username,
-								au_mobile: this.userDetails.au_mobile,
-								au_email: this.userDetails.au_email,
-								au_profileimage: this.userDetails.au_profileimage,
-							}),
-								// tslint:disable-next-line:max-line-length
-								this.Cs_relation_Form.patchValue({
-									uc_class_id: csrelationdetail.uc_class_id,
-									uc_sec_id: csrelationdetail.uc_sec_id,
-									uc_sub_id: csrelationdetail.uc_sub_id,
-									uc_department: csrelationdetail.uc_department,
-									uc_designation: csrelationdetail.uc_designation
-
-								});
-							this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
-								'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
-							this.cs_relationArray = this.userDetails.cs_relations;
-							for (const item of this.cs_relationArray) {
-								this.designation = item.uc_designation;
-								this.department = item.uc_department;
-							}
-						}
-					}
-				});
+			this.onload();
 			this.getAssignedModuleList();
 		}
 		this.getProjectList();
@@ -144,6 +107,46 @@ export class CreateNewTeacherComponent implements OnInit {
 		this.getCity();
 	}
 
+	onload() {
+		const param: any = {};
+		param.role_id = '3';
+		param.login_id = this.login_id;
+		this.insertdata = true;
+		this.qelementService.getGlobalTeacher(param).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					if (result.data.length > 0) {
+						this.updateFlag = true;
+						this.userDetails = result.data[0];
+						const csrelationdetail = this.userDetails.cs_relations[0];
+						this.Teacher_Form.patchValue({
+							au_login_id: this.userDetails.au_login_id,
+							au_full_name: this.userDetails.au_full_name,
+							au_username: this.userDetails.au_username,
+							au_mobile: this.userDetails.au_mobile,
+							au_email: this.userDetails.au_email,
+							au_profileimage: this.userDetails.au_profileimage,
+						}),
+							// tslint:disable-next-line:max-line-length
+							this.Cs_relation_Form.patchValue({
+								uc_class_id: csrelationdetail.uc_class_id,
+								uc_sec_id: csrelationdetail.uc_sec_id,
+								uc_sub_id: csrelationdetail.uc_sub_id,
+								uc_department: csrelationdetail.uc_department,
+								uc_designation: csrelationdetail.uc_designation
+
+							});
+						this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
+							'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+						this.cs_relationArray = this.userDetails.cs_relations;
+						for (const item of this.cs_relationArray) {
+							this.designation = item.uc_designation;
+							this.department = item.uc_department;
+						}
+					}
+				}
+			});
+	}
 	addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
 		this.events.push(`${type}: ${event.value}`);
 		const datePipe = new DatePipe('en-US');
@@ -364,7 +367,7 @@ export class CreateNewTeacherComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.notif.showSuccessErrorMessage('Modules Assigned Successfully', 'success');
-						this.router.navigate(['../teacher-management'], {relativeTo: this.route});
+						this.router.navigate(['../teacher-management'], { relativeTo: this.route });
 					}
 				});
 		}
@@ -435,7 +438,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	// changed for smart module
 	getClass() {
 		this.classArray = [];
-		this.smartService.getClass({class_status: '1'}).subscribe(
+		this.smartService.getClass({ class_status: '1' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.classArray = result.data;
@@ -447,7 +450,7 @@ export class CreateNewTeacherComponent implements OnInit {
 
 	getSubjectsByClass(): void {
 		this.subjectArray = [];
-		this.smartService.getSubjectsByClass({class_id: this.Cs_relation_Form.value.uc_class_id}).subscribe(
+		this.smartService.getSubjectsByClass({ class_id: this.Cs_relation_Form.value.uc_class_id }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
@@ -458,7 +461,7 @@ export class CreateNewTeacherComponent implements OnInit {
 
 	getSectionsByClass(): void {
 		this.sectionArray = [];
-		this.smartService.getSectionsByClass({class_id: this.Cs_relation_Form.value.uc_class_id}).subscribe(
+		this.smartService.getSectionsByClass({ class_id: this.Cs_relation_Form.value.uc_class_id }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.sectionArray = result.data;
@@ -573,5 +576,36 @@ export class CreateNewTeacherComponent implements OnInit {
 	}
 	hideIcon() {
 		this.prefixStatus = '';
+	}
+	checkStatus(index) {
+		if (Number(index) === 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	getChangeEvent($event, item) {
+		this.ctValue = $event.value;
+		if (Number(this.ctValue) === 1) {
+			this.ctValue = 0;
+		} else {
+			this.ctValue = 1;
+		}
+		const param: any = {};
+		param.uc_login_id = item.uc_login_id;
+		param.uc_class_id = item.uc_class_id;
+		param.uc_sec_id = item.uc_sec_id;
+		param.uc_class_teacher = this.ctValue;
+		param.uc_id = item.uc_id;
+		this.acsetupService.checkClassTeacher(param).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.notif.showSuccessErrorMessage(result.data, 'success');
+				} else {
+					this.notif.showSuccessErrorMessage(result.data, 'error');
+					this.onload();
+				}
+			}
+		);
 	}
 }

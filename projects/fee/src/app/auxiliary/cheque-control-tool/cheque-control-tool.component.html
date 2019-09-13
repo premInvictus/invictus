@@ -129,7 +129,7 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="processingdate">
-                <th mat-header-cell *matHeaderCellDef> Date of Clearence</th>
+                <th mat-header-cell *matHeaderCellDef> Date of Clearence/Dishonoured</th>
                 <td mat-cell *matCellDef="let item">
                   <span style="font-size: 14px" *ngIf="item.action.status === '2'">
                     <b *ngIf="item.action.dishonor_date">{{item.action.dishonor_date | date : 'd-MMM-y'}}</b>
@@ -160,11 +160,7 @@
                         <b>Cleared</b>
                       </span>
                       <span [matTooltip]="item.action.fcc_remarks" style="font-size: 14px;cursor: pointer;color: red"
-<<<<<<< HEAD
-                        *ngIf="item.action.status === '2'"><b>Bounced</b>
-=======
                         *ngIf="item.action.status === '2'" class="font-size-10"><b>Dishonoured</b>
->>>>>>> fbca967f9e3d34f0241be922e827b78ffaf2b3f0
                       </span>
                       <span style="font-size: 14px" *ngIf="item.action.status === '3'">
                         <b>Deposited</b>

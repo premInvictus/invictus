@@ -553,6 +553,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 				obj3['mod_review_by'] = '';
 				obj3['reason_title'] = '';
 				obj3['mod_review_remark'] = '';
+				this.aggregatearray.push(new Aggregators.Sum('invoice_amount'));
 				this.totalRow = obj3;
 				if (this.dataset.length <= 5) {
 					this.gridHeight = 300;
@@ -1179,7 +1180,8 @@ export class DeletedFeetransReportComponent implements OnInit {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
-									bold: true
+									bold: true,
+									color: { argb: 'ffffff' }
 								};
 								cell.alignment = { wrapText: true, horizontal: 'center' };
 								cell.fill = {

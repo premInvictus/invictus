@@ -143,9 +143,12 @@ export class FeeconReportComponent implements OnInit {
 		this.reportTypeArray.push({
 			report_type: 'concession', report_name: 'Concession Report'
 		},
-			{
-				report_type: 'concessionAlloted', report_name: 'Concession Allotee Report'
-			});
+		{
+			report_type: 'concessionAlloted', report_name: 'Concession Allotee Report'
+		},
+		{
+			report_type: 'concessionAllotedSummary', report_name: 'Concession Allotee Summary Report'
+		});
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
@@ -505,12 +508,248 @@ export class FeeconReportComponent implements OnInit {
 										obj[key2 + k] = titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0;
 										tot = tot + (titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0);
 										obj['total'] = tot;
+										// obj['approved_by'] = repoArray[Number(keys)]['approved_by'] ? repoArray[Number(keys)]['approved_by'] : '-';
+										// obj['mod_review_date'] = repoArray[Number(keys)]['mod_review_date'] ? repoArray[Number(keys)]['mod_review_date'] : '-';
+										// obj['mod_review_remark'] = repoArray[Number(keys)]['mod_review_remark'] ? repoArray[Number(keys)]['mod_review_remark'] : '-';
+										// obj['reason_title'] = repoArray[Number(keys)]['reason_title'] ? repoArray[Number(keys)]['reason_title'] : '-';
+										k++;
+									}
+								});
+							}
+						}
+						i++;
+						this.dataset.push(obj);
+					});
+					this.columnDefinitions.push(
+						{
+							id: 'total', name: 'Total', field: 'total',
+							filterable: true,
+							filterSearchType: FieldType.number,
+							filter: { model: Filters.compoundInputNumber },
+							sortable: true,
+							formatter: this.checkTotalFormatter,
+							cssClass: 'amount-report-fee',
+							groupTotalsFormatter: this.sumTotalsFormatter
+						},
+					);
+					// this.columnDefinitions.push({
+					// 	id: 'approved_by', name: 'Approved By', field: 'approved_by',
+					// 	sortable: true,
+					// 	filterable: true,
+					// 	filterSearchType: FieldType.string,
+					// 	filter: { model: Filters.compoundInput },
+					// 	width: 140,
+					// });
+					// this.columnDefinitions.push({
+					// 	id: 'mod_review_date', name: 'Approved Date', field: 'mod_review_date',
+					// 	sortable: true,
+					// 	formatter: this.checkDateFormatter,
+					// 	filterable: true,
+					// 	filterSearchType: FieldType.string,
+					// 	filter: { model: Filters.compoundInput },
+					// 	width: 140,
+					// });
+					// this.columnDefinitions.push({
+					// 	id: 'mod_review_remark', name: 'Remarks', field: 'mod_review_remark',
+					// 	sortable: true,
+					// 	filterable: true,
+					// 	filterSearchType: FieldType.string,
+					// 	filter: { model: Filters.compoundInput },
+					// 	width: 140,
+					// });
+					// this.columnDefinitions.push({
+					// 	id: 'reason_title', name: 'Reasons', field: 'reason_title',
+					// 	sortable: true,
+					// 	filterable: true,
+					// 	filterSearchType: FieldType.string,
+					// 	filter: { model: Filters.compoundInput },
+					// 	width: 140,
+					// });
+					this.totalRow = {};
+					const obj3: any = {};
+					obj3['id'] = 'footer';
+					obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
+					obj3['stu_admission_no'] = '';
+					obj3['stu_full_name'] = '';
+					obj3['stu_class_name'] = '';
+					obj3['fh_name'] = '';
+					Object.keys(feeHead).forEach((key: any) => {
+						Object.keys(feeHead[key]).forEach(key2 => {
+							Object.keys(this.dataset).forEach(key3 => {
+								Object.keys(this.dataset[key3]).forEach(key4 => {
+									if (key4 === key2) {
+										obj3[key2] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
+									}
+								});
+							});
+						});
+					});
+					obj3['fcg_name'] = '';
+					obj3['fcg_description'] = '';
+					obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
+					// obj3['approved_by'] = '';
+					// obj3['mod_review_date'] = '';
+					// obj3['mod_review_remark'] = '';
+					// obj3['reason_title'] = '';
+					this.totalRow = obj3;
+					if (this.dataset.length <= 5) {
+						this.gridHeight = 300;
+					} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+						this.gridHeight = 400;
+					} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+						this.gridHeight = 550;
+					} else if (this.dataset.length > 20) {
+						this.gridHeight = 750;
+					}
+					this.tableFlag = true;
+				} else {
+					this.tableFlag = true;
+				}
+			});
+		} else if (this.reportType === 'concessionAllotedSummary') {
+			const collectionJSON: any = {
+				'from_date': value.from_date,
+				'to_date': value.to_date,
+				'pageSize': value.pageSize,
+				'pageIndex': value.pageIndex,
+				'classId': value.fee_value,
+				'secId': value.hidden_value4,
+				'stoppageId': value.hidden_value5,
+				'admission_no': value.admission_no,
+				'studentName': value.au_full_name,
+				'login_id': value.login_id,
+				'orderBy': value.orderBy,
+				'downloadAll': true
+			};
+			this.feeService.getFeeConcessionAllotedSummaryReport(collectionJSON).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+					this.totalRecords = Number(result.data.totalRecords);
+					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+					repoArray = result.data.reportData;
+					let i = 0;
+					let j = 0;
+					const feeHead: any[] = [];
+					Object.keys(repoArray).forEach((keys: any) => {
+						const obj: any = {};
+						if (Number(keys) === 0) {
+							this.columnDefinitions = [
+								{
+									id: 'srno',
+									name: 'SNo.',
+									field: 'srno',
+									sortable: true,
+									width: 80
+								},
+								{
+									id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no',
+									sortable: true,
+									filterable: true,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInput },
+									grouping: {
+										getter: 'stu_admission_no',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count})</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false,
+									},
+									width: 140,
+								},
+								{
+									id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name',
+									sortable: true,
+									filterable: true,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInput },
+									grouping: {
+										getter: 'stu_full_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count})</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false,
+									},
+									width: 140,
+									groupTotalsFormatter: this.srnTotalsFormatter
+								},
+								{
+									id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name',
+									sortable: true,
+									filterable: true,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInput },
+									grouping: {
+										getter: 'stu_class_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count})</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false,
+									},
+									width: 140,
+								},
+								{
+									id: 'fcg_name',
+									name: 'Concession Group.',
+									field: 'fcg_name',
+									sortable: true,
+									filterable: true,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInput },
+									width: 350,
+									grouping: {
+										getter: 'fcg_name',
+										formatter: (g) => {
+											return `${g.value}  <span style="color:green">(${g.count})</span>`;
+										},
+										aggregators: this.aggregatearray,
+										aggregateCollapsed: true,
+										collapsed: false,
+									}
+								},
+								{
+									id: 'fcg_description',
+									name: 'Description',
+									field: 'fcg_description',
+									sortable: true,
+									filterable: true,
+									filterSearchType: FieldType.string,
+									filter: { model: Filters.compoundInput },
+									width: 180,
+								}];
+						}
+						if (repoArray[Number(keys)]['stu_concession_arr']) {
+							let k = 0;
+							let tot = 0;
+							for (const titem of repoArray[Number(keys)]['stu_concession_arr']) {
+								Object.keys(titem).forEach((key2: any) => {
+										obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys 
+										obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+											(Number(keys) + 1);
+										obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'];
+										obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'];
+										obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+										if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
+											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+												repoArray[Number(keys)]['stu_sec_name'];
+										} else {
+											obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
+										}
+										obj['fcg_name'] = repoArray[Number(keys)]['fcg_name'];
+										obj['fcg_description'] = repoArray[Number(keys)]['fcg_description'];
+										obj[key2 + k] = titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0;
+										tot = tot + (titem['invg_fcc_amount'] ? Number(titem['invg_fcc_amount']) : 0);
+										obj['total'] = tot;
 										obj['approved_by'] = repoArray[Number(keys)]['approved_by'] ? repoArray[Number(keys)]['approved_by'] : '-';
 										obj['mod_review_date'] = repoArray[Number(keys)]['mod_review_date'] ? repoArray[Number(keys)]['mod_review_date'] : '-';
 										obj['mod_review_remark'] = repoArray[Number(keys)]['mod_review_remark'] ? repoArray[Number(keys)]['mod_review_remark'] : '-';
 										obj['reason_title'] = repoArray[Number(keys)]['reason_title'] ? repoArray[Number(keys)]['reason_title'] : '-';
 										k++;
-									}
 								});
 							}
 						}
@@ -565,22 +804,10 @@ export class FeeconReportComponent implements OnInit {
 					this.totalRow = {};
 					const obj3: any = {};
 					obj3['id'] = 'footer';
-					obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
+					obj3['srno'] = '';
 					obj3['stu_admission_no'] = '';
-					obj3['stu_full_name'] = '';
+					obj3['stu_full_name'] = this.common.htmlToText('<b>Grand Total</b>');
 					obj3['stu_class_name'] = '';
-					obj3['fh_name'] = '';
-					Object.keys(feeHead).forEach((key: any) => {
-						Object.keys(feeHead[key]).forEach(key2 => {
-							Object.keys(this.dataset).forEach(key3 => {
-								Object.keys(this.dataset[key3]).forEach(key4 => {
-									if (key4 === key2) {
-										obj3[key2] = new DecimalPipe('en-in').transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
-									}
-								});
-							});
-						});
-					});
 					obj3['fcg_name'] = '';
 					obj3['fcg_description'] = '';
 					obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
@@ -598,6 +825,7 @@ export class FeeconReportComponent implements OnInit {
 					} else if (this.dataset.length > 20) {
 						this.gridHeight = 750;
 					}
+					this.aggregatearray.push(new Aggregators.Sum('total'));
 					this.tableFlag = true;
 				} else {
 					this.tableFlag = true;
@@ -1025,6 +1253,114 @@ export class FeeconReportComponent implements OnInit {
 				this.valueLabel = 'Class';
 				this.filterFlag = true;
 				this.getClassData();
+			} else if ($event.value === 'concessionAllotedSummary') {
+				this.gridOptions = {
+					enableDraggableGrouping: true,
+					createPreHeaderPanel: true,
+					showPreHeaderPanel: true,
+					enableHeaderMenu: true,
+					preHeaderPanelHeight: 40,
+					enableFiltering: true,
+					enableSorting: true,
+					enableColumnReorder: true,
+					createFooterRow: true,
+					showFooterRow: true,
+					footerRowHeight: 35,
+					enableExcelCopyBuffer: true,
+					fullWidthRows: true,
+					enableAutoTooltip: true,
+					enableCellNavigation: true,
+					headerMenu: {
+						iconColumnHideCommand: 'fas fa-times',
+						iconSortAscCommand: 'fas fa-sort-up',
+						iconSortDescCommand: 'fas fa-sort-down',
+						title: 'Sort'
+					},
+					exportOptions: {
+						sanitizeDataExport: true,
+						exportWithFormatter: true
+					},
+					gridMenu: {
+						customItems: [{
+							title: 'pdf',
+							titleKey: 'Export as PDF',
+							command: 'exportAsPDF',
+							iconCssClass: 'fas fa-download'
+						},
+						{
+							title: 'excel',
+							titleKey: 'Export Excel',
+							command: 'exportAsExcel',
+							iconCssClass: 'fas fa-download'
+						},
+						{
+							title: 'expand',
+							titleKey: 'Expand Groups',
+							command: 'expandGroup',
+							iconCssClass: 'fas fa-expand-arrows-alt'
+						},
+						{
+							title: 'collapse',
+							titleKey: 'Collapse Groups',
+							command: 'collapseGroup',
+							iconCssClass: 'fas fa-compress'
+						},
+						{
+							title: 'cleargroup',
+							titleKey: 'Clear Groups',
+							command: 'cleargroup',
+							iconCssClass: 'fas fa-eraser'
+						}
+						],
+						onCommand: (e, args) => {
+							if (args.command === 'toggle-preheader') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.clearGrouping();
+							}
+							if (args.command === 'exportAsPDF') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.exportAsPDF(this.dataset);
+							}
+							if (args.command === 'expandGroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.expandAllGroups();
+							}
+							if (args.command === 'collapseGroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.collapseAllGroups();
+							}
+							if (args.command === 'cleargroup') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.clearGrouping();
+							}
+							if (args.command === 'exportAsExcel') {
+								// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+								this.exportToExcel(this.dataset);
+							}
+						},
+						onColumnsChanged: (e, args) => {
+							console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+							this.updateTotalRow(this.angularGrid.slickGrid);
+						},
+					},
+					draggableGrouping: {
+						dropPlaceHolderText: 'Drop a column header here to group by the column',
+						// groupIconCssClass: 'fa fa-outdent',
+						deleteIconCssClass: 'fa fa-times',
+						onGroupChanged: (e, args) => {
+							this.groupColumns = [];
+							this.groupColumns = args.groupColumns;
+							this.onGroupChanged(args && args.groupColumns);
+							setTimeout(() => {
+								this.updateTotalRow(this.angularGrid.slickGrid);
+							}, 100);
+						},
+						onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+					}
+				};
+				this.valueLabel = 'Class';
+				this.filterFlag = true;
+				this.getClassData();
 			}
 		} else {
 			this.displyRep.emit({ report_index: 8, report_id: '', report_name: 'Concession Report' });
@@ -1331,11 +1667,7 @@ export class FeeconReportComponent implements OnInit {
 		});
 	}
 	filtered(event) {
-		let commonFilter: any = '';
-		for (const item of event.source.selected) {
-			commonFilter = commonFilter + item.viewValue + ',';
-		}
-		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + commonFilter.substring(0, commonFilter.length - 1);
+		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + event.source.selected.viewValue;
 	}
 	getParamValue() {
 		const filterArr = [];
@@ -1386,8 +1718,8 @@ export class FeeconReportComponent implements OnInit {
 					const obj3: any = {};
 					obj3['id'] = 'footer';
 					obj3['srno'] = '';
-					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
-					obj3['stu_full_name'] = '';
+					obj3['stu_admission_no'] = '';
+					obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 					obj3['stu_class_name'] = '';
 					obj3['fh_name'] = '';
 					Object.keys(this.feeHeadJson).forEach((key: any) => {
@@ -1469,8 +1801,8 @@ export class FeeconReportComponent implements OnInit {
 					const obj3: any = {};
 					obj3['id'] = 'footer';
 					obj3['srno'] = '';
-					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
-					obj3['stu_full_name'] = '';
+					obj3['stu_admission_no'] = '';
+					obj3['stu_full_name'] = this.getLevelFooter(groupItem.level, groupItem);
 					obj3['stu_class_name'] = '';
 					obj3['fh_name'] = '';
 					Object.keys(this.feeHeadJson).forEach((key: any) => {
@@ -1499,7 +1831,8 @@ export class FeeconReportComponent implements OnInit {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
-									bold: true
+									bold: true,
+									color: { argb: 'ffffff' }
 								};
 								cell.alignment = { wrapText: true, horizontal: 'center' };
 								cell.fill = {

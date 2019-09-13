@@ -118,8 +118,7 @@ export class ExamComponent implements OnInit {
 			);
 	}
 	getGradeSet() {
-		const inputJson = {};
-		this.examService.getGradeSet(inputJson)
+		this.examService.getGradeSet({})
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -149,7 +148,7 @@ export class ExamComponent implements OnInit {
 				this.subExamArray = result.data;
 			}
 		});
-	}
+	} 
 	getExamCalculation() {
 		const inputJson = {};
 		this.examService.getExamCalculation(inputJson)

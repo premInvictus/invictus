@@ -138,6 +138,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/common/getClassTerm', value);
 	}
+	ctForClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/ctForClass', value);
+	}
 
 }
 

@@ -1194,7 +1194,8 @@ export class FeeadjReportComponent implements OnInit {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
-									bold: true
+									bold: true,
+									color: { argb: 'ffffff' }
 								};
 								cell.alignment = { wrapText: true, horizontal: 'center' };
 								cell.fill = {

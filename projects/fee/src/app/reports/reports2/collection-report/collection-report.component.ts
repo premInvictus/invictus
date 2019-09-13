@@ -177,7 +177,7 @@ export class CollectionReportComponent implements OnInit {
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
 			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+			columnElement.innerHTML = '<b>' + (this.totalRow[columnId] ? this.totalRow[columnId] : '') + '<b>';
 		}
 	}
 	getSchool() {
@@ -1464,6 +1464,7 @@ export class CollectionReportComponent implements OnInit {
 							aggregateCollapsed: true,
 							collapsed: false
 						},
+						groupTotalsFormatter: this.countTotalsFormatter
 					},
 					{
 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
@@ -1678,6 +1679,17 @@ export class CollectionReportComponent implements OnInit {
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
 						}
+						this.totalRow = {};
+						const obj2: any = {};
+						obj2['id'] = '';
+						obj2['srno'] = '';
+						obj2['au_login_id'] = '';
+						obj2['stu_opening_balance'] = this.dataset.map(f => f.stu_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj2['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+						obj2['stu_full_name'] = this.dataset.length;
+						obj2['stu_class_name'] = '';
+						obj2['fp_name'] = '';
+						this.totalRow = obj2;
 						this.tableFlag = true;
 						setTimeout(() => this.groupByClass(), 2);
 						this.selectedGroupingFields.push('stu_class_name');
@@ -1791,28 +1803,30 @@ export class CollectionReportComponent implements OnInit {
 		}
 	}
 	getMFRFormatter(row, cell, value, columnDef, dataContext) {
-		if (value.status === 'unpaid') {
-			return '<div style="background-color:#4a7bec !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-				+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
-				'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
-		} else if (value.status === 'paid') {
-			return '<div style="background-color:#29A341 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-				+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
-				'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
-		} else if (value.status === 'Not Generated') {
-			return '<div style="background-color:#d2d8e0 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;' +
-				'border-right: 1px solid #89a8c8; border-top: 0px !important;' +
-				'border-bottom: 0px !important; border-left: 0px !important; margin: auto;">'
-				+ '<span style="margin-left:40px">' + '-' + '</span>' +
-				'<span>' + '' + '</span>' + '</div>';
-		} else if (value.status === 'Unpaid with fine') {
-			return '<div style="background-color:#f93435 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-				+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
-				'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
-		} else {
-			return '<div style="background-color:#7bd450 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-				+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
-				'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
+		if (value) {
+			if (value.status === 'unpaid') {
+				return '<div style="background-color:#4a7bec !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+					+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
+					'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
+			} else if (value.status === 'paid') {
+				return '<div style="background-color:#29A341 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+					+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
+					'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
+			} else if (value.status === 'Not Generated') {
+				return '<div style="background-color:#d2d8e0 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;' +
+					'border-right: 1px solid #89a8c8; border-top: 0px !important;' +
+					'border-bottom: 0px !important; border-left: 0px !important; margin: auto;">'
+					+ '<span style="margin-left:40px">' + '-' + '</span>' +
+					'<span>' + '' + '</span>' + '</div>';
+			} else if (value.status === 'Unpaid with fine') {
+				return '<div style="background-color:#f93435 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+					+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
+					'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
+			} else {
+				return '<div style="background-color:#7bd450 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+					+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
+					'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
+			}
 		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
@@ -2151,6 +2165,16 @@ export class CollectionReportComponent implements OnInit {
 						obj3['stoppages_name'] = '';
 						obj3['slab_name'] = '';
 					}
+					if (this.reportType === 'mfr') {
+						obj3['id'] = '';
+						obj3['srno'] = '';
+						obj3['au_login_id'] = '';
+						obj3['stu_opening_balance'] = groupItem.rows.map(t => t['stu_opening_balance']).reduce((acc, val) => acc + val, 0);
+						obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_full_name'] = groupItem.rows.length;
+						obj3['stu_class_name'] = '';
+						obj3['fp_name'] = '';
+					}
 					worksheet.addRow(obj3);
 					this.notFormatedCellArray.push(worksheet._rows.length);
 					// style row having total
@@ -2211,10 +2235,10 @@ export class CollectionReportComponent implements OnInit {
 								}
 							} else {
 								if (item2.id.toString().match(/Q/)) {
-									obj[item2.id] = groupItem.rows[key][item2.id].status !== 'Not Generated' ? groupItem.rows[key][item2.id].status
-										: '-';
-								} else {
-									obj[item2.id] = groupItem.rows[key][item2.id];
+										obj[item2.id] = groupItem.rows[key][item2.id].status !== 'Not Generated' ? groupItem.rows[key][item2.id].status
+											: '-';
+									} else {
+										obj[item2.id] = groupItem.rows[key][item2.id];
 								}
 							}
 						}
@@ -2296,6 +2320,16 @@ export class CollectionReportComponent implements OnInit {
 						obj3['stoppages_name'] = '';
 						obj3['slab_name'] = '';
 					}
+					if (this.reportType === 'mfr') {
+						obj3['id'] = '';
+						obj3['srno'] = '';
+						obj3['au_login_id'] = '';
+						obj3['stu_opening_balance'] = groupItem.rows.map(t => t['stu_opening_balance']).reduce((acc, val) => acc + val, 0);
+						obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
+						obj3['stu_full_name'] = groupItem.rows.length;
+						obj3['stu_class_name'] = '';
+						obj3['fp_name'] = '';
+					}
 					worksheet.addRow(obj3);
 					this.notFormatedCellArray.push(worksheet._rows.length);
 					if (groupItem.level === 0) {
@@ -2304,7 +2338,8 @@ export class CollectionReportComponent implements OnInit {
 								cell.font = {
 									name: 'Arial',
 									size: 10,
-									bold: true
+									bold: true,
+									color: { argb: 'ffffff' }
 								};
 								cell.alignment = { wrapText: true, horizontal: 'center' };
 								cell.fill = {
@@ -2889,6 +2924,9 @@ export class CollectionReportComponent implements OnInit {
 			theme: 'striped'
 		});
 		doc.save(reportType + '_' + new Date() + '.pdf');
+	}
+	countTotalsFormatter(totals, columnDef) {
+		return '<b class="total-footer-report">' + totals.group.rows.length + '</b>';
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
 		if (item.length > 0) {
