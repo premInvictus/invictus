@@ -38,12 +38,12 @@
                 <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag" class="col-4">
+        <div class="col-4">
             <div class="margin-top-10">
-                <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
+                <button *ngIf="filterFlag" class="filter-bt" mat-raised-button (click)="openFilterDialog()">
                     filter
                 </button>
-                <button class="sort-bt" mat-raised-button (click)="openSort()">
+                <button *ngIf="filterFlag" class="sort-bt" mat-raised-button (click)="openSort()">
                     sort
                 </button>
                 &nbsp;

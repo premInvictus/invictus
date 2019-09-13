@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonAPIService, FeeService } from '../../../_services';
 import { DecimalPipe } from '@angular/common';
+import { IndianCurrency } from '../../../_pipes';
 @Component({
 	selector: 'app-school-dashboard',
 	templateUrl: './school-dashboard.component.html',
@@ -93,7 +94,7 @@ export class SchoolDashboardComponent implements OnInit {
 				}
 			},
 			title: {
-				text: '<b>' + (new DecimalPipe('en-in').transform(this.totalfeeoutstanding)) + '<b><br><b>Total Outstanding <b>',
+				text: '<b>' + (new IndianCurrency().transform(this.totalfeeoutstanding)) + '<b><br><b>Total Outstanding <b>',
 				align: 'center',
 				verticalAlign: 'middle',
 				y: 25
@@ -166,6 +167,14 @@ export class SchoolDashboardComponent implements OnInit {
 			yAxis: {
 				title: {
 					text: 'Rupees (in Lacs)'
+				}
+			},
+			tooltip: {
+				useHTML: true,
+				formatter: function () {
+					return '<b>' + this.x + '</b><br/>' +
+						this.series.name + ': ' + '<i class="fas fa-rupee-sign"></i> ' +
+						new IndianCurrency().transform(this.y)
 				}
 			},
 			plotOptions: {
@@ -261,7 +270,7 @@ export class SchoolDashboardComponent implements OnInit {
 						if (this.currentTabIndex === 0) {
 							xcategories.push(value.month_day);
 						} else if (this.currentTabIndex === 1) {
-							xcategories.push(value.month_name.substr(0, 3));
+							xcategories.push(value.month_name.substr(0, 3) + "'" + value.year.toString().substring(value.year.toString().length -2, value.year.toString().length));
 						}
 						const amt = value.total_fee_amount ? Number(value.total_fee_amount) : 0;
 						projectedSeries.push(amt);
@@ -269,7 +278,10 @@ export class SchoolDashboardComponent implements OnInit {
 					});
 					received.forEach(value => {
 						const amt = value.total_fee_amount ? Number(value.total_fee_amount) : 0;
-						receivedSeries.push(amt);
+						receivedSeries.push({
+							y: amt,
+							color: value.color
+						});
 						this.totalreceived = this.totalreceived + amt;
 					});
 					this.norecordflag = false;
@@ -296,12 +308,11 @@ export class SchoolDashboardComponent implements OnInit {
 				innerSize: '%'
 			},
 			title: {
-				text: '<b>' + (new DecimalPipe('en-in').transform(this.totalreceipt)) + '<b><br><b>Total Receipt <b>',
+				text: '<b>' + (new IndianCurrency().transform(this.totalreceipt)) + '<b><br><b>Total Receipt <b>',
 				align: 'center',
 				verticalAlign: 'middle',
 				y: 25
 			},
-
 			plotOptions: {
 				pie: {
 					innerSize: 200,
@@ -355,6 +366,14 @@ export class SchoolDashboardComponent implements OnInit {
 					text: 'Rupees (in Lacs)'
 				}
 			},
+			tooltip: {
+				useHTML: true,
+				formatter: function () {
+					return '<b>' + this.x + '</b><br/>' +
+						this.series.name + ': ' + '<i class="fas fa-rupee-sign"></i> ' +
+						new IndianCurrency().transform(this.y)
+				}
+			},
 			plotOptions: {
 				line: {
 					dataLabels: {
@@ -364,13 +383,8 @@ export class SchoolDashboardComponent implements OnInit {
 				}
 			},
 			series: [
-				// {
-				// 	name: 'Projected',
-				// 	color: '#66BB6A',
-				// 	data: projectedSeries
-				// },
 				{
-					name: 'Recieved',
+					name: 'Collection',
 					color: '#66BB6A',
 					data: receivedSeries
 				}]

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
+import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
+import { ExamService } from '../../_services/exam.service';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 
-
 @Component({
-	selector: 'app-remarks-entry',
-	templateUrl: './remarks-entry.component.html',
-	styleUrls: ['./remarks-entry.component.css']
+  selector: 'app-remarks-entry',
+  templateUrl: './remarks-entry.component.html',
+  styleUrls: ['./remarks-entry.component.css']
 })
 export class RemarksEntryComponent implements OnInit {
 	paramform: FormGroup;
@@ -288,29 +288,6 @@ export class RemarksEntryComponent implements OnInit {
 			});
 		}
 	}
-
-	openRemarkDialog(): void {
-		const dialogRef = this.dialog.open(RemarksDialog, {
-			width: '80%'
-		});
-
-		dialogRef.afterClosed().subscribe(result => {
-			console.log('The dialog was closed');
-		});
-	}
-
-
 }
-@Component({
-	selector: 'remarks-dialog',
-	templateUrl: 'remarks-dialog.html',
-})
-export class RemarksDialog {
 
-	constructor(
-		public dialogRef: MatDialogRef<RemarksDialog>) { }
 
-	onNoClick(): void {
-		this.dialogRef.close();
-	}
-}

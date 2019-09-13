@@ -96,7 +96,7 @@
             <div class="row" [hidden]="!(formGroupArray.length > 0)" *ngFor="let item of formGroupArray">
               <div class="col-6">
                 <br>
-                {{item.sexam_name}}
+                {{item.sexam_name | capitalize}}
               </div>
               <div class="col-6">
                 <form [formGroup]="item.formGroup">
@@ -123,8 +123,7 @@
               <div class="col-12 remove-col-padding">
                 <mat-form-field appearance="outline" class="form-field">
                   <mat-label>Weightage</mat-label>
-                  <textarea placeholder="Weightage" required formControlName="exam_weightage" matInput
-                    rows="2"></textarea>
+                    <input matInput placeholder="Weightage" type="number" formControlName="exam_weightage"  min="1" required>
                 </mat-form-field>
               </div>
             </div>
