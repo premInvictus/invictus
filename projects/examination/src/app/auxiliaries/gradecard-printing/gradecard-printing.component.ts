@@ -5,6 +5,7 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './gradecard-printing.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material/table';
+import { ViewGradecardDialogComponent } from '../view-gradecard-dialog/view-gradecard-dialog.component'
 
 
 @Component({
@@ -40,7 +41,16 @@ export class GradecardPrintingComponent implements OnInit {
     this.buildForm();
     this.getClass();
   }
-  
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ViewGradecardDialogComponent, {
+      width: '1000px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }  
   /** Whether the number of selected elements matches the total number of rows. */ 
   isAllSelected() {
     const numSelected = this.selection.selected.length;

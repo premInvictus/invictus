@@ -8,6 +8,7 @@ import { CbseMarksAnalysisComponent, CbseMarksUploadDialog } from './cbse-marks-
 import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.component';
 import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.component';
 import { ExamSharedModule } from '../exam-shared/exam-shared.module';
+import { ViewGradecardDialogComponent } from './view-gradecard-dialog/view-gradecard-dialog.component';
 
 @NgModule({
 	imports: [
@@ -16,9 +17,9 @@ import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 		ExamSharedModule
 	],
 	declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent,
-		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog],
+		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, ViewGradecardDialogComponent],
 		entryComponents: [
-			CbseMarksUploadDialog
+			CbseMarksUploadDialog, ViewGradecardDialogComponent
 		  ],
 })
 export class AuxiliariesModule { }
