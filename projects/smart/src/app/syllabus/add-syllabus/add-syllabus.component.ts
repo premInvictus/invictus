@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ɵConsole } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
@@ -323,7 +323,7 @@ export class AddSyllabusComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.subtopicArray = result.data;
-						if (this.subTopicJson.length > 1) {
+						if (this.subTopicJson.length >= 1) {
 							const subTopindex = this.subTopicJson.findIndex(f => Number(f.st_id) === Number(this.subtopicArray.st_id));
 							if (subTopindex === -1) {
 								for (let i = 0; i < this.subtopicArray.length; i++) {
@@ -542,8 +542,6 @@ export class AddSyllabusComponent implements OnInit {
 					this.finalSpannedArray[findex].total = this.finalSpannedArray[findex].total + this.finalSyllabusArray[i].sd_period_req;
 					this.totalPeriodTempCount = this.totalPeriodTempCount + this.finalSyllabusArray[i].sd_period_req;
 				}
-				console.log('total', this.totalPeriodTempCount);
-
 			}
 			this.syllabusDetailForm.patchValue({
 				'sd_st_id': '',
@@ -647,7 +645,6 @@ export class AddSyllabusComponent implements OnInit {
 					this.finalSpannedArray[findex].total = this.finalSpannedArray[findex].total + this.finalSyllabusArray[i].sd_period_req;
 					this.totalPeriodTempCount = this.totalPeriodTempCount + this.finalSyllabusArray[i].sd_period_req;
 				}
-				console.log('total', this.totalPeriodTempCount);
 			}
 			this.syllabusDetailForm.patchValue({
 				'sd_st_id': '',
