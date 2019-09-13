@@ -28,9 +28,6 @@ export class MarksEntryPrimaryComponent implements OnInit {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.buildForm();
     this.getClass();
-    this.getTermList();
-    this.getExamDetails();
-    this.getSubExam();
   }
 
   constructor(
@@ -94,31 +91,37 @@ export class MarksEntryPrimaryComponent implements OnInit {
       }
     });
   }
-  getTermList() {
+  getClassTerm() {
     this.termsArray = [];
-    this.smartService.getTermList().subscribe((result: any) => {
+    this.examService.getClassTerm({class_id: this.paramform.value.eme_class_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.termsArray = result.data;
+        console.log(result.data);
+        result.data.ect_no_of_term.split(',').forEach(element => {
+          this.termsArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
+        });
       } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
       }
     });
   }
   getExamDetails() {
     this.examArray = [];
-    this.examService.getExamDetails({}).subscribe((result: any) => {
+    this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
       } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
   }
   getSubExam() {
     this.subexamArray = [];
-    this.examService.getSubExam({}).subscribe((result: any) => {
+    this.examService.getExamDetails({exam_id: this.paramform.value.eme_exam_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.subexamArray = result.data;
+        if(result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
+          this.subexamArray = result.data[0].exam_sub_exam_max_marks;
+          console.log(this.subexamArray);
+        }
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }

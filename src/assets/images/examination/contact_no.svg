@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="9.756" height="14.2" viewBox="0 0 9.756 14.2">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="Path_2002" data-name="Path 2002" d="M-.6,1.3H9.156V15.5H-.6Z" transform="translate(0.6 -1.3)" fill="#ababab"/>
+    </clipPath>
+  </defs>
+  <g id="contact_no" transform="translate(0.6 -2.6)">
+    <g id="Group_2587" data-name="Group 2587" transform="translate(-0.6 2.6)">
+      <g id="Mask_Group_26" data-name="Mask Group 26" clip-path="url(#clip-path)">
+        <path id="Path_2001" data-name="Path 2001" d="M7.431,2.4H1.1A1.094,1.094,0,0,0,0,3.5v10.7a1.094,1.094,0,0,0,1.1,1.1H7.431a1.094,1.094,0,0,0,1.1-1.1V3.5a1.094,1.094,0,0,0-1.1-1.1ZM2.7,3.069H5.829c.077,0,.146.12.146.266s-.069.266-.146.266H2.7c-.077,0-.146-.12-.146-.266s.069-.266.146-.266ZM4.269,14.2a.7.7,0,1,1,0-1.406.7.7,0,0,1,0,1.406Zm3.437-2.4H.823V4.251H7.706Zm0,0" transform="translate(0.65 -1.718)" fill="#ababab"/>
+      </g>
+    </g>
+  </g>
+</svg>

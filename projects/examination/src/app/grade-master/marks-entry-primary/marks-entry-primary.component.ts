@@ -93,9 +93,11 @@ export class MarksEntryPrimaryComponent implements OnInit {
     this.examService.getClassTerm({class_id: this.paramform.value.eme_class_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         console.log(result.data);
-        this.termsArray = result.data.ect_no_of_term.split(',');
+        result.data.ect_no_of_term.split(',').forEach(element => {
+          this.termsArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
+        });
       } else {
-        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
       }
     });
   }
