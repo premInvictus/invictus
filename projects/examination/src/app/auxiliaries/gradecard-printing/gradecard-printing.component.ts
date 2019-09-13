@@ -41,7 +41,7 @@ export class GradecardPrintingComponent implements OnInit {
     this.getClass();
   }
   
-  /** Whether the number of selected elements matches the total number of rows. */
+  /** Whether the number of selected elements matches the total number of rows. */ 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -147,7 +147,7 @@ export class GradecardPrintingComponent implements OnInit {
       });
     }
   }
-  getGradeCardMark() {
+  /*getGradeCardMark() {
     const param: any = {};
     param.class_id = this.paramform.value.eme_class_id;
     param.sec_id = this.paramform.value.eme_sec_id;
@@ -162,25 +162,87 @@ export class GradecardPrintingComponent implements OnInit {
         this.tableDivFlag = true;
       }
     })
+  }*/
+  getClearedGradeCard(au_login_id) {
+    // console.log(this.examArray);
+    // console.log(this.gradeCardMarkArray);
+    // console.log(this.subjectArray);
+    let gstatus  = '1';
+    for(let i=0; i<this.examArray.length;i++){
+      for(let j=0;j<this.examArray[i].exam_sub_exam_max_marks.length; j++) {
+        for(let k=0;k<this.subjectArray.length;k++) {
+          if(this.gradeCardMarkArray) {
+            const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
+              e.eme_sub_id === this.subjectArray[k].sub_id &&
+              e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
+              e.eme_exam_id === this.examArray[i].exam_id);
+              if(gindex === -1) {
+                gstatus = '0';
+                break;
+              }
+          } else {
+            gstatus = '0';
+            break;
+          }
+        }
+        if(gstatus === '0') {
+          break;
+        }
+      }
+      if(gstatus === '0') {
+        break;
+      }
+    }
+    /*const sindex = this.studentArray.findIndex(e => e.au_login_id === au_login_id);
+    if(sindex !== -1) {
+      this.studentArray[sindex].status = gstatus;
+    }*/
+    return gstatus;
   }
   displayData() {
+    this.tableDivFlag = false;
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-    if(this.studentArray.length > 0) {
-      this.studentArray.forEach(element => {
-        const temp: any = {};
-        temp.au_admission_no = element.au_admission_no;
-        temp.au_full_name = element.au_full_name;
-        temp.au_login_id = element.au_login_id;
-        temp.r_rollno = element.r_rollno;
-        temp.class_name = element.sec_name ? element.class_name + '-' + element.sec_name : element.class_name;
-        temp.status = 'uncleared';
-        temp.action = element;
-        this.ELEMENT_DATA.push(temp);
-      });
-      this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-    }
+    this.gradeCardMarkArray = [];
+    const param: any = {};
+    param.class_id = this.paramform.value.eme_class_id;
+    param.sec_id = this.paramform.value.eme_sec_id;
+    param.eme_term_id = this.paramform.value.eme_term_id;
+    param.eme_review_status = '4';
+    // param.login_id = '1144';
+    this.examService.getGradeCardMark(param).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        this.gradeCardMarkArray = result.data;
+      }
+      console.log(this.gradeCardMarkArray);
+      if(this.studentArray.length > 0) {
+        this.studentArray.forEach(element => {
+          const temp: any = {};
+          temp.au_admission_no = element.au_admission_no;
+          temp.au_full_name = element.au_full_name;
+          temp.au_login_id = element.au_login_id;
+          temp.r_rollno = element.r_rollno;
+          temp.class_name = element.sec_name ? element.class_name + '-' + element.sec_name : element.class_name;
+          temp.status = this.getClearedGradeCard(temp.au_login_id);
+          temp.action = element;
+          this.ELEMENT_DATA.push(temp);
+        });
+        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+        this.tableDivFlag = true;
+        console.log(' this.gradeCardMarkArray',  this.gradeCardMarkArray);
+        console.log(this.ELEMENT_DATA);
+      }
+    })
 
+
+
+
+
+    
+
+  }
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }
