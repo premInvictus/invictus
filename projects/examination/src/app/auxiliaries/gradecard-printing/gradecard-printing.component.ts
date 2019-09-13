@@ -1,15 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-<<<<<<< HEAD
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-=======
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './gradecard-printing.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material/table';
 
->>>>>>> upstream/development
 
 @Component({
   selector: 'app-gradecard-printing',
@@ -17,9 +13,6 @@ import {MatTableDataSource} from '@angular/material/table';
   styleUrls: ['./gradecard-printing.component.css']
 })
 export class GradecardPrintingComponent implements OnInit {
-
-<<<<<<< HEAD
-  constructor(public dialog: MatDialog) {}
 
   openGradeCardPrint(): void {
     const dialogRef = this.dialog.open(GradeCardPrint, {
@@ -31,7 +24,6 @@ export class GradecardPrintingComponent implements OnInit {
       console.log('The dialog was closed');
     });
   }
-=======
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
@@ -251,7 +243,6 @@ export class GradecardPrintingComponent implements OnInit {
         console.log(this.ELEMENT_DATA);
       }
     }) 
->>>>>>> upstream/development
 
   }
   applyFilter(filterValue: string) {
