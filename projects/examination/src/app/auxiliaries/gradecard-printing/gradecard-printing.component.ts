@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './gradecard-printing.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material/table';
-import { ViewGradecardDialogComponent } from '../view-gradecard-dialog/view-gradecard-dialog.component'
+import { ViewGradecardDialogComponent } from '../view-gradecard-dialog/view-gradecard-dialog.component';
 
 
 @Component({
@@ -15,6 +15,7 @@ import { ViewGradecardDialogComponent } from '../view-gradecard-dialog/view-grad
 })
 export class GradecardPrintingComponent implements OnInit {
 
+  @ViewChild('deleteModal') deleteModal;
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
@@ -51,6 +52,23 @@ export class GradecardPrintingComponent implements OnInit {
       console.log('The dialog was closed');
     });
   }  
+  openDeleteModal(data = null) {
+    data.text = 'Lock';
+		this.deleteModal.openModal(data);
+	}
+	lockGradeCard(item) {
+		if (item) {
+			this.lockGradeCardOne(item);
+		} else {
+			this.lockGradeCardMulti();
+		}
+  }
+  lockGradeCardOne(item) {
+    console.log(item);
+  }
+  lockGradeCardMulti() {
+
+  }
   /** Whether the number of selected elements matches the total number of rows. */ 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
