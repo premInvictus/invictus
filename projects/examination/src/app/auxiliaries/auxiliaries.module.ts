@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AuxiliariesRoutingModule } from './auxiliaries-routing.module';
-import { GradecardPrintingComponent } from './gradecard-printing/gradecard-printing.component';
+import { GradecardPrintingComponent, GradeCardPrint } from './gradecard-printing/gradecard-printing.component';
 import { AdditionalSubjectComponent } from './additional-subject/additional-subject.component';
 import { CbseMarksAnalysisComponent, CbseMarksUploadDialog } from './cbse-marks-analysis/cbse-marks-analysis.component';
 import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.component';
@@ -16,9 +16,9 @@ import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 		ExamSharedModule
 	],
 	declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent,
-		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog],
+		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, GradeCardPrint],
 		entryComponents: [
-			CbseMarksUploadDialog
+			CbseMarksUploadDialog, GradeCardPrint
 		  ],
 })
 export class AuxiliariesModule { }
