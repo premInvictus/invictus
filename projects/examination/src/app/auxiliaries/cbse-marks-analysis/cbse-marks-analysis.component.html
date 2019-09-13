@@ -30,10 +30,10 @@
         <div class="row">
           <div class="col-2">
             <div class="cbse-report-box text-center">
-              <div class="cbse-report-box-checked">
+              <div class="cbse-report-box-checked" (click)="successBox()">
                 <div class="cbse-check">
                   <img class="cbse_mark_img " src="../../../../../../src/assets/images/examination/successful.svg">
-                  <div class="margin-top-15"><span class="font-size-14 font-medium font-white">Marks Register</span></div>
+                  <div class="margin-top-15"><span class="font-size-14 font-medium font-black">Marks Register</span></div>
                 </div>
                 <div class="cbse-box-two">
                   <img class="cbse_mark_img" src="../../../../../../src/assets/images/examination/marks_register.svg">
@@ -44,9 +44,16 @@
           </div>
           <div class="col-2">
             <div class="cbse-report-box text-center">
-              
+                <div class="cbse-report-box-checked1" (click)="successBoxOne()">
+              <div class="cbse-check1">
+                <img class="cbse_mark_img " src="../../../../../../src/assets/images/examination/successful.svg">
+                <div class="margin-top-15"><span class="font-size-14 font-medium font-black">Best Five Subject</span></div>
+              </div>
+              <div class="cbse-box-two1">
               <img class="cbse_mark_img" src="../../../../../../src/assets/images/examination/best_five_subjects.svg">
               <div class="margin-top-15"><span class="font-size-14 font-medium ">Best Five Subject</span></div>
+            </div>
+            </div>
             </div>
           </div>
           <div class="col-2">
