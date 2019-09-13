@@ -13,17 +13,17 @@
     <div *ngIf="filterFlag" class="col-1">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>{{valueLabel}}</mat-label>
-        <mat-select formControlName="fee_value" [placeholder]="valueLabel" (change)="getSectionByClass($event)">
+        <mat-select formControlName="fee_value" [placeholder]="valueLabel" (selectionChange)="getSectionByClass($event);filtered($event)">
           <mat-option *ngFor="let item of valueArray" [value]="item.id">{{item.name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
     <div class="col-12 col-lg-1 col-md-4 col-sm-4 remove-col-padding-left"
-      *ngIf="reportType === 'transportAlloted' && filterFlag">
+      *ngIf="reportType === 'feestructurealloted' && filterFlag && hiddenValueArray4.length > 0">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Section</mat-label>
-        <mat-select formControlName="hidden_value4">
+        <mat-select formControlName="hidden_value4" (selectionChange)="filtered($event)">
           <mat-option>Please Select</mat-option>
           <mat-option *ngFor="let item of hiddenValueArray4" [value]="item.id">{{item.name}}
           </mat-option>
@@ -56,6 +56,8 @@
 </div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
   <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+    <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+    <br>
     No Records Found
   </div>
 </div>

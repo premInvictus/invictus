@@ -23,7 +23,7 @@
       *ngIf="(reportType === 'transportAlloted' || reportType === 'routeslabstopwise') && filterFlag">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Slab</mat-label>
-        <mat-select formControlName="hidden_value4">
+        <mat-select formControlName="hidden_value4" placeholder="Slab">
           <mat-option>Please Select</mat-option>
           <mat-option *ngFor="let item of hiddenValueArray4" [value]="item.id">{{item.name}}
           </mat-option>
@@ -34,7 +34,7 @@
       *ngIf="(reportType === 'transportAlloted' || reportType === 'routeslabstopwise') && filterFlag">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Stoppages</mat-label>
-        <mat-select formControlName="hidden_value5">
+        <mat-select formControlName="hidden_value5" placeholder="Stoppages">
           <mat-option>Please Select</mat-option>
           <mat-option *ngFor="let item of hiddenValueArray5" [value]="item.id">{{item.name}}
           </mat-option>
