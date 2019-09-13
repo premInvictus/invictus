@@ -265,7 +265,7 @@ export class FeeModificationComponent implements OnInit {
 					} else {
 						this.receiptArray = this.receipt.invoice_bifurcation;
 					}
-
+					console.log(this.receipt);
 					console.log(this.receiptArray.length);
 					this.modifyReceiptForm.patchValue({
 						'rpt_id' : this.receipt.receipt_id,
@@ -330,16 +330,16 @@ export class FeeModificationComponent implements OnInit {
 			}
 		} else if (Number(this.modifyReceiptForm.value.ftr_pay_id) === 2) {
 			if (!(this.modifyReceiptForm.value.ftr_pay_id &&
-				this.modifyReceiptForm.value.ftr_amount && this.modifyReceiptForm.value.ftr_bnk_id
+				this.modifyReceiptForm.value.ftr_amount && this.modifyReceiptForm.value.ftr_bnk_id !== '0'
 				&& this.modifyReceiptForm.value.ftr_remark)) {
 				validateFlag = false;
 			}
 		} else if (Number(this.modifyReceiptForm.value.ftr_pay_id) === 3) {
 			if (!(this.modifyReceiptForm.value.ftr_pay_id &&
-				this.modifyReceiptForm.value.ftr_amount && this.modifyReceiptForm.value.ftr_bnk_id
+				this.modifyReceiptForm.value.ftr_amount && this.modifyReceiptForm.value.ftr_bnk_id !== '0'
 				&& this.modifyReceiptForm.value.ftr_remark
 				&& this.modifyReceiptForm.value.ftr_cheque_date && this.modifyReceiptForm.value.ftr_cheque_no
-				&& this.modifyReceiptForm.value.ftr_deposit_bnk_id && this.modifyReceiptForm.value.ftr_branch)) {
+				&& this.modifyReceiptForm.value.ftr_deposit_bnk_id)) {
 				validateFlag = false;
 			}
 		} else {
@@ -390,13 +390,13 @@ export class FeeModificationComponent implements OnInit {
 			}
 		} else if (Number(this.modifyReceiptForm.value.ftr_pay_id) === 2) {
 			if (!(this.modifyReceiptForm.value.ftr_pay_id &&
-				this.modifyReceiptForm.value.ftr_amount && this.modifyReceiptForm.value.ftr_bnk_id
+				this.modifyReceiptForm.value.ftr_amount && this.modifyReceiptForm.value.ftr_bnk_id !== '0'
 				&& this.modifyReceiptForm.value.ftr_remark)) {
 				validateFlag = false;
 			}
 		} else if (Number(this.modifyReceiptForm.value.ftr_pay_id) === 3) {
 			if (!(this.modifyReceiptForm.value.ftr_pay_id &&
-				this.modifyReceiptForm.value.ftr_amount && this.modifyReceiptForm.value.ftr_bnk_id
+				this.modifyReceiptForm.value.ftr_amount && this.modifyReceiptForm.value.ftr_bnk_id !== '0'
 				&& this.modifyReceiptForm.value.ftr_remark
 				&& this.modifyReceiptForm.value.ftr_cheque_date && this.modifyReceiptForm.value.ftr_cheque_no
 				&& this.modifyReceiptForm.value.ftr_deposit_bnk_id && this.modifyReceiptForm.value.ftr_branch)) {
