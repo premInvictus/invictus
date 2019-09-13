@@ -232,13 +232,7 @@ export class GradecardPrintingComponent implements OnInit {
         console.log(' this.gradeCardMarkArray',  this.gradeCardMarkArray);
         console.log(this.ELEMENT_DATA);
       }
-    })
-
-
-
-
-
-    
+    }) 
 
   }
   applyFilter(filterValue: string) {
