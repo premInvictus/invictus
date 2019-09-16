@@ -18,107 +18,63 @@
 </div>
 <hr>
 <div class="row">
-<div class="col-12 text-center">
-  <span class="font-size-20 font-bold">Academic Session : 2018 - 2019</span><br>
-  <span class="font-size-20 font-bold">Report Card for Class IX</span>
+<div class="col-12 text-center" *ngIf="studentDetails">
+  <span class="font-size-20 font-bold">Academic Session : {{currentSession.ses_name}}</span><br>
+  <span class="font-size-20 font-bold">Report Card for Class {{studentDetails.class_name}}</span>
 </div>
 </div>
 <div class="row">
-<div class="col-6">
+<div class="col-6" *ngIf="studentDetails">
   <table>
       <tr>
           <td><span>Roll no.</span></td>
           <td><span>:</span></td>
-          <td>021542</td>
+          <td>{{studentDetails.r_rollno}}</td>
       </tr>
       <tr>
           <td><span>Student's Name</span></td>
           <td><span>:</span></td>
-          <td>Abishek Kumar</td>
+          <td>{{studentDetails.au_full_name | titlecase}}</td>
       </tr>
       <tr>
           <td><span>Mother's/Father's/Guardian's Name</span></td>
           <td><span>:</span></td>
-          <td>Sangeta Kaur</td>
+          <td>{{studentDetails.active_parent_name | titlecase}}</td>
       </tr>
       <tr>
           <td><span>Date of Birth</span></td>
           <td><span>:</span></td>
-          <td>10 Oct 1994</td>
+          <td>{{studentDetails.upd_dob | date:'d-MMM-y'}}</td>
       </tr>
       <tr>
           <td><span>Class/Section</span></td>
           <td><span>:</span></td>
-          <td>Xi-B</td>
+          <td>{{studentDetails.class_name}} - {{studentDetails.sec_name}}</td>
       </tr>
   </table>
 </div>
 <div class="col-6 text-right">
-  <img style="border: 1px solid #000; width: 120px; height: 140px">
+  <img style="border: 1px solid #000; width: 120px; height: 140px" [src]="defaultsrc" onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
 </div>
 </div>
 <div class="row">
-<div class="col-12">
+<div class="col-12" *ngIf="sflag && eflag && gflag">
   <table class="table-100 custom-table">
       <thead>
           <tr class="custom-tr">
-              <th class="custom-th text-center">Scholastic Areas</th>
-              <th colspan="6" class="custom-th text-center">Academic Years (100 Marks)</th>
+              <th class="custom-th text-center" width="200px">Scholastic Areas</th>
+              <th [attr.colspan]="examArray.length + 1" class="custom-th text-center">Academic Years (100 Marks)</th>
           </tr>
           <tr class="custom-tr">
               <th class="custom-th text-center">Subject Name</th>
-              <th class="custom-th text-center">Priodic Test <br>(10)</th>
-              <th class="custom-th text-center">Notebook<br>(10)</th>
-              <th class="custom-th text-center">Subject Enrichment<br>(5)</th>
-              <th class="custom-th text-center">Annual Examination<br>(5)</th>
-              <th class="custom-th text-center">Marks Obtained<br>(5)</th>
+              <th class="custom-th text-center" *ngFor="let item of examArray">{{item.exam_name | titlecase}} <br>({{item.exam_weightage}})</th>
               <th class="custom-th text-center">Grade</th>
           </tr>
       </thead>
       <tbody>
-          <tr class="custom-tr">
-              <td class="custom-td text-left padding-left-8px">Hindi</td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-          </tr>
-          <tr class="custom-tr">
-              <td class="custom-td text-left padding-left-8px">English</td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-          </tr>
-          <tr class="custom-tr">
-              <td class="custom-td text-left padding-left-8px">Mathematics</td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-          </tr>
-          <tr class="custom-tr">
-              <td class="custom-td text-left padding-left-8px">Science</td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-          </tr>
-          <tr class="custom-tr">
-              <td class="custom-td text-left padding-left-8px">Art & Craft</td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
-              <td class="custom-td"></td>
+          <tr class="custom-tr" *ngFor="let sub of subjectArray">
+              <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
+              <td class="custom-td" *ngFor="let item of examArray"></td>
               <td class="custom-td"></td>
           </tr>
       </tbody>

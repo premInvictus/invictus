@@ -6,6 +6,7 @@ import { Element } from './gradecard-printing.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material/table';
 import { ViewGradecardDialogComponent } from '../view-gradecard-dialog/view-gradecard-dialog.component';
+import { TitleCasePipe } from '@angular/common';
 
 
 @Component({
@@ -16,6 +17,7 @@ import { ViewGradecardDialogComponent } from '../view-gradecard-dialog/view-grad
 export class GradecardPrintingComponent implements OnInit {
 
   @ViewChild('deleteModal') deleteModal;
+  @ViewChild('deleteModalUnlock') deleteModalUnlock;
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
@@ -42,32 +44,98 @@ export class GradecardPrintingComponent implements OnInit {
     this.buildForm();
     this.getClass();
   }
-  openDialog(): void {
+  openDialog(item): void {
+    item.param = this.paramform.value;
     const dialogRef = this.dialog.open(ViewGradecardDialogComponent, {
-      width: '1000px',
-      data: {}
+      width: '80%',
+      height: '80%',
+      data: item
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
   }  
-  openDeleteModal(data = null) {
-    data.text = 'Lock';
+  openLockModal(data = null,multiple) {
+    data.text = 'Lock'
+    data.multiple = multiple;
 		this.deleteModal.openModal(data);
+  }
+  openUnlockModal(data = null, multiple) {
+    data.text = 'Unlock';
+    data.multiple = multiple;
+		this.deleteModalUnlock.openModal(data);
 	}
 	lockGradeCard(item) {
-		if (item) {
-			this.lockGradeCardOne(item);
+    console.log(item);
+		if (item.multiple === '1') {
+      this.lockGradeCardMulti();
 		} else {
-			this.lockGradeCardMulti();
+			this.lockGradeCardOne(item);
 		}
   }
   lockGradeCardOne(item) {
     console.log(item);
+    const lockdata: any = [];
+    const temp: any = {};
+    temp.egl_au_login_id = item.au_login_id;
+    temp.egl_classterm_id = this.paramform.value.eme_term_id;
+    temp.egl_lock_status = '1';
+    lockdata.push(temp);
+    this.lockUnlockGradeCard(lockdata);
   }
   lockGradeCardMulti() {
+    console.log(this.selection.selected);
+    const lockdata: any = [];
+    this.selection.selected.forEach(element => {
+      const temp: any = {};
+      temp.egl_au_login_id = element.au_login_id;
+      temp.egl_classterm_id = this.paramform.value.eme_term_id;
+      temp.egl_lock_status = '1';
+      lockdata.push(temp);
+    });
+    this.lockUnlockGradeCard(lockdata);
 
+  }
+  unlockGradeCard(item) {
+    console.log(item);
+    if (item.multiple === '1') {
+      this.unlockGradeCardMulti();
+		} else {
+			this.unlockGradeCardOne(item);
+		}
+  }
+  unlockGradeCardOne(item) {
+    console.log(item);
+    const lockdata: any = [];
+    const temp: any = {};
+    temp.egl_au_login_id = item.au_login_id;
+    temp.egl_classterm_id = this.paramform.value.eme_term_id;
+    temp.egl_lock_status = '0';
+    lockdata.push(temp);
+    this.lockUnlockGradeCard(lockdata);
+  }
+  unlockGradeCardMulti() {
+    console.log(this.selection.selected);
+    const lockdata: any = [];
+    this.selection.selected.forEach(element => {
+      const temp: any = {};
+      temp.egl_au_login_id = element.au_login_id;
+      temp.egl_classterm_id = this.paramform.value.eme_term_id;
+      temp.egl_lock_status = '0';
+      lockdata.push(temp);
+    });
+    this.lockUnlockGradeCard(lockdata);
+  }
+  lockUnlockGradeCard(param) {
+    this.examService.lockUnlockGradeCard(param).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+        this.displayData();
+      } else {
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+      }
+    })
   }
   /** Whether the number of selected elements matches the total number of rows. */ 
   isAllSelected() {
@@ -164,16 +232,6 @@ export class GradecardPrintingComponent implements OnInit {
       eme_term_id: '',
     });
     this.tableDivFlag = false;
-    if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id) {
-      this.studentArray = [];
-      this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id }).subscribe((result: any) => {
-        if (result && result.status === 'ok') {
-          this.studentArray = result.data;
-        } else {
-          this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-        }
-      });
-    }
   }
   /*getGradeCardMark() {
     const param: any = {};
@@ -232,36 +290,46 @@ export class GradecardPrintingComponent implements OnInit {
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.gradeCardMarkArray = [];
-    const param: any = {};
-    param.class_id = this.paramform.value.eme_class_id;
-    param.sec_id = this.paramform.value.eme_sec_id;
-    param.eme_term_id = this.paramform.value.eme_term_id;
-    param.eme_review_status = '4';
-    // param.login_id = '1144';
-    this.examService.getGradeCardMark(param).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
-        this.gradeCardMarkArray = result.data;
-      }
-      console.log(this.gradeCardMarkArray);
-      if(this.studentArray.length > 0) {
-        this.studentArray.forEach(element => {
-          const temp: any = {};
-          temp.au_admission_no = element.au_admission_no;
-          temp.au_full_name = element.au_full_name;
-          temp.au_login_id = element.au_login_id;
-          temp.r_rollno = element.r_rollno;
-          temp.class_name = element.sec_name ? element.class_name + '-' + element.sec_name : element.class_name;
-          temp.status = this.getClearedGradeCard(temp.au_login_id);
-          temp.action = element;
-          this.ELEMENT_DATA.push(temp);
-        });
-        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-        this.tableDivFlag = true;
-        console.log(' this.gradeCardMarkArray',  this.gradeCardMarkArray);
-        console.log(this.ELEMENT_DATA);
-      }
-    }) 
-
+    this.studentArray = [];
+    this.selection.clear();    
+    if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id && this.paramform.value.eme_term_id) {
+      this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id,
+      term_id: this.paramform.value.eme_term_id }).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          this.studentArray = result.data;
+          const param: any = {};
+          param.class_id = this.paramform.value.eme_class_id;
+          param.sec_id = this.paramform.value.eme_sec_id;
+          param.eme_term_id = this.paramform.value.eme_term_id;
+          param.eme_review_status = '4';
+          this.examService.getGradeCardMark(param).subscribe((result: any) => {
+            if(result && result.status === 'ok') {
+              this.gradeCardMarkArray = result.data;
+            }
+            console.log(this.gradeCardMarkArray);
+            if(this.studentArray.length > 0) {
+              this.studentArray.forEach(element => {
+                const temp: any = {};
+                temp.au_admission_no = element.au_admission_no;
+                temp.au_full_name = element.au_full_name;
+                temp.au_login_id = element.au_login_id;
+                temp.r_rollno = element.r_rollno;
+                temp.class_name = element.sec_name ? element.class_name + '-' + element.sec_name : element.class_name;
+                temp.status = this.getClearedGradeCard(temp.au_login_id);
+                temp.action = element;
+                this.ELEMENT_DATA.push(temp);
+              });
+              this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+              this.tableDivFlag = true;
+              console.log(' this.gradeCardMarkArray',  this.gradeCardMarkArray);
+              console.log(this.ELEMENT_DATA);
+            }
+          }) ;
+        } else {
+          this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+        }
+      });
+    }
   }
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
