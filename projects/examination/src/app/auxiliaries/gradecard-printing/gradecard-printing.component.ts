@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './gradecard-printing.model';
@@ -14,6 +14,16 @@ import {MatTableDataSource} from '@angular/material/table';
 })
 export class GradecardPrintingComponent implements OnInit {
 
+  openGradeCardPrint(): void {
+    const dialogRef = this.dialog.open(GradeCardPrint, {
+      width: '80%',
+      height: '80%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
@@ -237,6 +247,21 @@ export class GradecardPrintingComponent implements OnInit {
   }
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+}
+
+@Component({
+  selector: 'grade-card-print',
+  templateUrl: 'grade-card-print.html',
+})
+export class GradeCardPrint {
+
+  constructor(
+    public dialogRef: MatDialogRef<GradeCardPrint>) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
 }
