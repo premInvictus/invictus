@@ -12,23 +12,23 @@ export class CbseMarksAnalysisComponent implements OnInit {
   }
 
   successBox() {
-    // var el = document.querySelector('.cbse-box-two');
-    // el.style.display = 'none';
-    // var el1 = document.querySelector('.cbse-check');
-    // el1.style.display = 'block';
-    // var el2 = document.querySelector('.cbse-report-box-checked:hover');
-    // el2.style.color = '#fff';
-    // el2.style.backgroundColor = '#fff';
+    var el: any = document.querySelector('.cbse-box-two');
+    el.style.display = 'none';
+    var el1: any = document.querySelector('.cbse-check');
+    el1.style.display = 'block';
+    var el2: any = document.querySelector('.cbse-report-box-checked:hover');
+    el2.style.color = '#fff';
+    el2.style.backgroundColor = '#fff';
   }
 
   successBoxOne() {
-    // var el = document.querySelector('.cbse-box-two1');
-    // el.style.display = 'none';
-    // var el1 = document.querySelector('.cbse-check1');
-    // el1.style.display = 'block';
-    // var el2 = document.querySelector('.cbse-report-box-checked1:hover');
-    // el2.style.color = '#fff';
-    // el2.style.backgroundColor = '#fff';
+    var el: any = document.querySelector('.cbse-box-two1');
+    el.style.display = 'none';
+    var el1: any = document.querySelector('.cbse-check1');
+    el1.style.display = 'block';
+    var el2: any = document.querySelector('.cbse-report-box-checked1:hover');
+    el2.style.color = '#fff';
+    el2.style.backgroundColor = '#fff';
   }
 
 

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './gradecard-printing.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material/table';
+import { ViewGradecardDialogComponent } from '../view-gradecard-dialog/view-gradecard-dialog.component';
 
 
 @Component({
@@ -14,16 +15,7 @@ import {MatTableDataSource} from '@angular/material/table';
 })
 export class GradecardPrintingComponent implements OnInit {
 
-  openGradeCardPrint(): void {
-    const dialogRef = this.dialog.open(GradeCardPrint, {
-      width: '80%',
-      height: '80%',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
+  @ViewChild('deleteModal') deleteModal;
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
@@ -50,7 +42,33 @@ export class GradecardPrintingComponent implements OnInit {
     this.buildForm();
     this.getClass();
   }
-  
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ViewGradecardDialogComponent, {
+      width: '1000px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }  
+  openDeleteModal(data = null) {
+    data.text = 'Lock';
+		this.deleteModal.openModal(data);
+	}
+	lockGradeCard(item) {
+		if (item) {
+			this.lockGradeCardOne(item);
+		} else {
+			this.lockGradeCardMulti();
+		}
+  }
+  lockGradeCardOne(item) {
+    console.log(item);
+  }
+  lockGradeCardMulti() {
+
+  }
   /** Whether the number of selected elements matches the total number of rows. */ 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -247,21 +265,6 @@ export class GradecardPrintingComponent implements OnInit {
   }
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-}
-
-@Component({
-  selector: 'grade-card-print',
-  templateUrl: 'grade-card-print.html',
-})
-export class GradeCardPrint {
-
-  constructor(
-    public dialogRef: MatDialogRef<GradeCardPrint>) {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 
 }

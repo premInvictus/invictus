@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AuxiliariesRoutingModule } from './auxiliaries-routing.module';
-import { GradecardPrintingComponent, GradeCardPrint } from './gradecard-printing/gradecard-printing.component';
+import { GradecardPrintingComponent } from './gradecard-printing/gradecard-printing.component';
 import { AdditionalSubjectComponent } from './additional-subject/additional-subject.component';
 import { CbseMarksAnalysisComponent, CbseMarksUploadDialog } from './cbse-marks-analysis/cbse-marks-analysis.component';
 import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.component';
 import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.component';
 import { ExamSharedModule } from '../exam-shared/exam-shared.module';
+import { ViewGradecardDialogComponent } from './view-gradecard-dialog/view-gradecard-dialog.component';
 
 @NgModule({
 	imports: [
@@ -16,9 +17,9 @@ import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 		ExamSharedModule
 	],
 	declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent,
-		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, GradeCardPrint],
+		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, ViewGradecardDialogComponent],
 		entryComponents: [
-			CbseMarksUploadDialog, GradeCardPrint
+			CbseMarksUploadDialog, ViewGradecardDialogComponent
 		  ],
 })
 export class AuxiliariesModule { }
