@@ -111,17 +111,20 @@
 // }
 
 .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
-    color: #005AAB !important;
+    color: #007D9E !important;
 }
 
 .mat-form-field-appearance-outline .mat-form-field-outline-thick {
-    color: rgba(0,90,171,0.87)
+    color: #007D9E
 }
 
 .mat-form-field.mat-focused .mat-form-field-label {
-    color: #005AAB !important;
+    color: #007D9E !important;
 }
 
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: #757575;
+}
 
 
 // .cheque-control-tool .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix {
