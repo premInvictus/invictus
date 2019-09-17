@@ -161,6 +161,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/lockUnlockGradeCard', value);
 	}
+	getClassGradeset(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getClassGradeset', value);
+	}
 
 
 }
