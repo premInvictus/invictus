@@ -129,8 +129,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/gradeMaster/addReMarksEntry', value);
 	}
-	
-
+	getStudentAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/gradeMaster/getStudentAttendance', value);
+	}
 	getUserAttendance(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getUserAttendance', value);
