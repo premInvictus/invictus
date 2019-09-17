@@ -9,6 +9,7 @@ import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.co
 import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.component';
 import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 import { ViewGradecardDialogComponent } from './view-gradecard-dialog/view-gradecard-dialog.component';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @NgModule({
 	imports: [
@@ -18,8 +19,12 @@ import { ViewGradecardDialogComponent } from './view-gradecard-dialog/view-grade
 	],
 	declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent,
 		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, ViewGradecardDialogComponent],
-		entryComponents: [
-			CbseMarksUploadDialog, ViewGradecardDialogComponent
-		  ],
+	entryComponents: [
+		CbseMarksUploadDialog, ViewGradecardDialogComponent
+	],
+	providers: [{
+		provide: MAT_DIALOG_DATA,
+		useValue: {}
+	  }]
 })
 export class AuxiliariesModule { }
