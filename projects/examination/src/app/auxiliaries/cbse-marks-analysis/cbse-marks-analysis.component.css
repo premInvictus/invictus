@@ -1,0 +1,54 @@
+.cbse-report-box-checked:hover {
+    color: #fff !important;
+}
+.disabled-box {
+    opacity: 0.5 !important;
+    pointer-events: none !important;
+}
+.cbse-check {
+    display: block !important;
+}
+.cbse-check:hover {
+    display: block !important;
+    color: #fff !important;
+}
+.table-stu-data {
+    width: 100% !important;
+    height: 100% !important;
+    overflow-y: auto !important;
+ }
+ th.custom-th-tab-stu-text {
+     color: rgba(0, 0, 0, 0.54) !important;
+     /* height: 40px !important; */
+     padding: 0px !important;
+     font-size: 15px !important;
+     background: #C8D6E5;
+     font-weight: bold;
+ }
+ .accumulate.table-parent {
+     position: relative;
+     border: 1px solid;
+     top: 13%;
+     height: 240px;
+     overflow: hidden;
+     overflow-y: scroll;
+ }
+ tbody {
+     z-index: 4;
+ }
+ button.grade-btn23 {
+     color: white;
+     font-weight: bold;
+     border: none !important;
+ }
+ 
+ table th {
+     position: -webkit-sticky;
+     position: sticky;
+     top: 0;
+     z-index: 5;
+     border: 1px solid #89A8C9 !important;
+ }
+ tr {
+     height: 35px !important;
+ }

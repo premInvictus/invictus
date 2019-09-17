@@ -88,7 +88,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				class_id: '',
 				class_name: '',
 				class_order: '',
-				class_status: ''
+				class_status: '',
+				is_board: ''
 			})
 		},
 		{
@@ -147,6 +148,13 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				no_of_period: ''
 			})
 		}];
+	}
+	getClassIsBoard($event, configVal) {
+		if ($event.checked) {
+		 this.formGroupArray[configVal - 1].formGroup.value.is_board = true;
+		} else {
+			this.formGroupArray[configVal - 1].formGroup.value.is_board = false;
+		}
 	}
 	// delete dialog open modal function
 	deleteSetupList(j) {
@@ -633,14 +641,14 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 
 	formEdit(value: any) {
-		console.log('value', value);
 		if (Number(this.configValue) === 1) {
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				class_id: value.class_id,
 				class_name: value.class_name,
 				class_order: value.class_order,
-				class_status: value.class_status
+				class_status: value.class_status,
+				is_board: value.is_board === '1' ? true: false
 			});
 		} else if (Number(this.configValue) === 2) {
 			this.setupUpdateFlag = true;
@@ -651,7 +659,6 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				sec_status: value.sec_status
 			});
 		} else if (Number(this.configValue) === 3) {
-			console.log('value', value);
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				sub_id: value.sub_id,
@@ -1026,7 +1033,6 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	subTopicExcelDownload() {
 		const value = this.configValue;
 		if (value === '5') {
-			// console.log('this.formGroupArray[value - 1].formGroup', this.formGroupArray[value - 1].formGroup);
 			const inputJson = {
 				topic_id: this.formGroupArray[value - 1].formGroup.value.st_topic_id
 			};

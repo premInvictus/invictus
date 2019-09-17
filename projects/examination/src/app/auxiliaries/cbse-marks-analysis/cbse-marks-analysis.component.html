@@ -7,8 +7,8 @@
         </div>
         <div class="col-6 remove-col-padding-right text-right">
           <mat-form-field appearance="outline" class="form-field-150">
-            <mat-select placeholder="Class">
-              <mat-option></mat-option>
+            <mat-select placeholder="Class" (selectionChange)="getMarks($event.value)">
+              <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
             </mat-select>
           </mat-form-field>
           <div class="inline-flex">
@@ -22,72 +22,38 @@
 
 <div class="row">
   <div class="col-12">
-    <mat-card class="remove-padding">
-      <div class="padding-15 background-color-teal">
-        <span class=" font-size-16 text-uppercase">Reports</span>
-      </div>
-      <div class="padding-15">
-        <div class="row">
-          <div class="col-2">
-            <div class="cbse-report-box text-center">
-              <div class="cbse-report-box-checked" (click)="successBox()">
-                <div class="cbse-check">
-                  <img class="cbse_mark_img " src="../../../../../../src/assets/images/examination/successful.svg">
-                  <div class="margin-top-15"><span class="font-size-14 font-medium font-black">Marks Register</span></div>
+    <mat-accordion>
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header class="report-panel-header">
+          <mat-panel-title>
+            <span class="font-white font-size-16 text-uppercase">Reports</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="padding-15">
+          <div class="row">
+            <div class="col-2" *ngFor="let item of cardArray;let i = index">
+              <div [class]="item.initialState">
+                <div class="cbse-report-box-checked" (click)="excecuteCard(i)">
+                  <div [class]="item.class">
+                    <img class="cbse_mark_img " [src]="item.img">
+                    <div class="margin-top-15"><span class="font-size-14 font-medium">{{item.header}}</span></div>
+                  </div>
                 </div>
-                <div class="cbse-box-two">
-                  <img class="cbse_mark_img" src="../../../../../../src/assets/images/examination/marks_register.svg">
-                <div class="margin-top-15"><span class="font-size-14 font-medium">Marks Register</span></div>
               </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="cbse-report-box text-center">
-                <div class="cbse-report-box-checked1" (click)="successBoxOne()">
-              <div class="cbse-check1">
-                <img class="cbse_mark_img " src="../../../../../../src/assets/images/examination/successful.svg">
-                <div class="margin-top-15"><span class="font-size-14 font-medium font-black">Best Five Subject</span></div>
-              </div>
-              <div class="cbse-box-two1">
-              <img class="cbse_mark_img" src="../../../../../../src/assets/images/examination/best_five_subjects.svg">
-              <div class="margin-top-15"><span class="font-size-14 font-medium ">Best Five Subject</span></div>
-            </div>
-            </div>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="cbse-report-box text-center">
-              <img class="cbse_mark_img"
-                src="../../../../../../src/assets/images/examination/subject_wise_analysis.svg">
-              <div class="margin-top-15"><span class="font-size-14 font-medium ">Subject Wise Analysis</span></div>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="cbse-report-box text-center">
-              <img class="cbse_mark_img" src="../../../../../../src/assets/images/examination/trend_analysis.svg">
-              <div class="margin-top-15"><span class="font-size-14 font-medium ">Stream Wise Analysis</span></div>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="cbse-report-box text-center">
-              <img class="cbse_mark_img" src="../../../../../../src/assets/images/examination/trend_analysis.svg">
-              <div class="margin-top-15"><span class="font-size-14 font-medium ">Trend Analysis</span></div>
             </div>
           </div>
         </div>
-      </div>
-    </mat-card>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
 </div>
-
 <div class="row">
   <div class="col-12">
     <mat-accordion>
-      <mat-expansion-panel>
+      <mat-expansion-panel [expanded]="secondFlag">
         <mat-expansion-panel-header class="report-panel-header">
           <mat-panel-title>
-            <span class="font-white font-size-16 text-uppercase">Subject Wise Analysis</span>
+            <span class="font-white font-size-16 text-uppercase">{{header}}</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="row">
@@ -99,15 +65,55 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="previousIndex === 0 && tableFlag">
           <div class="col-12">
             <div class="padding-15">
-
-              <span>HighChart Goes Here</span>
+              <div *ngIf="tableFlag" class="accumulate table-parent">
+                <table class="table-stu-data table-100 table-bordered">
+                  <thead class="table-skill__head text-center">
+                    <tr class="custom-tr">
+                      <th class="custom-th-tab-stu-text text-center">#</th>
+                      <th class="custom-th-tab-stu-text text-center">ROLL NO.</th>
+                      <th class="custom-th-tab-stu-text text-center">SEX</th>
+                      <th class="custom-th-tab-stu-text text-center">NAME</th>
+                      <th class="custom-th-tab-stu-text text-center" *ngFor="let item of tabHeaderArray">
+                        <span style="text-transform: uppercase"> {{item | titlecase}} </span>
+                      </th>
+                      <th class="custom-th-tab-stu-text text-center">STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="custom-tr" *ngFor="let stu of stuDetailsArray;let i = index;">
+                      <td class="custom-td">{{i+1}}</td>
+                      <td class="custom-td">{{stu.cma_rollno}}</td>
+                      <td class="custom-td">{{stu.cma_sex}}</td>
+                      <td class="custom-td">{{stu.cma_student_name | titlecase}}</td>
+                      <ng-container *ngFor="let tabItem of tabSubDataArray; let k = index">
+                        <ng-container *ngFor="let titem of tabItem.sub_data; let j = index">
+                          <ng-container *ngIf="i == k">
+                            <td class="custom-td text-center">
+                              <span [ngStyle]="{'color': getSubjectColor(titem.sub_code), 'font-weight': 'bold'}">
+                                {{titem.sub_code}}</span>
+                            </td>
+                            <td class="custom-td text-center">{{titem.marks}}</td>
+                            <td class="custom-td text-center">
+                              <button mat-icon class="grade-btn23" [style.background]="getbtnbg(titem.marks)">
+                                {{titem.grade}}
+                              </button>
+                            </td>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                      <td class="custom-td text-center">
+                        <span [style.color]="checkStatusColor(stu.cma_status)"><b>{{stu.cma_status | uppercase}}</b></span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-
       </mat-expansion-panel>
     </mat-accordion>
   </div>
