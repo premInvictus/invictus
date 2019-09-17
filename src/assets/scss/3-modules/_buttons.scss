@@ -772,3 +772,12 @@ button.scheduler-circle .mat-button-wrapper {
     position: absolute !important;
     right: -15px !important;
 }
+
+.mat-raised-button {
+    box-shadow: none !important;
+}
+
+.mat-datepicker-toggle .mat-icon-button {
+    background-color: #007D9E;
+    color: white;
+}
