@@ -1,0 +1,233 @@
+<app-student-academic-profile [loginId]="lastRecordId"></app-student-academic-profile>
+<div class="row">
+  <div class="col-7">
+    <mat-card class="card-height-400">
+      <div class="row">
+        <div class="col-6">
+          <span class="font-bold font-size-20">Performance</span>
+        </div>
+        <div class="col-6 text-right">
+          <button mat-button><span>Year Wise</span></button>
+          <button mat-button class="margin-left-10 btn-blue font-white"><span>Current Session</span></button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <div class="col-5 remove-col-padding-left">
+    <mat-card class="card-height-400">
+      <mat-card-title>
+        <span class="font-bold font-size-20">Skills & Rewards</span><i
+          class="fas fa-plus-circle margin-left-10 font-size-20 font-skyblue"></i>
+      </mat-card-title>
+      <mat-card-content *ngIf="currentExam">
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Updated on</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{currentExam?.eaw_created_date | date: 'd-MMM-y' }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Activity Name</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{getActivityName(currentExam?.eaw_activity_name) }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Authority Name</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{getAuthorityName(currentExam?.eaw_authority) }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Level of Interest</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{getLevelofInterestName(currentExam?.eaw_level_of_interest) }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Event Level</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{getEventLevelName(currentExam?.eaw_event_level)}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <span class="font-size-14">Remarks</span> <span class="float-right">:</span>
+          </div>
+          <div class="col-7">
+            <span class="font-bold font-size-14">{{currentExam?.eaw_teacher_remark}}</span>
+          </div>
+        </div>
+        <div class="row margin-top-10">
+            <div class="col-12 remove-col-padding">
+              <span class="font-size-14 font-bold">Badges</span>
+              <div class="text-left margin-top-15">
+                <img
+                  [src]="getbadges(currentExam?.eaw_event_level)"
+                  height="55px">
+              </div>
+            </div>
+          </div>
+        <div class="row">
+          <div class="col-12 text-right">
+            <span><button mat-button class="side" [disabled]="examPre" (click)="examNavigate(currentExamIndex-1)">
+                <i class="fas fa-chevron-left cursor-pointer"></i>
+              </button>
+              <button mat-button class="side" [disabled]="examNext" (click)="examNavigate(currentExamIndex+1)">
+                <i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+       
+      </mat-card-content>
+      <ng-container *ngIf="!currentExam">
+        <div class="text-center">
+          <img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+            height="150px">
+          <br><br>
+          <span class="font-size-20 font-bold font-color-brown">
+            No Record Found
+          </span>
+        </div>
+      </ng-container>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <span class="font-bold font-size-20">Remarks</span><i
+        class="fas fa-plus-circle margin-left-10 font-size-20 font-skyblue"></i>
+
+      <div class="row margin-top-15" *ngIf="principalArray.length > 0">
+        <div class="col-12 remove-col-padding">
+          <mat-accordion>
+            <mat-expansion-panel class="exam-dash-exp-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="font-size-16 font-bold">Principal</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="padding-15">
+                <div class="row " *ngFor="let item of principalArray">
+                  <div class="col-12">
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'd-MMM-y'}}</span><span
+                      class="margin-left-15 ver-line-divider"></span><span
+                      class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <p class="font-size-12 margin-top-10">{{item.era_teachers_remark}}</p>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+
+      <div class="row margin-top-15" *ngIf="vicePrincipalArray.length > 0">
+        <div class="col-12 remove-col-padding">
+          <mat-accordion>
+            <mat-expansion-panel class="exam-dash-exp-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="font-size-16 font-bold">Vice Principal</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="padding-15">
+                <div class="row " *ngFor="let item of vicePrincipalArray">
+                  <div class="col-12">
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'd-MMM-y'}}</span><span
+                      class="margin-left-15 ver-line-divider"></span><span
+                      class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <p class="font-size-12 margin-top-10">{{item.era_teachers_remark}}</p>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="row margin-top-15" *ngIf="schoolAdmin.length > 0">
+        <div class="col-12 remove-col-padding">
+          <mat-accordion>
+            <mat-expansion-panel class="exam-dash-exp-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="font-size-16 font-bold">School Admin</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="padding-15">
+                <div class="row " *ngFor="let item of schoolAdmin">
+                  <div class="col-12">
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'd-MMM-y'}}</span><span
+                      class="margin-left-15 ver-line-divider"></span><span
+                      class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <p class="font-size-12 margin-top-10">{{item.era_teachers_remark}}</p>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="row margin-top-15" *ngIf="classTeacher.length > 0">
+        <div class="col-12 remove-col-padding">
+          <mat-accordion>
+            <mat-expansion-panel class="exam-dash-exp-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="font-size-16 font-bold">Class Teacher</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="padding-15">
+                <div class="row " *ngFor="let item of classTeacher">
+                  <div class="col-12">
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'd-MMM-y'}}</span><span
+                      class="margin-left-15 ver-line-divider"></span><span
+                      class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <p class="font-size-12 margin-top-10">{{item.era_teachers_remark}}</p>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="row margin-top-15" *ngIf="subjectTeacher.length > 0">
+        <div class="col-12 remove-col-padding">
+          <mat-accordion>
+            <mat-expansion-panel class="exam-dash-exp-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="font-size-16 font-bold">Subject Teacher</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="padding-15">
+                <div class="row " *ngFor="let item of subjectTeacher">
+                  <div class="col-12">
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'd-MMM-y'}}</span><span
+                      class="margin-left-15 ver-line-divider"></span><span
+                      class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <p class="font-size-12 margin-top-10">{{item.era_teachers_remark}}</p>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+
+    </mat-card>
+  </div>
+</div>

@@ -7,10 +7,11 @@ import { RemarksEntryComponent } from './remarks-entry/remarks-entry.component';
 import { MarksEntryPrimaryComponent } from './marks-entry-primary/marks-entry-primary.component';
 import { MarksEntrySecondaryComponent } from './marks-entry-secondary/marks-entry-secondary.component';
 import { MarksEntryFinalComponent } from './marks-entry-final/marks-entry-final.component';
+import { StudentAcademicProfileDetailsComponent } from './student-academic-profile-details/student-academic-profile-details.component';
 
 const routes: Routes = [
 	{
-		path: 'student', component: StudentAcademicProfileComponent,
+		path: 'student-details', component: StudentAcademicProfileComponent,
 	},
 	{
 		path: 'marks-entry', component: MarksEntryComponent
@@ -29,6 +30,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'review', component: ReviewComponent
+	},
+	{
+		path: 'student', component: StudentAcademicProfileDetailsComponent
 	}
 ];
 

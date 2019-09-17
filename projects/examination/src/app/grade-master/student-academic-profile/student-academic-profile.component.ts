@@ -51,7 +51,7 @@ export class StudentAcademicProfileComponent implements OnInit {
   divFlag = false;
   stopFlag = false;
   addOnly = true;
-  iddesabled = true;
+  iddesabled = true; 
   backOnly = false;
   defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
   classArray = [];
