@@ -10,13 +10,15 @@ import { CommonAPIService } from '../_services/index';
 import { CookieService } from 'ngx-cookie';
 import { Router } from '@angular/router';
 import { ProcesstypeService } from 'projects/sis/src/app/_services';
-import { ProcesstypeFeeService } from 'projects/fee/src/app/_services';
+import { ProcesstypeFeeService } from 'projects/fee/src/app/_services';   
+import { ProcesstypeExamService } from 'projects/examination/src/app/_services';   
 @Injectable()
 export class SuccessErrorInterceptor implements HttpInterceptor {
 	constructor(private service: CommonAPIService, private cookieService: CookieService,
 		private router: Router,
 		private processtypeService: ProcesstypeService,
-		private processtypeFeeService: ProcesstypeFeeService) { }
+		private processtypeFeeService: ProcesstypeFeeService,
+		private processtypeExamService: ProcesstypeExamService) { }
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		const session = JSON.parse(localStorage.getItem('session'));
 		const cookieData: any = this.service.getCokkieData();
@@ -44,6 +46,11 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 				localStorage.getItem('project') &&
 				(JSON.parse(localStorage.getItem('project')).pro_url === 'fees')) {
 				request = request.clone({ headers: request.headers.set('Processtype', this.processtypeFeeService.getProcesstype()) });
+			}
+			if (this.processtypeExamService.getProcesstype() &&
+				localStorage.getItem('project') &&
+				(JSON.parse(localStorage.getItem('project')).pro_url === 'exam')) {
+				request = request.clone({ headers: request.headers.set('Processtype', this.processtypeExamService.getProcesstype()) });
 			}
 		}
 		return next.handle(request).pipe(
