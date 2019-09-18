@@ -10,6 +10,7 @@ import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 import { MarksEntryPrimaryComponent } from './marks-entry-primary/marks-entry-primary.component';
 import { MarksEntrySecondaryComponent } from './marks-entry-secondary/marks-entry-secondary.component';
 import { MarksEntryFinalComponent } from './marks-entry-final/marks-entry-final.component';
+import { StudentAcademicProfileDetailsComponent } from './student-academic-profile-details/student-academic-profile-details.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { MarksEntryFinalComponent } from './marks-entry-final/marks-entry-final.
     GradeMasterRoutingModule,
     ExamSharedModule
   ],
-  declarations: [StudentAcademicProfileComponent, MarksEntryComponent, RemarksEntryComponent, ReviewComponent, RemarksDialog, ReviewDialog, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent],
+  declarations: [StudentAcademicProfileComponent, MarksEntryComponent, RemarksEntryComponent, ReviewComponent, RemarksDialog, ReviewDialog, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, StudentAcademicProfileDetailsComponent],
   entryComponents: [
     RemarksDialog,
     ReviewDialog

@@ -92,7 +92,7 @@
    <div *ngIf="finalActivityArray.length > 0 " class="row">
       <div class="col-12">
          <table class="table table-borderd table-stripped custom-table">
-            <thead class="table-skill__head text-center">
+            <thead class="table-skill__head text-center">  
                <tr class="custom-tr">
                   <th class="custom-th">Sr.No</th>
                   <th class="custom-th" *ngIf="checkIfFieldExist('esk_activity_name')">Activity Name</th>
@@ -120,7 +120,7 @@
    </div>
    <br>
    <br>
-   <h6 class="text-uppercase text-center"><b>Add Awards</b></h6>
+   <h6 class="text-uppercase text-center"><b>Add Awards</b></h6> 
    <form [formGroup]="awardsform">
       <div class="row">
          <div class="col-4" *ngIf="checkIfFieldExist('eaw_activity_name')">
