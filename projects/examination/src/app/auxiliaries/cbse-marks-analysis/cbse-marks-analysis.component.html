@@ -58,58 +58,25 @@
         </mat-expansion-panel-header>
         <div class="row">
           <div class="col-12">
-            <div class="text-right">
-              <i class="fas fa-file-pdf font-size-20 icon-skyblue cursor-pointer"></i>
-              <span class="ver-line-divider"></span>
-              <i class="fas fa-file-excel font-size-20 icon-orange cursor-pointer"></i>
+            <div class="padding-15" *ngIf="previousIndex === 0 && tableFlag">
+              <app-common-dynamic-chart [options]="marksRegisterChart"></app-common-dynamic-chart>
+              <br>
+              <br>
+              <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+                [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)">
+              </angular-slickgrid>
             </div>
-          </div>
-        </div>
-        <div class="row" *ngIf="previousIndex === 0 && tableFlag">
-          <div class="col-12">
-            <div class="padding-15">
-              <div *ngIf="tableFlag" class="accumulate table-parent">
-                <table class="table-stu-data table-100 table-bordered">
-                  <thead class="table-skill__head text-center">
-                    <tr class="custom-tr">
-                      <th class="custom-th-tab-stu-text text-center">#</th>
-                      <th class="custom-th-tab-stu-text text-center">ROLL NO.</th>
-                      <th class="custom-th-tab-stu-text text-center">SEX</th>
-                      <th class="custom-th-tab-stu-text text-center">NAME</th>
-                      <th class="custom-th-tab-stu-text text-center" *ngFor="let item of tabHeaderArray">
-                        <span style="text-transform: uppercase"> {{item | titlecase}} </span>
-                      </th>
-                      <th class="custom-th-tab-stu-text text-center">STATUS</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="custom-tr" *ngFor="let stu of stuDetailsArray;let i = index;">
-                      <td class="custom-td">{{i+1}}</td>
-                      <td class="custom-td">{{stu.cma_rollno}}</td>
-                      <td class="custom-td">{{stu.cma_sex}}</td>
-                      <td class="custom-td">{{stu.cma_student_name | titlecase}}</td>
-                      <ng-container *ngFor="let tabItem of tabSubDataArray; let k = index">
-                        <ng-container *ngFor="let titem of tabItem.sub_data; let j = index">
-                          <ng-container *ngIf="i == k">
-                            <td class="custom-td text-center">
-                              <span [ngStyle]="{'color': getSubjectColor(titem.sub_code), 'font-weight': 'bold'}">
-                                {{titem.sub_code}}</span>
-                            </td>
-                            <td class="custom-td text-center">{{titem.marks}}</td>
-                            <td class="custom-td text-center">
-                              <button mat-icon class="grade-btn23" [style.background]="getbtnbg(titem.marks)">
-                                {{titem.grade}}
-                              </button>
-                            </td>
-                          </ng-container>
-                        </ng-container>
-                      </ng-container>
-                      <td class="custom-td text-center">
-                        <span [style.color]="checkStatusColor(stu.cma_status)"><b>{{stu.cma_status | uppercase}}</b></span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+            <div class="padding-15" *ngIf="previousIndex === 1 && tableFlag">
+              <angular-slickgrid gridId="grid2" [columnDefinitions]="columnDefinitions2" [gridOptions]="gridOptions"
+                [dataset]="dataset2" [gridHeight]="gridHeight2" (onAngularGridCreated)="angularGridReady2($event)">
+              </angular-slickgrid>
+            </div>
+            <div class="padding-15" *ngIf="dataset.length === 0">
+              <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+                <img
+                  src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                <br>
+                No Records Found
               </div>
             </div>
           </div>
