@@ -15,18 +15,20 @@ import { ptBrLocale } from 'ngx-bootstrap';
 })
 export class SetupComponent implements OnInit {
 
-
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
+	dataset: any[] = [];
 	configValue: any;
 	currentUser: any;
 	session: any;
 	param: any = {};
-	classArray: any[];
+	classArray: any[] = []; 
+	termArray: any[] = []; 
 	parentSubArray: any[];
+	ClassTermGrade: any[];
 	secArray: any[];
 	topicArray: any[];
 	detailArray: any[];
@@ -43,7 +45,7 @@ export class SetupComponent implements OnInit {
 	remarkSetArray: any[] = [];
 	examActivityCategoryArr: any[] = [];
 	examActivityTypeArr: any[] = [];
-	remarkToneArray: any[] = [{'remark_tone_id':'1', 'remark_tone_name': 'Commendatory'}, {'remark_tone_id':'2', 'remark_tone_name': 'Neutal'}, {'remark_tone_id':'3', 'remark_tone_name': 'Adverse'},];
+	remarkToneArray: any[] = [{ 'remark_tone_id': '1', 'remark_tone_name': 'Commendatory' }, { 'remark_tone_id': '2', 'remark_tone_name': 'Neutal' }, { 'remark_tone_id': '3', 'remark_tone_name': 'Adverse' },];
 	pointTypeArray: any[] = [{ 'pt_id': '1', 'pt_name': 'Point' }, { 'pt_id': '2', 'pt_name': 'Range' }];
 	tiersArray: any[] = [{ 'tier_id': '1', 'tier_name': 1 }, { 'tier_id': '2', 'tier_name': 2 }, { 'tier_id': '3', 'tier_name': 3 }, { 'tier_id': '4', 'tier_name': 4 }, { 'tier_id': '5', 'tier_name': 5 }, { 'tier_id': '6', 'tier_name': 6 }, { 'tier_id': '7', 'tier_name': 7 }, { 'tier_id': '8', 'tier_name': 8 }, { 'tier_id': '9', 'tier_name': 9 }, { 'tier_id': '10', 'tier_name': 10 }];
 	rangeArray: any[] = [];
@@ -71,8 +73,6 @@ export class SetupComponent implements OnInit {
 
 	ngOnInit() {
 		this.buildForm();
-		// this.getClass();
-		// this.getDetailsCdpRelation();
 	}
 
 	ngAfterViewInit() {
@@ -82,20 +82,6 @@ export class SetupComponent implements OnInit {
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
 
 	buildForm() {
-		// this.systemInfoForm = this.fbuild.group({
-		// 	class_id: '',
-		// 	no_of_day: '',
-		// 	no_of_period: '',
-		// 	class_name: '',
-		// 	sec_name: '',
-		// 	sub_name: '',
-		// 	sub_id: '',
-		// 	topic_name: '',
-		// 	topic_id: '',
-		// 	sub_topic_name: '',
-		// 	sec_id: ''
-		// });
-
 		this.formGroupArray = [
 			// for exam setup
 			{
@@ -160,7 +146,18 @@ export class SetupComponent implements OnInit {
 					ea_description: '',
 					ea_status: ''
 				})
-			}];
+			},
+			{ // for Class Term Grade setup
+				formGroup: this.fbuild.group({
+					ect_id: '',
+					ect_class_id: '',
+					ect_term_id: '',
+					ect_gradeset_id: '',
+					ect_status: '',
+					ect_created_by: ''
+				})
+			}
+		];
 	}
 	// delete dialog open modal function
 	deleteSetupList(j) {
@@ -188,7 +185,24 @@ export class SetupComponent implements OnInit {
 			}
 		});
 	}
-
+	getActiveClass(that) {
+		this.classArray = [];
+		this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.classArray = result.data;
+			}
+		});
+	}
+	getTermList(that) {
+		this.smartService.getTermList()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.termArray = result.data;
+					}
+				}
+			);
+	}
 	getExam(that) {
 
 	}
@@ -201,6 +215,36 @@ export class SetupComponent implements OnInit {
 
 	}
 
+	getClassTermGrade(that) {
+		that.classTermGrade = [];
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+		that.examService.getClassTermGrade({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				that.classTermGrade = result.data;
+				if (that.configValue === '7') {
+					let pos = 1;
+					for (const item of result.data) {
+							that.CONFIG_ELEMENT_DATA.push({
+								position: pos,
+								name: item.ect_class_id,
+								term_name: item.ect_term_id,
+								grade_name: item.ect_gradeset_id,							
+								action: item
+							});
+							pos++;
+						}				
+				
+					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+					that.configDataSource.paginator = that.paginator;
+					that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
+					that.configDataSource.sort = that.sort;
+				}
+			} else {
+				that.classTermGrade = [];
+			}
+		});
+	}
 	getExamGradeSetup(that) {
 		that.gradeSetArray = [];
 		that.CONFIG_ELEMENT_DATA = [];
@@ -211,20 +255,22 @@ export class SetupComponent implements OnInit {
 				if (that.configValue === '3') {
 					let pos = 1;
 					for (const item of result.data) {
-						that.CONFIG_ELEMENT_DATA.push({
-							position: pos,
-							name: item.egs_name,
-							point_type_id: item.egs_point_type,
-							no_of_tiers: item.egs_no_of_tiers,
-							grade_name: item.egs_grade_name,
-							grade_value: item.egs_grade_value,
-							range_start: item.egs_range_start,
-							range_end: item.egs_range_end,
-							grade_set_description: item.egs_description,
-							order: item.class_order,
-							action: item
-						});
-						pos++;
+						for (const det of item.egs_grade_data) {
+							that.CONFIG_ELEMENT_DATA.push({
+								position: pos,
+								name: item.egs_name,
+								point_type_id: item.egs_point_type,
+								no_of_tiers: item.egs_no_of_tiers,
+								grade_name: det.egs_grade_name,
+								grade_value: det.egs_grade_value,
+								range_start: det.egs_range_start,
+								range_end: det.egs_range_end,
+								grade_set_description: item.egs_description,
+								order: item.class_order,
+								action: item
+							});
+							pos++;
+						}					
 					}
 					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					that.configDataSource.paginator = that.paginator;
@@ -327,7 +373,7 @@ export class SetupComponent implements OnInit {
 		}
 	}
 
-	getRemarkTone(rto_id) {
+	getRemarkTone(rto_id) {Set
 		for (let i = 0; i < this.remarkToneArray.length; i++) {
 			if (this.remarkToneArray[i]['remark_tone_id'] === rto_id.toString()) {
 				return this.remarkToneArray[i]['remark_tone_name'];
@@ -335,7 +381,13 @@ export class SetupComponent implements OnInit {
 			}
 		}
 	}
-
+	checkData() {
+		const finalData: any[] = [];
+		for (const item of this.gradeDataFrmArr) {
+			finalData.push(item.formGroup.value);
+		}
+		return finalData;
+	}
 	prepareGradeData(event) {
 		const gradeDataTier = event.value;
 		this.gradeDataFrmArr = [];
@@ -364,17 +416,13 @@ export class SetupComponent implements OnInit {
 	}
 
 	setGradeData(gradeDataTier) {
-		console.log('gradeDataTier', gradeDataTier);
 		this.gradeDataFrmArr = [];
-
 		for (let i = 0; i < 100; i++) {
 			this.rangeArray.push({
 				'rng_id': (i + 1).toString(),
 				'rng_value': (i + 1)
 			});
 		}
-
-
 		for (let i = 0; i < gradeDataTier.length; i++) {
 			this.gradeDataFrmArr.push({
 				formGroup: this.fbuild.group({
@@ -386,7 +434,7 @@ export class SetupComponent implements OnInit {
 			});
 		}
 
-		console.log('this.gradeDataFrmArr', this.gradeDataFrmArr);
+		//console.log('this.gradeDataFrmArr', this.gradeDataFrmArr);
 		return this.gradeDataFrmArr;
 	}
 
@@ -437,7 +485,7 @@ export class SetupComponent implements OnInit {
 	}
 
 	formEdit(value: any) {
-		console.log('value', value);
+		//console.log('value', value);
 		if (Number(this.configValue) === 1) { // for exam setup
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
@@ -456,6 +504,7 @@ export class SetupComponent implements OnInit {
 			});
 		} else if (Number(this.configValue) === 3) { // for exam grade setup
 			this.setupUpdateFlag = true;
+			//console.log('sasas', value);
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				egs_number: value.egs_number,
 				egs_name: value.egs_name,
@@ -531,6 +580,13 @@ export class SetupComponent implements OnInit {
 			this.getReportCardSetup(this);
 			this.displayedColumns = ['position', 'class_name', 'sec_name', 'sub_name', 'action', 'modify'];
 			this.configFlag = true;
+		} else if (Number(this.configValue) === 7) { // for exam report card setup			
+			this.getActiveClass(this);
+			this.getTermList(this);
+			this.getExamGradeSetup(this);
+			this.getClassTermGrade(this);
+			this.displayedColumns = ['position', 'name', 'term_name', 'grade_name', 'action', 'modify'];
+			this.configFlag = true;
 		}
 	}
 
@@ -544,7 +600,7 @@ export class SetupComponent implements OnInit {
 				data.sec_status = '5';
 				this.deleteEntry(data, 'insertSubExam', this.getSubExam);
 				break;
-			case '3': // for exam grade setup
+			case '3': // for exam grade setup 
 				data.egs_status = '5';
 				this.deleteEntry(data, 'insertExamGradeSetup', this.getExamGradeSetup);
 				break;
@@ -577,6 +633,7 @@ export class SetupComponent implements OnInit {
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertSubExam', this.getSubExam);
 					break;
 				case '3': // for exam grade setup
+					this.formGroupArray[value - 1].formGroup.value.egs_grade_data = this.checkData();
 					this.formGroupArray[value - 1].formGroup.value.sub_status = '1';
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertExamGradeSetup', this.getExamGradeSetup);
 					break;
@@ -591,6 +648,12 @@ export class SetupComponent implements OnInit {
 				case '6': // for exam report card setup
 					this.formGroupArray[value - 1].formGroup.value.gcss_status = '1';
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertReportCardSetup', this.getReportCardSetup);
+					break;
+				case '7': // for exam report card setup
+					this.formGroupArray[value - 1].formGroup.value.ect_status = '1';
+					this.formGroupArray[value - 1].formGroup.value.ect_created_by = this.currentUser.login_id;
+					console.log(this.formGroupArray[value - 1].formGroup.value);
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertClassTermGrade', this.getReportCardSetup);
 					break;
 			}
 		}
@@ -608,6 +671,8 @@ export class SetupComponent implements OnInit {
 					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'insertSubExam', this.getSubExam);
 					break;
 				case '3': // for exam grade setup
+					this.formGroupArray[value - 1].formGroup.value.egs_grade_data = this.checkData();
+					console.log(this.formGroupArray[value - 1].formGroup.value);
 					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'insertExamGradeSetup', this.getExamGradeSetup);
 					break;
 				case '4': // for exam remark setup
@@ -703,10 +768,16 @@ export class SetupComponent implements OnInit {
 		this.configDataSource.filter = event.trim().toLowerCase();
 	}
 
-	deleteCancel() { }
+	deleteGradeData(index) {
+		const egs_no_of_tiers = Number(this.formGroupArray[this.configValue - 1].formGroup.value.egs_no_of_tiers) - 1;
+		this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+			egs_no_of_tiers: egs_no_of_tiers.toString()
+		});
+		this.gradeDataFrmArr.splice(index, 1);
+	}
 
 	deleteEntry(deletedData, serviceName, next) {
-		this.smartService[serviceName](deletedData).subscribe((result: any) => {
+		this.examService[serviceName](deletedData).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				next(this);
 				this.commonService.showSuccessErrorMessage('Deleted Succesfully', 'success');
@@ -714,7 +785,7 @@ export class SetupComponent implements OnInit {
 		});
 	}
 	addEntry(data, serviceName, next) {
-		this.smartService[serviceName](data).subscribe((result: any) => {
+		this.examService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.resetForm(this.configValue);
 				next(this);
@@ -725,9 +796,10 @@ export class SetupComponent implements OnInit {
 		});
 	}
 	updateEntry(data, serviceName, next) {
-		this.smartService[serviceName](data).subscribe((result: any) => {
+		this.examService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.resetForm(this.configValue);
+				this.gradeDataFrmArr = [];
 				this.setupUpdateFlag = false;
 				next(this);
 				this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');

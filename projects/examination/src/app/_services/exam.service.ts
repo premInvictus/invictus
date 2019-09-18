@@ -177,8 +177,14 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getClassGradeset', value);
 	}
-
-
+	insertClassTermGrade(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/insertClassTermGrade', value);
+	}
+	getClassTermGrade(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getClassTermGrade', value);
+	}
 }
 
 

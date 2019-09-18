@@ -21,17 +21,17 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	currentUser: any;
 	session: any;
 	param: any = {};
-	classArray: any[];
+	classArray: any[] = [];
 	parentSubArray: any[];
-	secArray: any[];
-	topicArray: any[];
-	detailArray: any[];
+	secArray: any[] = [];
+	topicArray: any[] = [];
+	detailArray: any[] = [];
 	systemInfoForm: FormGroup;
 	setupUpdateFlag = false;
 	editFlag = false;
 	finaldivflag = true;
 	showConfigForm = '';
-	subArray: any[];
+	subArray: any[] = [];
 	file: any;
 	finalXlsTopicArray: any[] = [];
 	XlslArray: any[] = [];
@@ -151,7 +151,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 	getClassIsBoard($event, configVal) {
 		if ($event.checked) {
-		 this.formGroupArray[configVal - 1].formGroup.value.is_board = true;
+			this.formGroupArray[configVal - 1].formGroup.value.is_board = true;
 		} else {
 			this.formGroupArray[configVal - 1].formGroup.value.is_board = false;
 		}
@@ -377,47 +377,66 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 
 	getClassSectionSubject(that) {
-		that.getActiveClass(that);
-		that.getSection(that);
-		that.getSubject(that);
-		that.CONFIG_ELEMENT_DATA = [];
-		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
-		that.smartService.getGlobalClassSectionSubject().subscribe((result: any) => {
-			if (result.status === 'ok') {
-				if (that.configValue === '6') {
-					let pos = 1;
-					for (const item of result.data) {
-						const class_arr = [];
-						const sec_arr = [];
-						const sub_arr = [];
-						for (let ci = 0; ci < item.gcss_gc_id.length; ci++) {
-							const class_name = that.getClassName(item.gcss_gc_id[ci]);
-							class_arr.push(class_name);
-						}
-						for (let ci = 0; ci < item.gcss_gs_id.length; ci++) {
-							const sec_name = that.getSecName(item.gcss_gs_id[ci]);
-							sec_arr.push(sec_name);
-						}
-						for (let ci = 0; ci < item.gcss_gsub_id.length; ci++) {
-							const sub_name = that.getSubName(item.gcss_gsub_id[ci]);
-							sub_arr.push(sub_name);
-						}
-						that.CONFIG_ELEMENT_DATA.push({
-							position: pos,
-							class_name: class_arr.toString(),
-							sec_name: sec_arr.toString(),
-							sub_name: sub_arr.toString(),
-							entry_id: item.gcss_entry_id,
-							gcss_id: item.gcss_id,
-							action: item
+		that.classArray = [];
+		that.secArray = [];
+		that.subArray = [];
+		that.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				that.classArray = result.data;
+				that.smartService.getSection().subscribe((result: any) => {
+					if (result.status === 'ok') {
+						that.secArray = result.data;
+						that.smartService.getSubject().subscribe((result: any) => {
+							if (result.status === 'ok') {
+								that.subArray = result.data;
+								that.CONFIG_ELEMENT_DATA = [];
+								that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+								that.smartService.getGlobalClassSectionSubject().subscribe((result: any) => {
+									if (result.status === 'ok') {
+										if (that.configValue === '6') {
+											let pos = 1;
+											for (const item of result.data) {
+												const class_arr = [];
+												const sec_arr = [];
+												const sub_arr = [];
+												for (let ci = 0; ci < item.gcss_gc_id.length; ci++) {
+													const class_name = that.getClassName(item.gcss_gc_id[ci]);
+													class_arr.push(class_name);
+												}
+												for (let ci = 0; ci < item.gcss_gs_id.length; ci++) {
+													const sec_name = that.getSecName(item.gcss_gs_id[ci]);
+													sec_arr.push(sec_name);
+												}
+												for (let ci = 0; ci < item.gcss_gsub_id.length; ci++) {
+													const sub_name = that.getSubName(item.gcss_gsub_id[ci]);
+													sub_arr.push(sub_name);
+												}
+												that.CONFIG_ELEMENT_DATA.push({
+													position: pos,
+													class_name: class_arr.toString(),
+													sec_name: sec_arr.toString(),
+													sub_name: sub_arr.toString(),
+													entry_id: item.gcss_entry_id,
+													gcss_id: item.gcss_id,
+													action: item
+												});
+												pos++;
+											}
+
+											that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+											that.configDataSource.paginator = that.paginator;
+											that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
+											that.configDataSource.sort = that.sort;
+										}
+
+									}
+								});
+							}
 						});
-						pos++;
 					}
-					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
-					that.configDataSource.paginator = that.paginator;
-					that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
-					that.configDataSource.sort = that.sort;
-				}
+				});
+
+
 
 			}
 		});
@@ -586,7 +605,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 
 	getClassName(classId) {
 		for (const item of this.classArray) {
-			if (item.class_id === classId) {
+			if (Number(item.class_id) === Number(classId)) {
 				return item.class_name;
 			}
 		}
@@ -594,7 +613,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 
 	getSecName(secId) {
 		for (const item of this.secArray) {
-			if (item.sec_id === secId) {
+			if (Number(item.sec_id) === Number(secId)) {
 				return item.sec_name;
 			}
 		}
@@ -602,7 +621,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 
 	getSubName(subId) {
 		for (const item of this.subArray) {
-			if (item.sub_id === subId) {
+			if (Number(item.sub_id) === Number(subId)) {
 				return item.sub_name;
 			}
 		}
@@ -648,7 +667,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				class_name: value.class_name,
 				class_order: value.class_order,
 				class_status: value.class_status,
-				is_board: value.is_board === '1' ? true: false
+				is_board: value.is_board === '1' ? true : false
 			});
 		} else if (Number(this.configValue) === 2) {
 			this.setupUpdateFlag = true;
@@ -725,7 +744,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		} else if (Number(this.configValue) === 3) {
 			this.getSubjectType(this);
 			this.getSubject(this);
-			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'sub_code', 'sub_timetable','sub_type_name','sub_color', 'order', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'sub_code', 'sub_timetable', 'sub_type_name', 'sub_color', 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 4) {
 			this.getTopic(this);

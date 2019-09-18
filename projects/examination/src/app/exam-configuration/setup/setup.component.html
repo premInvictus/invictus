@@ -22,12 +22,11 @@
                           <mat-label>Setup Option</mat-label>
                           <mat-select (selectionChange)="loadConfiguration($event)" placeholder="Setup Options">
                             <mat-option value="">Please Select</mat-option>
-                            <mat-option value="1">Exam</mat-option>
-                            <mat-option value="2">Sub Exam</mat-option>
                             <mat-option value="3">Grades</mat-option>
                             <mat-option value="4">Remarks</mat-option>
                             <mat-option value="5">Activities</mat-option>
                             <mat-option value="6">Report Card (Print)</mat-option>
+                            <mat-option value="7">Class Term Grade</mat-option>
                           </mat-select>
                         </mat-form-field>
                       </div>
@@ -114,7 +113,6 @@
                         <div class="row">
                           <div class="col-12">
                             <ng-container *ngFor="let gradeDatafrm of gradeDataFrmArr; let rowIndex=index;">
-
                               <form [formGroup]="gradeDatafrm.formGroup">
                                 <div class="row">
                                   <div class="col-12">
@@ -144,8 +142,7 @@
                                       <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Range Start</mat-label>
                                         <mat-select formControlName="egs_range_start" placeholder="Select Start Range"
-                                          [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher"
-                                          >
+                                          [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher">
                                           <mat-option value="">Please Select Start Range
                                           </mat-option>
                                           <mat-option *ngFor="let item of rangeArray" [value]="item.rng_id">
@@ -158,8 +155,7 @@
                                       <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Range End</mat-label>
                                         <mat-select formControlName="egs_range_end" placeholder="Select End Range"
-                                          [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher"
-                                          >
+                                          [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher">
                                           <mat-option value="">Please Select End Range
                                           </mat-option>
                                           <mat-option *ngFor="let item of rangeArray" [value]="item.rng_id">
@@ -177,18 +173,18 @@
                                 </div>
                               </form>
                             </ng-container>
-                            <div class="row">
-                              <div class="col-12">
-                                <mat-form-field class="form-field" appearance="outline">
-                                  <mat-label>Grade Descripton</mat-label>
-                                  <textarea matInput placeholder="Enter Grade Description" type="text"
-                                    class="text-capitalize" formControlName="egs_description"
-                                    [errorStateMatcher]="confirmValidParentMatcher"
-                                    [value]="formGroupArray[configValue-1].formGroup.get('egs_description').value | capitalize"
-                                    required></textarea>
-                                </mat-form-field>
-                              </div>
-                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Grade Descripton</mat-label>
+                              <textarea matInput placeholder="Enter Grade Description" type="text"
+                                class="text-capitalize" formControlName="egs_description"
+                                [errorStateMatcher]="confirmValidParentMatcher"
+                                [value]="formGroupArray[configValue-1].formGroup.get('egs_description').value | capitalize"
+                                required></textarea>
+                            </mat-form-field>
                           </div>
                         </div>
                       </form>
@@ -368,6 +364,59 @@
                         </div>
                       </form>
                     </div>
+
+
+                    <div *ngIf="configValue == '7'">
+                      <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Class</mat-label>
+                              <mat-select formControlName="ect_class_id" placeholder="Select Class" [disabled]="editFlag"
+                                multiple [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                  {{item.class_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Class Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Terms</mat-label>
+                              <mat-select formControlName="ect_term_id" placeholder="Select Section"
+                                [disabled]="editFlag"  [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option *ngFor="let item of termArray" [value]="item.term_id">
+                                  {{item.term_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Term Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+ 
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Grade Set</mat-label>
+                              <mat-select formControlName="ect_gradeset_id" placeholder="Select Grade Set"
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option value="">Please select</mat-option>
+                                <mat-option *ngFor="let item of gradeSetArray" [value]="item.egs_id">
+                                  {{item.egs_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Grade Set Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                      </form>
+                    </div>
+
                     <div class="text-center margin-top-15">
                       <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
                         (click)="addConfiguration(configValue)">Add</button>
@@ -422,6 +471,16 @@
                                           <span *ngIf="!item.name">-</span>
                                         </td>
                                       </ng-container>
+                                      <ng-container *ngIf="configValue == '7'" matColumnDef="term_name">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Terms
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span
+                                            *ngIf="item.term_name">{{ item.term_name }}</span>
+                                          <span *ngIf="!item.term_name">-</span>
+                                        </td>
+                                      </ng-container>
                                       <ng-container *ngIf="configValue == '3'" matColumnDef="point_type_id">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Point Type
@@ -440,7 +499,7 @@
                                           <span *ngIf="!item.no_of_tiers">-</span>
                                         </td>
                                       </ng-container>
-                                      <ng-container *ngIf="configValue == '3'" matColumnDef="grade_name">
+                                      <ng-container *ngIf="configValue == '3' || configValue == '7'" matColumnDef="grade_name">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Grade Name
                                         </th>
@@ -463,8 +522,8 @@
                                           Start Range
                                         </th>
                                         <td class="left" mat-cell *matCellDef="let item">
-                                          <span *ngIf="item.start_range">{{ item.start_range }}</span>
-                                          <span *ngIf="!item.start_range">-</span>
+                                          <span *ngIf="item.range_start">{{ item.range_start }}</span>
+                                          <span *ngIf="!item.range_start">-</span>
                                         </td>
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '3'" matColumnDef="end_range">
@@ -472,8 +531,8 @@
                                           End Range
                                         </th>
                                         <td class="left" mat-cell *matCellDef="let item">
-                                          <span *ngIf="item.end_range">{{ item.end_range }}</span>
-                                          <span *ngIf="!item.end_range">-</span>
+                                          <span *ngIf="item.range_end">{{ item.range_end }}</span>
+                                          <span *ngIf="!item.range_end">-</span>
                                         </td>
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '3'" matColumnDef="grade_set_description">
@@ -481,72 +540,75 @@
                                           Description
                                         </th>
                                         <td class="left" mat-cell *matCellDef="let item">
-                                          <span *ngIf="item.grade_set_description">{{ item.grade_set_description }}</span>
+                                          <span
+                                            *ngIf="item.grade_set_description">{{ item.grade_set_description }}</span>
                                           <span *ngIf="!item.grade_set_description">-</span>
                                         </td>
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '4'" matColumnDef="remark_grade_name">
-                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                            Grade Name
-                                          </th>
-                                          <td class="left" mat-cell *matCellDef="let item">
-                                            <span *ngIf="item.remark_grade_name">{{ item.remark_grade_name }}</span>
-                                            <span *ngIf="!item.remark_grade_name">-</span>
-                                          </td>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Grade Name
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.remark_grade_name">{{ item.remark_grade_name }}</span>
+                                          <span *ngIf="!item.remark_grade_name">-</span>
+                                        </td>
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '4'" matColumnDef="remark_type">
-                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                            Remark Type
-                                          </th>
-                                          <td class="left" mat-cell *matCellDef="let item">
-                                            <span *ngIf="item.remark_type">{{ getActivityCategory(item.remark_type) }}</span>
-                                            <span *ngIf="!item.remark_type">-</span>
-                                          </td>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Remark Type
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span
+                                            *ngIf="item.remark_type">{{ getActivityCategory(item.remark_type) }}</span>
+                                          <span *ngIf="!item.remark_type">-</span>
+                                        </td>
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '4'" matColumnDef="remark_tone">
-                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                            Remark Tone
-                                          </th>
-                                          <td class="left" mat-cell *matCellDef="let item">
-                                            <span *ngIf="item.remark_tone">{{ getRemarkTone(item.remark_tone) }}</span>
-                                            <span *ngIf="!item.remark_tone">-</span>
-                                          </td>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Remark Tone
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.remark_tone">{{ getRemarkTone(item.remark_tone) }}</span>
+                                          <span *ngIf="!item.remark_tone">-</span>
+                                        </td>
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '4'" matColumnDef="remark_description">
-                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                            Description
-                                          </th>
-                                          <td class="left" mat-cell *matCellDef="let item">
-                                            <span *ngIf="item.remark_description">{{ item.remark_description }}</span>
-                                            <span *ngIf="!item.remark_description">-</span>
-                                          </td>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Description
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.remark_description">{{ item.remark_description }}</span>
+                                          <span *ngIf="!item.remark_description">-</span>
+                                        </td>
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '5'" matColumnDef="category_name">
-                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                            Category Name
-                                          </th>
-                                          <td class="left" mat-cell *matCellDef="let item">
-                                            <span *ngIf="item.category_name">{{ getActivityCategory(item.category_name) }}</span>
-                                            <span *ngIf="!item.category_name">-</span>
-                                          </td>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Category Name
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span
+                                            *ngIf="item.category_name">{{ getActivityCategory(item.category_name) }}</span>
+                                          <span *ngIf="!item.category_name">-</span>
+                                        </td>
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '5'" matColumnDef="type_name">
-                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Type Name
-                                          </th>
-                                          <td class="left" mat-cell *matCellDef="let item">
-                                            <span *ngIf="item.type_name">{{ getActivityType(item.type_name) }}</span>
-                                            <span *ngIf="!item.type_name">-</span>
-                                          </td>
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.type_name">{{ getActivityType(item.type_name) }}</span>
+                                          <span *ngIf="!item.type_name">-</span>
+                                        </td>
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '5'" matColumnDef="activity_description">
-                                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Description
-                                          </th>
-                                          <td class="left" mat-cell *matCellDef="let item">
-                                            <span *ngIf="item.activity_description">{{ item.activity_description }}</span>
-                                            <span *ngIf="!item.activity_description">-</span>
-                                          </td>
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.activity_description">{{ item.activity_description }}</span>
+                                          <span *ngIf="!item.activity_description">-</span>
+                                        </td>
                                       </ng-container>
 
                                       <!-- action Column -->
