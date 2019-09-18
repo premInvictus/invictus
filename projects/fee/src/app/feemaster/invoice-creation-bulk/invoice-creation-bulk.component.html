@@ -1,6 +1,6 @@
-<div class="fee-container-box__grey">
+<div>
    <div class="row">
-      <div class="col-12 remove-col-padding">
+      <div class="col-12 ">
          <mat-card class="card-top-title__container">
             <div class="row">
                <div class="col-6">
@@ -181,7 +181,7 @@
                         <div class="col-2 fee-custom-col-10 col-padding-5">
                            <button mat-raised-button class="apply-btn margin-top-10"
                               (click)="searchInvoice()">Apply</button>&nbsp;
-                           <button mat-raised-button class="reset-bt margin-top-10"
+                           <button mat-raised-button class="btn-reset-small margin-top-10"
                               (click)="resetSearch()">Reset</button>
                         </div>
                      </div>
@@ -196,9 +196,9 @@
                            *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0"
                            mat-raised-button class=" btn-danger btn-spacer"
                            (click)="openDeleteDialog(fetchInvId())">Delete</button>
-                        <button mat-raised-button class="my-filter-btn" (click)="advanceSearchToggle()">Filter
+                        <button mat-raised-button class="btn-filter-grey" (click)="advanceSearchToggle()">Filter
                            Search</button>
-                        <button *ngIf="ELEMENT_DATA.length !== 0" mat-raised-button class=" btn-success btn-spacer"
+                        <button *ngIf="ELEMENT_DATA.length !== 0" mat-raised-button class=" btn-print-invoice btn-spacer"
                            (click)="printInvoice()">Print</button>
                         <div class="inline-flex btn-spacer">
                            <div>
