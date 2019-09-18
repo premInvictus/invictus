@@ -157,6 +157,18 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getGradeCardMark', value);
 	}
+	getIsBoardClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/common/getIsBoardClass', value);
+	}
+	insertMarksAnalysis(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertMarksAnalysis', value);
+	}
+	getMarksAnalysis(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getMarksAnalysis', value);
+	}
 	lockUnlockGradeCard(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/lockUnlockGradeCard', value);

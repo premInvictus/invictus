@@ -50,6 +50,13 @@
                                                         </mat-form-field>
                                                     </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-checkbox formControlName="is_board" (change)="getClassIsBoard($event, configValue)">Is this a
+                                                            board class ? 
+                                                        </mat-checkbox>
+                                                    </div>
+                                                </div>
                                             </form>
                                         </div>
                                         <div *ngIf="configValue == '2'">
