@@ -145,7 +145,7 @@
                                         <mat-label>Range Start</mat-label>
                                         <mat-select formControlName="egs_range_start" placeholder="Select Start Range"
                                           [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher"
-                                          (selectionChange)="prepareGradeData($event)">
+                                          >
                                           <mat-option value="">Please Select Start Range
                                           </mat-option>
                                           <mat-option *ngFor="let item of rangeArray" [value]="item.rng_id">
@@ -159,7 +159,7 @@
                                         <mat-label>Range End</mat-label>
                                         <mat-select formControlName="egs_range_end" placeholder="Select End Range"
                                           [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher"
-                                          (selectionChange)="prepareGradeData($event)">
+                                          >
                                           <mat-option value="">Please Select End Range
                                           </mat-option>
                                           <mat-option *ngFor="let item of rangeArray" [value]="item.rng_id">
