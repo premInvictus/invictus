@@ -22,6 +22,8 @@ export class MarksEntryComponent implements OnInit {
   marksInputArray: any[] = [];
   marksEditable = true;
   responseMarksArray: any[] = []; 
+  exam_grade_type = '0';
+  exam_grade_type_arr: any[] = [];
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -49,9 +51,17 @@ export class MarksEntryComponent implements OnInit {
       }
     });
   }
+  getSubType() {
+    const ind = this.subjectArray.findIndex(e => e.sub_id === this.paramform.value.eme_sub_id);
+    if(ind !== -1) {
+      return this.subjectArray[ind].sub_type;
+    } else {
+      return '1';
+    }
+  }
   getExamDetails() {
     this.examArray = [];
-    this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id}).subscribe((result: any) => {
+    this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType()}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
       } else {
@@ -59,7 +69,19 @@ export class MarksEntryComponent implements OnInit {
       }
     });
   }
+  getGradeSet(param) {
+    this.examService.getGradeSet(param).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        this.exam_grade_type_arr = result.data[0].egs_grade_data;
+      }
+    })
+  }
   getSubExam() {
+    if(this.paramform.value.eme_exam_id) {
+      const ind = this.examArray.findIndex(e => e.exam_id === this.paramform.value.eme_exam_id);
+      this.exam_grade_type = this.examArray[ind].egs_point_type;
+      this.getGradeSet({egs_number: this.examArray[ind].egs_number,sort: 'asc'});
+    }
     this.subexamArray = [];
     this.examService.getExamDetails({exam_id: this.paramform.value.eme_exam_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -237,6 +259,15 @@ export class MarksEntryComponent implements OnInit {
     const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
     if (ind !== -1) {
       return this.marksInputArray[ind].mark;
+    } else {
+      return '';
+    }
+  }
+  getInputMarksForPoint(es_id, login_id) {
+    const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
+    if (ind !== -1) {
+      const temp = this.exam_grade_type_arr.find(e => e.egs_grade_value === this.marksInputArray[ind].mark);
+      return temp.egs_grade_name;
     } else {
       return '';
     }
