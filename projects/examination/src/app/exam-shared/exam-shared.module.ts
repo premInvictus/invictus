@@ -4,6 +4,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
+import {CommonDynamicChartComponent} from './common-dynamic-chart/common-dynamic-chart.component';
 import {
 	MatTooltipModule, MatMenuModule, MatCheckboxModule,
 	MatSidenavModule, MatSlideToggleModule,
@@ -94,7 +95,8 @@ export const MY_FORMATS = {
 		NumberToWordPipe,
 		ZerodashPipe,
 		NoDataComponent,
-		PreviewDocumentComponent
+		PreviewDocumentComponent,
+		CommonDynamicChartComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -130,6 +132,7 @@ export const MY_FORMATS = {
 		MatPaginatorModule,
 		MatStepperModule,
 		ImageViewerModule,
+		CommonDynamicChartComponent,
 		CKEditorModule,
 		MatSortModule,
 		RouterModule, DeleteModalComponent, ImagecropComponent,

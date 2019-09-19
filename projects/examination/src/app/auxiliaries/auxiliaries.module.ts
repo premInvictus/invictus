@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AuxiliariesRoutingModule } from './auxiliaries-routing.module';
 import { GradecardPrintingComponent } from './gradecard-printing/gradecard-printing.component';
 import { AdditionalSubjectComponent } from './additional-subject/additional-subject.component';
@@ -10,12 +9,15 @@ import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.compo
 import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 import { ViewGradecardDialogComponent } from './view-gradecard-dialog/view-gradecard-dialog.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AngularSlickgridModule } from 'angular-slickgrid';
+import { TranslateService } from '@ngx-translate/core';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		AuxiliariesRoutingModule,
-		ExamSharedModule
+		ExamSharedModule,
+		AngularSlickgridModule.forRoot()
 	],
 	declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent,
 		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, ViewGradecardDialogComponent],
@@ -25,6 +27,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 	providers: [{
 		provide: MAT_DIALOG_DATA,
 		useValue: {}
-	  }]
+	  },
+	  TranslateService]
 })
 export class AuxiliariesModule { }

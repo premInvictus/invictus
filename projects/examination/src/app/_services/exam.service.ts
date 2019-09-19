@@ -169,6 +169,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getMarksAnalysis', value);
 	}
+	getTopFiveSubjects(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTopFiveSubjects', value);
+	}
 	lockUnlockGradeCard(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/lockUnlockGradeCard', value);
