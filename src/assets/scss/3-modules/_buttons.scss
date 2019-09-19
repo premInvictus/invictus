@@ -522,11 +522,21 @@ button.mat-button:hover .right-text {
 .apply-btn {
     background-color: $button-success;
     color: #ffffff;
-    text-transform: uppercase;
+    text-transform: capitalize;
     width: 60px;
     font-size: 12px;
     line-height: 32px !important;
 }
+
+.btn-reset-small {
+    background-color: #f52424 !important;
+    color: #ffffff;
+    text-transform: capitalize;
+    width: 60px;
+    font-size: 12px;
+    line-height: 32px !important;
+}
+
 
 .print-btn {
     background-color: #005AAB;
@@ -644,7 +654,16 @@ button.mat-button:hover .right-text {
 }
 
 .btn-success-green {
-    background-color: #4db848 !important;
+    background-color: #43A047 !important;
+    width: 120px !important;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    font-size: 13px !important;
+}
+ 
+
+.btn-filter-grey {
+    background-color: #757b85  !important;
     width: 120px !important;
     color: #ffffff !important;
     text-transform: uppercase;
@@ -661,6 +680,22 @@ button.mat-button:hover .right-text {
 
 .btn-success-blue {
     background-color: #1e88e5 !important;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    font-size: 13px !important;
+    padding: 0px 20px;
+}
+
+.btn-print-invoice {
+    background-color: #005AAB !important;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    font-size: 13px !important;
+    padding: 0px 20px;
+}
+
+.make-payement-btn {
+    background-color: #1E88E5 !important;
     color: #ffffff !important;
     text-transform: uppercase;
     font-size: 13px !important;
@@ -771,4 +806,38 @@ button.scheduler-circle .mat-button-wrapper {
     border-bottom-left-radius: 15px !important;
     position: absolute !important;
     right: -15px !important;
+}
+
+.mat-raised-button {
+    box-shadow: none !important;
+    
+}
+
+.mat-raised-button .mat-button-wrapper {
+    text-transform: capitalize !important;
+}
+
+.mat-datepicker-toggle .mat-icon-button {
+    background-color: #007D9E;
+    color: white;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: #25ACCF !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: #25ACCF !important;
+}
+
+.mat-slide-toggle-bar {
+    background-color: #D0D0D0;
+}
+
+.mat-slide-toggle-thumb {
+    background-color: #D0D0D0;
+}
+
+.mat-checkbox-frame {
+    border-color: #007D9E !important;
 }

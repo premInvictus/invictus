@@ -1,6 +1,6 @@
-<div class="fee-container-box__grey  ">
-  <div class="row row-remove-top-margin">
-    <div class="col-12 remove-col-padding">
+<div >
+  <div class="row">
+    <div class="col-12 ">
       <mat-card class="card-content__container card-height-835">
         <mat-card-title>
           <div class="row">
@@ -157,13 +157,13 @@
                   </div>
                 </div>
                 <div class="text-center ">
-                  <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-success"
+                  <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-success-green"
                     (click)="saveForm()">Submit</button>
-                  <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-success"
+                  <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-success-green"
                     (click)="saveForm()">Update</button>
-                  <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"
+                  <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-reset btn-spacer"
                     (click)="cancelForm()">Cancel</button>
-                  <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"
+                  <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-reset btn-spacer"
                     (click)="resetForm()">Reset</button>
                 </div>
               </form>
