@@ -76,7 +76,7 @@ export class ViewGradecardDialogComponent implements OnInit {
 
       var pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
 
-      var imgData  = canvas.toDataURL("image/jpeg", 1.0);
+      var imgData  = canvas.toDataURL("image/png");
       pdf.addImage(imgData,0,0,canvas.width, canvas.height);
       pdf.save('converteddoc.pdf');
     });
