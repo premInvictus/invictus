@@ -19,7 +19,6 @@
     </mat-card>
   </div>
 </div>
-
 <div class="row">
   <div class="col-12">
     <mat-accordion>
@@ -65,19 +64,22 @@
               <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
                 [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)">
               </angular-slickgrid>
+              <div class="padding-15" *ngIf="dataset.length === 0">
+                <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+                  <img
+                    src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                  <br>
+                  No Records Found
+                </div>
+              </div>
             </div>
             <div class="padding-15" *ngIf="previousIndex === 1 && tableFlag">
+              <app-common-dynamic-chart [options]="topFiveChart"></app-common-dynamic-chart>
+              <br>
+              <br>
               <angular-slickgrid gridId="grid2" [columnDefinitions]="columnDefinitions2" [gridOptions]="gridOptions"
                 [dataset]="dataset2" [gridHeight]="gridHeight2" (onAngularGridCreated)="angularGridReady2($event)">
               </angular-slickgrid>
-            </div>
-            <div class="padding-15" *ngIf="dataset.length === 0">
-              <div class="text-center margin-top-20" style="margin-bottom:20px !important">
-                <img
-                  src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
-                <br>
-                No Records Found
-              </div>
             </div>
           </div>
         </div>
