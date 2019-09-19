@@ -4,6 +4,8 @@ import { AxiomService, SisService, SmartService, CommonAPIService, ExamService }
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import html2canvas from 'html2canvas';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-view-gradecard-dialog',
@@ -14,9 +16,12 @@ export class ViewGradecardDialogComponent implements OnInit {
 
   studentDetails: any;
   currentSession: any;
-  defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+  defaultsrc: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+  defaultschoollogosrc = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDfHehrJZBsRnceQ7ZnsweW0APVykYhToalBr9WF-2zd4JC0QbFA";
   subjectArray: any[] = [];
   examArray: any[] = [];
+  sexamArray: any[] = [];
+  cexamArray: any[] = [];
   gradeCardMarkArray: any[] = [];
   sflag = false;
   eflag = false;
@@ -24,13 +29,21 @@ export class ViewGradecardDialogComponent implements OnInit {
   acedemicmarks = 0;
   GradeSet: any[] = [];
   termArray: any[] = [];
+  schoolDetails: any;
+  gradePerTermOnScholastic: any[] = [];
+  totalSolasticSubject = 0;
+  totalexecutedSolasticSubject = 0;
+  today = new Date();
+  resultdivflag = false;
+
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private examService: ExamService,
     private sisService: SisService,
     private smartService: SmartService,
-    private commonAPIService: CommonAPIService
+    private commonAPIService: CommonAPIService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -39,6 +52,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     for (let i = 1; i <= this.data.param.eme_term_id; i++) {
       this.termArray.push(i);
     }
+    this.getSchool();
     this.getSession();
     this.getAllStudents();
     this.getSubjectsByClass();
@@ -46,6 +60,26 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getExamDetails();
     //this.getGradeCardMark();
 
+  }
+  getSchool() {
+    this.sisService.getSchool().subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        this.schoolDetails = result.data[0];
+        this.defaultschoollogosrc = this.schoolDetails.school_logo;
+      }
+    })
+  }
+  public generatePDF() {
+    var data = document.getElementById('gradecard');
+    html2canvas(data, { logging: true , allowTaint: false , useCORS: true }).then(canvas => {
+      // Few necessary setting options 
+
+      var pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
+
+      var imgData  = canvas.toDataURL("image/jpeg", 1.0);
+      pdf.addImage(imgData,0,0,canvas.width, canvas.height);
+      pdf.save('converteddoc.pdf');
+    });
   }
   getClassGradeset() {
     this.examService.getClassGradeset({ class_id: this.data.class_id }).subscribe((result: any) => {
@@ -107,18 +141,49 @@ export class ViewGradecardDialogComponent implements OnInit {
           break;
       }
     }
-    //console.log('sub_id', sub_id);
-    //console.log('sub_id', curExam);
-    //console.log('percentageArray',percentageArray);
+    console.log('sub_id', sub_id);
+    console.log('sub_id', curExam);
+    console.log('percentageArray', percentageArray);
     return score;
   }
 
-  calculateGrade(sub_id,term) {
-    let gradeMarks = 0;
-    this.examArray.forEach(element => {
-      gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id,term);
+  getPassResult(term){
+    console.log('gradePerTermOnScholastic', this.gradePerTermOnScholastic);
+    const temp: any[] = [];
+    this.gradePerTermOnScholastic.forEach(element => {
+      const tindex = temp.findIndex(e => e.sub_id === element.sub_id && e.term === element.term && e.grade === element.grade);
+      if(tindex === -1) {
+        temp.push(element);
+      }
     });
-    const grade = Math.round(gradeMarks / this.examArray.length);
+    let total = 0;
+    for(const item of temp) {
+      total = total + item.grade;
+    }
+    console.log('temp', temp);
+    console.log('total', total);
+    return Math.round(total/temp.length) > 32 ? 'Pass' : 'Fail';
+
+  }
+  calculateGrade(sub_id, term) {
+    let gradeMarks = 0;
+    this.sexamArray.forEach(element => {
+      gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id, term);
+    });
+    const grade = Math.round(gradeMarks / this.sexamArray.length);
+    if(Number(term) === Number(this.data.param.eme_term_id)) {
+      this.totalexecutedSolasticSubject++;
+      this.gradePerTermOnScholastic.push({
+        sub_id: sub_id,
+        term: term,
+        grade: grade
+      });
+      console.log('totalexecutedSolasticSubject', this.totalexecutedSolasticSubject);
+      console.log('totalSolasticSubject', this.totalSolasticSubject);
+      if(this.totalexecutedSolasticSubject === this.totalSolasticSubject) {
+        this.resultdivflag = true;
+      }
+    }
     let gradeValue = '';
     for (let index = 0; index < this.GradeSet.length; index++) {
       const element = this.GradeSet[index];
@@ -153,13 +218,20 @@ export class ViewGradecardDialogComponent implements OnInit {
     });
   }
   getExamDetails() {
-    this.examArray = [];
+    this.sexamArray = [];
     this.examService.getExamDetails({ exam_class: this.data.class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
+        this.examArray.forEach(element => {
+          if (element.exam_category === '1') {
+            this.sexamArray.push(element);
+          } else {
+            this.cexamArray.push(element);
+          }
+        });
         this.eflag = true;
-        if (this.examArray.length > 0) {
-          this.examArray.forEach(element => {
+        if (this.sexamArray.length > 0) {
+          this.sexamArray.forEach(element => {
             this.acedemicmarks += Number(element.exam_weightage);
           });
         }
@@ -174,6 +246,11 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.smartService.getSubjectsByClass({ class_id: this.data.class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.subjectArray = result.data;
+        this.subjectArray.forEach(element => {
+          if(element.sub_type === '1') {
+            this.totalSolasticSubject++;
+          }
+        });
         this.sflag = true;
         this.getExamDetails();
       } else {
@@ -198,6 +275,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       if (result && result.status === 'ok') {
         this.studentDetails = result.data[0];
         this.defaultsrc = this.studentDetails.au_profileimage;
+
         if (this.studentDetails.active_parent === 'M') {
           this.studentDetails.active_parent_name = this.studentDetails.mother_name;
         } else if (this.studentDetails.active_parent === 'F') {

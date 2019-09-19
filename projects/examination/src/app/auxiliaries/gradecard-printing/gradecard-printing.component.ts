@@ -258,14 +258,16 @@ export class GradecardPrintingComponent implements OnInit {
       for(let j=0;j<this.examArray[i].exam_sub_exam_max_marks.length; j++) {
         for(let k=0;k<this.subjectArray.length;k++) {
           if(this.gradeCardMarkArray) {
-            const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
-              e.eme_sub_id === this.subjectArray[k].sub_id &&
-              e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
-              e.eme_exam_id === this.examArray[i].exam_id);
-              if(gindex === -1) {
-                gstatus = '0';
-                break;
-              }
+            if(this.examArray[i].exam_category === this.subjectArray[k].sub_type) {
+              const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
+                e.eme_sub_id === this.subjectArray[k].sub_id &&
+                e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
+                e.eme_exam_id === this.examArray[i].exam_id);
+                if(gindex === -1) {
+                  gstatus = '0';
+                  break;
+                }
+            }
           } else {
             gstatus = '0';
             break;
