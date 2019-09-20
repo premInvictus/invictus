@@ -11,12 +11,14 @@ import {
   FileType
 } from 'angular-slickgrid';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TitleCasePipe } from '@angular/common';
 @Component({
   selector: 'app-cbse-marks-analysis',
   templateUrl: './cbse-marks-analysis.component.html',
   styleUrls: ['./cbse-marks-analysis.component.css']
 })
 export class CbseMarksAnalysisComponent implements OnInit {
+  headerCumulative: any[] = [];
   constructor(public dialog: MatDialog, private smart: SmartService, private exam: ExamService,
     public sanitizer: DomSanitizer,
     public common: CommonAPIService,
@@ -180,6 +182,8 @@ export class CbseMarksAnalysisComponent implements OnInit {
   sub5Arr: any[] = [];
   dataArray: any[] = [];
   seriesArray: any[] = [];
+  cumulativeDataArray: any[] = [];
+  topTenDataArray: any[] = [];
   ngOnInit() {
     this.getSubjects();
     this.getIsBoardClass();
@@ -242,7 +246,7 @@ export class CbseMarksAnalysisComponent implements OnInit {
       tooltip: {
         formatter: function () {
           return '<b>' + this.x + '</b><br/>' +
-            this.series.name + ': ' + this.y ;
+            this.series.name + ': ' + this.y;
         }
       },
       plotOptions: {
@@ -340,6 +344,7 @@ export class CbseMarksAnalysisComponent implements OnInit {
   }
   excecuteCard(index) {
     this.tableFlag = false;
+    this.secondFlag = false;
     if (this.previousIndex) {
       this.cardArray[this.previousIndex].class = 'cbse-box-two';
       this.cardArray[this.previousIndex].img = this.cardArray2[this.previousIndex].img;
@@ -349,7 +354,8 @@ export class CbseMarksAnalysisComponent implements OnInit {
     this.cardArray[index].img = this.succImg;
     this.header = this.cardArray[index].header;
     if (index === 0) {
-      setTimeout(() => this.tableFlag = true, 200);
+      setTimeout(() => this.tableFlag = true, 100);
+      setTimeout(() => this.secondFlag = true, 100);
     }
     if (index === 1) {
       this.repopulateTopFiveChart();
@@ -357,20 +363,47 @@ export class CbseMarksAnalysisComponent implements OnInit {
       this.getTopFiveSubjects(this.class_id);
     }
     if (index === 2) {
-      this.getTopTenDataPerSubject(this.class_id);
-      this.getSubjectWiseAnalysis(this.class_id);
+      if (this.topTenDataArray.length === 0) {
+        this.getTopTenDataPerSubject(this.class_id);
+      } else {
+        this.tableFlag = true;
+        this.secondFlag = true;
+      }
+      if (this.cumulativeDataArray.length === 0) {
+        this.getSubjectWiseAnalysis(this.class_id);
+      } else {
+        this.tableFlag = true;
+        this.secondFlag = true;
+      }
     }
-    setTimeout(() => this.secondFlag = true, 200);
   }
   getSubjectWiseAnalysis(class_id) {
-    this.exam.getSubjectWiseAnalysis({class_id: class_id}).subscribe((res: any) => {
+    this.tableFlag = false;
+    this.exam.getSubjectWiseAnalysis({ class_id: class_id }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
+        this.cumulativeDataArray = [];
+        this.headerCumulative = [];
+        this.cumulativeDataArray = res.data;
+        let index = 0;
+        for (const item of this.cumulativeDataArray) {
+          for (const titem of item.analysisData) {
+            if (index === 0) {
+              this.headerCumulative.push(titem.egs_grade_name);
+            }
+          }
+          index++;
+        }
+        setTimeout(() => this.secondFlag = true, 50);
+        this.tableFlag = true;
+
       }
     });
   }
   getTopTenDataPerSubject(class_id) {
-    this.exam.getTopTenDataPerSubject({class_id: class_id}).subscribe((res: any) => {
+    this.exam.getTopTenDataPerSubject({ class_id: class_id }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
+        this.topTenDataArray = [];
+        this.topTenDataArray = res.data;
       }
     });
   }
@@ -511,11 +544,11 @@ export class CbseMarksAnalysisComponent implements OnInit {
           obj['id'] = ind2 + item['cma_student_name'];
           obj['cma_rollno'] = item['cma_rollno'];
           obj['cma_sex'] = item['cma_sex'];
-          obj['cma_student_name'] = item['cma_student_name'];
+          obj['cma_student_name'] = new TitleCasePipe().transform(item['cma_student_name']);
           obj['total'] = item['total'];
           obj['per'] = this.convertFloat((item['total'] / (item['sub_count'] * 100)) * 100);
           obj['cma_status'] = item['cma_status'] ? item['cma_status'].toUpperCase() : '-';
-          this.markRegisterxSeries.push(item['cma_student_name']);
+          this.markRegisterxSeries.push(new TitleCasePipe().transform(item['cma_student_name']));
           this.marksRegisterChart.xAxis.categories = this.markRegisterxSeries;
           this.percentSeries.push({
             y: obj['per'],
@@ -737,7 +770,7 @@ export class CbseMarksAnalysisComponent implements OnInit {
               if (titem.sub_code.toString() === key.toString()) {
                 const findex = this.tabSubArray.findIndex(f => f.sub_code.toString() === key.toString());
                 if (findex === -1) {
-                  this.stuDetailsArray2[ind][key]['sub_color'] =  titem.sub_color
+                  this.stuDetailsArray2[ind][key]['sub_color'] = titem.sub_color
                   this.tabSubArray.push(this.stuDetailsArray2[ind][key]);
                 }
               }
@@ -763,11 +796,11 @@ export class CbseMarksAnalysisComponent implements OnInit {
           obj['id'] = ind2 + item['cma_student_name'];
           obj['cma_rollno'] = item['cma_rollno'];
           obj['cma_sex'] = item['cma_sex'];
-          obj['cma_student_name'] = item['cma_student_name'];
+          obj['cma_student_name'] = new TitleCasePipe().transform(item['cma_student_name']);
           obj['total'] = item['total'];
           obj['per'] = this.convertFloat((item['total'] / (item['sub_count'] * 100)) * 100);
           obj['cma_status'] = item['cma_status'] ? item['cma_status'].toUpperCase() : '-';
-          this.topFiveChart.xAxis.categories.push(item['cma_student_name']);
+          this.topFiveChart.xAxis.categories.push(new TitleCasePipe().transform(item['cma_student_name']));
           for (const titem of this.tabSubArray) {
             if (this.stuDetailsArray2[ind2][titem.sub_code]) {
               sub_data.push(this.stuDetailsArray2[ind2][titem.sub_code]);
@@ -899,8 +932,7 @@ export class CbseMarksAnalysisComponent implements OnInit {
         } else {
           this.gridHeight2 = 250;
         }
-        console.log(this.dataset2);
-        console.log(this.columnDefinitions2);
+        setTimeout(() => this.secondFlag = true, 100);
       }
     });
   }
@@ -1231,7 +1263,9 @@ export class CbseMarksUploadDialog implements OnInit {
       console.log(this.stuDetailsArray);
       this.exam.insertMarksAnalysis({
         studentData: this.stuDetailsArray,
-        subjects: this.subjectClassArray
+        subjects: this.subjectClassArray,
+        class_id: this.class_id,
+        ses_id: this.ses_id
       }).subscribe((res: any) => {
         if (res && res.status === 'ok') {
         } else {

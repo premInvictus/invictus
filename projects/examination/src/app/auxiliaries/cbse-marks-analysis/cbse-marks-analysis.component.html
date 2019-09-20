@@ -80,6 +80,72 @@
               <angular-slickgrid gridId="grid2" [columnDefinitions]="columnDefinitions2" [gridOptions]="gridOptions"
                 [dataset]="dataset2" [gridHeight]="gridHeight2" (onAngularGridCreated)="angularGridReady2($event)">
               </angular-slickgrid>
+              <div class="padding-15" *ngIf="dataset2.length === 0">
+                <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+                  <img
+                    src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                  <br>
+                  No Records Found
+                </div>
+              </div>
+            </div>
+            <div class="padding-15" *ngIf="previousIndex === 2 && tableFlag">
+              <table class="table table-borderd table-stripped custom-table">
+                <thead class="table-skill__head text-center">
+                  <tr class="custom-tr">
+                    <th class="custom-th">Subjects</th>
+                    <th class="custom-th" *ngFor="let hitem of headerCumulative">
+                      {{hitem}}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  <ng-container *ngFor="let item of cumulativeDataArray; let i = index">
+                    <tr class="custom-tr">
+                      <td class="custom-td"><b>{{item.subject}} ({{item.sub_code}})</b></td>
+                      <td class="custom-td" *ngFor="let analysis of item.analysisData">
+                        {{analysis.count}}
+                      </td>
+                    </tr>
+                    <tr class="custom-tr">
+                      <td class="custom-td"><b>Cumulative</b></td>
+                      <td class="custom-td" *ngFor="let analysis of item.analysisData">
+                        {{analysis.cumulative}}
+                      </td>
+                    </tr>
+                    <tr class="custom-tr" *ngIf="i < cumulativeDataArray.length - 1">
+                      <td class="custom-td">{{' '}}</td>
+                      <td class="custom-td" *ngFor="let analysis of item.analysisData">
+                        {{' '}}
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+              <br>
+              <br>
+              <ng-container *ngFor="let topten of topTenDataArray">
+                <span class="suject-header-span">Top Ten in {{topten.subject}}</span>
+                <br>
+                <br>
+                <table class="table table-borderd table-stripped custom-table">
+                  <thead class="table-skill__head text-center">
+                    <tr class="custom-tr">
+                      <th class="custom-th">Roll No</th>
+                      <th class="custom-th">Name</th>
+                      <th class="custom-th">Marks</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-center">
+                    <tr *ngFor="let titem of topten.analysisData">
+                      <td class="custom-td" style="width: 10rem !important">{{titem.cma_rollno}}</td>
+                      <td class="custom-td text-left">{{titem.cma_student_name | titlecase}}</td>
+                      <td class="custom-td text-right">{{titem.marks}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br>
+              </ng-container>
             </div>
           </div>
         </div>
