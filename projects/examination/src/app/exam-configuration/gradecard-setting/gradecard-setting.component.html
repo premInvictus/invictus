@@ -1,0 +1,68 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Gradecard Setting</span>
+          </div>
+        </div>
+        <div class="col-6 text-right">
+
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<form [formGroup]="gradecaredform">
+  <div class="row">
+    <div class="col-lg-4 col-mobile-view-add-ques">
+      <div class="row">
+        <div class="text-center">
+          <h4><b>Gradecard Custom Header</b></h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <ckeditor [config]="ckeConfig" formControlName="gradecard_header"></ckeditor>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-mobile-view-add-ques">
+      <div class="row">
+        <div class="text-center">
+          <h4><b>Gradecard Custom Footer</b></h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <ckeditor [config]="ckeConfig" formControlName="gradecard_footer"></ckeditor>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-mobile-view-add-ques">
+      <div class="row">
+        <div class="text-center">
+          <h4><b>Principal Signature</b></h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button mat-stroked-button class="btn-outline-green">
+            <label for="file">Choose File
+              &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
+          <input style="display:none" type="file" accept="image/*" (change)="uploadPricipalSign($event)" id="file"><br><br>
+          <img *ngIf="gradecaredform.value.gradecard_principal_signature" style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%"
+            [src]="gradecaredform.value.gradecard_principal_signature">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="text-center margin-top-15">
+        <button mat-raised-button class="btn-success" (click)="saveSetting()">Save</button>
+      </div>
+    </div>
+  </div>
+</form>

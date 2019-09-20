@@ -131,6 +131,7 @@ export class SubjectPeriodCounterComponent implements OnInit {
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
+		classParam.class_status = '1';
 		this.smartService.getClass(classParam)
 			.subscribe(
 				(result: any) => {
