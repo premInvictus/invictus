@@ -1,4 +1,5 @@
-<app-student-academic-profile [loginId]="lastRecordId"></app-student-academic-profile>
+<app-student-academic-profile [loginId]="lastRecordId" (next)="next($event)"
+(prev)="prev($event)" (first)="first($event)" (last)="last($event)" (key)="key($event)"></app-student-academic-profile>
 <div class="row">
   <div class="col-7">
     <mat-card class="card-height-400">
