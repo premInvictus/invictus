@@ -25,8 +25,8 @@ export class SetupComponent implements OnInit {
 	currentUser: any;
 	session: any;
 	param: any = {};
-	classArray: any[] = []; 
-	termArray: any[] = []; 
+	classArray: any[] = [];
+	termArray: any[] = [];
 	parentSubArray: any[];
 	ClassTermGrade: any[];
 	secArray: any[];
@@ -45,16 +45,18 @@ export class SetupComponent implements OnInit {
 	remarkSetArray: any[] = [];
 	examActivityCategoryArr: any[] = [];
 	examActivityTypeArr: any[] = [];
+	gradesetDropdownArray: any[] = [];
 	remarkToneArray: any[] = [{ 'remark_tone_id': '1', 'remark_tone_name': 'Commendatory' }, { 'remark_tone_id': '2', 'remark_tone_name': 'Neutal' }, { 'remark_tone_id': '3', 'remark_tone_name': 'Adverse' },];
 	pointTypeArray: any[] = [{ 'pt_id': '1', 'pt_name': 'Point' }, { 'pt_id': '2', 'pt_name': 'Range' }];
 	tiersArray: any[] = [{ 'tier_id': '1', 'tier_name': 1 }, { 'tier_id': '2', 'tier_name': 2 }, { 'tier_id': '3', 'tier_name': 3 }, { 'tier_id': '4', 'tier_name': 4 }, { 'tier_id': '5', 'tier_name': 5 }, { 'tier_id': '6', 'tier_name': 6 }, { 'tier_id': '7', 'tier_name': 7 }, { 'tier_id': '8', 'tier_name': 8 }, { 'tier_id': '9', 'tier_name': 9 }, { 'tier_id': '10', 'tier_name': 10 }];
+	examTypeArray: any[] = [{ 'e_id': '1', 'e_name': 'CC' }, { 'e_id': '2', 'e_name': 'Non CC' }];
 	rangeArray: any[] = [];
 	XlslArray: any[] = [];
 	arrayBuffer: any;
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
 	displayedColumns: any[] = [];
-	firstHeaderArray: any[] = ['Exam Name', 'Sub Exam Name', 'Grade Set Name', 'Remark Name', 'Activity Name', 'Report Card Name'];
+	firstHeaderArray: any[] = ['Exam Name', 'Sub Exam Name', 'Grade Set Name', 'Remark Name', 'Activity Name', 'Report Card Name','Class Name'];
 	secondHeaderArray: any[] = ['Order', 'Order', 'Order', 'Order', 'Order', 'Order'];
 	configFlag = false;
 
@@ -153,6 +155,8 @@ export class SetupComponent implements OnInit {
 					ect_class_id: '',
 					ect_term_id: '',
 					ect_gradeset_id: '',
+					ect_co_gradeset_id: '',
+					ect_exam_type: '',
 					ect_status: '',
 					ect_created_by: ''
 				})
@@ -203,6 +207,45 @@ export class SetupComponent implements OnInit {
 				}
 			);
 	}
+	getDropdownGradeSet(that) {
+		this.examService.getDropdownGradeSet({})
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.gradesetDropdownArray = result.data;
+					}
+				}
+			);
+	}	
+	getClassName(classId) {
+		for (const item of this.classArray) {
+			if (Number(item.class_id) === Number(classId)) {
+				return item.class_name;
+			}
+		}
+	}
+	getTermName(termId) {
+		for (const item of this.termArray) {
+			if (Number(item.term_id) === Number(termId)) {
+				return item.term_name;
+			}
+		}
+	}
+	getGradeName(gradeId) {
+		for (const item of this.gradesetDropdownArray) {
+			if (Number(item.egs_number) === Number(gradeId)) {
+				return item.egs_name;
+			}
+		}
+	}
+	getExamTypeName(etId) {
+		for (const item of this.examTypeArray) {
+			if (Number(item.e_id) === Number(etId)) {
+				return item.e_name;
+			}
+		}
+	}
+
 	getExam(that) {
 
 	}
@@ -225,16 +268,26 @@ export class SetupComponent implements OnInit {
 				if (that.configValue === '7') {
 					let pos = 1;
 					for (const item of result.data) {
-							that.CONFIG_ELEMENT_DATA.push({
-								position: pos,
-								name: item.ect_class_id,
-								term_name: item.ect_term_id,
-								grade_name: item.ect_gradeset_id,							
-								action: item
-							});
-							pos++;
-						}				
-				
+						const class_arr = [];
+						const sec_arr = [];
+						const sub_arr = [];
+						for (let ci = 0; ci < item.ect_class_id.length; ci++) {
+							const class_name = that.getClassName(item.ect_class_id[ci]);
+							class_arr.push(class_name);
+						}
+
+						that.CONFIG_ELEMENT_DATA.push({
+							position: pos,
+							name: class_arr,
+							term_name: that.getTermName(item.ect_term_id),
+							grade_name: that.getGradeName(item.ect_gradeset_id),
+							co_grade_name: that.getGradeName(item.ect_co_gradeset_id),
+							exam_type: that.getExamTypeName(item.ect_exam_type),
+							action: item
+						});
+						pos++;
+					}
+
 					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					that.configDataSource.paginator = that.paginator;
 					that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
@@ -245,6 +298,8 @@ export class SetupComponent implements OnInit {
 			}
 		});
 	}
+
+
 	getExamGradeSetup(that) {
 		that.gradeSetArray = [];
 		that.CONFIG_ELEMENT_DATA = [];
@@ -270,7 +325,7 @@ export class SetupComponent implements OnInit {
 								action: item
 							});
 							pos++;
-						}					
+						}
 					}
 					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					that.configDataSource.paginator = that.paginator;
@@ -373,7 +428,8 @@ export class SetupComponent implements OnInit {
 		}
 	}
 
-	getRemarkTone(rto_id) {Set
+	getRemarkTone(rto_id) {
+		Set
 		for (let i = 0; i < this.remarkToneArray.length; i++) {
 			if (this.remarkToneArray[i]['remark_tone_id'] === rto_id.toString()) {
 				return this.remarkToneArray[i]['remark_tone_name'];
@@ -481,6 +537,10 @@ export class SetupComponent implements OnInit {
 			if (value.st_status === '1') {
 				return true;
 			}
+		} else if (Number(this.configValue) === 7) { // for class term grade setup
+			if (value.ect_status === '1') {
+				return true;
+			}
 		}
 	}
 
@@ -546,6 +606,16 @@ export class SetupComponent implements OnInit {
 				gcss_gsub_id: value.gcss_gsub_id,
 				gcss_status: value.gcss_status
 			});
+		} else if (Number(this.configValue) === 7) { // for report card setup
+			this.setupUpdateFlag = true;
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				ect_id: value.ect_id,
+				ect_class_id: value.ect_class_id,
+				ect_term_id: value.ect_term_id,
+				ect_gradeset_id: value.ect_gradeset_id,
+				ect_co_gradeset_id: value.ect_co_gradeset_id,
+				ect_exam_type: value.ect_exam_type
+			});
 		}
 	}
 
@@ -583,9 +653,9 @@ export class SetupComponent implements OnInit {
 		} else if (Number(this.configValue) === 7) { // for exam report card setup			
 			this.getActiveClass(this);
 			this.getTermList(this);
-			this.getExamGradeSetup(this);
+			this.getDropdownGradeSet(this);
 			this.getClassTermGrade(this);
-			this.displayedColumns = ['position', 'name', 'term_name', 'grade_name', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'term_name', 'grade_name', 'co_grade_name', 'exam_type', 'action', 'modify'];
 			this.configFlag = true;
 		}
 	}
@@ -615,6 +685,13 @@ export class SetupComponent implements OnInit {
 			case '6': // for exam report card setup
 				data.gcss_status = '5';
 				this.deleteEntry(data, 'insertReportCardSetup', this.getReportCardSetup);
+				break;
+			case '7': // for exam class term and grade
+				const param = {
+					'ect_status': '5',
+					'ect_id': data.ect_id
+				};
+				this.deleteEntry(param, 'deleteClassTermGrade', this.getClassTermGrade);
 				break;
 		}
 	}
@@ -652,8 +729,7 @@ export class SetupComponent implements OnInit {
 				case '7': // for exam report card setup
 					this.formGroupArray[value - 1].formGroup.value.ect_status = '1';
 					this.formGroupArray[value - 1].formGroup.value.ect_created_by = this.currentUser.login_id;
-					console.log(this.formGroupArray[value - 1].formGroup.value);
-					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertClassTermGrade', this.getReportCardSetup);
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertClassTermGrade', this.getClassTermGrade);
 					break;
 			}
 		}
@@ -683,6 +759,11 @@ export class SetupComponent implements OnInit {
 					break;
 				case '6': // for exam report card setup
 					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'insertReportCardSetup', this.getReportCardSetup);
+					break;
+				case '7': // for exam report card setup
+					this.formGroupArray[value - 1].formGroup.value.ect_status = '1';
+					this.formGroupArray[value - 1].formGroup.value.ect_created_by = this.currentUser.login_id;
+					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'insertClassTermGrade', this.getClassTermGrade);
 					break;
 			}
 		}
@@ -759,6 +840,22 @@ export class SetupComponent implements OnInit {
 				if (result.status === 'ok') {
 					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
 					this.getReportCardSetup(this);
+				}
+			});
+		} else if (Number(this.configValue) === 7) { // for exam report card setup
+			if (value.ect_status === '1') {
+				value.ect_status = '0';
+			} else {
+				value.ect_status = '1';
+			}
+			const param = {
+				'ect_status': value.ect_status,
+				'ect_id': value.ect_id
+			};
+			this.examService.deleteClassTermGrade(param).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
+					this.getClassTermGrade(this);
 				}
 			});
 		}

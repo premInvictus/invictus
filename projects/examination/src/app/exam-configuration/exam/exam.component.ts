@@ -118,7 +118,7 @@ export class ExamComponent implements OnInit {
 			);
 	}
 	getGradeSet() {
-		this.examService.getGradeSet({})
+		this.examService.getDropdownGradeSet({})
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -159,6 +159,13 @@ export class ExamComponent implements OnInit {
 					}
 				}
 			);
+	}
+	getGradeName(gradeId) {
+		for (const item of this.gradeSetArray) {
+			if (Number(item.egs_number) === Number(gradeId)) {
+				return item.egs_name;
+			}
+		}
 	}
 	getMaxMarks($event) {
 		let subExamArray: any[] = [];
@@ -315,7 +322,7 @@ export class ExamComponent implements OnInit {
 						pushitem.exam_term = item.term_name;
 						pushitem.exam_class = class_name;
 						pushitem.exam_sub_exam = sub_exam_name;
-						pushitem.exam_marks_type = item.egs_name;
+						pushitem.exam_marks_type = this.getGradeName(item.exam_marks_type);
 						pushitem.exam_calculation_rule = item.ecr_name;
 						pushitem.exam_weightage = item.exam_weightage;
 						// pushitem.status = item.fh_status === '1' ? true : false;
