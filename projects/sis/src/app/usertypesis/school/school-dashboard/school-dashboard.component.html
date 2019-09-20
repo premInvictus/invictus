@@ -1,8 +1,8 @@
-<div class="fee-container-box__grey">
+<div>
   <div>
     <div class="row">
-      <div class="col-3 remove-col-padding">
-        <mat-card class="card-zoom">
+      <div class="col-3 remove-col-padding-right">
+        <mat-card >
           <div class="row">
             <div class="col-9 custom-col-70 tab-custom-col-60">
               <h2><b><span *ngIf="cardData?.Enquiry">{{cardData?.Enquiry}}</span>
@@ -18,7 +18,7 @@
         </mat-card>
       </div>
       <div class="col-3 remove-col-padding-right">
-        <mat-card class="card-zoom">
+        <mat-card >
           <div class="row">
             <div class="col-9 custom-col-70 tab-custom-col-60">
               <h2><b><span *ngIf="cardData?.Registration">{{cardData?.Registration}}</span>
@@ -32,8 +32,8 @@
           </div>
         </mat-card>
       </div>
-      <div class="col-3 remove-col-padding-right">
-        <mat-card class="card-zoom">
+      <div class="col-3 ">
+        <mat-card >
           <div class="row">
             <div class="col-9 tab-remove-right-padding custom-col-70 tab-custom-col-60">
               <h2><b><span
@@ -49,8 +49,8 @@
           </div>
         </mat-card>
       </div>
-      <div class="col-3 remove-col-padding-right">
-        <mat-card class="card-zoom">
+      <div class="col-3 remove-col-padding-left">
+        <mat-card >
           <div class="row">
             <div class="col-9 custom-col-70 tab-custom-col-60">
               <h2><b><span *ngIf="cardData?.Alumini">{{cardData?.Alumini}}</span>
@@ -66,8 +66,8 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-3 remove-col-padding ">
-        <mat-card>
+      <div class="col-3 remove-col-padding-right ">
+        <mat-card class="card-height-865">
           <div class="strength-padding background-white">
             <div class="row margin-bottom-10 margin-top-10">
               <div class="col-12">
@@ -118,7 +118,7 @@
           </div>
         </mat-card>
       </div>
-      <div class="col-9 remove-col-padding-right">
+      <div class="col-9">
         <mat-card>
           <div class="container-outline__dashyellow background-white">
             <app-common-dynamic-chart *ngIf="classBGChartFlag" [options]="classBGChart">
@@ -178,7 +178,7 @@
               </div>
             </mat-card>
           </div>
-          <div class="col-6">
+          <div class="col-6 remove-col-padding-right">
             <mat-card>
               <div class="background-white">
                 <div class="strength-padding notif-container-height table-overflow">
@@ -235,8 +235,5 @@
         </div>
       </div>
     </div>
-    <br>
-    <br>
-    <br>
   </div>
 </div>

@@ -1,6 +1,6 @@
-<div class="fee-container-box__grey">
+<div >
    <div class="row">
-      <div class="col-12 remove-col-padding">
+      <div class="col-12 ">
          <mat-card class="card-top-title__container">
             <div class="row">
                <div class="col-6">
@@ -19,7 +19,7 @@
       </div>
    </div>
    <div class="row">
-      <div class="col-12 remove-col-padding">
+      <div class="col-12 padding-8">
          <app-common-student-profile [loginId]="lastRecordId" (next2)="next($event)" (prev2)="prev($event)"
             (first2)="first($event)" (last2)="last($event)" (key2)="key($event)" (next)="next2($event)"
             (prev)="prev2($event)" (first)="first2($event)" (last)="last2($event)" (key)="key2($event)"
@@ -27,7 +27,7 @@
       </div>
    </div>
    <div [hidden]="!(invoiceArray.length > 0)" class="row ">
-      <div class="col-12 remove-col-padding">
+      <div class="col-12 padding-8">
          <mat-card class="card-top-title__container">
             <div class="row">
                <div class="col-12">
@@ -81,7 +81,7 @@
       </div>
    </div>
    <div class="row" *ngIf="!checkStatus()">
-      <div class="col-12 remove-col-padding">
+      <div class="col-12 ">
          <mat-card class="card-top-form__container">
             <div class="text-center">
                <h4><b>{{'Fee transaction is not available for this Student' | uppercase}}</b></h4>
@@ -94,7 +94,7 @@
    </div>
    <form [formGroup]="feeTransactionForm">
       <div *ngIf="checkStatus()" class="row">
-         <div class="col-6 remove-col-padding-left">
+         <div class="col-6 ">
             <mat-card class="card-top-form__container card-height-605 card-height-720">
                <div class="row remove-margin">
                   <div class="col-12 remove-col-padding">
@@ -191,7 +191,7 @@
                </div>
             </mat-card>
          </div>
-         <div class="col-6 remove-col-padding">
+         <div class="col-6">
             <mat-card class="card-top-form__container card-height-605 card-height-720">
                <div class="row">
                   <div class="col-3"></div>
