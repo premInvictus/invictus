@@ -28,6 +28,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   gflag = false;
   acedemicmarks = 0;
   GradeSet: any[] = [];
+  GradeSetPoint: any[] = [];
   termArray: any[] = [];
   schoolDetails: any;
   gradePerTermOnScholastic: any[] = [];
@@ -74,7 +75,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     html2canvas(data, { logging: true , allowTaint: false , useCORS: true }).then(canvas => {
       // Few necessary setting options 
 
-      var pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
+      var pdf = new jsPDF('l', 'pt', [canvas.width, canvas.height]);
 
       var imgData  = canvas.toDataURL("image/png");
       pdf.addImage(imgData,0,0,canvas.width, canvas.height);
@@ -84,7 +85,14 @@ export class ViewGradecardDialogComponent implements OnInit {
   getClassGradeset() {
     this.examService.getClassGradeset({ class_id: this.data.class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.GradeSet = result.data;
+        const tempGrade = result.data;
+        tempGrade.forEach(element => {
+          if(element.egs_point_type === '2') {
+            this.GradeSet.push(element);
+          } else if(element.egs_point_type === '1') {
+            this.GradeSetPoint.push(element)
+          }
+        });
       }
     })
   }
@@ -193,6 +201,20 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     }
     return gradeValue;
+  }
+  calculateGradePoint(sub_id, term) {
+    let gradeMarks = 0;
+    this.cexamArray.forEach(element => {
+      gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id, term);
+    });
+    console.log('gradeMarks', gradeMarks);
+    console.log('this.cexamArray.length', this.cexamArray.length);
+    console.log(' grade)',  Math.round(gradeMarks / this.cexamArray.length));
+    const grade = Math.round(gradeMarks / this.cexamArray.length);
+    const pointValue = this.GradeSetPoint.find(e => Number(e.egs_grade_value) === grade);  
+    if(pointValue)   {
+      return pointValue.egs_grade_name;
+    }
   }
   pdfDownload() {
     const doc = new jsPDF();

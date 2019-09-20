@@ -93,11 +93,11 @@
 
                     </table>
                 </div>
-                <div class="col-6">
+                <div class="col-6" *ngIf="sflag && eflag && gflag">
                     <table class="custom-table table-100">
                         <thead>
                             <tr class="custom-tr">
-                                <th class="custom-th padding-left-8px">Co-Scholastic Areas [on a 3-point AE grading
+                                <th class="custom-th padding-left-8px">Co-Scholastic Areas [on a 3-point A-C grading
                                     scale ]
                                 </th>
                                 <th class="custom-th text-center">Grade</th>
@@ -107,8 +107,8 @@
                             <ng-container *ngFor="let sub of subjectArray">
                                 <tr *ngIf="sub.sub_type == 2">
                                     <td class="custom-td padding-left-8px text-left">{{sub.sub_name}} </td>
-                                    <td class="custom-td text-center" *ngFor="let item of cexamArray">
-                                        {{getCalculatedMarks(sub.sub_id, item.exam_id,term)}}
+                                    <td class="custom-td text-center">
+                                        {{calculateGradePoint(sub.sub_id, term)}}
                                     </td>
                                 </tr>
                             </ng-container>

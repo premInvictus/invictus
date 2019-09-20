@@ -61,7 +61,7 @@
                   <mat-label>Marks Type</mat-label>
                   <mat-select formControlName="exam_marks_type" required placeholder="Marks Type">
                     <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of gradeSetArray" [value]="item.egs_id">
+                    <mat-option *ngFor="let item of gradeSetArray" [value]="item.egs_number">
                       {{item.egs_name}}
                     </mat-option>
                   </mat-select>

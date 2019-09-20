@@ -197,6 +197,15 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTopTenDataPerSubject', value);
 	}
+	deleteClassTermGrade(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/deleteClassTermGrade', value);
+	}
+	getDropdownGradeSet(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getDropdownGradeSet', value);
+	}
+	
 }
 
 
