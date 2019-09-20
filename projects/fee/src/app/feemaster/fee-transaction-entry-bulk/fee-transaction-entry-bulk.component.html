@@ -1,6 +1,6 @@
-<div class="fee-container-box__grey">
+<div>
   <div class="row">
-    <div class="col-12 remove-col-padding">
+    <div class="col-12">
       <mat-card class="card-top-title__container">
         <div class="row">
           <div class="col-12 col-lg-6 col-sm-6">
@@ -128,7 +128,7 @@
               </div>
               <div class="row">
                 <div class="col-12 text-center">
-                  <button *ngIf="isExist('369')" mat-button class="btn-success" (click)="submit()">Submit</button>
+                  <button *ngIf="isExist('369')" mat-button class="btn-success-green" (click)="submit()">Submit</button>
                   <button *ngIf="isExist('370')" mat-button class="text-uppercase recalulate-invoice-btn btn-spacer"
                     (click)="saveAndPrint()">save & print</button>
                   <button mat-button class="btn-spacer btn-danger" (click)="reset()">Cancel</button>
@@ -463,7 +463,7 @@
               </div>
               <div class="row text-center">
                 <div class="col-12">
-                  <button *ngIf="isExist('369')" mat-button class="text-uppercase btn-success"
+                  <button *ngIf="isExist('369')" mat-button class="text-uppercase btn-success-green"
                     (click)="submit2()">submit</button>
                   <button *ngIf="isExist('370')" mat-button class="text-uppercase recalulate-invoice-btn btn-spacer"
                     (click)="saveAndPrint2()">save & print</button>

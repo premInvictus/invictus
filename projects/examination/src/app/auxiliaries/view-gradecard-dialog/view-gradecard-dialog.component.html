@@ -1,21 +1,21 @@
+<div class="row">
+    <div class="col-12 ">
+        <button class="top-close-btn" mat-button (click)="generatePDF()">Close <i
+                class="fas fa-times font-size-16 margin-left-15"></i></button>
+    </div>
+</div>
 <table id="gradecard" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td>
-            <div class="row">
-                <div class="col-12 ">
-                    <button class="top-close-btn" mat-button (click)="pdfDownload()">Close <i
-                            class="fas fa-times font-size-16 margin-left-15"></i></button>
-                </div>
-            </div>
-            <div class="row">
+            <div class="row" *ngIf="schoolDetails">
                 <div class="col-12">
                     <div class="row">
                         <div class="col-1">
-                            <img src="../../../../../../src/assets/images/examination/Asset 1.png">
+                            <img [src]="defaultschoollogosrc" height="60px" width="60px">
                         </div>
                         <div class="col-11">
-                            <span class="font-size-24">Invictus DigiSoft Pvt Ltd</span><br>
-                            <span class="font-size-12">Sector No. - 72</span>
+                            <span class="font-size-24">{{schoolDetails.school_name | titlecase}}</span><br>
+                            <span class="font-size-12">{{schoolDetails.school_address | titlecase}}</span>
                         </div>
                     </div>
                 </div>
@@ -60,62 +60,58 @@
                 <div class="col-6 text-right">
                     <img style="width: 120px; height: 140px" [src]="defaultsrc"
                         onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
+                        <!-- <div [ngStyle]="{'background-image': 'url(' + defaultsrc + ')', 'height':'140px', 'width': '120px'}"></div> -->
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngFor="let term of termArray">
                 <div class="col-12" *ngIf="sflag && eflag && gflag">
-                    <table class="table-100 custom-table" *ngFor="let term of termArray" style="margin-bottom: 15px">
+                    <table class="table-100 custom-table" style="margin-bottom: 15px">
                         <thead>
                             <tr class="custom-tr">
                                 <th class="custom-th text-center" width="200px">Scholastic Areas</th>
-                                <th [attr.colspan]="examArray.length + 1" class="custom-th text-center">Academic Years
+                                <th [attr.colspan]="sexamArray.length + 1" class="custom-th text-center">Academic Years
                                     ({{acedemicmarks}} Marks)</th>
                             </tr>
                             <tr class="custom-tr">
                                 <th class="custom-th text-center">Subject Name</th>
-                                <th class="custom-th text-center" *ngFor="let item of examArray">
+                                <th class="custom-th text-center" *ngFor="let item of sexamArray">
                                     {{item.exam_name | titlecase}}
                                     <br>({{item.exam_weightage}})</th>
                                 <th class="custom-th text-center">Grade</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="custom-tr" *ngFor="let sub of subjectArray">
-                                <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
-                                <td class="custom-td" *ngFor="let item of examArray">
-                                    {{getCalculatedMarks(sub.sub_id, item.exam_id,term)}}</td>
-                                <td class="custom-td">{{calculateGrade(sub.sub_id,term)}}</td>
-                            </tr>
+                            <ng-container *ngFor="let sub of subjectArray">
+                                <tr class="custom-tr" *ngIf="sub.sub_type == 1">
+                                    <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
+                                    <td class="custom-td" *ngFor="let item of sexamArray">
+                                        {{getCalculatedMarks(sub.sub_id, item.exam_id,term)}}</td>
+                                    <td class="custom-td">{{calculateGrade(sub.sub_id,term)}}</td>
+                                </tr>
+                            </ng-container>
                         </tbody>
 
                     </table>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col-6">
                     <table class="custom-table table-100">
                         <thead>
                             <tr class="custom-tr">
-                                <th class="custom-th padding-left-8px">Scholastic Areas [on a 5-point AE grading scale ]
+                                <th class="custom-th padding-left-8px">Co-Scholastic Areas [on a 3-point AE grading
+                                    scale ]
                                 </th>
                                 <th class="custom-th text-center">Grade</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="custom-td padding-left-8px text-left">Work Education/ (or Pre-Vocational
-                                    Education)
-                                </td>
-                                <td class="custom-td text-center"></td>
-                            </tr>
-                            <tr>
-                                <td class="custom-td padding-left-8px text-left">Art Education</td>
-                                <td class="custom-td text-center"></td>
-                            </tr>
-                            <tr>
-                                <td class="custom-td padding-left-8px text-left">Health And Physical Education</td>
-                                <td class="custom-td text-center"></td>
-                            </tr>
+                            <ng-container *ngFor="let sub of subjectArray">
+                                <tr *ngIf="sub.sub_type == 2">
+                                    <td class="custom-td padding-left-8px text-left">{{sub.sub_name}} </td>
+                                    <td class="custom-td text-center" *ngFor="let item of cexamArray">
+                                        {{getCalculatedMarks(sub.sub_id, item.exam_id,term)}}
+                                    </td>
+                                </tr>
+                            </ng-container>
                         </tbody>
                     </table>
                 </div>
@@ -139,7 +135,7 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="resultdivflag">
                 <div class="col-6">
                     <table>
                         <thead>
@@ -151,7 +147,7 @@
                             <tr><br></tr>
                             <tr class="margin-top-10">
                                 <th style="text-align: left">Result</th>
-                                <th>: ......................................................................</th>
+                                <th>: {{getPassResult(data.param.eme_term_id)}}</th>
                             </tr>
                         </thead>
                     </table>
@@ -166,7 +162,7 @@
                                     <thead>
                                         <tr>
                                             <th>Date</th>
-                                            <th>: ..........................................</th>
+                                            <th>: {{today | date:'d-MMM-y'}}</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -217,9 +213,11 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let item of GradeSet">
-                                    <td style="border: 1px solid black;border-collapse: collapse;padding: 5px">{{item.egs_range_start}} - {{item.egs_range_end}}
+                                    <td style="border: 1px solid black;border-collapse: collapse;padding: 5px">
+                                        {{item.egs_range_start}} - {{item.egs_range_end}}
                                     </td>
-                                    <td style="border: 1px solid black;border-collapse: collapse;padding: 5px">{{item.egs_grade_name | titlecase}}</td>
+                                    <td style="border: 1px solid black;border-collapse: collapse;padding: 5px">
+                                        {{item.egs_grade_name | titlecase}}</td>
                                 </tr>
 
                             </tbody>
