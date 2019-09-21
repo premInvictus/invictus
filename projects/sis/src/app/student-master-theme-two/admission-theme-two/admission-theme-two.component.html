@@ -1,7 +1,7 @@
 <div class="row remove-top-margin">
   <div class="col-12 remove-col-padding">
     <ng-container *ngIf="settingsArray.length > 0">
-    <div class="fee-container-box__grey">
+    <div >
       <app-student-details-theme-two [belongToForm]="formname" [config]="config" [configSetting]="settingsArray"></app-student-details-theme-two>
       <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
         <ng-container *ngFor="let tab of formsTab; let i=index">
