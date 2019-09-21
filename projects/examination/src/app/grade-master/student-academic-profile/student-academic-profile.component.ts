@@ -89,84 +89,14 @@ export class StudentAcademicProfileComponent implements OnInit {
   absent = 0;
   present = 0;
   attendancePercentage = 0;
+  gaugeOptions: any;
   processTypeArray: any[] = [
     { id: '1', name: 'Enquiry No.' },
     { id: '2', name: 'Registration No.' },
     { id: '3', name: 'Provisional Admission No.' },
     { id: '4', name: 'Admission No.' }
   ];
-  gaugeOptions: any = {
-    chart: {
-      type: 'solidgauge',
-      height: 120,
-      width: 120,
-      events: {
-        render: ''
-      }
-    },
-
-    title: {
-      text: '',
-      style: {
-        fontSize: '10px'
-      }
-    },
-
-    tooltip: {
-      borderWidth: 0,
-      backgroundColor: 'none',
-      shadow: false,
-      style: {
-        fontSize: '14px'
-      },
-      pointFormat: '{series.name}<br><span style="font-size:16px; color: {point.color}; font-weight: bold;">{point.y}</span>',
-      positioner: function (labelWidth) {
-        return {
-          x: (this.chart.chartWidth - labelWidth) / 40,
-          y: (this.chart.plotHeight / 2) - 117
-        };
-      }
-    },
-
-    pane: {
-      startAngle: 0,
-      endAngle: 360,
-      background: [{ // Track for Highest
-        outerRadius: '100%',
-        innerRadius: '80%',
-        backgroundColor: '#E5E5E5',
-        borderWidth: 0
-      }]
-    },
-
-    yAxis: {
-      min: 0,
-      max: '',
-      lineWidth: 0,
-      tickPositions: []
-    },
-
-    plotOptions: {
-      solidgauge: {
-        cursor: 'pointer',
-        dataLabels: {
-          enabled: false
-        },
-        linecap: '',
-        stickyTracking: false,
-      }
-    },
-
-    series: [{
-      name: 'Attendance',
-      data: [{
-        color: '#4DB848',
-        radius: '100%',
-        innerRadius: '80%',
-        y: ''
-      }]
-    }]
-  };
+  
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -234,6 +164,80 @@ export class StudentAcademicProfileComponent implements OnInit {
       mi_emergency_contact_name: '',
       mi_emergency_contact_no: ''
     });
+  }
+  HighChartOption(){
+   this.gaugeOptions = {
+      chart: {
+        type: 'solidgauge',
+        height: 120,
+        width: 120,
+        events: {
+          render: ''
+        }
+      },
+  
+      title: {
+        text: '',
+        style: {
+          fontSize: '10px'
+        }
+      },
+  
+      tooltip: {
+        borderWidth: 0,
+        backgroundColor: 'none',
+        shadow: false,
+        style: {
+          fontSize: '14px'
+        },
+        pointFormat: '{series.name}<br><span style="font-size:16px; color: {point.color}; font-weight: bold;">{point.y}</span>',
+        positioner: function (labelWidth) {
+          return {
+            x: (this.chart.chartWidth - labelWidth) / 40,
+            y: (this.chart.plotHeight / 2) - 117
+          };
+        }
+      },
+  
+      pane: {
+        startAngle: 0,
+        endAngle: 360,
+        background: [{ // Track for Highest
+          outerRadius: '100%',
+          innerRadius: '80%',
+          backgroundColor: '#E5E5E5',
+          borderWidth: 0
+        }]
+      },
+  
+      yAxis: {
+        min: 0,
+        max: '',
+        lineWidth: 0,
+        tickPositions: []
+      },
+  
+      plotOptions: {
+        solidgauge: {
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: false
+          },
+          linecap: '',
+          stickyTracking: false,
+        }
+      },
+  
+      series: [{
+        name: 'Attendance',
+        data: [{
+          color: '#4DB848',
+          radius: '100%',
+          innerRadius: '80%',
+          y: ''
+        }]
+      }]
+    };
   }
   getStudentInformation(au_login_id) {
     this.studentLoginId = '';
@@ -569,8 +573,13 @@ export class StudentAcademicProfileComponent implements OnInit {
     }
   }
   getStudentAttendance(au_login_id) {
+    this.firstGauge = false;
+    this.present = 0;
+    this.absent = 0;
+    this.attendancePercentage = 0;
     this.examService.getStudentAttendance({ login_id: au_login_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
+        this.HighChartOption();
         for (const item of result.data) {
           if (Number(item.ma_attendance) === 1) {
             this.absent = Number(item.count);

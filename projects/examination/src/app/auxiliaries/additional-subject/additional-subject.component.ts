@@ -15,6 +15,7 @@ export class AdditionalSubjectComponent implements OnInit {
 	displayedColumns: string[] = ['sr_no', 'au_admission_no', 'au_full_name', 'au_roll_no', 'subjects'];
 	defaultFlag = false;
 	finalDivFlag = true;
+	submitFlag = false;
 	firstForm: FormGroup;
 	rollNoForm: FormGroup;
 	classArray: any[] = [];
@@ -24,7 +25,7 @@ export class AdditionalSubjectComponent implements OnInit {
 	currentUser: any;
 	session: any;
 	ELEMENT_DATA: Element[] = [];
-	rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+	rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA); 
 	formgroupArray: any[] = [];
 	finalArray: any[] = [];
 	constructor(
@@ -104,6 +105,7 @@ export class AdditionalSubjectComponent implements OnInit {
 		this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 		this.defaultFlag = false;
 		this.finalDivFlag = true;
+		this.submitFlag = false;
 	}
 	finalCancel() {
 		this.formgroupArray = [];
@@ -111,10 +113,14 @@ export class AdditionalSubjectComponent implements OnInit {
 		this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 		this.defaultFlag = false;
 		this.finalDivFlag = true;
+		this.submitFlag = false;
 		this.firstForm.patchValue({
 			'syl_class_id': '',
 			'syl_section_id': ''
 		});
+	}
+	onSelectChange(){
+		this.submitFlag = true;
 	}
 	fetchDetails() {
 		this.formgroupArray = [];
@@ -180,22 +186,12 @@ export class AdditionalSubjectComponent implements OnInit {
 		for (const item of this.formgroupArray) {
 			this.finalArray.push(item.formGroup.value);
 		}
-		console.log(this.finalArray);
 		const checkParam: any = {};
 		checkParam.au_class_id = this.firstForm.value.syl_class_id;
 		checkParam.au_sec_id = this.firstForm.value.syl_section_id;
 		checkParam.au_ses_id = this.session.ses_id;
 		this.examService.checkAdditionalSubjectForClass(checkParam).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.examService.updateAdditionalSubject(this.finalArray).subscribe((result_u: any) => {
-					if (result_u && result_u.status === 'ok') {
-						this.finalCancel();
-						this.commonService.showSuccessErrorMessage('Additional Subject Updated Successfully', 'success');
-					} else {
-						this.commonService.showSuccessErrorMessage('Update failed', 'error');
-					}
-				});
-			} else {
 				this.examService.insertAdditionalSubject(this.finalArray).subscribe((result_i: any) => {
 					if (result_i && result_i.status === 'ok') {
 						this.finalCancel();
