@@ -58,6 +58,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     for (let i = 1; i <= this.data.param.eme_term_id; i++) {
       this.termArray.push(i);
     }
+    this.ctForClass();
     this.getGlobalSetting();
     this.getSchool();
     this.getSession();
@@ -67,6 +68,18 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getExamDetails();
     //this.getGradeCardMark();
 
+  }
+  ctForClass() {
+    const param: any = {};
+    param.uc_class_teacher = '1';
+    param.uc_class_id = this.data.class_id;
+    param.uc_sec_id = this.data.sec_id;
+      this.examService.ctForClass(param).subscribe((result: any) => {
+        if(result && result.status === 'ok') {
+          console.log(result.data);
+          this.teacherSignature = result.data[0].usr_signature;
+        }
+      })
   }
   getGlobalSetting() {
     let param: any = {};
