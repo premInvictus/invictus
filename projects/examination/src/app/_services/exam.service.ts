@@ -173,6 +173,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTopFiveSubjects', value);
 	}
+	getSubjectWiseAnalysis(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getSubjectWiseAnalysis', value);
+	}
 	lockUnlockGradeCard(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/lockUnlockGradeCard', value);
@@ -198,6 +202,18 @@ export class ExamService {
 		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
 	}
 	
+	getTopTenDataPerSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTopTenDataPerSubject', value);
+	}
+	deleteClassTermGrade(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/deleteClassTermGrade', value);
+	}
+	getDropdownGradeSet(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getDropdownGradeSet', value);
+	}
 	
 }
 

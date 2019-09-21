@@ -52,3 +52,7 @@
  tr {
      height: 35px !important;
  }
+ span.suject-header-span {
+    font-size: 18px;
+    font-weight: bold;
+ }

@@ -216,7 +216,6 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
               this.subjectTeacher.push(item);
             }
           }
-          console.log('remarkArray', this.principalArray);
         }
       });
     }
@@ -227,13 +226,36 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
       if (result.status === 'ok') {
         this.lastRecordId = result.data[0].last_record;
         this.loginId = result.data[0].au_login_id;
-        // this.getSkillsAwards(this.loginId);
-        // this.getRemarks(this.loginId);
-        this.getSkillsAwards(1043);
-        this.getRemarks(1571);
+        this.getSkillsAwards(this.loginId);
+        this.getRemarks(this.loginId);
       }
     });
 
+  }
+  next(admno) {
+    this.loginId = admno;
+    this.getSkillsAwards(this.loginId);
+    this.getRemarks(this.loginId);
+  }
+  prev(admno) {
+    this.loginId = admno;
+    this.getSkillsAwards(this.loginId);
+    this.getRemarks(this.loginId);
+  }
+  first(admno) {
+    this.loginId = admno;
+    this.getSkillsAwards(this.loginId);
+    this.getRemarks(this.loginId);
+  }
+  last(admno) {
+    this.loginId = admno;
+    this.getSkillsAwards(this.loginId);
+    this.getRemarks(this.loginId);
+  }
+  key(admno) {
+    this.loginId = admno;
+    this.getSkillsAwards(this.loginId);
+    this.getRemarks(this.loginId);
   }
 
 }

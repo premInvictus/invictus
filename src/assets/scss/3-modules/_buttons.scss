@@ -190,7 +190,7 @@
 .btn-success {
     background-color: $button-success;
     color: #ffffff;
-    text-transform: uppercase;
+    text-transform: capitalize;
     width: 126px;
     height: 32px;
     font-size: 13px;
@@ -201,7 +201,7 @@
     color: $font-success;
     background-color: #ffffff;
     border: 2px solid $font-success;
-    text-transform: uppercase;
+    text-transform: capitalize;
     width: 126px;
     height: 32px;
     font-size: 13px;
@@ -218,7 +218,7 @@
 .btn-danger {
     background-color: $button-danger;
     color: #ffffff;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 15px;
     width: 126px;
     height: 32px;
@@ -230,7 +230,7 @@
     color: $font-danger;
     background-color: #ffffff;
     border: 2px solid $font-danger;
-    text-transform: uppercase;
+    text-transform: capitalize;
     width: 126px;
     height: 32px;
     font-size: 13px;
@@ -414,7 +414,7 @@ button.mat-button:hover .right-text {
 .recalulate-invoice-btn {
     background: #007D9E;
     color: #fff;
-    text-transform: uppercase;
+    text-transform: capitalize;
     width: 126px;
     height: 32px;
     font-size: 13px;
@@ -424,13 +424,13 @@ button.mat-button:hover .right-text {
 .print-invoice-btn {
     background: #FFB300;
     color: #fff;
-    text-transform: uppercase;
+    text-transform: capitalize;
 }
 
 .btn-consolidate {
     background: #1E88E5;
     color: #fff;
-    text-transform: uppercase;
+    text-transform: capitalize;
     width: 126px;
     height: 32px;
     font-size: 13px;
@@ -482,7 +482,7 @@ button.mat-button:hover .right-text {
     height: 25px;
     background: #43A047;
     padding: 0px 10px;
-    text-transform: uppercase;
+    text-transform: capitalize;
     color: #fff;
     cursor: pointer;
 }
@@ -496,7 +496,7 @@ button.mat-button:hover .right-text {
     height: 25px;
     background: #FF5A5A;
     padding: 0px 10px;
-    text-transform: uppercase;
+    text-transform: capitalize;
     color: #fff;
     cursor: pointer;
 }
@@ -541,7 +541,7 @@ button.mat-button:hover .right-text {
 .print-btn {
     background-color: #005AAB;
     color: #fff;
-    text-transform: uppercase;
+    text-transform: capitalize;
     width: 126px;
     height: 32px;
     font-size: 13px;
@@ -551,7 +551,7 @@ button.mat-button:hover .right-text {
 .btn-generate-invoice {
     background-color: $button-success;
     color: #fff;
-    text-transform: uppercase;
+    text-transform: capitalize;
     width: 150px;
     height: 32px;
     font-size: 13px;
@@ -633,7 +633,7 @@ button.mat-button:hover .right-text {
     background-color: #8184F3 !important;
     padding: 0px 20px;
     color: #ffffff !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px !important;
 }
 
@@ -641,7 +641,7 @@ button.mat-button:hover .right-text {
     background-color: #007D9E !important;
     width: 120px !important;
     color: #ffffff !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px !important;
 }
 
@@ -649,7 +649,7 @@ button.mat-button:hover .right-text {
     background-color: #f52424 !important;
     width: 120px !important;
     color: #ffffff !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px !important;
 }
 
@@ -657,7 +657,7 @@ button.mat-button:hover .right-text {
     background-color: #43A047 !important;
     width: 120px !important;
     color: #ffffff !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px !important;
 }
  
@@ -666,7 +666,7 @@ button.mat-button:hover .right-text {
     background-color: #757b85  !important;
     width: 120px !important;
     color: #ffffff !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px !important;
 }
 
@@ -674,14 +674,14 @@ button.mat-button:hover .right-text {
     background-color: #007D9E !important;
     width: 120px !important;
     color: #ffffff !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px !important;
 }
 
 .btn-success-blue {
     background-color: #1e88e5 !important;
     color: #ffffff !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px !important;
     padding: 0px 20px;
 }
@@ -689,7 +689,7 @@ button.mat-button:hover .right-text {
 .btn-print-invoice {
     background-color: #005AAB !important;
     color: #ffffff !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px !important;
     padding: 0px 20px;
 }
@@ -697,7 +697,7 @@ button.mat-button:hover .right-text {
 .make-payement-btn {
     background-color: #1E88E5 !important;
     color: #ffffff !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px !important;
     padding: 0px 20px;
 }
@@ -706,7 +706,7 @@ button.mat-button:hover .right-text {
     background-color: #1e88e5 !important;
     width: 100% !important;
     color: #ffffff !important;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px !important;
 }
 
@@ -819,7 +819,7 @@ button.scheduler-circle .mat-button-wrapper {
 
 .mat-datepicker-toggle .mat-icon-button {
     background-color: #007D9E;
-    color: white;
+    color: white !important;
 }
 
 .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {

@@ -31,6 +31,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	) {
 	}
 
+	ctFlag = false;
 	Teacher_Form: FormGroup;
 	Cs_relation_Form: FormGroup;
 	Personal_Form: FormGroup;
@@ -119,6 +120,9 @@ export class CreateNewTeacherComponent implements OnInit {
 						this.updateFlag = true;
 						this.userDetails = result.data[0];
 						const csrelationdetail = this.userDetails.cs_relations[0];
+						if(this.userDetails.cs_relations.length > 0){
+							this.ctFlag = true;
+						}
 						this.Teacher_Form.patchValue({
 							au_login_id: this.userDetails.au_login_id,
 							au_full_name: this.userDetails.au_full_name,
@@ -129,7 +133,7 @@ export class CreateNewTeacherComponent implements OnInit {
 						}),
 							// tslint:disable-next-line:max-line-length
 							this.Cs_relation_Form.patchValue({
-								uc_class_id: csrelationdetail.uc_class_id,
+								uc_class_id: csrelationdetail.uc_class_id, 
 								uc_sec_id: csrelationdetail.uc_sec_id,
 								uc_sub_id: csrelationdetail.uc_sub_id,
 								uc_department: csrelationdetail.uc_department,
@@ -146,7 +150,7 @@ export class CreateNewTeacherComponent implements OnInit {
 					}
 				}
 			});
-	}
+	} 
 	addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
 		this.events.push(`${type}: ${event.value}`);
 		const datePipe = new DatePipe('en-US');
@@ -213,7 +217,8 @@ export class CreateNewTeacherComponent implements OnInit {
 			uc_sec_id: '',
 			uc_sub_id: '',
 			uc_designation: '',
-			uc_department: ''
+			uc_department: '',
+			uc_class_teacher: '0'
 		});
 		this.Personal_Form = this.fbuild.group({
 			upd_adhaar_no: ['', Validators.required],
@@ -300,10 +305,12 @@ export class CreateNewTeacherComponent implements OnInit {
 
 		if (this.Cs_relation_Form.valid) {
 			let relations: any = {};
-			relations = this.Cs_relation_Form.value;
+
+			relations = this.Cs_relation_Form.value; 
 			relations.class_name = this.currentClass;
 			relations.sec_name = this.currentSection;
 			relations.sub_name = this.currentSubject;
+			relations.uc_class_teacher = '0';			
 			let pushFlag = 0;
 			for (const item of this.cs_relationArray) {
 				if (item.uc_class_id === relations.uc_class_id && item.uc_sec_id === relations.uc_sec_id && item.uc_sub_id === relations.uc_sub_id) {
@@ -500,6 +507,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	}
 
 	updateUser() {
+
 		if (this.Teacher_Form.valid) {
 			const newTeacherFormData = new FormData();
 			if (this.url) {
@@ -517,6 +525,8 @@ export class CreateNewTeacherComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.notif.showSuccessErrorMessage('Updated successfully', 'success');
+					} else{
+						this.notif.showSuccessErrorMessage(result.data, 'error');
 					}
 				}
 			);
@@ -587,25 +597,17 @@ export class CreateNewTeacherComponent implements OnInit {
 	getChangeEvent($event, item) {
 		this.ctValue = $event.value;
 		if (Number(this.ctValue) === 1) {
-			this.ctValue = 0;
+			this.ctValue = '0';
 		} else {
-			this.ctValue = 1;
+			this.ctValue = '1';
 		}
-		const param: any = {};
-		param.uc_login_id = item.uc_login_id;
-		param.uc_class_id = item.uc_class_id;
-		param.uc_sec_id = item.uc_sec_id;
-		param.uc_class_teacher = this.ctValue;
-		param.uc_id = item.uc_id;
-		this.acsetupService.checkClassTeacher(param).subscribe(
-			(result: any) => {
-				if (result && result.status === 'ok') {
-					this.notif.showSuccessErrorMessage(result.data, 'success');
-				} else {
-					this.notif.showSuccessErrorMessage(result.data, 'error');
-					this.onload();
-				}
-			}
-		);
+		const rindex = this.cs_relationArray.findIndex(f => f.uc_class_teacher === '1');
+		if (rindex !== -1) {
+			this.cs_relationArray[rindex].uc_class_teacher = '0';
+		}
+		const findex = this.cs_relationArray.findIndex(f => f.uc_class_id === item.uc_class_id  && f.uc_sec_id === item.uc_sec_id && f.uc_sub_id === item.uc_sub_id);
+		if (findex !== -1) {
+			this.cs_relationArray[findex].uc_class_teacher = this.ctValue;
+		}
 	}
 }
