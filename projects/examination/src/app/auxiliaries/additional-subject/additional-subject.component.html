@@ -41,7 +41,7 @@
 <div class="row ">
   <div class="col-12">
     <mat-card>
-      <table mat-table [dataSource]="rollNoDataSource" class="mat-elevation-z8" *ngIf="defaultFlag">
+      <table mat-table [dataSource]="rollNoDataSource" class="table-100" *ngIf="defaultFlag">
 
         <ng-container matColumnDef="sr_no">
           <th mat-header-cell *matHeaderCellDef> Sr No. </th>
@@ -69,13 +69,13 @@
             <form *ngIf="formgroupArray.length > 0" [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
               <mat-form-field class="form-field" appearance="outline" style="padding:0.5em;padding-bottom: 0em">
                 <mat-label>Subject</mat-label>
-                <mat-select formControlName="subjects" multiple>
+                <mat-select formControlName="subjects" (selectionChange)="onSelectChange()" multiple>
                   <mat-option *ngFor="let item of element.subjects" [value]="item.sub_id">{{item.sub_name}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </form>
           </td>
-        </ng-container>
+        </ng-container> 
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -93,7 +93,7 @@
           </tr>
         </tbody>
       </table>
-      <div class="row margin-top-20" *ngIf="defaultFlag">
+      <div class="row margin-top-20" *ngIf="defaultFlag && submitFlag">
         <div class="col-12 text-center">
           <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
           <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>

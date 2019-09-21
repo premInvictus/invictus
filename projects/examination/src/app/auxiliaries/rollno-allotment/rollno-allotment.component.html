@@ -14,7 +14,7 @@
                 appearance="outline">
                 <mat-label>Roll No. Type</mat-label>
                 <mat-select formControlName="syl_board_id" (selectionChange)="getClassByBoard()" required
-                  placeholder="Select Class">
+                  placeholder="Select Class"> 
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of boardArray" [value]="item.id">
                     {{item.name}}
@@ -52,7 +52,8 @@
 <div class="row ">
   <div class="col-12">
     <mat-card>
-      <table mat-table [dataSource]="rollNoDataSource" class="mat-elevation-z8" *ngIf="defaultFlag">
+      <div class ="table-center">
+      <table mat-table [dataSource]="rollNoDataSource" class="table-100 text-center" *ngIf="defaultFlag">
 
         <ng-container matColumnDef="sr_no">
           <th mat-header-cell *matHeaderCellDef> Sr No. </th>
@@ -73,7 +74,7 @@
           <th mat-header-cell *matHeaderCellDef style="width:20%"> Roll No. </th>
           <td mat-cell *matCellDef="let element">
             <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
-              <input matInput placeholder="Enter Roll No." type="text" value="{{element.au_roll_no}}" required
+              <input matInput placeholder="Enter Roll No." (change)="onTextChange($event)" type="text" value="{{element.au_roll_no}}" required
                 formControlName="roll_no">
             </form>
           </td>
@@ -83,8 +84,8 @@
           <th mat-header-cell *matHeaderCellDef style="width:20%"> Board Roll No. </th>
           <td mat-cell *matCellDef="let element">
             <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
-              <input matInput placeholder="Enter Board Roll No." type="text" value="{{element.au_board_roll_no}}"
-                formControlName="board_roll_no" required>
+              <input matInput placeholder="Enter Board Roll No." (change)="onTextChange($event)" type="text" value="{{element.au_board_roll_no}}"
+                formControlName="board_roll_no" >
             </form>
           </td>
         </ng-container>
@@ -92,7 +93,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-      <table>
+      <table class="table-100">
         <tbody *ngIf="finalDivFlag">
           <tr class="text-center">
             <td colspan="12">
@@ -105,12 +106,13 @@
           </tr>
         </tbody>
       </table>
-      <div class="row margin-top-20" *ngIf="defaultFlag">
+      <div class="row margin-top-20" *ngIf="defaultFlag && submitFlag">
         <div class="col-12 text-center">
           <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
           <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
         </div>
       </div>
+    </div>
     </mat-card>
   </div>
 </div>

@@ -139,7 +139,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
   }
   getbadges(value) {
     for (const item of this.eventLevelArray) {
-      if (item.el_id === value) {
+      if (Number(item.el_id) === Number(value)) {
         return item.el_badges;
       }
     }
@@ -163,12 +163,13 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
           if (this.skillAwardsArray[0]) {
             for (const item of this.skillAwardsArray[0]) {
               this.finalAwardArray.push(item);
+              this.examNavigate(0);
             }
           }
           if (this.skillAwardsArray[1]) {
             for (const item of this.skillAwardsArray[1]) {
               this.finalActivityArray.push(item);
-              this.examNavigate(0);
+              
             }
           }
         } else {
@@ -199,6 +200,12 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
   }
   getRemarks(login_id) {
     if (login_id) {
+      this.principalArray = [];
+      this.vicePrincipalArray = [];
+      this.schoolAdmin = [];
+      this.classTeacher = [];
+      this.subjectTeacher = [];
+
       const getJson = { 'user': 'user', 'era_type': 'general', 'login_id': login_id };
       this.sisService.getGeneralRemarks(getJson).subscribe((result: any) => {
         if (result.status === 'ok') {
