@@ -57,34 +57,34 @@
           <div class="col-1 text-center">
             <div class="vertical-line-divider"></div>
           </div>
-          <div class="col-1 text-center">
-            <div class="row ">
+          <div class="col-1 text-center"> 
+            <div class="row "> 
               <div class="col-12 text-left">
-                <span class="font-size-10">Date of Birth</span><br>
-                <span class="font-size-13 font-medium">{{studentdetails.au_dob ? (studentdetails.au_dob | date : 'd-MMM-y'): '-'}}</span>
+                <span class="font-size-14">Date of Birth</span><br>
+                <span class="font-size-16 font-medium">{{studentdetails.au_dob ? (studentdetails.au_dob | date : 'd-MMM-y'): '-'}}</span>
               </div>
             </div>
             <div class="row ">
               <div class="col-12 text-left">
-                <span class="font-size-10">Contact no.</span><br>
+                <span class="font-size-14">Contact no.</span><br>
                 <span
-                  class="font-size-13 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? (studentdetails.parentinfo[0].epd_contact_no | mask: '00000 00000') : '-'}}</span>
+                  class="font-size-16 font-medium">{{studentdetails.parentinfo && studentdetails.parentinfo[0] ? (studentdetails.parentinfo[0].epd_contact_no | mask: '00000 00000') : '-'}}</span>
               </div>
             </div>
           </div>
           <div class="col-2 sis-col-15 text-center">
             <div class="row ">
               <div class="col-12 text-left">
-                <span class="font-size-10">Admitted On</span><br>
+                <span class="font-size-14">Admitted On</span><br>
                 <span
-                  class="font-size-13 font-medium">{{studentdetails.em_provisional_admission_date ? (studentdetails.em_provisional_admission_date | date : 'd-MMM-y') : '-'}}</span>
+                  class="font-size-16 font-medium">{{studentdetails.em_provisional_admission_date ? (studentdetails.em_provisional_admission_date | date : 'd-MMM-y') : '-'}}</span>
               </div>
             </div>
             <div class="row ">
               <div class="col-12 text-left">
-                <span class="font-size-10">House</span><br>
+                <span class="font-size-14">House</span><br>
                 <span
-                  class="font-size-13 font-medium">{{studentdetails.hou_house_name ? (studentdetails.hou_house_name | capitalize) : '-'}}</span>
+                  class="font-size-16 font-medium">{{studentdetails.hou_house_name ? (studentdetails.hou_house_name | capitalize) : '-'}}</span>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@
             <div class="vertical-line-divider"></div>
           </div>
           <div class="col-2 sis-col-15 text-center">
-            <div class="row margin-top-30">
+            <div class="row margin-top-20">
               <div class="col-12 ">
                 <span class="font-size-13 font-medium">As On Date : <span class="font-bold">{{currentDate | date : ('d-MMM-y')}}</span> </span>
               </div>
@@ -104,8 +104,12 @@
             </div>
           </div>
 
-          <div class="col-1 text-center">
-            <div>High Chart will go here</div>
+          <div class="col-1 text-center" >
+            <div class="h-120" *ngIf="firstGauge">
+              <app-common-dynamic-chart [options]="gaugeOptions"></app-common-dynamic-chart>
+              <span class="percentageattendance">{{attendancePercentage}}%</span>
+              <span class="tittleAttendance">Attendance</span>
+           </div>
           </div>
         </div>
 
