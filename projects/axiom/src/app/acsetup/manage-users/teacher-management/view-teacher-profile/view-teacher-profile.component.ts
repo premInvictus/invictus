@@ -117,6 +117,7 @@ export class ViewTeacherProfileComponent implements OnInit {
 						this.Teacher_Form.controls.au_full_name.setValue(this.userDetails.au_username);
 						this.Teacher_Form.controls.au_mobile.setValue(this.userDetails.au_mobile);
 						this.Teacher_Form.controls.au_email.setValue(this.userDetails.au_email);
+						this.Teacher_Form.controls.usr_signature.setValue(this.userDetails.usr_signature);
 						this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
 							'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
 						this.cs_relationArray = this.userDetails.cs_relations;
@@ -156,7 +157,8 @@ export class ViewTeacherProfileComponent implements OnInit {
 			au_mobile: '',
 			au_email: '',
 			au_role_id: '3',
-			au_login_id: ''
+			au_login_id: '',
+			usr_signature: ''
 		});
 		this.Cs_relation_Form = this.fbuild.group({
 			uc_class_id: '',

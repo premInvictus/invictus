@@ -96,6 +96,22 @@
                                        </mat-form-field>
                                     </div>
                                  </div>
+                                 <div class="row form-group">
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                    </div>
+                                    <div class="col-lg-7 fin-tab-col-50 col-mobile-view-add-ques">
+                                       <div class="image-upload">
+                                             Signature :
+                                          <label for="file-input_sign">
+                                             <img class="img-fluid teacher-img" [src]="Teacher_Form.value.usr_signature"
+                                                style="width: 200px; height: 60px;  border: 1px solid rgb(149, 145, 216);"
+                                                matTooltip="upload-image 109px*145px" />
+                                          </label>
+                                          <input id="file-input_sign" type="file"
+                                             (change)="uploadTeacherSign($event)" />
+                                       </div>
+                                    </div>
+                                 </div>
                               </div>
                            </div>
                         </div>
@@ -187,7 +203,7 @@
                      <div class="col-lg-12">
                         <table class="table-100 text-center">
                            <thead>
-                              <th style="width:8%" >Class Teacher</th>
+                              <th style="width:8%">Class Teacher</th>
                               <th>Class</th>
                               <th>Section</th>
                               <th>Subject</th>
@@ -195,11 +211,12 @@
                            </thead>
                            <tbody>
                               <tr *ngFor="let item of cs_relationArray; let i=index">
-                                 <td >
-                                    <mat-radio-button (change)="getChangeEvent($event,item)" [value]="item.uc_class_teacher"
-                                       name="radio2" [checked]="checkStatus(item.uc_class_teacher)"></mat-radio-button>
+                                 <td>
+                                    <mat-radio-button (change)="getChangeEvent($event,item)"
+                                       [value]="item.uc_class_teacher" name="radio2"
+                                       [checked]="checkStatus(item.uc_class_teacher)"></mat-radio-button>
                                  </td>
-                                 <td>{{item.class_name}}</td> 
+                                 <td>{{item.class_name}}</td>
                                  <td>{{item.sec_name}}</td>
                                  <td>{{item.sub_name}}</td>
                                  <td class="text-center">

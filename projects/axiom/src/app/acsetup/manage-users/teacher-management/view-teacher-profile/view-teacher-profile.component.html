@@ -103,6 +103,21 @@
                                        </mat-form-field>
                                     </div>
                                  </div>
+                                 <div class="row form-group">
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                    </div>
+                                    <div class="col-lg-7 fin-tab-col-50 col-mobile-view-add-ques">
+                                       <div class="image-upload">
+                                          Signature :
+                                          <label for="file-input_sign">
+                                             <img class="img-fluid teacher-img" [src]="Teacher_Form.value.usr_signature"
+                                                style="width: 200px; height: 60px;  border: 1px solid rgb(149, 145, 216);"
+                                                matTooltip="upload-image 109px*145px" />
+                                          </label>
+                                          <input id="file-input_sign" type="file" [attr.disabled]="true" />
+                                       </div>
+                                    </div>
+                                 </div>
                               </div>
                            </div>
                         </div>
