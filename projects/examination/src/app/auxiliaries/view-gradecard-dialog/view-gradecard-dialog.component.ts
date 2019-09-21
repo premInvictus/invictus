@@ -36,6 +36,9 @@ export class ViewGradecardDialogComponent implements OnInit {
   totalexecutedSolasticSubject = 0;
   today = new Date();
   resultdivflag = false;
+  settings: any[] = [];
+  principalSignature: any;
+  header: any;
 
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
@@ -49,10 +52,10 @@ export class ViewGradecardDialogComponent implements OnInit {
 
   ngOnInit() {
     this.currentSession = JSON.parse(localStorage.getItem('session'));
-    console.log(this.data);
     for (let i = 1; i <= this.data.param.eme_term_id; i++) {
       this.termArray.push(i);
     }
+    this.getGlobalSetting();
     this.getSchool();
     this.getSession();
     this.getAllStudents();
@@ -61,6 +64,22 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getExamDetails();
     //this.getGradeCardMark();
 
+  }
+  getGlobalSetting() {
+    let param: any = {};
+    param.gs_name = ['gradecard_header','gradecard_footer','gradecard_principal_signature'];
+    this.examService.getGlobalSetting(param).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        this.settings = result.data;
+        this.settings.forEach(element => {
+          if(element.gs_alias === 'gradecard_principal_signature') {
+            this.principalSignature = element.gs_value;
+          } else if(element.gs_alias === 'gradecard_header') {
+            this.header = element.gs_value;
+          }
+        });
+      }
+    })
   }
   getSchool() {
     this.sisService.getSchool().subscribe((result: any) => {
@@ -149,14 +168,10 @@ export class ViewGradecardDialogComponent implements OnInit {
           break;
       }
     }
-    console.log('sub_id', sub_id);
-    console.log('sub_id', curExam);
-    console.log('percentageArray', percentageArray);
     return score;
   }
 
   getPassResult(term){
-    console.log('gradePerTermOnScholastic', this.gradePerTermOnScholastic);
     const temp: any[] = [];
     this.gradePerTermOnScholastic.forEach(element => {
       const tindex = temp.findIndex(e => e.sub_id === element.sub_id && e.term === element.term && e.grade === element.grade);
@@ -168,8 +183,6 @@ export class ViewGradecardDialogComponent implements OnInit {
     for(const item of temp) {
       total = total + item.grade;
     }
-    console.log('temp', temp);
-    console.log('total', total);
     return Math.round(total/temp.length) > 32 ? 'Pass' : 'Fail';
 
   }
@@ -186,8 +199,6 @@ export class ViewGradecardDialogComponent implements OnInit {
         term: term,
         grade: grade
       });
-      console.log('totalexecutedSolasticSubject', this.totalexecutedSolasticSubject);
-      console.log('totalSolasticSubject', this.totalSolasticSubject);
       if(this.totalexecutedSolasticSubject === this.totalSolasticSubject) {
         this.resultdivflag = true;
       }
@@ -207,9 +218,6 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.cexamArray.forEach(element => {
       gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id, term);
     });
-    console.log('gradeMarks', gradeMarks);
-    console.log('this.cexamArray.length', this.cexamArray.length);
-    console.log(' grade)',  Math.round(gradeMarks / this.cexamArray.length));
     const grade = Math.round(gradeMarks / this.cexamArray.length);
     const pointValue = this.GradeSetPoint.find(e => Number(e.egs_grade_value) === grade);  
     if(pointValue)   {

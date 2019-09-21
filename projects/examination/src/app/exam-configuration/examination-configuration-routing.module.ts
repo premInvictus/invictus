@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SetupComponent } from './setup/setup.component';
 import { ExamComponent } from './exam/exam.component';
 import { SubExamComponent } from './sub-exam/sub-exam.component';
+import { GradecardSettingComponent } from './gradecard-setting/gradecard-setting.component';
 
 const routes: Routes = [
 	{
@@ -13,6 +14,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'sub-exam', component: SubExamComponent
+	},
+	{
+		path: 'gradecard-setting', component: GradecardSettingComponent
 	}
 ];
 

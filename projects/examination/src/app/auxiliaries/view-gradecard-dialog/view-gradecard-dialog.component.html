@@ -10,12 +10,15 @@
             <div class="row" *ngIf="schoolDetails">
                 <div class="col-12">
                     <div class="row">
-                        <div class="col-1">
+                        <!-- <div class="col-1">
                             <img [src]="defaultschoollogosrc" height="60px" width="60px">
                         </div>
                         <div class="col-11">
                             <span class="font-size-24">{{schoolDetails.school_name | titlecase}}</span><br>
                             <span class="font-size-12">{{schoolDetails.school_address | titlecase}}</span>
+                        </div> -->
+                        <div class="col-12">
+                            <div class="header" [innerHTML]="header" style="height: 80px; display: inline-flex;"></div>
                         </div>
                     </div>
                 </div>
@@ -60,7 +63,7 @@
                 <div class="col-6 text-right">
                     <img style="width: 120px; height: 140px" [src]="defaultsrc"
                         onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
-                        <!-- <div [ngStyle]="{'background-image': 'url(' + defaultsrc + ')', 'height':'140px', 'width': '120px'}"></div> -->
+                    <!-- <div [ngStyle]="{'background-image': 'url(' + defaultsrc + ')', 'height':'140px', 'width': '120px'}"></div> -->
                 </div>
             </div>
             <div class="row" *ngFor="let term of termArray">
@@ -157,7 +160,7 @@
                 <div class="col-12">
                     <table class="table-100">
                         <tr>
-                            <th>
+                            <th height="80" style="text-align: left; vertical-align: bottom;">
                                 <table>
                                     <thead>
                                         <tr>
@@ -167,7 +170,7 @@
                                     </thead>
                                 </table>
                             </th>
-                            <th style="text-align: center">
+                            <th style="text-align: center; vertical-align: bottom;" height="80">
                                 <table>
                                     <thead>
                                         <tr>
@@ -176,9 +179,12 @@
                                     </thead>
                                 </table>
                             </th>
-                            <th style="text-align: right">
+                            <th style="text-align: right; vertical-align: bottom;" height="80">
                                 <table>
                                     <thead>
+                                        <tr>
+                                            <th> <img [src]="principalSignature" height="60px" width="120px"></th>
+                                        </tr>
                                         <tr>
                                             <th>Signature of Principal</th>
                                         </tr>
