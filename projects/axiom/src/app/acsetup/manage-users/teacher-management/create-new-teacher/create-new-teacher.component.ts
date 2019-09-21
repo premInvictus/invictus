@@ -120,7 +120,7 @@ export class CreateNewTeacherComponent implements OnInit {
 						this.updateFlag = true;
 						this.userDetails = result.data[0];
 						const csrelationdetail = this.userDetails.cs_relations[0];
-						if(this.userDetails.cs_relations.length > 0){
+						if (this.userDetails.cs_relations.length > 0) {
 							this.ctFlag = true;
 						}
 						this.Teacher_Form.patchValue({
@@ -130,10 +130,11 @@ export class CreateNewTeacherComponent implements OnInit {
 							au_mobile: this.userDetails.au_mobile,
 							au_email: this.userDetails.au_email,
 							au_profileimage: this.userDetails.au_profileimage,
+							usr_signature: this.userDetails.usr_signature
 						}),
 							// tslint:disable-next-line:max-line-length
 							this.Cs_relation_Form.patchValue({
-								uc_class_id: csrelationdetail.uc_class_id, 
+								uc_class_id: csrelationdetail.uc_class_id,
 								uc_sec_id: csrelationdetail.uc_sec_id,
 								uc_sub_id: csrelationdetail.uc_sub_id,
 								uc_department: csrelationdetail.uc_department,
@@ -150,7 +151,7 @@ export class CreateNewTeacherComponent implements OnInit {
 					}
 				}
 			});
-	} 
+	}
 	addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
 		this.events.push(`${type}: ${event.value}`);
 		const datePipe = new DatePipe('en-US');
@@ -210,7 +211,8 @@ export class CreateNewTeacherComponent implements OnInit {
 			au_mobile: '',
 			au_email: '',
 			au_role_id: '3',
-			au_login_id: ''
+			au_login_id: '',
+			usr_signature: ''
 		});
 		this.Cs_relation_Form = this.fbuild.group({
 			uc_class_id: '',
@@ -306,11 +308,11 @@ export class CreateNewTeacherComponent implements OnInit {
 		if (this.Cs_relation_Form.valid) {
 			let relations: any = {};
 
-			relations = this.Cs_relation_Form.value; 
+			relations = this.Cs_relation_Form.value;
 			relations.class_name = this.currentClass;
 			relations.sec_name = this.currentSection;
 			relations.sub_name = this.currentSubject;
-			relations.uc_class_teacher = '0';			
+			relations.uc_class_teacher = '0';
 			let pushFlag = 0;
 			for (const item of this.cs_relationArray) {
 				if (item.uc_class_id === relations.uc_class_id && item.uc_sec_id === relations.uc_sec_id && item.uc_sub_id === relations.uc_sub_id) {
@@ -388,6 +390,24 @@ export class CreateNewTeacherComponent implements OnInit {
 				}
 			},
 		);
+	}
+	uploadTeacherSign($event) {
+		const file: File = $event.target.files[0];
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			const fileJson = {
+				fileName: file.name,
+				imagebase64: reader.result
+			};
+			this.qelementService.uploadDocuments([fileJson]).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.Teacher_Form.patchValue({
+						usr_signature: result.data[0].file_url
+					});
+				}
+			});
+		};
+		reader.readAsDataURL(file);
 	}
 
 	readUrl(event: any) {
@@ -482,6 +502,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		if (this.Teacher_Form.valid) {
 			const newTeacherFormData = new FormData();
 			newTeacherFormData.append('au_profileimage', this.url);
+			newTeacherFormData.append('usr_signature', this.Teacher_Form.value.usr_signature);
 			newTeacherFormData.append('au_full_name', this.Teacher_Form.value.au_full_name);
 			newTeacherFormData.append('au_username', this.Teacher_Form.value.au_username);
 			newTeacherFormData.append('au_mobile', this.Teacher_Form.value.au_mobile);
@@ -513,6 +534,7 @@ export class CreateNewTeacherComponent implements OnInit {
 			if (this.url) {
 				newTeacherFormData.append('au_profileimage', this.url);
 			}
+			newTeacherFormData.append('usr_signature', this.Teacher_Form.value.usr_signature);
 			newTeacherFormData.append('au_login_id', this.Teacher_Form.value.au_login_id);
 			newTeacherFormData.append('au_full_name', this.Teacher_Form.value.au_full_name);
 			newTeacherFormData.append('au_username', this.Teacher_Form.value.au_username);
@@ -525,7 +547,7 @@ export class CreateNewTeacherComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.notif.showSuccessErrorMessage('Updated successfully', 'success');
-					} else{
+					} else {
 						this.notif.showSuccessErrorMessage(result.data, 'error');
 					}
 				}
@@ -605,7 +627,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		if (rindex !== -1) {
 			this.cs_relationArray[rindex].uc_class_teacher = '0';
 		}
-		const findex = this.cs_relationArray.findIndex(f => f.uc_class_id === item.uc_class_id  && f.uc_sec_id === item.uc_sec_id && f.uc_sub_id === item.uc_sub_id);
+		const findex = this.cs_relationArray.findIndex(f => f.uc_class_id === item.uc_class_id && f.uc_sec_id === item.uc_sec_id && f.uc_sub_id === item.uc_sub_id);
 		if (findex !== -1) {
 			this.cs_relationArray[findex].uc_class_teacher = this.ctValue;
 		}
