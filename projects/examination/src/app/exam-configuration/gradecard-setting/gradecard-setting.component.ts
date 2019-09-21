@@ -45,7 +45,9 @@ export class GradecardSettingComponent implements OnInit {
     this.gradecaredform = this.fbuild.group({
       gradecard_header: '',
       gradecard_footer: '',
-      gradecard_principal_signature: ''
+      gradecard_principal_signature: '',
+      gradecard_use_principal_signature: '',
+      gradecard_use_teacher_signature: ''
     })
   }
   uploadPricipalSign($event) {
@@ -68,7 +70,7 @@ export class GradecardSettingComponent implements OnInit {
 	}
   getGlobalSetting() {
     let param: any = {};
-    param.gs_name = ['gradecard_header','gradecard_footer','gradecard_principal_signature'];
+    param.gs_name = ['gradecard_header','gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature', 'gradecard_use_teacher_signature'];
     this.examService.getGlobalSetting(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         const settings = result.data;
@@ -77,7 +79,13 @@ export class GradecardSettingComponent implements OnInit {
           console.log(control);
           settings.forEach(element => {
             if(element.gs_alias === key) {
-              control.setValue(element.gs_value); 
+              if(key === 'gradecard_use_principal_signature') {
+                control.setValue(element.gs_value && element.gs_value === '1' ? true : false); 
+              } else if(key === 'gradecard_use_teacher_signature') {
+                control.setValue(element.gs_value && element.gs_value === '1' ? true : false);
+              } else {
+                control.setValue(element.gs_value); 
+              }              
             }
           });
         })

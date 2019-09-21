@@ -38,6 +38,9 @@ export class ViewGradecardDialogComponent implements OnInit {
   resultdivflag = false;
   settings: any[] = [];
   principalSignature: any;
+ teacherSignature: any;
+  usePrincipalSignature: any
+  useTeacherSignature: any
   header: any;
 
   constructor(
@@ -67,7 +70,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getGlobalSetting() {
     let param: any = {};
-    param.gs_name = ['gradecard_header','gradecard_footer','gradecard_principal_signature'];
+    param.gs_name = ['gradecard_header','gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature','gradecard_use_teacher_signature'];
     this.examService.getGlobalSetting(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         this.settings = result.data;
@@ -76,6 +79,10 @@ export class ViewGradecardDialogComponent implements OnInit {
             this.principalSignature = element.gs_value;
           } else if(element.gs_alias === 'gradecard_header') {
             this.header = element.gs_value;
+          } else if(element.gs_alias === 'gradecard_use_principal_signature') {
+            this.usePrincipalSignature = element.gs_value;
+          } else if(element.gs_alias === 'gradecard_use_teacher_signature') {
+            this.useTeacherSignature = element.gs_value;
           }
         });
       }
@@ -94,7 +101,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     html2canvas(data, { logging: true , allowTaint: false , useCORS: true }).then(canvas => {
       // Few necessary setting options 
 
-      var pdf = new jsPDF('l', 'pt', [canvas.width, canvas.height]);
+      var pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
 
       var imgData  = canvas.toDataURL("image/png");
       pdf.addImage(imgData,0,0,canvas.width, canvas.height);
