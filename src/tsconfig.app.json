@@ -86,6 +86,12 @@
     "../projects/teacherapp/src/app/logentry/logentry.module.ts",
     "../projects/teacherapp/src/app/assignment/assignment.module.ts",
     "../projects/teacherapp/src/app/auxillaries/auxillaries.module.ts",
-    "../projects/teacherapp/src/app/grade-master/grade-master.module.ts"
+    "../projects/teacherapp/src/app/grade-master/grade-master.module.ts",
+    "../projects/library-management/src/app/library-usertype/library-usertype.module.ts",
+    "../projects/library-management/src/app/auxillaries/auxillaries.module.ts",
+    "../projects/library-management/src/app/catalogue-management/catalogue-management.module.ts",
+    "../projects/library-management/src/app/circulation-management/circulation-management.module.ts",
+    "../projects/library-management/src/app/library-reports/library-reports.module.ts",
+    "../projects/library-management/src/app/library-configure/library-configure.module.ts"
   ]
 }
