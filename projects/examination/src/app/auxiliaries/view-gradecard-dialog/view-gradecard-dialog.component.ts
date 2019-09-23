@@ -114,7 +114,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     html2canvas(data, { logging: true , allowTaint: false , useCORS: true }).then(canvas => {
       // Few necessary setting options 
 
-      var pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
+      var pdf = new jsPDF('l', 'pt', [canvas.width, canvas.height]);
 
       var imgData  = canvas.toDataURL("image/png");
       pdf.addImage(imgData,0,0,canvas.width, canvas.height);
