@@ -199,3 +199,7 @@ mat-form-field.remove-form-field-bottom-margin .mat-form-field-wrapper {
   flex-direction: column;
   margin: 15px 0;
 }
+
+.mat-form-field.lib-form .mat-form-field-wrapper .mat-form-field-underline {
+    background-color: rgb(255, 255, 255) !important;
+}
