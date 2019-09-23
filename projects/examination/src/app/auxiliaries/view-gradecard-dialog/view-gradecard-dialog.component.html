@@ -1,3 +1,4 @@
+<!-- pattern="[0-9]{1}|[0-9]{2}|[0-9]{3}|[A-C]{1}" -->
 <div class="row">
     <div class="col-12 ">
         <button class="top-close-btn" mat-button (click)="generatePDF()">Close <i
@@ -174,6 +175,10 @@
                                 <table>
                                     <thead>
                                         <tr>
+                                            <th *ngIf="useTeacherSignature === '1'"> <img [src]="teacherSignature"
+                                                    height="60px" width="160px"></th>
+                                        </tr>
+                                        <tr>
                                             <th>Signature of Class Teacher</th>
                                         </tr>
                                     </thead>
@@ -183,7 +188,8 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th> <img [src]="principalSignature" height="60px" width="120px"></th>
+                                            <th *ngIf="usePrincipalSignature === '1'"> <img [src]="principalSignature"
+                                                    height="60px" width="120px"></th>
                                         </tr>
                                         <tr>
                                             <th>Signature of Principal</th>

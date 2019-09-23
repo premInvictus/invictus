@@ -16,7 +16,7 @@
                 <mat-select formControlName="syl_class_id" (selectionChange)="getSectionsByClass()" required
                   placeholder="Select Class">
                   <mat-option value="">Please select</mat-option>
-                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                  <mat-option *ngFor="let item of classArray" [value]="item.class_id"> 
                     {{item.class_name}}
                   </mat-option>
                 </mat-select>
@@ -47,7 +47,7 @@
             <mat-form-field appearance="outline" class="form-field-220">
               <mat-select formControlName="attendance" (selectionChange)="markStudentAttendance()" required
                 placeholder="Mark all student as">
-                <mat-option value="">Please select</mat-option>
+                <mat-option value="">Mark all Student as</mat-option>
                 <mat-option *ngFor="let item of attendanceArray" [value]="item.aid">
                   {{item.a_name}}
                 </mat-option>
@@ -109,7 +109,7 @@
         </table>
       </div>
       <br>
-      <div class="row margin-top-25" *ngIf="defaultFlag">
+      <div class="row margin-top-25" *ngIf="defaultFlag && submitFlag">
         <div class="col-12 text-center">
           <button mat-button class="btn-success-green" (click)="submit()">Submit</button>
           <button mat-button class="btn-reset btn-spacer" (click)="resetForm()">Reset</button>

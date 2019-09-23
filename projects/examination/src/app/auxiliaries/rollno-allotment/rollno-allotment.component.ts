@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Element } from './rollno.model';
 import { MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	selector: 'app-rollno-allotment',
@@ -14,6 +15,7 @@ import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 export class RollnoAllotmentComponent implements OnInit {
 	defaultFlag = false;
 	finalDivFlag = true;
+	submitFlag = false;
 	displayedColumns: string[] = [];
 	firstForm: FormGroup;
 	rollNoForm: FormGroup;
@@ -57,8 +59,10 @@ export class RollnoAllotmentComponent implements OnInit {
 			syl_class_id: '',
 			syl_section_id: ''
 		});
+		this.formgroupArray = [];
 	}
 	getClassByBoard() {
+		this.submitFlag = false;
 		this.defaultFlag = false;
 		this.finalDivFlag = true;
 		this.classArray = [];
@@ -109,15 +113,20 @@ export class RollnoAllotmentComponent implements OnInit {
 		this.ELEMENT_DATA = [];
 		this.defaultFlag = false;
 		this.finalDivFlag = true;
+		this.submitFlag = false;
 		this.firstForm.patchValue({
 			'syl_board_id': '',
 			'syl_class_id': '',
 			'syl_section_id': ''
 		});
 	}
+	onTextChange($event) {
+		this.submitFlag = true;
+	}
 	fetchDetails() {
 		this.formgroupArray = [];
 		this.ELEMENT_DATA = [];
+		this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 		const studentParam: any = {};
 		studentParam.au_class_id = this.firstForm.value.syl_class_id;
 		studentParam.au_sec_id = this.firstForm.value.syl_section_id;
@@ -155,7 +164,8 @@ export class RollnoAllotmentComponent implements OnInit {
 						}
 						this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 					} else {
-						this.studentArray = [];
+						this.commonService.showSuccessErrorMessage('No record found', 'error');
+						this.finalCancel();
 					}
 				}
 			);
@@ -171,15 +181,6 @@ export class RollnoAllotmentComponent implements OnInit {
 		checkParam.au_ses_id = this.session.ses_id;
 		this.examService.checkRollNoForClass(checkParam).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.examService.updateRollNo(this.finalArray).subscribe((result_u: any) => {
-					if (result_u && result_u.status === 'ok') {
-						this.finalCancel();
-						this.commonService.showSuccessErrorMessage('Roll No. Updated Successfully', 'success');
-					} else {
-						this.commonService.showSuccessErrorMessage('Update failed', 'error');
-					}
-				});
-			} else {
 				this.examService.insertRollNo(this.finalArray).subscribe((result_i: any) => {
 					if (result_i && result_i.status === 'ok') {
 						this.finalCancel();

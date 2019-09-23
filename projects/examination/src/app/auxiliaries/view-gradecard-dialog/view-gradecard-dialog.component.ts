@@ -38,6 +38,9 @@ export class ViewGradecardDialogComponent implements OnInit {
   resultdivflag = false;
   settings: any[] = [];
   principalSignature: any;
+ teacherSignature: any;
+  usePrincipalSignature: any
+  useTeacherSignature: any
   header: any;
 
   constructor(
@@ -55,6 +58,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     for (let i = 1; i <= this.data.param.eme_term_id; i++) {
       this.termArray.push(i);
     }
+    this.ctForClass();
     this.getGlobalSetting();
     this.getSchool();
     this.getSession();
@@ -65,9 +69,21 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getGradeCardMark();
 
   }
+  ctForClass() {
+    const param: any = {};
+    param.uc_class_teacher = '1';
+    param.uc_class_id = this.data.class_id;
+    param.uc_sec_id = this.data.sec_id;
+      this.examService.ctForClass(param).subscribe((result: any) => {
+        if(result && result.status === 'ok') {
+          console.log(result.data);
+          this.teacherSignature = result.data[0].usr_signature;
+        }
+      })
+  }
   getGlobalSetting() {
     let param: any = {};
-    param.gs_name = ['gradecard_header','gradecard_footer','gradecard_principal_signature'];
+    param.gs_name = ['gradecard_header','gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature','gradecard_use_teacher_signature'];
     this.examService.getGlobalSetting(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         this.settings = result.data;
@@ -76,6 +92,10 @@ export class ViewGradecardDialogComponent implements OnInit {
             this.principalSignature = element.gs_value;
           } else if(element.gs_alias === 'gradecard_header') {
             this.header = element.gs_value;
+          } else if(element.gs_alias === 'gradecard_use_principal_signature') {
+            this.usePrincipalSignature = element.gs_value;
+          } else if(element.gs_alias === 'gradecard_use_teacher_signature') {
+            this.useTeacherSignature = element.gs_value;
           }
         });
       }

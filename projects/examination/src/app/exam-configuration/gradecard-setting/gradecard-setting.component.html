@@ -51,11 +51,31 @@
           <button mat-stroked-button class="btn-outline-green">
             <label for="file">Choose File
               &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
-          <input style="display:none" type="file" accept="image/*" (change)="uploadPricipalSign($event)" id="file"><br><br>
-          <img *ngIf="gradecaredform.value.gradecard_principal_signature" style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%"
+          <input style="display:none" type="file" accept="image/*" (change)="uploadPricipalSign($event)"
+            id="file"><br><br>
+          <img *ngIf="gradecaredform.value.gradecard_principal_signature"
+            style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%"
             [src]="gradecaredform.value.gradecard_principal_signature">
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4">
+      Use Teacher Signature
+    </div>
+    <div class="col-lg-4">
+      <mat-slide-toggle class="inline-form-radio-spacing" formControlName="gradecard_use_teacher_signature">
+      </mat-slide-toggle>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4">
+      Use Principal Signature
+    </div>
+    <div class="col-lg-4">
+      <mat-slide-toggle class="inline-form-radio-spacing" formControlName="gradecard_use_principal_signature">
+      </mat-slide-toggle>
     </div>
   </div>
   <div class="row">
