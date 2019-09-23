@@ -33,7 +33,7 @@ import { AccordionModule } from 'ngx-bootstrap';
 		MatMenuModule,
 		MatExpansionModule,
 		MatSidenavModule,
-		RouterModule
+		RouterModule,
 	]
 })
-export class InvictusSharedModule {}
+export class InvictusSharedModule { }

@@ -1112,6 +1112,125 @@
           }
         }
       }
+    },
+    "library-management": {
+      "root": "projects/library-management/",
+      "sourceRoot": "projects/library-management/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/library-management",
+            "index": "projects/library-management/src/index.html",
+            "main": "projects/library-management/src/main.ts",
+            "polyfills": "projects/library-management/src/polyfills.ts",
+            "tsConfig": "projects/library-management/tsconfig.app.json",
+            "assets": [
+              "projects/library-management/src/favicon.ico",
+              "projects/library-management/src/assets"
+            ],
+            "styles": [
+              "projects/library-management/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/library-management/src/environments/environment.ts",
+                  "with": "projects/library-management/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "library-management:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "library-management:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "library-management:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/library-management/src/test.ts",
+            "polyfills": "projects/library-management/src/polyfills.ts",
+            "tsConfig": "projects/library-management/tsconfig.spec.json",
+            "karmaConfig": "projects/library-management/karma.conf.js",
+            "styles": [
+              "projects/library-management/src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/library-management/src/favicon.ico",
+              "projects/library-management/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/library-management/tsconfig.app.json",
+              "projects/library-management/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "library-management-e2e": {
+      "root": "projects/library-management-e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/library-management-e2e/protractor.conf.js",
+            "devServerTarget": "library-management:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "library-management:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/library-management-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "invictus"

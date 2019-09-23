@@ -162,6 +162,9 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			} else if (url === 'exam') {
 				this.defaultProject = 'Examination';
 				this.projectId = '5';
+			} else if (url === 'library') {
+				this.defaultProject = 'Library Management';
+				this.projectId = '6';
 			}
 		}
 	}
@@ -274,6 +277,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.proUrl = 'exam';
 			localStorage.setItem('project', JSON.stringify({ pro_url: 'exam' }));
 		}
+		if (Number(pro_id) === 6) {
+			this.proUrl = 'library';
+			localStorage.setItem('project', JSON.stringify({ pro_url: 'library' }));
+		}
 		const saveStateJSON = {
 			pro_url: this.proUrl,
 			ses_id: JSON.parse(localStorage.getItem('session')).ses_id
@@ -304,6 +311,11 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 					this.router.navigate(['/exam']);
 					this.defaultProject = 'Examination';
 					this.projectId = '5';
+				}
+				if (Number(pro_id) === 6) {
+					this.router.navigate(['/library']);
+					this.defaultProject = 'Library Management';
+					this.projectId = '6';
 				}
 			}
 		});
