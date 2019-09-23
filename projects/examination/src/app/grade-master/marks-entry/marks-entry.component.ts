@@ -24,6 +24,7 @@ export class MarksEntryComponent implements OnInit {
   responseMarksArray: any[] = []; 
   exam_grade_type = '0';
   exam_grade_type_arr: any[] = [];
+  classterm: any;
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -42,7 +43,10 @@ export class MarksEntryComponent implements OnInit {
     this.termsArray = [];
     this.examService.getClassTerm({class_id: this.paramform.value.eme_class_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
+        this.classterm = result.data;
+        this.getSubjectsByClass();
         console.log(result.data);
+
         result.data.ect_no_of_term.split(',').forEach(element => {
           this.termsArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
         });
@@ -141,7 +145,30 @@ export class MarksEntryComponent implements OnInit {
     });
     this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.subjectArray = result.data;
+        const temp = result.data;
+        if(temp.length > 0) {
+          temp.forEach(element => {
+            if(element.sub_parent_id && element.sub_parent_id === '0') {
+              const childSub: any[] = [];
+              for(const item of temp) {
+                if(element.sub_id === item.sub_parent_id) {
+                  childSub.push(item);
+                }
+              }
+              if(this.classterm.ect_exam_type === '1') {
+                
+              }
+              if(childSub.length > 0) {
+                element.disabled = true;
+              } else {
+                element.disabled = false;
+              }
+              element.childSub = childSub;
+              this.subjectArray.push(element);
+            }
+          });
+        }
+        console.log(this.subjectArray);
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }

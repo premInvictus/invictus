@@ -218,6 +218,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				params.push(param);
 				datalist.push(this.checkChangedFieldsArray);
 				this.openEditDialog({ data: datalist, reqParam: params });
+				console.log(datalist);
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('No changes to update', 'error');
 			}
