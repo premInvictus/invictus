@@ -213,6 +213,7 @@ export class SetupComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.gradesetDropdownArray = result.data;
+						this.getClassTermGrade(this);
 					}
 				}
 			);
@@ -650,11 +651,10 @@ export class SetupComponent implements OnInit {
 			this.getReportCardSetup(this);
 			this.displayedColumns = ['position', 'class_name', 'sec_name', 'sub_name', 'action', 'modify'];
 			this.configFlag = true;
-		} else if (Number(this.configValue) === 7) { // for exam report card setup			
+		} else if (Number(this.configValue) === 7) { // for exam class term garde		
 			this.getActiveClass(this);
 			this.getTermList(this);
-			this.getDropdownGradeSet(this);
-			this.getClassTermGrade(this);
+			this.getDropdownGradeSet(this);			
 			this.displayedColumns = ['position', 'name', 'term_name', 'grade_name', 'co_grade_name', 'exam_type', 'action', 'modify'];
 			this.configFlag = true;
 		}
