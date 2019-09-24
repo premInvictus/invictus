@@ -155,14 +155,6 @@ export class MarksEntryComponent implements OnInit {
                   childSub.push(item);
                 }
               }
-              if(this.classterm.ect_exam_type === '1') {
-                
-              }
-              if(childSub.length > 0) {
-                element.disabled = true;
-              } else {
-                element.disabled = false;
-              }
               element.childSub = childSub;
               this.subjectArray.push(element);
             }
@@ -231,6 +223,7 @@ export class MarksEntryComponent implements OnInit {
     }
   }
   checkEditable(es_id, eme_review_status) {
+    console.log('this.responseMarksArray', this.responseMarksArray.length);
     if (this.responseMarksArray.length > 0) {
       const rindex = this.responseMarksArray.findIndex(item => item.examEntry.eme_subexam_id === es_id);
       if (rindex === -1) {
