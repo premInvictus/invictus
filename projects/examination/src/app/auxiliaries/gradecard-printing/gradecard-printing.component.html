@@ -10,7 +10,7 @@
             <mat-form-field appearance="outline" class="form-field-150">
               <mat-label>Class</mat-label>
               <mat-select placeholder="Class" formControlName="eme_class_id"
-                (selectionChange)="getSectionsByClass();getSubjectsByClass();getClassTerm();getExamDetails()" required>
+                (selectionChange)="getSectionsByClass();getClassTerm();getExamDetails()" required>
                 <mat-option value="">Please select</mat-option>
                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
               </mat-select>

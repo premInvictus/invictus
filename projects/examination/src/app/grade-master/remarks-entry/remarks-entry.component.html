@@ -89,7 +89,7 @@
                             class="custom-th text-center">
                             {{getSubjectName() | titlecase}}</th>
                     </tr>
-                    <tr class="custom-tr">
+                    <tr class="custom-tr" *ngIf="formGroupArray.length > 0">
                         <th class="custom-th text-center" *ngFor="let item of paramform.value.ere_sub_exam_id">
                             {{getSubexamName(item) | titlecase}}</th>
                     </tr>
@@ -100,6 +100,7 @@
                         <td class="custom-td text-left font-size-14"><span
                                 class="margin-left-15">{{stu.au_full_name | titlecase}}</span> </td>
                         <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
+                        <ng-container *ngIf="formGroupArray.length > 0">
                         <ng-container *ngFor="let item of paramform.value.ere_sub_exam_id;let i=index">
                             <td class="custom-td text-center font-size-14 ">
                                 <form [formGroup]="formGroupArray[s].formGroup[i]">
@@ -130,16 +131,17 @@
                                         {{getInputRemarks(item, stu.au_login_id)}}
                                     </ng-template>
                                 </form>
-                            </td>
+                            </td> 
                         </ng-container>
-                        <ng-container *ngIf="tableDivFlag">
+                        </ng-container>
+                        <ng-container *ngIf="formGroupArray2.length > 0">
                             <td class="custom-td text-center font-size-14 ">
                                 <form [formGroup]="formGroupArray2[s].formGroup[0]">
-                                    <ng-template [ngIf]="checkExternalEdit('1', '0')" [ngIfElse]="elseContaint">
+                                    <ng-template [ngIf]="checkExternalEdit('0')" [ngIfElse]="elseContaint">
                                         <div class="row">
                                             <div class="col-8">
                                                 <mat-form-field class="form-field" appearance="outline">
-                                                    <input matInput type="text" [value]="getInputRemarks2(stu.au_login_id)" formControlName="remark">
+                                                    <input matInput type="text" formControlName="remark"  (change)="changeFlagStatus()" [value]="getInputRemarks2(stu.au_login_id)" >
                                                 </mat-form-field>
                                             </div>
                                             <div class="col-4">
@@ -156,7 +158,7 @@
                                         </div>
                                     </ng-template>
                                     <ng-template #elseContaint>
-                                        {{getInputRemarks(item, stu.au_login_id)}}
+                                        {{getInputRemarks2(stu.au_login_id)}}
                                     </ng-template>
                                 </form>
                             </td>
@@ -166,7 +168,7 @@
             </table>
             <br>
             <div class="row margin-top-25">
-                <div class="col-12 text-center" *ngIf="isAnyoneEditable('0') ">
+                <div class="col-12 text-center" *ngIf="isAnyoneEditable('0') && submitFlag">
                     <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0 "
                         (click)="saveForm()">Save</button>
                     <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0 "
@@ -179,6 +181,15 @@
                         Submit</button>
                 </div>
             </div>
+        </mat-card>
+    </div>
+</div>
+<div class="row" *ngIf="!tableDivFlag">
+    <div class="col-12 text-center">
+        <mat-card>
+            <app-no-data
+                [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                [noDataText]="" [subText]="'Please select all required field'"></app-no-data>
         </mat-card>
     </div>
 </div>

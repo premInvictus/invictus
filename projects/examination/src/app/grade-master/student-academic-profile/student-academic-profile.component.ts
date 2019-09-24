@@ -582,9 +582,9 @@ export class StudentAcademicProfileComponent implements OnInit {
         this.HighChartOption();
         for (const item of result.data) {
           if (Number(item.ma_attendance) === 1) {
-            this.absent = Number(item.count);
-          } else {
             this.present = Number(item.count);
+          } else {
+            this.absent = Number(item.count);
           }
         }
         this.attendancePercentage = (this.present * 100)/(this.absent + this.present);

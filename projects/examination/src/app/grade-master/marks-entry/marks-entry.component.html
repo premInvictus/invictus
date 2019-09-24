@@ -10,7 +10,7 @@
                         <mat-form-field appearance="outline" class="form-field-150">
                             <mat-label>Class</mat-label>
                             <mat-select placeholder="Class" formControlName="eme_class_id"
-                                (selectionChange)="getSectionsByClass();getSubjectsByClass();getClassTerm();" required>
+                                (selectionChange)="getSectionsByClass();getClassTerm();" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
                                 </mat-option>
@@ -30,8 +30,19 @@
                             <mat-select placeholder="Subject" formControlName="eme_sub_id"
                                 (selectionChange)="getExamDetails();resetTableDiv();" required>
                                 <mat-option value="">Please select</mat-option>
-                                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}
-                                </mat-option>
+                                <!-- non-cce pattern -->
+                                <ng-template [ngIf]="classterm?.ect_exam_type == 2" [ngIfElse]="ccepattern">
+                                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+                                </ng-template>
+                                <!-- cce pattern -->
+                                <ng-template #ccepattern>
+                                    <ng-container *ngFor="let item of subjectArray">
+                                        <mat-option *ngIf="item.childSub.length == 0" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+                                        <mat-optgroup *ngIf="item.childSub.length != 0" [label]="item.sub_name">
+                                        <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id">{{item1.sub_name}}</mat-option>
+                                        </mat-optgroup>
+                                    </ng-container>
+                                </ng-template>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
@@ -102,20 +113,22 @@
                                 <ng-container *ngIf="exam_grade_type == '1'">
                                     <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                                         <mat-select [value]="getInputMarks(item, stu.au_login_id)"
-                                            (selectionChange)="enterInputMarks(item, stu.au_login_id, $event.value)" required>
-                                            <mat-option *ngFor="let item of exam_grade_type_arr" [value]="item.egs_grade_value">{{item.egs_grade_name}}
+                                            (selectionChange)="enterInputMarks(item, stu.au_login_id, $event.value)"
+                                            required>
+                                            <mat-option *ngFor="let item of exam_grade_type_arr"
+                                                [value]="item.egs_grade_value">{{item.egs_grade_name}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </ng-container>
                             </ng-template>
                             <ng-template #elseContaint>
-                                    <ng-container *ngIf="exam_grade_type == '2'">
-                                        {{getInputMarks(item, stu.au_login_id)}}
-                                    </ng-container>
-                                    <ng-container *ngIf="exam_grade_type == '1'">
-                                            {{getInputMarksForPoint(item, stu.au_login_id)}}
-                                    </ng-container>
+                                <ng-container *ngIf="exam_grade_type == '2'">
+                                    {{getInputMarks(item, stu.au_login_id)}}
+                                </ng-container>
+                                <ng-container *ngIf="exam_grade_type == '1'">
+                                    {{getInputMarksForPoint(item, stu.au_login_id)}}
+                                </ng-container>
                             </ng-template>
                         </td>
                     </tr>
