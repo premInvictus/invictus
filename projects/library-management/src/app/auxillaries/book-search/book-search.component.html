@@ -1,3 +1,4 @@
+<div class="search-book">
 <div class="row">
   <div class="col-3"></div>
   <div class="col-6">
@@ -5,14 +6,18 @@
       <div class="row">
         <div class="col-8">
           <mat-form-field class="form-field lib-form">
-            <input matInput placeholder="Search Any Book By Name And ID">
+            <input matInput placeholder="Search Any Book By Name And ID" />
           </mat-form-field>
         </div>
         <div class="col-4 text-right">
           <div class="margin-top-10">
-          <span class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i class="fas fa-chevron-down"></i></span>
-          <button mat-button class="btn-spacer btn-lib-search margin-left-10">Search</button>
-        </div>
+            <span class="font-size-12 margin-top-15 font-skyblue"
+              >Advanced Search <i class="fas fa-chevron-down"></i
+            ></span>
+            <button mat-button class="btn-spacer btn-lib-search margin-left-10">
+              Search
+            </button>
+          </div>
         </div>
       </div>
     </mat-card>
@@ -24,11 +29,461 @@
     <mat-card class="card-height-730">
       <div class="row margin-top-15per">
         <div class="col-12 text-center">
-          <span class="font-size-24 font-bold">No Books Selected</span><br>
-          <span class="font-size-18 margin-top-10">It's seems there is no books searched yet. Scan Book or Enter Book ID to view availaiable books in library.</span><br>
-          <button mat-button class="btn-success-blue margin-top-10">Search Book</button>
+          <span class="font-size-24 font-bold">No Books Selected</span><br />
+          <span class="font-size-18 margin-top-10"
+            >It's seems there is no books searched yet. Scan Book or Enter Book
+            ID to view availaiable books in library.</span
+          ><br />
+          <button mat-button class="btn-success-blue margin-top-10">
+            Search Book
+          </button>
         </div>
       </div>
     </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <mat-card class="card-height-730">
+      <div class="row ">
+        <div class="col-8">
+          <span class="font-size-20 font-bold">Search Result</span>
+        </div>
+        <div class="col-4 text-right">
+          <button mat-button class="btn-success-blue">Grid View</button>
+          <button mat-button class="btn-success-blue btn-spacer">
+            List View
+          </button>
+        </div>
+      </div>
+      <div class="grid-view">
+      <div class="row margin-top-20">
+        <div class="col-1 smart-col-10">
+          <div class="book-container">
+            <img
+              class="book-cover-img"
+              src="http://placehold.jp/006699/cccc00/160x230.png"
+            />
+            <div class="book-title-container">
+              <div class="book-title-content text-center">
+                <div class="book-first-content">
+                  <span class="font-size-16">Book Title</span>
+                </div>
+                <div class="book-second-content">
+                  <span class="font-size-18 font-medium">12546689</span><br />
+                  <span class="font-size-16 font-medium">Harry Porter</span
+                  ><br />
+                  <span class="font-size-14 font-medium">J.K Rowling</span>
+                  <div class="font-size-14 margin-top-15 font-medium">
+                    Location: A4
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-10">
+          <div class="book-container">
+            <img
+              class="book-cover-img"
+              src="http://placehold.jp/006699/cccc00/160x230.png"
+            />
+            <div class="book-title-container">
+              <div class="book-title-content text-center">
+                <div class="book-first-content">
+                  <span class="font-size-16">Book Title</span>
+                </div>
+                <div class="book-second-content">
+                  <span class="font-size-18 font-medium">12546689</span><br />
+                  <span class="font-size-16 font-medium">Harry Porter</span
+                  ><br />
+                  <span class="font-size-14 font-medium">J.K Rowling</span>
+                  <div class="font-size-14 margin-top-15 font-medium">
+                    Location: A4
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-10">
+          <div class="book-container">
+            <img
+              class="book-cover-img"
+              src="http://placehold.jp/006699/cccc00/160x230.png"
+            />
+            <div class="book-title-container">
+              <div class="book-title-content text-center">
+                <div class="book-first-content">
+                  <span class="font-size-16">Book Title</span>
+                </div>
+                <div class="book-second-content">
+                  <span class="font-size-18 font-medium">12546689</span><br />
+                  <span class="font-size-16 font-medium">Harry Porter</span
+                  ><br />
+                  <span class="font-size-14 font-medium">J.K Rowling</span>
+                  <div class="font-size-14 margin-top-15 font-medium">
+                    Location: A4
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-10">
+          <div class="book-container">
+            <img
+              class="book-cover-img"
+              src="http://placehold.jp/006699/cccc00/160x230.png"
+            />
+            <div class="book-title-container">
+              <div class="book-title-content text-center">
+                <div class="book-first-content">
+                  <span class="font-size-16">Book Title</span>
+                </div>
+                <div class="book-second-content">
+                  <span class="font-size-18 font-medium">12546689</span><br />
+                  <span class="font-size-16 font-medium">Harry Porter</span
+                  ><br />
+                  <span class="font-size-14 font-medium">J.K Rowling</span>
+                  <div class="font-size-14 margin-top-15 font-medium">
+                    Location: A4
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-10">
+          <div class="book-container">
+            <img
+              class="book-cover-img"
+              src="http://placehold.jp/006699/cccc00/160x230.png"
+            />
+            <div class="book-title-container">
+              <div class="book-title-content text-center">
+                <div class="book-first-content">
+                  <span class="font-size-16">Book Title</span>
+                </div>
+                <div class="book-second-content">
+                  <span class="font-size-18 font-medium">12546689</span><br />
+                  <span class="font-size-16 font-medium">Harry Porter</span
+                  ><br />
+                  <span class="font-size-14 font-medium">J.K Rowling</span>
+                  <div class="font-size-14 margin-top-15 font-medium">
+                    Location: A4
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-10">
+          <div class="book-container">
+            <img
+              class="book-cover-img"
+              src="http://placehold.jp/006699/cccc00/160x230.png"
+            />
+            <div class="book-title-container">
+              <div class="book-title-content text-center">
+                <div class="book-first-content">
+                  <span class="font-size-16">Book Title</span>
+                </div>
+                <div class="book-second-content">
+                  <span class="font-size-18 font-medium">12546689</span><br />
+                  <span class="font-size-16 font-medium">Harry Porter</span
+                  ><br />
+                  <span class="font-size-14 font-medium">J.K Rowling</span>
+                  <div class="font-size-14 margin-top-15 font-medium">
+                    Location: A4
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-10">
+          <div class="book-container">
+            <img
+              class="book-cover-img"
+              src="http://placehold.jp/006699/cccc00/160x230.png"
+            />
+            <div class="book-title-container">
+              <div class="book-title-content text-center">
+                <div class="book-first-content">
+                  <span class="font-size-16">Book Title</span>
+                </div>
+                <div class="book-second-content">
+                  <span class="font-size-18 font-medium">12546689</span><br />
+                  <span class="font-size-16 font-medium">Harry Porter</span
+                  ><br />
+                  <span class="font-size-14 font-medium">J.K Rowling</span>
+                  <div class="font-size-14 margin-top-15 font-medium">
+                    Location: A4
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-10">
+          <div class="book-container">
+            <img
+              class="book-cover-img"
+              src="http://placehold.jp/006699/cccc00/160x230.png"
+            />
+            <div class="book-title-container">
+              <div class="book-title-content text-center">
+                <div class="book-first-content">
+                  <span class="font-size-16">Book Title</span>
+                </div>
+                <div class="book-second-content">
+                  <span class="font-size-18 font-medium">12546689</span><br />
+                  <span class="font-size-16 font-medium">Harry Porter</span
+                  ><br />
+                  <span class="font-size-14 font-medium">J.K Rowling</span>
+                  <div class="font-size-14 margin-top-15 font-medium">
+                    Location: A4
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-10">
+          <div class="book-container">
+            <img
+              class="book-cover-img"
+              src="http://placehold.jp/006699/cccc00/160x230.png"
+            />
+            <div class="book-title-container">
+              <div class="book-title-content text-center">
+                <div class="book-first-content">
+                  <span class="font-size-16">Book Title</span>
+                </div>
+                <div class="book-second-content">
+                  <span class="font-size-18 font-medium">12546689</span><br />
+                  <span class="font-size-16 font-medium">Harry Porter</span
+                  ><br />
+                  <span class="font-size-14 font-medium">J.K Rowling</span>
+                  <div class="font-size-14 margin-top-15 font-medium">
+                    Location: A4
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-10">
+          <div class="book-container">
+            <img
+              class="book-cover-img"
+              src="http://placehold.jp/006699/cccc00/160x230.png"
+            />
+            <div class="book-title-container">
+              <div class="book-title-content text-center">
+                <div class="book-first-content">
+                  <span class="font-size-16">Book Title</span>
+                </div>
+                <div class="book-second-content">
+                  <span class="font-size-18 font-medium">12546689</span><br />
+                  <span class="font-size-16 font-medium">Harry Porter</span
+                  ><br />
+                  <span class="font-size-14 font-medium">J.K Rowling</span>
+                  <div class="font-size-14 margin-top-15 font-medium">
+                    Location: A4
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list-view">
+      
+      <div class="row">
+        <div class="col-2">
+
+        </div>
+        <div class="col-8">
+            <div class="row ">
+                <div class="col-12 remove-col-padding">
+                    <mat-form-field appearance="legacy lib-form">
+                        
+                        <input matInput placeholder="Search">
+                        <mat-icon matPrefix>filter_list</mat-icon>
+                      </mat-form-field>
+                </div>
+              </div>
+          <table class="custom-table">
+            <thead>
+              <tr class="custom-tr text-center">
+              <th class="custom-th">Sr No.</th>
+              <th class="custom-th">Book No.</th>
+              <th class="custom-th">Title</th>
+              <th class="custom-th">Author</th>
+              <th class="custom-th">Publisher</th>
+              <th class="custom-th">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr>
+              <td class="custom-td">1</td>
+              <td class="custom-td"><a class="font-skyblue cursor-pointer">1254689</a></td>
+              <td class="custom-td text-left"><span class="margin-left-15">Harry Porter</span></td>
+              <td class="custom-td text-left padding-left-15"><span class="margin-left-15">J. K Rowling</span></td>
+              <td class="custom-td text-left padding-left-15"><span class="margin-left-15">Joseph Desuza</span></td>
+              <td class="custom-td">Read Only</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-2">
+
+        </div>
+      </div>
+    </div>
+    </mat-card>
+  </div>
+</div>
+</div>
+
+<div class="book-detial-container">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <span class="font-size-24">Book Details</span>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="font-size-16 padding-5">
+          <span>Search Result -</span><span class="font-bold"> Book Details</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row ">
+          <div class="col-2 smart-col-12 remove-col-padding-left">
+            <img class="book-detail-img-big" src="http://placehold.jp/006699/cccc00/200x280.png">
+          </div>
+          <div class="col-8 smart-col-88 remove-col-padding">
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                  <span class="font-size-20 font-bold">123546987</span><br>
+                  <span class="font-size-18">The Harry Porter And The Cursed Child</span><br>
+                  <span class="font-skyblue font-size-14">J.K Rowling</span><br>
+                  <div class="margin-top-35">
+                      <span class="font-bold font-size-14">Edition : </span><span>2000</span><br>
+                      <span class="font-bold font-size-14">Publisher : </span><span>Waren Education</span><br>
+                      <span class="font-bold font-size-14">Pages : </span><span>201</span><br>
+                      <span class="font-bold font-size-14">Location : </span><span>H1-7</span><br>
+                  </div>
+                  <hr>
+                  <div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                  </div>
+              </div>
+              <div class="col-4">
+                  <div class="row">
+                    <div class="col-12 text-right">
+                      <span class="font-size-16"><i class="fas fa-book-open font-size-16"></i> Read Only</span>
+                      <button mat-button class="btn-success-blue btn-spacer"> Book Reserve Request</button>
+                    </div>
+                    
+                    
+                  </div>
+                  <div class="row margin-top-35">
+                    <div class="col-12">
+                        <div class="text-right">
+                            <span class="font-bold font-size-16">Similar Books</span>
+                          </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-12 text-right">
+                        <div class="inline-flex">
+                            <div class="book-img-small-similar margin-left-15">
+                                <img class="book-img-small-similar" src="http://placehold.jp/006699/cccc00/114x160.png">
+                            </div>
+                            <div class="book-img-small-similar margin-left-15">
+                                <img class="book-img-small-similar" src="http://placehold.jp/006699/cccc00/114x160.png">
+                            </div>
+                            <div class="book-img-small-similar">
+                                <img class="book-img-small-similar margin-left-15" src="http://placehold.jp/006699/cccc00/114x160.png">
+                            </div>
+                          </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            
+          </div>
+          
+        </div>
+        
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-12">
+            <span class="font-size-20">Book Log</span>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+
+              </div>
+              <div class="col-8">
+                  <div class="row ">
+                      <div class="col-10 remove-col-padding">
+                          <mat-form-field appearance="legacy lib-form">
+                              
+                              <input matInput placeholder="Search">
+                              <mat-icon matPrefix>filter_list</mat-icon>
+                            </mat-form-field>
+                      </div>
+                      <div class="col-2 remove-col-padding text-right">
+                        <span class="font-size-14 font-skyblue">Export Table</span>
+                      </div>
+                    </div>
+                <table class="custom-table">
+                  <thead>
+                    <tr class="custom-tr text-center">
+                    <th class="custom-th">Sr No.</th>
+                    <th class="custom-th">Enrollment No.</th>
+                    <th class="custom-th">Issued To</th>
+                    <th class="custom-th">Class</th>
+                    <th class="custom-th">Issued On</th>
+                    <th class="custom-th">Returned On</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                    <td class="custom-td">1</td>
+                    <td class="custom-td"><a class="font-skyblue cursor-pointer">S-1002</a></td>
+                    <td class="custom-td text-left"><span class="margin-left-15">Vikram singh Vedi</span></td>
+                    <td class="custom-td text-left padding-left-15"><span class="margin-left-15">VI-A</span></td>
+                    <td class="custom-td text-left padding-left-15"><span class="margin-left-15">13-Sep-2019</span></td>
+                    <td class="custom-td">20-Sep-2019</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-2">
+      
+              </div>
+        </div>
+      </mat-card>
+    </div>
   </div>
 </div>
