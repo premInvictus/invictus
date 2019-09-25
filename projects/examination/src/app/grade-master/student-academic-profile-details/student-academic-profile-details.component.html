@@ -20,7 +20,7 @@
         <span class="font-bold font-size-20">Skills & Rewards</span><i
           class="fas fa-plus-circle margin-left-10 font-size-20 font-skyblue"></i>
       </mat-card-title>
-      <mat-card-content *ngIf="currentExam">
+      <mat-card-content *ngIf="defaultskill">
         <div class="row">
           <div class="col-5">
             <span class="font-size-14">Updated on</span> <span class="float-right">:</span>
@@ -92,7 +92,7 @@
         </div>
        
       </mat-card-content>
-      <ng-container *ngIf="!currentExam">
+      <ng-container *ngIf="!defaultskill">
         <div class="text-center">
           <img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
             height="150px">
@@ -124,10 +124,11 @@
               <div class="padding-15">
                 <div class="row " *ngFor="let item of principalArray">
                   <div class="col-12">
-                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'd-MMM-y'}}</span><span
-                      class="margin-left-15 ver-line-divider"></span><span
-                      class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
-                    <p class="font-size-12 margin-top-10">{{item.era_teachers_remark}}</p>
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
                   </div>
                 </div>
               </div>
@@ -148,10 +149,11 @@
               <div class="padding-15">
                 <div class="row " *ngFor="let item of vicePrincipalArray">
                   <div class="col-12">
-                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'd-MMM-y'}}</span><span
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
                       class="margin-left-15 ver-line-divider"></span><span
                       class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
-                    <p class="font-size-12 margin-top-10">{{item.era_teachers_remark}}</p>
+                      <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
                   </div>
                 </div>
               </div>
@@ -171,10 +173,11 @@
               <div class="padding-15">
                 <div class="row " *ngFor="let item of schoolAdmin">
                   <div class="col-12">
-                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'd-MMM-y'}}</span><span
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
                       class="margin-left-15 ver-line-divider"></span><span
                       class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
-                    <p class="font-size-12 margin-top-10">{{item.era_teachers_remark}}</p>
+                      <span class="margin-left-15 ver-line-divider"></span>
+                      <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
                   </div>
                 </div>
               </div>
@@ -194,10 +197,11 @@
               <div class="padding-15">
                 <div class="row " *ngFor="let item of classTeacher">
                   <div class="col-12">
-                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'd-MMM-y'}}</span><span
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
                       class="margin-left-15 ver-line-divider"></span><span
                       class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
-                    <p class="font-size-12 margin-top-10">{{item.era_teachers_remark}}</p>
+                      <span class="margin-left-15 ver-line-divider"></span>
+                      <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
                   </div>
                 </div>
               </div>
@@ -217,10 +221,11 @@
               <div class="padding-15">
                 <div class="row " *ngFor="let item of subjectTeacher">
                   <div class="col-12">
-                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'd-MMM-y'}}</span><span
+                    <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
                       class="margin-left-15 ver-line-divider"></span><span
                       class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
-                    <p class="font-size-12 margin-top-10">{{item.era_teachers_remark}}</p>
+                      <span class="margin-left-15 ver-line-divider"></span>
+                      <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
                   </div>
                 </div>
               </div>
@@ -228,7 +233,16 @@
           </mat-accordion>
         </div>
       </div>
-
+      <ng-container *ngIf="!defaultRemark">
+        <div class="text-center">
+          <img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+            height="150px">
+          <br><br>
+          <span class="font-size-20 font-bold font-color-brown">
+            No Record Found
+          </span>
+        </div>
+      </ng-container>
     </mat-card>
   </div>
 </div>

@@ -26,6 +26,8 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
   currentExamIndex: number;
   examPre = true;
   examNext = true;
+  defaultRemark = false;
+  defaultskill = false;
   currentUser: any;
   principalArray: any[] = [];
   vicePrincipalArray: any[] = [];
@@ -152,12 +154,14 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
     }
   }
   getSkillsAwards(login_id) {
+    this.defaultskill = false;
     if (login_id) {
       this.finalAwardArray = [];
       this.finalActivityArray = [];
       this.skillAwardsArray = [];
       this.sisService.getSkillAwards({ login_id: login_id, user: 'User' }).subscribe((result: any) => {
         if (result.status === 'ok') {
+          this.defaultskill = true;
           this.skillAwardsArray.push(result.awards);
           this.skillAwardsArray.push(result.skills);
           if (this.skillAwardsArray[0]) {
@@ -199,6 +203,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
 
   }
   getRemarks(login_id) {
+    this.defaultRemark = false;
     if (login_id) {
       this.principalArray = [];
       this.vicePrincipalArray = [];
@@ -209,6 +214,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
       const getJson = { 'user': 'user', 'era_type': 'general', 'login_id': login_id };
       this.sisService.getGeneralRemarks(getJson).subscribe((result: any) => {
         if (result.status === 'ok') {
+          this.defaultRemark = true;
           this.remarkArray = result.generalRemarks ? result.generalRemarks : [];
           for (const item of this.remarkArray) {
             if (Number(item.era_aut_id) === 1) {

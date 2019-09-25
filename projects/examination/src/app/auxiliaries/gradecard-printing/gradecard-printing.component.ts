@@ -31,6 +31,7 @@ export class GradecardPrintingComponent implements OnInit {
   displayedColumns: string[] = ['select', 'au_admission_no', 'au_full_name', 'r_rollno', 'class_name', 'status', 'action'];
   dataSource = new MatTableDataSource<Element>();
   selection = new SelectionModel<Element>(true, []);
+  classterm: any;
   constructor(
     private fbuild: FormBuilder,
     private examService: ExamService,
@@ -46,6 +47,7 @@ export class GradecardPrintingComponent implements OnInit {
   }
   openDialog(item): void {
     item.param = this.paramform.value;
+    item.ect_exam_type = this.classterm.ect_exam_type;
     const dialogRef = this.dialog.open(ViewGradecardDialogComponent, {
       width: '80%',
       height: '80%',
@@ -208,7 +210,23 @@ export class GradecardPrintingComponent implements OnInit {
     });
     this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.subjectArray = result.data;
+        const temp = result.data;
+        if(temp.length > 0) {
+          temp.forEach(element => {
+            if(element.sub_parent_id && element.sub_parent_id === '0') {
+              const childSub: any[] = [];
+              for(const item of temp) {
+                if(element.sub_id === item.sub_parent_id) {
+                  childSub.push(item);
+                }
+              }
+              element.childSub = childSub;
+              this.subjectArray.push(element);
+            }
+          });
+        }
+        console.log(this.subjectArray);
+        //this.subjectArray = result.data;
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
@@ -218,6 +236,8 @@ export class GradecardPrintingComponent implements OnInit {
     this.termsArray = [];
     this.examService.getClassTerm({class_id: this.paramform.value.eme_class_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
+        this.classterm = result.data;
+        this.getSubjectsByClass();
         console.log(result.data);
         result.data.ect_no_of_term.split(',').forEach(element => {
           this.termsArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
@@ -254,22 +274,27 @@ export class GradecardPrintingComponent implements OnInit {
     // console.log(this.gradeCardMarkArray);
     // console.log(this.subjectArray);
     let gstatus  = '1';
-    for(let i=0; i<this.examArray.length;i++){
-      for(let j=0;j<this.examArray[i].exam_sub_exam_max_marks.length; j++) {
-        for(let k=0;k<this.subjectArray.length;k++) {
-          if(this.gradeCardMarkArray) {
-            if(this.examArray[i].exam_category === this.subjectArray[k].sub_type) {
-              const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
-                e.eme_sub_id === this.subjectArray[k].sub_id &&
-                e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
-                e.eme_exam_id === this.examArray[i].exam_id);
+    if(this.classterm.ect_exam_type === '2') {
+      for(let i=0; i<this.examArray.length;i++){
+        for(let j=0;j<this.examArray[i].exam_sub_exam_max_marks.length; j++) {
+          for(let k=0;k<this.subjectArray.length;k++) {
+            if(this.gradeCardMarkArray) {
+              if(this.examArray[i].exam_category === this.subjectArray[k].sub_type) {
+                const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
+                  e.eme_sub_id === this.subjectArray[k].sub_id &&
+                  e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
+                  e.eme_exam_id === this.examArray[i].exam_id);
                 if(gindex === -1) {
                   gstatus = '0';
                   break;
                 }
+              }
+            } else {
+              gstatus = '0';
+              break;
             }
-          } else {
-            gstatus = '0';
+          }
+          if(gstatus === '0') {
             break;
           }
         }
@@ -277,10 +302,52 @@ export class GradecardPrintingComponent implements OnInit {
           break;
         }
       }
-      if(gstatus === '0') {
-        break;
+    } else if(this.classterm.ect_exam_type === '1') {
+      for(let i=0; i<this.examArray.length;i++){
+        for(let j=0;j<this.examArray[i].exam_sub_exam_max_marks.length; j++) {
+          for(let k=0;k<this.subjectArray.length;k++) {
+            if(this.gradeCardMarkArray) {
+              if(this.examArray[i].exam_category === this.subjectArray[k].sub_type) {
+                if(this.subjectArray[k].childSub.length === 0) {
+                  const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
+                    e.eme_sub_id === this.subjectArray[k].sub_id &&
+                    e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
+                    e.eme_exam_id === this.examArray[i].exam_id);
+                  if(gindex === -1) {
+                    gstatus = '0';
+                    break;
+                  }
+                } else {
+                  for(let l=0; l< this.subjectArray[k].childSub; l++) {
+                    const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
+                      e.eme_sub_id === this.subjectArray[k].childSub[l].sub_id &&
+                      e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
+                      e.eme_exam_id === this.examArray[i].exam_id);
+                    if(gindex === -1) {
+                      gstatus = '0';
+                      break;
+                    }
+                  }
+                  if(gstatus === '0') {
+                    break;
+                  }
+                }
+              }
+            } else {
+              gstatus = '0';
+              break;
+            }
+          }
+          if(gstatus === '0') {
+            break;
+          }
+        }
+        if(gstatus === '0') {
+          break;
+        }
       }
     }
+    
     /*const sindex = this.studentArray.findIndex(e => e.au_login_id === au_login_id);
     if(sindex !== -1) {
       this.studentArray[sindex].status = gstatus;

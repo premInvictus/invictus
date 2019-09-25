@@ -41,20 +41,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-12 remove-col-padding">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>No. Of Terms</mat-label>
-                  <mat-select formControlName="exam_term" required placeholder="No. Of Terms">
-                    <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of termArray" [value]="item.term_id">
-                      {{item.term_name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
+            </div>            
             <div class="row">
               <div class="col-12 remove-col-padding">
                 <mat-form-field class="form-field" appearance="outline">
@@ -96,7 +83,7 @@
             <div class="row" [hidden]="!(formGroupArray.length > 0)" *ngFor="let item of formGroupArray">
               <div class="col-6">
                 <br>
-                {{item.sexam_name | capitalize}}
+                {{item.sexam_name | capitalize}} 
               </div>
               <div class="col-6">
                 <form [formGroup]="item.formGroup">
@@ -157,15 +144,6 @@
                   </th>
                   <td mat-cell *matCellDef="let item">
                     {{ item.exam_category }}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="exam_term">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    No. of Terms
-                  </th>
-                  <td mat-cell *matCellDef="let item">
-                    {{ item.exam_term }}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="exam_class">
