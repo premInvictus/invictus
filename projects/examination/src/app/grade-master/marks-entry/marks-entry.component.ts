@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { MarkEntrySubmitDialogComponent } from '../mark-entry-submit-dialog/mark-entry-submit-dialog.component'
 
 @Component({
   selector: 'app-marks-entry',
@@ -9,7 +10,6 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./marks-entry.component.css']
 })
 export class MarksEntryComponent implements OnInit {
-
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
@@ -25,6 +25,7 @@ export class MarksEntryComponent implements OnInit {
   exam_grade_type = '0';
   exam_grade_type_arr: any[] = [];
   classterm: any;
+  absentData = {"egs_grade_name":"AB","egs_grade_value":"AB","egs_range_start":"0","egs_range_end":"0"};
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -77,6 +78,7 @@ export class MarksEntryComponent implements OnInit {
     this.examService.getGradeSet(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         this.exam_grade_type_arr = result.data[0].egs_grade_data;
+        this.exam_grade_type_arr.push(this.absentData);
       }
     })
   }
@@ -188,6 +190,9 @@ export class MarksEntryComponent implements OnInit {
   getSubexamName(se_id) {
     return this.subexamArray.find(e => e.se_id === se_id).sexam_name;
   }
+  getSubexamMarks(se_id) {
+    return this.subexamArray.find(e => e.se_id === se_id).exam_max_marks;
+  }
   displayData() {
     if (this.paramform.value.eme_subexam_id.length > 0) {
       this.responseMarksArray = [];
@@ -223,7 +228,7 @@ export class MarksEntryComponent implements OnInit {
     }
   }
   checkEditable(es_id, eme_review_status) {
-    console.log('this.responseMarksArray', this.responseMarksArray.length);
+    //console.log('this.responseMarksArray', this.responseMarksArray.length);
     if (this.responseMarksArray.length > 0) {
       const rindex = this.responseMarksArray.findIndex(item => item.examEntry.eme_subexam_id === es_id);
       if (rindex === -1) {
@@ -261,18 +266,42 @@ export class MarksEntryComponent implements OnInit {
       }
     }
   }
-  enterInputMarks(es_id, login_id, mark) {
-    const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
-    if (ind !== -1) {
-      this.marksInputArray[ind].mark = mark;
+  enterInputMarks(es_id, login_id, marktarget) {
+    const subexammarks = this.getSubexamMarks(es_id);
+    const mark = marktarget.value;
+    console.log(mark);
+    if(!isNaN(mark)) {
+      if(mark <= subexammarks) {
+        const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
+        if (ind !== -1) {
+          this.marksInputArray[ind].mark = mark;
+        } else {
+          this.marksInputArray.push({
+            es_id: es_id,
+            login_id: login_id,
+            mark: mark
+          });
+        }
+      } else {
+        this.commonAPIService.showSuccessErrorMessage('Invalid input', 'error');
+        marktarget.value = '';
+      }
+    } else if(mark === 'AB') {
+      const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
+        if (ind !== -1) {
+          this.marksInputArray[ind].mark = mark;
+        } else {
+          this.marksInputArray.push({
+            es_id: es_id,
+            login_id: login_id,
+            mark: mark
+          });
+        }
     } else {
-      this.marksInputArray.push({
-        es_id: es_id,
-        login_id: login_id,
-        mark: mark
-      });
+      this.commonAPIService.showSuccessErrorMessage('Invalid input', 'error');
+      marktarget.value = '';
     }
-    console.log(this.marksInputArray);
+    console.log('marksInputArray',this.marksInputArray);
   }
 
   getInputMarks(es_id, login_id) {
@@ -293,17 +322,44 @@ export class MarksEntryComponent implements OnInit {
     }
   }
 
-  saveForm(status = '0') {
-    if (this.paramform.valid && this.marksInputArray.length > 0) {
-      const param: any = {};
-      param.examEntry = this.paramform.value;
-      param.examEntryMapping = this.marksInputArray;
-      param.examEntryStatus = status;
-      this.examService.addMarksEntry(param).subscribe((result: any) => {
-        if (result && result.status === 'ok') {
-          this.displayData();
+  saveForm(status = '0',savelog = '0') {
+    console.log('this.marksInputArray.length', this.marksInputArray.length);
+    console.log('this.paramform.value.eme_subexam_id.length * this.studentArray.length', this.paramform.value.eme_subexam_id.length * this.studentArray.length);
+    if(this.marksInputArray.length < this.paramform.value.eme_subexam_id.length * this.studentArray.length) {
+      const dialogRef = this.dialog.open(MarkEntrySubmitDialogComponent, {
+        width: '600px',
+        height: '300px',
+        data: {text: 'Save',message: 'Still few student has empty mark! Do you wish to continue?'}
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        if(result && result.confirm === 'ok') {
+          if (this.paramform.valid && this.marksInputArray.length > 0) {
+            const param: any = {};
+            param.examEntry = this.paramform.value;
+            param.examEntryMapping = this.marksInputArray;
+            param.examEntryStatus = status;
+            param.savelog = savelog;
+            this.examService.addMarksEntry(param).subscribe((result: any) => {
+              if (result && result.status === 'ok') {
+                this.displayData();
+              }
+            })
+          }
         }
-      })
+      });
+    } else {
+      if (this.paramform.valid && this.marksInputArray.length > 0) {
+        const param: any = {};
+        param.examEntry = this.paramform.value;
+        param.examEntryMapping = this.marksInputArray;
+        param.examEntryStatus = status;
+        this.examService.addMarksEntry(param).subscribe((result: any) => {
+          if (result && result.status === 'ok') {
+            this.displayData();
+          }
+        })
+      }
     }
   }
   resetTableDiv() {

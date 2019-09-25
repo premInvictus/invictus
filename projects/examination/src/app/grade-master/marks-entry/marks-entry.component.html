@@ -78,6 +78,11 @@
 </div>
 
 <div class="row" *ngIf="tableDivFlag">
+    <div class="col-12 text-right">
+        <mat-card>
+            AB-Absent
+        </mat-card>
+    </div>
     <div class="col-12">
         <mat-card>
             <table class="custom-table">
@@ -91,7 +96,7 @@
                     </tr>
                     <tr class="custom-tr">
                         <th class="custom-th text-center" width="100"
-                            *ngFor="let item of paramform.value.eme_subexam_id">{{getSubexamName(item) | titlecase}}
+                            *ngFor="let item of paramform.value.eme_subexam_id">{{getSubexamName(item) | titlecase}} ({{getSubexamMarks(item)}})
                         </th>
                     </tr>
                 </thead>
@@ -105,15 +110,13 @@
                             *ngFor="let item of paramform.value.eme_subexam_id">
                             <ng-template [ngIf]="checkEditable(item, '0')" [ngIfElse]="elseContaint">
                                 <ng-container *ngIf="exam_grade_type == '2'">
-                                    <mat-form-field style="margin-bottom:-10px">
-                                        <input matInput type="number" [value]="getInputMarks(item, stu.au_login_id)"
-                                            (change)="enterInputMarks(item, stu.au_login_id, $event.target.value)">
-                                    </mat-form-field>
+                                        <input matInput [value]="getInputMarks(item, stu.au_login_id)" placeholder="Please enter marks"
+                                            (change)="enterInputMarks(item, stu.au_login_id, $event.target)" pattern="[0-9]{1}|[0-9]{2}|[0-9]{3}|[AB]{1}">
                                 </ng-container>
                                 <ng-container *ngIf="exam_grade_type == '1'">
                                     <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                                         <mat-select [value]="getInputMarks(item, stu.au_login_id)"
-                                            (selectionChange)="enterInputMarks(item, stu.au_login_id, $event.value)"
+                                            (selectionChange)="enterInputMarks(item, stu.au_login_id, $event)"
                                             required>
                                             <mat-option *ngFor="let item of exam_grade_type_arr"
                                                 [value]="item.egs_grade_value">{{item.egs_grade_name}}
@@ -139,9 +142,9 @@
                 <div class="col-12 text-center" *ngIf="marksInputArray.length > 0 && isAnyoneEditable('0')">
                     <button mat-button class="btn-success-green" (click)="saveForm()">Save</button>
                     <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        (click)="saveForm('1')">Save & Submit</button>
+                        (click)="saveForm('1','1')">Save & Submit</button>
                     <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        (click)="saveForm('4')">Final Publish</button>
+                        (click)="saveForm('4','1')">Final Publish</button>
                 </div>
             </div>
         </mat-card>

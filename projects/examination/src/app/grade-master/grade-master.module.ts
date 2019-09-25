@@ -11,6 +11,7 @@ import { MarksEntryPrimaryComponent } from './marks-entry-primary/marks-entry-pr
 import { MarksEntrySecondaryComponent } from './marks-entry-secondary/marks-entry-secondary.component';
 import { MarksEntryFinalComponent } from './marks-entry-final/marks-entry-final.component';
 import { StudentAcademicProfileDetailsComponent } from './student-academic-profile-details/student-academic-profile-details.component';
+import { MarkEntrySubmitDialogComponent } from './mark-entry-submit-dialog/mark-entry-submit-dialog.component';
 
 @NgModule({
   imports: [
@@ -18,9 +19,9 @@ import { StudentAcademicProfileDetailsComponent } from './student-academic-profi
     GradeMasterRoutingModule,
     ExamSharedModule
   ],
-  declarations: [StudentAcademicProfileComponent, MarksEntryComponent, RemarksEntryComponent, ReviewComponent, ReviewDialog, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, StudentAcademicProfileDetailsComponent],
+  declarations: [StudentAcademicProfileComponent, MarksEntryComponent, RemarksEntryComponent, ReviewComponent, ReviewDialog, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, StudentAcademicProfileDetailsComponent, MarkEntrySubmitDialogComponent],
   entryComponents: [
-    ReviewDialog
+    ReviewDialog, MarkEntrySubmitDialogComponent
   ],
 })
 export class GradeMasterModule { }

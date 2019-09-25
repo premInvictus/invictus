@@ -178,7 +178,10 @@ export class ViewGradecardDialogComponent implements OnInit {
       if (this.gradeCardMarkArray && this.gradeCardMarkArray.length > 0) {
         this.gradeCardMarkArray.forEach(element1 => {
           if (element1.eme_sub_id === sub_id && element1.eme_exam_id === exam_id && element1.eme_subexam_id === element.se_id && Number(element1.eme_term_id) === Number(term)) {
-            const per = (element1.emem_marks / element.exam_max_marks) * 100;
+            let per = 0;
+            if(!isNaN(element1.emem_marks)) {
+              per = (element1.emem_marks / element.exam_max_marks) * 100;
+            }
             percentageArray.push({
               exam_max_marks: Number(element.exam_max_marks),
               se_id: element.se_id,
