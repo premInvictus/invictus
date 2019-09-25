@@ -92,21 +92,26 @@ export class RollnoAllotmentComponent implements OnInit {
 	}
 	// get section list according to selected class
 	getSectionsByClass() {
-		this.firstForm.patchValue({
-			'syl_section_id': ''
-		});
-		const sectionParam: any = {};
-		sectionParam.class_id = this.firstForm.value.syl_class_id;
-		this.smartService.getSectionsByClass(sectionParam)
-			.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.sectionArray = result.data;
-					} else {
-						this.sectionArray = [];
+		if (Number(this.firstForm.value.syl_board_id) === 0) {
+			this.fetchDetails();
+		} else {
+			this.firstForm.patchValue({
+				'syl_section_id': ''
+			});
+			const sectionParam: any = {};
+			sectionParam.class_id = this.firstForm.value.syl_class_id;
+			this.smartService.getSectionsByClass(sectionParam)
+				.subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.sectionArray = result.data;
+						} else {
+							this.sectionArray = [];
+						}
 					}
-				}
-			);
+				);
+		}
+
 	}
 	finalCancel() {
 		this.formgroupArray = [];
@@ -129,7 +134,9 @@ export class RollnoAllotmentComponent implements OnInit {
 		this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 		const studentParam: any = {};
 		studentParam.au_class_id = this.firstForm.value.syl_class_id;
-		studentParam.au_sec_id = this.firstForm.value.syl_section_id;
+		if (Number(this.firstForm.value.syl_board_id) === 1) {
+			studentParam.au_sec_id = this.firstForm.value.syl_section_id;
+		}
 		studentParam.au_role_id = '4';
 		studentParam.au_status = '1';
 		this.examService.getRollNoUser(studentParam)
@@ -152,7 +159,7 @@ export class RollnoAllotmentComponent implements OnInit {
 							this.formgroupArray.push({
 								formGroup: this.fbuild.group({
 									class_id: this.firstForm.value.syl_class_id,
-									sec_id: this.firstForm.value.syl_section_id,
+									sec_id: item.au_sec_id,
 									login_id: item.au_login_id,
 									roll_no: item.r_rollno,
 									board_roll_no: item.r_board_roll_no,
@@ -177,6 +184,9 @@ export class RollnoAllotmentComponent implements OnInit {
 		}
 		const checkParam: any = {};
 		checkParam.au_class_id = this.firstForm.value.syl_class_id;
+		if (Number(this.firstForm.value.syl_board_id) === 1) {
+			checkParam.au_sec_id = this.firstForm.value.syl_section_id;
+		}
 		checkParam.au_sec_id = this.firstForm.value.syl_section_id;
 		checkParam.au_ses_id = this.session.ses_id;
 		this.examService.checkRollNoForClass(checkParam).subscribe((result: any) => {
