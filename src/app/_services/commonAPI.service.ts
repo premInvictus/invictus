@@ -211,6 +211,9 @@ export class CommonAPIService {
 	getSchool() {
 		return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
 	}
+	insertReservoirData(value) {
+		return this.http.post(environment.apiReservUrl + '/reservoir/insertReservoirData', value);
+	}
 
 	getQTypeFromApi() {
 		return this.http.get(environment.apiAxiomUrl + '/setup/question_type/1');
