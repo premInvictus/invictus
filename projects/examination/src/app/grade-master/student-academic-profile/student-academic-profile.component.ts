@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { isNgTemplate } from '@angular/compiler';
 import { dateFilterCondition } from 'angular-slickgrid/app/modules/angular-slickgrid/filter-conditions/dateFilterCondition';
 import * as Highcharts from 'highcharts';
+import { roundToNearest } from 'angular-calendar/modules/common/util';
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/solid-gauge')(Highcharts);
@@ -92,6 +93,7 @@ export class StudentAcademicProfileComponent implements OnInit {
   gaugeOptions: any;
   startDate: any;
   studentClass: any;
+  totalWorkingDay = 0;
   processTypeArray: any[] = [
     { id: '1', name: 'Enquiry No.' },
     { id: '2', name: 'Registration No.' },
@@ -589,7 +591,7 @@ export class StudentAcademicProfileComponent implements OnInit {
         workingDayParam.class_id = this.studentClass;
         this.smartService.GetHolidayDays(workingDayParam).subscribe((result: any) => {
           if (result && result.status === 'ok') {
-
+              this.totalWorkingDay = result.data.workingDay;
           }
         }
         );
@@ -613,8 +615,8 @@ export class StudentAcademicProfileComponent implements OnInit {
             this.absent = Number(item.count);
           }
         }
-        this.attendancePercentage = (this.present * 100) / (this.absent + this.present);
-        this.gaugeOptions.yAxis.max = this.absent + this.present;
+        this.attendancePercentage = Math.round((this.present * 100) / (this.totalWorkingDay));
+        this.gaugeOptions.yAxis.max = this.totalWorkingDay;
         this.gaugeOptions.series[0].data[0].y = this.present;
         this.firstGauge = true;
       }
