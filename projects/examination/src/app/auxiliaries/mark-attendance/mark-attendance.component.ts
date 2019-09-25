@@ -14,18 +14,23 @@ export class MarkAttendanceComponent implements OnInit {
 	submitFlag = false;
 	defaultFlag = false;
 	finalDivFlag = true;
+	entry_date = new Date()
 	firstForm: FormGroup;
 	attendanceForm: FormGroup;
 	classArray: any[] = [];
 	sectionArray: any[] = [];
 	studentArray: any[] = [];
-	currentUser: any; 
+	currentUser: any;
 	session: any;
 	formgroupArray: any[] = [];
 	finalArray: any[] = [];
 	studentAttendanceArray: any[] = [];
 	presentFlag: any[] = [];
 	absentFlag: any[] = [];
+	totalStudent = 0;
+	presentStudent = 0;
+	absentStudent = 0;
+	defaultsrc: any;
 	attendanceArray: any[] = [
 		{ aid: 0, a_name: 'Absent' },
 		{ aid: 1, a_name: 'Present' },
@@ -52,7 +57,8 @@ export class MarkAttendanceComponent implements OnInit {
 	buildForm() {
 		this.firstForm = this.fbuild.group({
 			syl_class_id: '',
-			syl_section_id: ''
+			syl_section_id: '',
+			cw_entry_date: this.entry_date
 		});
 		this.attendanceForm = this.fbuild.group({
 			attendance: ''
@@ -121,13 +127,16 @@ export class MarkAttendanceComponent implements OnInit {
 			);
 	}
 	fetchDetails() {
-    this.finalArray = [];
+		this.presentStudent = 0;
+		this.absentStudent = 0;
+		this.finalArray = [];
 		this.formgroupArray = [];
 		this.studentArray = [];
 		this.studentAttendanceArray = [];
 		const studentParam: any = {};
 		studentParam.au_class_id = this.firstForm.value.syl_class_id;
 		studentParam.au_sec_id = this.firstForm.value.syl_section_id;
+		studentParam.ma_created_date = this.commonService.dateConvertion(this.firstForm.value.cw_entry_date);
 		studentParam.au_role_id = '4';
 		studentParam.au_status = '1';
 		this.examService.getUserAttendance(studentParam)
@@ -137,17 +146,25 @@ export class MarkAttendanceComponent implements OnInit {
 						this.finalDivFlag = false;
 						this.defaultFlag = true;
 						this.studentArray = result.data;
-						let counter = 1;
+						let counter = 0;
 						for (const item of this.studentArray) {
+							if (item.upd_gender === 'M') {
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+							  } else if (item.upd_gender === 'F') {
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+							  } else {
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+							  }
 							this.studentAttendanceArray.push({
 								sr_no: counter,
-								au_profileimage: item.au_profileimage ? item.au_profileimage : 'https://via.placeholder.com/150',
+								au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
 								au_full_name: new CapitalizePipe().transform(item.au_full_name),
 								au_roll_no: item.r_rollno,
 							});
 							this.finalArray.push({
 								class_id: this.firstForm.value.syl_class_id ? this.firstForm.value.syl_class_id : '',
 								sec_id: this.firstForm.value.syl_section_id ? this.firstForm.value.syl_section_id : '',
+								ma_created_date: this.commonService.dateConvertion(this.firstForm.value.cw_entry_date) ? this.commonService.dateConvertion(this.firstForm.value.cw_entry_date) : '',
 								login_id: item.au_login_id ? item.au_login_id : '',
 								roll_no: item.r_rollno ? item.r_rollno : '',
 								attendance: item.ma_attendance ? Number(item.ma_attendance) : '',
@@ -155,6 +172,12 @@ export class MarkAttendanceComponent implements OnInit {
 								created_by: this.currentUser.login_id ? this.currentUser.login_id : ''
 							});
 							counter++;
+							this.totalStudent = counter;
+							if (Number(item.ma_attendance) === 0) {
+								this.absentStudent++;
+							} else {
+								this.presentStudent++;
+							}
 						}
 					}
 				});
@@ -166,34 +189,43 @@ export class MarkAttendanceComponent implements OnInit {
 			for (const item of this.studentArray) {
 				this.finalArray[counter1].attendance = 0;
 				counter1++;
+				this.absentStudent = counter1;
+				this.presentStudent = 0;
 			}
 		} else {
 			let counter1 = 0;
 			for (const item of this.studentArray) {
 				this.finalArray[counter1].attendance = 1;
 				counter1++;
+				this.presentStudent = counter1;
+				this.absentStudent = 0;
 			}
 		}
 	}
 	changeStudentAttendanceStatus($event, i) {
 		this.submitFlag = true;
-		if (Number($event.value) === 0) {
+		if (this.finalArray[i].attendance === 1) {
 			this.finalArray[i].attendance = 0;
-		} else {
+			this.presentStudent--;
+			this.absentStudent++;
+		} else {			
+			this.presentStudent++;
+			this.absentStudent--;
 			this.finalArray[i].attendance = 1;
 		}
 	}
 	submit() {
 		this.requiredAll = true;
 		for (const item of this.finalArray) {
-			if(item.attendance === ''){
+			if (item.attendance === '') {
 				this.requiredAll = false;
 			}
 		}
-		if(this.requiredAll){
+		if (this.requiredAll) {
 			const checkParam: any = {};
 			checkParam.au_class_id = this.firstForm.value.syl_class_id;
 			checkParam.au_sec_id = this.firstForm.value.syl_section_id;
+			checkParam.ma_created_date = this.commonService.dateConvertion(this.firstForm.value.cw_entry_date);
 			checkParam.au_ses_id = this.session.ses_id;
 			this.examService.checkAttendanceForClass(checkParam).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -216,10 +248,10 @@ export class MarkAttendanceComponent implements OnInit {
 					});
 				}
 			});
-		} else{
+		} else {
 			this.commonService.showSuccessErrorMessage('Mark all student attendance', 'error');
 		}
-	
+
 	}
 
 }
