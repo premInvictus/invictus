@@ -122,7 +122,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-6">
                         <table class="custom-table table-100">
                             <thead>
@@ -140,7 +140,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> -->
             </ng-template>
             <ng-template #ccepattern>
                 <div class="row" *ngFor="let term of termArray">
@@ -149,28 +149,49 @@
                             <thead>
                                 <tr class="custom-tr">
                                     <th class="custom-th text-center" width="200px">Scholastic Areas</th>
-                                    <th [attr.colspan]="sexamArray.length + 2" class="custom-th text-center">Academic
+                                    <th [attr.colspan]="2" class="custom-th text-center">Academic
                                         Years
                                         ({{acedemicmarks}} Marks)</th>
                                 </tr>
                                 <tr class="custom-tr">
                                     <th class="custom-th text-center">Subject Name</th>
-                                    <th class="custom-th text-center" *ngFor="let item of sexamArray">
+                                    <!-- <th class="custom-th text-center" *ngFor="let item of sexamArray">
                                         {{item.exam_name | titlecase}}
-                                        <br>({{item.exam_weightage}})</th>
-                                    <th class="custom-th text-center">Grade</th>
+                                        <br>({{item.exam_weightage}})</th> -->
+                                    <th class="custom-th text-center" width="60px">Grade</th>
                                     <th class="custom-th text-center">Remark</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <ng-container *ngFor="let sub of subjectArray">
-                                    <tr class="custom-tr" *ngIf="sub.sub_type == 1 && sub.childSub.length == 0">
-                                        <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
-                                        <td class="custom-td" *ngFor="let item of sexamArray">
-                                            {{getGradePoint(getCalculatedMarks(sub.sub_id, item.exam_id,term))}}</td>
-                                        <td class="custom-td">{{calculateGradeCcePoint(sub.sub_id,term)}}</td>
-                                        <td class="custom-td"></td>
-                                    </tr>
+                                    <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv">
+                                        <tr class="custom-tr" *ngIf="sub.sub_type == 1">
+                                            <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
+                                            <!-- <td class="custom-td" *ngFor="let item of sexamArray">
+                                                {{getGradePoint(getCalculatedMarks(sub.sub_id, item.exam_id,term))}}
+                                            </td> -->
+                                            <td class="custom-td">{{calculateGradeCcePoint(sub.sub_id,term)}}</td>
+                                            <td class="custom-td">{{remarkOfSub(sub.sub_id) | titlecase}}</td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template #childdiv>
+                                        <tr class="custom-tr" *ngIf="sub.sub_type == 1">
+                                            <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
+                                            <!-- <td class="custom-td" *ngFor="let item of sexamArray"></td> -->
+                                            <td class="custom-td"></td>
+                                            <td class="custom-td"></td>
+                                        </tr>
+                                        <ng-container *ngFor="let sub1 of sub.childSub">
+                                            <tr class="custom-tr" *ngIf="sub1.sub_type == 1">
+                                                <td class="custom-td text-left padding-left-8px">{{sub1.sub_name}}</td>
+                                                <!-- <td class="custom-td" *ngFor="let item of sexamArray">
+                                                    {{getGradePoint(getCalculatedMarks(sub1.sub_id, item.exam_id,term))}}
+                                                </td> -->
+                                                <td class="custom-td">{{calculateGradeCcePoint(sub1.sub_id,term)}}</td>
+                                                <td class="custom-td">{{remarkOfSub(sub1.sub_id) | titlecase}}</td>
+                                            </tr>
+                                        </ng-container>
+                                    </ng-template>
                                 </ng-container>
                             </tbody>
 
@@ -201,14 +222,14 @@
                 </div>
             </ng-template>
 
-            <div class="row" *ngIf="resultdivflag">
+            <div class="row" *ngIf="resultdivflag && data.ect_exam_type == 2">
                 <div class="col-6">
                     <table>
                         <thead>
                             <tr><br></tr>
                             <tr>
                                 <th>Class Teacher's Remarks</th>
-                                <th>: ......................................................................</th>
+                                <th>: {{remarkOfSub() | titlecase}}</th>
                             </tr>
                             <tr><br></tr>
                             <tr class="margin-top-10">
@@ -237,8 +258,8 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th *ngIf="useTeacherSignature === '1'"> <img [src]="teacherSignature"
-                                                    height="60px" width="160px"></th>
+                                            <th *ngIf="useTeacherSignature === '1' && teacherSignature"> <img
+                                                    [src]="teacherSignature" height="60px" width="160px"></th>
                                         </tr>
                                         <tr>
                                             <th>Signature of Class Teacher</th>
@@ -250,8 +271,8 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th *ngIf="usePrincipalSignature === '1'"> <img [src]="principalSignature"
-                                                    height="60px" width="120px"></th>
+                                            <th *ngIf="usePrincipalSignature === '1' && principalSignature"> <img
+                                                    [src]="principalSignature" height="60px" width="120px"></th>
                                         </tr>
                                         <tr>
                                             <th>Signature of Principal</th>
@@ -264,14 +285,14 @@
                 </div>
             </div>
             <hr>
-            <div class="row">
+            <div class="row" *ngIf="data.ect_exam_type == 2">
                 <div class="col-12">
                     <span><b>Grading Scale for scholatic Area</b></span><span> : Grades are awarded on a 8-pont grading
                         scale as
                         follows</span>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="data.ect_exam_type == 2">
                 <div class="col-3"></div>
                 <div class="col-6">
 
@@ -302,7 +323,7 @@
             </div>
             <br>
             <div class="">
-
+                <div [innerHTML]="footer"></div>
                 <div style="width: 100%; height:10px; background-color:#f4981e;"></div>
                 <div style="width: 100%; height:10px; background-color:#159ec4"></div>
 

@@ -221,6 +221,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/ctForClass', value);
 	}
+	getRemarksEntryStudent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/gradeMaster/getRemarksEntryStudent', value);
+	}
 	
 }
 

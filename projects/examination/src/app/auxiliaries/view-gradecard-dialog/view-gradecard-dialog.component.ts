@@ -42,6 +42,8 @@ export class ViewGradecardDialogComponent implements OnInit {
   usePrincipalSignature: any
   useTeacherSignature: any
   header: any;
+  footer: any;
+  remarksArr: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
@@ -70,6 +72,37 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getGradeCardMark();
 
   }
+  getRemarksEntryStudent(sub_id = null) {
+    const param: any = {};
+    param.ere_class_id = this.data.class_id;
+    param.ere_sec_id = this.data.sec_id;
+    param.ere_term_id = this.data.param.eme_term_id;
+    if(sub_id) {
+      param.ere_sub_id = sub_id;
+    }
+    param.ere_remarks_type = this.data.ect_exam_type;
+    param.erem_login_id = this.data.au_login_id;
+    this.examService.getRemarksEntryStudent(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        console.log(result.data);
+        this.remarksArr = result.data;
+      }
+    })
+  }
+  remarkOfSub(sub_id = null) {
+    let remarkstr = '';
+    if(sub_id) {
+      if(this.remarksArr.length > 0) {
+        const temp = this.remarksArr.find(e => e.ere_sub_id === sub_id);
+        remarkstr = temp.erem_remark;
+      }
+    } else {
+      if(this.remarksArr.length > 0) {
+        remarkstr = this.remarksArr[0].erem_remark;
+      }
+    }
+    return remarkstr;
+  }
   ctForClass() {
     const param: any = {};
     param.uc_class_teacher = '1';
@@ -80,7 +113,7 @@ export class ViewGradecardDialogComponent implements OnInit {
         console.log(result.data);
         this.teacherSignature = result.data[0].usr_signature;
       }
-    })
+    });
   }
   getGlobalSetting() {
     let param: any = {};
@@ -97,6 +130,8 @@ export class ViewGradecardDialogComponent implements OnInit {
             this.usePrincipalSignature = element.gs_value;
           } else if (element.gs_alias === 'gradecard_use_teacher_signature') {
             this.useTeacherSignature = element.gs_value;
+          } else if (element.gs_alias === 'gradecard_footer') {
+            this.footer = element.gs_value;
           }
         });
       }
@@ -330,7 +365,14 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.subjectArray = [];
     this.smartService.getSubjectsByClass({ class_id: this.data.class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        const temp = result.data;
+        const temp: any[] = result.data;
+        if(this.data.ect_exam_type === '2') {
+          this.getRemarksEntryStudent();
+        } else {
+          console.log(temp);
+          console.log(temp.map(e => e.sub_id));
+          this.getRemarksEntryStudent(temp.map(e => e.sub_id));
+        }
         if (temp.length > 0) {
           temp.forEach(element => {
             if (element.sub_parent_id && element.sub_parent_id === '0') {
