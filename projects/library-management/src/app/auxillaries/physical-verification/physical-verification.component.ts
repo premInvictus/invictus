@@ -7,9 +7,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PhysicalVerificationComponent implements OnInit {
 
+  showMainPhyicalVerification = true;
+  showBookList = false;
+
   constructor() { }
 
   ngOnInit() {
+    
+  }
+
+  onClickVerifiedOn() {
+    this.showMainPhyicalVerification = false;
+    this.showBookList = true;
   }
 
 }
