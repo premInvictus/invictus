@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonAPIService } from 'src/app/_services';
+import { ErpCommonService } from 'src/app/_services';
 
 @Component({
   selector: 'app-book-search',
@@ -13,7 +13,7 @@ export class BookSearchComponent implements OnInit {
   enteredVal: any = false;
   gridViewClass = 'btn-success-blue-btn';
   listViewClass = 'default-view-button btn-spacer';
-  constructor(private common: CommonAPIService) { }
+  constructor(private common: ErpCommonService) { }
 
   ngOnInit() {
   }

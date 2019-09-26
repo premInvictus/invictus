@@ -7,23 +7,22 @@
             <span class="font-size-24 font-bold">Bar Code Printing</span>
           </div>
           <div class="col-6 text-right">
-            <mat-form-field appearance="outline" class=" form-field-150">
-              <mat-label>Book ID From</mat-label>
-              <input matInput placeholder="Book ID From" />
-            </mat-form-field>
-            <mat-form-field
-              appearance="outline"
-              class="btn-spacer form-field-150"
-            >
-              <mat-label>Book ID To</mat-label>
-              <input matInput placeholder="Book ID TO" />
-            </mat-form-field>
-            <button mat-raised-button class="btn-success-blue btn-spacer">
-              Advanced Filter
-            </button>
-            <button mat-raised-button class="btn-success-green btn-spacer">
-              Create Bar Code
-            </button>
+            <form [formGroup]="barCodePrintForm">
+              <mat-form-field appearance="outline" class=" form-field-150">
+                <mat-label>Book ID From</mat-label>
+                <input matInput placeholder="Book ID From" formControlName="reserv_id_from" type="number" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="btn-spacer form-field-150">
+                <mat-label>Book ID To</mat-label>
+                <input matInput placeholder="Book ID TO" formControlName="reserv_id_to" type="number" />
+              </mat-form-field>
+              <button mat-raised-button class="btn-success-blue btn-spacer align-btn-bar">
+                Advanced Filter
+              </button>
+              <button mat-raised-button class="btn-success-green btn-spacer align-btn-bar" (click)="getBarCode()">
+                Create Bar Code
+              </button>
+            </form>
           </div>
         </div>
       </mat-card>
@@ -32,206 +31,42 @@
 
   <div class="row">
     <div class="col-12">
-      <mat-card class="card-height-730">
-        <div class="margin-left-15 ">
-        <div class="row">
-          <div class="col-1 smart-col-11">
-            <span class="font-size-16 font-bold">The Three Musketeers</span
-            ><br />
-            <img
-              class="barcode-print"
-              src="../../../../../../src/assets/images/Library/barcode.png"
-            /><br />
-            <span class="font-size-14 font-bold">125487956</span
-            ><span class="float-right font-size-14 font-bold">H-2</span>
+      <mat-card class="card-height-730" [hidden]="!(barCodeArray.length > 0)">
+        <div class="margin-left-15" id="print-bars">
+          <div class="row">
+            <div class="col-3 smart-col-11" *ngFor="let item of barCodeArray">
+              <div class="bar-acc-div">
+                <span
+                  class="font-size-16 font-bold bar-tiltle-span">{{(item.title | titlecase) | truncatetext : 20}}</span>
+              </div>
+              <div class="barcode-print-lib">
+                <ngx-barcode bc-element-type="img" [bc-value]="item.reserv_id" bc-format="CODE128" bc-width="2">
+                </ngx-barcode>
+              </div>
+              <br />
+              <span class="font-size-14 font-bold bar-isbn-span">{{item.reserv_id}}</span><span
+                class="float-right font-size-14 font-bold bar-location-span">{{item.location}}</span>
+            </div>
+            <br>
           </div>
-          <div class="col-1 smart-col-11">
-            <span class="font-size-16 font-bold">The Three Musketeers</span
-            ><br />
-            <img
-              class="barcode-print"
-              src="../../../../../../src/assets/images/Library/barcode.png"
-            /><br />
-            <span class="font-size-14 font-bold">125487956</span
-            ><span class="float-right font-size-14 font-bold">H-2</span>
-          </div>
-          <div class="col-1 smart-col-11">
-            <span class="font-size-16 font-bold">The Three Musketeers</span
-            ><br />
-            <img
-              class="barcode-print"
-              src="../../../../../../src/assets/images/Library/barcode.png"
-            /><br />
-            <span class="font-size-14 font-bold">125487956</span
-            ><span class="float-right font-size-14 font-bold">H-2</span>
-          </div>
-          <div class="col-1 smart-col-11">
-            <span class="font-size-16 font-bold">The Three Musketeers</span
-            ><br />
-            <img
-              class="barcode-print"
-              src="../../../../../../src/assets/images/Library/barcode.png"
-            /><br />
-            <span class="font-size-14 font-bold">125487956</span
-            ><span class="float-right font-size-14 font-bold">H-2</span>
-          </div>
-          <div class="col-1 smart-col-11">
-            <span class="font-size-16 font-bold">The Three Musketeers</span
-            ><br />
-            <img
-              class="barcode-print"
-              src="../../../../../../src/assets/images/Library/barcode.png"
-            /><br />
-            <span class="font-size-14 font-bold">125487956</span
-            ><span class="float-right font-size-14 font-bold">H-2</span>
-          </div>
-          <div class="col-1 smart-col-11">
-            <span class="font-size-16 font-bold">The Three Musketeers</span
-            ><br />
-            <img
-              class="barcode-print"
-              src="../../../../../../src/assets/images/Library/barcode.png"
-            /><br />
-            <span class="font-size-14 font-bold">125487956</span
-            ><span class="float-right font-size-14 font-bold">H-2</span>
-          </div>
-          <div class="col-1 smart-col-11">
-            <span class="font-size-16 font-bold">The Three Musketeers</span
-            ><br />
-            <img
-              class="barcode-print"
-              src="../../../../../../src/assets/images/Library/barcode.png"
-            /><br />
-            <span class="font-size-14 font-bold">125487956</span
-            ><span class="float-right font-size-14 font-bold">H-2</span>
-          </div>
-          <div class="col-1 smart-col-11">
-            <span class="font-size-16 font-bold">The Three Musketeers</span
-            ><br />
-            <img
-              class="barcode-print"
-              src="../../../../../../src/assets/images/Library/barcode.png"
-            /><br />
-            <span class="font-size-14 font-bold">125487956</span
-            ><span class="float-right font-size-14 font-bold">H-2</span>
-          </div>
-          <div class="col-1 smart-col-11">
-            <span class="font-size-16 font-bold">The Three Musketeers</span
-            ><br />
-            <img
-              class="barcode-print"
-              src="../../../../../../src/assets/images/Library/barcode.png"
-            /><br />
-            <span class="font-size-14 font-bold">125487956</span
-            ><span class="float-right font-size-14 font-bold">H-2</span>
-          </div>
-        </div>
         </div>
         <hr class="margin-left-15 margin-right-15">
-        <div class="margin-left-15 ">
-            <div class="row">
-              <div class="col-1 smart-col-11">
-                <span class="font-size-16 font-bold">The Three Musketeers</span
-                ><br />
-                <img
-                  class="barcode-print"
-                  src="../../../../../../src/assets/images/Library/barcode.png"
-                /><br />
-                <span class="font-size-14 font-bold">125487956</span
-                ><span class="float-right font-size-14 font-bold">H-2</span>
-              </div>
-              <div class="col-1 smart-col-11">
-                <span class="font-size-16 font-bold">The Three Musketeers</span
-                ><br />
-                <img
-                  class="barcode-print"
-                  src="../../../../../../src/assets/images/Library/barcode.png"
-                /><br />
-                <span class="font-size-14 font-bold">125487956</span
-                ><span class="float-right font-size-14 font-bold">H-2</span>
-              </div>
-              <div class="col-1 smart-col-11">
-                <span class="font-size-16 font-bold">The Three Musketeers</span
-                ><br />
-                <img
-                  class="barcode-print"
-                  src="../../../../../../src/assets/images/Library/barcode.png"
-                /><br />
-                <span class="font-size-14 font-bold">125487956</span
-                ><span class="float-right font-size-14 font-bold">H-2</span>
-              </div>
-              <div class="col-1 smart-col-11">
-                <span class="font-size-16 font-bold">The Three Musketeers</span
-                ><br />
-                <img
-                  class="barcode-print"
-                  src="../../../../../../src/assets/images/Library/barcode.png"
-                /><br />
-                <span class="font-size-14 font-bold">125487956</span
-                ><span class="float-right font-size-14 font-bold">H-2</span>
-              </div>
-              <div class="col-1 smart-col-11">
-                <span class="font-size-16 font-bold">The Three Musketeers</span
-                ><br />
-                <img
-                  class="barcode-print"
-                  src="../../../../../../src/assets/images/Library/barcode.png"
-                /><br />
-                <span class="font-size-14 font-bold">125487956</span
-                ><span class="float-right font-size-14 font-bold">H-2</span>
-              </div>
-              <div class="col-1 smart-col-11">
-                <span class="font-size-16 font-bold">The Three Musketeers</span
-                ><br />
-                <img
-                  class="barcode-print"
-                  src="../../../../../../src/assets/images/Library/barcode.png"
-                /><br />
-                <span class="font-size-14 font-bold">125487956</span
-                ><span class="float-right font-size-14 font-bold">H-2</span>
-              </div>
-              <div class="col-1 smart-col-11">
-                <span class="font-size-16 font-bold">The Three Musketeers</span
-                ><br />
-                <img
-                  class="barcode-print"
-                  src="../../../../../../src/assets/images/Library/barcode.png"
-                /><br />
-                <span class="font-size-14 font-bold">125487956</span
-                ><span class="float-right font-size-14 font-bold">H-2</span>
-              </div>
-              <div class="col-1 smart-col-11">
-                <span class="font-size-16 font-bold">The Three Musketeers</span
-                ><br />
-                <img
-                  class="barcode-print"
-                  src="../../../../../../src/assets/images/Library/barcode.png"
-                /><br />
-                <span class="font-size-14 font-bold">125487956</span
-                ><span class="float-right font-size-14 font-bold">H-2</span>
-              </div>
-              <div class="col-1 smart-col-11">
-                <span class="font-size-16 font-bold">The Three Musketeers</span
-                ><br />
-                <img
-                  class="barcode-print"
-                  src="../../../../../../src/assets/images/Library/barcode.png"
-                /><br />
-                <span class="font-size-14 font-bold">125487956</span
-                ><span class="float-right font-size-14 font-bold">H-2</span>
-              </div>
-            </div>
-            </div>
         <br />
         <div class="row text-center">
           <div class="col-12">
-            <button mat-raised-button class="btn-success-green">Print</button>
+            <button mat-raised-button class="btn-success-green" (click)="printbars()">Print</button>
             <button mat-raised-button class="btn-reset btn-spacer">
               Cancel
             </button>
           </div>
         </div>
-        
+      </mat-card>
+      <mat-card *ngIf="barCodeArray.length === 0">
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+            [noDataText]="'No barcode to print'" [subText]="'Please filter data to print bar code'"></app-no-data>
+        </div>
       </mat-card>
     </div>
   </div>

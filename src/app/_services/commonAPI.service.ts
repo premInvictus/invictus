@@ -211,10 +211,6 @@ export class CommonAPIService {
 	getSchool() {
 		return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
 	}
-	insertReservoirData(value) {
-		return this.http.post(environment.apiReservUrl + '/reservoir/insertReservoirData', value);
-	}
-
 	getQTypeFromApi() {
 		return this.http.get(environment.apiAxiomUrl + '/setup/question_type/1');
 	}
@@ -269,8 +265,4 @@ export class CommonAPIService {
 	getSelectedChildData() {
 		return this.selectedChildData;
 	}
-	searchReservoir(value) {
-		return this.http.post(environment.apiReservUrl + '/booksearch/searchReservoir', value);
-	}
-
 }
