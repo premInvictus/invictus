@@ -157,13 +157,6 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ]
 })
-
-@NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: []
-})
 export class LibrarySharedModule {
   constructor() {
     const script: any = document.createElement('script');
