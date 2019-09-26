@@ -14,7 +14,20 @@
     background-color: rgb(100, 100, 100);
     color: #fff;
 }
-
+.blink{
+    background-color: #e11022;
+    text-align: center;
+}
+.blink span{
+    font-family: cursive;
+    color: white;
+    animation: blink 1s linear infinite;
+}
+@keyframes blink{
+    0%{opacity: 0;}
+    50%{opacity: .5;}
+    100%{opacity: 1;}
+    }
 .functional-button-two {
     z-index: 11111;
     position: fixed;
