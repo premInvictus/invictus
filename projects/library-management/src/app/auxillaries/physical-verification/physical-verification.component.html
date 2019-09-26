@@ -1,4 +1,4 @@
-<div class="main-physical-verificationa">
+<div class="main-physical-verification" *ngIf="showMainPhyicalVerification">
   <div class="row">
     <div class="col-12">
       <mat-card>
@@ -75,7 +75,7 @@
                 <tr>
                   <td class="custom-td">1</td>
                   <td class="custom-td">
-                    <a class="font-skyblue cursor-pointer">12-Sep-2019</a>
+                    <a class="font-skyblue cursor-pointer" (click)="onClickVerifiedOn()">12-Sep-2019</a>
                   </td>
                   <td class="custom-td text-left">
                     <span class="margin-left-15">Vikram singh Vedi</span>
@@ -94,28 +94,8 @@
   </div>
 </div>
 
-<div class="main-batch-container">
-  <div class="row">
-    <div class="col-12">
-      <mat-card>
-        <div class="row">
-          <div class="col-7 margin-top-15">
-            <span class="font-size-24 font-bold">Physical Verification</span>
-          </div>
-          <div class="col-4">
-            <mat-form-field class="form-field lib-form">
-              <input matInput placeholder="Add Book Code" />
-            </mat-form-field>
-          </div>
-          <div class="col-1 margin-top-15">
-            <button mat-button class="btn-lib-search">
-              <span class="font-size-11">Add to List</span>
-            </button>
-          </div>
-        </div>
-      </mat-card>
-    </div>
-  </div>
+<div class="main-batch-container" *ngIf="showBookList">
+  
   <div class="row">
     <div class="col-12">
       <mat-card>
@@ -123,17 +103,30 @@
           <div class="col-6">
             <span class="font-bold font-size-20">Books List</span>
           </div>
-          <div class="col-6 text-right">
-            <span class="font-size-16">Today : </span
-            ><span class="font-bold font-size-16">Tuesday, 22 Sep 2019</span>
-          </div>
+          
         </div>
       </mat-card>
     </div>
   </div>
   <div class="row">
     <div class="col-12">
+      <span class="font-size-16 opacity-7">Physical verification - </span><span class="font-bold">Book List</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
       <mat-card class="card-height-730">
+        <div class="row">
+          <div class="col-6 remove-col-padding">
+            <span class="font-size-14 font-bold">Verified On : </span><span class="font-size-14 opacity-7">10-Sep-2019</span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Verified By : </span><span class="font-size-14 opacity-7">Vikram Sing Bedi</span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">No. of Books : </span><span class="font-size-14 font-bold">1,254 Books</span>
+          </div>
+          <div class="col-6 text-right">
+              <span class="font-size-16">Today : </span
+              ><span class="font-bold font-size-16">Tuesday, 22 Sep 2019</span>
+            </div>
+        </div>
         <div class="row">
           <div class="col-2"></div>
           <div class="col-8">
@@ -154,7 +147,7 @@
                   <th class="custom-th">Author</th>
                   <th class="custom-th">Publisher</th>
                   <th class="custom-th">Location</th>
-                  <th class="custom-th">Action</th>
+                  <!-- <th class="custom-th">Action</th> -->
                 </tr>
               </thead>
               <tbody>
@@ -173,9 +166,9 @@
                     <span class="margin-left-15">TCK Publishing</span>
                   </td>
                   <td class="custom-td">H-1</td>
-                  <td class="custom-td">
+                  <!-- <td class="custom-td">
                     <i class="fas fa-trash font-color-red"></i>
-                  </td>
+                  </td> -->
                 </tr>
               </tbody>
             </table>
@@ -195,3 +188,4 @@
     </div>
   </div>
 </div>
+
