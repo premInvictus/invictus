@@ -250,7 +250,8 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.sexamArray.forEach(element => {
       gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id, term);
     });
-    const grade = Math.round(gradeMarks / this.sexamArray.length);
+    //const grade = Math.round(gradeMarks / this.sexamArray.length);
+    const grade = gradeMarks;
     if (Number(term) === Number(this.data.param.eme_term_id)) {
       this.totalexecutedSolasticSubject++;
       this.gradePerTermOnScholastic.push({
