@@ -42,35 +42,38 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="custom-td">1</td>
+                <tr *ngFor="let item of bookData; let i = index">
+                  <td class="custom-td">{{i+ 1}}</td>
                   <td class="custom-td">
-                    <a class="font-skyblue cursor-pointer">125845899</a>
+                    <a class="font-skyblue cursor-pointer">{{item.reserv_id}}</a>
                   </td>
                   <td class="custom-td text-left">
-                    <span class="margin-left-15">River of Smaoke</span>
+                    <span class="margin-left-15">{{item.title | titlecase}}</span>
                   </td>
                   <td class="custom-td text-left padding-left-15">
-                    <span class="margin-left-15">Dolores Umbridge</span>
+                    <span class="margin-left-15">{{item.authors}}</span>
                   </td>
                   <td class="custom-td text-center ">
-                    <span class="">H-1</span>
+                    <span class="">{{item.location}}</span>
                   </td>
                   <td class="custom-td text-center padding-8">
-                    <mat-form-field class="form-field lib-form">
-                      <input matInput placeholder="RFID No." />
-                    </mat-form-field>
+                    <form [formGroup]="formGroupArray[i].formGroup">
+                      <mat-form-field class="form-field lib-form">
+                        <input matInput [placeholder]="!(formGroupArray[i].formGroup.value.rfid) ? 'Enter RFID No..' : ''" formControlName="rfid"/>
+                      </mat-form-field>
+                    </form>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="col-2"></div>
+          <div class=" col-2">
+          </div>
         </div>
         <br />
         <div class="row text-center">
           <div class="col-12">
-            <button mat-raised-button class="btn-success-green">Submit</button>
+            <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
             <button mat-raised-button class="btn-reset btn-spacer">
               Reset
             </button>
