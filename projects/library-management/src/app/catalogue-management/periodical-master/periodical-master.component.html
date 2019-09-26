@@ -1,3 +1,82 @@
-<p>
-  periodical-master works!
-</p>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-6">
+          <span class="font-size-24">Periodical Master</span>
+        </div>
+        <div class="col-6 text-right">
+          <button mat-raised-button class="btn-success-blue" (click)="openAddSubscriptionDialog()">
+            Add Subscription
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <mat-card class="card-height-730">
+            <div class="row">
+              <div class="col-6">
+                <span class="font-bold font-size-20">Subscription List</span>
+              </div>
+            </div>
+            <div class="row">
+              
+              <div class="col-12">
+                <div class="row ">
+                  <div class="col-10 remove-col-padding">
+                    <mat-form-field appearance="legacy lib-form">
+                      <input matInput placeholder="Search" />
+                      <mat-icon matPrefix>filter_list</mat-icon>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <table class="custom-table">
+                  <thead>
+                    <tr class="custom-tr text-center">
+                      <th class="custom-th">Sr No.</th>
+                      <th class="custom-th">Subscription ID</th>
+                      <th class="custom-th">Subscription Name</th>
+                      <th class="custom-th">Subscription Type</th>
+                      <th class="custom-th">Frequency</th>
+                      <th class="custom-th">Start Date</th>
+                      <th class="custom-th">End Date</th>
+                      <th class="custom-th">Vender</th>
+                      <th class="custom-th">Status</th>
+                      <th class="custom-th">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="custom-td">1</td>
+                      <td class="custom-td">
+                        <a class="font-skyblue cursor-pointer">12345689</a>
+                      </td>
+                      <td class="custom-td text-left">
+                        <span class="margin-left-15">The Indian Express</span>
+                      </td>
+                      <td class="custom-td text-left padding-left-15">
+                        <span class="margin-left-15">Newspaper</span>
+                      </td>
+                      <td class="custom-td text-left padding-left-15">
+                        <span class="margin-left-15">Daily</span>
+                      </td>
+                      <td class="custom-td">13-Sep-2019</td>
+                      <td class="custom-td">20-Sep-2019</td>
+                      <td class="custom-td text-left "><span class="margin-left-15">Vikram Kumar Vedi</span></td>
+                      <td class="custom-td text-left "><span class="margin-left-15">Active</span></td>
+                      <td class="custom-td">
+                          <span><i class="fas fa-edit font-color-grey margin-right-15" ></i></span>
+                        <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"></i></span>
+                                </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </mat-card>
+    </div>
+  </div>
