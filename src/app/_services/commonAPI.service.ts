@@ -183,7 +183,7 @@ export class CommonAPIService {
 		return this.http.post('/dashboard/getProjectList', param);
 	}
 
-	dateConvertion(value, format= 'yyyy-MM-dd') {
+	dateConvertion(value, format = 'yyyy-MM-dd') {
 		const datePipe = new DatePipe('en-US');
 		return datePipe.transform(value, format);
 	}
@@ -268,6 +268,9 @@ export class CommonAPIService {
 
 	getSelectedChildData() {
 		return this.selectedChildData;
+	}
+	searchReservoir(value) {
+		return this.http.post(environment.apiReservUrl + '/booksearch/searchReservoir', value);
 	}
 
 }
