@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, Input, ViewChild, OnChanges, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Input, ViewChild, OnChanges, OnDestroy, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,6 +18,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	@Input() configSetting: any;
 	@ViewChild('cropModal') cropModal;
 	@ViewChild('editReference') editReference;
+	@ViewChild('enrollmentFocus') enrollmentFocus: ElementRef;
 	nextEvent = new Subject();
 	@Output() nextUserEvent: EventEmitter<any> = new EventEmitter<any>();
 	studentdetailsform: FormGroup;
@@ -57,6 +58,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	classPlaceHolder: any;
 	gender: any;
 	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('myInput') myInput: ElementRef;
 	openDeleteDialog = (data) => {
 		this.deleteModal.openModal(data);
 	}
@@ -81,6 +83,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		this.buildForm();
 		this.getClass();
 		this.getHouses();
+		const inputElem = <HTMLInputElement>this.myInput.nativeElement;
+		inputElem.select();
 		this.commonAPIService.studentData.subscribe((data: any) => {
 			if (data && data.last_record) {
 				if (this.login_id !== data.last_record) {
@@ -187,6 +191,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			this.divFlag = true;
 			this.editOnly = true;
 			this.deleteOnly = true;
+			const inputElem = <HTMLInputElement>this.myInput.nativeElement;
+			inputElem.select();
 			// this.commonAPIService.studentData.next(this.studentdetailsform.value.au_enrollment_id);
 			if (this.lastStudentDetails.enrollment_id === this.studentdetailsform.value.au_enrollment_id) {
 				this.firstB = false;
@@ -313,6 +319,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 							this.previousB = false;
 						}
 					}
+					const inputElem = <HTMLInputElement>this.myInput.nativeElement;
+					inputElem.select();
 
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
@@ -620,7 +628,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 					|| (Number(result.process_type) === 5 && this.route.snapshot.routeConfig.path === 'alumini')) {
 					this.getStudentDetailsByAdmno(result.adm_no);
 				} else {
-					this.router.navigate(['../' + url], {relativeTo: this.route});
+					this.router.navigate(['../' + url], { relativeTo: this.route });
 				}
 			}
 		});
