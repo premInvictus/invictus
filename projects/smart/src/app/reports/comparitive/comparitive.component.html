@@ -96,6 +96,8 @@
                                 <th class="custom-th" colspan="3">No. of Period Taken To</th>
                                 <th class="custom-th" rowspan="2">Total</th>
                                 <th class="custom-th" rowspan="2" colspan="2">Deviation</th>
+                                <th class="custom-th" rowspan="2">Estimated Period Of Completion</th>
+                                <th class="custom-th" rowspan="2">Status</th>
 
                             </tr>
                             <tr class="custom-tr">
@@ -151,25 +153,30 @@
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
                                                 {{item.total1}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 1 && det.cw_period_teacher !== 0"
+                                            <td class="custom-td"
+                                                *ngIf="det.sd_ctr_id == 1 && det.cw_period_teacher !== 0"
                                                 [ngStyle]="{'background-color': getcolor(det.sd_period_teacher - det.cw_period_teacher)}">
                                                 {{det.sd_period_teacher - det.cw_period_teacher}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 1 && det.cw_period_teacher === 0">
+                                            <td class="custom-td"
+                                                *ngIf="det.sd_ctr_id == 1 && det.cw_period_teacher === 0">
                                                 {{det.sd_period_teacher - det.cw_period_teacher}}
                                             </td>
                                             <td class="custom-td" *ngIf="det.sd_ctr_id == 2 && det.cw_period_test !== 0"
                                                 [ngStyle]="{'background-color': getcolor(det.sd_period_test - det.cw_period_test)}">
                                                 {{det.sd_period_test - det.cw_period_test}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 2 && det.cw_period_test === 0">
+                                            <td class="custom-td"
+                                                *ngIf="det.sd_ctr_id == 2 && det.cw_period_test === 0">
                                                 {{det.sd_period_test - det.cw_period_test}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 3 && det.cw_period_revision !== 0"
+                                            <td class="custom-td"
+                                                *ngIf="det.sd_ctr_id == 3 && det.cw_period_revision !== 0"
                                                 [ngStyle]="{'background-color': getcolor(det.sd_period_revision - det.cw_period_revision)}">
                                                 {{det.sd_period_revision - det.cw_period_revision}}
                                             </td>
-                                            <td class="custom-td" *ngIf="det.sd_ctr_id == 3 && det.cw_period_revision === 0">
+                                            <td class="custom-td"
+                                                *ngIf="det.sd_ctr_id == 3 && det.cw_period_revision === 0">
                                                 {{det.sd_period_revision - det.cw_period_revision}}
                                             </td>
                                             <td rowspan="5" class="custom-td " *ngIf="j == 0 && item.total1 !== 0"
@@ -177,6 +184,22 @@
                                                 [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
                                             <td rowspan="5" class="custom-td " *ngIf="j == 0 && item.total1 === 0"
                                                 [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
+                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                                {{getDatePeriod(item.estimateDate, i)}}
+                                            </td>
+                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                                <ng-container>
+                                                    <i *ngIf="item && item.statusDetails"
+                                                        class="fas fa-check-circle font-size-40 font-color-{{item.statusDetails.color}}"></i><br>
+                                                    <span *ngIf="item && item.statusDetails"
+                                                        class="font-size-14 font-regular">{{item.statusDetails.statusStr}}
+                                                    </span> <br>
+                                                    <span
+                                                        *ngIf="item && item.statusDetails && item.statusDetails.statusFlag"
+                                                        class="font-size-12 font-bold">
+                                                        {{item.statusDetails.statusDate | date:'dd MMM, yyyy'}}</span>
+                                                </ng-container>
+                                            </td>
                                         </tr>
                                     </ng-container>
                                 </ng-container>
@@ -216,6 +239,10 @@
                                 </td>
                                 <td class="custom-td">
                                     {{deviationSum}}
+                                </td>
+                                <td class="custom-td">
+                                </td>
+                                <td class="custom-td">
                                 </td>
                             </tr>
                         </tbody>

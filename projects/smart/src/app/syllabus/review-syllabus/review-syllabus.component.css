@@ -23,3 +23,9 @@ tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }
     margin-left: 10px;
     margin-right: 10px;
 }
+.topic-width{
+    width: 15%;
+}
+.desc-width{
+    width: 20%;
+}
