@@ -2,12 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
+import * as moment from 'moment/moment';
+import { TitleCasePipe, DatePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
 declare var require;
 import * as Excel from 'exceljs/dist/exceljs';
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
-import { TitleCasePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
 import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
 
@@ -19,6 +20,7 @@ import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
 export class ComparitiveComponent implements OnInit {
 
 	editRequestFlag = false;
+	startDate: any;
 	finalDivFlag = true;
 	headerDivFlag = false;
 	comparitiveForm: FormGroup;
@@ -555,6 +557,25 @@ export class ComparitiveComponent implements OnInit {
 			return '#dc3545a6';
 		}
 	}
+	getDatePeriod(date, index) {
+		if (date) {
+			if (index === 0) {
+				return new DatePipe('en-in').transform(this.startDate, 'dd MMM, yyyy') + ' - '
+					+ new DatePipe('en-in').transform(date, 'dd MMM, yyyy');
+			}
+			if (index > 0) {
+				const date2 = new Date(this.finalSpannedArray[index - 1].estimateDate).getDate() + 1;
+				let month: any = Number(new Date(this.finalSpannedArray[index - 1].estimateDate).getMonth()) + 1;
+				if (month <= 9) {
+					month = '0' + month;
+				}
+				const year = new Date(this.finalSpannedArray[index - 1].estimateDate).getFullYear();
+				const finalDate = year + '-' + month + '-' + date2;
+				return new DatePipe('en-in').transform(finalDate, 'dd MMM, yyyy') + ' - '
+					+ new DatePipe('en-in').transform(this.finalSpannedArray[index].estimateDate, 'dd MMM, yyyy');
+			}
+		}
+	}
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
 		this.teachingSum = 0;
@@ -577,7 +598,15 @@ export class ComparitiveComponent implements OnInit {
 				(result1: any) => {
 					if (result1 && result1.status === 'ok') {
 						this.getTopicByClassSubject();
-						this.finalSyllabusArray = result1.data;
+						this.finalSyllabusArray = result1.data.syllabusDetails;
+						const topicwiseDetails = result1.data.topicwiseDetails;
+						const classworkDetails = result1.data.classworkDetails;
+						const periodCoundDetails = result1.data.periodCoundDetails;
+						const scheduleDetails = result1.data.scheduleDetails;
+						const sessionStartDate = result1.data.sessionStartDate;
+						this.startDate = '';
+						this.startDate = sessionStartDate;
+						const sessionEndDate = result1.data.sessionEndDate;
 						for (let i = 0; i < this.finalSyllabusArray.length; i++) {
 							let sd_period_teacher: any = '';
 							let sd_period_test: any = '';
@@ -683,6 +712,88 @@ export class ComparitiveComponent implements OnInit {
 							}
 						}
 						this.deviationSum = (this.teachingSum + this.testSum + this.revisionSum) - (this.cwteachingSum + this.cwtestSum + this.cwrevisionSum);
+						if (this.finalSpannedArray.length > 0) {
+							let totalPeriodFromInitial = 0;
+							this.finalSpannedArray.forEach(element => {
+								totalPeriodFromInitial = totalPeriodFromInitial + Number(element.total);
+								let estimateDate = '';
+								if (sessionStartDate && sessionEndDate && scheduleDetails) {
+									let notp = totalPeriodFromInitial;
+									const sessionSD = moment(sessionStartDate);
+									const sessionED = moment(sessionEndDate);
+									for (const d = sessionSD; d.diff(sessionED) <= 0; d.add(1, 'days')) {
+										// console.log(d.format('YYYY-MM-DD'));
+										// if day is sunday
+										if (d.day() === 0) {
+											continue;
+										} else {
+											if (scheduleDetails && scheduleDetails.length > 0) {
+												const sdIndex = scheduleDetails.findIndex(e => e.sc_date === d.format('YYYY-MM-DD'));
+												if (sdIndex !== -1) {
+													continue;
+												} else {
+													notp = notp - periodCoundDetails[d.day()];
+													if (notp <= 0) {
+														estimateDate = d.format('YYYY-MM-DD');
+														break;
+													}
+												}
+
+											}
+										}
+
+									}
+								}
+								const eachTopicStatus: any = {};
+								eachTopicStatus.statusStr = 'Yet To Start';
+								eachTopicStatus.statusDate = '';
+								eachTopicStatus.color = 'red';
+								eachTopicStatus.statusFlag = false;
+								if (topicwiseDetails && topicwiseDetails.length > 0) {
+									const findex = topicwiseDetails.findIndex(e => e.tw_topic_id === element.sd_topic_id);
+									if (findex !== -1) {
+										const tempArr = topicwiseDetails[findex].ctr_group.split(',');
+										if (tempArr.length === 3) {
+											eachTopicStatus.statusStr = 'Completed';
+											eachTopicStatus.statusDate = topicwiseDetails[findex].compilation_date;
+											eachTopicStatus.statusFlag = true;
+											eachTopicStatus.color = 'green';
+										} else if (tempArr.length === 2) {
+											eachTopicStatus.statusStr = 'Revision Done';
+											eachTopicStatus.statusDate = topicwiseDetails[findex].compilation_date;
+											eachTopicStatus.statusFlag = true;
+											eachTopicStatus.color = 'green';
+										} else if (tempArr.length === 1) {
+											eachTopicStatus.statusStr = 'Course Completed';
+											eachTopicStatus.statusDate = topicwiseDetails[findex].compilation_date;
+											eachTopicStatus.statusFlag = true;
+											eachTopicStatus.color = 'green';
+										}
+									} else {
+										const cindex = classworkDetails.findIndex(c => c.cw_topic_id === element.sd_topic_id);
+										if (cindex !== -1) {
+											eachTopicStatus.statusStr = 'In Progress';
+											eachTopicStatus.color = 'yellow';
+											eachTopicStatus.statusFlag = false;
+										}
+									}
+								} else {
+									if (classworkDetails && classworkDetails.length > 0) {
+										const cindex = classworkDetails.findIndex(c => c.cw_topic_id === element.sd_topic_id);
+										if (cindex !== -1) {
+											eachTopicStatus.statusStr = 'In Progress';
+											eachTopicStatus.color = 'yellow';
+											eachTopicStatus.statusFlag = false;
+										}
+									}
+								}
+								element.statusDetails = eachTopicStatus;
+								element.initialTotal = totalPeriodFromInitial;
+								element.estimateDate = estimateDate;
+							});
+							console.log(this.finalSpannedArray);
+						}
+
 					} else {
 						this.finalSpannedArray = [];
 						this.finalDivFlag = true;

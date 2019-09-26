@@ -150,7 +150,7 @@
                                         <mat-option value="">Please select</mat-option>
                                         <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
                                             {{item.topic_name}}
-                                        </mat-option>
+                                        </mat-option> 
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -239,19 +239,19 @@
                                             <ng-container>
                                                 <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
                                                     <!-- <td *ngIf="j == 0" class="custom-td" [attr.rowspan]="item.details.length">{{i+1}}</td> -->
-                                                    <td class="custom-td" *ngIf="j == 0"
+                                                    <td class="custom-td topic-width" *ngIf="j == 0"
                                                         [attr.rowspan]="item.details.length">
                                                         {{getTopicName(item.sd_topic_id)}}</td>
-                                                    <td class="custom-td" *ngIf="det.sd_ctr_id == 1">
+                                                    <td class="custom-td topic-width" *ngIf="det.sd_ctr_id == 1">
                                                         {{getSubTopicName(det.sd_st_id)}}
                                                     </td>
-                                                    <td class="custom-td" *ngIf="det.sd_ctr_id == 2">
+                                                    <td class="custom-td topic-width" *ngIf="det.sd_ctr_id == 2">
                                                         Test
                                                     </td>
-                                                    <td class="custom-td" *ngIf="det.sd_ctr_id == 3">
+                                                    <td class="custom-td topic-width" *ngIf="det.sd_ctr_id == 3">
                                                         Revision
                                                     </td>
-                                                    <td class="custom-td">
+                                                    <td class="custom-td desc-width">
                                                         <div [innerHTML]="det.sd_desc"></div>
                                                     </td>
                                                     <td class="custom-td">
