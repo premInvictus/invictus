@@ -12,11 +12,17 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getStudentInvoice', value);
 	}
+	updateRFIDMapping(value) {
+		return this.http.post(environment.apiReservUrl + '/rfidmapping/updateRFIDMapping', value);
+	}
 	insertReservoirData(value) {
 		return this.http.post(environment.apiReservUrl + '/reservoir/insertReservoirData', value);
 	}
 	searchReservoir(value) {
 		return this.http.post(environment.apiReservUrl + '/booksearch/searchReservoir', value);
+	}
+	getReservoirData(value) {
+		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirData', value);
 	}
 	getBarcodePrint(value) {
 		return this.http.post(environment.apiReservUrl + '/barcodeprint/getBarcodePrint', value);
