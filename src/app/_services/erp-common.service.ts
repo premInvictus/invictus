@@ -24,6 +24,15 @@ export class ErpCommonService {
 	getReservoirData(value) {
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirData', value);
 	}
+	getLanguages(value) {
+		return this.http.post(environment.apiReservUrl + '/reservoir/getLanguages', value);
+	}
+	getVendor(value) {
+		return this.http.post(environment.apiReservUrl + '/vendor/getVendor', value);
+	}
+	getGenres(value) {
+		return this.http.post(environment.apiReservUrl + '/reservoir/getGenres', value);
+	}
 	getBarcodePrint(value) {
 		return this.http.post(environment.apiReservUrl + '/barcodeprint/getBarcodePrint', value);
 	}
