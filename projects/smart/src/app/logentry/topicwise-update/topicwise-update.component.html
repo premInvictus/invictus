@@ -16,7 +16,7 @@
                 <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
                   [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
                 <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
+                  <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id" 
                     (onSelectionChange)="setTeacherId(item)">
                     <small>{{item.au_full_name | capitalize}} ( {{item.au_login_id}} )</small>
                   </mat-option>
@@ -33,11 +33,19 @@
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
                 appearance="outline">
                 <mat-label>Subject</mat-label>
-                <mat-select formControlName="tw_sub_id" (selectionChange)="getTopicwiseDetails()">
+                <mat-select formControlName="tw_sub_id" (selectionChange)="getTopicwiseDetails();getClassTerm();">
                   <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name | capitalize}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+              appearance="outline">
+              <mat-label>Term</mat-label>
+              <mat-select formControlName="tw_term_id" (selectionChange)="getTopicwiseDetails();">
+                <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name | capitalize}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
             </div>
           </div>
         </div>

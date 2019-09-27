@@ -198,5 +198,8 @@ export class CommonAPIService {
 			return false;
 		}
 	}
-
+	getClassTerm(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiExamUrl + '/common/getClassTerm', value);
+	}
 }
