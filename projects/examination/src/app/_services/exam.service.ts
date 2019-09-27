@@ -225,6 +225,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/gradeMaster/getRemarksEntryStudent', value);
 	}
+	printGradecard(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/printGradecard', value);
+	}
 	
 }
 
