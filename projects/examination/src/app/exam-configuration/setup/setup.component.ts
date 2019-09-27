@@ -659,7 +659,9 @@ export class SetupComponent implements OnInit {
 			this.configFlag = true;
 		}
 	}
-
+	deleteCancel(){
+		
+	}
 	deleteConfirm({ data, type }) {
 		switch (type) {
 			case '1': // for exam setup

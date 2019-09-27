@@ -10,6 +10,7 @@ import { ProjectComponent } from './project/project.component';
 import { MatSidenavModule, MatTooltipModule, MatButtonModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { AccordionModule } from 'ngx-bootstrap';
+import { IndianCurrency } from '../_pipes';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -23,7 +24,7 @@ import { AccordionModule } from 'ngx-bootstrap';
 		RouterModule,
 		AccordionModule.forRoot(),
 	],
-	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent],
+	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent,IndianCurrency],
 	exports: [
 		TopNavComponent,
 		SideNavComponent,

@@ -313,7 +313,7 @@ export class AddSyllabusComponent implements OnInit {
 						this.topicArray = [];
 					}
 				}
-			);
+			); 
 	}
 
 	//  Get Subtopic List function
@@ -833,7 +833,7 @@ export class AddSyllabusComponent implements OnInit {
 												sd_period_req: fetch.sd_period_req,
 												sd_st_id: fetch.sd_st_id,
 												sd_desc: fetch.sd_desc
-											});
+											}); 
 										}
 									}
 									this.syllabusService.insertSyllabusDetails(this.finalSubmitArray).subscribe((result1: any) => {
