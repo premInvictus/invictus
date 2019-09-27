@@ -23,3 +23,38 @@
     border: none !important;
     border-radius: 5px 5px 5px 5px !important;
 }
+.book-title-container-clicked {
+    width: 160px !important;
+    height: 230px !important;
+    background: rgb(0, 0, 0, 0.7) !important;
+    transition: 0.5s !important;
+    transition-delay: 0.2s;
+    position: absolute !important;
+    bottom: 0 !important;
+    border-bottom-left-radius: 5px !important;
+    cursor: pointer !important;
+  }
+
+  .book-title-container-clicked .book-first-content {
+      display: none !important;
+  }
+
+  .book-title-container-default .book-second-content {
+    display: none !important;
+}
+
+.book-title-container-clicked .book-second-content {
+    display: block !important;
+}
+
+.book-title-container-default {
+    width: 160px !important;
+    height: 50px !important;
+    background: rgb(0, 0, 0, 0.7) !important;
+    transition-delay: 0.2s;
+    transition: 0.5s !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    border-bottom-left-radius: 5px !important;
+    cursor: pointer !important;
+}

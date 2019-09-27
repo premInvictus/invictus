@@ -58,16 +58,15 @@
         </div>
         <div class="grid-view" *ngIf="gridView">
           <div class="row margin-top-20">
-            <div class="col-1 smart-col-10" *ngFor="let item of bookData">
+            <div class="col-1 smart-col-10" *ngFor="let item of bookData; let i = index;">
               <div class="book-container">
                 <img class="book-cover-img" [src]="item.images_links.thumbnail" />
-                <div class="book-title-container">
+                <div [class]="item.book_container_class">
                   <div class="book-title-content text-center" style="padding: 3px !important">
-                    <div class="book-first-content">
+                    <div class="book-first-content" (click)="showSecondDetailDiv(i); $event.stopPropagation();">
                       <span class="font-size-16"><b>{{item.title | truncatetext}}</b></span>
                     </div>
-                    <div class="book-second-content" style="padding: 30px !important">
-                      <!-- <span class="font-size-18 font-medium">{{item.isbn ? item.isbn : item.reserv_id}}</span><br /> -->
+                    <div class="book-second-content" style="padding: 30px !important" (click)="showFirstDetailDiv(i); $event.stopPropagation()">
                       <span class="font-size-16 font-medium"><b>{{item.title ? item.title : ''}}</b></span><br />
                       <span class="font-size-14 font-medium">{{item.authors}}</span>
                       <div class="font-size-14 margin-top-15 font-medium">

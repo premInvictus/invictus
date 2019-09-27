@@ -24,12 +24,16 @@ export class BookSearchComponent implements OnInit {
       this.common.searchReservoir({
         searchData: {
           isbn: '',
-          reserv_id : Number($event.target.value)
+          reserv_id: Number($event.target.value)
         }
       }).subscribe((res: any) => {
         if (res && res.data) {
-          this.bookData = res.data;
+          for (const item of res.data) {
+            item.book_container_class = 'book-title-container-default';
+            this.bookData.push(item);
+          }
           this.searchFlag = true;
+          console.log(this.bookData);
         }
       });
     } else {
@@ -48,5 +52,11 @@ export class BookSearchComponent implements OnInit {
       this.gridViewClass = 'default-view-button';
       this.listViewClass = 'btn-success-blue-btn btn-spacer';
     }
+  }
+  showSecondDetailDiv(index) {
+    this.bookData[index].book_container_class = 'book-title-container-clicked';
+  }
+  showFirstDetailDiv(index) {
+    this.bookData[index].book_container_class = 'book-title-container-default';
   }
 }
