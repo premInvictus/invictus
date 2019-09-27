@@ -72,10 +72,10 @@ export class GradecardPrintingComponent implements OnInit {
   printGradecard(item=null) {
     const printData: any[] = [];
     if(item) {
-      printData.push({login_id: item.au_login_id});
+      printData.push(item.au_login_id);
     } else {
       this.selection.selected.forEach(e => {
-        printData.push({login_id: e.au_login_id});
+        printData.push(e.au_login_id);
       });
     }
     const param: any = {};
