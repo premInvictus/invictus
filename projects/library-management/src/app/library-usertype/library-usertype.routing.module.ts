@@ -14,6 +14,10 @@ const routes: Routes = [
             {
                 path: 'circulation-management',
                 loadChildren: 'projects/library-management/src/app/circulation-management/circulation-management.module#CirculationManagementModule'
+            },
+            {
+                path: 'catalogue-management',
+                loadChildren: 'projects/library-management/src/app/catalogue-management/catalogue-management.module#CatalogueManagementModule'
             }]
     }];
 @NgModule({

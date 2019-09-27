@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { CatalogueManagementRoutingModule } from './catalogue-management-routing.module';
 import { LibrarySharedModule } from '../library-shared/library-shared.module';
+import { AccessionMasterComponent } from './accession-master/accession-master.component';
+import { PeriodicalMasterComponent } from './periodical-master/periodical-master.component';
+import { VendorMasterComponent } from './vendor-master/vendor-master.component';
+import { PurchaseMasterComponent } from './purchase-master/purchase-master.component';
 
 @NgModule({
   imports: [
@@ -10,6 +14,6 @@ import { LibrarySharedModule } from '../library-shared/library-shared.module';
     CatalogueManagementRoutingModule,
     LibrarySharedModule
   ],
-  declarations: []
+  declarations: [AccessionMasterComponent, PeriodicalMasterComponent, VendorMasterComponent, PurchaseMasterComponent]
 })
 export class CatalogueManagementModule { }

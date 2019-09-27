@@ -1,0 +1,25 @@
+.default-view-button {
+    background: #fff !important;
+    color: #1e88e5 !important;
+    padding: 0px 20px;
+    text-transform: capitalize;
+    font-size: 13px !important;
+    padding: 0px 20px !important;
+    height: 28px !important;
+    width: 120px !important;
+    font-weight: bold;
+    border: none !important;
+    border-radius: 5px 5px 5px 5px !important; 
+}
+.btn-success-blue-btn {
+    background-color: #1e88e5 !important;
+    color: #ffffff !important;
+    text-transform: capitalize;
+    font-size: 13px !important;
+    padding: 0px 20px !important;
+    font-weight: bold;
+    height: 28px !important;
+    width: 120px !important;
+    border: none !important;
+    border-radius: 5px 5px 5px 5px !important;
+}

@@ -1,34 +1,129 @@
-<div class="row">
-  <div class="col-3"></div>
-  <div class="col-6">
-    <mat-card class="padding-5">
-      <div class="row">
-        <div class="col-8">
-          <mat-form-field class="form-field lib-form">
-            <input matInput placeholder="Search Any Book By Name And ID">
-          </mat-form-field>
+<div class="search-book">
+  <div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+      <mat-card class="padding-5" style="margin-top: 10px !important;margin-bottom: 10px !important">
+        <div class="row">
+          <div class="col-8">
+            <mat-form-field class="form-field lib-form">
+              <input matInput [placeholder]="!enteredVal ? 'Search Any Book By Name And ID..' : ''" id="search_book"
+                (blur)="searchBook($event)" />
+            </mat-form-field>
+          </div>
+          <div class="col-4 text-right">
+            <div class="margin-top-10">
+              <span class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
+                  class="fas fa-chevron-down"></i></span>
+              <button mat-button class="btn-spacer btn-lib-search margin-left-10"
+              (click)="searchBook($event)">
+                Search
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="col-4 text-right">
-          <div class="margin-top-10">
-          <span class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i class="fas fa-chevron-down"></i></span>
-          <button mat-button class="btn-spacer btn-lib-search margin-left-10">Search</button>
-        </div>
-        </div>
-      </div>
-    </mat-card>
+      </mat-card>
+    </div>
+    <div class="col-3"></div>
   </div>
-  <div class="col-3"></div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <mat-card class="card-height-730">
-      <div class="row margin-top-15per">
-        <div class="col-12 text-center">
-          <span class="font-size-24 font-bold">No Books Selected</span><br>
-          <span class="font-size-18 margin-top-10">It's seems there is no books searched yet. Scan Book or Enter Book ID to view availaiable books in library.</span><br>
-          <button mat-button class="btn-success-blue margin-top-10">Search Book</button>
+  <div class="row" *ngIf="!searchFlag">
+    <div class="col-12">
+      <mat-card class="card-height-730" style="margin-left: 10px !important; margin-right: 10px !important">
+        <div class="row margin-top-15per">
+          <div class="col-12 text-center">
+            <span class="font-size-24 font-bold">No Books Selected</span><br /><br>
+            <span class="font-size-18 margin-top-10">It's seems there is no books searched yet. Scan Book or Enter Book
+              ID to view availaiable books in library.</span><br /><br>
+            <button mat-button class="btn-success-blue margin-top-10" (click)="intitiateSearch()"
+            style="width: 140px;height:40px">
+              Search Book
+            </button>
+          </div>
         </div>
-      </div>
-    </mat-card>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row" *ngIf="searchFlag">
+    <div class="col-12">
+      <mat-card class="card-height-730" style="margin-left: 10px !important; margin-right: 10px !important">
+        <div class="row ">
+          <div class="col-8">
+            <span class="font-size-20 font-bold">Search Result</span>
+          </div>
+          <div class="col-4 text-right">
+            <button mat-button [class]="gridViewClass" (click)="setView(true)">Grid View</button>
+            <button mat-button [class]="listViewClass" (click)="setView(false)">
+              List View
+            </button>
+          </div>
+        </div>
+        <div class="grid-view" *ngIf="gridView">
+          <div class="row margin-top-20">
+            <div class="col-1 smart-col-10" *ngFor="let item of bookData">
+              <div class="book-container">
+                <img class="book-cover-img" [src]="item.images_links.thumbnail" />
+                <div class="book-title-container">
+                  <div class="book-title-content text-center" style="padding: 3px !important">
+                    <div class="book-first-content">
+                      <span class="font-size-16"><b>{{item.title | truncatetext}}</b></span>
+                    </div>
+                    <div class="book-second-content" style="padding: 30px !important">
+                      <!-- <span class="font-size-18 font-medium">{{item.isbn ? item.isbn : item.reserv_id}}</span><br /> -->
+                      <span class="font-size-16 font-medium"><b>{{item.title ? item.title : ''}}</b></span><br />
+                      <span class="font-size-14 font-medium">{{item.authors}}</span>
+                      <div class="font-size-14 margin-top-15 font-medium">
+                        <b>Location</b>: {{item.location}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="list-view" *ngIf="!gridView">
+          <div class="row">
+            <div class="col-2">
+            </div>
+            <div class="col-8">
+              <div class="row ">
+                <div class="col-12 remove-col-padding">
+                  <mat-form-field appearance="legacy lib-form">
+                    <input matInput placeholder="Search">
+                    <mat-icon matPrefix>filter_list</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
+              <table class="custom-table">
+                <thead>
+                  <tr class="custom-tr text-center">
+                    <th class="custom-th">Sr No.</th>
+                    <th class="custom-th">Book No.</th>
+                    <th class="custom-th">Title</th>
+                    <th class="custom-th">Author</th>
+                    <th class="custom-th">Publisher</th>
+                    <th class="custom-th">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of bookData;let i = index;">
+                    <td class="custom-td">{{i+1}}</td>
+                    <td class="custom-td"><a class="font-skyblue cursor-pointer">{{item.reserv_id}}</a></td>
+                    <td class="custom-td text-left"><span class="margin-left-15">{{item.title | capitalize}}</span></td>
+                    <td class="custom-td text-left padding-left-15"><span class="margin-left-15">{{item.authors}}</span>
+                    </td>
+                    <td class="custom-td text-left padding-left-15"><span
+                        class="margin-left-15">{{item.publisher | capitalize}}</span>
+                    </td>
+                    <td class="custom-td">Read Only</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-2">
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
   </div>
 </div>

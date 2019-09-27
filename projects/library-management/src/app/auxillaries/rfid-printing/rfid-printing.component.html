@@ -1,3 +1,85 @@
-<p>
-  rfid-printing works!
-</p>
+<div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6">
+            <span class="font-size-24 font-bold">RFID Mapping</span>
+          </div>
+          <div class="col-6 text-right">
+            <button mat-raised-button class="btn-success-blue btn-spacer">
+              Advanced Filter
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-height-730">
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-8">
+            <div class="row ">
+              <div class="col-10 remove-col-padding">
+                <mat-form-field appearance="legacy lib-form">
+                  <input matInput placeholder="Search" />
+                  <mat-icon matPrefix>filter_list</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+            <table class="custom-table">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Sr No.</th>
+                  <th class="custom-th">Book No.</th>
+                  <th class="custom-th">Title</th>
+                  <th class="custom-th">Author</th>
+                  <th class="custom-th">Location</th>
+                  <th class="custom-th">RFID No.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of bookData; let i = index">
+                  <td class="custom-td">{{i+ 1}}</td>
+                  <td class="custom-td">
+                    <a class="font-skyblue cursor-pointer">{{item.reserv_id}}</a>
+                  </td>
+                  <td class="custom-td text-left">
+                    <span class="margin-left-15">{{item.title | titlecase}}</span>
+                  </td>
+                  <td class="custom-td text-left padding-left-15">
+                    <span class="margin-left-15">{{item.authors}}</span>
+                  </td>
+                  <td class="custom-td text-center ">
+                    <span class="">{{item.location}}</span>
+                  </td>
+                  <td class="custom-td text-center padding-8">
+                    <form [formGroup]="formGroupArray[i].formGroup">
+                      <mat-form-field class="form-field lib-form">
+                        <input matInput [placeholder]="!(formGroupArray[i].formGroup.value.rfid) ? 'Enter RFID No..' : ''" formControlName="rfid"/>
+                      </mat-form-field>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class=" col-2">
+          </div>
+        </div>
+        <br />
+        <div class="row text-center">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
+            <button mat-raised-button class="btn-reset btn-spacer">
+              Reset
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

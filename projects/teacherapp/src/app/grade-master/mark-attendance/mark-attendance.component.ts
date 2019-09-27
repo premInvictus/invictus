@@ -12,8 +12,10 @@ import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
   styleUrls: ['./mark-attendance.component.css']
 })
 export class MarkAttendanceComponent implements OnInit {
+  submitFlag = false;
   defaultFlag = false;
   finalDivFlag = true;
+  entry_date = new Date()
   firstForm: FormGroup;
   attendanceForm: FormGroup;
   classArray: any[] = [];
@@ -28,6 +30,10 @@ export class MarkAttendanceComponent implements OnInit {
   absentFlag: any[] = [];
   class_id: any;
   section_id: any;
+  totalStudent = 0;
+  presentStudent = 0;
+  absentStudent = 0;
+  defaultsrc: any;
   attendanceArray: any[] = [
     { aid: 0, a_name: 'Absent' },
     { aid: 1, a_name: 'Present' },
@@ -66,6 +72,7 @@ export class MarkAttendanceComponent implements OnInit {
     this.studentArray = [];
     this.finalArray = [];
     this.defaultFlag = false;
+    this.submitFlag = false;
     this.finalDivFlag = true;
   }
   resetForm() {
@@ -75,13 +82,14 @@ export class MarkAttendanceComponent implements OnInit {
     this.finalArray = [];
     this.defaultFlag = false;
     this.finalDivFlag = true;
+    this.submitFlag = false;
     this.firstForm.patchValue({
       'syl_class_id': '',
       'syl_section_id': ''
     });
   }
-  ctForClass(){
-    this.examService.ctForClass({uc_login_id : this.currentUser.login_id})
+  ctForClass() {
+    this.examService.ctForClass({ uc_login_id: this.currentUser.login_id })
       .subscribe(
         (result: any) => {
           if (result && result.status === 'ok') {
@@ -128,6 +136,8 @@ export class MarkAttendanceComponent implements OnInit {
       );
   }
   fetchDetails() {
+    this.presentStudent = 0;
+    this.absentStudent = 0;
     this.firstForm.patchValue({
       'syl_class_id': this.class_id,
       'syl_section_id': this.section_id
@@ -139,6 +149,7 @@ export class MarkAttendanceComponent implements OnInit {
     const studentParam: any = {};
     studentParam.au_class_id = this.class_id;
     studentParam.au_sec_id = this.section_id;
+    studentParam.ma_created_date = this.commonService.dateConvertion(this.entry_date);
     studentParam.au_role_id = '4';
     studentParam.au_status = '1';
     this.examService.getUserAttendance(studentParam)
@@ -148,17 +159,25 @@ export class MarkAttendanceComponent implements OnInit {
             this.finalDivFlag = false;
             this.defaultFlag = true;
             this.studentArray = result.data;
-            let counter = 1;
+            let counter = 0;
             for (const item of this.studentArray) {
+              if (item.upd_gender === 'M') {
+                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+              } else if (item.upd_gender === 'F') {
+                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+              } else {
+                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+              }
               this.studentAttendanceArray.push({
                 sr_no: counter,
-                au_profileimage: item.au_profileimage ? item.au_profileimage : 'https://via.placeholder.com/150',
+                au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
                 au_full_name: new CapitalizePipe().transform(item.au_full_name),
                 au_roll_no: item.r_rollno,
               });
               this.finalArray.push({
                 class_id: this.firstForm.value.syl_class_id ? this.firstForm.value.syl_class_id : '',
                 sec_id: this.firstForm.value.syl_section_id ? this.firstForm.value.syl_section_id : '',
+                ma_created_date: this.commonService.dateConvertion(this.entry_date) ? this.commonService.dateConvertion(this.entry_date) : '',
                 login_id: item.au_login_id ? item.au_login_id : '',
                 roll_no: item.r_rollno ? item.r_rollno : '',
                 attendance: item.ma_attendance ? Number(item.ma_attendance) : '',
@@ -166,29 +185,45 @@ export class MarkAttendanceComponent implements OnInit {
                 created_by: this.currentUser.login_id ? this.currentUser.login_id : ''
               });
               counter++;
+              this.totalStudent = counter;
+              if (Number(item.ma_attendance) === 0) {
+                this.absentStudent++;
+              } else {
+                this.presentStudent++;
+              }
             }
           }
         });
   }
   markStudentAttendance() {
+    this.submitFlag = true;
     if (this.attendanceForm.value.attendance === 0) {
       let counter1 = 0;
       for (const item of this.studentArray) {
         this.finalArray[counter1].attendance = 0;
         counter1++;
+        this.absentStudent = counter1;
+        this.presentStudent = 0;
       }
     } else {
       let counter1 = 0;
       for (const item of this.studentArray) {
         this.finalArray[counter1].attendance = 1;
         counter1++;
+        this.presentStudent = counter1;
+        this.absentStudent = 0;
       }
     }
   }
   changeStudentAttendanceStatus($event, i) {
-    if (Number($event.value) === 0) {
+    this.submitFlag = true;
+    if (this.finalArray[i].attendance === 1) {
       this.finalArray[i].attendance = 0;
+      this.presentStudent--;
+      this.absentStudent++;
     } else {
+      this.presentStudent++;
+      this.absentStudent--;
       this.finalArray[i].attendance = 1;
     }
   }
@@ -196,6 +231,7 @@ export class MarkAttendanceComponent implements OnInit {
     const checkParam: any = {};
     checkParam.au_class_id = this.firstForm.value.syl_class_id;
     checkParam.au_sec_id = this.firstForm.value.syl_section_id;
+    checkParam.ma_created_date = this.commonService.dateConvertion(this.entry_date);
     checkParam.au_ses_id = this.session.ses_id;
     this.examService.checkAttendanceForClass(checkParam).subscribe((result: any) => {
       if (result && result.status === 'ok') {

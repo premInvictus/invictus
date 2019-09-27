@@ -1,3 +1,191 @@
-<p>
-  physical-verification works!
-</p>
+<div class="main-physical-verification" *ngIf="showMainPhyicalVerification">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24 font-bold">Physical Verification</span>
+          </div>
+          <div class="col-6 text-right">
+            <mat-form-field class="form-field-150" appearance="outline">
+              <input
+                matInput
+                [matDatepicker]="picker"
+                placeholder="From date"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field
+              class="form-field-150 margin-left-15"
+              appearance="outline"
+            >
+              <input matInput [matDatepicker]="picker1" placeholder="To date" />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker1"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+            <button mat-raised-button class="btn-success-blue btn-spacer">
+              New Batch
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-height-730">
+        <div class="row">
+          <div class="col-6">
+            <span class="font-bold font-size-20">Verification Logs</span>
+          </div>
+          <div class="col-6 text-right">
+            <span class="font-size-16">Today : </span
+            ><span class="font-bold font-size-16">Tuesday, 22 Sep 2019</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-8">
+            <div class="row ">
+              <div class="col-10 remove-col-padding">
+                <mat-form-field appearance="legacy lib-form">
+                  <input matInput placeholder="Search" />
+                  <mat-icon matPrefix>filter_list</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+            <table class="custom-table">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Sr No.</th>
+                  <th class="custom-th">Verified On</th>
+                  <th class="custom-th">Verified By</th>
+                  <th class="custom-th">No. of Books</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="custom-td">1</td>
+                  <td class="custom-td">
+                    <a class="font-skyblue cursor-pointer" (click)="onClickVerifiedOn()">12-Sep-2019</a>
+                  </td>
+                  <td class="custom-td text-left">
+                    <span class="margin-left-15">Vikram singh Vedi</span>
+                  </td>
+                  <td class="custom-td text-center padding-left-15">
+                    <span class="margin-left-15">1058 Books</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-2"></div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="main-batch-container" *ngIf="showBookList">
+  
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6">
+            <span class="font-bold font-size-20">Books List</span>
+          </div>
+          
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <span class="font-size-16 opacity-7">Physical verification - </span><span class="font-bold">Book List</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-height-730">
+        <div class="row">
+          <div class="col-6 remove-col-padding">
+            <span class="font-size-14 font-bold">Verified On : </span><span class="font-size-14 opacity-7">10-Sep-2019</span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Verified By : </span><span class="font-size-14 opacity-7">Vikram Sing Bedi</span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">No. of Books : </span><span class="font-size-14 font-bold">1,254 Books</span>
+          </div>
+          <div class="col-6 text-right">
+              <span class="font-size-16">Today : </span
+              ><span class="font-bold font-size-16">Tuesday, 22 Sep 2019</span>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-8">
+            <div class="row ">
+              <div class="col-10 remove-col-padding">
+                <mat-form-field appearance="legacy lib-form">
+                  <input matInput placeholder="Search" />
+                  <mat-icon matPrefix>filter_list</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+            <table class="custom-table">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Sr No.</th>
+                  <th class="custom-th">Book No.</th>
+                  <th class="custom-th">Book Name</th>
+                  <th class="custom-th">Author</th>
+                  <th class="custom-th">Publisher</th>
+                  <th class="custom-th">Location</th>
+                  <!-- <th class="custom-th">Action</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="custom-td">1</td>
+                  <td class="custom-td">
+                    <a class="font-skyblue cursor-pointer">12345689</a>
+                  </td>
+                  <td class="custom-td text-left">
+                    <span class="margin-left-15">River of Smoke</span>
+                  </td>
+                  <td class="custom-td text-left padding-left-15">
+                    <span class="margin-left-15">Dolores Umbridge</span>
+                  </td>
+                  <td class="custom-td text-left padding-left-15">
+                    <span class="margin-left-15">TCK Publishing</span>
+                  </td>
+                  <td class="custom-td">H-1</td>
+                  <!-- <td class="custom-td">
+                    <i class="fas fa-trash font-color-red"></i>
+                  </td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-2"></div>
+        </div>
+        <br />
+        <div class="row text-center">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green">Submit</button>
+            <button mat-raised-button class="btn-reset btn-spacer">
+              Reset
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+

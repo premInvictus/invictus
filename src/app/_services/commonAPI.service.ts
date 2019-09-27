@@ -183,7 +183,7 @@ export class CommonAPIService {
 		return this.http.post('/dashboard/getProjectList', param);
 	}
 
-	dateConvertion(value, format= 'yyyy-MM-dd') {
+	dateConvertion(value, format = 'yyyy-MM-dd') {
 		const datePipe = new DatePipe('en-US');
 		return datePipe.transform(value, format);
 	}
@@ -211,7 +211,6 @@ export class CommonAPIService {
 	getSchool() {
 		return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
 	}
-
 	getQTypeFromApi() {
 		return this.http.get(environment.apiAxiomUrl + '/setup/question_type/1');
 	}
@@ -266,5 +265,4 @@ export class CommonAPIService {
 	getSelectedChildData() {
 		return this.selectedChildData;
 	}
-
 }

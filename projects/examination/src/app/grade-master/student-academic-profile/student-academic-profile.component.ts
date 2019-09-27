@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { isNgTemplate } from '@angular/compiler';
 import { dateFilterCondition } from 'angular-slickgrid/app/modules/angular-slickgrid/filter-conditions/dateFilterCondition';
 import * as Highcharts from 'highcharts';
+import { roundToNearest } from 'angular-calendar/modules/common/util';
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/solid-gauge')(Highcharts);
@@ -90,13 +91,16 @@ export class StudentAcademicProfileComponent implements OnInit {
   present = 0;
   attendancePercentage = 0;
   gaugeOptions: any;
+  startDate: any;
+  studentClass: any;
+  totalWorkingDay = 0;
   processTypeArray: any[] = [
     { id: '1', name: 'Enquiry No.' },
     { id: '2', name: 'Registration No.' },
     { id: '3', name: 'Provisional Admission No.' },
     { id: '4', name: 'Admission No.' }
   ];
-  
+
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -104,6 +108,7 @@ export class StudentAcademicProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private examService: ExamService,
     private commonAPIService: CommonAPIService,
+    private smartService: SmartService,
     public processtypeService: ProcesstypeExamService,
     public studentRouteMoveStoreService: StudentRouteMoveStoreService,
     public dialog: MatDialog
@@ -165,8 +170,8 @@ export class StudentAcademicProfileComponent implements OnInit {
       mi_emergency_contact_no: ''
     });
   }
-  HighChartOption(){
-   this.gaugeOptions = {
+  HighChartOption() {
+    this.gaugeOptions = {
       chart: {
         type: 'solidgauge',
         height: 120,
@@ -175,14 +180,14 @@ export class StudentAcademicProfileComponent implements OnInit {
           render: ''
         }
       },
-  
+
       title: {
         text: '',
         style: {
           fontSize: '10px'
         }
       },
-  
+
       tooltip: {
         borderWidth: 0,
         backgroundColor: 'none',
@@ -198,7 +203,7 @@ export class StudentAcademicProfileComponent implements OnInit {
           };
         }
       },
-  
+
       pane: {
         startAngle: 0,
         endAngle: 360,
@@ -209,14 +214,14 @@ export class StudentAcademicProfileComponent implements OnInit {
           borderWidth: 0
         }]
       },
-  
+
       yAxis: {
         min: 0,
         max: '',
         lineWidth: 0,
         tickPositions: []
       },
-  
+
       plotOptions: {
         solidgauge: {
           cursor: 'pointer',
@@ -227,7 +232,7 @@ export class StudentAcademicProfileComponent implements OnInit {
           stickyTracking: false,
         }
       },
-  
+
       series: [{
         name: 'Attendance',
         data: [{
@@ -257,7 +262,9 @@ export class StudentAcademicProfileComponent implements OnInit {
               this.studentdetails = result.data[0];
               this.previousLoginId = this.studentdetails.au_login_id;
               this.gender = this.studentdetails.au_gender;
+              this.studentClass = this.studentdetails.au_class_id;
               this.getStudentAttendance(this.previousLoginId);
+              this.getGlobalSetting();
               if (this.gender === 'M') {
                 this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
               } else if (this.gender === 'F') {
@@ -572,11 +579,32 @@ export class StudentAcademicProfileComponent implements OnInit {
       return 'Active Parent Name';
     }
   }
+  getGlobalSetting() {
+    let param: any = {};
+    param.gs_name = ['school_session_start_date'];
+    this.examService.getGlobalSetting(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.startDate = result.data[0]['gs_value'];
+        let workingDayParam: any = {};
+        workingDayParam.datefrom = this.startDate;
+        workingDayParam.dateto =  this.commonAPIService.dateConvertion(this.currentDate);
+        workingDayParam.class_id = this.studentClass;
+        this.smartService.GetHolidayDays(workingDayParam).subscribe((result: any) => {
+          if (result && result.status === 'ok') {
+              this.totalWorkingDay = result.data.workingDay;
+          }
+        }
+        );
+      }
+    });
+  }
+
   getStudentAttendance(au_login_id) {
     this.firstGauge = false;
     this.present = 0;
     this.absent = 0;
     this.attendancePercentage = 0;
+    this.savedSettingsArray
     this.examService.getStudentAttendance({ login_id: au_login_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.HighChartOption();
@@ -587,8 +615,8 @@ export class StudentAcademicProfileComponent implements OnInit {
             this.absent = Number(item.count);
           }
         }
-        this.attendancePercentage = (this.present * 100)/(this.absent + this.present);
-        this.gaugeOptions.yAxis.max = this.absent + this.present;
+        this.attendancePercentage = Math.round((this.present * 100) / (this.totalWorkingDay));
+        this.gaugeOptions.yAxis.max = this.totalWorkingDay;
         this.gaugeOptions.series[0].data[0].y = this.present;
         this.firstGauge = true;
       }

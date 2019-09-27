@@ -55,7 +55,8 @@
                                                     <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>{{enrolmentPlaceholder}} No</mat-label>
                                                 <input matInput placeholder="{{enrolmentPlaceholder}} No."
-                                                    formControlName="au_login_id" (blur)="getStudentData($event)">
+                                                    formControlName="au_login_id" (blur)="getStudentData($event)"
+                                                    (keydown.enter)="getStudentData($event)">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-3 margin-top-10">

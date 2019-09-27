@@ -452,6 +452,7 @@ export class ClassworkUpdateComponent implements OnInit {
 		// console.log(event.target.value);
 		this.teacherArray = [];
 		if (event.target.value) {
+			this.generateReviewArray();
 			this.axiomService.getAllTeacher({ full_name: event.target.value, role_id: '3', status: '1' }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.teacherArray = result.data;
@@ -462,9 +463,9 @@ export class ClassworkUpdateComponent implements OnInit {
 					this.classworkforForm.patchValue({
 						cw_teacher_id: '',
 						teacher_name: ''
-					});
-					this.resetClassworkForm();
+					});					
 				}
+				this.resetClassworkForm();
 			});
 		}
 	}

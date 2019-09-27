@@ -13,11 +13,11 @@ import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 	styleUrls: ['./exam.component.css']
 })
 export class ExamComponent implements OnInit {
-	displayedColumns: string[] = ['exam_name', 'exam_category', 'exam_term', 'exam_class',
+	displayedColumns: string[] = ['exam_name', 'exam_category', 'exam_class',
 		'exam_sub_exam', 'exam_sub_exam_max_marks', 'exam_calculation_rule', 'exam_weightage', 'status', 'action'];
 	@ViewChild('deleteModal') deleteModal;
 	examForm: FormGroup;
-	currentUser: any;
+	currentUser: any; 
 	session: any;
 	ckeConfig: any = {};
 	subExamArray: any[] = [];
@@ -62,7 +62,6 @@ export class ExamComponent implements OnInit {
 			exam_id: '',
 			exam_name: '',
 			exam_category: '',
-			exam_term: '',
 			exam_marks_type: '',
 			exam_class: '',
 			exam_sub_exam: '',
@@ -78,7 +77,6 @@ export class ExamComponent implements OnInit {
 			'exam_id': '',
 			'exam_name': '',
 			'exam_category': '',
-			'exam_term': '',
 			'exam_marks_type': '',
 			'exam_class': '',
 			'exam_sub_exam': '',
@@ -243,7 +241,6 @@ export class ExamComponent implements OnInit {
 			const insertJson = {
 				exam_name: this.examForm.value.exam_name,
 				exam_category: this.examForm.value.exam_category,
-				exam_term: this.examForm.value.exam_term,
 				exam_marks_type: this.examForm.value.exam_marks_type,
 				exam_class: this.examForm.value.exam_class,
 				exam_sub_exam: this.examForm.value.exam_sub_exam,
@@ -255,7 +252,6 @@ export class ExamComponent implements OnInit {
 				exam_id: this.examForm.value.exam_id,
 				exam_name: this.examForm.value.exam_name,
 				exam_category: this.examForm.value.exam_category,
-				exam_term: this.examForm.value.exam_term,
 				exam_marks_type: this.examForm.value.exam_marks_type,
 				exam_class: this.examForm.value.exam_class,
 				exam_sub_exam: this.examForm.value.exam_sub_exam,
@@ -319,7 +315,6 @@ export class ExamComponent implements OnInit {
 						}
 						pushitem.exam_name = item.exam_name;
 						pushitem.exam_category = item.eac_name;
-						pushitem.exam_term = item.term_name;
 						pushitem.exam_class = class_name;
 						pushitem.exam_sub_exam = sub_exam_name;
 						pushitem.exam_marks_type = this.getGradeName(item.exam_marks_type);
@@ -364,7 +359,6 @@ export class ExamComponent implements OnInit {
 			exam_id: value.exam_id,
 			exam_name: value.exam_name,
 			exam_category: value.exam_category,
-			exam_term: value.exam_term,
 			exam_marks_type: value.exam_marks_type,
 			exam_class: class_id,
 			exam_sub_exam: subExamArray,

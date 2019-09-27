@@ -177,9 +177,22 @@ $breakpoints: (xs: 576px, sm: 768px, smb:810px, md: 992px, lg: 1200px, aslg:1400
         flex: 0 0 5% !important;
     }
 
+    .smart-col-10 {
+        max-width: 10% !important;
+        flex: 0 0 10% !important;
+    }
+
     .smart-col-11 {
         max-width: 11% !important;
         flex: 0 0 11% !important;
+    }
+    .smart-col-12 {
+        max-width: 12% !important;
+        flex: 0 0 12% !important;
+    }
+    .smart-col-88 {
+        max-width: 88% !important;
+        flex: 0 0 88% !important;
     }
     .smart-col-3 {
         max-width: 3% !important;

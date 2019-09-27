@@ -14,7 +14,7 @@
                 appearance="outline">
                 <mat-label>Roll No. Type</mat-label>
                 <mat-select formControlName="syl_board_id" (selectionChange)="getClassByBoard()" required
-                  placeholder="Select Class"> 
+                  placeholder="Select Class">  
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of boardArray" [value]="item.id">
                     {{item.name}}
@@ -32,7 +32,7 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+              <mat-form-field class="form-field-150 margin-left-10" appearance="outline" *ngIf="firstForm.value.syl_board_id === 1">
                 <mat-label>Section</mat-label>
                 <mat-select formControlName="syl_section_id" (selectionChange)="fetchDetails()" required
                   placeholder="Select Section">

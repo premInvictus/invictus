@@ -24,6 +24,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from 'src/app/_pipes';
 import { NgxMaskModule } from 'ngx-mask';
 import * as _moment from 'moment';
+import { NgxBarcodeModule } from 'ngx-barcode';
 import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/invictus-shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditRequestModalComponent } from './edit-request-modal/edit-request-modal.component';
@@ -65,6 +66,7 @@ export const MY_FORMATS = {
     MatListModule,
     MatCardModule,
     MatExpansionModule,
+    NgxBarcodeModule,
     LayoutModule,
     MatTooltipModule,
     MatMenuModule,
@@ -149,20 +151,14 @@ export const MY_FORMATS = {
     NumberToWordPipe,
     ZerodashPipe,
     CommonDynamicChartComponent,
-    NoDataComponent, PreviewDocumentComponent
+    NoDataComponent, PreviewDocumentComponent,
+    NgxBarcodeModule
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ]
-})
-
-@NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: []
 })
 export class LibrarySharedModule {
   constructor() {
