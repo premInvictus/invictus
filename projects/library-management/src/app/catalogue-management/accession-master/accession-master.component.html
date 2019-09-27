@@ -1,3 +1,519 @@
-<p>
-  accession-master works!
-</p>
+<div class="assession-master-container" *ngIf="assessionMasterContainer">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24">Assession Master</span>
+          </div>
+          <div class="col-5">
+            <div class="search-container">
+              <div class="row remove-top-margin">
+                <div class="col-8">
+                  <mat-form-field class="lib-form form-field">
+                    <input
+                      matInput
+                      placeholder="Search Any Book By Name or ID"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-4 margin-top-10  text-right">
+                  <span class="font-size-12 margin-top-15 font-skyblue"
+                    >Advanced Search <i class="fas fa-chevron-down"></i
+                  ></span>
+                  <button
+                    mat-button
+                    class="btn-spacer btn-lib-search margin-left-10"
+                  >
+                    Search
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-1">
+            <button
+              mat-raised-button
+              class="btn-success-blue-add-book"
+              (click)="addBook()"
+            >
+              Add Book
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-height-730">
+        <div class="row">
+          <div class="col-6">
+            <span class="font-bold font-size-20">Books List</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-8">
+            <div class="row ">
+              <div class="col-10 remove-col-padding">
+                <mat-form-field appearance="legacy lib-form">
+                  <input matInput placeholder="Search" />
+                  <mat-icon matPrefix>filter_list</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+            <table class="custom-table">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Sr No.</th>
+                  <th class="custom-th">Book No.</th>
+                  <th class="custom-th">Book Name</th>
+                  <th class="custom-th">Author</th>
+                  <th class="custom-th">Publisher</th>
+                  <th class="custom-th">Location</th>
+                  <!-- <th class="custom-th">Action</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="custom-td">1</td>
+                  <td class="custom-td">
+                    <a class="font-skyblue cursor-pointer">12345689</a>
+                  </td>
+                  <td class="custom-td text-left">
+                    <span class="margin-left-15">River of Smoke</span>
+                  </td>
+                  <td class="custom-td text-left padding-left-15">
+                    <span class="margin-left-15">Dolores Umbridge</span>
+                  </td>
+                  <td class="custom-td text-left padding-left-15">
+                    <span class="margin-left-15">TCK Publishing</span>
+                  </td>
+                  <td class="custom-td">H-1</td>
+                  <!-- <td class="custom-td">
+                              <i class="fas fa-trash font-color-red"></i>
+                            </td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-2"></div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="add-book-container" *ngIf="addBookContainer">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-12">
+            <span class="font-size-24">Add Books</span>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <span class="margin-left-15 opacity-7 font-size-16"
+        >Accession Master -
+      </span>
+      <span class="font-bold font-size-16">Add Books</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-12">
+            <span class="font-size-20 font-bold">Book Details</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-1 smart-col-10 ">
+            <div class=" margin-top-20">
+            <img class="book-cover-img">
+          </div>
+          </div>
+          <div class="col-11 smart-col-90">
+            <div class="row">
+              <div class="col-3">
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>ISBN Code</mat-label>
+                      <input matInput placeholder="ISBN Code" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Publisher</mat-label>
+                      <input matInput placeholder="Publisher" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Tag</mat-label>
+                      <input matInput placeholder="Tag" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Print Type</mat-label>
+                      <mat-select placeholder="Print Type">
+                        <mat-option>
+                          Na
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Title</mat-label>
+                      <input matInput placeholder="Harry Porter" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Publisher Date</mat-label>
+                      <input matInput placeholder="ISBN Code" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Volume Info</mat-label>
+                      <input matInput placeholder="Volume Info" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Price</mat-label>
+                      <input matInput placeholder="Price" />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Sub-Title</mat-label>
+                      <input matInput placeholder="Harry Porter and Scocers" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Kind/ Genre</mat-label>
+                      <input matInput placeholder="Adventure Fiction" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Mode</mat-label>
+                      <mat-select placehlder="Mode">
+                        <mat-option>
+                          Physical
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Language</mat-label>
+                      <input matInput placeholder="Hindi" />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Author</mat-label>
+                      <input matInput placeholder="Richard Wilson" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Pages</mat-label>
+                      <input matInput placeholder="256" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Description</mat-label>
+                      <textarea matInput rows="5"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <span class="font-size-20 font-bold">Schools Details</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Book Type</mat-label>
+                  <mat-select placehlder="Mode">
+                    <mat-option>
+                      Na
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Class</mat-label>
+                  <mat-select placehlder="Mode">
+                    <mat-option>
+                      NA
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Status</mat-label>
+                  <mat-select placehlder="Mode">
+                    <mat-option>
+                      Na
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Subject</mat-label>
+                  <mat-select placehlder="Mode">
+                    <mat-option>
+                      NA
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Category</mat-label>
+                  <mat-select placehlder="Mode">
+                    <mat-option>
+                      Na
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Source</mat-label>
+                  <mat-select placehlder="Mode">
+                    <mat-option>
+                      NA
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="row remove-top-margin">
+              <div class="col-6">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Stack</mat-label>
+                  <input matInput placeholder="Stack" />
+                </mat-form-field>
+              </div>
+              <div class="col-6">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Row</mat-label>
+                  <input matInput placeholder="Row" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>No. Of Copies</mat-label>
+                  <mat-select placehlder="Mode">
+                    <mat-option>
+                      NA
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+              <span class="font-size-20 font-bold">Vendors Details</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Vendor ID</mat-label>
+                    <input matInput placeholder="Vendor ID" />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Email ID</mat-label>
+                        <input matInput placeholder="Email ID" />
+                      </mat-form-field>
+                </div>
+              </div>
+              <div class="row remove-top-margin">
+                  <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>GST No.</mat-label>
+                          <input matInput placeholder="GST No." />
+                        </mat-form-field>
+                  </div>
+                </div>
+            </div>
+            
+            <div class="col-3">
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Vendor Name</mat-label>
+                        <input matInput placeholder="Vendor Name" />
+                      </mat-form-field>
+                </div>
+              </div>
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Authorised Contact Person</mat-label>
+                    <input matInput placeholder="Authorised Contact Person" />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>P O No</mat-label>
+                      <input matInput placeholder="P O No" />
+                    </mat-form-field>
+                  </div>
+                </div>
+            </div>
+            <div class="col-3">
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Address</mat-label>
+                    <input matInput placeholder="Address" />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Mobile No.</mat-label>
+                    <input matInput placeholder="Mobile No." />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row remove-top-margin">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Invoice No.</mat-label>
+                      <input matInput placeholder="Invoice No." />
+                    </mat-form-field>
+                  </div>
+                </div>
+            </div>
+            <div class="col-3">
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Contact No.</mat-label>
+                    <input matInput placeholder="Contact No." />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>PAN</mat-label>
+                    <input matInput placeholder="PAN" />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <mat-checkbox><span class="font-bold">Add Multiple Records</span></mat-checkbox>
+            </div>
+          </div>
+          <br />
+        <div class="row text-center">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green">Submit</button>
+            <button mat-raised-button class="btn-reset btn-spacer">
+              Reset
+            </button>
+          </div>
+        </div>
+        <br>
+      </mat-card>
+    </div>
+  </div>
+</div>

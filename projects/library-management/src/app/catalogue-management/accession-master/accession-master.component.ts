@@ -7,9 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccessionMasterComponent implements OnInit {
 
+  assessionMasterContainer = true;
+  addBookContainer = false;
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  addBook() {
+    this.assessionMasterContainer =  false;
+    this.addBookContainer = true;
   }
 
 }
