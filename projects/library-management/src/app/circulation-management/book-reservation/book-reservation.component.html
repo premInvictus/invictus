@@ -1,3 +1,104 @@
-<p>
-  book-reservation works!
-</p>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+        <div class="row">
+            <div class="col-7 margin-top-15">
+              <span class="font-size-24">Book Reservations</span>
+            </div>
+            <div class="col-5">
+              <div class="search-container">
+                <div class="row remove-top-margin">
+                  <div class="col-8">
+                    <mat-form-field class="lib-form form-field">
+                      <input matInput placeholder="Search Any Book By Name or ID" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4 margin-top-10  text-right">
+                    
+                    <button
+                      mat-button
+                      class="btn-spacer btn-lib-search margin-left-10"
+                    >
+                      Search
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-12 remove-col-padding">
+          <span class="font-size-20 font-bold"> Reserve Requests</span>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-2"></div>
+          <div class="col-8">
+            <div class="row ">
+              <div class="col-10 remove-col-padding">
+                <mat-form-field appearance="legacy lib-form">
+                  <input matInput placeholder="Search" />
+                  <mat-icon matPrefix>filter_list</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+            <table class="custom-table">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Sr No.</th>
+                  <th class="custom-th">Book ID</th>
+                  <th class="custom-th">Book Name</th>
+                  <th class="custom-th">Request By</th>
+                  <th class="custom-th">Request On</th>
+                  <th class="custom-th">Priority</th>
+               
+                  <th class="custom-th">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="custom-td">1</td>
+                  <td class="custom-td">
+                    <a class="font-skyblue cursor-pointer">12345689</a>
+                  </td>
+                  <td class="custom-td text-left">
+                    <span class="margin-left-15">Harry Porter</span>
+                  </td>
+                  <td class="custom-td text-left padding-left-15">
+                    <span class="margin-left-15">Vikram Singh Vedi</span>
+                  </td>
+                  <td class="custom-td text-left padding-left-15">
+                    <span class="margin-left-15">20-Sep-2019</span>
+                  </td>
+                  <td class="custom-td">Low</td>
+                 
+                  <td class="custom-td">
+                      <span><i class="fas fa-check-circle font-color-green font-size-14 margin-right-15" ></i></span>
+                    <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"></i></span>
+                            </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-2"></div>
+        </div>
+        <br />
+        <div class="row text-center">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green">Submit</button>
+            <button mat-raised-button class="btn-reset btn-spacer">
+              Reset
+            </button>
+          </div>
+        </div>
+        <br>
+
+    </mat-card>
+  </div>
+</div>
