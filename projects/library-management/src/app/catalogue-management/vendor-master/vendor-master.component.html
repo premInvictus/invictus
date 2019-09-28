@@ -59,7 +59,7 @@
                   <div class="row ">
                     <div class="col-10 remove-col-padding">
                       <mat-form-field appearance="legacy lib-form">
-                        <input matInput placeholder="Search" />
+                        <input matInput placeholder="Search" (keyup)="applyFilterVendor($event.target.value)"/>
                         <mat-icon matPrefix>filter_list</mat-icon>
                       </mat-form-field>
                     </div>
@@ -168,7 +168,7 @@
       </div>
     </div>
   </div>
-  <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete Subscription'" (deleteOk)="deleteSubscription(currentSubscription)" (deleteCancel)="deleteComCancel()">
+  <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete Vendor'" (deleteOk)="deleteVendor(currentVendor)" (deleteCancel)="deleteComCancel()">
     </app-delete-modal>
   
 

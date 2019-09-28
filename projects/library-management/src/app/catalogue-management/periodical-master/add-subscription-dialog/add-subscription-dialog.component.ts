@@ -42,7 +42,8 @@ export class AddSubscriptionDialog implements OnInit {
       subscription_vendor_name: '',
       subscription_vendor_contact: '',
       subscription_vendor_email: '',
-      subscription_status: this.dialogData.subscription_status ? this.dialogData.subscription_status : '1'
+      subscription_status: this.dialogData.subscription_status ? this.dialogData.subscription_status : '1',
+      showButtonStatus: this.dialogData.showButtonStatus
     });
     
     if (this.dialogData.subscription_id) {
@@ -86,25 +87,31 @@ export class AddSubscriptionDialog implements OnInit {
   }
 
   save() {
-    const inputJson = {
-      subscription_name : this.subscriptionForm.value.subscription_name,
-      subscription_type : this.subscriptionForm.value.subscription_type,
-      subscription_frequency: this.subscriptionForm.value.subscription_frequency,
-      subscription_start_date: this.subscriptionForm.value.subscription_start_date,
-      subscription_vendor_id: this.subscriptionForm.value.subscription_vendor_id,
-      subscription_end_date: this.subscriptionForm.value.subscription_end_date,
-      subscription_status: this.subscriptionForm.value.subscription_status
-    };
-
-    this.erpCommonService.insertSubscription(inputJson).subscribe((res: any) => {
-      if (res && res.status == 'ok') {
-        this.common.showSuccessErrorMessage(res.message, res.status);
-        this.subscriptionForm.reset();
-        this.dialogRef.close();
-      } else {
-        this.common.showSuccessErrorMessage(res.message, res.status);
-      }
-    });
+    if (this.subscriptionForm.valid) {
+      const inputJson = {
+        subscription_name : this.subscriptionForm.value.subscription_name,
+        subscription_type : this.subscriptionForm.value.subscription_type,
+        subscription_frequency: this.subscriptionForm.value.subscription_frequency,
+        subscription_start_date: this.subscriptionForm.value.subscription_start_date,
+        subscription_vendor_id: this.subscriptionForm.value.subscription_vendor_id,
+        subscription_vendor_name: this.subscriptionForm.value.subscription_vendor_name,
+        subscription_end_date: this.subscriptionForm.value.subscription_end_date,
+        subscription_status: this.subscriptionForm.value.subscription_status
+      };
+  
+      this.erpCommonService.insertSubscription(inputJson).subscribe((res: any) => {
+        if (res && res.status == 'ok') {
+          this.common.showSuccessErrorMessage(res.message, res.status);
+          this.subscriptionForm.reset();
+          this.dialogRef.close();
+        } else {
+          this.common.showSuccessErrorMessage(res.message, res.status);
+        }
+      });
+    } else {
+      this.common.showSuccessErrorMessage('Please Fill All Required Fields', 'error');
+    }
+    
   }
 
   update() {
@@ -115,6 +122,7 @@ export class AddSubscriptionDialog implements OnInit {
       subscription_frequency: this.subscriptionForm.value.subscription_frequency,
       subscription_start_date: this.subscriptionForm.value.subscription_start_date,
       subscription_vendor_id: this.subscriptionForm.value.subscription_vendor_id,
+      subscription_vendor_name: this.subscriptionForm.value.subscription_vendor_name,
       subscription_end_date: this.subscriptionForm.value.subscription_end_date,
       subscription_status: this.subscriptionForm.value.subscription_status
     };

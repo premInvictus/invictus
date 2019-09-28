@@ -315,6 +315,18 @@ export class PhysicalVerificationComponent implements OnInit {
     this.enteredVal = false;
   }
 
+  applyFilterVerificationLog(filterValue: string) {
+		this.logdataSource.filter = filterValue.trim().toLowerCase();
+  }
+  
+  applyFilterBookList(filterValue: string) {
+		this.booklistdataSource.filter = filterValue.trim().toLowerCase();
+  }
+  
+  applyFilterNewBatch(filterValue: string) {
+		this.batchdataSource.filter = filterValue.trim().toLowerCase();
+	}
+
 }
 
 export interface VerificationLogElement {

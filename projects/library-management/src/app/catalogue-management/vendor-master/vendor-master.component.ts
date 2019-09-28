@@ -95,7 +95,17 @@ export class VendorMasterComponent implements OnInit {
             ven_category: item.ven_category,
             ven_address: item.ven_address,
             ven_contact: item.ven_contact,
-            ven_email: item.ven_email,		
+            ven_email: item.ven_email,	
+            ven_frequency: item.ven_frequency ? item.ven_frequency : '',
+            ven_items_tags: item.ven_items_tags ? item.ven_items_tags : '',
+            ven_authorised_person_detail_name : item.ven_authorised_person_detail_name ? item.ven_authorised_person_detail_name : '',
+            ven_authorised_person_detail_designation : item.ven_authorised_person_detail_designation ? item.ven_authorised_person_detail_designation : '',
+            ven_authorised_person_detail_contact : item.ven_authorised_person_detail_contact ? item.ven_authorised_person_detail_contact : '',
+            ven_pan_no : item.ven_pan_no ? item.ven_pan_no : '',
+            ven_gst_no : item.ven_gst_no ? item.ven_gst_no : '',
+            ven_status: item.ven_status ? item.ven_status : '1',
+            ven_created_date: item.ven_created_date ? item.ven_created_date : '',
+            ven_updated_date: item.ven_updated_date ? item.ven_updated_date : '',
           };
 					this.VENDOR_LIST_ELEMENT.push(element);
 					pos++;
@@ -116,8 +126,17 @@ export class VendorMasterComponent implements OnInit {
         ven_address: element.ven_address,
         ven_contact: element.ven_contact,
         ven_email: element.ven_email,
-        ven_status: element.ven_status,
-        showButtonStatus: buttonStatus
+        ven_frequency: element.ven_frequency ? element.ven_frequency : '',
+        ven_items_tags: element.ven_items_tags ? element.ven_items_tags : '',
+        ven_authorised_person_detail_name : element.ven_authorised_person_detail_name ? element.ven_authorised_person_detail_name : '',
+        ven_authorised_person_detail_designation : element.ven_authorised_person_detail_designation ? element.ven_authorised_person_detail_designation : '',
+        ven_authorised_person_detail_contact : element.ven_authorised_person_detail_contact ? element.ven_authorised_person_detail_contact : '',
+        ven_pan_no : element.ven_pan_no ? element.ven_pan_no : '',
+        ven_gst_no : element.ven_gst_no ? element.ven_gst_no : '',
+        ven_status: element.ven_status ? element.ven_status : '1',
+        ven_created_date: element.ven_created_date ? element.ven_created_date : '',
+        ven_updated_date: element.ven_updated_date ? element.ven_updated_date : '',
+        showButtonStatus: buttonStatus ? buttonStatus : false
       }
     });
 
@@ -132,9 +151,8 @@ export class VendorMasterComponent implements OnInit {
     console.log('data', data, this.currentVendorId);
 
     if (this.currentVendorId) {
-      this.currentVendorId['vendor_status'] = '5';
-      this.erpCommonService.deleteVendor(this.currentVendorId
-      ).subscribe((res: any) => {
+      this.currentVendorId['ven_status'] = '5';
+      this.erpCommonService.deleteVendor(this.currentVendorId).subscribe((res: any) => {
         if (res && res.status === 'ok') {
           
           this.getVendorList();
@@ -143,14 +161,15 @@ export class VendorMasterComponent implements OnInit {
         }
       })
     }
-
-
-    
   }
 
   deleteVendorModel(vendor_id) {
     this.currentVendorId = vendor_id;
   }
+
+  applyFilterVendor(filterValue: string) {
+		this.vendorlistdataSource.filter = filterValue.trim().toLowerCase();
+	}
 
 }
 

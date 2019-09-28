@@ -29,9 +29,10 @@
                 <div class="row ">
                   <div class="col-10 remove-col-padding">
                     <mat-form-field appearance="legacy lib-form">
-                      <input matInput placeholder="Search" />
+                      <input matInput placeholder="Search" (keyup)="applyFilterSubscription($event.target.value)" />
                       <mat-icon matPrefix>filter_list</mat-icon>
                     </mat-form-field>
+                   
                   </div>
                 </div>
                 <!-- <table class="custom-table">
@@ -84,7 +85,7 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Subscription ID</th>
                         <td mat-cell *matCellDef="let element">
                           <a class="font-skyblue cursor-pointer"
-                            (click)="editSubscription(element)">{{element?.subscription_id}} </a>
+                            (click)="editSubscription(element, false)">{{element?.subscription_id}} </a>
                         </td>
                       </ng-container>
                       <ng-container matColumnDef="subscription_name">
@@ -118,13 +119,13 @@
                         </td>
                       </ng-container>
                     <ng-container matColumnDef="subscription_vendor_name">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header width="25%"> Vendor </th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Vendor </th>
                       <td mat-cell *matCellDef="let element" class="text-left"> <span
                           *ngIf="element.subscription_vendor_name">{{(element.subscription_vendor_name)}} </span>
                         <span *ngIf="!(element.subscription_vendor_name)"> - </span> </td>
                     </ng-container>
                     <ng-container matColumnDef="subscription_status">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Status</th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Status</th>
                       <td mat-cell *matCellDef="let element">
                         <span *ngIf="element.subscription_status == '1'">Inactive </span>
                         <span *ngIf="element.subscription_status == '2'"> Active </span>
@@ -132,9 +133,9 @@
                       </td>
                     </ng-container>
                     <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Action</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Action</th>
                         <td mat-cell *matCellDef="let element">
-                            <span><i class="fas fa-edit font-color-grey margin-right-15" (click)="editSubscription(element)"></i></span>
+                            <span><i class="fas fa-edit font-color-grey margin-right-15" (click)="editSubscription(element, true)"></i></span>
                             <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15" (click)="openModal({});deleteSubscriptionModel(element)"></i></span>
                         </td>
                       </ng-container>

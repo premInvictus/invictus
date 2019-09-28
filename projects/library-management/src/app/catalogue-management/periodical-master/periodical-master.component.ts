@@ -25,10 +25,11 @@ export class PeriodicalMasterComponent implements OnInit {
   currentSubscriptionId = '';
   SUBSCRIPTION_LIST_ELEMENT: SubscriptionListElement[] = [];
   subscriptionlistdataSource = new MatTableDataSource<SubscriptionListElement>(this.SUBSCRIPTION_LIST_ELEMENT);
-  displayedSubscriptionListColumns: string[] = ['srno', 'subscription_name', 'subscription_type', 'subscription_frequency', 'subscription_start_date', 'subscription_end_date', 'subscription_vendor_name', 'subscription_status', 'action'];
+  displayedSubscriptionListColumns: string[] = ['srno', 'subscription_id','subscription_name', 'subscription_type', 'subscription_frequency', 'subscription_start_date', 'subscription_end_date', 'subscription_vendor_name', 'subscription_status', 'action'];
   subscriptionListPageIndex = 0;
   subscriptionListPageSize = 10;
   subscriptionListPageSizeOptions = [10, 25, 50, 100];
+  showButtonStatus = true;
 
   constructor(public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -56,7 +57,8 @@ export class PeriodicalMasterComponent implements OnInit {
         subscription_start_date: '',
         subscription_end_date: '',
         subscription_vendor_id: '',
-        subscription_status: ''
+        subscription_status: '',
+        showButtonStatus: true
       }
     });
 
@@ -88,8 +90,9 @@ export class PeriodicalMasterComponent implements OnInit {
             subscription_start_date: item.subscription_start_date,
             subscription_end_date: item.subscription_end_date,
             subscription_vendor_id: item.subscription_vendor_id,
-            subscription_vendor_name: this.getVendorDetail(item.subscription_vendor_id),
-            subscription_status: item.subscription_status
+            subscription_vendor_name: item.subscription_vendor_name ? item.subscription_vendor_name : '',
+            subscription_status: item.subscription_status,
+            
           };
           console.log('element', element);
           this.SUBSCRIPTION_LIST_ELEMENT.push(element);
@@ -101,7 +104,7 @@ export class PeriodicalMasterComponent implements OnInit {
     });
   }
 
-  editSubscription(element) {
+  editSubscription(element, showButton) {
     const dialogRef = this.dialog.open(AddSubscriptionDialog, {
       width: '750px',
       data: {
@@ -113,6 +116,7 @@ export class PeriodicalMasterComponent implements OnInit {
         subscription_end_date: element.subscription_end_date,
         subscription_vendor_id: element.subscription_vendor_id,
         subscription_status: element.subscription_status,
+        showButtonStatus: showButton ? showButton : false
       }
     });
 
@@ -147,27 +151,9 @@ export class PeriodicalMasterComponent implements OnInit {
     this.currentSubscriptionId = subscription_id;
   }
 
-  getVendorDetail(vendor_id) {
-    console.log(vendor_id);
-    let vendorDetail: any;
-    if (vendor_id) {
-      this.erpCommonService.getVendor({
-        ven_id: Number(vendor_id)
-      }).subscribe((res: any) => {
-        if (res && res.status === 'ok') {
-          console.log('vendorDetail', vendorDetail);
-          vendorDetail = res.data[0];
-          
-        }
-      })
-    }
-    console.log('vendorDetail', vendorDetail);
-    if (vendorDetail) {
-      console.log('vendorDetail.ven_name', vendorDetail.ven_name);
-      return vendorDetail.ven_name;
-    }
-    
-  }
+  applyFilterSubscription(filterValue: string) {
+		this.subscriptionlistdataSource.filter = filterValue.trim().toLowerCase();
+	}
 
 }
 

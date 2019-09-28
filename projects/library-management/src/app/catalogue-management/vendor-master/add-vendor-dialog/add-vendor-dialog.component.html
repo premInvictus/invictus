@@ -1,7 +1,9 @@
 <div class="row remove-modal-margin">
   <div class="col-12 remove-col-padding">
     <div class="dialog-title-container ">
-      <span class="font-size-24 font-white">Add Vendor</span>
+      <span class="font-size-24 font-white" *ngIf="vendorForm.value.showButtonStatus && !vendorForm.value.ven_id">Add Vendor</span>
+      <span class="font-size-24 font-white" *ngIf="vendorForm.value.showButtonStatus && vendorForm.value.ven_id != ''">Update Vendor</span>
+      <span class="font-size-24 font-white" *ngIf="!vendorForm.value.showButtonStatus">View Vendor</span>
       <i class="material-icons font-size-24 float-right font-white margin-top-10 cursor-pointer" (click)="onNoClick()">
         cancel
       </i>
@@ -9,8 +11,9 @@
   </div>
 </div>
 <div class="row">
-    <form [formGroup]="vendorForm">
+   
   <div class="col-12 remove-col-padding">
+      <form [formGroup]="vendorForm">
     <div class="row  margin-top-25">
       <div class="col-6 remove-col-padding">
         <!-- <div class="row">
@@ -25,7 +28,7 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Vendor Name</mat-label>
-              <input matInput placeholder="" formControlName = "ven_name" [disabled]="vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_name" [readonly]="!vendorForm.value.showButtonStatus" required/>
             </mat-form-field>
           </div>
         </div>
@@ -33,8 +36,8 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Vendor Category</mat-label>
-              <mat-select formControlName = "ven_category" [disabled]="vendorForm.value.showButtonStatus">
-                <mat-option></mat-option>
+              <mat-select formControlName = "ven_category" [disabled]="!vendorForm.value.showButtonStatus" required>
+                <mat-option value="Seller">Seller</mat-option>
               </mat-select>
 
             </mat-form-field>
@@ -44,7 +47,7 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Items Tag</mat-label>
-              <input matInput placeholder="" formControlName = "ven_items_tags" [disabled]="vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_items_tags" [readonly]="!vendorForm.value.showButtonStatus" required/>
             </mat-form-field>
           </div>
         </div>
@@ -52,7 +55,7 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Address</mat-label>
-              <input matInput placeholder="" formControlName = "ven_address" [disabled]="vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_address" [readonly]="!vendorForm.value.showButtonStatus"/>
 
             </mat-form-field>
           </div>
@@ -61,7 +64,7 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Contact No.</mat-label>
-              <input matInput placeholder="" formControlName = "ven_contact" [disabled]="vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_contact" [readonly]="!vendorForm.value.showButtonStatus" required/>
 
             </mat-form-field>
           </div>
@@ -70,7 +73,7 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Email</mat-label>
-              <input matInput placeholder="" formControlName = "ven_email" [disabled]="vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_email" [readonly]="!vendorForm.value.showButtonStatus"/>
             </mat-form-field>
           </div>
         </div>
@@ -81,7 +84,7 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Authorised Contact Person</mat-label>
-              <input matInput placeholder="" formControlName = "ven_authorised_person_detail_name" [disabled]="vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_authorised_person_detail_name" [readonly]="!vendorForm.value.showButtonStatus"/>
             </mat-form-field>
           </div>
         </div>
@@ -89,7 +92,7 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Designation</mat-label>
-              <input matInput placeholder="" formControlName = "ven_authorised_person_detail_designation" [disabled]="vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_authorised_person_detail_designation" [readonly]="!vendorForm.value.showButtonStatus"/>
             </mat-form-field>
           </div>
         </div>
@@ -97,7 +100,7 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Contact No</mat-label>
-              <input matInput placeholder="" formControlName = "ven_authorised_person_detail_contact" [disabled]="vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_authorised_person_detail_contact" [readonly]="!vendorForm.value.showButtonStatus"/>
             </mat-form-field>
           </div>
         </div>
@@ -105,7 +108,7 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>PAN No.</mat-label>
-              <input matInput placeholder="" formControlName = "ven_pan_no" [disabled]="vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_pan_no" [readonly]="!vendorForm.value.showButtonStatus"/>
 
             </mat-form-field>
           </div>
@@ -114,7 +117,7 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>GST No.</mat-label>
-              <input matInput placeholder="" formControlName = "ven_gst_no" [disabled]="vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_gst_no" [readonly]="!vendorForm.value.showButtonStatus"/>
 
             </mat-form-field>
           </div>
@@ -124,13 +127,15 @@
     <br />
     <div class="row text-center" *ngIf="vendorForm.value.showButtonStatus">
       <div class="col-12">
-        <button mat-raised-button class="btn-success-green" (click)="save()">Submit</button>
+          <button *ngIf="!vendorForm.value.ven_id" mat-raised-button class="btn-success-green" (click)="save()">Add</button>
+          <button *ngIf="vendorForm.value.ven_id != ''" mat-raised-button class="btn-success-green" (click)="update()">Update</button>
         <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
           Reset
         </button>
       </div>
     </div>
     <br>
+  </form>
   </div>
-</form>
+
 </div>
