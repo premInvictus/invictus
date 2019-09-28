@@ -247,5 +247,35 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/vendor/getVendor', value);
 	}
+
+	insertSubscription(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/subscription/insertSubscription', value);
+	}
+
+	updateSubscription(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/subscription/updateSubscription', value);
+	}
+
+	deleteSubscription(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/subscription/deleteSubscription', value);
+	}
+
+	insertVendor(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/vendor/insertVendor', value);
+	}
+
+	updateVendor(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/vendor/updateVendor', value);
+	}
+
+	deleteVendor(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/vendor/deleteVendor', value);
+	}
 }
 
