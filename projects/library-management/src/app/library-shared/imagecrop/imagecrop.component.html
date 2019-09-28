@@ -1,30 +1,22 @@
 <ng-template #cropModal>
-  <div class="modal-main-box">
-     <h4 class="text-uppercase text-center"><b>Crop Image</b></h4>
-     <br>
-     <div class="modal-delete-content-box">
-        <div>
-          <image-cropper
-              [imageChangedEvent]="imageChangedEvent"
-              [maintainAspectRatio]="true"
-              [aspectRatio]="16 / 21"
-              [roundCropper]="true"
-              format="png"
-              [resizeToWidth]="133"
-              [imageQuality]= "100"
-              (imageCropped)="imageCropped($event)"
-              (imageLoaded)="imageLoaded()"
-              (loadImageFailed)="loadImageFailed()"
-          ></image-cropper>
-          
-          <img class="crop-image-previewer" [src]="croppedImage" />
-          <span class="crop-image-text"><b>Image Preview</b></span>
-        </div>
-        <br>
-        <div class="text-center">
-           <button mat-raised-button class="btn-success" (click)="acceptcrop();closeDialog()">Yes</button>&nbsp;
-           <button mat-raised-button class="btn-danger" (click)="closeDialog()">No</button>
-        </div>
-     </div>
-  </div>
+   <div>
+      <h4 class="text-uppercase text-center"><b>Crop Image</b></h4>
+      <br>
+      <div>
+         <div>
+            <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="16 / 9"
+                [imageQuality]="100"
+               (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+               (loadImageFailed)="loadImageFailed()"></image-cropper>
+
+            <img class="crop-image-previewer" [src]="croppedImage" />
+            <span class="crop-image-text"><b>Image Preview</b></span>
+         </div>
+         <br>
+         <div class="text-center">
+            <button mat-raised-button class="btn-success" (click)="acceptcrop();closeDialog()">Yes</button>&nbsp;
+            <button mat-raised-button class="btn-danger" (click)="closeDialog()">No</button>
+         </div>
+      </div>
+   </div>
 </ng-template>

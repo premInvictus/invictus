@@ -16,12 +16,14 @@ export class ErpCommonService {
 		return this.http.post(environment.apiReservUrl + '/rfidmapping/updateRFIDMapping', value);
 	}
 	insertReservoirData(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/insertReservoirData', value);
 	}
 	searchReservoir(value) {
 		return this.http.post(environment.apiReservUrl + '/booksearch/searchReservoir', value);
 	}
 	getReservoirData(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirData', value);
 	}
 	getLanguages(value) {
@@ -34,6 +36,7 @@ export class ErpCommonService {
 		return this.http.post(environment.apiReservUrl + '/reservoir/getGenres', value);
 	}
 	getBarcodePrint(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/barcodeprint/getBarcodePrint', value);
 	}
 	getFeeLedger(value: any) {
