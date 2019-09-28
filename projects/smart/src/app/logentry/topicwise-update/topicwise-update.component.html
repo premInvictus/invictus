@@ -24,7 +24,7 @@
               </mat-form-field>
               <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10"
                 appearance="outline">
-                <mat-label>Class & Section</mat-label>
+                <mat-label>Class & Section</mat-label> 
                 <mat-select formControlName="tw_class_sec_id"
                   (selectionChange)="getSubjectByTeacherIdClassIdSectionId($event)">
                   <mat-option *ngFor="let item of classSectionArray" [value]="item.cs_id">{{item.cs_name}}</mat-option>
@@ -33,7 +33,7 @@
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
                 appearance="outline">
                 <mat-label>Subject</mat-label>
-                <mat-select formControlName="tw_sub_id" (selectionChange)="getTopicwiseDetails();getClassTerm();">
+                <mat-select formControlName="tw_sub_id" (selectionChange)="getClassTerm();">
                   <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name | capitalize}}
                   </mat-option>
                 </mat-select>

@@ -32,6 +32,7 @@ export class ComparitiveComponent implements OnInit {
 	subtopicArray: any[];
 	sectionArray: any[];
 	finalSpannedArray: any[] = [];
+	termsArray: any[] = [];
 	dataArr: any[] = [];
 	sessionArray: any[] = [];
 	param: any = {};
@@ -118,7 +119,8 @@ export class ComparitiveComponent implements OnInit {
 			sc_to: '',
 			syl_class_id: '',
 			syl_section_id: '',
-			syl_sub_id: ''
+			syl_sub_id: '',
+			syl_term_id: ''
 		});
 	}
 
@@ -127,6 +129,18 @@ export class ComparitiveComponent implements OnInit {
 		this.getClass();
 		this.getSession();
 		this.getSchool();
+	}
+	getClassTerm() {
+		this.termsArray = [];
+		this.commonService.getClassTerm({ class_id: this.comparitiveForm.value.syl_class_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				result.data.ect_no_of_term.split(',').forEach(element => {
+					this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
+				});
+			} else {
+				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
+			}
+		});
 	}
 	//  Get Class List function
 	getClass() {
@@ -593,6 +607,7 @@ export class ComparitiveComponent implements OnInit {
 		param.class_id = this.comparitiveForm.value.syl_class_id;
 		param.sec_id = this.comparitiveForm.value.syl_section_id;
 		param.subject_id = this.comparitiveForm.value.syl_sub_id;
+		param.syl_term_id = this.comparitiveForm.value.syl_term_id;
 		this.syllabusService.getComparativeDetails(param)
 			.subscribe(
 				(result1: any) => {
