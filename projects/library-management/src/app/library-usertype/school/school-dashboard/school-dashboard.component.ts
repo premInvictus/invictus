@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ErpCommonService } from 'src/app/_services';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-school-dashboard',
@@ -9,10 +11,13 @@ import { ErpCommonService } from 'src/app/_services';
 export class SchoolDashboardComponent implements OnInit {
   bookDetailsArray: any[] = [];
   result: any = {};
-  constructor(private common: ErpCommonService) { }
+  constructor(private common: ErpCommonService, public dialog: MatDialog) { }
   ngOnInit() {
     this.getBooksBasedOnISBN();
   }
+
+  
+
   getBooksBasedOnISBN() {
     this.result = {};
     this.bookDetailsArray = [];
@@ -63,4 +68,33 @@ export class SchoolDashboardComponent implements OnInit {
     };
 
   }
+
+
+  openAdvanceSearchDialog(): void {
+    const dialogRef = this.dialog.open(AdvancedSearchDialog, {
+      width: '750px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+
+}
+
+
+@Component({
+  selector: 'advanced-search-dialog',
+  templateUrl: 'advanced-search-dialog.html',
+})
+export class AdvancedSearchDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<AdvancedSearchDialog>) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
 }
