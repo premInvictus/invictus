@@ -7,6 +7,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material/table';
 import { ViewGradecardDialogComponent } from '../view-gradecard-dialog/view-gradecard-dialog.component';
 import { TitleCasePipe } from '@angular/common';
+import { saveAs } from 'file-saver';
 
 
 @Component({
@@ -67,7 +68,32 @@ export class GradecardPrintingComponent implements OnInit {
     data.text = 'Unlock';
     data.multiple = multiple;
 		this.deleteModalUnlock.openModal(data);
-	}
+  }
+  printGradecard(item=null) {
+    const printData: any[] = [];
+    if(item) {
+      printData.push({login_id: item.au_login_id});
+    } else {
+      this.selection.selected.forEach(e => {
+        printData.push({login_id: e.au_login_id});
+      });
+    }
+    const param: any = {};
+    param.login_id = printData;
+    param.class_id = this.paramform.value.eme_class_id;
+    param.sec_id = this.paramform.value.eme_sec_id;
+    param.term_id = this.paramform.value.eme_term_id;
+    this.examService.printGradecard(param).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        console.log(result.data);
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
+      }
+    })
+
+  }
 	lockGradeCard(item) {
     console.log(item);
 		if (item.multiple === '1') {

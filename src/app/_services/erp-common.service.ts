@@ -222,4 +222,20 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/getUser', param);
 	}
+
+	getVerificationLog(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/physicalverification/getPhysicalVerification', value);
+	}
+
+	insertPhysicalVerification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/physicalverification/insertPhysicalVerification', value);
+	}
+
+	updatePhysicalVerification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/physicalverification/updatePhysicalVerification', value);
+	}
 }
+
