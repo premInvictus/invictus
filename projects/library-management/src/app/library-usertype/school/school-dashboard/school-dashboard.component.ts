@@ -52,13 +52,13 @@ export class SchoolDashboardComponent implements OnInit {
           })
         }
         console.log(this.bookDetailsArray);
-        this.common.insertReservoirData({
-          bookDetails: this.bookDetailsArray
-        }).subscribe((res: any) => {
-          if (res && res.status === 'ok') {
-            console.log(res);
-          }
-        });
+        // this.common.insertReservoirData({
+        //   bookDetails: this.bookDetailsArray
+        // }).subscribe((res: any) => {
+        //   if (res && res.status === 'ok') {
+        //     console.log(res);
+        //   }
+        // });
       }
     };
 
