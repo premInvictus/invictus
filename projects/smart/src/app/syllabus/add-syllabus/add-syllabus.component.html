@@ -35,7 +35,6 @@
                                             {{item.class_name}}
                                         </mat-option>
                                     </mat-select>
-
                                 </mat-form-field>
                             </div>
                         </div>
@@ -43,10 +42,23 @@
                             <div class="col-12 remove-col-padding">
                                 <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Subject</mat-label>
-                                    <mat-select formControlName="syl_sub_id" required placeholder="Select Subject">
+                                    <mat-select formControlName="syl_sub_id" required placeholder="Select Subject" (selectionChange)="getClassTerm()" >
                                         <mat-option value="">Please select</mat-option>
                                         <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                             {{item.sub_name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 remove-col-padding">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Term</mat-label>
+                                    <mat-select formControlName="syl_term_id" required placeholder="Select Term" (selectionChange)="getClassTerm()" >
+                                        <mat-option value="">Please select</mat-option>
+                                        <mat-option *ngFor="let item of termsArray" [value]="item.id">
+                                            {{item.name}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -116,6 +128,9 @@
                     <span class="ver-line-divider margin-left-10"></span> <span class="font-size-20 font-light">Subject:
                     </span>
                     <span class="font-size-20 font-bold">{{getSyllabusSubject(syllabusForm.value.syl_sub_id)}}</span>
+                    <span class="ver-line-divider margin-left-10"></span> <span class="font-size-20 font-light">Term:
+                    </span>
+                    <span class="font-size-20 font-bold">{{getSyllabusTerm(syllabusForm.value.syl_term_id)}}</span>
                 </div>
                 <div class="col-6 text-right">
                     <span class="font-size-16 font-regular font-color-gray ">No. of Period Available</span>

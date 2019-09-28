@@ -18,10 +18,11 @@ export class TopicwiseUpdateComponent implements OnInit {
 	categoryArray: any[] = [];
 	classArray: any[] = [];
 	sectionArray: any[] = [];
-	classSectionArray: any[] = [];
+	classSectionArray: any[] = []; 
 	teacherId = '';
 	topicsubtopicArray: any[] = [];
 	topicCTRArray: any[] = [];
+	termsArray: any[] = [];
 	topicsubtopicDetailsArray: any[] = [];
 	currentUser: any;
 	noDataFlag = true;
@@ -74,7 +75,22 @@ export class TopicwiseUpdateComponent implements OnInit {
 			tw_teacher_id: '',
 			teacher_name: '',
 			tw_class_sec_id: '',
-			tw_sub_id: ''
+			tw_sub_id: '',
+			tw_term_id: ''
+		});
+	}
+
+	getClassTerm() {
+		this.termsArray = [];
+		const csArray = this.topicwiseforForm.value.tw_class_sec_id.split('-');
+		this.commonAPIService.getClassTerm({ class_id: csArray[0] }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				result.data.ect_no_of_term.split(',').forEach(element => {
+					this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
+				});
+			} else {
+				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
+			}
 		});
 	}
 	topicwiseInsert(value) {
@@ -197,6 +213,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 			param.class_id = csArray[0];
 			param.sec_id = csArray[1];
 			param.sub_id = this.topicwiseforForm.value.tw_sub_id;
+			param.term_id = this.topicwiseforForm.value.tw_term_id;
 			this.smartService.getSubtopicCountAndDetail(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.noDataFlag = false;

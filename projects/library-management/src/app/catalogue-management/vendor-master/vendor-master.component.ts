@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-vendor-master',
@@ -7,9 +8,35 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VendorMasterComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) {}
 
   ngOnInit() {
+  }
+
+  addVendorDialog(): void {
+    const dialogRef = this.dialog.open(AddVendorDialog, {
+      width: '750px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+}
+
+
+@Component({
+  selector: 'add-vendor-dialog',
+  templateUrl: 'add-vendor-dialog.html',
+})
+export class AddVendorDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<AddVendorDialog>) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
 }
