@@ -12,6 +12,8 @@ export class ImagecropComponent implements OnInit {
 	inputData: any;
 	filename = '';
 	@Input() cropconfig: any;
+	@Input() roundCropper: any;
+	@Input() resizeToWidth: any;
 	@Output() cropYes = new EventEmitter<any>();
 	@Output() cropNo = new EventEmitter<any>();
 	dialogRef: MatDialogRef<ImagecropComponent>;
@@ -32,8 +34,8 @@ export class ImagecropComponent implements OnInit {
 			this.fileChangeEvent(event);
 		}
 		this.dialogRef = this.dialog.open(this.cropModal, {
-			'height': '100vh',
-			'width': '100vw',
+			'height': '80vh',
+			'width': '80vw',
 			position: {
 				'top': '5%'
 			}

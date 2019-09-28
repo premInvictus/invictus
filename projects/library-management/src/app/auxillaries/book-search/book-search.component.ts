@@ -11,6 +11,24 @@ export class BookSearchComponent implements OnInit {
   bookData: any[] = [];
   gridView = true;
   enteredVal: any = false;
+  statusArray: any[] = [
+    {
+      type_id: '1',
+      type_name: 'Available',
+    },
+    {
+      type_id: '2',
+      type_name: 'Issued',
+    },
+    {
+      type_id: '3',
+      type_name: 'Reserved',
+    },
+    {
+      type_id: '4',
+      type_name: 'Flagged',
+    }
+  ];
   gridViewClass = 'btn-success-blue-btn';
   listViewClass = 'default-view-button btn-spacer';
   constructor(private common: ErpCommonService) { }
@@ -58,5 +76,11 @@ export class BookSearchComponent implements OnInit {
   }
   showFirstDetailDiv(index) {
     this.bookData[index].book_container_class = 'book-title-container-default';
+  }
+  getReserv_status(id) {
+    const findex = this.statusArray.findIndex(f=> f.type_id === id);
+    if (findex !== -1) {
+      return this.statusArray[findex].type_name;
+    }
   }
 }
