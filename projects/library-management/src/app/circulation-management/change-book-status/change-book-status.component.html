@@ -1,3 +1,173 @@
-<p>
-  change-book-status works!
-</p>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-7 margin-top-15">
+          <span class="font-size-24">Change Book Status</span>
+        </div>
+        <div class="col-5">
+          <div class="search-container">
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <mat-form-field class="lib-form form-field">
+                  <input matInput placeholder="Search Any Book By Name or ID" />
+                </mat-form-field>
+              </div>
+              <div class="col-4 margin-top-10  text-right">
+                <button
+                  mat-button
+                  class="btn-spacer btn-lib-search margin-left-10"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-2 remove-col-padding-left smart-col-12">
+          <img class="book-detail-img-big" src="" />
+        </div>
+        <div class="col-10 smart-col-88">
+          <div class="row remove-top-margin">
+            <div class="col-12 remove-col-padding">
+              <span class="font-size-20 font-bold">12549863</span>
+              <span class="font-size-14 float-right font-bold font-gold"
+                ><img
+                  src="../../../../../../src/assets/images/Library/openbook.svg"
+                />
+                &nbsp;Read Only</span
+              >
+            </div>
+          </div>
+          <div class="row remove-top-margin">
+            <div class="col-12 remove-col-padding">
+              <span class="font-size-18">Harry Potter and the cursed child</span
+              ><br />
+              <span class="font-size-14 font-skyblue">J.K. Rowling</span>
+            </div>
+          </div>
+          <div class="row margin-top-20">
+            <div class="col-1 remove-col-padding">
+              <span class="font-size-14 font-bold">Edition</span>
+              <span class="font-size-14 font-bold float-right"> :</span>
+            </div>
+            <div class="col-11 remove-col-padding">
+              <span class="font-size-14 font-bold opacity-7 margin-left-15"
+                >2000</span
+              >
+            </div>
+          </div>
+          <div class="row remove-top-margin">
+            <div class="col-1 remove-col-padding">
+              <span class="font-size-14 font-bold">Publisher</span>
+              <span class="font-size-14 font-bold float-right"> : </span>
+            </div>
+            <div class="col-11 remove-col-padding">
+              <span class="font-size-14 font-bold opacity-7 margin-left-15"
+                >Waren Book Prod</span
+              >
+            </div>
+          </div>
+          <div class="row remove-top-margin">
+            <div class="col-1 remove-col-padding">
+              <span class="font-size-14 font-bold">Pages</span>
+              <span class="font-size-14 font-bold float-right"> : </span>
+            </div>
+            <div class="col-11 remove-col-padding">
+              <span class="font-size-14 font-bold opacity-7 margin-left-15">
+                200</span
+              >
+            </div>
+          </div>
+          <div class="row remove-top-margin">
+            <div class="col-1 remove-col-padding">
+              <span class="font-size-14 font-bold">Location</span>
+              <span class="font-size-14 font-bold float-right"> : </span>
+            </div>
+            <div class="col-11 remove-col-padding">
+              <span class="font-size-14 font-bold opacity-7 margin-left-15">
+                H-1</span
+              >
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-12">
+              <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s, when an unknown printer took a galley
+                of type and scrambled it to make a type specimen book.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+          <div class="row">
+            <div class="col-4">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Current Status</mat-label>
+                <mat-select>
+                  <mat-option></mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-4">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Change to</mat-label>
+                <mat-select>
+                  <mat-option></mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-4">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Reason To Change</mat-label>
+                <mat-select>
+                  <mat-option></mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field" appearance="outline">
+                <textarea matInput rows="5"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+          <br />
+          <div class="row text-center">
+            <div class="col-12">
+              <button mat-raised-button class="btn-success-green">
+                Submit
+              </button>
+              <button mat-raised-button class="btn-reset btn-spacer">
+                Reset
+              </button>
+            </div>
+          </div>
+          <br />
+        </div>
+        <div class="col-3"></div>
+      </div>
+    </mat-card>
+  </div>
+</div>

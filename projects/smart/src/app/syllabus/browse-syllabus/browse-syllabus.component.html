@@ -23,11 +23,22 @@
                             <mat-form-field class="form-field-220 margin-left-10 remove-form-field-bottom-margin"
                                 appearance="outline">
                                 <mat-label>Subject</mat-label>
-                                <mat-select formControlName="syl_sub_id" (selectionChange)="fetchSyllabusDetails()"
+                                <mat-select formControlName="syl_sub_id" (selectionChange)="fetchSyllabusDetails();getClassTerm();"
                                     required placeholder="Select Subject">
                                     <mat-option value="">Please select</mat-option>
                                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                         {{item.sub_name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="form-field-220 margin-left-10 remove-form-field-bottom-margin"
+                                appearance="outline">
+                                <mat-label>Term</mat-label>
+                                <mat-select formControlName="syl_term_id" (selectionChange)="fetchSyllabusDetails()"
+                                    required placeholder="Select Term">
+                                    <mat-option value="">Please select</mat-option>
+                                    <mat-option *ngFor="let item of termsArray" [value]="item.id">
+                                        {{item.name}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

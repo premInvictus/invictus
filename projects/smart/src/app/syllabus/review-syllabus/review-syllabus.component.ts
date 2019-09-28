@@ -27,6 +27,7 @@ export class ReviewSyllabusComponent implements OnInit {
 	public subtopicArray: any[];
 	finalSpannedArray: any[] = [];
 	finalSubmitArray: any[] = [];
+	termsArray: any[] = [];
 	dataArr: any[] = [];
 	editRequestFlag = false;
 	finalDivFlag = true;
@@ -134,7 +135,8 @@ export class ReviewSyllabusComponent implements OnInit {
 	buildForm() {
 		this.reviewForm = this.fbuild.group({
 			syl_class_id: '',
-			syl_sub_id: ''
+			syl_sub_id: '',
+			syl_term_id: ''
 		});
 	}
 	ngOnInit() {
@@ -151,6 +153,18 @@ export class ReviewSyllabusComponent implements OnInit {
 			this.getSubjectsByClass();
 			this.fetchSyllabusDetails();
 		}
+	}
+	getClassTerm() {
+		this.termsArray = [];
+		this.commonService.getClassTerm({ class_id: this.reviewForm.value.syl_class_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				result.data.ect_no_of_term.split(',').forEach(element => {
+					this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
+				});
+			} else {
+				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
+			}
+		});
 	}
 	// get session name by session id
 	getSession() {
@@ -237,7 +251,7 @@ export class ReviewSyllabusComponent implements OnInit {
 
 	//  Get Sub Topic Name
 	getSubTopicName(value): void {
-		this.syllabusService.getSubTopic({st_topic_id: value})
+		this.syllabusService.getSubTopic({ st_topic_id: value })
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -607,7 +621,7 @@ export class ReviewSyllabusComponent implements OnInit {
 		this.teachingSum = 0;
 		this.testSum = 0;
 		this.revisionSum = 0;
-		this.syllabusService.getSylIdByClassSubject(this.reviewForm.value.syl_class_id, this.reviewForm.value.syl_sub_id)
+		this.syllabusService.getSylIdByClassSubject(this.reviewForm.value)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -616,8 +630,9 @@ export class ReviewSyllabusComponent implements OnInit {
 						const param: any = {};
 						param.syl_id = result.data[0].syl_id;
 						param.sd_status = 0;
+						this.reviewForm.value.sd_status = 0;
 						if (param.syl_id !== '') {
-							this.syllabusService.getSyllabusDetails(param)
+							this.syllabusService.getSyllabusDetails(this.reviewForm.value)
 								.subscribe(
 									(result1: any) => {
 										if (result1 && result1.status === 'ok') {
@@ -693,7 +708,7 @@ export class ReviewSyllabusComponent implements OnInit {
 														sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
 														details: spannArray,
 														total: this.finalSyllabusArray[i].sd_period_req,
-														syl_id: param.syl_id
+														syl_id: this.finalSyllabusArray[i].sd_syl_id,
 													});
 												} else {
 													// tslint:disable-next-line: max-line-length

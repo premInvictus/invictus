@@ -11,20 +11,13 @@
               <div class="row remove-top-margin">
                 <div class="col-8">
                   <mat-form-field class="lib-form form-field">
-                    <input
-                      matInput
-                      placeholder="Search Any Book By Name or ID"
-                    />
+                    <input matInput placeholder="Search Any Book By Name or ID" />
                   </mat-form-field>
                 </div>
                 <div class="col-4 margin-top-10  text-right">
-                  <span class="font-size-12 margin-top-15 font-skyblue"
-                    >Advanced Search <i class="fas fa-chevron-down"></i
-                  ></span>
-                  <button
-                    mat-button
-                    class="btn-spacer btn-lib-search margin-left-10"
-                  >
+                  <span class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
+                      class="fas fa-chevron-down"></i></span>
+                  <button mat-button class="btn-spacer btn-lib-search margin-left-10">
                     Search
                   </button>
                 </div>
@@ -32,11 +25,7 @@
             </div>
           </div>
           <div class="col-1">
-            <button
-              mat-raised-button
-              class="btn-success-blue-add-book"
-              (click)="addBook()"
-            >
+            <button mat-raised-button class="btn-success-blue-add-book" (click)="addBook()">
               Add Book
             </button>
           </div>
@@ -44,7 +33,6 @@
       </mat-card>
     </div>
   </div>
-
   <div class="row">
     <div class="col-12">
       <mat-card class="card-height-730">
@@ -93,8 +81,8 @@
                   </td>
                   <td class="custom-td">H-1</td>
                   <!-- <td class="custom-td">
-                              <i class="fas fa-trash font-color-red"></i>
-                            </td> -->
+                             <i class="fas fa-trash font-color-red"></i>
+                             </td> -->
                 </tr>
               </tbody>
             </table>
@@ -105,7 +93,6 @@
     </div>
   </div>
 </div>
-
 <div class="add-book-container" *ngIf="addBookContainer">
   <div class="row">
     <div class="col-12">
@@ -120,8 +107,7 @@
   </div>
   <div class="row">
     <div class="col-12">
-      <span class="margin-left-15 opacity-7 font-size-16"
-        >Accession Master -
+      <span class="margin-left-15 opacity-7 font-size-16">Accession Master -
       </span>
       <span class="font-bold font-size-16">Add Books</span>
     </div>
@@ -129,272 +115,274 @@
   <div class="row">
     <div class="col-12">
       <mat-card>
-        <div class="row">
-          <div class="col-12">
-            <span class="font-size-20 font-bold">Book Details</span>
+        <form [formGroup]="bookForm">
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-20 font-bold">Book Details</span>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-1 smart-col-10 ">
-            <div class=" margin-top-20">
-            <img class="book-cover-img">
-          </div>
-          </div>
-          <div class="col-11 smart-col-90">
-            <div class="row">
-              <div class="col-3">
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>ISBN Code</mat-label>
-                      <input matInput placeholder="ISBN Code" />
-                    </mat-form-field>
+          <div class="row">
+            <div class="col-1 smart-col-10 ">
+              <div class=" margin-top-20">
+                <div class="book-cover-img-2" *ngIf="!imageFlag">
+                  <div class="text-center">
+                    <img class="book-place-holder-img" src="../../../../../../assets/images/book-upload_holder.png">
                   </div>
                 </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Publisher</mat-label>
-                      <input matInput placeholder="Publisher" />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Tag</mat-label>
-                      <input matInput placeholder="Tag" />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Print Type</mat-label>
-                      <mat-select placeholder="Print Type">
-                        <mat-option>
-                          Na
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
+                <img *ngIf="imageFlag" class="book-cover-img" [src]="bookImage">
               </div>
-              <div class="col-3">
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Title</mat-label>
-                      <input matInput placeholder="Harry Porter" />
-                    </mat-form-field>
+            </div>
+            <div class="col-11 smart-col-90">
+              <div class="row">
+                <div class="col-3">
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>ISBN Code</mat-label>
+                        <input matInput placeholder="ISBN Code" formControlName="isbn" type="number"
+                        id="isbn_id"
+                          (blur)="getBooksBasedOnISBN($event);$event.stopPropagation()" (keydown.enter)="getBooksBasedOnISBN($event);$event.stopPropagation()" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Publisher</mat-label>
+                        <input matInput placeholder="Publisher" formControlName="publisher" required />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Tag</mat-label>
+                        <input matInput placeholder="Tag" formControlName="tags" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Print Type</mat-label>
+                        <mat-select placeholder="Print Type" formControlName="type_id" required>
+                          <mat-option *ngFor="let item of typeArray" [value]="item.type_id">
+                            {{item.type_name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
                   </div>
                 </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Publisher Date</mat-label>
-                      <input matInput placeholder="ISBN Code" />
-                    </mat-form-field>
+                <div class="col-3">
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Title</mat-label>
+                        <input matInput placeholder="Title" formControlName="title" required />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Published Date</mat-label>
+                        <input matInput placeholder="Published Date" formControlName="publishedDate" required>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Volume Info</mat-label>
+                        <input matInput placeholder="Volume Info" formControlName="volumeInfo" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Price</mat-label>
+                        <input matInput placeholder="Price" formControlName="price" type="number" step="0.01"
+                          required />
+                      </mat-form-field>
+                    </div>
                   </div>
                 </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Volume Info</mat-label>
-                      <input matInput placeholder="Volume Info" />
-                    </mat-form-field>
+                <div class="col-3">
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Sub-Title</mat-label>
+                        <input matInput placeholder="Subtitle" formControlName="subtitle" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Kind/ Genre</mat-label>
+                        <mat-select formControlName="genre_id" required>
+                          <mat-option *ngFor="let item of genreArray" [value]="item.genre_id">
+                            {{item.genre_name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Language</mat-label>
+                        <mat-select formControlName="lang_id" required>
+                          <mat-option *ngFor="let item of languageArray" [value]="item.lang_code">
+                            {{item.lang_name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
                   </div>
                 </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Price</mat-label>
-                      <input matInput placeholder="Price" />
-                    </mat-form-field>
+                <div class="col-3">
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Author</mat-label>
+                        <input matInput placeholder="Author" formControlName="authors" required />
+                      </mat-form-field>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Sub-Title</mat-label>
-                      <input matInput placeholder="Harry Porter and Scocers" />
-                    </mat-form-field>
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Pages</mat-label>
+                        <input matInput placeholder="Pages" formControlName="page_count" required type="number" />
+                      </mat-form-field>
+                    </div>
                   </div>
-                </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Kind/ Genre</mat-label>
-                      <input matInput placeholder="Adventure Fiction" />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Mode</mat-label>
-                      <mat-select placehlder="Mode">
-                        <mat-option>
-                          Physical
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Language</mat-label>
-                      <input matInput placeholder="Hindi" />
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Author</mat-label>
-                      <input matInput placeholder="Richard Wilson" />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Pages</mat-label>
-                      <input matInput placeholder="256" />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Description</mat-label>
-                      <textarea matInput rows="5"></textarea>
-                    </mat-form-field>
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput rows="5" formControlName="description"></textarea>
+                      </mat-form-field>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <span class="font-size-20 font-bold">Schools Details</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-3">
-            <div class="row remove-top-margin">
-              <div class="col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Book Type</mat-label>
-                  <mat-select placehlder="Mode">
-                    <mat-option>
-                      Na
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row remove-top-margin">
-              <div class="col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Class</mat-label>
-                  <mat-select placehlder="Mode">
-                    <mat-option>
-                      NA
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-20 font-bold">Schools Details</span>
             </div>
           </div>
-          <div class="col-3">
-            <div class="row remove-top-margin">
-              <div class="col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Status</mat-label>
-                  <mat-select placehlder="Mode">
-                    <mat-option>
-                      Na
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+          <div class="row">
+            <div class="col-3">
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Book Type</mat-label>
+                    <mat-select placeholder="Book Type" formControlName="category_id">
+                      <mat-option *ngFor="let item of booktypeArray" [value]="item.type_id">
+                        {{item.type_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Class</mat-label>
+                    <mat-select placeholder="Class" formControlName="reserv_class_id" multiple>
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                        {{item.class_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
               </div>
             </div>
-            <div class="row remove-top-margin">
-              <div class="col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Subject</mat-label>
-                  <mat-select placehlder="Mode">
-                    <mat-option>
-                      NA
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+            <div class="col-3">
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Status</mat-label>
+                    <mat-select placeholder="Status" formControlName="reserv_status" required>
+                      <mat-option *ngFor="let item of statusArray" [value]="item.type_id">
+                        {{item.type_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Subject</mat-label>
+                    <mat-select placeholder="Subject" formControlName="reserv_sub_id">
+                      <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                        {{item.sub_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-3">
-            <div class="row remove-top-margin">
-              <div class="col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Category</mat-label>
-                  <mat-select placehlder="Mode">
-                    <mat-option>
-                      Na
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+            <div class="col-3">
+              <div class="row remove-top-margin">
+                <div class="col-12" *ngIf="bookForm.value.reserv_status === '4'">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Category</mat-label>
+                    <mat-select placeholder="Category" formControlName="status"
+                    [required]="bookForm.value.reserv_status === '4'">
+                      <mat-option *ngFor="let item of categoryArray" [value]="item.type_id">
+                        {{item.type_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Source</mat-label>
+                    <input matInput placeholder="Source" formControlName="source" />
+                  </mat-form-field>
+                </div>
               </div>
             </div>
-            <div class="row remove-top-margin">
-              <div class="col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Source</mat-label>
-                  <mat-select placehlder="Mode">
-                    <mat-option>
-                      NA
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+            <div class="col-3">
+              <div class="row remove-top-margin">
+                <div class="col-6">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Stack</mat-label>
+                    <input matInput placeholder="Stack" formControlName="stack" 
+                    required/>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Row</mat-label>
+                    <input matInput placeholder="Row" formControlName="row"
+                    type="number" 
+                    required/>
+                  </mat-form-field>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="col-3">
-            <div class="row remove-top-margin">
-              <div class="col-6">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Stack</mat-label>
-                  <input matInput placeholder="Stack" />
-                </mat-form-field>
-              </div>
-              <div class="col-6">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Row</mat-label>
-                  <input matInput placeholder="Row" />
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row remove-top-margin">
-              <div class="col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>No. Of Copies</mat-label>
-                  <mat-select placehlder="Mode">
-                    <mat-option>
-                      NA
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+              <div class="row remove-top-margin">
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>No. Of Copies</mat-label>
+                    <input matInput placeholder="No. Of Copies" type="number" formControlName="no_of_copies" 
+                    required/>
+                  </mat-form-field>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
+          <div class="row">
             <div class="col-12">
               <span class="font-size-20 font-bold">Vendors Details</span>
             </div>
@@ -405,60 +393,60 @@
                 <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Vendor ID</mat-label>
-                    <input matInput placeholder="Vendor ID" />
+                    <input matInput placeholder="Vendor ID" formControlName="vendor_id"
+                      (blur)="getVenderDetails($event)" (keydown.enter)="getVenderDetails($event)" type="number" />
                   </mat-form-field>
                 </div>
               </div>
               <div class="row remove-top-margin">
                 <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Email ID</mat-label>
-                        <input matInput placeholder="Email ID" />
-                      </mat-form-field>
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Email ID</mat-label>
+                    <input matInput placeholder="Email ID" formControlName="vendor_email" readonly />
+                  </mat-form-field>
                 </div>
               </div>
               <div class="row remove-top-margin">
-                  <div class="col-12">
-                      <mat-form-field class="form-field" appearance="outline">
-                          <mat-label>GST No.</mat-label>
-                          <input matInput placeholder="GST No." />
-                        </mat-form-field>
-                  </div>
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>GST No.</mat-label>
+                    <input matInput placeholder="GST No." formControlName="ven_gst_no" readonly />
+                  </mat-form-field>
                 </div>
+              </div>
             </div>
-            
             <div class="col-3">
               <div class="row remove-top-margin">
                 <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Vendor Name</mat-label>
-                        <input matInput placeholder="Vendor Name" />
-                      </mat-form-field>
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Vendor Name</mat-label>
+                    <input matInput placeholder="Vendor Name" formControlName="vendor_name" readonly />
+                  </mat-form-field>
                 </div>
               </div>
               <div class="row remove-top-margin">
                 <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Authorised Contact Person</mat-label>
-                    <input matInput placeholder="Authorised Contact Person" />
+                    <input matInput placeholder="Authorised Contact Person" formControlName="name" readonly />
                   </mat-form-field>
                 </div>
               </div>
               <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>P O No</mat-label>
-                      <input matInput placeholder="P O No" />
-                    </mat-form-field>
-                  </div>
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>P O No</mat-label>
+                    <input matInput placeholder="P O No" formControlName="vendor_po_no" required />
+                  </mat-form-field>
                 </div>
+              </div>
             </div>
             <div class="col-3">
               <div class="row remove-top-margin">
                 <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Address</mat-label>
-                    <input matInput placeholder="Address" />
+                    <input matInput placeholder="Address" formControlName="vendor_address" readonly />
                   </mat-form-field>
                 </div>
               </div>
@@ -466,25 +454,25 @@
                 <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Mobile No.</mat-label>
-                    <input matInput placeholder="Mobile No." />
+                    <input matInput placeholder="Mobile No." formControlName="vendor_contact" readonly maxlength="10" />
                   </mat-form-field>
                 </div>
               </div>
               <div class="row remove-top-margin">
-                  <div class="col-12">
-                    <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Invoice No.</mat-label>
-                      <input matInput placeholder="Invoice No." />
-                    </mat-form-field>
-                  </div>
+                <div class="col-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Invoice No.</mat-label>
+                    <input matInput placeholder="Invoice No." formControlName="vendor_invoice_no" required />
+                  </mat-form-field>
                 </div>
+              </div>
             </div>
             <div class="col-3">
               <div class="row remove-top-margin">
                 <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Contact No.</mat-label>
-                    <input matInput placeholder="Contact No." />
+                    <input matInput placeholder="Contact No." formControlName="contact" readonly maxlength="10" />
                   </mat-form-field>
                 </div>
               </div>
@@ -492,7 +480,7 @@
                 <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>PAN</mat-label>
-                    <input matInput placeholder="PAN" />
+                    <input matInput placeholder="PAN" formControlName="ven_pan_no" readonly />
                   </mat-form-field>
                 </div>
               </div>
@@ -504,15 +492,17 @@
             </div>
           </div>
           <br />
-        <div class="row text-center">
-          <div class="col-12">
-            <button mat-raised-button class="btn-success-green">Submit</button>
-            <button mat-raised-button class="btn-reset btn-spacer">
-              Reset
-            </button>
+          <div class="row text-center">
+            <div class="col-12">
+              <button mat-raised-button class="btn-success-green" (click)="submitBook()"
+              [disabled]="!(bookForm.valid)">Submit</button>
+              <button mat-raised-button class="btn-reset btn-spacer">
+                Reset
+              </button>
+            </div>
           </div>
-        </div>
-        <br>
+          <br>
+        </form>
       </mat-card>
     </div>
   </div>

@@ -93,4 +93,32 @@ export interface VendorListElement {
   ven_address:string;
   ven_contact:string;
   ven_email:string;
+ 
+
+}
+
+
+@Component({
+  selector: 'add-vendor-dialog',
+  templateUrl: 'add-vendor-dialog.html',
+})
+export class AddVendorDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<AddVendorDialog>) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  // addVendorDialog(): void {
+  //   const dialogRef = this.dialog.open(AddVendorDialog, {
+  //     width: '750px'
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     console.log('The dialog was closed');
+  //   });
+  // }
+
 }
