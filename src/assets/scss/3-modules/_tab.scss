@@ -61,3 +61,17 @@
 .mat-tab-group.fee-dashboard-tabgroup .mat-tab-header {
     border-bottom: none !important;
   }
+
+
+  .library-dash-group .mat-tab-header .mat-tab-label-container .mat-tab-list .mat-tab-labels .mat-tab-label {
+    border: none !important;
+    font-size: 18px;
+    color: #000000 !important;
+  }
+
+  .library-dash-group .mat-tab-header .mat-tab-label-container .mat-tab-list .mat-tab-labels .mat-tab-label.mat-tab-label-active {
+    background-color: #ffffff;
+    color: #1e88e5 !important;
+    font-size: 18px;
+    border-bottom: 2px solid #1e88e5 !important;
+  }
