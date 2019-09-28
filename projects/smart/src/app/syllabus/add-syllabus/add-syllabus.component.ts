@@ -38,6 +38,7 @@ export class AddSyllabusComponent implements OnInit {
 	XlslArray: any[] = [];
 	subTopicJson: any[] = [];
 	sessionArray: any[] = [];
+	termsArray: any[] = [];
 	arrayBuffer: any;
 	file: any;
 	syllabusValue1: any;
@@ -128,6 +129,7 @@ export class AddSyllabusComponent implements OnInit {
 		this.syllabusForm = this.fbuild.group({
 			syl_class_id: '',
 			syl_sub_id: '',
+			syl_term_id: ''
 		});
 		this.syllabusDetailForm = this.fbuild.group({
 			sd_ctr_id: '',
@@ -138,6 +140,18 @@ export class AddSyllabusComponent implements OnInit {
 		});
 	}
 
+	getClassTerm() {
+		this.termsArray = [];
+		this.commonService.getClassTerm({ class_id: this.syllabusForm.value.syl_class_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				result.data.ect_no_of_term.split(',').forEach(element => {
+					this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
+				});
+			} else {
+				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
+			}
+		});
+	}
 	// get end month and start month of school
 	getSchool() {
 		this.sisService.getSchool()
@@ -313,7 +327,7 @@ export class AddSyllabusComponent implements OnInit {
 						this.topicArray = [];
 					}
 				}
-			); 
+			);
 	}
 
 	//  Get Subtopic List function
@@ -357,6 +371,14 @@ export class AddSyllabusComponent implements OnInit {
 		const sindex = this.subjectArray.findIndex(f => Number(f.sub_id) === Number(sub_id));
 		if (sindex !== -1) {
 			return this.subjectArray[sindex].sub_name;
+		}
+	}
+
+	//  Get Subject Name from existion Array for details table
+	getSyllabusTerm(term_id) {
+		const tindex = this.termsArray.findIndex(f => Number(f.id) === Number(term_id));
+		if (tindex !== -1) {
+			return this.termsArray[tindex].sub_name;
 		}
 	}
 
@@ -408,7 +430,8 @@ export class AddSyllabusComponent implements OnInit {
 		this.cancelFlag = false;
 		this.syllabusForm.patchValue({
 			'syl_class_id': '',
-			'syl_sub_id': ''
+			'syl_sub_id': '',
+			'syl_term_id': ''
 		});
 		this.resetForm();
 	}
@@ -417,7 +440,7 @@ export class AddSyllabusComponent implements OnInit {
 	submit() {
 		if (this.syllabusForm.valid) {
 			this.getTopicByClassSubject();
-			this.syllabusService.getSylIdByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
+			this.syllabusService.getSylIdByClassSubject(this.syllabusForm.value)
 				.subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
@@ -780,7 +803,7 @@ export class AddSyllabusComponent implements OnInit {
 	// In this function database entry occur
 	finalSubmit($event) {
 		if ($event) {
-			this.syllabusService.getSylIdByClassSubject(this.syllabusForm.value.syl_class_id, this.syllabusForm.value.syl_sub_id)
+			this.syllabusService.getSylIdByClassSubject(this.syllabusForm.value)
 				.subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
@@ -833,7 +856,7 @@ export class AddSyllabusComponent implements OnInit {
 												sd_period_req: fetch.sd_period_req,
 												sd_st_id: fetch.sd_st_id,
 												sd_desc: fetch.sd_desc
-											}); 
+											});
 										}
 									}
 									this.syllabusService.insertSyllabusDetails(this.finalSubmitArray).subscribe((result1: any) => {

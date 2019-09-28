@@ -121,12 +121,9 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/insertSyllabusDetails', value);
 	}
-	getSylIdByClassSubject(class_id: any, sub_id: any) {
-		const param: any = {};
-		param.syl_class_id = class_id;
-		param.syl_sub_id = sub_id;
+	getSylIdByClassSubject(value: any) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getSylIdByClassSubject', param);
+		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getSylIdByClassSubject', value);
 	}
 	getSyllabusDetails(value: any) {
 		this.service.startLoading();

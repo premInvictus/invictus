@@ -504,7 +504,7 @@ export class ViewSyllabusComponent implements OnInit {
 		this.revisionSum = 0;
 		this.finalSpannedArray = [];
 		if (this.reviewform.value.syl_class_id && this.reviewform.value.syl_sub_id && this.reviewform.value.syl_sec_id) {
-			this.syllabusService.getSylIdByClassSubject(this.reviewform.value.syl_class_id, this.reviewform.value.syl_sub_id)
+			this.syllabusService.getSylIdByClassSubject(this.reviewform.value)
 				.subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
