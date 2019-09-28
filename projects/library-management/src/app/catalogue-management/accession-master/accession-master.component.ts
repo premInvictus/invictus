@@ -3,17 +3,26 @@ import { ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SmartService, SisService, CommonAPIService } from '../../_services';
 import { AccessionMasterModel } from './accession-master.model';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, PageEvent, MatPaginatorIntl, MatDialog } from '@angular/material';
 import { TitleCasePipe } from '@angular/common';
+import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
 @Component({
   selector: 'app-accession-master',
   templateUrl: './accession-master.component.html',
-  styleUrls: ['./accession-master.component.css']
+  styleUrls: ['./accession-master.component.css'],
+  providers: [
+    { provide: MatPaginatorIntl, useClass: MatPaginatorI18n }
+  ]
 })
 export class AccessionMasterComponent implements OnInit, AfterViewInit {
   @ViewChild('cropModal') cropModal;
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort
+  @ViewChild('searchModal') searchModal;
+  @ViewChild(MatSort) sort: MatSort;
+  bookpagesize = 10;
+  pageEvent: PageEvent;
+  bookpageindex = 0;
+  bookpagesizeoptions = [10, 25, 50, 100];
   result: any = {};
   languageArray: any[] = [];
   imageFlag = false;
@@ -98,7 +107,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   displayedColumns: any[] = ['sr_no', 'book_no', 'book_name', 'author', 'publisher', 'location'];
   BOOK_ELEMENT_DATA: AccessionMasterModel[] = [];
   bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+  totalRecords: number;
   constructor(private common: ErpCommonService, private fbuild: FormBuilder,
+    public dialog: MatDialog,
     private notif: CommonAPIService,
     private sis: SisService,
     private smart: SmartService) { }
@@ -106,6 +117,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   addBookContainer = false;
   bookForm: FormGroup;
   ngOnInit() {
+    localStorage.removeItem('invoiceBulkRecords');
     this.getLanguages();
     this.getGenres();
     this.builForm();
@@ -116,6 +128,45 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.bookDataSource.paginator = this.paginator;
     this.bookDataSource.sort = this.sort;
+  }
+  searchOk($event) {
+    this.BOOK_ELEMENT_DATA = [];
+    let i = 0;
+    localStorage.removeItem('invoiceBulkRecords');
+    this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+    if ($event) {
+      this.common.getReservoirDataBasedOnFilter({
+        filters: $event,
+        page_index: this.bookpageindex,
+        page_size: this.bookpagesize
+      }).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          this.totalRecords = Number(res.data.totalRecords);
+          localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+          for (const item of res.data.resultData) {
+            let authName = '';
+            for (const aut of item.authors) {
+              authName = new TitleCasePipe().transform(aut) + ',';
+            }
+            authName = authName.substring(0, authName.length - 2);
+            this.BOOK_ELEMENT_DATA.push({
+              sr_no: i + 1,
+              book_name: item.title,
+              book_no: item.reserv_id,
+              authors: authName,
+              publisher: item.publisher,
+              location: item.location
+            })
+            i++;
+          }
+          this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+          this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+          this.bookDataSource.sort = this.sort;
+          this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+          this.bookDataSource.paginator = this.paginator;
+        }
+      });
+    }
   }
   getClass() {
     this.smart.getClass({}).subscribe((res: any) => {
@@ -289,6 +340,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
     }
     document.getElementById('isbn_id').blur();
   }
+  openSearchDialog = (data) => this.searchModal.openModal(data);
   getLanguageName(code) {
     const findex = this.languageArray.findIndex(f => f.lang_code === code)
     if (findex !== -1) {
@@ -330,10 +382,16 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   getReservoirData() {
     this.BOOK_ELEMENT_DATA = [];
     let i = 0;
+    localStorage.removeItem('invoiceBulkRecords');
     this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
-    this.common.getReservoirData({}).subscribe((res: any) => {
+    this.common.getReservoirData({
+      page_index: this.bookpageindex,
+      page_size: this.bookpagesize
+    }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
-        for (const item of res.data) {
+        this.totalRecords = Number(res.data.totalRecords);
+        localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+        for (const item of res.data.resultData) {
           let authName = '';
           for (const aut of item.authors) {
             authName = new TitleCasePipe().transform(aut) + ',';
@@ -350,9 +408,10 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
           i++;
         }
         this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
-        this.bookDataSource.paginator = this.paginator;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
         this.bookDataSource.sort = this.sort;
+        this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+        this.bookDataSource.paginator = this.paginator;
         console.log(this.BOOK_ELEMENT_DATA);
       }
     });
@@ -410,6 +469,12 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
         this.bookImage = '';
       }
     });
+  }
+  fetchData(event?: PageEvent) {
+    this.bookpageindex = event.pageIndex;
+    this.bookpagesize = event.pageSize;
+    this.getReservoirData();
+    return event;
   }
   enableMulti($event) {
     if ($event.checked) {

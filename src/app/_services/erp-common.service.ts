@@ -7,7 +7,6 @@ import { environment } from '../../environments/environment';
 export class ErpCommonService {
 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
-
 	getStudentInvoice(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getStudentInvoice', value);
@@ -25,6 +24,10 @@ export class ErpCommonService {
 	getReservoirData(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirData', value);
+	}
+	getReservoirDataBasedOnFilter(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirDataBasedOnFilter', value);
 	}
 	getLanguages(value) {
 		return this.http.post(environment.apiReservUrl + '/reservoir/getLanguages', value);
