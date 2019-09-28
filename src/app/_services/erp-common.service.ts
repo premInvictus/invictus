@@ -237,5 +237,15 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/physicalverification/updatePhysicalVerification', value);
 	}
+
+	getSubscriptionList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/subscription/getSubscription', value);
+	}
+
+	getVendorList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/vendor/getVendor', value);
+	}
 }
 

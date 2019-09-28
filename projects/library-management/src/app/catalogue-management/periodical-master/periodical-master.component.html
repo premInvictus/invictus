@@ -34,7 +34,7 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <table class="custom-table">
+                <!-- <table class="custom-table">
                   <thead>
                     <tr class="custom-tr text-center">
                       <th class="custom-th">Sr No.</th>
@@ -74,7 +74,80 @@
                                 </td>
                     </tr>
                   </tbody>
-                </table>
+                </table> -->
+                <table mat-table [dataSource]="subscriptionlistdataSource" matSort class="table-100 text-center" id="report_table">
+                    <ng-container matColumnDef="srno">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
+                      <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="subscription_id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Subscription ID</th>
+                        <td mat-cell *matCellDef="let element">
+                          <a class="font-skyblue cursor-pointer"
+                            (click)="getSubscriptionDetails(element)">{{element?.subscription_id}} </a>
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="subscription_name">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Subscription Name</th>
+                          <td mat-cell *matCellDef="let element">
+                            {{element?.subscription_name}} 
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="subscription_type">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Type</th>
+                            <td mat-cell *matCellDef="let element">
+                              {{element?.subscription_type}} 
+                            </td>
+                          </ng-container>
+                        <ng-container matColumnDef="subscription_frequency">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Frequency</th>
+                            <td mat-cell *matCellDef="let element">
+                             {{element?.subscription_frequency}}
+                            </td>
+                          </ng-container>
+                    <ng-container matColumnDef="subscription_start_date">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Start Date</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{element?.subscription_start_date | date: 'd-MMM-y'}} 
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="subscription_end_date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">End Date</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{element?.subscription_end_date | date: 'd-MMM-y'}} 
+                        </td>
+                      </ng-container>
+                    <ng-container matColumnDef="subscription_vendor_id">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header width="25%"> Vendor </th>
+                      <td mat-cell *matCellDef="let element" class="text-left"> <span
+                          *ngIf="element.subscription_vendor_id">{{element.subscription_vendor_id}} </span>
+                        <span *ngIf="!(element.subscription_vendor_id)"> - </span> </td>
+                    </ng-container>
+                    <ng-container matColumnDef="subscription_status">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Status</th>
+                      <td mat-cell *matCellDef="let element">
+                        <span *ngIf="element.subscription_status">{{element.subscription_status}} Books</span>
+                        <span *ngIf="!element.subscription_status"> - </span>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Action</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span><i class="fas fa-edit font-color-grey margin-right-15" ></i></span>
+                            <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"></i></span>
+                        </td>
+                      </ng-container>
+        
+                    <tr mat-header-row *matHeaderRowDef="displayedSubscriptionListColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedSubscriptionListColumns;">
+                    </tr>
+                  </table>
+        
+                  <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+                    <tr *ngIf="SUBSCRIPTION_LIST_ELEMENT.length == 0">
+                      <td colspan="9">No Record Found</td>
+                    </tr>
+                  </table>
               </div>
             </div>
           </mat-card>
