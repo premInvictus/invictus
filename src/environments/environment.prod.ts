@@ -4,6 +4,8 @@ export const environment = {
 	apiSisUrl: 'https://apisis.invictusdigisoft.com',
 	apiFeeUrl: 'https://apifee.invictusdigisoft.com',
 	apiSmartUrl: 'https://apismart.invictusdigisoft.com',
+	apiExamUrl: 'https://apiexam.invictusdigisoft.com',
+	apiReservUrl: 'https://apireservoir.invictusdigisoft.com',
 	logoutUrl: 'https://login.invictusdigisoft.com',
 	socketUrl: 'https://sockets.invictusdigisoft.com',
 	testInitiateCode : 'T100',
