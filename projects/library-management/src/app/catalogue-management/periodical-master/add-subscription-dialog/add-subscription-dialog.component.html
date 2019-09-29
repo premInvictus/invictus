@@ -1,0 +1,151 @@
+<div class="row remove-modal-margin">
+  <div class="col-12 remove-col-padding">
+    <div class="dialog-title-container ">
+      <span class="font-size-24 font-white" *ngIf="subscriptionForm.value.showButtonStatus && !subscriptionForm.value.subscription_id">Add Subscription</span>
+      <span class="font-size-24 font-white" *ngIf="subscriptionForm.value.showButtonStatus && subscriptionForm.value.subscription_id != ''">Update Subscription</span>
+      <span class="font-size-24 font-white" *ngIf="!subscriptionForm.value.showButtonStatus">View Subscription</span>
+      <i class="material-icons font-size-24 float-right font-white margin-top-10"  style="cursor: pointer" (click)="onNoClick()">
+        cancel
+      </i>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 remove-col-padding">
+      <form [formGroup]="subscriptionForm">
+    <div class="row  margin-top-25">
+      <div class="col-6 remove-col-padding">
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Subscription Name</mat-label>
+              <input matInput placeholder="" formControlName="subscription_name" [readonly]="!subscriptionForm.value.showButtonStatus" required/>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+              <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Subscription Type</mat-label>
+                  <mat-select formControlName="subscription_type" [disabled]="!subscriptionForm.value.showButtonStatus" required>
+                      <mat-option value="Newspaper">Newspaper</mat-option>
+                  </mat-select>
+                </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Frequency</mat-label>
+              <mat-select formControlName="subscription_frequency" [disabled]="!subscriptionForm.value.showButtonStatus" required>
+                  <mat-option value="Daily">Daily</mat-option>
+                  <mat-option value="Weekly">Weekly</mat-option>
+                  <mat-option value="Monthly">Monthly</mat-option>
+                  <mat-option value="Yearly">Yearly</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Start Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                placeholder="Start Date"
+                formControlName="subscription_start_date"
+                required
+                [readonly]="!subscriptionForm.value.showButtonStatus"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>End Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker1"
+                  placeholder="End Date"
+                  formControlName="subscription_end_date"
+                  required
+                  [readonly]="!subscriptionForm.value.showButtonStatus"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker1"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+      </div>
+      <div class="col-6 remove-col-padding">
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Vendor ID</mat-label>
+              <input matInput placeholder=""  formControlName="subscription_vendor_id" (blur)="getVendorDetail($event)" required [readonly]="!subscriptionForm.value.showButtonStatus"/>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Vendor Name</mat-label>
+              <input matInput placeholder="" formControlName="subscription_vendor_name" readonly/>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Contact No.</mat-label>
+              <input matInput placeholder="" formControlName="subscription_vendor_contact" readonly/>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Email ID</mat-label>
+              <input matInput placeholder="" formControlName="subscription_vendor_email" readonly/>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="subscription_status" [disabled]="!subscriptionForm.value.showButtonStatus">
+                    <mat-option value="1">Inactive</mat-option>
+                    <mat-option value="2">Active</mat-option>
+                    <mat-option value="3">Suspended</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <br />
+        <div class="row text-center"  *ngIf="subscriptionForm.value.showButtonStatus">
+          <div class="col-12">
+            <button *ngIf="!subscriptionForm.value.subscription_id" mat-raised-button class="btn-success-green" (click)="save()">Add</button>
+            <button *ngIf="subscriptionForm.value.subscription_id != ''" mat-raised-button class="btn-success-green" (click)="update()">Update</button>
+            <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
+              Reset
+            </button>
+          </div>
+        </div>
+        <br>
+        </form>
+  </div>
+</div>
