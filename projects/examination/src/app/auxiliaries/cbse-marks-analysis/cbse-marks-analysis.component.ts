@@ -77,7 +77,7 @@ export class CbseMarksAnalysisComponent implements OnInit {
       useHTML: true,
       formatter: function () {
         return '<b>' + this.x + '</b><br/>' +
-          this.series.name + ': ' + this.y
+          this.series.name + ': ' + this.y;
       }
     },
     plotOptions: {
@@ -465,7 +465,7 @@ export class CbseMarksAnalysisComponent implements OnInit {
     }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         for (const titem of this.cardArray) {
-          titem.initialState = 'cbse-report-box text-center'
+          titem.initialState = 'cbse-report-box text-center';
         }
         this.columnDefinitions = [
           {
@@ -559,17 +559,17 @@ export class CbseMarksAnalysisComponent implements OnInit {
               sub_data.push(this.stuDetailsArray[ind2][titem.sub_code]);
               obj[titem.sub_code] = this.stuDetailsArray[ind2][titem.sub_code].subject;
               obj['marks' + indext] = Number(this.stuDetailsArray[ind2][titem.sub_code].marks);
-              obj['grade' + indext] = this.stuDetailsArray[ind2][titem.sub_code].grade
+              obj['grade' + indext] = this.stuDetailsArray[ind2][titem.sub_code].grade;
             } else {
               sub_data.push({
                 grade: '-',
                 marks: '-',
                 sub_code: titem.sub_code,
                 subject: titem.subject,
-              })
+              });
               obj[titem.sub_code] = this.stuDetailsArray[ind2][titem.sub_code] ? this.stuDetailsArray[ind2][titem.sub_code].subject : '-';
               obj['marks' + indext] = 0;
-              obj['grade' + indext] = 0
+              obj['grade' + indext] = 0;
             }
             if (ind2 === 0) {
               this.columnDefinitions.push({
@@ -687,7 +687,7 @@ export class CbseMarksAnalysisComponent implements OnInit {
         }
       } else {
         for (const titem of this.cardArray) {
-          titem.initialState = 'cbse-report-box disabled-box text-center'
+          titem.initialState = 'cbse-report-box disabled-box text-center';
         }
       }
     });
@@ -770,7 +770,7 @@ export class CbseMarksAnalysisComponent implements OnInit {
               if (titem.sub_code.toString() === key.toString()) {
                 const findex = this.tabSubArray.findIndex(f => f.sub_code.toString() === key.toString());
                 if (findex === -1) {
-                  this.stuDetailsArray2[ind][key]['sub_color'] = titem.sub_color
+                  this.stuDetailsArray2[ind][key]['sub_color'] = titem.sub_color;
                   this.tabSubArray.push(this.stuDetailsArray2[ind][key]);
                 }
               }
@@ -784,7 +784,7 @@ export class CbseMarksAnalysisComponent implements OnInit {
             name: item.subject,
             data: this.getSubjetDataTopFive(item.sub_code),
             color: item.sub_color
-          })
+          });
         }
         this.topFiveChart.series = this.seriesArray;
         let ind2 = 0;
@@ -806,17 +806,17 @@ export class CbseMarksAnalysisComponent implements OnInit {
               sub_data.push(this.stuDetailsArray2[ind2][titem.sub_code]);
               obj[titem.sub_code] = this.stuDetailsArray2[ind2][titem.sub_code].subject;
               obj['marks' + indext] = Number(this.stuDetailsArray2[ind2][titem.sub_code].marks);
-              obj['grade' + indext] = this.stuDetailsArray2[ind2][titem.sub_code].grade
+              obj['grade' + indext] = this.stuDetailsArray2[ind2][titem.sub_code].grade;
             } else {
               sub_data.push({
                 grade: '-',
                 marks: '-',
                 sub_code: titem.sub_code,
                 subject: titem.subject,
-              })
+              });
               obj[titem.sub_code] = this.stuDetailsArray2[ind2][titem.sub_code] ? this.stuDetailsArray2[ind2][titem.sub_code].subject : '-';
               obj['marks' + indext] = 0;
-              obj['grade' + indext] = 0
+              obj['grade' + indext] = 0;
             }
             if (ind2 === 0) {
               this.columnDefinitions2.push({
@@ -1181,6 +1181,13 @@ export class CbseMarksUploadDialog implements OnInit {
     reader.onloadend = (e: any) => {
       const dataArr: any[] = e.target.result.split(/\r?\n/);
       const studentArray: any[] = [];
+      let certFlag = false;
+      for (const item of dataArr) {
+        if (item.match(/CERTIFICATE/)) {
+          certFlag = true;
+          break;
+        }
+      }
       for (const item of dataArr) {
         if (!item.match(/ROLL/) && !item.match(/MKS/)
           && !item.match(/------------/)
@@ -1205,6 +1212,7 @@ export class CbseMarksUploadDialog implements OnInit {
       let i = 0;
       for (const item of finalArray) {
         let j = 0;
+        let internalGrades: any = [];
         for (const titem of finalArray[i]) {
           if (j < 2 && (finalArray[i][j].match(/M/) || finalArray[i][j].match(/F/))) {
             this.stuDetailsArray.push({
@@ -1227,38 +1235,78 @@ export class CbseMarksUploadDialog implements OnInit {
               k++;
             }
           }
-          if (j >= k && j <= finalArray[i].length - 2) {
-            if (finalArray[i][j].match(/A1/) ||
-              finalArray[i][j].match(/A2/) ||
-              finalArray[i][j].match(/B1/) ||
-              finalArray[i][j].match(/B2/) ||
-              finalArray[i][j].match(/C1/) ||
-              finalArray[i][j].match(/C2/) ||
-              finalArray[i][j].match(/D1/) ||
-              finalArray[i][j].match(/D2/) ||
-              finalArray[i][j].match(/E1/) ||
-              finalArray[i][j].match(/E2/) ||
-              finalArray[i][j].match(/F1/) ||
-              finalArray[i][j].match(/F2/)) {
-              this.stuDetailsArray[i][finalArray[i][j - 2]] = {
-                marks: finalArray[i][j - 1],
-                grade: finalArray[i][j],
-                sub_code: finalArray[i][j - 2],
-                subject: this.getSubjectName(finalArray[i][j - 2])
-              };
+          if (
+            (j >= k && Number(finalArray[i][j - 1])
+              && (this.checkSubjectCodeIndex(finalArray[i][j - 2]) !== -1)
+              &&
+              (finalArray[i][j].match(/A1/) ||
+                finalArray[i][j].match(/A2/) ||
+                finalArray[i][j].match(/B1/) ||
+                finalArray[i][j].match(/B2/) ||
+                finalArray[i][j].match(/C1/) ||
+                finalArray[i][j].match(/E/) ||
+                finalArray[i][j].match(/D/) ||
+                finalArray[i][j].match(/C2/) ||
+                finalArray[i][j].match(/D1/) ||
+                finalArray[i][j].match(/D2/) ||
+                finalArray[i][j].match(/E1/) ||
+                finalArray[i][j].match(/E2/) ||
+                finalArray[i][j].match(/F1/) ||
+                finalArray[i][j].match(/FE/) ||
+                finalArray[i][j].match(/FTE/) ||
+                finalArray[i][j].match(/F2/)))) {
+            this.stuDetailsArray[i][finalArray[i][j - 2]] = {
+              marks: finalArray[i][j - 1],
+              grade: finalArray[i][j],
+              sub_code: finalArray[i][j - 2],
+              subject: this.getSubjectName(finalArray[i][j - 2])
+            };
+          } else {
+            if (finalArray[i][j].match(/PASS/)
+              || finalArray[i][j].match(/FAIL/)
+              || finalArray[i][j].match(/ABST/)
+              || finalArray[i][j].match(/COMP/)) {
+                console.log(j);
+              if (certFlag) {
+                internalGrades.push(finalArray[i][j - 3]);
+                internalGrades.push(finalArray[i][j - 2]);
+                internalGrades.push(finalArray[i][j - 1]);
+              }
             }
           }
           if (j === finalArray[i].length - 1) {
-            if (this.checkSubjectCodeIndex(finalArray[i][j]) !== -1) {
-              this.stuDetailsArray[i]['cma_status'] = finalArray[i][j - 1].toLowerCase();
-            } else {
-              this.stuDetailsArray[i]['cma_status'] = finalArray[i][j].toLowerCase();
-            }
-            this.stuDetailsArray[i]['cma_student_name'] = stuName.substring(0, stuName.length - 1);
+            this.stuDetailsArray[i]['cma_internal_grades'] = internalGrades;
           }
           j++;
         }
         i++;
+      }
+      let indext = 0;
+      for (const item of this.stuDetailsArray) {
+        const subjectMarkArray: any[] = [];
+        Object.keys(this.stuDetailsArray[indext]).forEach((key: any) => {
+          if (this.checkSubjectCodeIndex(key) !== -1) {
+            subjectMarkArray.push(this.stuDetailsArray[indext][key]['marks']
+              ? Number(this.stuDetailsArray[indext][key]['marks']) : 0);
+          }
+        });
+        let count = 0;
+        for (const subM of subjectMarkArray) {
+          if (subM >=33) {
+            count++;
+          }
+        }
+        let status = '';
+        if (count === subjectMarkArray.length) {
+          status = 'pass';
+        }
+        else if (count === 0) {
+          status = 'fail'
+        } else {
+          status = 'comp';
+        }
+        this.stuDetailsArray[indext]['cma_status'] = status;
+        indext++;
       }
       console.log(this.stuDetailsArray);
       this.exam.insertMarksAnalysis({
