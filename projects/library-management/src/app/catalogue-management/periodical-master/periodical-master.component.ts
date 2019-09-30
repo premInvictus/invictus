@@ -100,6 +100,9 @@ export class PeriodicalMasterComponent implements OnInit {
 
         }
         this.subscriptionlistdataSource = new MatTableDataSource<SubscriptionListElement>(this.SUBSCRIPTION_LIST_ELEMENT);
+        this.subscriptionlistdataSource.paginator = this.paginator;
+        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+        this.subscriptionlistdataSource.sort = this.sort;
       }
     });
   }
@@ -144,6 +147,10 @@ export class PeriodicalMasterComponent implements OnInit {
     }
 
 
+    
+  }
+
+  fetchData() {
     
   }
 

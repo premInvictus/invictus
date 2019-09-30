@@ -111,7 +111,10 @@ export class VendorMasterComponent implements OnInit {
 					pos++;
 					
 				}
-				this.vendorlistdataSource = new MatTableDataSource<VendorListElement>(this.VENDOR_LIST_ELEMENT);
+        this.vendorlistdataSource = new MatTableDataSource<VendorListElement>(this.VENDOR_LIST_ELEMENT);
+        this.vendorlistdataSource.paginator = this.paginator;
+        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+        this.vendorlistdataSource.sort = this.sort;
 			} 
     });
   }
@@ -145,6 +148,10 @@ export class VendorMasterComponent implements OnInit {
       this.getVendorList();
 
     });
+  }
+
+  fetchData() {
+
   }
 
   deleteVendor(data) {
