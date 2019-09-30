@@ -210,7 +210,7 @@ export class MarksEntryComponent implements OnInit {
               result.data.forEach(melement => {
                 if (selement === melement.examEntry.eme_subexam_id) {
                   melement.examEntryMapping.forEach(element => {
-                    this.marksInputArray.push({
+                    this.marksInputArray.push({ 
                       es_id: melement.examEntry.eme_subexam_id,
                       login_id: element.emem_login_id,
                       mark: element.emem_marks
