@@ -112,7 +112,7 @@
                 <!-- Name Column -->
                 <ng-container matColumnDef="au_full_name">
                   <th mat-header-cell *matHeaderCellDef> Student Name </th>
-                  <td mat-cell *matCellDef="let element"> {{element.au_full_name}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-left"> {{element.au_full_name | titlecase}} </td>
                 </ng-container>
 
                 <!-- Weight Column -->
@@ -129,7 +129,7 @@
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="status">
                   <th mat-header-cell *matHeaderCellDef> Status </th>
-                  <td mat-cell *matCellDef="let element"> {{element.status === '1' ? 'cleared' : 'uncleared' | titlecase}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.status === '1' ? 'Cleared' : 'Uncleared' | titlecase}} </td>
                 </ng-container>
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="action">
