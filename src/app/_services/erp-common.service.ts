@@ -283,5 +283,20 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/vendor/deleteVendor', value);
 	}
+
+	getStudentInformation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);
+	}
+
+	insertUserReservoirData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/issuereturnprocess/insertUserReservoirData', value);
+	}
+
+	getUserReservoirData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/issuereturnprocess/getUserReservoirData', value);
+	}
 }
 

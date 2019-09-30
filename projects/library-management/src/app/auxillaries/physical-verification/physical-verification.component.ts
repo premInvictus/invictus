@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { DatePipe } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
@@ -58,6 +59,8 @@ export class PhysicalVerificationComponent implements OnInit {
   
 
   constructor(
+    private route: ActivatedRoute,
+		private router: Router,
     private fbuild: FormBuilder,
     private common: CommonAPIService, 
     private erpCommonService : ErpCommonService
@@ -336,11 +339,15 @@ export class PhysicalVerificationComponent implements OnInit {
   }
 
   getBookDetail(element) {
-    this.showBookDetail = true;
-    this.showVerifiedBookLog = false;
-    this.showBookList = false;
-    this.showNewBatchStatus = false;
-    this.bookData = element;
+    // this.showBookDetail = true;
+    // this.showVerifiedBookLog = false;
+    // this.showBookList = false;
+    // this.showNewBatchStatus = false;
+    ///this.bookData = element;
+    console.log('element', element);
+    this.common.setReservoirId(element.book_no);
+    this.router.navigate(['../book-detail'], { relativeTo: this.route });
+
   }
 
 }

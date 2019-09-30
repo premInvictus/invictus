@@ -5,6 +5,7 @@ import { PhysicalVerificationComponent } from './physical-verification/physical-
 import { BarcodePrintingComponent } from './barcode-printing/barcode-printing.component';
 import { RfidPrintingComponent } from './rfid-printing/rfid-printing.component';
 import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
+import { BookDetailComponent } from '../library-shared/book-detail/book-detail.component';
 
 const routes: Routes = [
   { path: 'book-search', component: BookSearchComponent },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'bar-code-printing', component: BarcodePrintingComponent },
   { path: 'rfid-mapping', component: RfidPrintingComponent },
   { path: 'bulk-upload', component: BulkUploadComponent },
+  { path: 'book-detail', component: BookDetailComponent },
 ];
 
 @NgModule({
