@@ -36,6 +36,7 @@ import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.compo
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
 const moment = _moment;
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -104,7 +105,8 @@ export const MY_FORMATS = {
     PublishModalComponent,
     NoDataComponent,
     UnpublishModalComponent,
-    PreviewDocumentComponent
+    PreviewDocumentComponent,
+    AdvancedSearchModalComponent
   ],
   entryComponents: [
     DeleteModalComponent,
@@ -113,7 +115,8 @@ export const MY_FORMATS = {
     EditRequestModalComponent,
     PublishModalComponent,
     UnpublishModalComponent,
-    PreviewDocumentComponent
+    PreviewDocumentComponent,
+    AdvancedSearchModalComponent
   ],
   exports: [
     FormsModule, ReactiveFormsModule,
@@ -152,7 +155,8 @@ export const MY_FORMATS = {
     ZerodashPipe,
     CommonDynamicChartComponent,
     NoDataComponent, PreviewDocumentComponent,
-    NgxBarcodeModule
+    NgxBarcodeModule,
+    AdvancedSearchModalComponent
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
