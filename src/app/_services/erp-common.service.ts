@@ -7,7 +7,6 @@ import { environment } from '../../environments/environment';
 export class ErpCommonService {
 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
-
 	getStudentInvoice(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeOnlineTransaction/getStudentInvoice', value);
@@ -16,13 +15,19 @@ export class ErpCommonService {
 		return this.http.post(environment.apiReservUrl + '/rfidmapping/updateRFIDMapping', value);
 	}
 	insertReservoirData(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/insertReservoirData', value);
 	}
 	searchReservoir(value) {
 		return this.http.post(environment.apiReservUrl + '/booksearch/searchReservoir', value);
 	}
 	getReservoirData(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirData', value);
+	}
+	getReservoirDataBasedOnFilter(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirDataBasedOnFilter', value);
 	}
 	getLanguages(value) {
 		return this.http.post(environment.apiReservUrl + '/reservoir/getLanguages', value);
@@ -34,6 +39,7 @@ export class ErpCommonService {
 		return this.http.post(environment.apiReservUrl + '/reservoir/getGenres', value);
 	}
 	getBarcodePrint(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/barcodeprint/getBarcodePrint', value);
 	}
 	getFeeLedger(value: any) {
@@ -246,6 +252,36 @@ export class ErpCommonService {
 	getVendorList(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/vendor/getVendor', value);
+	}
+
+	insertSubscription(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/subscription/insertSubscription', value);
+	}
+
+	updateSubscription(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/subscription/updateSubscription', value);
+	}
+
+	deleteSubscription(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/subscription/deleteSubscription', value);
+	}
+
+	insertVendor(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/vendor/insertVendor', value);
+	}
+
+	updateVendor(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/vendor/updateVendor', value);
+	}
+
+	deleteVendor(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/vendor/deleteVendor', value);
 	}
 }
 

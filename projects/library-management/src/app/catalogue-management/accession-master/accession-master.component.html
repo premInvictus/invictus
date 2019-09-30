@@ -15,7 +15,8 @@
                   </mat-form-field>
                 </div>
                 <div class="col-4 margin-top-10  text-right">
-                  <span class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
+                  <span class="font-size-12 margin-top-15 font-skyblue"
+                  (click)="openSearchDialog()">Advanced Search <i
                       class="fas fa-chevron-down"></i></span>
                   <button mat-button class="btn-spacer btn-lib-search margin-left-10">
                     Search
@@ -44,48 +45,47 @@
         <div class="row">
           <div class="col-2"></div>
           <div class="col-8">
-            <div class="row ">
-              <div class="col-10 remove-col-padding">
-                <mat-form-field appearance="legacy lib-form">
-                  <input matInput placeholder="Search" />
-                  <mat-icon matPrefix>filter_list</mat-icon>
-                </mat-form-field>
+            <div [hidden]="BOOK_ELEMENT_DATA.length === 0">
+              <table mat-table [dataSource]="bookDataSource" matSort class="table-100 text-center" id="report_table">
+                <ng-container matColumnDef="sr_no">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr. No. </th>
+                  <td mat-cell *matCellDef="let item"> {{item.sr_no}} </td>
+                </ng-container>
+                <ng-container matColumnDef="book_no">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Book No. </th>
+                  <td mat-cell *matCellDef="let item"> {{item.book_no}} </td>
+                </ng-container>
+                <ng-container matColumnDef="book_name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Book name</th>
+                  <td mat-cell *matCellDef="let item" class="text-left mar-left-5"> {{item.book_name | titlecase}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="author">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Author </th>
+                  <td mat-cell *matCellDef="let item"> {{item.authors}} </td>
+                </ng-container>
+                <ng-container matColumnDef="publisher">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Publisher </th>
+                  <td mat-cell *matCellDef="let item"> {{item.publisher | titlecase}} </td>
+                </ng-container>
+                <ng-container matColumnDef="location">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Location </th>
+                  <td mat-cell *matCellDef="let item"> {{item.location}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+              </table>
+              <mat-paginator #paginator [pageSize]="bookpagesize" [pageSizeOptions]="bookpagesizeoptions" showFirstLastButtons
+                (page)="pageEvent = fetchData($event)"></mat-paginator>
+            </div>
+            <div [hidden]="!(BOOK_ELEMENT_DATA.length === 0)">
+              <div class="text-center">
+                <app-no-data
+                  [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                  [noDataText]="'No books to display'" [subText]="'Please   add books'"></app-no-data>
               </div>
             </div>
-            <table class="custom-table">
-              <thead>
-                <tr class="custom-tr text-center">
-                  <th class="custom-th">Sr No.</th>
-                  <th class="custom-th">Book No.</th>
-                  <th class="custom-th">Book Name</th>
-                  <th class="custom-th">Author</th>
-                  <th class="custom-th">Publisher</th>
-                  <th class="custom-th">Location</th>
-                  <!-- <th class="custom-th">Action</th> -->
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="custom-td">1</td>
-                  <td class="custom-td">
-                    <a class="font-skyblue cursor-pointer">12345689</a>
-                  </td>
-                  <td class="custom-td text-left">
-                    <span class="margin-left-15">River of Smoke</span>
-                  </td>
-                  <td class="custom-td text-left padding-left-15">
-                    <span class="margin-left-15">Dolores Umbridge</span>
-                  </td>
-                  <td class="custom-td text-left padding-left-15">
-                    <span class="margin-left-15">TCK Publishing</span>
-                  </td>
-                  <td class="custom-td">H-1</td>
-                  <!-- <td class="custom-td">
-                             <i class="fas fa-trash font-color-red"></i>
-                             </td> -->
-                </tr>
-              </tbody>
-            </table>
           </div>
           <div class="col-2"></div>
         </div>
@@ -126,7 +126,10 @@
               <div class=" margin-top-20">
                 <div class="book-cover-img-2" *ngIf="!imageFlag">
                   <div class="text-center">
-                    <img class="book-place-holder-img" src="../../../../../../assets/images/book-upload_holder.png">
+                    <label for="file-input">
+                      <img class="book-place-holder-img" src="../../../../../../assets/images/book-upload_holder.png">
+                    </label>
+                    <input id="file-input" name="file-input" type="file" (change)="readUrl($event)" hidden />
                   </div>
                 </div>
                 <img *ngIf="imageFlag" class="book-cover-img" [src]="bookImage">
@@ -139,9 +142,9 @@
                     <div class="col-12">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>ISBN Code</mat-label>
-                        <input matInput placeholder="ISBN Code" formControlName="isbn" type="number"
-                        id="isbn_id"
-                          (blur)="getBooksBasedOnISBN($event);$event.stopPropagation()" (keydown.enter)="getBooksBasedOnISBN($event);$event.stopPropagation()" />
+                        <input matInput placeholder="ISBN Code" formControlName="isbn" type="number" id="isbn_id"
+                          (blur)="getBooksBasedOnISBN($event);$event.stopPropagation()"
+                          (keydown.enter)="getBooksBasedOnISBN($event);$event.stopPropagation()" />
                       </mat-form-field>
                     </div>
                   </div>
@@ -223,7 +226,7 @@
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Kind/ Genre</mat-label>
                         <mat-select formControlName="genre_id" required>
-                          <mat-option *ngFor="let item of genreArray" [value]="item.genre_id">
+                          <mat-option *ngFor="let item of genreArray" [value]="item.genre_name">
                             {{item.genre_name}}
                           </mat-option>
                         </mat-select>
@@ -283,7 +286,7 @@
                 <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Book Type</mat-label>
-                    <mat-select placeholder="Book Type" formControlName="category_id">
+                    <mat-select placeholder="Book Type" formControlName="category_id" required>
                       <mat-option *ngFor="let item of booktypeArray" [value]="item.type_id">
                         {{item.type_name}}
                       </mat-option>
@@ -336,7 +339,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Category</mat-label>
                     <mat-select placeholder="Category" formControlName="status"
-                    [required]="bookForm.value.reserv_status === '4'">
+                      [required]="bookForm.value.reserv_status === '4'">
                       <mat-option *ngFor="let item of categoryArray" [value]="item.type_id">
                         {{item.type_name}}
                       </mat-option>
@@ -358,16 +361,13 @@
                 <div class="col-6">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Stack</mat-label>
-                    <input matInput placeholder="Stack" formControlName="stack" 
-                    required/>
+                    <input matInput placeholder="Stack" formControlName="stack" required />
                   </mat-form-field>
                 </div>
                 <div class="col-6">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Row</mat-label>
-                    <input matInput placeholder="Row" formControlName="row"
-                    type="number" 
-                    required/>
+                    <input matInput placeholder="Row" formControlName="row" type="number" required />
                   </mat-form-field>
                 </div>
               </div>
@@ -375,8 +375,7 @@
                 <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>No. Of Copies</mat-label>
-                    <input matInput placeholder="No. Of Copies" type="number" formControlName="no_of_copies" 
-                    required/>
+                    <input matInput placeholder="No. Of Copies" type="number" formControlName="no_of_copies" required />
                   </mat-form-field>
                 </div>
               </div>
@@ -488,14 +487,15 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <mat-checkbox><span class="font-bold">Add Multiple Records</span></mat-checkbox>
+              <mat-checkbox (change)="enableMulti($event)"><span class="font-bold">Add Multiple Records</span>
+              </mat-checkbox>
             </div>
           </div>
           <br />
           <div class="row text-center">
             <div class="col-12">
               <button mat-raised-button class="btn-success-green" (click)="submitBook()"
-              [disabled]="!(bookForm.valid)">Submit</button>
+                [disabled]="!(bookForm.valid)">Submit</button>
               <button mat-raised-button class="btn-reset btn-spacer">
                 Reset
               </button>
@@ -507,3 +507,7 @@
     </div>
   </div>
 </div>
+<app-imagecrop #cropModal (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)" [roundCropper]="false"
+  [resizeToWidth]="160"></app-imagecrop>
+  <app-advanced-search-modal (searchOk)="searchOk($event)"
+  #searchModal></app-advanced-search-modal>

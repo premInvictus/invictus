@@ -18,7 +18,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 	categoryArray: any[] = [];
 	classArray: any[] = [];
 	sectionArray: any[] = [];
-	classSectionArray: any[] = []; 
+	classSectionArray: any[] = [];  
 	teacherId = '';
 	topicsubtopicArray: any[] = [];
 	topicCTRArray: any[] = [];
@@ -251,6 +251,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 		const csArray = this.topicwiseforForm.value.tw_class_sec_id.split('-');
 		const param: any = {};
 		param.tw_teacher_id = this.topicwiseforForm.value.tw_teacher_id;
+		param.tw_term_id = this.topicwiseforForm.value.tw_term_id;
 		param.tw_class_id = csArray[0];
 		param.tw_sec_id = csArray[1];
 		param.tw_topic_id = this.topicsubtopicDetailsArray[i].topic_id;

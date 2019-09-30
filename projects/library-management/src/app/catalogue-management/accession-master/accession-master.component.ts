@@ -1,14 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { SmartService } from '../../_services';
-
+import { SmartService, SisService, CommonAPIService } from '../../_services';
+import { AccessionMasterModel } from './accession-master.model';
+import { MatTableDataSource, MatPaginator, MatSort, PageEvent, MatPaginatorIntl, MatDialog } from '@angular/material';
+import { TitleCasePipe } from '@angular/common';
+import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
 @Component({
   selector: 'app-accession-master',
   templateUrl: './accession-master.component.html',
-  styleUrls: ['./accession-master.component.css']
+  styleUrls: ['./accession-master.component.css'],
+  providers: [
+    { provide: MatPaginatorIntl, useClass: MatPaginatorI18n }
+  ]
 })
-export class AccessionMasterComponent implements OnInit {
+export class AccessionMasterComponent implements OnInit, AfterViewInit {
+  @ViewChild('cropModal') cropModal;
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('searchModal') searchModal;
+  @ViewChild(MatSort) sort: MatSort;
+  bookpagesize = 10;
+  pageEvent: PageEvent;
+  bookpageindex = 0;
+  bookpagesizeoptions = [10, 25, 50, 100];
   result: any = {};
   languageArray: any[] = [];
   imageFlag = false;
@@ -87,17 +101,72 @@ export class AccessionMasterComponent implements OnInit {
   subjectArray: any[] = [];
   vendorDetail: any = {};
   bookDetails: any = {};
+  url: any;
+  imageUrl: any = '';
+  enableMultiFlag = false;
+  displayedColumns: any[] = ['sr_no', 'book_no', 'book_name', 'author', 'publisher', 'location'];
+  BOOK_ELEMENT_DATA: AccessionMasterModel[] = [];
+  bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+  totalRecords: number;
   constructor(private common: ErpCommonService, private fbuild: FormBuilder,
+    public dialog: MatDialog,
+    private notif: CommonAPIService,
+    private sis: SisService,
     private smart: SmartService) { }
   assessionMasterContainer = true;
   addBookContainer = false;
   bookForm: FormGroup;
   ngOnInit() {
+    localStorage.removeItem('invoiceBulkRecords');
     this.getLanguages();
     this.getGenres();
     this.builForm();
     this.getClass();
     this.getSubject();
+    this.getReservoirData();
+  }
+  ngAfterViewInit() {
+    this.bookDataSource.paginator = this.paginator;
+    this.bookDataSource.sort = this.sort;
+  }
+  searchOk($event) {
+    this.BOOK_ELEMENT_DATA = [];
+    let i = 0;
+    localStorage.removeItem('invoiceBulkRecords');
+    this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+    if ($event) {
+      this.common.getReservoirDataBasedOnFilter({
+        filters: $event,
+        page_index: this.bookpageindex,
+        page_size: this.bookpagesize
+      }).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          this.totalRecords = Number(res.data.totalRecords);
+          localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+          for (const item of res.data.resultData) {
+            let authName = '';
+            for (const aut of item.authors) {
+              authName = new TitleCasePipe().transform(aut) + ',';
+            }
+            authName = authName.substring(0, authName.length - 2);
+            this.BOOK_ELEMENT_DATA.push({
+              sr_no: i + 1,
+              book_name: item.title,
+              book_no: item.reserv_id,
+              authors: authName,
+              publisher: item.publisher,
+              location: item.location
+            })
+            i++;
+          }
+          this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+          this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+          this.bookDataSource.sort = this.sort;
+          this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+          this.bookDataSource.paginator = this.paginator;
+        }
+      });
+    }
   }
   getClass() {
     this.smart.getClass({}).subscribe((res: any) => {
@@ -161,6 +230,27 @@ export class AccessionMasterComponent implements OnInit {
       ven_pan_no: ''
     });
   }
+  readUrl(event: any) {
+    this.openCropDialog(event);
+  }
+  openCropDialog = (imageFile) => this.cropModal.openModal(imageFile);
+  uploadImage(fileName, au_profileimage) {
+    this.imageFlag = false;
+    this.sis.uploadDocuments([
+      { fileName: fileName, imagebase64: au_profileimage, module: 'profile' }]).subscribe((result: any) => {
+        if (result.status === 'ok') {
+          this.bookImage = result.data[0].file_url;
+          this.imageFlag = true;
+          console.log(this.bookImage);
+        }
+      });
+  }
+  acceptCrop(result) {
+    this.uploadImage(result.filename, result.base64);
+  }
+  acceptNo(event) {
+    event.target.value = '';
+  }
   getLanguages() {
     this.common.getLanguages({}).subscribe((res: any) => {
       if (res && res.status === 'ok') {
@@ -185,6 +275,7 @@ export class AccessionMasterComponent implements OnInit {
     this.imageFlag = false;
     this.bookImage = '';
     if ($event.target.value) {
+      this.notif.startLoading();
       this.result = {};
       this.bookDetails = {};
       this.bookDetailsArray = [];
@@ -216,6 +307,7 @@ export class AccessionMasterComponent implements OnInit {
       xhr.send();
       xhr.onloadend = () => {
         if (xhr.response && xhr.status === 200) {
+          this.notif.stopLoading();
           const jsonString = xhr.response
           this.result = JSON.parse(jsonString);
           this.bookDetails = this.result.items[0];
@@ -248,6 +340,7 @@ export class AccessionMasterComponent implements OnInit {
     }
     document.getElementById('isbn_id').blur();
   }
+  openSearchDialog = (data) => this.searchModal.openModal(data);
   getLanguageName(code) {
     const findex = this.languageArray.findIndex(f => f.lang_code === code)
     if (findex !== -1) {
@@ -286,21 +379,108 @@ export class AccessionMasterComponent implements OnInit {
       })
     }
   }
+  getReservoirData() {
+    this.BOOK_ELEMENT_DATA = [];
+    let i = 0;
+    localStorage.removeItem('invoiceBulkRecords');
+    this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+    this.common.getReservoirData({
+      page_index: this.bookpageindex,
+      page_size: this.bookpagesize
+    }).subscribe((res: any) => {
+      if (res && res.status === 'ok') {
+        this.totalRecords = Number(res.data.totalRecords);
+        localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+        for (const item of res.data.resultData) {
+          let authName = '';
+          for (const aut of item.authors) {
+            authName = new TitleCasePipe().transform(aut) + ',';
+          }
+          authName = authName.substring(0, authName.length - 2);
+          this.BOOK_ELEMENT_DATA.push({
+            sr_no: i + 1,
+            book_name: item.title,
+            book_no: item.reserv_id,
+            authors: authName,
+            publisher: item.publisher,
+            location: item.location
+          })
+          i++;
+        }
+        this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+        this.bookDataSource.sort = this.sort;
+        this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+        this.bookDataSource.paginator = this.paginator;
+        console.log(this.BOOK_ELEMENT_DATA);
+      }
+    });
+  }
   submitBook() {
-    this.bookForm.value['language_details'] = {
-      lang_code: this.bookDetails.volumeInfo.language ? this.bookDetails.volumeInfo.language : '',
-      lang_name: this.getLanguageName(this.bookDetails.volumeInfo.language)
-    };
-    this.bookForm.value['genre'] = {
-      genre_name: this.bookDetails.volumeInfo.categories ? this.bookDetails.volumeInfo.categories[0] : '',
-      genre_id: this.getGenreId(this.bookDetails.volumeInfo.categories[0])
-    };
+    if (Object.keys(this.bookDetails).length > 0) {
+      this.bookForm.value['language_details'] = {
+        lang_code: this.bookDetails.volumeInfo.language ? this.bookDetails.volumeInfo.language : '',
+        lang_name: this.getLanguageName(this.bookDetails.volumeInfo.language)
+      };
+      this.bookForm.value['genre'] = {
+        genre_name: this.bookDetails.volumeInfo.categories ? this.bookDetails.volumeInfo.categories[0] : '',
+        genre_id: this.getGenreId(this.bookDetails.volumeInfo.categories[0])
+      };
+    } else {
+      this.bookForm.value['language_details'] = {
+        lang_code: this.bookForm.value.lang_id,
+        lang_name: this.getLanguageName(this.bookForm.value.lang_id)
+      };
+      this.bookForm.value['genre'] = {
+        genre_name: this.bookForm.value.genre_id,
+        genre_id: this.getGenreId(this.bookForm.value.genre_name)
+      };
+      this.bookForm.value.isbn_details = [
+
+        {
+          "type": "ISBN_13",
+          "identifier": ""
+        },
+        {
+          "type": "ISBN_10",
+          "identifier": ""
+        }
+      ];
+      this.bookForm.value.authors = [this.bookForm.value.authors];
+      this.bookForm.value.images_links = {
+        smallThumbnail: this.bookImage,
+        thumbnail: this.bookImage
+      };
+    }
     this.bookForm.value['location'] = this.bookForm.value.stack + '-' + this.bookForm.value.row;
     this.common.insertReservoirData({
       bookDetails: this.bookForm.value
     }).subscribe((res: any) => {
-      if (res && res.data) {
+      if (res && res.status === 'ok') {
+        this.notif.showSuccessErrorMessage(res.message, 'success');
+        if (!this.enableMultiFlag) {
+          this.assessionMasterContainer = true;
+          this.addBookContainer = false;
+          this.getReservoirData();
+        }
+        this.builForm();
+        this.imageFlag = false;
+        this.bookDetails = {};
+        this.bookImage = '';
       }
     });
+  }
+  fetchData(event?: PageEvent) {
+    this.bookpageindex = event.pageIndex;
+    this.bookpagesize = event.pageSize;
+    this.getReservoirData();
+    return event;
+  }
+  enableMulti($event) {
+    if ($event.checked) {
+      this.enableMultiFlag = true;
+    } else {
+      this.enableMultiFlag = false;
+    }
   }
 }
