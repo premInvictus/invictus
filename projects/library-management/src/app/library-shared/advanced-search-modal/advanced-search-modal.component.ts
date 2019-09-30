@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ErpCommonService } from 'src/app/_services';
 
 @Component({
@@ -143,6 +143,7 @@ export class AdvancedSearchModalComponent implements OnInit {
       type: 'number',
     }
   ];
+  generalFilterForm: FormGroup;
   ngOnInit() {
   }
   openModal(data) {
@@ -202,10 +203,17 @@ export class AdvancedSearchModalComponent implements OnInit {
         formGroup: this.fbuild.group({
           'filter_type': '',
           'filter_value': '',
-          'type' : ''
+          'type': ''
         })
       }
     ];
+    const obj: any = {};
+    obj['type_id'] = [];
+    obj['genre.genre_name'] = [];
+    obj['category_id'] = [];
+    obj['reserv_status'] = [];
+    obj['language_details.lang_code'] = [];
+    this.generalFilterForm = this.fbuild.group(obj);
   }
   closeDialog() {
     this.dialogRef.close();
@@ -215,7 +223,10 @@ export class AdvancedSearchModalComponent implements OnInit {
     for (const item of this.formGroupArray) {
       dataArr.push(item.formGroup.value);
     }
-    this.searchOk.emit(dataArr);
+    this.searchOk.emit({
+      filters: dataArr,
+      generalFilters: this.generalFilterForm.value
+    });
     this.closeDialog();
   }
   cancel() {
