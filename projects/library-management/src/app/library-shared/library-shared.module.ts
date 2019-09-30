@@ -38,6 +38,7 @@ import { PreviewDocumentComponent } from './preview-document/preview-document.co
 import { BookDetailComponent } from './book-detail/book-detail.component';
 const moment = _moment;
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -107,7 +108,8 @@ export const MY_FORMATS = {
     NoDataComponent,
     UnpublishModalComponent,
     PreviewDocumentComponent,
-    BookDetailComponent
+    BookDetailComponent,
+    AdvancedSearchModalComponent
   ],
   entryComponents: [
     DeleteModalComponent,
@@ -117,7 +119,8 @@ export const MY_FORMATS = {
     PublishModalComponent,
     UnpublishModalComponent,
     PreviewDocumentComponent,
-    BookDetailComponent
+    BookDetailComponent,
+    AdvancedSearchModalComponent
   ],
   exports: [
     FormsModule, ReactiveFormsModule,
@@ -157,7 +160,8 @@ export const MY_FORMATS = {
     CommonDynamicChartComponent,
     NoDataComponent, PreviewDocumentComponent,
     NgxBarcodeModule,
-    BookDetailComponent
+    BookDetailComponent,
+    AdvancedSearchModalComponent
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

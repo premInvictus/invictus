@@ -49,7 +49,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		{ reason_type: '7', reason_type_desc: 'Change Enrolment Number' },
 		{ reason_type: '8', reason_type_desc: 'Change Enrolment Status' },
 		{ reason_type: '9', reason_type_desc: 'Request SLC/TC' },
-		{ reason_type: '10', reason_type_desc: 'SLC/TC' }];
+		{ reason_type: '10', reason_type_desc: 'SLC/TC' },
+		{ reason_type: '11', reason_type_desc: 'Cheque Bounced' },
+		{ reason_type: '12', reason_type_desc: 'Change Book Status' }];
 	reason_type: any = '1';
 	constructor(private fbuild: FormBuilder,
 		private sisService: SisService,
