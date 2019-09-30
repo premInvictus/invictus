@@ -229,6 +229,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/printGradecard', value);
 	}
+	getMarksRegister(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getMarksRegister', value);
+	}
 	
 }
 

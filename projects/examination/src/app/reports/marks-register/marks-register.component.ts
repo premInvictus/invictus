@@ -45,6 +45,7 @@ export class MarksRegisterComponent implements OnInit {
     this.examService.getClassTerm({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.classterm = result.data;
+        this.getSubjectsByClass();
         result.data.ect_no_of_term.split(',').forEach(element => {
           this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
         });
@@ -79,24 +80,25 @@ export class MarksRegisterComponent implements OnInit {
       }
     })
   }
-  getSubExam() {
-    if (this.paramform.value.eme_exam_id) {
-      const ind = this.examArray.findIndex(e => e.exam_id === this.paramform.value.eme_exam_id);
-      this.exam_grade_type = this.examArray[ind].egs_point_type;
-      this.getGradeSet({ egs_number: this.examArray[ind].egs_number, sort: 'asc' });
-    }
-    this.subexamArray = [];
-    this.examService.getExamDetails({ exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
-          this.subexamArray = result.data[0].exam_sub_exam_max_marks;
-          console.log(this.subexamArray);
-        }
-      } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-      }
-    });
-  }
+  // getSubExam() {
+  //   console.log('sss');
+  //   if (this.paramform.value.eme_exam_id) {
+  //     const ind = this.examArray.findIndex(e => e.exam_id === this.paramform.value.eme_exam_id);
+  //     this.exam_grade_type = this.examArray[ind].egs_point_type;
+  //     this.getGradeSet({ egs_number: this.examArray[ind].egs_number, sort: 'asc' });
+  //   }
+  //   this.subexamArray = [];
+  //   this.examService.getExamDetails({ exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
+  //     if (result && result.status === 'ok') {
+  //       if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
+  //         this.subexamArray = result.data[0].exam_sub_exam_max_marks;
+  //         console.log(this.subexamArray);
+  //       }
+  //     } else {
+  //       this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+  //     }
+  //   });
+  // }
 
   buildForm() {
     this.paramform = this.fbuild.group({
@@ -123,6 +125,7 @@ export class MarksRegisterComponent implements OnInit {
     this.paramform.patchValue({
       eme_sec_id: '',
       eme_term_id: '',
+      eme_sub_id: '',
       eme_exam_id: '',
       eme_subexam_id: ''
     });
@@ -136,5 +139,93 @@ export class MarksRegisterComponent implements OnInit {
       }
     });
   }
+  getSubjectsByClass() {
+    this.subjectArray = [];
+    this.paramform.patchValue({
+      eme_sub_id: ''
+    });
+    this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        const temp = result.data;
+        if (temp.length > 0) {
+          temp.forEach(element => {
+            if (element.sub_parent_id && element.sub_parent_id === '0') {
+              const childSub: any[] = [];
+              for (const item of temp) {
+                if (element.sub_id === item.sub_parent_id) {
+                  childSub.push(item);
+                }
+              }
+              element.childSub = childSub;
+              this.subjectArray.push(element);
+            }
+          });
+        }
+        console.log(this.subjectArray);
+      } else {
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+      }
+    });
+  }
+  getRollNoUser() {
+    this.paramform.patchValue({
+      eme_term_id: '',
+      eme_exam_id: '',
+    });
+    this.tableDivFlag = false;
+    if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id) {
+      this.studentArray = [];
+      this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id }).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          this.studentArray = result.data;
+        } else {
+          this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+        }
+      });
+    }
+  }
+  displayData() {
+    if (this.paramform.value.eme_exam_id.length > 0) {
+      this.responseMarksArray = [];
+      this.marksInputArray = [];
+      this.tableDivFlag = true;
+      const param: any = {};
+      param.examEntry = this.paramform.value;
+      param.eme_review_status = ['0', '1', '2', '3', '4'];
+      this.examService.getMarksRegister(this.paramform.value).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          console.log(result.data);
+          this.responseMarksArray = result.data;
 
+          // if (result.data.length > 0) {
+          //   this.paramform.value.eme_subexam_id.forEach(selement => {
+          //     result.data.forEach(melement => {
+          //       if (selement === melement.examEntry.eme_subexam_id) {
+          //         melement.examEntryMapping.forEach(element => {
+          //           this.marksInputArray.push({
+          //             es_id: melement.examEntry.eme_subexam_id,
+          //             login_id: element.emem_login_id,
+          //             mark: element.emem_marks
+          //           });
+          //         });
+          //       }
+          //     });
+          //   });
+          // }
+
+
+
+        }
+      })
+    } else {
+      this.marksInputArray = [];
+      this.tableDivFlag = false;
+    }
+  }
+  resetTableDiv() {
+    this.tableDivFlag = false;
+    this.paramform.patchValue({
+      eme_subexam_id: ''
+    });
+  }
 }
