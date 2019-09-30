@@ -136,7 +136,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
     this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
     if ($event) {
       this.common.getReservoirDataBasedOnFilter({
-        filters: $event,
+        filters: $event.filters,
+        generalFilters: $event.generalFilters,
         page_index: this.bookpageindex,
         page_size: this.bookpagesize
       }).subscribe((res: any) => {
