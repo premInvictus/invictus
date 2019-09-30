@@ -17,6 +17,7 @@ import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynam
 import { ImageViewerModule } from 'ngx-image-viewer';
 import { CKEditorModule } from 'ng2-ckeditor';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
+
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -34,6 +35,7 @@ import { PublishModalComponent } from './publish-modal/publish-modal.component';
 import { NoDataComponent } from './no-data/no-data.component';
 import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.component';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { BookDetailComponent } from './book-detail/book-detail.component';
 const moment = _moment;
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
@@ -106,6 +108,7 @@ export const MY_FORMATS = {
     NoDataComponent,
     UnpublishModalComponent,
     PreviewDocumentComponent,
+    BookDetailComponent,
     AdvancedSearchModalComponent
   ],
   entryComponents: [
@@ -116,6 +119,7 @@ export const MY_FORMATS = {
     PublishModalComponent,
     UnpublishModalComponent,
     PreviewDocumentComponent,
+    BookDetailComponent,
     AdvancedSearchModalComponent
   ],
   exports: [
@@ -156,6 +160,7 @@ export const MY_FORMATS = {
     CommonDynamicChartComponent,
     NoDataComponent, PreviewDocumentComponent,
     NgxBarcodeModule,
+    BookDetailComponent,
     AdvancedSearchModalComponent
   ],
   providers: [

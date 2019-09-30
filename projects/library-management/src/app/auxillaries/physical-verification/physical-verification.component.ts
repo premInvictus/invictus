@@ -30,6 +30,7 @@ export class PhysicalVerificationComponent implements OnInit {
   searchFlag = false;
   bookData: any[] = [];
   currentDate = new Date();
+  showBookDetail = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -165,6 +166,9 @@ export class PhysicalVerificationComponent implements OnInit {
               
             }
             this.booklistdataSource = new MatTableDataSource<BookListElement>(this.BOOK_LIST_ELEMENT);
+            this.booklistdataSource.paginator = this.paginator;
+            this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+            this.booklistdataSource.sort = this.sort;
           } 
 
 
@@ -325,7 +329,19 @@ export class PhysicalVerificationComponent implements OnInit {
   
   applyFilterNewBatch(filterValue: string) {
 		this.batchdataSource.filter = filterValue.trim().toLowerCase();
-	}
+  }
+  
+  fetchData() {
+
+  }
+
+  getBookDetail(element) {
+    this.showBookDetail = true;
+    this.showVerifiedBookLog = false;
+    this.showBookList = false;
+    this.showNewBatchStatus = false;
+    this.bookData = element;
+  }
 
 }
 

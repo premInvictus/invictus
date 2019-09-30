@@ -1,4 +1,4 @@
-<div class="main-physical-verification">
+<div class="main-physical-verification" *ngIf="!showBookDetail">
   <div class="row" *ngIf="showVerifiedBookLog">
     <div class="col-12">
       <mat-card>
@@ -170,7 +170,7 @@
           <div class="col-6 text-right">
 
             <div class="margin-top-10">
-              <button mat-button class="btn-spacer margin-left-10" (click)="backToVerificationLog($event)">
+              <button mat-button class="btn-spacer margin-left-10 btn-back" (click)="backToVerificationLog($event)">
                 Back To Verification Log
               </button>
             </div>
@@ -257,7 +257,8 @@
               </ng-container>
               <ng-container matColumnDef="book_no">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Book No. </th>
-                <td mat-cell *matCellDef="let element">{{element.book_no}}
+                <td mat-cell *matCellDef="let element">
+                  <a href="javascript:void(0)" (click)="getBookDetail(element)">{{element.book_no}}</a>
                 </td>
               </ng-container>
               <ng-container matColumnDef="book_name">
@@ -292,6 +293,9 @@
                 <td colspan="6">No Record Found</td>
               </tr>
             </table>
+
+            <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons
+                (page)="pageEvent = fetchData($event)"></mat-paginator>
           </div>
           <div class="col-2"></div>
         </div>
@@ -441,4 +445,7 @@
       </mat-card>
     </div>
   </div>
+</div>
+<div *ngIf="showBookDetail">
+  <app-book-detail [bookData]="bookData"></app-book-detail>
 </div>
