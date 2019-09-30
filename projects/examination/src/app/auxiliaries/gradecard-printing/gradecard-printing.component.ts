@@ -296,9 +296,9 @@ export class GradecardPrintingComponent implements OnInit {
     })
   }*/
   getClearedGradeCard(au_login_id) {
-    // console.log(this.examArray);
-    // console.log(this.gradeCardMarkArray);
-    // console.log(this.subjectArray);
+     console.log(this.examArray);
+     console.log(this.gradeCardMarkArray);
+     console.log(this.subjectArray);
     let gstatus  = '1';
     if(this.classterm.ect_exam_type === '2') {
       for(let i=0; i<this.examArray.length;i++){
@@ -344,7 +344,7 @@ export class GradecardPrintingComponent implements OnInit {
                     break;
                   }
                 } else {
-                  for(let l=0; l< this.subjectArray[k].childSub; l++) {
+                  for(let l=0; l< this.subjectArray[k].childSub.length; l++) {
                     const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
                       e.eme_sub_id === this.subjectArray[k].childSub[l].sub_id &&
                       e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
