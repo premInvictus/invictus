@@ -31,6 +31,7 @@
                       <mat-label>
                         {{placeholder[i] ? placeholder[i] : 'Select a filter type'}}</mat-label>
                       <input matInput [placeholder]="placeholder[i] ? placeholder[i] : 'Select a filter type'"
+                      [type]="fieldType[i]"
                         formControlName="filter_value" [readonly]="!(formGroupArray[i].formGroup.value.filter_type)" />
                     </mat-form-field>
                   </div>
