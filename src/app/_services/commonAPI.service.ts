@@ -14,6 +14,7 @@ export class CommonAPIService {
 	menus: any[] = [];
 	homeUrl: string;
 	userData: any;
+	reserv_id: any;
 	constructor(private http: HttpClient, private _cookieService: CookieService,
 		private _notificationService: NotificationsService) {
 		this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
@@ -265,4 +266,13 @@ export class CommonAPIService {
 	getSelectedChildData() {
 		return this.selectedChildData;
 	}
+
+	setReservoirId(reserv_id) {
+		this.reserv_id = reserv_id;
+	}
+
+	getReservoirId() {
+		return this.reserv_id;
+	}
+
 }
