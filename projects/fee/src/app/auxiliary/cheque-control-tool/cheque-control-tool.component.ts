@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
+import { MatTableDataSource, MatPaginator, PageEvent, MatPaginatorIntl } from '@angular/material';
 import { ChequeToolElement } from './cheque-control-tool.model';
 import { FeeService, CommonAPIService } from '../../_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { BouncedChequeModalComponent } from './bounced-cheque-modal/bounced-cheque-modal.component';
 import { InvoiceDetailsModalComponent } from '../../feemaster/invoice-details-modal/invoice-details-modal.component';
@@ -12,7 +13,10 @@ import { CapitalizePipe } from '../../_pipes';
 @Component({
 	selector: 'app-cheque-control-tool',
 	templateUrl: './cheque-control-tool.component.html',
-	styleUrls: ['./cheque-control-tool.component.scss']
+	styleUrls: ['./cheque-control-tool.component.scss'],
+	providers: [
+		{ provide: MatPaginatorIntl, useClass: MatPaginatorI18n }
+	]
 })
 export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
@@ -45,6 +49,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		public dialog: MatDialog) { }
 
 	ngOnInit() {
+		localStorage.removeItem('invoiceBulkRecords');
 		this.buildForm();
 		this.getChequeControlListAll();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -127,7 +132,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						approved_by: item.approved_by ? item.approved_by : '-',
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
 						bankdeposite: item.fcc_deposite_date ? this.common.dateConvertion(item.fcc_deposite_date, 'd-MMM-y') : '-',
-						processingdate: '',
+						processingdate: item.fcc_process_date ? this.common.dateConvertion(item.fcc_process_date, 'd-MMM-y') : '-',
 						remarks: item.fcc_remarks ? new CapitalizePipe().transform(item.fcc_remarks) : '-',
 						action: item,
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : ''
@@ -144,10 +149,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					pos++;
 				}
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
-				if (this.dataSource.paginator) {
-					this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
-					this.dataSource.paginator = this.paginator;
-				}
+				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+				this.dataSource.paginator = this.paginator;
 			}
 		});
 	}
@@ -197,7 +200,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						approved_by: item.approved_by ? item.approved_by : '-',
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
 						bankdeposite: item.fcc_deposite_date ? new DatePipe('en-in').transform(item.fcc_deposite_date, 'd-MMM-y') : '-',
-						processingdate: '',
+						processingdate: item.fcc_process_date ? this.common.dateConvertion(item.fcc_process_date, 'd-MMM-y') : '-',
 						remarks: item.fcc_remarks ? new CapitalizePipe().transform(item.fcc_remarks) : '-',
 						action: item,
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-'
@@ -214,6 +217,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					pos++;
 				}
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
+				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
 				this.dataSource.paginator = this.paginator;
 			}
 		});

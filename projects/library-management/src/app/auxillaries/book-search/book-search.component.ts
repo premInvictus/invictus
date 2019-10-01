@@ -47,6 +47,9 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
   searchForm: FormGroup;
   totalRecords: number;
   filteredFlag = false;
+  searchViaSearch = false;
+  searchViaText = false;
+  currentUser: any = {};
   constructor(private common: ErpCommonService,
     private route: ActivatedRoute,
     private router: Router,
@@ -54,6 +57,7 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
     private notif: CommonAPIService) { }
 
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.builForm();
   }
   ngAfterViewInit() {
@@ -61,36 +65,37 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
   }
   builForm() {
     this.searchForm = this.fbuild.group({
-      search: ''
+      search: '',
+      page_size: this.bookpagesize,
+      page_index: this.bookpageindex,
+      role_id: this.currentUser.role_id
     })
   }
   openBookDetails(id) {
-    this.notif.setReservoirId(id);
-    this.router.navigate(['../book-detail'], { relativeTo: this.route });
+    this.router.navigate(['../book-detail'], { queryParams: { book_id: id }, relativeTo: this.route });
   }
   searchBook() {
+    this.filters = {};
+    this.searchFlag = false;
     this.BOOK_ELEMENT_DATA = [];
     this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
     if (this.searchForm.value.search) {
       this.bookData = [];
       this.enteredVal = true;
-      this.common.searchReservoir({
-        searchData: {
-          isbn: '',
-          reserv_id: Number(this.searchForm.value.search)
-        }
-      }).subscribe((res: any) => {
-        if (res && res.data) {
-          this.searchForm.patchValue(
-            {
-              'search': ''
-            }
-          );
-          for (const item of res.data) {
+      this.common.searchReservoir(this.searchForm.value).subscribe((res: any) => {
+        if (res && res.data.resultData) {
+          this.searchViaText = true;
+          this.searchViaSearch = false;
+          this.totalRecords = Number(res.data.totalRecords);
+          localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+          for (const item of res.data.resultData) {
             item.book_container_class = 'book-title-container-default';
             this.BOOK_ELEMENT_DATA.push(item);
           }
           this.searchFlag = true;
+          this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
+          this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+          this.bookDataSource.paginator = this.paginator;
         }
       });
     } else {
@@ -141,6 +146,8 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
     if ($event) {
       this.filters = $event;
       this.filteredFlag = true;
+      this.searchViaText = false;
+      this.searchViaSearch = true;
       this.common.getReservoirDataBasedOnFilter({
         filters: $event.filters,
         generalFilters: $event.generalFilters,
@@ -171,7 +178,15 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
   fetchData(event?: PageEvent) {
     this.bookpageindex = event.pageIndex;
     this.bookpagesize = event.pageSize;
+    this.searchForm.patchValue({
+      page_index: this.bookpageindex,
+      page_size: this.bookpagesize
+    });
+    if (this.searchViaSearch) {
     this.getReservoirDataBasedOnFilter();
+    } else {
+    this.searchBook();
+    }
     return event;
   }
   getReservoirDataBasedOnFilter() {
@@ -186,6 +201,8 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
     }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.searchFlag = true;
+        this.searchViaText = false;
+        this.searchViaSearch = true;
         this.totalRecords = Number(res.data.totalRecords);
         localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
         for (const item of res.data.resultData) {
