@@ -27,7 +27,8 @@ export class VendorMasterComponent implements OnInit {
   displayedVendorListColumns: string[] = ['srno', 'ven_id','ven_name' , 'ven_category', 'ven_address', 'ven_contact', 'ven_email','action'];
   vendorListPageIndex = 0;
 	vendorListPageSize = 10;
-	vendorListPageSizeOptions = [10, 25, 50, 100];
+  vendorListPageSizeOptions = [10, 25, 50, 100];
+  pageEvent: any;
 
   constructor(public dialog: MatDialog, 
     private fbuild: FormBuilder,
@@ -150,7 +151,7 @@ export class VendorMasterComponent implements OnInit {
     });
   }
 
-  fetchData() {
+  fetchData($event) {
 
   }
 
@@ -176,7 +177,7 @@ export class VendorMasterComponent implements OnInit {
 
   applyFilterVendor(filterValue: string) {
 		this.vendorlistdataSource.filter = filterValue.trim().toLowerCase();
-	}
+  }
 
 }
 
