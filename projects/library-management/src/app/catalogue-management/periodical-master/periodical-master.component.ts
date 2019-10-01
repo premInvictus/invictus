@@ -30,6 +30,7 @@ export class PeriodicalMasterComponent implements OnInit {
   subscriptionListPageSize = 10;
   subscriptionListPageSizeOptions = [10, 25, 50, 100];
   showButtonStatus = true;
+  pageEvent: any;
 
   constructor(public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -150,7 +151,7 @@ export class PeriodicalMasterComponent implements OnInit {
     
   }
 
-  fetchData() {
+  fetchData($event) {
     
   }
 
@@ -160,7 +161,7 @@ export class PeriodicalMasterComponent implements OnInit {
 
   applyFilterSubscription(filterValue: string) {
 		this.subscriptionlistdataSource.filter = filterValue.trim().toLowerCase();
-	}
+  }
 
 }
 

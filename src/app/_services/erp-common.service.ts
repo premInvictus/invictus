@@ -19,6 +19,7 @@ export class ErpCommonService {
 		return this.http.post(environment.apiReservUrl + '/reservoir/insertReservoirData', value);
 	}
 	searchReservoir(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/booksearch/searchReservoir', value);
 	}
 	getReservoirData(value) {
@@ -305,5 +306,9 @@ export class ErpCommonService {
 	}
 
 	
+	changeReservoirStatus(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/reservoir/changeReservoirStatus', value);
+	}
 }
 

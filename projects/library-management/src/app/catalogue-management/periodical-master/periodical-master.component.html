@@ -157,5 +157,5 @@
           </mat-card>
     </div>
   </div>
-  <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete Subscription'" (deleteOk)="deleteSubscription(currentSubscription)" (deleteCancel)="deleteComCancel()">
+  <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete Subscription'" (deleteOk)="deleteSubscription(currentSubscriptionId)" (deleteCancel)="deleteComCancel()">
     </app-delete-modal>
