@@ -19,6 +19,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('searchModal') searchModal;
   @ViewChild(MatSort) sort: MatSort;
+  filters: any = {};
   bookpagesize = 10;
   pageEvent: PageEvent;
   bookpageindex = 0;
@@ -96,10 +97,11 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   url: any;
   imageUrl: any = '';
   enableMultiFlag = false;
-  displayedColumns: any[] = ['sr_no', 'book_no', 'book_name', 'author', 'publisher', 'location'];
+  displayedColumns: any[] = ['sr_no', 'book_no', 'book_name', 'author', 'publisher', 'location', 'status'];
   BOOK_ELEMENT_DATA: AccessionMasterModel[] = [];
   bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
   totalRecords: number;
+  filteredFlag = false;
   constructor(private common: ErpCommonService, private fbuild: FormBuilder,
     public dialog: MatDialog,
     private notif: CommonAPIService,
@@ -108,6 +110,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   assessionMasterContainer = true;
   addBookContainer = false;
   bookForm: FormGroup;
+  searchForm: FormGroup;
   ngOnInit() {
     localStorage.removeItem('invoiceBulkRecords');
     this.getLanguages();
@@ -123,10 +126,14 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   }
   searchOk($event) {
     this.BOOK_ELEMENT_DATA = [];
+    this.filteredFlag = false;
+    this.filters = {};
     let i = 0;
     localStorage.removeItem('invoiceBulkRecords');
     this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
     if ($event) {
+      this.filters = $event;
+      this.filteredFlag = true;
       this.common.getReservoirDataBasedOnFilter({
         filters: $event.filters,
         generalFilters: $event.generalFilters,
@@ -148,7 +155,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
               book_no: item.reserv_id,
               authors: authName,
               publisher: item.publisher,
-              location: item.location
+              location: item.location,
+              status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status
             })
             i++;
           }
@@ -174,6 +182,43 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
       if (res && res.status === 'ok') {
         this.subjectArray = [];
         this.subjectArray = res.data;
+      }
+    });
+  }
+  getReservoirDataBasedOnFilter() {
+    let i = 0;
+    this.BOOK_ELEMENT_DATA = [];
+    this.common.getReservoirDataBasedOnFilter({
+      filters: this.filters.filters,
+      generalFilters: this.filters.generalFilters,
+      page_index: this.bookpageindex,
+      page_size: this.bookpagesize
+    }).subscribe((res: any) => {
+      if (res && res.status === 'ok') {
+        this.totalRecords = Number(res.data.totalRecords);
+        localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+        for (const item of res.data.resultData) {
+          let authName = '';
+          for (const aut of item.authors) {
+            authName = new TitleCasePipe().transform(aut) + ',';
+          }
+          authName = authName.substring(0, authName.length - 2);
+          this.BOOK_ELEMENT_DATA.push({
+            sr_no: i + 1,
+            book_name: item.title,
+            book_no: item.reserv_id,
+            authors: authName,
+            publisher: item.publisher,
+            location: item.location,
+            status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status
+          })
+          i++;
+        }
+        this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+        this.bookDataSource.sort = this.sort;
+        this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+        this.bookDataSource.paginator = this.paginator;
       }
     });
   }
@@ -222,9 +267,60 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
       ven_gst_no: '',
       ven_pan_no: ''
     });
+    this.searchForm = this.fbuild.group({
+      search: ''
+    })
   }
   readUrl(event: any) {
     this.openCropDialog(event);
+  }
+  searchBook() {
+    this.BOOK_ELEMENT_DATA = [];
+    let i = 0;
+    localStorage.removeItem('invoiceBulkRecords');
+    this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+    if (this.searchForm.value.search) {
+      this.common.searchReservoir({
+        searchData: {
+          reserv_id: Number(this.searchForm.value.search)
+        }
+      }).subscribe((res: any) => {
+        if (res && res.data) {
+          this.searchForm.patchValue(
+            {
+              'search': ''
+            }
+          );
+          this.totalRecords = Number(res.data.length);
+          localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+          for (const item of res.data) {
+            let authName = '';
+            for (const aut of item.authors) {
+              authName = new TitleCasePipe().transform(aut) + ',';
+            }
+            authName = authName.substring(0, authName.length - 2);
+            this.BOOK_ELEMENT_DATA.push({
+              sr_no: i + 1,
+              book_name: item.title,
+              book_no: item.reserv_id,
+              authors: authName,
+              publisher: item.publisher,
+              location: item.location,
+              status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status
+            })
+            i++;
+          }
+          this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+          this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+          this.bookDataSource.sort = this.sort;
+          this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+          this.bookDataSource.paginator = this.paginator;
+        }
+      });
+    } else {
+      this.BOOK_ELEMENT_DATA = [];
+      this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+    }
   }
   openCropDialog = (imageFile) => this.cropModal.openModal(imageFile);
   uploadImage(fileName, au_profileimage) {
@@ -234,7 +330,6 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
         if (result.status === 'ok') {
           this.bookImage = result.data[0].file_url;
           this.imageFlag = true;
-          console.log(this.bookImage);
         }
       });
   }
@@ -396,7 +491,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
             book_no: item.reserv_id,
             authors: authName,
             publisher: item.publisher,
-            location: item.location
+            location: item.location,
+            status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status
           })
           i++;
         }
@@ -405,7 +501,6 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
         this.bookDataSource.sort = this.sort;
         this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
         this.bookDataSource.paginator = this.paginator;
-        console.log(this.BOOK_ELEMENT_DATA);
       }
     });
   }
@@ -460,13 +555,19 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
         this.imageFlag = false;
         this.bookDetails = {};
         this.bookImage = '';
+      } else {
+        this.notif.showSuccessErrorMessage(res.message, 'error');
       }
     });
   }
   fetchData(event?: PageEvent) {
     this.bookpageindex = event.pageIndex;
     this.bookpagesize = event.pageSize;
-    this.getReservoirData();
+    if (!this.filteredFlag) {
+      this.getReservoirData();
+    } else {
+      this.getReservoirDataBasedOnFilter();
+    }
     return event;
   }
   enableMulti($event) {
