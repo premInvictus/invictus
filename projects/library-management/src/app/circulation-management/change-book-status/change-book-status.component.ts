@@ -14,6 +14,7 @@ export class ChangeBookStatusComponent implements OnInit {
   gridView = true;
   enteredVal: any = false;
   changeStatusForm: FormGroup;
+  searchForm: FormGroup;
   constructor(private sis: SisService, private common: ErpCommonService,
     private fbuild: FormBuilder) { }
   statusArray: any[] = [
@@ -48,6 +49,9 @@ export class ChangeBookStatusComponent implements OnInit {
       'reason_id': '',
       'reason_desc': ''
     });
+    this.searchForm = this.fbuild.group({
+      search: ''
+    })
   }
   getReasons() {
     this.sis.getReason({ reason_type: 12 }).subscribe((res: any) => {
@@ -75,10 +79,12 @@ export class ChangeBookStatusComponent implements OnInit {
             }
           }
           console.log(this.bookData);
+          this.searchForm.reset();
         }
       });
     } else {
       this.enteredVal = false;
+      this.searchForm.reset();
     }
   }
   intitiateSearch() {
@@ -100,6 +106,8 @@ export class ChangeBookStatusComponent implements OnInit {
       changedDetails: this.changeStatusForm.value
     }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
+        this.changeStatusForm.reset();
+        this.bookData =[];
       }
     });
   }
