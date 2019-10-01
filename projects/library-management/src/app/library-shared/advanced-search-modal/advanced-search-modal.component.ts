@@ -53,19 +53,15 @@ export class AdvancedSearchModalComponent implements OnInit {
   }];
   statusArray: any[] = [
     {
-      type_id: '1',
+      type_id: 'available',
       type_name: 'Available',
     },
     {
-      type_id: '2',
+      type_id: 'issued',
       type_name: 'Issued',
     },
     {
-      type_id: '3',
-      type_name: 'Reserved',
-    },
-    {
-      type_id: '4',
+      type_id: 'flagged',
       type_name: 'Flagged',
     }
   ];

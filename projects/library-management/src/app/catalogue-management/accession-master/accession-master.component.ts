@@ -63,19 +63,11 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   }];
   statusArray: any[] = [
     {
-      type_id: '1',
+      type_id: 'available',
       type_name: 'Available',
     },
     {
-      type_id: '2',
-      type_name: 'Issued',
-    },
-    {
-      type_id: '3',
-      type_name: 'Reserved',
-    },
-    {
-      type_id: '4',
+      type_id: 'flagged',
       type_name: 'Flagged',
     }
   ];
@@ -302,7 +294,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
         buy_link: '',
       });
       const method = 'get';
-      const url: any = 'https://www.googleapis.com/books/v1/volumes?q=isbn:' + Number($event.target.value);
+      const url: any = 'https://www.googleapis.com/books/v1/volumes?q=isbn:' + $event.target.value;
       const xhr = new XMLHttpRequest();
       xhr.open(method, url, true);
       xhr.send();
@@ -372,9 +364,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
             vendor_email: this.vendorDetail.ven_email,
             ven_pan_no: this.vendorDetail.ven_pan_no,
             ven_gst_no: this.vendorDetail.ven_gst_no,
-            name: this.vendorDetail.ven_authorised_person_detail.name,
-            desgnation: this.vendorDetail.ven_authorised_person_detail.desgnation,
-            contact: this.vendorDetail.ven_authorised_person_detail.contact,
+            name: this.vendorDetail.ven_authorised_person_detail_name,
+            desgnation: this.vendorDetail.ven_authorised_person_detail_designation,
+            contact: this.vendorDetail.ven_authorised_person_detail_contact,
           })
         }
       })
