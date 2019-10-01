@@ -39,6 +39,7 @@ import { BookDetailComponent } from './book-detail/book-detail.component';
 const moment = _moment;
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
+import { BarecodeScannerLivestreamModule } from 'ngx-barcode-scanner';
 
 export const MY_FORMATS = {
   parse: {
@@ -70,6 +71,7 @@ export const MY_FORMATS = {
     MatCardModule,
     MatExpansionModule,
     NgxBarcodeModule,
+    BarecodeScannerLivestreamModule,
     LayoutModule,
     MatTooltipModule,
     MatMenuModule,
@@ -161,7 +163,8 @@ export const MY_FORMATS = {
     NoDataComponent, PreviewDocumentComponent,
     NgxBarcodeModule,
     BookDetailComponent,
-    AdvancedSearchModalComponent
+    AdvancedSearchModalComponent,
+    BarecodeScannerLivestreamModule
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
