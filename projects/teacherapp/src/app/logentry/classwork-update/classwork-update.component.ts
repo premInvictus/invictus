@@ -37,6 +37,7 @@ export class ClassworkUpdateComponent implements OnInit {
 	disabletopicArray: any[] = [];
 	disableClassArray: any[] = [];
 	disableSubjectArray: any[] = [];
+	timetabledata: any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -58,6 +59,87 @@ export class ClassworkUpdateComponent implements OnInit {
 		}
 		this.getSubjectByTeacherId();
 		this.ctrList();
+		this.getTeacherwiseTableDetails(this.currentUser.login_id);
+	}
+	datechange(){
+		console.log(this.classworkforForm.value.cw_entry_date);
+		this.resetClasswork();
+		this.getSubjectByTeacherId();
+		this.ctrList();
+		this.getTeacherwiseTableDetails(this.currentUser.login_id);
+	}
+	getClassSectionByTeacherIdSubjectIdAndPatch(i, resetflag = true,value) {
+		// console.log(this.Periods);
+		const eachPeriodFG = this.Periods.controls[i];
+		// console.log(eachPeriodFG);
+		this.classSectionArray[i] = [];
+		if (resetflag) {
+			this.resetClassworkFormForSubjectChange(i);
+		}
+		this.smartService.getClassSectionByTeacherIdSubjectId({ teacher_id: this.teacherId, sub_id: eachPeriodFG.value.cw_sub_id }).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					const csArray = result.data;
+					if (csArray.length > 0) {
+						csArray.forEach(element => {
+							this.classSectionArray[i].push({
+								cs_id: element.class_id + '-' + element.sec_id,
+								cs_name: element.class_name + ' - ' + element.sec_name
+							});
+						});
+						eachPeriodFG.patchValue({
+							cw_class_id: value,
+							cw_ctr_id: '1'
+						});
+						if(eachPeriodFG.value.cw_class_id && eachPeriodFG.value.cw_sub_id) {
+							this.getTopicByClassSubject(i);
+							this.reviewElementClass(i,{value: eachPeriodFG.value.cw_class_id});
+						}
+						this.reviewElementCategory(i,{value: eachPeriodFG.value.cw_ctr_id});
+						this.disableSt(i,{value: eachPeriodFG.value.cw_ctr_id})
+					}
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+	}
+	patchTeacherPeriod(dayofweek, ttd) {
+		dayofweek = dayofweek - 1 >= 0 ? dayofweek -1 : 6;
+		for(let i=0; i<ttd.length;i++) {
+			const control = this.Periods.controls[i];
+			console.log(control);
+			if (control instanceof FormGroup) {
+				if(ttd[i][dayofweek].subject_id !== '' && ttd[i][dayofweek].subject_id !== '-') {
+					control.patchValue({
+						cw_sub_id: ttd[i][dayofweek].subject_id
+					});
+					this.getClassSectionByTeacherIdSubjectId(i);
+					this.reviewElementSubject(i,{value: control.value.cw_sub_id});
+					this.getClassSectionByTeacherIdSubjectIdAndPatch(i,false,ttd[i][dayofweek].class_id + '-' + ttd[i][dayofweek].sec_id);
+				} else {
+					control.patchValue({
+						cw_ctr_id: '8'
+					});
+					this.reviewElementCategory(i,{value: control.value.cw_ctr_id});
+					this.disableSt(i,{value: control.value.cw_ctr_id})
+				}
+			}
+		}
+		console.log(this.Periods);
+	}
+	getTeacherwiseTableDetails(teacherId){
+		const param: any = {};
+		param.uc_login_id = teacherId;
+		this.smartService.getTeacherwiseTableDetails(param).subscribe((result: any) => {
+			if(result && result.status === 'ok') {
+				this.timetabledata = result.data.tabledata;
+				let dayofweek = 0;
+				dayofweek = this.classworkforForm.value.cw_entry_date.getDay();
+				if(this.timetabledata.length > 0) {
+				this.patchTeacherPeriod(dayofweek, this.timetabledata);
+				}
+			}
+		})
 	}
 	buildForm() {
 		this.classworkForm = this.fbuild.group({
@@ -175,7 +257,7 @@ export class ClassworkUpdateComponent implements OnInit {
 		if (event.value) {
 			this.reviewClasswork[index].subjectName = this.subjectArray.find(item => item.sub_id === event.value).sub_name;
 		}
-		// console.log(this.reviewClasswork[index]);
+		// console.log(this.reviewClasswork[index]); 
 	}
 	reviewElementCategory(index, event) {
 		if (event.value) {
@@ -313,12 +395,26 @@ export class ClassworkUpdateComponent implements OnInit {
 			cw_st_id: ''
 		});
 		const csArray = eachPeriodFG.value.cw_class_id.split('-');
-		const param = { class_id: csArray[0], sub_id: eachPeriodFG.value.cw_sub_id };
+		const param: any = { class_id: csArray[0], sub_id: eachPeriodFG.value.cw_sub_id };
 		this.smartService.getTopicByClassIdSubjectId(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.topicArray[i] = result.data;
+				param.sec_id = csArray[1];
+				param.tw_ctr_id = '1';
+				this.smartService.getTopicwiseCTR(param).subscribe((result1: any) => {
+					if(result1 && result1.status === 'ok') {
+						const temptopic: any = result1.data;
+						temptopic.forEach(element => {
+							if(element.tw_status === '1') {
+								const index = this.topicArray[i].findIndex(e => e.topic_id === element.topic_id);
+								console.log(index);
+								this.topicArray[i].splice(index,1);
+							}
+						});
+					}
+				})
 			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				//this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
