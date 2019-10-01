@@ -1,14 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { ErpCommonService } from 'src/app/_services';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { ErpCommonService, CommonAPIService } from 'src/app/_services';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { PageEvent, MatTableDataSource, MatPaginator } from '@angular/material';
+import { TitleCasePipe } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-book-search',
   templateUrl: './book-search.component.html',
   styleUrls: ['./book-search.component.css']
 })
-export class BookSearchComponent implements OnInit {
+export class BookSearchComponent implements OnInit, AfterViewInit {
   searchFlag = false;
   bookData: any[] = [];
+  BOOK_ELEMENT_DATA: any[] = [];
+  bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
+  @ViewChild('searchModal') searchModal;
+  @ViewChild('paginator') paginator: MatPaginator;
+  filters: any = {};
+  bookpagesize = 10;
+  pageEvent: PageEvent;
+  bookpageindex = 0;
+  bookpagesizeoptions = [10, 25, 50, 100];
   gridView = true;
   enteredVal: any = false;
   statusArray: any[] = [
@@ -31,31 +44,64 @@ export class BookSearchComponent implements OnInit {
   ];
   gridViewClass = 'btn-success-blue-btn';
   listViewClass = 'default-view-button btn-spacer';
-  constructor(private common: ErpCommonService) { }
+  searchForm: FormGroup;
+  totalRecords: number;
+  filteredFlag = false;
+  constructor(private common: ErpCommonService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private fbuild: FormBuilder,
+    private notif: CommonAPIService) { }
 
   ngOnInit() {
+    this.builForm();
   }
-  searchBook($event) {
-    if ($event.target.value) {
-      this.enteredVal = true;
+  ngAfterViewInit() {
+    this.bookDataSource.paginator = this.paginator;
+  }
+  builForm() {
+    this.searchForm = this.fbuild.group({
+      search: ''
+    })
+  }
+  openBookDetails(id) {
+    this.notif.setReservoirId(id);
+    this.router.navigate(['../book-detail'], { relativeTo: this.route });
+  }
+  searchBook() {
+    this.BOOK_ELEMENT_DATA = [];
+    this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
+    if (this.searchForm.value.search) {
       this.bookData = [];
+      this.enteredVal = true;
       this.common.searchReservoir({
         searchData: {
           isbn: '',
-          reserv_id: Number($event.target.value)
+          reserv_id: Number(this.searchForm.value.search)
         }
       }).subscribe((res: any) => {
         if (res && res.data) {
+          this.searchForm.patchValue(
+            {
+              'search': ''
+            }
+          );
           for (const item of res.data) {
             item.book_container_class = 'book-title-container-default';
-            this.bookData.push(item);
+            this.BOOK_ELEMENT_DATA.push(item);
           }
           this.searchFlag = true;
-          console.log(this.bookData);
         }
       });
     } else {
+      this.searchForm.patchValue(
+        {
+          'search': ''
+        }
+      );
       this.enteredVal = false;
+      this.BOOK_ELEMENT_DATA = [];
+      this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
     }
   }
   intitiateSearch() {
@@ -71,16 +117,91 @@ export class BookSearchComponent implements OnInit {
       this.listViewClass = 'btn-success-blue-btn btn-spacer';
     }
   }
+  openSearchDialog = (data) => this.searchModal.openModal(data);
   showSecondDetailDiv(index) {
-    this.bookData[index].book_container_class = 'book-title-container-clicked';
+    this.BOOK_ELEMENT_DATA[index].book_container_class = 'book-title-container-clicked';
   }
   showFirstDetailDiv(index) {
-    this.bookData[index].book_container_class = 'book-title-container-default';
+    this.BOOK_ELEMENT_DATA[index].book_container_class = 'book-title-container-default';
   }
   getReserv_status(id) {
-    const findex = this.statusArray.findIndex(f=> f.type_id === id);
+    const findex = this.statusArray.findIndex(f => f.type_id === id);
     if (findex !== -1) {
       return this.statusArray[findex].type_name;
     }
+  }
+  searchOk($event) {
+    this.BOOK_ELEMENT_DATA = [];
+    this.filteredFlag = false;
+    this.searchFlag = false;
+    this.filters = {};
+    let i = 0;
+    localStorage.removeItem('invoiceBulkRecords');
+    this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
+    if ($event) {
+      this.filters = $event;
+      this.filteredFlag = true;
+      this.common.getReservoirDataBasedOnFilter({
+        filters: $event.filters,
+        generalFilters: $event.generalFilters,
+        page_index: this.bookpageindex,
+        page_size: this.bookpagesize
+      }).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          this.searchFlag = true;
+          this.totalRecords = Number(res.data.totalRecords);
+          localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+          for (const item of res.data.resultData) {
+            let authName = '';
+            for (const aut of item.authors) {
+              authName = new TitleCasePipe().transform(aut) + ',';
+            }
+            authName = authName.substring(0, authName.length - 2);
+            item.book_container_class = 'book-title-container-default';
+            this.BOOK_ELEMENT_DATA.push(item);
+            i++;
+          }
+          this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
+          this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+          this.bookDataSource.paginator = this.paginator;
+        }
+      });
+    }
+  }
+  fetchData(event?: PageEvent) {
+    this.bookpageindex = event.pageIndex;
+    this.bookpagesize = event.pageSize;
+    this.getReservoirDataBasedOnFilter();
+    return event;
+  }
+  getReservoirDataBasedOnFilter() {
+    let i = 0;
+    this.BOOK_ELEMENT_DATA = [];
+    this.searchFlag = false;
+    this.common.getReservoirDataBasedOnFilter({
+      filters: this.filters.filters,
+      generalFilters: this.filters.generalFilters,
+      page_index: this.bookpageindex,
+      page_size: this.bookpagesize
+    }).subscribe((res: any) => {
+      if (res && res.status === 'ok') {
+        this.searchFlag = true;
+        this.totalRecords = Number(res.data.totalRecords);
+        localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+        for (const item of res.data.resultData) {
+          let authName = '';
+          for (const aut of item.authors) {
+            authName = new TitleCasePipe().transform(aut) + ',';
+          }
+          authName = authName.substring(0, authName.length - 2);
+          item.book_container_class = 'book-title-container-default';
+          this.BOOK_ELEMENT_DATA.push(item)
+          i++;
+        }
+        this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
+        this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+        this.bookDataSource.paginator = this.paginator;
+      }
+    });
   }
 }

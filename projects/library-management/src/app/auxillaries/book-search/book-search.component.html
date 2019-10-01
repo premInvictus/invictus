@@ -54,9 +54,11 @@
         <div class="grid-view">
           <div class="row margin-top-20">
             <div class="col-1 smart-col-10" style="margin-bottom: 30px !important"
-            *ngFor="let item of BOOK_ELEMENT_DATA; let i = index;">
+              *ngFor="let item of BOOK_ELEMENT_DATA; let i = index;">
               <div class="book-container">
-                <img class="book-cover-img" [src]="item.images_links ?item.images_links.thumbnail : ''" />
+                <img class="book-cover-img" [src]="item.images_links ?item.images_links.thumbnail : ''"
+                style="cursor: pointer"
+                  (click)="openBookDetails(item.reserv_id)" />
                 <div [class]="item.book_container_class">
                   <div class="book-title-content text-center" style="padding: 3px !important">
                     <div class="book-first-content" (click)="showSecondDetailDiv(i); $event.stopPropagation();">

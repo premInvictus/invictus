@@ -50,7 +50,7 @@
                       ><img
                         src="../../../../../../src/assets/images/Library/openbook.svg"
                       />
-                      &nbsp;Read Only</span
+                      &nbsp;{{bookData?.reserv_flagged_status.status ? (bookData?.reserv_flagged_status.status | capitalize) : (bookData?.reserv_status | capitalize)}}</span
                     >
                     <div class="margin-top-10">
                             <button mat-button class="btn-spacer margin-left-10 btn-back" (click)="bookReserveRequest($event)">
