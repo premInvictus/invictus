@@ -102,6 +102,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
   totalRecords: number;
   filteredFlag = false;
+  currentUser: any;
+  searchViaSearch = false;
+  searchViaText = false;
   constructor(private common: ErpCommonService, private fbuild: FormBuilder,
     public dialog: MatDialog,
     private notif: CommonAPIService,
@@ -112,6 +115,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   bookForm: FormGroup;
   searchForm: FormGroup;
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     localStorage.removeItem('invoiceBulkRecords');
     this.getLanguages();
     this.getGenres();
@@ -141,6 +145,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
         page_size: this.bookpagesize
       }).subscribe((res: any) => {
         if (res && res.status === 'ok') {
+          this.searchViaText = true;
+          this.searchViaSearch = false;
           this.totalRecords = Number(res.data.totalRecords);
           localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
           for (const item of res.data.resultData) {
@@ -195,6 +201,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
       page_size: this.bookpagesize
     }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
+        this.searchViaText = false;
+        this.searchViaSearch = true;
         this.totalRecords = Number(res.data.totalRecords);
         localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
         for (const item of res.data.resultData) {
@@ -268,32 +276,28 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
       ven_pan_no: ''
     });
     this.searchForm = this.fbuild.group({
-      search: ''
-    })
+      search: '',
+      page_size: this.bookpagesize,
+      page_index: this.bookpageindex,
+      role_id: this.currentUser.role_id
+    });
   }
   readUrl(event: any) {
     this.openCropDialog(event);
   }
   searchBook() {
+    this.filters = {};
     this.BOOK_ELEMENT_DATA = [];
     let i = 0;
-    localStorage.removeItem('invoiceBulkRecords');
-    this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+    this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
     if (this.searchForm.value.search) {
-      this.common.searchReservoir({
-        searchData: {
-          reserv_id: Number(this.searchForm.value.search)
-        }
-      }).subscribe((res: any) => {
-        if (res && res.data) {
-          this.searchForm.patchValue(
-            {
-              'search': ''
-            }
-          );
-          this.totalRecords = Number(res.data.length);
+      this.common.searchReservoir(this.searchForm.value).subscribe((res: any) => {
+        if (res && res.data.resultData) {
+          this.searchViaText = true;
+          this.searchViaSearch = false;
+          this.totalRecords = Number(res.data.totalRecords);
           localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-          for (const item of res.data) {
+          for (const item of res.data.resultData) {
             let authName = '';
             for (const aut of item.authors) {
               authName = new TitleCasePipe().transform(aut) + ',';
@@ -318,8 +322,13 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
+      this.searchForm.patchValue(
+        {
+          'search': ''
+        }
+      );
       this.BOOK_ELEMENT_DATA = [];
-      this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
+      this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
     }
   }
   openCropDialog = (imageFile) => this.cropModal.openModal(imageFile);
@@ -477,6 +486,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
       page_size: this.bookpagesize
     }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
+        this.searchViaText = false;
+        this.searchViaSearch = true;
         this.totalRecords = Number(res.data.totalRecords);
         localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
         for (const item of res.data.resultData) {
