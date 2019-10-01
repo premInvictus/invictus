@@ -12,9 +12,9 @@
                 <div class="col-8">
                   <mat-form-field class="lib-form form-field">
                     <input matInput placeholder="Search Any Book By ID" id="search_book" type="number"
-                    formControlName="search"
-                      (keydown.enter)="searchBook($event);$event.stopPropagation()" />
+                      formControlName="search" (keydown.enter)="searchBook($event);$event.stopPropagation()" />
                   </mat-form-field>
+                  <barcode-scanner-livestream (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
                 </div>
               </div>
             </form>
@@ -56,6 +56,9 @@
                   </div>
                   <div class="book-second-content" style="padding: 30px !important"
                     (click)="showFirstDetailDiv(i); $event.stopPropagation()">
+                    <div class="font-size-12 margin-top-15 font-medium">
+                      <b>BOOK ID</b>: {{item.reserv_id}}
+                    </div>
                     <span class="font-size-16 font-medium"><b>{{item.title ? item.title : ''}}</b></span><br />
                     <span class="font-size-14 font-medium">{{item.authors}}</span>
                     <div class="font-size-14 margin-top-15 font-medium">
