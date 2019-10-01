@@ -299,6 +299,13 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/issuereturnprocess/getUserReservoirData', value);
 	}
+
+	updateUserReservoirData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/issuereturnprocess/updateUserReservoirData', value);
+	}
+
+	
 	changeReservoirStatus(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/changeReservoirStatus', value);
