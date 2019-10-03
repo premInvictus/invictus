@@ -279,33 +279,14 @@ export class GradecardPrintingComponent implements OnInit {
     });
     this.tableDivFlag = false;
   }
-  /*getGradeCardMark() {
-    const param: any = {};
-    param.class_id = this.paramform.value.eme_class_id;
-    param.sec_id = this.paramform.value.eme_sec_id;
-    param.eme_term_id = this.paramform.value.eme_term_id;
-    param.eme_review_status = '4';
-    param.login_id = '1144';
-    this.examService.getGradeCardMark(param).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
-        this.gradeCardMarkArray = result.data;
-        this.tableDivFlag = true;
-      } else {
-        this.tableDivFlag = true;
-      }
-    })
-  }*/
   getClearedGradeCard(au_login_id) {
-     console.log(this.examArray);
-     console.log(this.gradeCardMarkArray);
-     console.log(this.subjectArray);
     let gstatus  = '1';
-    if(this.classterm.ect_exam_type === '2') {
-      for(let i=0; i<this.examArray.length;i++){
-        for(let j=0;j<this.examArray[i].exam_sub_exam_max_marks.length; j++) {
-          for(let k=0;k<this.subjectArray.length;k++) {
-            if(this.gradeCardMarkArray) {
-              if(this.examArray[i].exam_category === this.subjectArray[k].sub_type) {
+    for(let i=0; i<this.examArray.length;i++){
+      for(let j=0;j<this.examArray[i].exam_sub_exam_max_marks.length; j++) {
+        for(let k=0;k<this.subjectArray.length;k++) {
+          if(this.gradeCardMarkArray) {
+            if(this.examArray[i].exam_category === this.subjectArray[k].sub_type) {
+              if(this.subjectArray[k].childSub.length === 0) {
                 const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
                   e.eme_sub_id === this.subjectArray[k].sub_id &&
                   e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
@@ -314,13 +295,24 @@ export class GradecardPrintingComponent implements OnInit {
                   gstatus = '0';
                   break;
                 }
+              } else {
+                for(let l=0; l< this.subjectArray[k].childSub.length; l++) {
+                  const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
+                    e.eme_sub_id === this.subjectArray[k].childSub[l].sub_id &&
+                    e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
+                    e.eme_exam_id === this.examArray[i].exam_id);
+                  if(gindex === -1) {
+                    gstatus = '0';
+                    break;
+                  }
+                }
+                if(gstatus === '0') {
+                  break;
+                }
               }
-            } else {
-              gstatus = '0';
-              break;
             }
-          }
-          if(gstatus === '0') {
+          } else {
+            gstatus = '0';
             break;
           }
         }
@@ -328,49 +320,8 @@ export class GradecardPrintingComponent implements OnInit {
           break;
         }
       }
-    } else if(this.classterm.ect_exam_type === '1') {
-      for(let i=0; i<this.examArray.length;i++){
-        for(let j=0;j<this.examArray[i].exam_sub_exam_max_marks.length; j++) {
-          for(let k=0;k<this.subjectArray.length;k++) {
-            if(this.gradeCardMarkArray) {
-              if(this.examArray[i].exam_category === this.subjectArray[k].sub_type) {
-                if(this.subjectArray[k].childSub.length === 0) {
-                  const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
-                    e.eme_sub_id === this.subjectArray[k].sub_id &&
-                    e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
-                    e.eme_exam_id === this.examArray[i].exam_id);
-                  if(gindex === -1) {
-                    gstatus = '0';
-                    break;
-                  }
-                } else {
-                  for(let l=0; l< this.subjectArray[k].childSub.length; l++) {
-                    const gindex = this.gradeCardMarkArray.findIndex(e =>  e.emem_login_id === au_login_id &&
-                      e.eme_sub_id === this.subjectArray[k].childSub[l].sub_id &&
-                      e.eme_subexam_id === this.examArray[i].exam_sub_exam_max_marks[j].se_id &&
-                      e.eme_exam_id === this.examArray[i].exam_id);
-                    if(gindex === -1) {
-                      gstatus = '0';
-                      break;
-                    }
-                  }
-                  if(gstatus === '0') {
-                    break;
-                  }
-                }
-              }
-            } else {
-              gstatus = '0';
-              break;
-            }
-          }
-          if(gstatus === '0') {
-            break;
-          }
-        }
-        if(gstatus === '0') {
-          break;
-        }
+      if(gstatus === '0') {
+        break;
       }
     }
     
@@ -401,7 +352,6 @@ export class GradecardPrintingComponent implements OnInit {
             if(result && result.status === 'ok') {
               this.gradeCardMarkArray = result.data;
             }
-            console.log(this.gradeCardMarkArray);
             if(this.studentArray.length > 0) {
               this.studentArray.forEach(element => {
                 const temp: any = {};
@@ -416,8 +366,6 @@ export class GradecardPrintingComponent implements OnInit {
               });
               this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
               this.tableDivFlag = true;
-              console.log(' this.gradeCardMarkArray',  this.gradeCardMarkArray);
-              console.log(this.ELEMENT_DATA);
             }
           }) ;
         } else {

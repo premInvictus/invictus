@@ -171,6 +171,18 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     })
   }
+  getCalculatedMarksSub(sub_id, exam_id, term){
+    const currentSub = this.subjectArray.find(e => e.sub_id === sub_id);
+    let totalscore = 0;
+    if(currentSub.childSub.length > 0) {
+      currentSub.childSub.forEach(element => {
+        totalscore += this.getCalculatedMarks(element.sub_id, exam_id, term);
+      });
+    } else {
+      totalscore = this.getCalculatedMarks(sub_id, exam_id, term);
+    }
+    return totalscore;
+  }
   getCalculatedMarks(sub_id, exam_id, term) {
     const curExam = this.examArray.find(e => e.exam_id === exam_id);
     const percentageArray: any[] = [];
@@ -430,6 +442,9 @@ export class ViewGradecardDialogComponent implements OnInit {
         }
       }
     })
+  }
+  closeDialog(){
+    this.dialogRef.close();
   }
 
 }
