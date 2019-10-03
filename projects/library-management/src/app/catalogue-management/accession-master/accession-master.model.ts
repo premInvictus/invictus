@@ -5,4 +5,5 @@ export interface AccessionMasterModel {
     authors: any;
     publisher: any;
     location: any;
+    status: any;
 }

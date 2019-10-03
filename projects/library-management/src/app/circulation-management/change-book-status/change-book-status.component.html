@@ -7,167 +7,126 @@
         </div>
         <div class="col-5">
           <div class="search-container">
-            <div class="row remove-top-margin">
-              <div class="col-8">
-                <mat-form-field class="lib-form form-field">
-                  <input matInput placeholder="Search Any Book By Name or ID" />
+            <form [formGroup]="searchForm">
+              <div class="row remove-top-margin">
+                <div class="col-8">
+                  <mat-form-field class="lib-form form-field">
+                    <input matInput placeholder="Search Any Book By ID" id="search_book" type="number"
+                      formControlName="search" (keydown.enter)="searchBook($event);$event.stopPropagation()" />
+                  </mat-form-field>
+                  <barcode-scanner-livestream (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="bookData.length === 0">
+  <div class="col-12">
+    <mat-card class="card-height-730" style="margin-left: 10px !important; margin-right: 10px !important">
+      <div class="row margin-top-15per">
+        <div class="col-12 text-center">
+          <span class="font-size-24 font-bold">No Books Selected</span><br /><br>
+          <span class="font-size-18 margin-top-10">It's seems there is no books searched yet. Scan Book or Enter Book
+            ID to view availaiable books in library.</span><br /><br>
+          <button mat-button class="btn-success-blue margin-top-10" (click)="intitiateSearch()"
+            style="width: 140px;height:40px">
+            Search Book
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="bookData.length > 0">
+  <div class="col-12">
+    <mat-card style="height:auto">
+      <div class="grid-view">
+        <div class="row margin-top-20">
+          <div class="col-1 smart-col-10" *ngFor="let item of bookData; let i = index;">
+            <div class="book-container">
+              <img class="book-cover-img" [src]="item.images_links.thumbnail" />
+              <div [class]="item.book_container_class">
+                <div class="book-title-content text-center" style="padding: 3px !important">
+                  <div class="book-first-content" (click)="showSecondDetailDiv(i); $event.stopPropagation();">
+                    <span class="font-size-16"><b>{{item.title | truncatetext}}</b></span>
+                  </div>
+                  <div class="book-second-content" style="padding: 30px !important"
+                    (click)="showFirstDetailDiv(i); $event.stopPropagation()">
+                    <div class="font-size-12 margin-top-15 font-medium">
+                      <b>BOOK ID</b>: {{item.reserv_id}}
+                    </div>
+                    <span class="font-size-16 font-medium"><b>{{item.title ? item.title : ''}}</b></span><br />
+                    <span class="font-size-14 font-medium">{{item.authors}}</span>
+                    <div class="font-size-14 margin-top-15 font-medium">
+                      <b>Location</b>: {{item.location}}
+                    </div>
+                    <div class="font-size-14 margin-top-10 font-medium">
+                      <b>{{item.reserv_flagged_status.status ? (item.reserv_flagged_status.status | capitalize) : (item.reserv_status | capitalize)}}</b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="bookData.length > 0">
+  <div class="col-12">
+    <mat-card>
+      <form [formGroup]="changeStatusForm">
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-6">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Change to</mat-label>
+                  <mat-select formControlName="changed_to" placeholder="Change to">
+                    <mat-option *ngFor="let item of statusArray" [value]="item.type_id">{{item.type_name}}</mat-option>
+                  </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-4 margin-top-10  text-right">
-                <button
-                  mat-button
-                  class="btn-spacer btn-lib-search margin-left-10"
-                >
-                  Search
+              <div class="col-6">
+                <mat-form-field class="form-field" appearance="outline" placeholder="Reason to Change">
+                  <mat-label>Reason To Change</mat-label>
+                  <mat-select formControlName="reason_id">
+                    <mat-option *ngFor="let item of reasonArray" [value]="item.reason_id">{{item.reason_title}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Remarks</mat-label>
+                  <textarea matInput rows="5" formControlName="reason_desc" placeholder="Remarks"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+            <br />
+            <div class="row text-center">
+              <div class="col-12">
+                <button mat-raised-button class="btn-success-green" (click)="changeReservoirStatus()">
+                  Submit
+                </button>
+                <button mat-raised-button class="btn-reset btn-spacer">
+                  Reset
                 </button>
               </div>
             </div>
+            <br />
           </div>
+          <div class="col-3"></div>
         </div>
-      </div>
-    </mat-card>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <mat-card>
-      <div class="row">
-        <div class="col-2 remove-col-padding-left smart-col-12">
-          <img class="book-detail-img-big" src="" />
-        </div>
-        <div class="col-10 smart-col-88">
-          <div class="row remove-top-margin">
-            <div class="col-12 remove-col-padding">
-              <span class="font-size-20 font-bold">12549863</span>
-              <span class="font-size-14 float-right font-bold font-gold"
-                ><img
-                  src="../../../../../../src/assets/images/Library/openbook.svg"
-                />
-                &nbsp;Read Only</span
-              >
-            </div>
-          </div>
-          <div class="row remove-top-margin">
-            <div class="col-12 remove-col-padding">
-              <span class="font-size-18">Harry Potter and the cursed child</span
-              ><br />
-              <span class="font-size-14 font-skyblue">J.K. Rowling</span>
-            </div>
-          </div>
-          <div class="row margin-top-20">
-            <div class="col-1 remove-col-padding">
-              <span class="font-size-14 font-bold">Edition</span>
-              <span class="font-size-14 font-bold float-right"> :</span>
-            </div>
-            <div class="col-11 remove-col-padding">
-              <span class="font-size-14 font-bold opacity-7 margin-left-15"
-                >2000</span
-              >
-            </div>
-          </div>
-          <div class="row remove-top-margin">
-            <div class="col-1 remove-col-padding">
-              <span class="font-size-14 font-bold">Publisher</span>
-              <span class="font-size-14 font-bold float-right"> : </span>
-            </div>
-            <div class="col-11 remove-col-padding">
-              <span class="font-size-14 font-bold opacity-7 margin-left-15"
-                >Waren Book Prod</span
-              >
-            </div>
-          </div>
-          <div class="row remove-top-margin">
-            <div class="col-1 remove-col-padding">
-              <span class="font-size-14 font-bold">Pages</span>
-              <span class="font-size-14 font-bold float-right"> : </span>
-            </div>
-            <div class="col-11 remove-col-padding">
-              <span class="font-size-14 font-bold opacity-7 margin-left-15">
-                200</span
-              >
-            </div>
-          </div>
-          <div class="row remove-top-margin">
-            <div class="col-1 remove-col-padding">
-              <span class="font-size-14 font-bold">Location</span>
-              <span class="font-size-14 font-bold float-right"> : </span>
-            </div>
-            <div class="col-11 remove-col-padding">
-              <span class="font-size-14 font-bold opacity-7 margin-left-15">
-                H-1</span
-              >
-            </div>
-          </div>
-          <hr />
-          <div class="row">
-            <div class="col-12">
-              <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </mat-card>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <mat-card>
-      <div class="row">
-        <div class="col-3"></div>
-        <div class="col-6">
-          <div class="row">
-            <div class="col-4">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Current Status</mat-label>
-                <mat-select>
-                  <mat-option></mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="col-4">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Change to</mat-label>
-                <mat-select>
-                  <mat-option></mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="col-4">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Reason To Change</mat-label>
-                <mat-select>
-                  <mat-option></mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <mat-form-field class="form-field" appearance="outline">
-                <textarea matInput rows="5"></textarea>
-              </mat-form-field>
-            </div>
-          </div>
-          <br />
-          <div class="row text-center">
-            <div class="col-12">
-              <button mat-raised-button class="btn-success-green">
-                Submit
-              </button>
-              <button mat-raised-button class="btn-reset btn-spacer">
-                Reset
-              </button>
-            </div>
-          </div>
-          <br />
-        </div>
-        <div class="col-3"></div>
-      </div>
+      </form>
     </mat-card>
   </div>
 </div>
