@@ -34,8 +34,9 @@
                             <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
                                 appearance="outline">
                                 <mat-label>Subject</mat-label>
-                                <mat-select formControlName="syl_sub_id" (selectionChange)="fetchSyllabusDetails();getClassTerm();"
-                                    required placeholder="Select Subject">
+                                <mat-select formControlName="syl_sub_id"
+                                    (selectionChange)="fetchSyllabusDetails();getClassTerm();" required
+                                    placeholder="Select Subject">
                                     <mat-option value="">Please select</mat-option>
                                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                         {{item.sub_name}}
@@ -43,16 +44,16 @@
                                 </mat-select>
                             </mat-form-field>
                             <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
-                            appearance="outline">
-                            <mat-label>Term</mat-label>
-                            <mat-select formControlName="syl_term_id" (selectionChange)="fetchSyllabusDetails()"
-                                required placeholder="Select Term">
-                                <mat-option value="">Please select</mat-option>
-                                <mat-option *ngFor="let item of termsArray" [value]="item.id">
-                                    {{item.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                                appearance="outline">
+                                <mat-label>Term</mat-label>
+                                <mat-select formControlName="syl_term_id" (selectionChange)="fetchSyllabusDetails()"
+                                    required placeholder="Select Term">
+                                    <mat-option value="">Please select</mat-option>
+                                    <mat-option *ngFor="let item of termsArray" [value]="item.id">
+                                        {{item.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                     </form>
                 </div>
@@ -102,6 +103,7 @@
                             <tr class="custom-tr">
                                 <th class="custom-th" rowspan="2">Topic</th>
                                 <th class="custom-th" rowspan="2">SubTopic</th>
+                                <th class="custom-th" rowspan="2">Term</th>
                                 <th class="custom-th" colspan="3">No. of Period Required To</th>
                                 <th class="custom-th" rowspan="2">Total</th>
                                 <th class="custom-th" colspan="3">No. of Period Taken To</th>
@@ -125,79 +127,95 @@
                                 <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
                                     <ng-container>
                                         <tr class="custom-tr2" *ngFor="let det of item.details;let j = index">
-                                            <td class="custom-td text-left" *ngIf="j == 0"
+                                            <td class="custom-td text-left bold" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
                                                 {{det.sd_topic_name}}</td>
-                                            <td class="custom-td text-left" *ngIf="det.sd_ctr_id == 1">
+                                            <td class="custom-td text-left"
+                                                [ngClass]="getBold(j,item.details.length - 1 )"
+                                                *ngIf="det.sd_ctr_id == 1">
                                                 {{det.sd_st_name}}
                                             </td>
-                                            <td class="custom-td text-left" *ngIf="det.sd_ctr_id == 2">
+                                            <td class="custom-td text-left"
+                                                [ngClass]="getBold(j,item.details.length - 1)"
+                                                *ngIf="det.sd_ctr_id == 2">
                                                 Test
                                             </td>
-                                            <td class="custom-td text-left" *ngIf="det.sd_ctr_id == 3">
+                                            <td class="custom-td text-left"
+                                                [ngClass]="getBold(j,item.details.length - 1)"
+                                                *ngIf="det.sd_ctr_id == 3">
                                                 Revision
                                             </td>
-                                            <td class="custom-td">
+                                            <td class="custom-td text-center"
+                                                [ngClass]="getBold(j,item.details.length - 1)">
+                                                {{termArray[det.syl_term_id]}}
+                                            </td>
+                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.sd_period_teacher}}
                                             </td>
-                                            <td class="custom-td">
+                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.sd_period_test}}
 
                                             </td>
-                                            <td class="custom-td">
+                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.sd_period_revision}}
                                             </td>
-                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                            <td class="custom-td bold" *ngIf="j == 0"
+                                                [attr.rowspan]="item.details.length">
                                                 {{item.total}}
 
                                             </td>
-                                            <td class="custom-td">
+                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.cw_period_teacher}}
                                             </td>
-                                            <td class="custom-td">
+                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.cw_period_test}}
                                             </td>
-                                            <td class="custom-td">
+                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.cw_period_revision}}
                                             </td>
-                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                            <td class="custom-td bold" *ngIf="j == 0"
+                                                [attr.rowspan]="item.details.length">
                                                 {{item.total1}}
                                             </td>
                                             <td class="custom-td"
                                                 *ngIf="det.sd_ctr_id == 1 && det.cw_period_teacher !== 0"
+                                                [ngClass]="getBold(j,item.details.length - 1)"
                                                 [ngStyle]="{'background-color': getcolor(det.sd_period_teacher - det.cw_period_teacher)}">
                                                 {{det.sd_period_teacher - det.cw_period_teacher}}
                                             </td>
-                                            <td class="custom-td"
+                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)"
                                                 *ngIf="det.sd_ctr_id == 1 && det.cw_period_teacher === 0">
                                                 {{det.sd_period_teacher - det.cw_period_teacher}}
                                             </td>
                                             <td class="custom-td" *ngIf="det.sd_ctr_id == 2 && det.cw_period_test !== 0"
+                                                [ngClass]="getBold(j,item.details.length - 1)"
                                                 [ngStyle]="{'background-color': getcolor(det.sd_period_test - det.cw_period_test)}">
                                                 {{det.sd_period_test - det.cw_period_test}}
                                             </td>
-                                            <td class="custom-td"
+                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)"
                                                 *ngIf="det.sd_ctr_id == 2 && det.cw_period_test === 0">
                                                 {{det.sd_period_test - det.cw_period_test}}
                                             </td>
-                                            <td class="custom-td"
+                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)"
                                                 *ngIf="det.sd_ctr_id == 3 && det.cw_period_revision !== 0"
                                                 [ngStyle]="{'background-color': getcolor(det.sd_period_revision - det.cw_period_revision)}">
                                                 {{det.sd_period_revision - det.cw_period_revision}}
                                             </td>
-                                            <td class="custom-td"
+                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)"
                                                 *ngIf="det.sd_ctr_id == 3 && det.cw_period_revision === 0">
                                                 {{det.sd_period_revision - det.cw_period_revision}}
                                             </td>
-                                            <td rowspan="5" class="custom-td " *ngIf="j == 0 && item.total1 !== 0"
+                                            <td rowspan="5" class="custom-td bold" *ngIf="j == 0 && item.total1 !== 0"
                                                 [ngStyle]="{'background-color': getcolor(item.total - item.total1)}"
                                                 [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
-                                            <td rowspan="5" class="custom-td " *ngIf="j == 0 && item.total1 === 0"
+                                            <td rowspan="5" class="custom-td bold" *ngIf="j == 0 && item.total1 === 0"
                                                 [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
-                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                            <td class="custom-td bold" *ngIf="j == 0"
+                                                [attr.rowspan]="item.details.length">
                                                 {{getDatePeriod(item.estimateDate, i)}}
                                             </td>
-                                            <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                            <td class="custom-td bold" *ngIf="j == 0"
+                                                [attr.rowspan]="item.details.length">
                                                 <ng-container>
                                                     <i *ngIf="item && item.statusDetails"
                                                         class="fas fa-check-circle font-size-40 font-color-{{item.statusDetails.color}}"></i><br>
@@ -217,6 +235,8 @@
                             <tr class="custom-tr" *ngIf="!finalDivFlag">
                                 <td class="custom-td">
                                     Grand Total
+                                </td>
+                                <td class="custom-td">
                                 </td>
                                 <td class="custom-td">
                                 </td>

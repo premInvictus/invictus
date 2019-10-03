@@ -93,6 +93,7 @@ export class ReviewSyllabusComponent implements OnInit {
 
 	};
 	schooInfo: any;
+	termArray: any[] = ['','Term 1', 'Term 2', 'Term 3', 'Term 4','Term 5', 'Term 6', 'Term 7', 'Term 8','Term 9'];
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -665,6 +666,7 @@ export class ReviewSyllabusComponent implements OnInit {
 													sd_period_revision: sd_period_revision,
 													sd_ctr_id: this.finalSyllabusArray[i].sd_ctr_id,
 													sd_desc: this.finalSyllabusArray[i].sd_desc,
+													syl_term_id: this.finalSyllabusArray[i].syl_term_id,
 													sd_topic_name: this.finalSyllabusArray[i].topic_name,
 													sd_st_name: this.finalSyllabusArray[i].st_name,
 													sd_id: this.finalSyllabusArray[i].sd_id,
@@ -693,6 +695,7 @@ export class ReviewSyllabusComponent implements OnInit {
 															sd_period_revision: sd_period_revision1,
 															sd_ctr_id: this.finalSyllabusArray[j].sd_ctr_id,
 															sd_desc: this.finalSyllabusArray[j].sd_desc,
+															syl_term_id: this.finalSyllabusArray[j].syl_term_id,
 															sd_topic_name: this.finalSyllabusArray[j].topic_name,
 															sd_st_name: this.finalSyllabusArray[j].st_name,
 															sd_id: this.finalSyllabusArray[j].sd_id,

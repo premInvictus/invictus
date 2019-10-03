@@ -24,6 +24,7 @@ export class MarksRegisterComponent implements OnInit {
   responseMarksArray: any[] = [];
   exam_grade_type = '0';
   exam_grade_type_arr: any[] = [];
+  subExamArray: any[] = [];
   classterm: any;
   absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
   ngOnInit() {
@@ -39,7 +40,15 @@ export class MarksRegisterComponent implements OnInit {
     private commonAPIService: CommonAPIService,
     public dialog: MatDialog
   ) { }
-
+  buildForm() {
+    this.paramform = this.fbuild.group({
+      eme_class_id: '',
+      eme_sec_id: '',
+      eme_sub_id: '',
+      eme_term_id: '',
+      eme_exam_id: ''
+    })
+  }
   getClassTerm() {
     this.termsArray = [];
     this.examService.getClassTerm({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
@@ -64,9 +73,11 @@ export class MarksRegisterComponent implements OnInit {
   }
   getExamDetails() {
     this.examArray = [];
+    this.subexamArray = [];
     this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType() }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
+        this.subexamArray = result.data[0].exam_sub_exam_max_marks;
       } else {
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
@@ -80,35 +91,11 @@ export class MarksRegisterComponent implements OnInit {
       }
     })
   }
-  // getSubExam() {
-  //   console.log('sss');
-  //   if (this.paramform.value.eme_exam_id) {
-  //     const ind = this.examArray.findIndex(e => e.exam_id === this.paramform.value.eme_exam_id);
-  //     this.exam_grade_type = this.examArray[ind].egs_point_type;
-  //     this.getGradeSet({ egs_number: this.examArray[ind].egs_number, sort: 'asc' });
-  //   }
-  //   this.subexamArray = [];
-  //   this.examService.getExamDetails({ exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
-  //     if (result && result.status === 'ok') {
-  //       if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
-  //         this.subexamArray = result.data[0].exam_sub_exam_max_marks;
-  //         console.log(this.subexamArray);
-  //       }
-  //     } else {
-  //       this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-  //     }
-  //   });
-  // }
-
-  buildForm() {
-    this.paramform = this.fbuild.group({
-      eme_class_id: '',
-      eme_sec_id: '',
-      eme_sub_id: '',
-      eme_term_id: '',
-      eme_exam_id: '',
-      eme_subexam_id: ''
-    })
+  getSubexamName(se_id) {
+    return this.subexamArray.find(e => e.se_id === se_id).sexam_name;
+  }
+  getSubexamMarks(se_id) {
+    return this.subexamArray.find(e => e.se_id === se_id).exam_max_marks;
   }
   getClass() {
     this.classArray = [];
@@ -161,7 +148,6 @@ export class MarksRegisterComponent implements OnInit {
             }
           });
         }
-        console.log(this.subjectArray);
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
@@ -184,6 +170,13 @@ export class MarksRegisterComponent implements OnInit {
       });
     }
   }
+  getSubjectName(sub_id) {
+    for (const item of this.subjectArray) {
+      if (item.sub_id === sub_id) {
+        return item.sub_name;
+      }
+    }
+  }
   displayData() {
     if (this.paramform.value.eme_exam_id.length > 0) {
       this.responseMarksArray = [];
@@ -194,38 +187,54 @@ export class MarksRegisterComponent implements OnInit {
       param.eme_review_status = ['0', '1', '2', '3', '4'];
       this.examService.getMarksRegister(this.paramform.value).subscribe((result: any) => {
         if (result && result.status === 'ok') {
-          console.log(result.data);
-          this.responseMarksArray = result.data;
-
-          // if (result.data.length > 0) {
-          //   this.paramform.value.eme_subexam_id.forEach(selement => {
-          //     result.data.forEach(melement => {
-          //       if (selement === melement.examEntry.eme_subexam_id) {
-          //         melement.examEntryMapping.forEach(element => {
-          //           this.marksInputArray.push({
-          //             es_id: melement.examEntry.eme_subexam_id,
-          //             login_id: element.emem_login_id,
-          //             mark: element.emem_marks
-          //           });
-          //         });
-          //       }
-          //     });
-          //   });
-          // }
-
-
-
+          this.subExamArray = result.data[0].details;
+          const subExam = result.data[0].subExam;
+          Object.keys(subExam).forEach(key => {
+            const subExamArray = [];
+            if (key !== '-') {
+              Object.keys(subExam[key]).forEach(key1 => {
+                subExamArray.push({
+                  sexam_id: key1,
+                  sub_exam_id: subExam[key][key1]
+                });
+                //.push(result.data.subExamArray[key][key1]);
+              });
+              this.responseMarksArray.push({
+                sub_id: key,
+                dataArr: subExamArray
+              });
+            }
+          });
         }
       })
+     console.log(this.responseMarksArray);
     } else {
       this.marksInputArray = [];
       this.tableDivFlag = false;
     }
   }
+  getInputMarks(sub_id, es_id, login_id) {
+    const ind = this.subExamArray.findIndex(e => Number(e.eme_subexam_id) === Number(es_id)
+      && Number(e.emem_login_id) === Number(login_id) && Number(e.eme_sub_id) === Number(sub_id));
+    if (ind !== -1) {
+      return this.subExamArray[ind].emem_marks;
+    } else {
+      return '-';
+    }
+
+  }
+  getInputMarks2(login_id) {
+    const ind = this.subExamArray.findIndex(e=> Number(e.emem_login_id) === Number(login_id));
+    if (ind !== -1) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
   resetTableDiv() {
     this.tableDivFlag = false;
     this.paramform.patchValue({
-      eme_subexam_id: ''
+      eme_exam_id: ''
     });
   }
 }
