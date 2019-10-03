@@ -18,6 +18,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/insertReservoirData', value);
 	}
+	generateBookRequest(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/bookreservation/generateBookRequest', value);
+	}
 	searchReservoir(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/booksearch/searchReservoir', value);
