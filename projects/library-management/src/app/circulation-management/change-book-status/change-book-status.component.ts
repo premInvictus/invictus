@@ -18,6 +18,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
   enteredVal: any = false;
   changeStatusForm: FormGroup;
   searchForm: FormGroup;
+  currentUser: any;
   constructor(private sis: SisService, private common: ErpCommonService,
     private notif: CommonAPIService,
     private fbuild: FormBuilder) { }
@@ -44,6 +45,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
     }
   ];
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.getReasons();
     this.buildForm();
   }
@@ -57,8 +59,11 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
       'reason_desc': ''
     });
     this.searchForm = this.fbuild.group({
-      search: ''
-    })
+      search: '',
+      page_size: 1,
+      page_index: 0,
+      role_id: this.currentUser.role_id
+    });
   }
   getReasons() {
     this.sis.getReason({ reason_type: 12 }).subscribe((res: any) => {
@@ -69,19 +74,12 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
     });
   }
   onValueChanges(result) {
-    this.searchForm.patchValue({
-      search: ''
-    });
     this.barcodeValue = result.codeResult.code;
     this.searchForm.value.search = this.barcodeValue;
-    this.common.searchReservoir({
-      searchData: {
-        isbn: '',
-        reserv_id: Number(this.barcodeValue)
-      }
-    }).subscribe((res: any) => {
+    const inputJson = { "filters": [{ "filter_type": "reserv_id", "filter_value": Number(this.barcodeValue), "type": "number" }] };
+    this.common.getReservoirDataBasedOnFilter(inputJson).subscribe((res: any) => {
       if (res && res.data) {
-        for (const item of res.data) {
+        for (const item of res.data.resultData) {
           item.book_container_class = 'book-title-container-default';
           const findex = this.bookData.findIndex(f => Number(f.reserv_id) === Number(this.barcodeValue));
           if (findex === -1) {
@@ -89,21 +87,21 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
           }
         }
         console.log(this.bookData);
-        this.searchForm.reset();
+        this.searchForm.patchValue(
+          {
+            search: ''
+          }
+        );
       }
     });
   }
   searchBook($event) {
     if ($event.target.value) {
       this.enteredVal = true;
-      this.common.searchReservoir({
-        searchData: {
-          isbn: '',
-          reserv_id: Number($event.target.value)
-        }
-      }).subscribe((res: any) => {
+      const inputJson = { "filters": [{ "filter_type": "reserv_id", "filter_value": Number($event.target.value), "type": "number" }] };
+      this.common.getReservoirDataBasedOnFilter(inputJson).subscribe((res: any) => {
         if (res && res.data) {
-          for (const item of res.data) {
+          for (const item of res.data.resultData) {
             item.book_container_class = 'book-title-container-default';
             const findex = this.bookData.findIndex(f => Number(f.reserv_id) === Number($event.target.value));
             if (findex === -1) {
@@ -111,12 +109,16 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
             }
           }
           console.log(this.bookData);
-          this.searchForm.reset();
+          this.searchForm.patchValue({
+            search: ''
+          });
         }
       });
     } else {
       this.enteredVal = false;
-      this.searchForm.reset();
+      this.searchForm.patchValue({
+        search: ''
+      });
     }
   }
   intitiateSearch() {
