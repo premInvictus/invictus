@@ -7,7 +7,11 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
 import { BookListElement } from '../../auxillaries/physical-verification/physical-verification.component';
-
+import * as XLSX from 'xlsx';
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
+import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-issue-return',
   templateUrl: './issue-return.component.html',
@@ -24,6 +28,7 @@ export class IssueReturnComponent implements OnInit {
   bookLogData: any = [];
   issueBookData: any;
   userHaveBooksData = false;
+  bookReadTillDate = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -45,7 +50,8 @@ export class IssueReturnComponent implements OnInit {
 
   buildForm() {
     this.searchForm = this.fbuild.group({
-      searchId: ''
+      searchId: '',
+      user_role_id: ''
     });
 
     this.returnIssueReservoirForm = this.fbuild.group({
@@ -57,42 +63,62 @@ export class IssueReturnComponent implements OnInit {
   }
 
   searchUser() {
-    console.log('this.searchForm', this.searchForm);
     if (this.searchForm && this.searchForm.value.searchId) {
-      var role_id = this.searchForm.value.searchId.split('-')[0];
-      var login_id = this.searchForm.value.searchId.split('-')[1];
-      console.log('dfgb', this.searchForm.value.searchId);
-      this.erpCommonService.getStudentInformation({ 'login_id': login_id }).subscribe((result: any) => {
-        if (result && result.status == 'ok') {
-          this.userData = result.data ? result.data[0] : '';
-          this.getUserIssueReturnData();
-          this.getUserIssueReturnLogData();
-        }
-      });
+      var au_role_id = this.searchForm.value.user_role_id;
+      var au_admission_no = this.searchForm.value.searchId;
+
+      if (au_role_id === '4') {
+        this.erpCommonService.getStudentInformation({ 'admission_no': au_admission_no, 'au_role_id': au_role_id }).subscribe((result: any) => {
+          if (result && result.status == 'ok') {
+            this.userData = result.data ? result.data[0] : '';
+            this.bookData = [];
+            this.getUserIssueReturnLogData();
+          } else {
+            this.userData = [];
+            this.bookData = [];
+            this.getUserIssueReturnLogData();
+          }
+        });
+      } else if (au_role_id === '3') {
+        this.erpCommonService.getTeacher({ 'login_id': this.searchForm.value.searchId, 'role_id': Number(au_role_id) }).subscribe((result: any) => {
+          if (result && result.status == 'ok') {
+            this.userData = result.data ? result.data[0] : '';
+            this.bookData = [];
+            this.getUserIssueReturnLogData();
+          } else {
+            this.userData = [];
+            this.bookData = [];
+            this.getUserIssueReturnLogData();
+          }
+        });
+      }
+
     }
   }
 
   searchReservoirData() {
-    console.log('this.returnIssueReservoirForm', this.returnIssueReservoirForm);
     if (this.returnIssueReservoirForm && this.returnIssueReservoirForm.value.scanBookId) {
       var bookAlreadyAddedStatus = this.checkBookAlreadyAdded(this.returnIssueReservoirForm.value.scanBookId);
       if (!bookAlreadyAddedStatus) {
         var issueBookStatus = this.checkForIssueBook(this.returnIssueReservoirForm.value.scanBookId);
         if (issueBookStatus.status) {
-          // this.issueBookData[Number(issueBookStatus.index)]['reserv_status'] = 'available';
-          this.bookData.push(this.issueBookData[Number(issueBookStatus.index)]);
-          console.log('this.bookData', this.bookData);
+          this.bookData.push(this.bookLogData[Number(issueBookStatus.index)]);
         } else {
-          const inputJson = { "filters": [{ "filter_type": "reserv_id", "filter_value": this.returnIssueReservoirForm.value.scanBookId, "type": "number" }, { "filter_type": "reserv_status", "filter_value": "available", "type": "string" }] };
-          this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
+          const inputJson = {  "reserv_id" : Number(this.returnIssueReservoirForm.value.scanBookId), 
+                               "reserv_status" : [ 'available']
+                            };
+          var date = new Date();
+          date.setDate(date.getDate() + 7);
+          this.erpCommonService.searchReservoirByStatus(inputJson).subscribe((result: any) => {
             if (result && result.status == 'ok') {
-              console.log('result', result);
               if (result && result.data && result.data.resultData[0]) {
                 delete result.data.resultData[0]["_id"];
-                for (var i = 0; i < result.data.resultData[0]["similarBooks"].length; i++) {
-                  delete result.data.resultData[0]["similarBooks"][i]["_id"];
-                }
+                result.data.resultData[0]['due_date'] = date;
+                result.data.resultData[0]['issued_on'] = '';
+                result.data.resultData[0]['returned_on'] = '';
                 this.bookData.push(result.data.resultData[0]);
+                this.setDueDate(this.bookData.length - 1 , date);
+                console.log('this.bookData',this.bookData);
               }
             } else {
               this.bookData = [];
@@ -126,7 +152,6 @@ export class IssueReturnComponent implements OnInit {
     }
     this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
       if (result && result.status == 'ok') {
-        console.log('result', result);
         this.issueBookData = result.data.details;
       } else {
         this.issueBookData = [];
@@ -143,9 +168,7 @@ export class IssueReturnComponent implements OnInit {
     }
     this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
       if (result && result.status == 'ok') {
-        console.log('result', result);
         this.bookLogData = result.data.reserv_user_logs;
-        console.log(' this.bookLogData', this.bookLogData);
         this.userHaveBooksData = true;
 
         let element: any = {};
@@ -155,6 +178,7 @@ export class IssueReturnComponent implements OnInit {
 
         let pos = 1;
         recordArray = this.bookLogData;
+        let returnedCount = 0;
         for (const item of recordArray) {
           element = {
             srno: pos,
@@ -167,7 +191,9 @@ export class IssueReturnComponent implements OnInit {
             returned_on: item.returned_on,
             fine: item.fine ? item.fine : '',
           };
-          console.log('element', element);
+          if (item.returned_on) {
+            this.bookReadTillDate++;
+          }
           this.BOOK_LOG_LIST_ELEMENT.push(element);
           pos++;
 
@@ -178,28 +204,29 @@ export class IssueReturnComponent implements OnInit {
         this.bookLoglistdataSource.sort = this.sort;
 
 
+
       } else {
         this.userHaveBooksData = false;
-
+        this.bookLogData = [];
         this.BOOK_LOG_LIST_ELEMENT = [];
         this.bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
-        // this.common.showSuccessErrorMessage(result.message, result.status);
       }
     });
   }
 
   saveIssueReturn() {
-    console.log(' this.userData', this.userData);
-    console.log('this.bookData', this.bookData);
-    console.log('this.userHaveBooksData', this.userHaveBooksData);
     var updatedBookData = [];
     for (let i = 0; i < this.bookData.length; i++) {
+      console.log(this.bookData[i]);
       if (this.bookData[i]['reserv_status'] === 'issued') {
-        if (this.bookData[i]['due_date'] > this.common.dateConvertion(this.bookData[i]['fdue_date'], 'dd-MMM-yyyy')) {
+        console.log(this.bookData[i]['due_date']);
+        console.log(this.common.dateConvertion(this.bookData[i]['fdue_date'], 'dd-MMM-yyyy'));
+        if (this.bookData[i]['due_date'] < this.common.dateConvertion(this.bookData[i]['fdue_date'], 'dd-MMM-yyyy')) {
           this.bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
           this.bookData[i]['due_date'] = this.common.dateConvertion(this.bookData[i]['fdue_date'], 'dd-MMM-yyyy');
         } else {
           this.bookData[i]['reserv_status'] = 'available';
+          this.bookData[i]['issued_on'] = '';
           this.bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
         }
         updatedBookData.push(this.bookData[i]);
@@ -218,13 +245,11 @@ export class IssueReturnComponent implements OnInit {
       user_login_id: this.userData.au_login_id,
       user_role_id: this.userData.au_role_id
     }
-    console.log('inputJson', inputJson);
     if (!this.userHaveBooksData) {
       this.erpCommonService.insertUserReservoirData(inputJson).subscribe((result: any) => {
         if (result && result.status == 'ok') {
           this.bookData = [];
           this.resetIssueReturn();
-          this.getUserIssueReturnData();
           this.getUserIssueReturnLogData();
 
         }
@@ -235,7 +260,6 @@ export class IssueReturnComponent implements OnInit {
         if (result && result.status == 'ok') {
           this.bookData = [];
           this.resetIssueReturn();
-          this.getUserIssueReturnData();
           this.getUserIssueReturnLogData();
 
         }
@@ -251,8 +275,8 @@ export class IssueReturnComponent implements OnInit {
 
   checkForIssueBook(searchBookId) {
     var flag = { 'status': false, 'index': '' };
-    for (var i = 0; i < this.issueBookData.length; i++) {
-      if (Number(this.issueBookData[i]['reserv_id']) === Number(searchBookId)) {
+    for (var i = 0; i < this.bookLogData.length; i++) {
+      if (Number(this.bookLogData[i]['reserv_id']) === Number(searchBookId) && this.bookLogData[i]['issued_on'] != '') {
         flag = { 'status': true, 'index': i.toString() };
 
         break;
@@ -273,8 +297,20 @@ export class IssueReturnComponent implements OnInit {
   }
 
   resetIssueReturn() {
+    this.bookData = [];
     this.returnIssueReservoirForm.reset();
 
+  }
+
+  resetAll() {
+    this.bookData = [];
+    this.bookLogData = [];
+    this.issueBookData = [];
+    this.userData = [];
+    this.searchForm.value.searchId = '';
+    this.returnIssueReservoirForm.reset();
+    this.BOOK_LOG_LIST_ELEMENT = [];
+    this.bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
   }
 
   applyFilterBookLog(filterValue: string) {
@@ -283,18 +319,33 @@ export class IssueReturnComponent implements OnInit {
 
   getColor(item) {
     if (item.reserv_status === 'issued') {
-      return '#ff0000';
+      return 'rgb(252, 191, 188)';
     } else {
-      return '#00ff00';
+      return '#cfe39b';
     }
   }
 
   getBorder(item) {
     if (item.reserv_status === 'issued') {
-      return '#ff0000';
+      return 'rgb(252, 191, 188)';
     } else {
-      return '#00ff00';
+      return '#cfe39b';
     }
+  }
+
+  downloadExcel() {
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('book_log')); // converts a DOM TABLE element to a worksheet
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+		XLSX.writeFile(wb, 'BookLog_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.xlsx');
+  }
+
+  downloadPdf() {
+    const doc = new jsPDF('landscape');
+		doc.setFont('helvetica');
+		doc.setFontSize(5);
+		doc.autoTable({ html: '#book_log' });
+		doc.save('BookLog_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.pdf');
   }
 
 }

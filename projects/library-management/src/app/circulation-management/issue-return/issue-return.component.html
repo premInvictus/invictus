@@ -1,35 +1,45 @@
 <div class="row">
   <div class="col-12">
     <mat-card>
+        <form [formGroup]="searchForm">
       <div class="row">
+        
         <div class="col-7 margin-top-15">
           <span class="font-size-24">Books Issue Return Process</span>
         </div>
-        <div class="col-5">
+        
+        <div class="col-2">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Choose User Type</mat-label>
+            <mat-select formControlName="user_role_id" required (selectionChange)="resetAll()">
+              <mat-option value="4">Student</mat-option>
+              <mat-option value="3">Teacher</mat-option>
+              <mat-option value="2">Staff</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
 
           <div class="search-container">
-            <form [formGroup]="searchForm">
-              <div class="row remove-top-margin">
 
-                <div class="col-8">
-                  <mat-form-field class="lib-form form-field">
-                    <input matInput placeholder="Search Student ID" formControlName="searchId" />
-                  </mat-form-field>
-                </div>
-                <div class="col-4 margin-top-10  text-right">
-                  <!-- <span class="font-size-12 margin-top-15 font-skyblue"
-                  >Advanced Search <i class="fas fa-chevron-down"></i
-                ></span> -->
-                  <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
-                    Search
-                  </button>
-                </div>
+            <div class="row remove-top-margin">
 
+              <div class="col-8">
+                <mat-form-field class="lib-form form-field">
+                  <input matInput [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Teacher By Login Id'" formControlName="searchId" />
+                </mat-form-field>
               </div>
-            </form>
+              <div class="col-4 margin-top-10  text-right">
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
+                  Search
+                </button>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
+      </form>
     </mat-card>
   </div>
 </div>
@@ -43,8 +53,11 @@
             height="90px" width="90px" />
         </div>
         <div class="col-10 smart-col-88 remove-col-padding-left">
-          <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span><span
-            class="font-size-16 text-capitalize"> ( <span *ngIf="userData?.au_role_id == '4'"> S </span> <span *ngIf="userData?.au_role_id == '3'"> T </span> <span *ngIf="userData?.au_role_id == '2'"> A </span>-{{userData?.em_admission_no}})</span>
+          <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
+          <span
+            class="font-size-16 text-capitalize"> ( <span *ngIf="userData?.au_role_id == '4'">  S - {{userData?.em_admission_no}}</span> <span
+              *ngIf="userData?.au_role_id == '3'"> T - {{userData?.au_login_id}}</span> <span *ngIf="userData?.au_role_id == '2'"> A -{{userData?.au_login_id}}</span> )
+            </span>
           <div class="row">
             <div class="col-4 remove-col-padding">
               <div class="row remove-top-margin">
@@ -86,17 +99,13 @@
                   <span class="font-size-12 font-bold float-right">:</span>
                 </div>
                 <div class="col-8 remove-col-padding-right">
-                  <span class="font-size-12 font-bold opacity-7">XI - A</span>
+                  <span class="font-size-12 font-bold opacity-7">-</span>
                 </div>
               </div>
               <div class="row remove-top-margin">
-                <div class="col-4 remove-col-padding">
-                  <span class="font-size-12 font-bold">Books Read Till Date
-                  </span>
-                  <span class="font-size-12 font-bold float-right">:</span>
-                </div>
-                <div class="col-8 remove-col-padding-right">
-                  <span class="font-size-12 font-bold opacity-7">Red House</span>
+                <div class="col-6 remove-col-padding">
+                  <span class="font-size-12 font-bold">Books Read Till Date</span>
+                  <span class="font-size-12 font-bold float-right">{{bookReadTillDate}}</span>
                 </div>
               </div>
             </div>
@@ -123,17 +132,23 @@
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngFor="let item of issueBookData; let i = index;">
-              <tr class="custom-tr" *ngIf="item.reserv_status === 'issued'">
-                <td class="custom-td"><span>{{i+1}}</span></td>
-                <td class="custom-td">
-                  <span class="font-skyblue">{{item?.reserv_id}}</span>
-                </td>
-                <td class="custom-td"><span>{{item?.title}}</span></td>
-                <td class="custom-td">{{item?.publisher}}</td>
-                <td class="custom-td">{{item?.due_date}}</td>
+              <ng-container *ngFor="let item of bookLogData; let i = index;">
+                <tr class="custom-tr" *ngIf="item.reserv_status === 'issued'">
+                  <td class="custom-td"><span>{{i+1}}</span></td>
+                  <td class="custom-td">
+                    <span class="font-skyblue">{{item?.reserv_id}}</span>
+                  </td>
+                  <td class="custom-td"><span>{{item?.title}}</span></td>
+                  <td class="custom-td">{{item?.publisher}}</td>
+                  <td class="custom-td">{{item?.due_date | date: 'd-MMM-y' }}</td>
+                </tr>
+              </ng-container>
+
+            </tbody>
+            <tbody>
+              <tr class="custom-tr" *ngIf="bookLogData?.length == 0">
+                <td class="custom-td text-center" colspan="5">No Book Issued</td>
               </tr>
-            </ng-container>
             </tbody>
           </table>
         </div>
@@ -165,7 +180,7 @@
             </div>
           </div>
         </div>
-        <div class="row margin-top-15">
+        <div class="row margin-top-15" *ngIf="bookData.length > 0">
           <div class="col-12 remove-col-padding">
             <table class="table-100 custom-table">
               <thead>
@@ -180,63 +195,43 @@
               </thead>
               <tbody>
                 <ng-container *ngFor="let item of bookData; let i=index;">
-                  <tr class="custom-tr" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
-                    <td class="custom-td"><span>{{i+1}}</span></td>
-                    <td class="custom-td">
+                  <tr class="custom-tr book-list">
+                    <td class="custom-td"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span>{{i+1}}</span></td>
+                    <td class="custom-td"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span class="font-skyblue" (click)="setBookId(item?.reserv_id)">{{item?.reserv_id}}</span>
                     </td>
-                    <td class="custom-td"><span>{{item?.title}}</span></td>
-                    <td class="custom-td">{{item?.authors}}</td>
-                    <td class="custom-td">                      
+                    <td class="custom-td"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span>{{item?.title}}</span></td>
+                    <td class="custom-td"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">{{item?.authors}}
+                    </td>
+                    <td class="custom-td"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <div class="inline-flex date-width-100">
-                        <input matInput [matDatepicker]="picker" formControlName="due_date" (dateChange)="setDueDate(i, returnIssueReservoirForm.value.due_date)" [value]="item?.fdue_date">
+                        <input matInput [matDatepicker]="picker" formControlName="due_date"
+                          (dateChange)="setDueDate(i, returnIssueReservoirForm.value.due_date)"
+                          [value]="item?.fdue_date">
                         <mat-datepicker #picker></mat-datepicker>
                         <div class="inline-flex" [hidden]="!(item?.reserv_status == 'available')">
-                            <i class="fa fa-calendar" aria-hidden="true" (click)="picker.open();"></i>
-                          </div>
+                          <i class="fa fa-calendar" aria-hidden="true" (click)="picker.open();"></i>
+                        </div>
                       </div>
-                      <!-- <span *ngIf="item.reserv_status==='issued'">{{item?.due_date}}</span> -->
-                      
                     </td>
-                    <td class="custom-td"><i class="fas fa-trash font-color-red" (click)="removeBook(i)"></i></td>
+                    <td class="custom-td"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'"><i
+                        class="fas fa-trash font-color-red" (click)="removeBook(i)"></i></td>
                   </tr>
                 </ng-container>
-                <!-- <tr class="custom-tr">
-                <td class="custom-td"><span>2</span></td>
-                <td class="custom-td">
-                  <span class="font-skyblue">12456879</span>
-                </td>
-                <td class="custom-td"><span>Harry Porter</span></td>
-                <td class="custom-td">Dolres umbridge</td>
-                <td class="custom-td">20-Sep-2019</td>
-                <td class="custom-td"><i class="fas fa-trash font-color-red"></i></td>
-              </tr>
-              <tr class="custom-tr">
-                <td class="custom-td"><span>3</span></td>
-                <td class="custom-td">
-                  <span class="font-skyblue">12456879</span>
-                </td>
-                <td class="custom-td"><span>Harry Porter</span></td>
-                <td class="custom-td">Dolres umbridge</td>
-                <td class="custom-td">20-Sep-2019</td>
-                <td class="custom-td"><i class="fas fa-trash font-color-red"></i></td>
-              </tr>
-              <tr class="custom-tr">
-                <td class="custom-td"><span>4</span></td>
-                <td class="custom-td">
-                  <span class="font-skyblue">12456879</span>
-                </td>
-                <td class="custom-td"><span>Harry Porter</span></td>
-                <td class="custom-td">Dolres umbridge</td>
-                <td class="custom-td">20-Sep-2019</td>
-                <td class="custom-td"><i class="fas fa-trash font-color-red"></i></td>
-              </tr> -->
               </tbody>
             </table>
           </div>
         </div>
         <br />
-        <div class="row text-center">
+        <div class="row text-center" *ngIf="bookData.length > 0">
           <div class="col-12">
             <button mat-raised-button class="btn-success-green" (click)="saveIssueReturn()">Submit</button>
             <button mat-raised-button class="btn-reset btn-spacer" (click)="resetIssueReturn()">
@@ -258,102 +253,62 @@
 
         <div class="col-12">
           <div class="row ">
-            <div class="col-6 remove-col-padding-left">
-              <!-- <mat-form-field appearance="legacy lib-form">
-                <input matInput placeholder="Search" />
-                <mat-icon matPrefix>filter_list</mat-icon>
-              </mat-form-field> -->
+            <div class="col-9 remove-col-padding-left">
               <mat-form-field appearance="legacy lib-form">
                 <input matInput placeholder="Search" (keyup)="applyFilterBookLog($event.target.value)" />
                 <mat-icon matPrefix>filter_list</mat-icon>
               </mat-form-field>
             </div>
-            <div class="col-6 text-right remove-col-padding-right">
-              <i class="fas fa-file-export font-skyblue font-bold font-size-20"></i> <span
-                class="font-skyblue font-size-14 font-bold"> Export table</span>
+            <div class="col-3 text-right remove-col-padding-right" *ngIf="BOOK_LOG_LIST_ELEMENT.length > 0">
+              <i class="fa fa-file-excel font-skyblue font-bold font-size-20" (click)="downloadExcel()"></i>&nbsp;
+              <i class="fa fa-file-pdf font-skyblue font-bold font-size-20" (click)="downloadPdf()"></i>
             </div>
+            
           </div>
-          <!-- <table class="custom-table">
-            <thead>
-              <tr class="custom-tr text-center">
-                <th class="custom-th">Sr No.</th>
-                <th class="custom-th">Book No</th>
-                <th class="custom-th">Book Name</th>
-                <th class="custom-th">Author</th>
-                <th class="custom-th">Publisher</th>
-                <th class="custom-th">Issued On</th>
-                <th class="custom-th">Due Date</th>
-                <th class="custom-th">Returned On</th>
-                <th class="custom-th">Fine</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="custom-td">1</td>
-                <td class="custom-td">
-                  <a class="font-skyblue cursor-pointer">12345689</a>
-                </td>
-                <td class="custom-td text-left">
-                  <span class="margin-left-15">Believe in Yourself</span>
-                </td>
-                <td class="custom-td text-left padding-left-15">
-                  <span class="margin-left-15">Richard Wilson</span>
-                </td>
-                <td class="custom-td text-left padding-left-15">
-                  <span class="margin-left-15">Dolores UnBridge</span>
-                </td>
-                <td class="custom-td">13-Sep-2019</td>
-                <td class="custom-td">20-Sep-2019</td>
-                <td class="custom-td text-center "><span class="">25-Sep-2019</span></td>
-                <td class="custom-td text-center "><span class=""><i class="fas fa-rupee-sign"></i> 25</span></td>
-
-              </tr>
-            </tbody>
-          </table> -->
-          <table mat-table [dataSource]="bookLoglistdataSource" matSort class="table-100 text-center" id="report_table">
+          <table mat-table [dataSource]="bookLoglistdataSource" matSort class="table-100 text-center" id="book_log">
             <ng-container matColumnDef="srno">
               <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
               <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
             </ng-container>
             <ng-container matColumnDef="reserv_id">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Book No</th>
-                <td mat-cell *matCellDef="let element">
-                  <a class="font-skyblue cursor-pointer"
-                    (click)="getBookDetail(element?.reserv_id)">{{element?.reserv_id}} </a>
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="title">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Book Name</th>
-                  <td mat-cell *matCellDef="let element">
-                    {{element?.title}} 
-                  </td>
-                </ng-container>
-                <ng-container matColumnDef="author">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Author</th>
-                    <td mat-cell *matCellDef="let element">
-                      {{element?.author}} 
-                    </td>
-                  </ng-container>
-                <ng-container matColumnDef="publisher">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Publisher</th>
-                    <td mat-cell *matCellDef="let element">
-                     {{element?.publisher}}
-                    </td>
-                  </ng-container>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Book No</th>
+              <td mat-cell *matCellDef="let element">
+                <a class="font-skyblue cursor-pointer"
+                  (click)="getBookDetail(element?.reserv_id)">{{element?.reserv_id}} </a>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Book Name</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.title}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="author">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Author</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.author}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="publisher">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Publisher</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.publisher}}
+              </td>
+            </ng-container>
             <ng-container matColumnDef="issued_on">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Issued On</th>
               <td mat-cell *matCellDef="let element">
-                {{element?.issued_on | date: 'd-MMM-y'}} 
+                {{element?.issued_on | date: 'd-MMM-y'}}
               </td>
             </ng-container>
             <ng-container matColumnDef="due_date">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Due Date</th>
-                <td mat-cell *matCellDef="let element">
-                  {{element?.due_date | date: 'd-MMM-y'}} 
-                </td>
-              </ng-container>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Due Date</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.due_date | date: 'd-MMM-y'}}
+              </td>
+            </ng-container>
             <ng-container matColumnDef="returned_on">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Returned On  </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Returned On </th>
               <td mat-cell *matCellDef="let element" class="text-left"> <span
                   *ngIf="element.returned_on">{{(element?.returned_on | date: 'd-MMM-y')}} </span>
                 <span *ngIf="!(element.returned_on)"> - </span> </td>
@@ -366,12 +321,14 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Action</th>
-                <td mat-cell *matCellDef="let element">
-                    <span><i class="fas fa-edit font-color-grey margin-right-15" (click)="editSubscription(element, true)"></i></span>
-                    <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15" (click)="openModal({});deleteSubscriptionModel(element)"></i></span>
-                </td>
-              </ng-container>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Action</th>
+              <td mat-cell *matCellDef="let element">
+                <span><i class="fas fa-edit font-color-grey margin-right-15"
+                    (click)="editSubscription(element, true)"></i></span>
+                <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
+                    (click)="openModal({});deleteSubscriptionModel(element)"></i></span>
+              </td>
+            </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedBookLogListColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedBookLogListColumns;">
@@ -383,6 +340,8 @@
               <td colspan="8">No Record Found</td>
             </tr>
           </table>
+          <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons
+            (page)="pageEvent = fetchData($event)"></mat-paginator>
         </div>
       </div>
     </mat-card>
