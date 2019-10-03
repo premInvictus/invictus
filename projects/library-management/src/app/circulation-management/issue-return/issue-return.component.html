@@ -1,44 +1,46 @@
 <div class="row">
   <div class="col-12">
     <mat-card>
-        <form [formGroup]="searchForm">
-      <div class="row">
-        
-        <div class="col-7 margin-top-15">
-          <span class="font-size-24">Books Issue Return Process</span>
-        </div>
-        
-        <div class="col-2">
-          <mat-form-field class="form-field" appearance="outline">
-            <mat-label>Choose User Type</mat-label>
-            <mat-select formControlName="user_role_id" required (selectionChange)="resetAll()">
-              <mat-option value="4">Student</mat-option>
-              <mat-option value="3">Teacher</mat-option>
-              <mat-option value="2">Staff</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="col-3">
+      <form [formGroup]="searchForm">
+        <div class="row">
 
-          <div class="search-container">
+          <div class="col-7 margin-top-15">
+            <span class="font-size-24">Books Issue Return Process</span>
+          </div>
 
-            <div class="row remove-top-margin">
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Choose User Type</mat-label>
+              <mat-select formControlName="user_role_id" required (selectionChange)="resetAll()">
+                <mat-option value="4">Student</mat-option>
+                <mat-option value="3">Teacher</mat-option>
+                <mat-option value="2">Staff</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
 
-              <div class="col-8">
-                <mat-form-field class="lib-form form-field">
-                  <input matInput [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Teacher By Login Id'" formControlName="searchId" />
-                </mat-form-field>
+            <div class="search-container">
+
+              <div class="row remove-top-margin">
+
+                <div class="col-8">
+                  <mat-form-field class="lib-form form-field">
+                    <input matInput
+                      [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Teacher By Login Id'"
+                      formControlName="searchId" />
+                  </mat-form-field>
+                </div>
+                <div class="col-4 margin-top-10  text-right">
+                  <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
+                    Search
+                  </button>
+                </div>
+
               </div>
-              <div class="col-4 margin-top-10  text-right">
-                <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
-                  Search
-                </button>
-              </div>
-
             </div>
           </div>
         </div>
-      </div>
       </form>
     </mat-card>
   </div>
@@ -54,10 +56,11 @@
         </div>
         <div class="col-10 smart-col-88 remove-col-padding-left">
           <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
-          <span
-            class="font-size-16 text-capitalize"> ( <span *ngIf="userData?.au_role_id == '4'">  S - {{userData?.em_admission_no}}</span> <span
-              *ngIf="userData?.au_role_id == '3'"> T - {{userData?.au_login_id}}</span> <span *ngIf="userData?.au_role_id == '2'"> A -{{userData?.au_login_id}}</span> )
-            </span>
+          <span class="font-size-16 text-capitalize"> ( <span *ngIf="userData?.au_role_id == '4'"> S -
+              {{userData?.em_admission_no}}</span> <span *ngIf="userData?.au_role_id == '3'"> T -
+              {{userData?.au_login_id}}</span> <span *ngIf="userData?.au_role_id == '2'"> A
+              -{{userData?.au_login_id}}</span> )
+          </span>
           <div class="row">
             <div class="col-4 remove-col-padding">
               <div class="row remove-top-margin">
@@ -113,13 +116,13 @@
         </div>
       </div>
     </mat-card>
-    <mat-card class="margin-top-10 card-height-219">
+    <mat-card class="margin-top-10" [ngClass]="issueBookData.length > 0 ? 'card-height-219' : ''">
       <div class="row">
         <div class="col-12 remove-col-padding">
           <span class="font-size-20 font-bold">Issued Books</span>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="issueBookData?.length > 0">
         <div class="col-12 remove-col-padding">
           <table class="table-100 custom-table">
             <thead>
@@ -145,19 +148,26 @@
               </ng-container>
 
             </tbody>
-            <tbody>
-              <tr class="custom-tr" *ngIf="bookLogData?.length == 0">
+            <!-- <tbody>
+              <tr class="custom-tr" *ngIf="issueBookData?.length == 0">
                 <td class="custom-td text-center" colspan="5">No Book Issued</td>
               </tr>
-            </tbody>
+            </tbody> -->
           </table>
         </div>
       </div>
     </mat-card>
+    <mat-card *ngIf="issueBookData.length == 0">
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'No Book Issued'"></app-no-data>
+        </div>
+      </mat-card>
   </div>
   <div class="col-6 remove-col-padding-left">
     <form [formGroup]="returnIssueReservoirForm">
-      <mat-card class="card-height-356">
+      <mat-card [ngClass]="bookData.length > 0 ? 'card-height-356' : 'card-height-201'">
         <div class="row">
           <div class="col-4 margin-top-15">
             <span class="font-size-20 font-bold">Return/Issue Book</span>
@@ -241,12 +251,19 @@
         </div>
       </mat-card>
     </form>
+    <mat-card *ngIf="bookData.length == 0">
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+          [noDataText]="" [subText]="'Please Search Book To Issue / Return'"></app-no-data>
+      </div>
+    </mat-card>
   </div>
 </div>
 <div class="row" *ngIf="userData!=''">
 
   <div class="col-12 ">
-    <mat-card>
+    <mat-card *ngIf="BOOK_LOG_LIST_ELEMENT.length > 0">
       <span class="font-size-20 font-bold">Books Logs</span>
 
       <div class="row">
@@ -263,7 +280,7 @@
               <i class="fa fa-file-excel font-skyblue font-bold font-size-20" (click)="downloadExcel()"></i>&nbsp;
               <i class="fa fa-file-pdf font-skyblue font-bold font-size-20" (click)="downloadPdf()"></i>
             </div>
-            
+
           </div>
           <table mat-table [dataSource]="bookLoglistdataSource" matSort class="table-100 text-center" id="book_log">
             <ng-container matColumnDef="srno">
@@ -343,6 +360,24 @@
           <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons
             (page)="pageEvent = fetchData($event)"></mat-paginator>
         </div>
+      </div>
+    </mat-card>
+    <mat-card *ngIf="BOOK_LOG_LIST_ELEMENT.length == 0">
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'No Book Issued'"></app-no-data>
+        </div>
+      </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="userData==''">
+  <div class="col-12">
+    <mat-card>
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+          [noDataText]="" [subText]="'Please Select User'"></app-no-data>
       </div>
     </mat-card>
   </div>

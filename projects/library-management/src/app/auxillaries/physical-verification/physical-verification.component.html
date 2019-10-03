@@ -47,12 +47,12 @@
               <div class="col-8">
                 <mat-form-field class="form-field lib-form">
                   <input matInput [placeholder]="!enteredVal ? 'Search or Scan Any Book Code..' : ''" id="search_book"
-                    (blur)="searchBook($event)" id="search_book" />
+                  (keyup.enter)="searchBook($event)" id="search_book" />
                 </mat-form-field>
               </div>
               <div class="col-4 text-right">
                 <div class="margin-top-10">
-                  <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchBook($event)">
+                  <button mat-button class="btn-spacer btn-lib-list margin-left-10" (click)="searchBook($event)">
                     Add to List
                   </button>
                 </div>
@@ -65,7 +65,7 @@
   </div>
 </div>
 
-<div class="row" *ngIf="showVerifiedBookLog">
+<div class="row" *ngIf="showVerifiedBookLog && VERIFICATION_LOG_ELEMENT.length > 0">
   <div class="col-12">
     <mat-card class="card-height-730">
       <div class="row">
@@ -74,7 +74,6 @@
         </div>
         <div class="col-6 text-right">
           <span class="font-size-16">Today : </span><span class="font-bold font-size-16">
-            <!-- Tuesday, 22 Sep 2019 -->
             {{currentDate | date: 'EEEE, d MMM y'}}
           </span>
         </div>
@@ -90,30 +89,6 @@
               </mat-form-field>
             </div>
           </div>
-          <!-- <table class="custom-table">
-              <thead>
-                <tr class="custom-tr text-center">
-                  <th class="custom-th">Sr No.</th>
-                  <th class="custom-th">Verified On</th>
-                  <th class="custom-th">Verified By</th>
-                  <th class="custom-th">No. of Books</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of verificationLogData; let i=index;">
-                  <td class="custom-td">{{i+1}}</td>
-                  <td class="custom-td">
-                    <a class="font-skyblue cursor-pointer" (click)="onClickVerifiedOn(i)">{{item?.verfication_on_date | date: 'd-MMM-y'}} </a>
-                  </td>
-                  <td class="custom-td text-left">
-                    <span class="margin-left-15">{{item?.verfication_by}}</span>
-                  </td>
-                  <td class="custom-td text-center padding-left-15">
-                    <span class="margin-left-15">{{bookCount(item?.details)}} Books</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table> -->
           <table mat-table [dataSource]="logdataSource" matSort class="table-100 text-center" id="report_table">
             <ng-container matColumnDef="srno">
               <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
@@ -156,6 +131,17 @@
     </mat-card>
   </div>
 </div>
+<div class="row" *ngIf="VERIFICATION_LOG_ELEMENT.length == 0 && showVerifiedBookLog">
+    <div class="col-12">
+      <mat-card>
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'No Verification Log Found'"></app-no-data>
+        </div>
+      </mat-card>
+    </div>
+  </div>
 </div>
 
 <div class="main-batch-container" *ngIf="showBookList">
@@ -313,7 +299,7 @@
   </div>
 </div>
 
-<div class="main-batch-container" *ngIf="showNewBatchStatus">
+<div class="main-batch-container" *ngIf="VERIFICATION_BATCH_ELEMENT.length > 0 && showNewBatchStatus">
 
 
   <div class="row">
@@ -341,48 +327,11 @@
             <div class="row ">
               <div class="col-10 remove-col-padding">
                 <mat-form-field appearance="legacy lib-form">
-                  <input matInput placeholder="Search" (keyup)="applyFilterNewBatch($event.target.value)"/>
+                  <input matInput placeholder="Search" (keyUp)="applyFilterNewBatch($event.target.value)"/>
                   <mat-icon matPrefix>filter_list</mat-icon>
                 </mat-form-field>
               </div>
             </div>
-            <!-- <table class="custom-table">
-              <thead>
-                <tr class="custom-tr text-center">
-                  <th class="custom-th">Sr No.</th>
-                  <th class="custom-th">Book No.</th>
-                  <th class="custom-th">Book Name</th>
-                  <th class="custom-th">Author</th>
-                  <th class="custom-th">Publisher</th>
-                  <th class="custom-th">Location</th>
-                  <th class="custom-th">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of bookData; let i=index;">
-                  <td class="custom-td">{{i+1}}</td>
-                  <td class="custom-td">
-                    <a class="font-skyblue cursor-pointer">{{item?.reserv_id}}</a>
-                  </td>
-                  <td class="custom-td text-left">
-                    <span class="margin-left-15">{{item?.title}}</span>
-                  </td>
-                  <td class="custom-td text-left padding-left-15">
-                    <span class="margin-left-15">{{item?.authors}}</span>
-                  </td>
-                  <td class="custom-td text-left padding-left-15">
-                    <span class="margin-left-15">{{item?.publisher}}</span>
-                  </td>
-                  <td class="custom-td">{{item?.location}}</td>
-                  <td class="custom-td">
-                    <i class="fas fa-trash font-color-red" (click)="deleteRow(i)"></i>
-                  </td>
-                </tr>
-                <tr *ngIf="bookData.length == 0">
-                  <td colspan="7">No Record Available</td>
-                </tr>
-              </tbody>
-            </table> -->
             <table mat-table [dataSource]="batchdataSource" matSort class="table-100 text-center" id="report_table">
                 <ng-container matColumnDef="srno">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
@@ -445,6 +394,17 @@
       </mat-card>
     </div>
   </div>
+  <div class="row" *ngIf="VERIFICATION_BATCH_ELEMENT.length == 0 && showNewBatchStatus">
+      <div class="col-12">
+        <mat-card>
+          <div class="text-center">
+            <app-no-data
+              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+              [noDataText]="" [subText]="'No Book Found'"></app-no-data>
+          </div>
+        </mat-card>
+      </div>
+    </div>
 </div>
 <!-- <div *ngIf="showBookDetail">
   <app-book-detail [bookInputData]="bookData"></app-book-detail>
