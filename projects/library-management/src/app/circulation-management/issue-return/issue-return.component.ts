@@ -26,7 +26,7 @@ export class IssueReturnComponent implements OnInit {
   userData: any = '';
   bookData: any = [];
   bookLogData: any = [];
-  issueBookData: any;
+  issueBookData: any = [];
   userHaveBooksData = false;
   bookReadTillDate = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -91,6 +91,18 @@ export class IssueReturnComponent implements OnInit {
             this.getUserIssueReturnLogData();
           }
         });
+      } else if (au_role_id === '2') {
+        this.erpCommonService.getUser({ 'login_id': this.searchForm.value.searchId, 'role_id': Number(au_role_id) }).subscribe((result: any) => {
+          if (result && result.status == 'ok') {
+            this.userData = result.data ? result.data[0] : '';
+            this.bookData = [];
+            this.getUserIssueReturnLogData();
+          } else {
+            this.userData = [];
+            this.bookData = [];
+            this.getUserIssueReturnLogData();
+          }
+        });
       }
 
     }
@@ -141,24 +153,25 @@ export class IssueReturnComponent implements OnInit {
   }
 
   setBookId(reserv_id) {
-    this.common.setReservoirId(reserv_id);
-    this.router.navigate(['../book-detail'], { relativeTo: this.route });
+    // this.common.setReservoirId(reserv_id);
+    this.router.navigate(['../book-detail'], { queryParams: { book_id: reserv_id }, relativeTo: this.route } );
+    
   }
 
-  getUserIssueReturnData() {
-    var inputJson = {
-      user_login_id: this.userData.au_login_id,
-      user_role_id: this.userData.au_role_id
-    }
-    this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
-      if (result && result.status == 'ok') {
-        this.issueBookData = result.data.details;
-      } else {
-        this.issueBookData = [];
-      }
-      this.common.showSuccessErrorMessage(result.message, result.status);
-    });
-  }
+  // getUserIssueReturnData() {
+  //   var inputJson = {
+  //     user_login_id: this.userData.au_login_id,
+  //     user_role_id: this.userData.au_role_id
+  //   }
+  //   this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
+  //     if (result && result.status == 'ok') {
+  //       this.issueBookData = result.data.details;
+  //     } else {
+  //       this.issueBookData = [];
+  //     }
+  //     this.common.showSuccessErrorMessage(result.message, result.status);
+  //   });
+  // }
 
   getUserIssueReturnLogData() {
     var inputJson = {
@@ -194,6 +207,11 @@ export class IssueReturnComponent implements OnInit {
           if (item.returned_on) {
             this.bookReadTillDate++;
           }
+
+          if(item.reserv_status === 'issued') {
+            this.issueBookData.push(item);
+          }
+
           this.BOOK_LOG_LIST_ELEMENT.push(element);
           pos++;
 
