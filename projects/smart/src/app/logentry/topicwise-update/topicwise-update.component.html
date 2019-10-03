@@ -33,7 +33,7 @@
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
                 appearance="outline">
                 <mat-label>Subject</mat-label>
-                <mat-select formControlName="tw_sub_id" (selectionChange)="getClassTerm();">
+                <mat-select formControlName="tw_sub_id" (selectionChange)="getClassTerm();getTopicwiseDetails();">
                   <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name | capitalize}}
                   </mat-option>
                 </mat-select>

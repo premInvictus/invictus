@@ -21,7 +21,7 @@
               </mat-form-field> -->
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
                 <mat-label>Date</mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="cw_entry_date">
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="cw_entry_date" (dateChange)="changeDate()">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
