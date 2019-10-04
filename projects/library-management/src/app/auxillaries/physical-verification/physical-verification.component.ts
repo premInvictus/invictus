@@ -197,7 +197,7 @@ export class PhysicalVerificationComponent implements OnInit {
         }
       }).subscribe((result: any) => {
         if (result && result.data) {
-          for (const item of result.data) {
+          for (const item of result.data.resultData) {
             item.book_container_class = 'book-title-container-default';
             this.bookData.push(item);
           }
@@ -345,8 +345,8 @@ export class PhysicalVerificationComponent implements OnInit {
     // this.showNewBatchStatus = false;
     ///this.bookData = element;
     console.log('element', element);
-    this.common.setReservoirId(element.book_no);
-    this.router.navigate(['../book-detail'], { relativeTo: this.route });
+    // this.common.setReservoirId(element.book_no);
+    this.router.navigate(['../book-detail'],  { queryParams: { book_id: element.book_no }, relativeTo: this.route });
 
   }
 

@@ -43,7 +43,7 @@
                     <span class="font-size-16"><i class="fas fa-book-open font-size-16"></i>
                       {{bookData?.reserv_flagged_status.status ? (bookData?.reserv_flagged_status.status | capitalize) : (bookData?.reserv_status | capitalize)}}
                     </span>
-                    <button mat-button class="btn-success-blue btn-spacer"> Book Reserve Request</button>
+                    <button mat-button class="btn-success-blue btn-spacer" (click)="reserve_request(bookData)"> Book Reserve Request</button>
                   </div>
                 </div>
                 <div class="row margin-top-35">
@@ -122,3 +122,4 @@
     </div>
   </div>
 </div>
+<app-book-reserve-request-confirmation #bookReserve></app-book-reserve-request-confirmation>

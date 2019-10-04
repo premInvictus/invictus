@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -7,11 +7,13 @@ import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 @Component({
 	selector: 'app-book-detail',
 	templateUrl: './book-detail.component.html',
-	styleUrls: ['./book-detail.component.css']
+	styleUrls: ['./book-detail.component.scss']
 })
 export class BookDetailComponent implements OnInit {
 	searchForm: FormGroup;
+	@ViewChild('bookReserve')bookReserve;
 	bookData: any = {};
+	currentUser: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private dialog: MatDialog,
@@ -20,6 +22,7 @@ export class BookDetailComponent implements OnInit {
 		private erpCommonService: ErpCommonService) { }
 	// @Input() bookInputData;
 	ngOnInit() {
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		// console.log(this.bookInputData);
 		this.buildForm();
 		const book_no = this.route.snapshot.queryParams['book_id'];
@@ -46,9 +49,7 @@ export class BookDetailComponent implements OnInit {
 		});
 	}
 
-	bookReserveRequest($event) {
-
+	reserve_request(item) {
+		this.bookReserve.openModal(item) ;
 	}
-
-
 }

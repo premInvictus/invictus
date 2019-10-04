@@ -40,6 +40,7 @@ const moment = _moment;
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 import { BarecodeScannerLivestreamModule } from 'ngx-barcode-scanner';
+import { BookReserveRequestConfirmationComponent } from './book-reserve-request-confirmation/book-reserve-request-confirmation.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -111,7 +112,8 @@ export const MY_FORMATS = {
     UnpublishModalComponent,
     PreviewDocumentComponent,
     BookDetailComponent,
-    AdvancedSearchModalComponent
+    AdvancedSearchModalComponent,
+    BookReserveRequestConfirmationComponent
   ],
   entryComponents: [
     DeleteModalComponent,
@@ -122,7 +124,8 @@ export const MY_FORMATS = {
     UnpublishModalComponent,
     PreviewDocumentComponent,
     BookDetailComponent,
-    AdvancedSearchModalComponent
+    AdvancedSearchModalComponent,
+    BookReserveRequestConfirmationComponent
   ],
   exports: [
     FormsModule, ReactiveFormsModule,

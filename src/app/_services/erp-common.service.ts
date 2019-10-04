@@ -18,6 +18,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/insertReservoirData', value);
 	}
+	generateBookRequest(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/bookreservation/generateBookRequest', value);
+	}
 	searchReservoir(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/booksearch/searchReservoir', value);
@@ -227,7 +231,7 @@ export class ErpCommonService {
 			param.au_admission_no = value.au_admission_no;
 		}
 		this.service.startLoading();
-		return this.http.post(environment.apiSisUrl + '/users/getUser', param);
+		return this.http.post(environment.apiAxiomUrl + '/users/getUser', param);
 	}
 
 	getVerificationLog(value) {
@@ -309,6 +313,41 @@ export class ErpCommonService {
 	changeReservoirStatus(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/changeReservoirStatus', value);
+	}
+
+	searchReservoirByStatus(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/booksearch/searchReservoirByStatus', value);
+	}
+
+	getTeacher(value) {
+		const param: any = {};
+		if (value.full_name) {
+			param.au_full_name = value.full_name;
+		}
+		if (value.login_id) {
+			param.au_login_id = value.login_id;
+		}
+		if (value.class_id) {
+			param.au_class_id = value.class_id;
+		}
+		if (value.sec_id) {
+			param.au_sec_id = value.sec_id;
+		}
+		if (value.role_id) {
+			param.au_role_id = value.role_id;
+		}
+		if (value.sub_id) {
+			param.au_sub_id = value.sub_id;
+		}
+		if (value.status) {
+			param.au_status = value.status;
+		}
+		if (value.au_admission_no) {
+			param.au_admission_no = value.au_admission_no;
+		}
+		this.service.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/getAllTeacher', param);
 	}
 }
 

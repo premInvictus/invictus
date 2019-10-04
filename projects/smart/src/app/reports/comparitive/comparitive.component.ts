@@ -51,6 +51,8 @@ export class ComparitiveComponent implements OnInit {
 	revisionSum = 0;
 	cwrevisionSum = 0;
 	deviationSum = 0;
+	grandTotal = 0;
+	grandTotal1 = 0;
 	session: any;
 	sessionName: any;
 	length: any;
@@ -102,6 +104,7 @@ export class ComparitiveComponent implements OnInit {
 
 	};
 	schoolInfo: any;
+	termArray: any[] = ['', 'Term 1', 'Term 2', 'Term 3', 'Term 4', 'Term 5', 'Term 6', 'Term 7', 'Term 8', 'Term 9'];
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -590,6 +593,23 @@ export class ComparitiveComponent implements OnInit {
 			}
 		}
 	}
+	getTotalAvailable(index) {
+		let sum = 0;
+		while (index !== -1) {
+			sum = sum + Number(this.finalSpannedArray[index].total);
+			index--;
+		}
+		return sum;
+	}
+	getAddItionalPeriod(index) {
+		let sum = 0;
+		while (index !== -1) {
+			sum = sum + Number(this.finalSpannedArray[index].total1);
+			index--;
+		}
+		return sum;
+	}
+	
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
 		this.teachingSum = 0;
@@ -659,6 +679,7 @@ export class ComparitiveComponent implements OnInit {
 								cw_period_revision: Number(cw_period_revision),
 								sd_ctr_id: this.finalSyllabusArray[i].sd_ctr_id,
 								sd_desc: this.finalSyllabusArray[i].sd_desc,
+								syl_term_id: this.finalSyllabusArray[i].syl_term_id,
 								sd_topic_name: this.finalSyllabusArray[i].topic_name,
 								sd_st_name: this.finalSyllabusArray[i].st_name,
 								sd_id: this.finalSyllabusArray[i].sd_id,
@@ -694,6 +715,7 @@ export class ComparitiveComponent implements OnInit {
 										cw_period_test: Number(cw_period_test1),
 										cw_period_revision: Number(cw_period_revision1),
 										sd_desc: this.finalSyllabusArray[j].sd_desc,
+										syl_term_id: this.finalSyllabusArray[j].syl_term_id,
 										sd_topic_name: this.finalSyllabusArray[j].topic_name,
 										sd_st_name: this.finalSyllabusArray[j].st_name,
 										sd_id: this.finalSyllabusArray[j].sd_id,
@@ -726,6 +748,8 @@ export class ComparitiveComponent implements OnInit {
 								}
 							}
 						}
+						this.grandTotal = this.teachingSum + this.testSum + this.revisionSum;
+						this.grandTotal1 = this.cwteachingSum + this.cwtestSum + this.cwrevisionSum;
 						this.deviationSum = (this.teachingSum + this.testSum + this.revisionSum) - (this.cwteachingSum + this.cwtestSum + this.cwrevisionSum);
 						if (this.finalSpannedArray.length > 0) {
 							let totalPeriodFromInitial = 0;
@@ -817,7 +841,13 @@ export class ComparitiveComponent implements OnInit {
 				});
 
 	}
-
+	getBold(j, k) {
+		if (Number(j) === Number(k)) {
+			return 'bold';
+		} else {
+			return 'no-bold';
+		}
+	}
 
 
 }
