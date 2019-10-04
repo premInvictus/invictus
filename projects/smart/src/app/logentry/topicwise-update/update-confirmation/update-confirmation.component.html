@@ -8,11 +8,10 @@
       </div>
     </div>
   </div>
-  <div class="row margin-top-20">
+  <div class="row margin-top-20" *ngIf="step1Flag">
     <div class="col-12 text-center">
       <span class="font-size-24 font-light"> Do you wish to </span><span class="font-size-24 font-bold">Save Changes
-        ?</span><br>
-      <span class="font-size-20 font-light"> Please Enter Date of Completion </span>
+        ?</span>
     </div>
   </div>
   <div class="row margin-top-20" *ngIf="step1Flag">
@@ -23,6 +22,7 @@
   </div>
   <div class="row margin-top-20" *ngIf="step2Flag">
     <div class="col-12 text-center">
+      <span class="font-size-20 font-light"> Please Enter Date of Completion </span><br><br>
       <mat-form-field class="form-field-220" appearance="outline">
         <mat-label>Entry Date</mat-label>
         <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="tw_entry_date">
