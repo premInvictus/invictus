@@ -156,7 +156,7 @@ export class CommonAPIService {
 
 	}
 	showSuccessErrorMessage(message, type) {
-		if (type === 'success') {
+		if (type === 'success' || type === 'ok') {
 			this._notificationService.success('Success', message, {
 				timeout: 2000,
 				showProgressBar: true,

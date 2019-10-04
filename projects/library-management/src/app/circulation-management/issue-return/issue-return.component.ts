@@ -15,10 +15,7 @@ import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-issue-return',
   templateUrl: './issue-return.component.html',
-  styleUrls: ['./issue-return.component.css'],
-  providers: [
-    { provide: MatPaginatorIntl, useClass: MatPaginatorI18n }
-  ]
+  styleUrls: ['./issue-return.component.css']
 })
 export class IssueReturnComponent implements OnInit {
   searchForm: FormGroup;
@@ -29,7 +26,8 @@ export class IssueReturnComponent implements OnInit {
   issueBookData: any = [];
   userHaveBooksData = false;
   bookReadTillDate = 0;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+  @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   BOOK_LOG_LIST_ELEMENT: BookLogListElement[] = [];
@@ -126,14 +124,13 @@ export class IssueReturnComponent implements OnInit {
               if (result && result.data && result.data.resultData[0]) {
                 delete result.data.resultData[0]["_id"];
                 result.data.resultData[0]['due_date'] = date;
-                result.data.resultData[0]['issued_on'] = '';
-                result.data.resultData[0]['returned_on'] = '';
+                // result.data.resultData[0]['issued_on'] = '';
+                // result.data.resultData[0]['returned_on'] = '';
                 this.bookData.push(result.data.resultData[0]);
                 this.setDueDate(this.bookData.length - 1 , date);
-                console.log('this.bookData',this.bookData);
               }
             } else {
-              this.bookData = [];
+              // this.bookData = [];
               this.common.showSuccessErrorMessage('No Record Found', 'error');
             }
           });
@@ -153,25 +150,9 @@ export class IssueReturnComponent implements OnInit {
   }
 
   setBookId(reserv_id) {
-    // this.common.setReservoirId(reserv_id);
     this.router.navigate(['../book-detail'], { queryParams: { book_id: reserv_id }, relativeTo: this.route } );
     
   }
-
-  // getUserIssueReturnData() {
-  //   var inputJson = {
-  //     user_login_id: this.userData.au_login_id,
-  //     user_role_id: this.userData.au_role_id
-  //   }
-  //   this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
-  //     if (result && result.status == 'ok') {
-  //       this.issueBookData = result.data.details;
-  //     } else {
-  //       this.issueBookData = [];
-  //     }
-  //     this.common.showSuccessErrorMessage(result.message, result.status);
-  //   });
-  // }
 
   getUserIssueReturnLogData() {
     var inputJson = {
@@ -218,8 +199,11 @@ export class IssueReturnComponent implements OnInit {
         }
         this.bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
         this.bookLoglistdataSource.paginator = this.paginator;
-        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-        this.bookLoglistdataSource.sort = this.sort;
+        if (this.sort) {
+          this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+          this.bookLoglistdataSource.sort = this.sort;
+        }
+        
 
 
 
@@ -234,26 +218,24 @@ export class IssueReturnComponent implements OnInit {
 
   saveIssueReturn() {
     var updatedBookData = [];
-    for (let i = 0; i < this.bookData.length; i++) {
-      console.log(this.bookData[i]);
-      if (this.bookData[i]['reserv_status'] === 'issued') {
-        console.log(this.bookData[i]['due_date']);
-        console.log(this.common.dateConvertion(this.bookData[i]['fdue_date'], 'dd-MMM-yyyy'));
-        if (this.bookData[i]['due_date'] < this.common.dateConvertion(this.bookData[i]['fdue_date'], 'dd-MMM-yyyy')) {
-          this.bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
-          this.bookData[i]['due_date'] = this.common.dateConvertion(this.bookData[i]['fdue_date'], 'dd-MMM-yyyy');
+    var bookData = JSON.parse(JSON.stringify(this.bookData )); ;
+    for (let i = 0; i < bookData.length; i++) {
+      if (bookData[i]['reserv_status'] === 'issued') {
+        if (bookData[i]['due_date'] < this.common.dateConvertion(bookData[i]['fdue_date'], 'dd-MMM-yyyy')) {
+          bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
+          bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'dd-MMM-yyyy');
         } else {
-          this.bookData[i]['reserv_status'] = 'available';
-          this.bookData[i]['issued_on'] = '';
-          this.bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
+          bookData[i]['reserv_status'] = 'available';
+          bookData[i]['issued_on'] = '';
+          bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
         }
-        updatedBookData.push(this.bookData[i]);
-      } else if (this.bookData[i]['reserv_status'] === 'available') {
-        if (this.bookData[i]['fdue_date']) {
-          this.bookData[i]['reserv_status'] = 'issued';
-          this.bookData[i]['due_date'] = this.common.dateConvertion(this.bookData[i]['fdue_date'], 'dd-MMM-yyyy');
-          this.bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
-          updatedBookData.push(this.bookData[i]);
+        updatedBookData.push(bookData[i]);
+      } else if (bookData[i]['reserv_status'] === 'available') {
+        if (bookData[i]['fdue_date']) {
+          bookData[i]['reserv_status'] = 'issued';
+          bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'dd-MMM-yyyy');
+          bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
+          updatedBookData.push(bookData[i]);
         }
       }
     }
@@ -325,7 +307,7 @@ export class IssueReturnComponent implements OnInit {
     this.bookLogData = [];
     this.issueBookData = [];
     this.userData = [];
-    this.searchForm.value.searchId = '';
+    this.searchForm.controls['searchId'].setValue('');
     this.returnIssueReservoirForm.reset();
     this.BOOK_LOG_LIST_ELEMENT = [];
     this.bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
@@ -335,21 +317,7 @@ export class IssueReturnComponent implements OnInit {
     this.bookLoglistdataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  getColor(item) {
-    if (item.reserv_status === 'issued') {
-      return 'rgb(252, 191, 188)';
-    } else {
-      return '#cfe39b';
-    }
-  }
-
-  getBorder(item) {
-    if (item.reserv_status === 'issued') {
-      return 'rgb(252, 191, 188)';
-    } else {
-      return '#cfe39b';
-    }
-  }
+  
 
   downloadExcel() {
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('book_log')); // converts a DOM TABLE element to a worksheet
@@ -360,9 +328,46 @@ export class IssueReturnComponent implements OnInit {
 
   downloadPdf() {
     const doc = new jsPDF('landscape');
-		doc.setFont('helvetica');
-		doc.setFontSize(5);
-		doc.autoTable({ html: '#book_log' });
+		doc.autoTable({
+			head: [['Book Log of ' + this.userData.au_full_name]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			html: '#book_log',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: '#89A8C9',
+			},
+			theme: 'grid'
+		});
+   // doc.save('table.pdf');
+    
+    // const doc = new jsPDF('landscape');
+		// doc.setFont('helvetica');
+		// doc.setFontSize(5);
+    // doc.autoTable({ html: '#book_log' });
+    
 		doc.save('BookLog_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.pdf');
   }
 
