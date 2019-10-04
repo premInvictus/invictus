@@ -1,10 +1,13 @@
 .book-list td.reserv_issued {
     background-color: rgb(252, 191, 188) !important;
-    border: rgb(252, 191, 188) !important;
 }
 
 .book-list td.reserv_green {
     background-color:#cfe39b !important;
-    border: #cfe39b !important;
+}
+
+.booklog td.text-left {
+    text-align: left !important;
+    margin-left: 2px;
 }
 

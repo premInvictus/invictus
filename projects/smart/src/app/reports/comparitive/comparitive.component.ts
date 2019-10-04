@@ -567,18 +567,18 @@ export class ComparitiveComponent implements OnInit {
 	// get background color according to value range
 	getcolor(value) {
 		if (Number(value) === 0) {
-			return '#ffffff';
+			return '#3caea3';
 		} else if (Number(value) > 0) {
-			return '#28a7456b';
+			return '#fd7e14';
 		} else {
-			return '#dc3545a6';
+			return '#ed553b';
 		}
 	}
 	getDatePeriod(date, index) {
 		if (date) {
 			if (index === 0) {
-				return new DatePipe('en-in').transform(this.startDate, 'dd MMM, yyyy') + ' - '
-					+ new DatePipe('en-in').transform(date, 'dd MMM, yyyy');
+				return new DatePipe('en-in').transform(this.startDate, 'dd MMM, yy') + ' - '
+					+ new DatePipe('en-in').transform(date, 'dd MMM, yy');
 			}
 			if (index > 0) {
 				const date2 = new Date(this.finalSpannedArray[index - 1].estimateDate).getDate() + 1;
@@ -588,15 +588,15 @@ export class ComparitiveComponent implements OnInit {
 				}
 				const year = new Date(this.finalSpannedArray[index - 1].estimateDate).getFullYear();
 				const finalDate = year + '-' + month + '-' + date2;
-				return new DatePipe('en-in').transform(finalDate, 'dd MMM, yyyy') + ' - '
-					+ new DatePipe('en-in').transform(this.finalSpannedArray[index].estimateDate, 'dd MMM, yyyy');
+				return new DatePipe('en-in').transform(finalDate, 'dd MMM, yy') + ' - '
+					+ new DatePipe('en-in').transform(this.finalSpannedArray[index].estimateDate, 'dd MMM, yy');
 			}
 		}
 	}
 	getTotalAvailable(index) {
 		let sum = 0;
 		while (index !== -1) {
-			sum = sum + Number(this.finalSpannedArray[index].total);
+			sum = sum + Number(this.finalSpannedArray[index].total1);
 			index--;
 		}
 		return sum;
@@ -604,7 +604,7 @@ export class ComparitiveComponent implements OnInit {
 	getAddItionalPeriod(index) {
 		let sum = 0;
 		while (index !== -1) {
-			sum = sum + Number(this.finalSpannedArray[index].total1);
+			sum = sum + Number(this.finalSpannedArray[index].total);
 			index--;
 		}
 		return sum;
@@ -674,9 +674,9 @@ export class ComparitiveComponent implements OnInit {
 								sd_period_teacher: sd_period_teacher,
 								sd_period_test: sd_period_test,
 								sd_period_revision: sd_period_revision,
-								cw_period_teacher: Number(cw_period_teacher),
-								cw_period_test: Number(cw_period_test),
-								cw_period_revision: Number(cw_period_revision),
+								cw_period_teacher: (cw_period_teacher),
+								cw_period_test: (cw_period_test),
+								cw_period_revision: (cw_period_revision),
 								sd_ctr_id: this.finalSyllabusArray[i].sd_ctr_id,
 								sd_desc: this.finalSyllabusArray[i].sd_desc,
 								syl_term_id: this.finalSyllabusArray[i].syl_term_id,
@@ -711,9 +711,9 @@ export class ComparitiveComponent implements OnInit {
 										sd_period_test: sd_period_test1,
 										sd_period_revision: sd_period_revision1,
 										sd_ctr_id: this.finalSyllabusArray[j].sd_ctr_id,
-										cw_period_teacher: Number(cw_period_teacher1),
-										cw_period_test: Number(cw_period_test1),
-										cw_period_revision: Number(cw_period_revision1),
+										cw_period_teacher: (cw_period_teacher1),
+										cw_period_test: (cw_period_test1),
+										cw_period_revision: (cw_period_revision1),
 										sd_desc: this.finalSyllabusArray[j].sd_desc,
 										syl_term_id: this.finalSyllabusArray[j].syl_term_id,
 										sd_topic_name: this.finalSyllabusArray[j].topic_name,

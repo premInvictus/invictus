@@ -1,177 +1,122 @@
 <div class="assession-master-container">
-    <div class="row">
-      <div class="col-12">
-        <mat-card>
-          <div class="row">
-            <div class="col-6 margin-top-15">
-              <span class="font-size-24">Vendor Master</span>
-            </div>
-            <div class="col-5">
-              <!-- <div class="search-container"> -->
-                <!-- <div class="row remove-top-margin">
-                  <div class="col-8">
-                    <mat-form-field class="lib-form form-field">
-                      <input
-                        matInput
-                        placeholder="Search Any Book By Name or ID"
-                      />
-                    </mat-form-field>
-                  </div>
-                  <div class="col-4 margin-top-10  text-right">
-                    <span class="font-size-12 margin-top-15 font-skyblue"
-                      >Advanced Search <i class="fas fa-chevron-down"></i
-                    ></span> 
-                     <button
-                      mat-button
-                      class="btn-spacer btn-lib-search margin-left-10"
-                    >
-                      Search
-                    </button>
-                  </div>
-                </div> -->
-              <!-- </div> -->
-            </div>
-            <div class="col-1">
-              <button
-                mat-raised-button
-                class="btn-success-blue-add-book"
-                (click)="openAddVendorDialog()"
-                
-              >
-                Add Vendor
-              </button>
-            </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24">Vendor Master</span>
           </div>
-        </mat-card>
-      </div>
-    </div>
-  
-    <div class="row">
-      <div class="col-12">
-        <mat-card class="card-height-730">
-          <div class="row">
-            <div class="col-6">
-              <span class="font-bold font-size-20">Vendors List</span>
-            </div>
+          <div class="col-5">
           </div>
-          <div class="row">
-              <div class="col-12">
-                  <div class="row ">
-                    <div class="col-10 remove-col-padding">
-                      <mat-form-field appearance="legacy lib-form">
-                        <input matInput placeholder="Search" (keyup)="applyFilterVendor($event.target.value)"/>
-                        <mat-icon matPrefix>filter_list</mat-icon>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!-- <table class="custom-table">
-                    <thead>
-                      <tr class="custom-tr text-center">
-                        <th class="custom-th">Sr No.</th>
-                        <th class="custom-th">Vendor ID</th>
-                        <th class="custom-th">Vendor Name</th>
-                        <th class="custom-th">Vendor Category</th>
-                        <th class="custom-th">Address</th>
-                        <th class="custom-th">Contact No.</th>
-                        <th class="custom-th">Email</th>
-                        <th class="custom-th">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="custom-td">1</td>
-                        <td class="custom-td">
-                          <a class="font-skyblue cursor-pointer">12345689</a>
-                        </td>
-                        <td class="custom-td text-left">
-                          <span class="margin-left-15">Abarik Kumar</span>
-                        </td>
-                        <td class="custom-td text-left padding-left-15">
-                          <span class="margin-left-15">Donator</span>
-                        </td>
-                        <td class="custom-td text-left padding-left-15">
-                          <span class="margin-left-15">Sector 38 A, Noida, Uttar Pradesh - 201301</span>
-                        </td>
-                        <td class="custom-td text-left "><span class="margin-left-15">+9198563245</span></td>
-                        <td class="custom-td text-left "><span class="margin-left-15">aaar@gmail.com</span></td>
-                        <td class="custom-td">
-                            <span><i class="fas fa-edit font-color-grey margin-right-15" ></i></span>
-                          <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"></i></span>
-                                  </td>
-                      </tr>
-                    </tbody>
-                  </table> -->
-                  <table mat-table [dataSource]="vendorlistdataSource" matSort class="table-100 text-center" id="report_table">
-                      <ng-container matColumnDef="srno">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
-                        <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="ven_id">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Vendor ID</th>
-                          <td mat-cell *matCellDef="let element">
-                            <a class="font-skyblue cursor-pointer"
-                              (click)="editVendor(element, false)">{{element?.ven_id}} </a>
-                          </td>
-                        </ng-container>
-                        <ng-container matColumnDef="ven_name">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Vendor Name</th>
-                            <td mat-cell *matCellDef="let element">
-                              {{element?.ven_name}} 
-                            </td>
-                          </ng-container>
-                          <ng-container matColumnDef="ven_category">
-                              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Vendor Category</th>
-                              <td mat-cell *matCellDef="let element">
-                                {{element?.ven_category}} 
-                              </td>
-                            </ng-container>
-                          <ng-container matColumnDef="ven_address">
-                              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Address</th>
-                              <td mat-cell *matCellDef="let element">
-                               {{element?.ven_address}}
-                              </td>
-                            </ng-container>
-                      <ng-container matColumnDef="ven_contact">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Contact No.</th>
-                        <td mat-cell *matCellDef="let element">
-                          {{element?.ven_contact}} 
-                        </td>
-                      </ng-container>
-                      <ng-container matColumnDef="ven_email">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Email</th>
-                          <td mat-cell *matCellDef="let element">
-                            {{element?.ven_email }} 
-                          </td>
-                        </ng-container>
-                     
-                      <ng-container matColumnDef="action">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Action</th>
-                          <td mat-cell *matCellDef="let element">
-                              <span><i class="fas fa-edit font-color-grey margin-right-15" (click)="editVendor(element, true)"></i></span>
-                              <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15" (click)="openModal({});deleteVendorModel(element)"></i></span>
-                          </td>
-                        </ng-container>
-          
-                      <tr mat-header-row *matHeaderRowDef="displayedVendorListColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedVendorListColumns;">
-                      </tr>
-                    </table>
-          
-                    <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
-                      <tr *ngIf="VENDOR_LIST_ELEMENT.length == 0">
-                        <td colspan="9">No Record Found</td>
-                      </tr>
-                    </table>
-                    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons
-                    (page)="pageEvent = fetchData($event)"></mat-paginator>
-                </div>
+          <div class="col-1">
+            <button mat-raised-button class="btn-success-blue-add-book" (click)="openAddVendorDialog()">
+              Add Vendor
+            </button>
           </div>
-        </mat-card>
-      </div>
+        </div>
+      </mat-card>
     </div>
   </div>
-  <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete Vendor'" (deleteOk)="deleteVendor(currentVendorId)" (deleteCancel)="deleteComCancel()">
-    </app-delete-modal>
-  
 
-  
+  <div class="row" [hidden]="!(VENDOR_LIST_ELEMENT.length > 0)">
+    <div class="col-12">
+      <mat-card class="card-height-730">
+        <div class="row">
+          <div class="col-6">
+            <span class="font-bold font-size-20">Vendors List</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="row ">
+              <div class="col-10 remove-col-padding">
+                <mat-form-field appearance="legacy lib-form">
+                  <input matInput placeholder="Search" (keyup)="applyFilterVendor($event.target.value)" />
+                  <mat-icon matPrefix>filter_list</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+            <table mat-table [dataSource]="vendorlistdataSource" matSort class="table-100 text-center"
+              id="report_table">
+              <ng-container matColumnDef="srno">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
+                <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+              </ng-container>
+              <ng-container matColumnDef="ven_id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Vendor ID</th>
+                <td mat-cell *matCellDef="let element">
+                  <a class="font-skyblue cursor-pointer" (click)="editVendor(element, false)">{{element?.ven_id}} </a>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="ven_name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Vendor Name</th>
+                <td mat-cell *matCellDef="let element">
+                  {{element?.ven_name}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="ven_category">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Vendor Category</th>
+                <td mat-cell *matCellDef="let element">
+                  {{element?.ven_category}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="ven_address">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Address</th>
+                <td mat-cell *matCellDef="let element">
+                  {{element?.ven_address}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="ven_contact">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Contact No.</th>
+                <td mat-cell *matCellDef="let element">
+                  {{element?.ven_contact}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="ven_email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Email</th>
+                <td mat-cell *matCellDef="let element">
+                  {{element?.ven_email }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Action</th>
+                <td mat-cell *matCellDef="let element">
+                  <span><i class="fas fa-edit font-color-grey margin-right-15"
+                      (click)="editVendor(element, true)"></i></span>
+                  <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
+                      (click)="openModal({});deleteVendorModel(element)"></i></span>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedVendorListColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedVendorListColumns;">
+              </tr>
+            </table>
+
+            <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+              <tr *ngIf="VENDOR_LIST_ELEMENT.length == 0">
+                <td colspan="9">No Record Found</td>
+              </tr>
+            </table>
+            <mat-paginator #paginator  [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="VENDOR_LIST_ELEMENT.length == 0">
+  <div class="col-12">
+    <mat-card>
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+          [noDataText]="" [subText]="'No Vendor Found'"></app-no-data>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete Vendor'"
+  (deleteOk)="deleteVendor(currentVendorId)" (deleteCancel)="deleteComCancel()">
+</app-delete-modal>

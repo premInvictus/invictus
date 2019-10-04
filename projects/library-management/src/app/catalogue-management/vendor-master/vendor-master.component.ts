@@ -10,14 +10,11 @@ import { AddVendorDialog } from './add-vendor-dialog/add-vendor-dialog.component
 @Component({
   selector: 'app-vendor-master',
   templateUrl: './vendor-master.component.html',
-  styleUrls: ['./vendor-master.component.css'],
-  providers: [
-		{ provide: MatPaginatorIntl, useClass: MatPaginatorI18n }
-	]
+  styleUrls: ['./vendor-master.component.css']
 })
 export class VendorMasterComponent implements OnInit {
   currentVendorId: any;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('deleteModalRef') deleteModalRef;
   vendorListData: any = [];
@@ -25,9 +22,7 @@ export class VendorMasterComponent implements OnInit {
   VENDOR_LIST_ELEMENT: VendorListElement[] = [];
   vendorlistdataSource = new MatTableDataSource<VendorListElement>(this.VENDOR_LIST_ELEMENT);
   displayedVendorListColumns: string[] = ['srno', 'ven_id','ven_name' , 'ven_category', 'ven_address', 'ven_contact', 'ven_email','action'];
-  vendorListPageIndex = 0;
-	vendorListPageSize = 10;
-  vendorListPageSizeOptions = [10, 25, 50, 100];
+  
   pageEvent: any;
 
   constructor(public dialog: MatDialog, 
@@ -65,7 +60,6 @@ export class VendorMasterComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       this.getVendorList();
 
     });
@@ -75,12 +69,6 @@ export class VendorMasterComponent implements OnInit {
     const datePipe = new DatePipe('en-in');
    
     this.erpCommonService.getVendorList({}).subscribe((result: any) => {
-      // if (res && res.data.length > 0) {
-      //   this.verificationLogData = res.data;
-        
-      // } else {
-      //   this.verificationLogData = [];
-      // }
       let element: any = {};
       let recordArray = [];
       this.VENDOR_LIST_ELEMENT = [];
@@ -114,8 +102,11 @@ export class VendorMasterComponent implements OnInit {
 				}
         this.vendorlistdataSource = new MatTableDataSource<VendorListElement>(this.VENDOR_LIST_ELEMENT);
         this.vendorlistdataSource.paginator = this.paginator;
-        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-        this.vendorlistdataSource.sort = this.sort;
+        if (this.sort) {
+          this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+          this.vendorlistdataSource.sort = this.sort;
+        }
+        
 			} 
     });
   }
@@ -145,24 +136,19 @@ export class VendorMasterComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       this.getVendorList();
 
     });
   }
 
-  fetchData($event) {
-
-  }
+  
 
   deleteVendor(data) {
-    console.log('data', data, this.currentVendorId);
-
     if (this.currentVendorId) {
       this.currentVendorId['ven_status'] = '5';
       this.erpCommonService.deleteVendor(this.currentVendorId).subscribe((res: any) => {
-        if (res && res.status === 'ok') {
-          
+        if (res && res.status === 'ok') {     
+          this.common.showSuccessErrorMessage(res.message, res.status);     
           this.getVendorList();
         } else {
           this.common.showSuccessErrorMessage(res.message, res.status);

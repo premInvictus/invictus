@@ -4,3 +4,14 @@
     text-transform: uppercase;
     font-size: 13px !important;
 }
+
+.btn-lib-list {
+    border-radius: 50px !important;
+    width: 103px !important;
+    background-color: #1E88E5;
+    color: #fff;
+}
+
+#report_table td.text-left{
+    text-align: left !important;
+}

@@ -171,6 +171,19 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     })
   }
+  getCalculatedMarksSub(sub_id, exam_id, term){
+    const currentSub = this.subjectArray.find(e => e.sub_id === sub_id);
+    let totalscore = 0;
+    if(currentSub.childSub.length > 0) {
+      currentSub.childSub.forEach(element => {
+        totalscore += this.getCalculatedMarks(element.sub_id, exam_id, term);
+      });
+      totalscore = totalscore / currentSub.childSub.length;
+    } else {
+      totalscore = this.getCalculatedMarks(sub_id, exam_id, term);
+    }
+    return totalscore;
+  }
   getCalculatedMarks(sub_id, exam_id, term) {
     const curExam = this.examArray.find(e => e.exam_id === exam_id);
     const percentageArray: any[] = [];
@@ -207,14 +220,16 @@ export class ViewGradecardDialogComponent implements OnInit {
               max2 = item.obtained_percentage;
             }
           }
-          score = Math.round((((max1 + max2) / 2) / 100) * curExam.exam_weightage);
+          score = (((max1 + max2) / 2) / 100) * curExam.exam_weightage;
+          score = Number.parseFloat(score.toFixed(2));
           break;
         case 2:
           let sum = 0;
           for (const item of percentageArray) {
             sum += item.obtained_percentage;
           }
-          score = Math.round(((sum / percentageArray.length) / 100) * curExam.exam_weightage);
+          score = ((sum / percentageArray.length) / 100) * curExam.exam_weightage;
+          score = Number.parseFloat(score.toFixed(2));
           break;
         case 3:
           let max = percentageArray[0].obtained_percentage;
@@ -223,7 +238,8 @@ export class ViewGradecardDialogComponent implements OnInit {
               max = item.obtained_percentage;
             }
           }
-          score = Math.round((max / 100) * curExam.exam_weightage);
+          score = (max / 100) * curExam.exam_weightage;
+          score = Number.parseFloat(score.toFixed(2));
           break;
       }
     }
@@ -248,10 +264,10 @@ export class ViewGradecardDialogComponent implements OnInit {
   calculateGrade(sub_id, term) {
     let gradeMarks = 0;
     this.sexamArray.forEach(element => {
-      gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id, term);
+      gradeMarks = gradeMarks + this.getCalculatedMarksSub(sub_id, element.exam_id, term);
     });
     //const grade = Math.round(gradeMarks / this.sexamArray.length);
-    const grade = gradeMarks;
+    const grade = Math.round(gradeMarks);
     if (Number(term) === Number(this.data.param.eme_term_id)) {
       this.totalexecutedSolasticSubject++;
       this.gradePerTermOnScholastic.push({
@@ -430,6 +446,9 @@ export class ViewGradecardDialogComponent implements OnInit {
         }
       }
     })
+  }
+  closeDialog(){
+    this.dialogRef.close();
   }
 
 }

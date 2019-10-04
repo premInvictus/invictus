@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
+import { ConfirmValidParentMatcher } from '../../../ConfirmValidParentMatcher';
 
 @Component({
   selector: 'add-vendor-dialog',
@@ -12,6 +13,7 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl 
   styleUrls: ['./add-vendor-dialog.component.css'],
 })
 export class AddVendorDialog implements OnInit {
+  confirmValidParentMatcher = new ConfirmValidParentMatcher();
   vendorForm: FormGroup;
 
 
@@ -25,7 +27,6 @@ export class AddVendorDialog implements OnInit {
   }
 
   ngOnInit() {
-    console.log('dialogData', this.dialogData)
     this.buildForm();
   }
 
@@ -50,9 +51,6 @@ export class AddVendorDialog implements OnInit {
       ven_updated_date: this.dialogData.ven_updated_date ? this.dialogData.ven_updated_date : '',
       showButtonStatus: this.dialogData.showButtonStatus ? this.dialogData.showButtonStatus : false
     });
-
-
-    console.log('this.vendorForm', this.vendorForm);
   }
 
 
