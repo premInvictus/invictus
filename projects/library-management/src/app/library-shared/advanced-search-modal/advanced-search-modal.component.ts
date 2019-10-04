@@ -209,6 +209,7 @@ export class AdvancedSearchModalComponent implements OnInit {
     obj['category_id'] = [];
     obj['reserv_status'] = [];
     obj['language_details.lang_code'] = [];
+    obj['user'] = JSON.parse(localStorage.getItem('currentUser'))
     this.generalFilterForm = this.fbuild.group(obj);
   }
   closeDialog() {

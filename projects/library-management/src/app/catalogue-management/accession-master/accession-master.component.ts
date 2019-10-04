@@ -523,7 +523,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
       };
       this.bookForm.value['genre'] = {
         genre_name: this.bookDetails.volumeInfo.categories ? this.bookDetails.volumeInfo.categories[0] : '',
-        genre_id: this.getGenreId(this.bookDetails.volumeInfo.categories[0])
+        genre_id: this.getGenreId(this.bookDetails.volumeInfo && this.bookDetails.volumeInfo.categories ? this.bookDetails.volumeInfo.categories[0]: '')
       };
     } else {
       this.bookForm.value['language_details'] = {

@@ -63,14 +63,14 @@
                 <div [class]="item.book_container_class">
                   <div class="book-title-content text-center" style="padding: 3px !important">
                     <div class="book-first-content" (click)="showSecondDetailDiv(i); $event.stopPropagation();">
-                      <span class="font-size-16"><b>{{item.title | truncatetext}}</b></span>
+                      <span class="font-size-16"><b>{{item.title | truncatetext : 12}}</b></span>
                     </div>
-                    <div class="book-second-content" style="padding: 30px !important"
+                    <div class="book-second-content" style="padding: 30px !important;position: relative;top:-30px"
                       (click)="showFirstDetailDiv(i); $event.stopPropagation()">
                       <div class="font-size-12 margin-top-15 font-medium">
                         <b>BOOK ID</b>: {{item.reserv_id}}
                       </div>
-                      <span class="font-size-16 font-medium"><b>{{item.title ? item.title : ''}}</b></span><br />
+                      <span class="font-size-16 font-medium"><b>{{item.title ? (item.title| truncatetext : 12) : ''}}</b></span><br />
                       <span class="font-size-14 font-medium">{{item.authors}}</span>
                       <div class="font-size-14 margin-top-15 font-medium">
                         <b>Location</b>: {{item.location}}
