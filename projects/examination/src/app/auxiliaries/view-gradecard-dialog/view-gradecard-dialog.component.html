@@ -1,7 +1,7 @@
 <!-- pattern="[0-9]{1}|[0-9]{2}|[0-9]{3}|[A-C]{1}" -->
 <div class="row">
     <div class="col-12 ">
-        <button class="top-close-btn" mat-button (click)="generatePDF()">Close <i
+        <button class="top-close-btn" mat-button (click)="closeDialog()">Close <i
                 class="fas fa-times font-size-16 margin-left-15"></i></button>
     </div>
 </div>
@@ -90,7 +90,7 @@
                                     <tr class="custom-tr" *ngIf="sub.sub_type == 1">
                                         <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
                                         <td class="custom-td" *ngFor="let item of sexamArray">
-                                            {{getCalculatedMarks(sub.sub_id, item.exam_id,term)}}</td>
+                                            {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}</td>
                                         <td class="custom-td">{{calculateGrade(sub.sub_id,term)}}</td>
                                     </tr>
                                 </ng-container>
