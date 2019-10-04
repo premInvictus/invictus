@@ -427,6 +427,9 @@ export class ClassworkUpdateComponent implements OnInit {
 					}
 				}
 			});
+		} else {
+			this.classworkForm.markAsDirty();
+			this.commonAPIService.showSuccessErrorMessage('Please Fill all required field','error');
 		}
 
 	}

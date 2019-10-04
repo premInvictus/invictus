@@ -43,6 +43,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	firstHeaderArray: any[] = ['Class Name', 'Section Name', 'Subject Name', 'Topic Name', 'SubTopic Name', 'Class Name', 'Class Name'];
 	secondHeaderArray: any[] = ['Order', 'Order', 'Order', 'Order', 'Order', 'Order'];
 	configFlag = false;
+	paramform: FormGroup;
+	searchtoggle = false;
+	psubArray: any[] = [];
 
 
 	constructor(
@@ -61,7 +64,36 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		// this.getClass();
 		// this.getDetailsCdpRelation();
 	}
-
+	advanceSearchToggle(){
+		this.searchtoggle = true;
+	}
+	getSubjectsByClass(){
+		this.psubArray = [];
+		this.smartService.getSubjectsByClass({class_id: this.paramform.value.param_class_id}).subscribe((result: any) => {
+			if(result && result.status === 'ok') {
+				this.psubArray = result.data;
+			}
+		})
+	}
+	getSubjectsByClassForTopic(){
+		const topicformgroup: FormGroup = this.formGroupArray[this.configValue-1].formGroup;
+		const param: any = {};
+		if(topicformgroup.value.topic_class_id) {
+			param.class_id = topicformgroup.value.topic_class_id;
+		}
+		this.subArray = [];
+		this.smartService.getSubjectsByClass(param).subscribe((result: any) => {
+			if(result && result.status === 'ok') {
+				this.subArray = result.data;
+			}
+		})
+	}
+	searchTopic(){
+		this.getTopic(this);
+	}
+	resetTopic(){
+		this.paramform.reset();
+	}
 	ngAfterViewInit() {
 		this.configDataSource.sort = this.sort;
 		this.configDataSource.paginator = this.paginator;
@@ -82,7 +114,10 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		// 	sub_topic_name: '',
 		// 	sec_id: ''
 		// });
-
+		this.paramform = this.fbuild.group({
+			param_class_id: '',
+			param_sub_id: ''
+		})
 		this.formGroupArray = [{
 			formGroup: this.fbuild.group({
 				class_id: '',
@@ -127,6 +162,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			formGroup: this.fbuild.group({
 				st_id: '',
 				st_name: '',
+				topic_class_id: '',
+				topic_sub_id: '',
 				st_topic_id: '',
 				st_order: '',
 				st_status: ''
@@ -321,7 +358,14 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		that.getSubject(that);
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
-		that.smartService.getTopic().subscribe((result: any) => {
+		const param: any = {};
+		if(that.paramform.value.param_class_id) {
+			param.topic_class_id = that.paramform.value.param_class_id;
+		}
+		if(that.paramform.value.param_sub_id) {
+			param.topic_sub_id = that.paramform.value.param_sub_id;
+		}
+		that.smartService.getTopic(param).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				that.topicArray = result.data;
 				if (that.configValue === '4') {
@@ -730,6 +774,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 
 	loadConfiguration(event) {
+		this.searchtoggle = false;
+		this.paramform.reset();
 		this.configFlag = false;
 		this.setupUpdateFlag = false;
 		this.configValue = event.value;
