@@ -25,7 +25,7 @@ export class AdditionalSubjectComponent implements OnInit {
 	currentUser: any;
 	session: any;
 	ELEMENT_DATA: Element[] = [];
-	rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA); 
+	rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	formgroupArray: any[] = [];
 	finalArray: any[] = [];
 	constructor(
@@ -69,7 +69,7 @@ export class AdditionalSubjectComponent implements OnInit {
 			);
 	}
 	getSubjectsByClass() {
-		this.smartService.getSubjectsByClass({ class_id: this.firstForm.value.syl_class_id })
+		this.smartService.getSubject({ sub_timetable: 1, sub_status: 1 })
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -119,7 +119,7 @@ export class AdditionalSubjectComponent implements OnInit {
 			'syl_section_id': ''
 		});
 	}
-	onSelectChange(){
+	onSelectChange() {
 		this.submitFlag = true;
 	}
 	fetchDetails() {
