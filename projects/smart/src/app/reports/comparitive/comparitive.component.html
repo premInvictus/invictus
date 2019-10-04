@@ -111,8 +111,8 @@
                                 <!-- <th class="custom-th" rowspan="2" colspan="2">Deviation</th> -->
                                 <th class="custom-th" rowspan="2">Deviation</th>
                                 <th class="custom-th" rowspan="2">Available</th>
-                                <th class="custom-th" rowspan="2">Aditional Periods</th>
-                                <th class="custom-th" rowspan="2">Estimated Time Of Completion</th>
+                                <th class="custom-th" rowspan="2">Period Required</th>
+                                <th class="custom-th" rowspan="2">Est. Time Of Completion</th>
                                 <th class="custom-th" rowspan="2">Status</th>
 
                             </tr>
@@ -148,35 +148,35 @@
                                                 *ngIf="det.sd_ctr_id == 3">
                                                 Revision
                                             </td>
-                                            <td class="custom-td text-center"
-                                                [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td text-center bold" *ngIf="j == 0"
+                                            [attr.rowspan]="item.details.length">
                                                 {{termArray[det.syl_term_id]}}
                                             </td>
-                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.sd_period_teacher}}
                                             </td>
-                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.sd_period_test}}
 
                                             </td>
-                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.sd_period_revision}}
                                             </td>
-                                            <td class="custom-td bold" *ngIf="j == 0"
+                                            <td class="custom-td bold fw-700 no-of-period" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
                                                 {{item.total}}
 
                                             </td>
-                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.cw_period_teacher}}
                                             </td>
-                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.cw_period_test}}
                                             </td>
-                                            <td class="custom-td" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.cw_period_revision}}
                                             </td>
-                                            <td class="custom-td bold" *ngIf="j == 0"
+                                            <td class="custom-td bold fw-700 no-of-period" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
                                                 {{item.total1}}
                                             </td>
@@ -211,24 +211,24 @@
                                                 {{det.sd_period_revision - det.cw_period_revision}}
                                             </td> -->
 
-                                            <td rowspan="5" class="custom-td bold" *ngIf="j == 0 && item.total1 !== 0"
+                                            <td rowspan="5" class="custom-td bold fw-700 additional-period" *ngIf="j == 0 && item.total1 !== 0"
                                                 [ngStyle]="{'background-color': getcolor(item.total - item.total1)}"
-                                                [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
-                                            <td rowspan="5" class="custom-td bold" *ngIf="j == 0 && item.total1 === 0"
+                                                [attr.rowspan]="item.details.length "> {{ item.total - item.total1}}</td>
+                                            <td rowspan="5" class="custom-td bold fw-700 additional-period" *ngIf="j == 0 && item.total1 === 0"
                                                 [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
 
-                                            <td class="custom-td bold" *ngIf="j == 0"
+                                            <td class="custom-td bold fw-700 additional-period" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
                                                 {{grandTotal - getTotalAvailable(i)}}
                                             </td>
-                                            <td class="custom-td bold additional-period" *ngIf="j == 0"
+                                            <td class="custom-td bold additional-period fw-700" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
                                                 {{grandTotal - getAddItionalPeriod(i)}}
                                             </td>
                                             <td class="custom-td bold" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
                                                 {{getDatePeriod(item.estimateDate, i)}}
-                                            </td>
+                                            </td> 
                                             <td class="custom-td bold" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
                                                 <ng-container>

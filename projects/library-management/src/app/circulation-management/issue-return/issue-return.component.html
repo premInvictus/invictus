@@ -50,9 +50,10 @@
     <mat-card>
       <div class="row">
         <div class="col-2 smart-col-12 remove-col-padding-left margin-top-8">
-          <img *ngIf="!userData?.au_profileimage" class="border-radius-50" src="https://place-hold.it/90" />
-          <img *ngIf="userData?.au_profileimage" class="border-radius-50" [src]="userData?.au_profileimage"
-            height="90px" width="90px" />
+           
+          <img *ngIf="!userData?.au_profileimage" class="border-radius-50 student-profile-image-68" [src]="defaultSrc"  onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'"/>
+          <img *ngIf="userData?.au_profileimage" class="border-radius-50 student-profile-image-68" [src]="userData?.au_profileimage"
+            height="90px" width="90px"  onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'"/>
         </div>
         <div class="col-10 smart-col-88 remove-col-padding-left">
           <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
@@ -63,7 +64,7 @@
           </span>
           <div class="row">
             <div class="col-4 remove-col-padding">
-              <div class="row remove-top-margin">
+              <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
                 <div class="col-4 remove-col-padding">
                   <span class="font-size-12 font-bold">Class</span>
                   <span class="font-size-12 font-bold float-right">:</span>
@@ -73,7 +74,7 @@
                     {{userData?.sec_name}}</span>
                 </div>
               </div>
-              <div class="row remove-top-margin">
+              <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
                 <div class="col-4 remove-col-padding">
                   <span class="font-size-12 font-bold">House</span>
                   <span class="font-size-12 font-bold float-right">:</span>
@@ -106,23 +107,27 @@
                 </div>
               </div>
               <div class="row remove-top-margin">
-                <div class="col-6 remove-col-padding">
+                <div class="col-5 remove-col-padding">
                   <span class="font-size-12 font-bold">Books Read Till Date</span>
-                  <span class="font-size-12 font-bold float-right">{{bookReadTillDate}}</span>
+                  <span class="font-size-12 font-bold float-right">:</span>
                 </div>
+                <div class="col-7 remove-col-padding-right">
+                  <span class="font-size-12 font-bold opacity-7">{{bookReadTillDate}}</span>
+                </div>
+
               </div>
             </div>
           </div>
         </div>
       </div>
     </mat-card>
-    <mat-card class="margin-top-10" [ngClass]="issueBookData.length > 0 ? 'card-height-219' : ''">
+    <mat-card class="margin-top-10">
       <div class="row">
         <div class="col-12 remove-col-padding">
           <span class="font-size-20 font-bold">Issued Books</span>
         </div>
       </div>
-      <div class="row" *ngIf="issueBookData?.length > 0">
+      <div class="row booklog" [hidden]="!(issueBookData?.length > 0)">
         <div class="col-12 remove-col-padding">
           <table class="table-100 custom-table">
             <thead>
@@ -141,33 +146,28 @@
                   <td class="custom-td">
                     <span class="font-skyblue">{{item?.reserv_id}}</span>
                   </td>
-                  <td class="custom-td"><span>{{item?.title}}</span></td>
-                  <td class="custom-td">{{item?.publisher}}</td>
+                  <td class="custom-td text-left"><span>{{item?.title | slice:0:76}}</span><span *ngIf="item?.title.length > 76">...</span></td>
+                  <td class="custom-td text-left">{{item?.publisher | slice:0:76}}<span *ngIf="item?.authors.length > 76">...</span></td>
                   <td class="custom-td">{{item?.due_date | date: 'd-MMM-y' }}</td>
                 </tr>
               </ng-container>
 
             </tbody>
-            <!-- <tbody>
-              <tr class="custom-tr" *ngIf="issueBookData?.length == 0">
-                <td class="custom-td text-center" colspan="5">No Book Issued</td>
-              </tr>
-            </tbody> -->
           </table>
         </div>
       </div>
     </mat-card>
     <mat-card *ngIf="issueBookData.length == 0">
-        <div class="text-center">
-          <app-no-data
-            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
-            [noDataText]="" [subText]="'No Book Issued'"></app-no-data>
-        </div>
-      </mat-card>
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+          [noDataText]="" [subText]="'No Book Issued'"></app-no-data>
+      </div>
+    </mat-card>
   </div>
   <div class="col-6 remove-col-padding-left">
     <form [formGroup]="returnIssueReservoirForm">
-      <mat-card [ngClass]="bookData.length > 0 ? 'card-height-356' : 'card-height-201'">
+      <mat-card>
         <div class="row">
           <div class="col-4 margin-top-15">
             <span class="font-size-20 font-bold">Return/Issue Book</span>
@@ -190,7 +190,7 @@
             </div>
           </div>
         </div>
-        <div class="row margin-top-15" *ngIf="bookData.length > 0">
+        <div class="row margin-top-15 booklog" [hidden]="!(bookData.length > 0)">
           <div class="col-12 remove-col-padding">
             <table class="table-100 custom-table">
               <thead>
@@ -213,11 +213,12 @@
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span class="font-skyblue" (click)="setBookId(item?.reserv_id)">{{item?.reserv_id}}</span>
                     </td>
-                    <td class="custom-td"
+                    <td class="custom-td text-left"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span>{{item?.title}}</span></td>
-                    <td class="custom-td"
-                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">{{item?.authors}}
+                      <span>{{item?.title | slice:0:76}}</span> <span *ngIf="item?.title.length > 76">...</span>
+                    </td>
+                    <td class="custom-td text-left"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">{{item?.authors | slice:0:76}} <span *ngIf="item?.authors.length > 76">...</span>
                     </td>
                     <td class="custom-td"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
@@ -263,7 +264,7 @@
 <div class="row" *ngIf="userData!=''">
 
   <div class="col-12 ">
-    <mat-card *ngIf="BOOK_LOG_LIST_ELEMENT.length > 0">
+    <mat-card [hidden]="!(BOOK_LOG_LIST_ELEMENT.length > 0)">
       <span class="font-size-20 font-bold">Books Logs</span>
 
       <div class="row">
@@ -277,49 +278,65 @@
               </mat-form-field>
             </div>
             <div class="col-3 text-right remove-col-padding-right" *ngIf="BOOK_LOG_LIST_ELEMENT.length > 0">
-              <i class="fa fa-file-excel font-skyblue font-bold font-size-20" (click)="downloadExcel()"></i>&nbsp;
-              <i class="fa fa-file-pdf font-skyblue font-bold font-size-20" (click)="downloadPdf()"></i>
+              <!-- <i class="fa fa-file-excel font-skyblue font-bold font-size-20" (click)="downloadExcel()"></i>&nbsp;
+              <i class="fa fa-file-pdf font-skyblue font-bold font-size-20" (click)="downloadPdf()"></i> -->
+
+              <div class="inline-flex btn-spacer text-right margin-bottom-5">
+                  <div>
+                      <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+                          matTooltip="Download as Pdf" (click)="downloadPdf()" />
+                  </div>
+              </div>
+              <div class="inline-flex btn-spacer text-right margin-bottom-5">
+                  <div>
+                      <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+                          matTooltip="Export as excel" (click)="downloadExcel()" />
+                  </div>
+              </div>
             </div>
 
           </div>
-          <table mat-table [dataSource]="bookLoglistdataSource" matSort class="table-100 text-center" id="book_log">
+          <table mat-table [dataSource]="bookLoglistdataSource" matSort class="table-100 text-center" id="book_log" class="booklog">
             <ng-container matColumnDef="srno">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="2%"> Sr. No. </th>
               <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
             </ng-container>
             <ng-container matColumnDef="reserv_id">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Book No</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Book No.</th>
               <td mat-cell *matCellDef="let element">
                 <a class="font-skyblue cursor-pointer"
-                  (click)="getBookDetail(element?.reserv_id)">{{element?.reserv_id}} </a>
+                  (click)="setBookId(element?.reserv_id)">{{element?.reserv_id}} </a>
               </td>
             </ng-container>
             <ng-container matColumnDef="title">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Book Name</th>
-              <td mat-cell *matCellDef="let element">
-                {{element?.title}}
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="30%">Book Name</th>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                <span class="text-left text-capitalize">{{element?.title | slice:0:125}}</span>
+                <span *ngIf="item?.title?.length > 76">...</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="author">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Author</th>
-              <td mat-cell *matCellDef="let element">
-                {{element?.author}}
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Author</th>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                  <span class="text-left text-capitalize">{{element?.author | slice:0:76}}</span>
+                  <span *ngIf="item?.authors?.length > 76">...</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="publisher">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Publisher</th>
-              <td mat-cell *matCellDef="let element">
-                {{element?.publisher}}
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Publisher</th>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                  <span class="text-left text-capitalize">{{element?.publisher | slice:0:76}}</span>
+                  <span *ngIf="item?.publisher.length > 76">...</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="issued_on">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Issued On</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Issued On</th>
               <td mat-cell *matCellDef="let element">
                 {{element?.issued_on | date: 'd-MMM-y'}}
               </td>
             </ng-container>
             <ng-container matColumnDef="due_date">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Due Date</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Due Date</th>
               <td mat-cell *matCellDef="let element">
                 {{element?.due_date | date: 'd-MMM-y'}}
               </td>
@@ -358,17 +375,17 @@
             </tr>
           </table>
           <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons
-            (page)="pageEvent = fetchData($event)"></mat-paginator>
+            ></mat-paginator>
         </div>
       </div>
     </mat-card>
     <mat-card *ngIf="BOOK_LOG_LIST_ELEMENT.length == 0">
-        <div class="text-center">
-          <app-no-data
-            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
-            [noDataText]="" [subText]="'No Book Issued'"></app-no-data>
-        </div>
-      </mat-card>
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+          [noDataText]="" [subText]="'No Book Log'"></app-no-data>
+      </div>
+    </mat-card>
   </div>
 </div>
 <div class="row" *ngIf="userData==''">

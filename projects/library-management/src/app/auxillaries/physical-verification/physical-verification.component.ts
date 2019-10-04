@@ -11,10 +11,7 @@ import { MatDialog } from '@angular/material';
 @Component({
   selector: 'app-physical-verification',
   templateUrl: './physical-verification.component.html',
-  styleUrls: ['./physical-verification.component.css'],
-  providers: [
-		{ provide: MatPaginatorIntl, useClass: MatPaginatorI18n }
-	]
+  styleUrls: ['./physical-verification.component.css']
 })
 
 
@@ -56,7 +53,13 @@ export class PhysicalVerificationComponent implements OnInit {
   bookListPageIndex = 0;
 	bookListPageSize = 10;
 	bookListPageSizeOptions = [10, 25, 50, 100];
-  
+  searchBookId = '';
+
+
+
+  // MatPaginator Output
+  pageEvent: PageEvent;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -98,19 +101,12 @@ export class PhysicalVerificationComponent implements OnInit {
 
   getVerificationLog() {
     const datePipe = new DatePipe('en-in');
-    console.log('this.newBatchForm', this.newBatchForm);
     let inputJson = {
       'verfication_from_date' :  datePipe.transform(this.newBatchForm.value.from_date, 'yyyy-MM-dd'),
       'verfication_to_date' :  datePipe.transform(this.newBatchForm.value.to_date, 'yyyy-MM-dd'),
 
     }
     this.erpCommonService.getVerificationLog({inputJson}).subscribe((result: any) => {
-      // if (res && res.data.length > 0) {
-      //   this.verificationLogData = res.data;
-        
-      // } else {
-      //   this.verificationLogData = [];
-      // }
       let element: any = {};
       let recordArray = [];
       this.VERIFICATION_LOG_ELEMENT = [];
@@ -125,7 +121,6 @@ export class PhysicalVerificationComponent implements OnInit {
 						verified_by: item.verfication_by ? item.verfication_by : '-',
 						no_of_books: this.bookCount(item.details) ? this.bookCount(item.details) : '-'
           };
-          console.log('element', element);
 					this.VERIFICATION_LOG_ELEMENT.push(element);
 					pos++;
 					
@@ -140,8 +135,6 @@ export class PhysicalVerificationComponent implements OnInit {
   }
  
   onClickVerifiedOn(elementNo) {
-    console.log(this.verificationLogData);
-   // console.log(element, this.verificationLogData[element.srno - 1]);
     let index = elementNo.srno - 1;
     this.showBookList = true;
     this.showNewBatchStatus = false;
@@ -169,6 +162,7 @@ export class PhysicalVerificationComponent implements OnInit {
               
             }
             this.booklistdataSource = new MatTableDataSource<BookListElement>(this.BOOK_LIST_ELEMENT);
+            
             this.booklistdataSource.paginator = this.paginator;
             this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
             this.booklistdataSource.sort = this.sort;
@@ -176,7 +170,6 @@ export class PhysicalVerificationComponent implements OnInit {
 
 
     this.currentVerificationData = this.verificationLogData[index];
-    console.log('this.bookListData', this.bookListData);
   }
 
   showNewBatch() {
@@ -187,23 +180,23 @@ export class PhysicalVerificationComponent implements OnInit {
     this.batchdataSource = new MatTableDataSource<VerificationBatchElement>(this.VERIFICATION_BATCH_ELEMENT);
   }
 
-  searchBook($event) {
-    if ($event.target.value) {
+  searchBoodId(event) {
+    this.searchBookId = event.target.value;
+  }
+
+  searchBook() {
+    console.log(this.searchBookId);
+    if (this.searchBookId) {
       this.enteredVal = true;
-      this.erpCommonService.searchReservoir({
-        searchData: {
-          isbn: '',
-          reserv_id: Number($event.target.value)
-        }
-      }).subscribe((result: any) => {
+      const inputJson = { "filters": [{ "filter_type": "reserv_id", "filter_value": Number(this.searchBookId), "type": "number" }] };
+		  this.erpCommonService.getReservoirDataBasedOnFilter
+      this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
         if (result && result.data) {
           for (const item of result.data.resultData) {
             item.book_container_class = 'book-title-container-default';
             this.bookData.push(item);
           }
           this.searchFlag = true;
-          console.log(this.bookData);
-
           let element: any = {};
           
           this.VERIFICATION_BATCH_ELEMENT = [];
@@ -226,12 +219,13 @@ export class PhysicalVerificationComponent implements OnInit {
             }
             this.batchdataSource = new MatTableDataSource<VerificationBatchElement>(this.VERIFICATION_BATCH_ELEMENT);
           } 
-
+          this.searchBookId = '';
 
         }
       });
     } else {
       this.enteredVal = false;
+      this.searchBookId = '';
     }
   }
 
@@ -253,10 +247,6 @@ export class PhysicalVerificationComponent implements OnInit {
       'verfication_status' : '1',
       'verification_details' : JSON.stringify(batchArr)
     };
-    // if (this.currentVerificationData && this.currentVerificationData.verification_id) {
-    //   inputJson['verification_id'] = this.currentVerificationData.verification_id;
-    //   inputJson['verfication_on_date'] = this.currentVerificationData.verification_on_date;
-    // }
     this.erpCommonService.insertPhysicalVerification(inputJson).subscribe((res: any) => {
       if (res && res.status == 'ok') {
         this.common.showSuccessErrorMessage(res.message, res.status);
@@ -272,40 +262,17 @@ export class PhysicalVerificationComponent implements OnInit {
     this.enteredVal = false;
   }
 
-  // update() {
-  //   let inputJson = {
-  //     'verfication_status' : '1',
-  //     'verification_details' : JSON.stringify(this.bookData)
-  //   }
-
-  //   if (this.currentVerificationData && this.currentVerificationData.verification_id) {
-  //     inputJson['verification_id'] = this.currentVerificationData.verification_id;
-  //     inputJson['verfication_on_date'] = this.currentVerificationData.verification_on_date;
-  //   }
-  //   this.erpCommonService.updatePhysicalVerification(inputJson).subscribe((res: any) => {
-  //     if (res && res.status == 'ok') {
-  //       this.common.showSuccessErrorMessage(res.message, res.status);
-  //     } else {
-  //       this.common.showSuccessErrorMessage(res.message, res.status);
-  //     }
-  //   });
-  //   this.bookData = [];
-  //   this.enteredVal = false;
-  // }
-
   backToVerificationLog(event) {
     this.showNewBatchStatus = false;
     this.showBookList = false;
     this.showVerifiedBookLog = true;
   }
 
-  deleteRow(elementNo) {
-    
+  deleteRow(elementNo) {    
     let index = elementNo.srno - 1;
     this.bookData.splice(index,1);
     this.VERIFICATION_BATCH_ELEMENT.splice(index, 1);
     this.batchdataSource = new MatTableDataSource<VerificationBatchElement>(this.VERIFICATION_BATCH_ELEMENT);
-    console.log('VERIFICATION_BATCH_ELEMENT', this.VERIFICATION_BATCH_ELEMENT);
   }
 
 
@@ -339,13 +306,6 @@ export class PhysicalVerificationComponent implements OnInit {
   }
 
   getBookDetail(element) {
-    // this.showBookDetail = true;
-    // this.showVerifiedBookLog = false;
-    // this.showBookList = false;
-    // this.showNewBatchStatus = false;
-    ///this.bookData = element;
-    console.log('element', element);
-    // this.common.setReservoirId(element.book_no);
     this.router.navigate(['../book-detail'],  { queryParams: { book_id: element.book_no }, relativeTo: this.route });
 
   }
