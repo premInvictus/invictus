@@ -365,6 +365,13 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		if(that.paramform.value.param_sub_id) {
 			param.topic_sub_id = that.paramform.value.param_sub_id;
 		}
+		const topicformgroup: FormGroup = this.formGroupArray[this.configValue-1].formGroup;
+		if(topicformgroup.value.topic_class_id) {
+			param.topic_class_id = topicformgroup.value.topic_class_id;
+		}
+		if(topicformgroup.value.topic_sub_id) {
+			param.topic_sub_id = topicformgroup.value.topic_sub_id;
+		}
 		that.smartService.getTopic(param).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				that.topicArray = result.data;

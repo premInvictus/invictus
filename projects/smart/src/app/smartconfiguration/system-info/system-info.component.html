@@ -270,6 +270,7 @@
                                                             <mat-select formControlName="topic_sub_id" required
                                                                 placeholder="Select Subject" [disabled]="editFlag"
                                                                 [errorStateMatcher]="confirmValidParentMatcher"
+                                                                (selectionChange)="getTopic(this)"
                                                                 required>
                                                                 <mat-option value="">Please select</mat-option>
                                                                 <mat-option *ngFor="let item of subArray"
