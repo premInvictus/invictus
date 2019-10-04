@@ -6,3 +6,8 @@
     background-color:#cfe39b !important;
 }
 
+.booklog td.text-left {
+    text-align: left !important;
+    margin-left: 2px;
+}
+
