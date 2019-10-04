@@ -29,6 +29,8 @@
                   <mat-label>Subscription Type</mat-label>
                   <mat-select formControlName="subscription_type" [disabled]="!subscriptionForm.value.showButtonStatus" required>
                       <mat-option value="Newspaper">Newspaper</mat-option>
+                      <mat-option value="Magazine">Magazine</mat-option>
+                      <mat-option value="Journals (Scholarly/Trade)">Journals (Scholarly/Trade)</mat-option>
                   </mat-select>
                 </mat-form-field>
           </div>
@@ -40,8 +42,11 @@
               <mat-select formControlName="subscription_frequency" [disabled]="!subscriptionForm.value.showButtonStatus" required>
                   <mat-option value="Daily">Daily</mat-option>
                   <mat-option value="Weekly">Weekly</mat-option>
+                  <mat-option value="Bi-weekly">Bi-weekly</mat-option>
                   <mat-option value="Monthly">Monthly</mat-option>
-                  <mat-option value="Yearly">Yearly</mat-option>
+                  <mat-option value="Quaterly">Quaterly</mat-option>
+                  <mat-option value="Half-yearly">Half-yearly</mat-option>
+                  <mat-option value="Annually">Annually</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -57,6 +62,7 @@
                 formControlName="subscription_start_date"
                 required
                 [readonly]="!subscriptionForm.value.showButtonStatus"
+                [min]="subscriptionForm.controls.subscription_start_date.value" 
               />
               <mat-datepicker-toggle
                 matSuffix
@@ -125,8 +131,8 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="subscription_status" [disabled]="!subscriptionForm.value.showButtonStatus">
-                    <mat-option value="1">Inactive</mat-option>
-                    <mat-option value="2">Active</mat-option>
+                    <mat-option value="1">Active</mat-option>
+                    <mat-option value="2">InActive</mat-option>
                     <mat-option value="3">Suspended</mat-option>
                 </mat-select>
               </mat-form-field>

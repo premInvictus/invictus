@@ -16,14 +16,6 @@
       <form [formGroup]="vendorForm">
     <div class="row  margin-top-25">
       <div class="col-6 remove-col-padding">
-        <!-- <div class="row">
-            <div class="col-12">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Vendor ID</mat-label>
-                <input matInput placeholder="" />
-              </mat-form-field>
-            </div>
-          </div> -->
         <div class="row">
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
@@ -38,6 +30,10 @@
               <mat-label>Vendor Category</mat-label>
               <mat-select formControlName = "ven_category" [disabled]="!vendorForm.value.showButtonStatus" required>
                 <mat-option value="Seller">Seller</mat-option>
+                <mat-option value="Donator">Donator</mat-option>
+                <mat-option value="Gifted">Gifted</mat-option>
+                <mat-option value="Sampler">Sampler</mat-option>
+
               </mat-select>
 
             </mat-form-field>
@@ -64,8 +60,10 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Contact No.</mat-label>
-              <input matInput placeholder="" formControlName = "ven_contact" [readonly]="!vendorForm.value.showButtonStatus" required/>
-
+              <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" matInput placeholder="" formControlName = "ven_contact" [readonly]="!vendorForm.value.showButtonStatus" pattern="[0-9]*" minlength="10" maxlength="10"  [errorStateMatcher]="confirmValidParentMatcher" required />
+              <mat-error>
+                  Contact Number should be of 10 Digit Number
+               </mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -73,7 +71,10 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Email</mat-label>
-              <input matInput placeholder="" formControlName = "ven_email" [readonly]="!vendorForm.value.showButtonStatus"/>
+              <input matInput placeholder="" formControlName = "ven_email" [readonly]="!vendorForm.value.showButtonStatus" [errorStateMatcher]="confirmValidParentMatcher" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}$"/>
+              <mat-error>
+                  Please Fill Valid Email
+               </mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -100,7 +101,10 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Contact No</mat-label>
-              <input matInput placeholder="" formControlName = "ven_authorised_person_detail_contact" [readonly]="!vendorForm.value.showButtonStatus"/>
+              <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" matInput placeholder="" formControlName = "ven_authorised_person_detail_contact" [readonly]="!vendorForm.value.showButtonStatus" pattern="[0-9]*" minlength="10" maxlength="10"  [errorStateMatcher]="confirmValidParentMatcher"/>
+              <mat-error>
+                  Contact Number should be of 10 Digit Number
+               </mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -108,8 +112,10 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>PAN No.</mat-label>
-              <input matInput placeholder="" formControlName = "ven_pan_no" [readonly]="!vendorForm.value.showButtonStatus"/>
-
+              <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" matInput placeholder="" formControlName = "ven_pan_no" [readonly]="!vendorForm.value.showButtonStatus" pattern="[a-zA-Z0-9]*" minlength="10" maxlength="10"  [errorStateMatcher]="confirmValidParentMatcher"/>
+              <mat-error>
+                  PAN Number should be of 10 Digit Alphanumeric Number
+               </mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -117,8 +123,10 @@
           <div class="col-12">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>GST No.</mat-label>
-              <input matInput placeholder="" formControlName = "ven_gst_no" [readonly]="!vendorForm.value.showButtonStatus"/>
-
+              <input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" matInput placeholder="" formControlName = "ven_gst_no" [readonly]="!vendorForm.value.showButtonStatus" pattern="[a-zA-Z0-9]*" minlength="15" maxlength="15"  [errorStateMatcher]="confirmValidParentMatcher"/>
+              <mat-error>
+                  GST Number should be of 15 Digit Alphanumeric Number
+               </mat-error>
             </mat-form-field>
           </div>
         </div>
