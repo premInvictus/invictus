@@ -32,18 +32,18 @@ export class EditClassworkModalComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		console.log(this.data);
 		this.teacherId = this.data.cw_teacher_id;
 		this.buildForm().then(() => {
 			this.ctrList();
 			this.getSubjectByTeacherId();
-			this.getClassSectionByTeacherIdSubjectId(false);
+			//this.getClassSectionByTeacherIdSubjectId(false);
 			this.getTopicByClassSubject();
 			this.getSubtopicByTopic();
 		});
 		this.disableSt({value: this.data.cw_ctr_id});
 	}
 	buildForm() {
+		//console.log('this.data', this.data);
 		return new Promise(resolve => {
 			this.editclassworkform = this.fb.group({
 				cw_id: this.data.cw_id,
@@ -54,7 +54,6 @@ export class EditClassworkModalComponent implements OnInit {
 				cw_topic_id: this.data.cw_topic_id && this.data.cw_topic_id !== '0' ? this.data.cw_topic_id : '',
 				cw_st_id: this.data.cw_st_id && this.data.cw_st_id !== '0' ? this.data.cw_st_id : '',
 			});
-			console.log(this.editclassworkform.value);
 			if (this.data.cw_ctr_id === '2' || this.data.cw_ctr_id === '3' || this.data.cw_ctr_id === '5' || this.data.cw_ctr_id === '6') {
 				this.disableSubtop = true;
 			} else if (this.data.cw_ctr_id === '8') {
@@ -77,7 +76,9 @@ export class EditClassworkModalComponent implements OnInit {
 			return this.editclassworkform.value.cw_sub_id !== '0' &&
 			this.editclassworkform.value.cw_class_id !== '0' &&
 			this.editclassworkform.value.cw_topic_id !== '0';
-		}  else {
+		} else if (event.value === '8') {
+			return true;
+		} else {
 			return this.editclassworkform.value.cw_sub_id !== '0' &&
 			this.editclassworkform.value.cw_class_id !== '0' &&
 			this.editclassworkform.value.cw_topic_id !== '0' &&
@@ -114,7 +115,6 @@ export class EditClassworkModalComponent implements OnInit {
 				cw_topic_id: '0',
 				cw_st_id: '0'
 			});
-			console.log(this.editclassworkform.value);
 		} else if (event.value === '7') {
 			this.editclassworkform.controls['cw_class_id'].setValidators(Validators.required);
 			this.editclassworkform.controls['cw_sub_id'].clearValidators();
@@ -190,25 +190,28 @@ export class EditClassworkModalComponent implements OnInit {
 		if (resetFlag) {
 			this.resetClassworkFormForSubjectChange();
 		}
-		this.smartService.getClassSectionByTeacherIdSubjectId({
-			teacher_id: this.teacherId,
-			sub_id: this.editclassworkform.value.cw_sub_id
-		}).subscribe(
-			(result: any) => {
-				if (result && result.status === 'ok') {
-					const csArray = result.data;
-					if (csArray.length > 0) {
-						csArray.forEach(element => {
-							this.classSectionArray.push({
-								cs_id: element.class_id + '-' + element.sec_id,
-								cs_name: element.class_name + ' - ' + element.sec_name
+		if(this.editclassworkform.value.cw_sub_id !== '0') {
+			this.smartService.getClassSectionByTeacherIdSubjectId({
+				teacher_id: this.teacherId,
+				sub_id: this.editclassworkform.value.cw_sub_id
+			}).subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						const csArray = result.data;
+						console.log('csArray',csArray)
+						if (csArray.length > 0) {
+							csArray.forEach(element => {
+								this.classSectionArray.push({
+									cs_id: element.class_id + '-' + element.sec_id,
+									cs_name: element.class_name + ' - ' + element.sec_name
+								});
 							});
-						});
+						}
+					} else {
+						this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 					}
-				} else {
-					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-				}
-			});
+				});
+		}
 	}
 
 	resetSuptopic() {
@@ -219,26 +222,29 @@ export class EditClassworkModalComponent implements OnInit {
 
 	getTopicByClassSubject() {
 		this.topicArray = [];
-		console.log(this.editclassworkform.value);
 		const csArray = this.editclassworkform.value.cw_class_id.split('-');
 		const param = { class_id: csArray[0], sub_id: this.editclassworkform.value.cw_sub_id };
-		this.smartService.getTopicByClassIdSubjectId(param).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.topicArray = result.data;
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-			}
-		});
+		if(this.editclassworkform.value.cw_sub_id !== '0' && csArray[0] !== '0') {
+			this.smartService.getTopicByClassIdSubjectId(param).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.topicArray = result.data;
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		}
 	}
 	getSubtopicByTopic() {
 		this.subtopicArray = [];
-		this.smartService.getSubtopicByTopicId({ topic_id: this.editclassworkform.value.cw_topic_id }).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.subtopicArray = result.data;
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-			}
-		});
+		if(this.editclassworkform.value.cw_topic_id !== '0') {
+			this.smartService.getSubtopicByTopicId({ topic_id: this.editclassworkform.value.cw_topic_id }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.subtopicArray = result.data;
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				}
+			});
+		}
 	}
 
 	resetClassworkFormForSubjectChange() {
@@ -262,8 +268,7 @@ export class EditClassworkModalComponent implements OnInit {
 		});
 	}
 	updateClasswork() {
-		console.log(this.editclassworkform);
-		if (this.editclassworkform.valid && this.validateForm(this.editclassworkform.value.cw_ctr_id)) {
+		if (this.editclassworkform.valid && this.validateForm({value: this.editclassworkform.value.cw_ctr_id})) {
 			const csArray = this.editclassworkform.value.cw_class_id.split('-');
 			if (csArray.length === 2) {
 				this.editclassworkform.patchValue({
