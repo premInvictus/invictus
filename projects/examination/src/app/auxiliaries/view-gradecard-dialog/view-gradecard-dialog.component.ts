@@ -178,6 +178,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       currentSub.childSub.forEach(element => {
         totalscore += this.getCalculatedMarks(element.sub_id, exam_id, term);
       });
+      totalscore = totalscore / currentSub.childSub.length;
     } else {
       totalscore = this.getCalculatedMarks(sub_id, exam_id, term);
     }
@@ -260,7 +261,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   calculateGrade(sub_id, term) {
     let gradeMarks = 0;
     this.sexamArray.forEach(element => {
-      gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id, term);
+      gradeMarks = gradeMarks + this.getCalculatedMarksSub(sub_id, element.exam_id, term);
     });
     //const grade = Math.round(gradeMarks / this.sexamArray.length);
     const grade = gradeMarks;
