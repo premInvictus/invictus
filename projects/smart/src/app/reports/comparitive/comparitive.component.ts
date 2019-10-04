@@ -596,7 +596,7 @@ export class ComparitiveComponent implements OnInit {
 	getTotalAvailable(index) {
 		let sum = 0;
 		while (index !== -1) {
-			sum = sum + Number(this.finalSpannedArray[index].total);
+			sum = sum + Number(this.finalSpannedArray[index].total1);
 			index--;
 		}
 		return sum;
@@ -604,7 +604,7 @@ export class ComparitiveComponent implements OnInit {
 	getAddItionalPeriod(index) {
 		let sum = 0;
 		while (index !== -1) {
-			sum = sum + Number(this.finalSpannedArray[index].total1);
+			sum = sum + Number(this.finalSpannedArray[index].total);
 			index--;
 		}
 		return sum;
