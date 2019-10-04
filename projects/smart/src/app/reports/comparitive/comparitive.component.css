@@ -46,3 +46,13 @@ table {
   .additional-period{
     width:5%;
   }
+  .no-of-period{
+    width:4%;
+  }
+  .fw-700{
+    font-weight: 700;
+  }
+  .font-color-yellow{
+    color: #f6d55f;
+  }
+  
