@@ -11,3 +11,7 @@
     background-color: #1E88E5;
     color: #fff;
 }
+
+#report_table td.text-left{
+    text-align: left !important;
+}
