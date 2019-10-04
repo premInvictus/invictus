@@ -36,7 +36,7 @@
         <div class="col-8">
           <span class="font-size-18 font-medium">Books Added</span>
           <div class="margin-top-15">
-            <span class="font-size-14 font-bold font-skyblue">196</span>
+            <span class="font-size-14 font-bold font-skyblue">{{dashboardReservoirData?.books_added}}</span>
             <span class="opacity-7 "> Books added in the Library</span>
           </div>
         </div>
@@ -53,7 +53,7 @@
         <div class="col-8">
           <span class="font-size-18 font-medium">Books Damaged</span>
           <div class="margin-top-15">
-            <span class="font-size-14 font-bold font-color-red">196</span>
+            <span class="font-size-14 font-bold font-color-red">{{dashboardReservoirData?.books_damaged}}</span>
             <span class="opacity-7 "> Books damaged in the Library</span>
           </div>
         </div>
@@ -70,7 +70,7 @@
         <div class="col-8">
           <span class="font-size-18 font-medium">Books Availiable</span>
           <div class="margin-top-15">
-            <span class="font-size-14 font-bold font-color-green">196</span>
+            <span class="font-size-14 font-bold font-color-green">{{dashboardReservoirData?.books_available}}</span>
             <span class="opacity-7 "> Books availiable in the Library</span>
           </div>
         </div>
@@ -87,7 +87,7 @@
         <div class="col-8">
           <span class="font-size-18 font-medium">Books Issued</span>
           <div class="margin-top-15">
-            <span class="font-size-14 font-bold font-color-gold">196</span>
+            <span class="font-size-14 font-bold font-color-gold">{{dashboardReservoirData?.books_issued}}</span>
             <span class="opacity-7 "> Books issued in the Library</span>
           </div>
         </div>
@@ -109,8 +109,11 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <div style="border: 1px solid #000; width: 100%; height: 425px;" class="font-size-24 text-center">
-            <div class="margin-top-15per"> Chart will goes Here</div>
+          <div class="font-size-24 text-center">
+            <!-- <div class="margin-top-15per"> Chart will goes Here</div> -->
+            <app-common-dynamic-chart *ngIf="issuedBookchartflag"
+                                                    [options]="issuedBookchart">
+                                                </app-common-dynamic-chart>
           </div>
         </div>
       </div>

@@ -349,5 +349,15 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/users/getAllTeacher', param);
 	}
+
+	getDashboardReservoirData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/dashboard/getReservoirData', value);
+	}
+
+	getDashboardIssueBookData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/dashboard/getIssuedReservoir', value);
+	}
 }
 

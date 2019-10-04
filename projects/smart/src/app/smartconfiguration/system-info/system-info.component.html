@@ -52,8 +52,9 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <mat-checkbox formControlName="is_board" (change)="getClassIsBoard($event, configValue)">Is this a
-                                                            board class ? 
+                                                        <mat-checkbox formControlName="is_board"
+                                                            (change)="getClassIsBoard($event, configValue)">Is this a
+                                                            board class ?
                                                         </mat-checkbox>
                                                     </div>
                                                 </div>
@@ -105,8 +106,9 @@
                                                 <div class="row">
                                                     <div class="col-12  remove-col-padding">
                                                         <mat-checkbox formControlName="sub_timetable"
-                                                            [checked]="formGroupArray[configValue-1].formGroup.get('sub_timetable').value === '1' ? 'checked':''">Is this a
-                                                            timetable subject ? 
+                                                            [checked]="formGroupArray[configValue-1].formGroup.get('sub_timetable').value === '1' ? 'checked':''">
+                                                            Is this a
+                                                            timetable subject ?
                                                         </mat-checkbox>
                                                     </div>
                                                 </div>
@@ -172,6 +174,7 @@
                                                             <mat-select formControlName="topic_class_id"
                                                                 placeholder="Select Class" [disabled]="editFlag"
                                                                 [errorStateMatcher]="confirmValidParentMatcher"
+                                                                (selectionChange)="getSubjectsByClassForTopic()"
                                                                 required>
                                                                 <mat-option value="">Please select</mat-option>
                                                                 <mat-option *ngFor="let item of classArray"
@@ -241,6 +244,43 @@
                                         </div>
                                         <div *ngIf="configValue == '5'">
                                             <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Class</mat-label>
+                                                            <mat-select formControlName="topic_class_id"
+                                                                placeholder="Select Class" [disabled]="editFlag"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                (selectionChange)="getSubjectsByClassForTopic()"
+                                                                required>
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of classArray"
+                                                                    [value]="item.class_id">
+                                                                    {{item.class_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error>Please Choose Class Name</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Subject</mat-label>
+                                                            <mat-select formControlName="topic_sub_id" required
+                                                                placeholder="Select Subject" [disabled]="editFlag"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                required>
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of subArray"
+                                                                    [value]="item.sub_id">
+                                                                    {{item.sub_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error>Please Choose Subject Name</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <mat-form-field class="form-field" appearance="outline">
@@ -424,11 +464,92 @@
                                                                 <div class=" mob-table-box">
                                                                     <div class="example-container table-box-main">
                                                                         <div class="example-header">
-                                                                            <mat-form-field class="form-feild">
-                                                                                <input matInput
-                                                                                    (keyup)="applyFilter($event.target.value)"
-                                                                                    placeholder="Filter" />
-                                                                            </mat-form-field>
+                                                                            <ng-container
+                                                                                *ngIf="configValue == '4' && searchtoggle">
+                                                                                <form [formGroup]="paramform">
+                                                                                    <div class="row">
+
+                                                                                        <div class="col-3">
+                                                                                            <mat-form-field
+                                                                                                class="form-field"
+                                                                                                appearance="outline">
+                                                                                                <mat-label>Class
+                                                                                                </mat-label>
+                                                                                                <mat-select
+                                                                                                    formControlName="param_class_id"
+                                                                                                    placeholder="Select Class"
+                                                                                                    (selectionChange)="getSubjectsByClass()">
+                                                                                                    <mat-option
+                                                                                                        value="">Please
+                                                                                                        select
+                                                                                                    </mat-option>
+                                                                                                    <mat-option
+                                                                                                        *ngFor="let item of classArray"
+                                                                                                        [value]="item.class_id">
+                                                                                                        {{item.class_name}}
+                                                                                                    </mat-option>
+                                                                                                </mat-select>
+                                                                                                <mat-error>Please Choose
+                                                                                                    Class
+                                                                                                    Name
+                                                                                                </mat-error>
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                        <div class="col-3">
+                                                                                            <mat-form-field
+                                                                                                class="form-field"
+                                                                                                appearance="outline">
+                                                                                                <mat-label>Subject
+                                                                                                </mat-label>
+                                                                                                <mat-select
+                                                                                                    formControlName="param_sub_id"
+                                                                                                    placeholder="Select Subject">
+                                                                                                    <mat-option
+                                                                                                        value="">Please
+                                                                                                        select
+                                                                                                    </mat-option>
+                                                                                                    <mat-option
+                                                                                                        *ngFor="let item of psubArray"
+                                                                                                        [value]="item.sub_id">
+                                                                                                        {{item.sub_name}}
+                                                                                                    </mat-option>
+                                                                                                </mat-select>
+                                                                                                <mat-error>Please Choose
+                                                                                                    Subject
+                                                                                                    Name
+                                                                                                </mat-error>
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                        <div class="col-3">
+                                                                                            <button mat-raised-button
+                                                                                                class="apply-btn margin-top-10"
+                                                                                                (click)="searchTopic()">Apply</button>&nbsp;
+                                                                                            <button mat-raised-button
+                                                                                                class="btn-reset-small margin-top-10"
+                                                                                                (click)="resetTopic()">Reset</button>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </form>
+                                                                            </ng-container>
+                                                                            <div class="row">
+                                                                                <div class="col-3">
+                                                                                    <mat-form-field class="form-feild">
+                                                                                        <input matInput
+                                                                                            (keyup)="applyFilter($event.target.value)"
+                                                                                            placeholder="Filter" />
+                                                                                    </mat-form-field>
+                                                                                </div>
+                                                                                <ng-container
+                                                                                    *ngIf="configValue == '4'">
+                                                                                    <div class="col-9 text-right">
+                                                                                        <button mat-raised-button
+                                                                                            class="btn-filter-grey"
+                                                                                            (click)="advanceSearchToggle()">Filter
+                                                                                            Search</button>
+                                                                                    </div>
+                                                                                </ng-container>
+                                                                            </div>
                                                                         </div>
                                                                         <table mat-table #table
                                                                             [dataSource]="configDataSource" matSort
@@ -572,7 +693,7 @@
                                                                                         *ngIf="item.sub_timetable=='1'">Yes</span>
                                                                                     <span
                                                                                         *ngIf="item.sub_timetable=='0'">No</span>
-                                                                                </td> 
+                                                                                </td>
                                                                             </ng-container>
                                                                             <ng-container *ngIf="configValue == '3'"
                                                                                 matColumnDef="sub_type_name">
@@ -592,19 +713,22 @@
                                                                                 matColumnDef="sub_color">
                                                                                 <th mat-header-cell *matHeaderCellDef
                                                                                     mat-sort-header>
-                                                                                    Subject Color 
+                                                                                    Subject Color
                                                                                 </th>
                                                                                 <td class="left" mat-cell
                                                                                     *matCellDef="let item">
-                                                                                    <span style="float: left;width: 60%;"
+                                                                                    <span
+                                                                                        style="float: left;width: 60%;"
                                                                                         *ngIf="item.sub_color">{{item?.sub_color}}
                                                                                     </span>
 
                                                                                     <span style="float: left">
-                                                                                        <div  [ngStyle]="{background: item?.sub_color, height:'10px',width :'10px','float':'right','margin-top':'5px','margin-left':'5px'}"></div>
+                                                                                        <div
+                                                                                            [ngStyle]="{background: item?.sub_color, height:'10px',width :'10px','float':'right','margin-top':'5px','margin-left':'5px'}">
+                                                                                        </div>
                                                                                     </span>
-                                                                                    
-                                                                                    
+
+
                                                                                     <span
                                                                                         *ngIf="!item.sub_color">-</span>
                                                                                 </td>

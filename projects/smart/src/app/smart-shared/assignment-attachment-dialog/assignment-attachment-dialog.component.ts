@@ -209,6 +209,21 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 
 	submitAttachment() {
 		this.dialogRef.close({ attachments: this.imageArray, assignment_desc: this.assignment_desc });
+		/*if(this.assignment_desc) {
+			this.dialogRef.close({ attachments: this.imageArray, assignment_desc: this.assignment_desc });
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
+		}*/
+	}
+	getuploadurl(fileurl: string) {
+		const filetype = fileurl.substr(fileurl.lastIndexOf('.')+1);
+		if(filetype === 'pdf') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-pdf.png';
+		} else if(filetype === 'doc' || filetype === 'docx') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-word.png';
+		} else {
+			return fileurl;
+		}
 	}
 	closeDialog() {
 		this.dialogRef.close();
