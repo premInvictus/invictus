@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 
 @Component({
@@ -11,7 +11,7 @@ import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 })
 export class BookDetailComponent implements OnInit {
 	searchForm: FormGroup;
-	@ViewChild('bookReserve')bookReserve;
+	@ViewChild('bookReserve') bookReserve;
 	bookData: any = {};
 	currentUser: any;
 	constructor(
@@ -19,6 +19,7 @@ export class BookDetailComponent implements OnInit {
 		private dialog: MatDialog,
 		private route: ActivatedRoute,
 		private common: CommonAPIService,
+		private router: Router,
 		private erpCommonService: ErpCommonService) { }
 	// @Input() bookInputData;
 	ngOnInit() {
@@ -38,10 +39,22 @@ export class BookDetailComponent implements OnInit {
 		});
 	}
 	getBookDetail(book_no) {
-		const inputJson = { "filters": [{ "filter_type": "reserv_id", "filter_value": book_no, "type": "number" }] };
+		this.bookData = {};
+		const inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': book_no, 'type': 'number' }] };
 		this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
-			if (result && result.status == 'ok') {
-				console.log('result', result);
+			if (result && result.status === 'ok') {
+				this.bookData = result.data.resultData[0];
+			} else {
+				this.bookData = {};
+			}
+		});
+	}
+	getBookDetail2(book_no) {
+		this.bookData = {};
+		this.router.navigate([], { relativeTo: this.route, queryParams: { book_id: book_no }, queryParamsHandling: 'merge' });
+		const inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': book_no, 'type': 'number' }] };
+		this.erpCommonService.getReservoirDataBasedOnFilter(inputJson).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
 				this.bookData = result.data.resultData[0];
 			} else {
 				this.bookData = {};
@@ -50,6 +63,6 @@ export class BookDetailComponent implements OnInit {
 	}
 
 	reserve_request(item) {
-		this.bookReserve.openModal(item) ;
+		this.bookReserve.openModal(item);
 	}
 }
