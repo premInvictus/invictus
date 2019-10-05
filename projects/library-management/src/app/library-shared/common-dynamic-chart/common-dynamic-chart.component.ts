@@ -5,16 +5,16 @@ import { chart } from 'highcharts';
 	templateUrl: './common-dynamic-chart.component.html',
 	styleUrls: ['./common-dynamic-chart.component.scss']
 })
-export class CommonDynamicChartComponent implements OnInit, AfterViewInit, OnChanges {
+export class CommonDynamicChartComponent implements OnInit, AfterViewInit {
 	@Input() options: any;
 	dynamicValue: any;
 	constructor() { }
 	ngOnInit() {
 		this.dynamicValue = 'container' + new Date().getTime();
 	}
-	ngOnChanges() {
-		chart(this.dynamicValue, this.options);
-	}
+	// ngOnChanges() {
+	// 	chart(this.dynamicValue, this.options);
+	// }
 	ngAfterViewInit() {
 		chart(this.dynamicValue, this.options);
 	}

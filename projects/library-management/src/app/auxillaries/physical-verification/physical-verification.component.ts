@@ -36,23 +36,17 @@ export class PhysicalVerificationComponent implements OnInit {
   VERIFICATION_LOG_ELEMENT: VerificationLogElement[] = [];
   logdataSource = new MatTableDataSource<VerificationLogElement>(this.VERIFICATION_LOG_ELEMENT);
   displayedVerificationLogColumns: string[] = ['srno', 'verified_on', 'verified_by', 'no_of_books'];
-  verificationPageIndex = 0;
-	verificationPageSize = 10;
-  verificationPageSizeOptions = [10, 25, 50, 100];
+
   
   VERIFICATION_BATCH_ELEMENT: VerificationBatchElement[] = [];
   batchdataSource = new MatTableDataSource<VerificationBatchElement>(this.VERIFICATION_BATCH_ELEMENT);
   displayedVerificationBatchColumns: string[] = ['srno', 'book_no', 'book_name', 'book_author', 'book_publisher', 'book_location', 'action'];
-  verificationBatchPageIndex = 0;
-	verificationBatchPageSize = 10;
-  verificationBatchPageSizeOptions = [10, 25, 50, 100];
+
   
   BOOK_LIST_ELEMENT: BookListElement[] = [];
   booklistdataSource = new MatTableDataSource<BookListElement>(this.BOOK_LIST_ELEMENT);
   displayedBookListColumns: string[] = ['srno', 'book_no', 'book_name', 'book_author', 'book_publisher', 'book_location'];
-  bookListPageIndex = 0;
-	bookListPageSize = 10;
-	bookListPageSizeOptions = [10, 25, 50, 100];
+  
   searchBookId = '';
 
 
@@ -118,7 +112,8 @@ export class PhysicalVerificationComponent implements OnInit {
 					element = {
 						srno: pos,
 						verified_on: new DatePipe('en-in').transform(item.verfication_on_date, 'd-MMM-y'),
-						verified_by: item.verfication_by ? item.verfication_by : '-',
+            verified_by: item.verfication_by ? item.verfication_by : '-',
+            verfication_by_name: item.verfication_by_name ? item.verfication_by_name : '-',
 						no_of_books: this.bookCount(item.details) ? this.bookCount(item.details) : '-'
           };
 					this.VERIFICATION_LOG_ELEMENT.push(element);
@@ -185,7 +180,6 @@ export class PhysicalVerificationComponent implements OnInit {
   }
 
   searchBook() {
-    console.log(this.searchBookId);
     if (this.searchBookId) {
       this.enteredVal = true;
       const inputJson = { "filters": [{ "filter_type": "reserv_id", "filter_value": Number(this.searchBookId), "type": "number" }] };
@@ -229,8 +223,7 @@ export class PhysicalVerificationComponent implements OnInit {
     }
   }
 
-  save() {
-   
+  save() {   
     const datePipe = new DatePipe('en-in');
     let batchArr = [];
     for (var i = 0; i < this.VERIFICATION_BATCH_ELEMENT.length; i++) {
