@@ -46,6 +46,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	paramform: FormGroup;
 	searchtoggle = false;
 	psubArray: any[] = [];
+	ptopicArray: any[] = [];
+	stopicArray: any[] = [];
 
 
 	constructor(
@@ -89,7 +91,12 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		})
 	}
 	searchTopic(){
-		this.getTopic(this);
+		if(this.paramform.value.param_topic_id) {
+			this.getSubTopic(this);
+		} else {
+			this.getTopic(this);
+		}
+		
 	}
 	resetTopic(){
 		this.paramform.reset();
@@ -116,7 +123,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		// });
 		this.paramform = this.fbuild.group({
 			param_class_id: '',
-			param_sub_id: ''
+			param_sub_id: '',
+			param_topic_id: ''
 		})
 		this.formGroupArray = [{
 			formGroup: this.fbuild.group({
@@ -227,7 +235,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					let pos = 1;
 					for (const item of result.data) {
 						that.CONFIG_ELEMENT_DATA.push({
-							position: pos,
+							position: item.class_id,
 							name: item.class_name,
 							order: item.class_order,
 							action: item
@@ -301,7 +309,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					let pos = 1;
 					for (const item of result.data) {
 						that.CONFIG_ELEMENT_DATA.push({
-							position: pos,
+							position: item.sub_id,
 							name: item.sub_name,
 							sub_code: item.sub_code,
 							sub_timetable: item.sub_timetable,
@@ -352,10 +360,42 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		}
 	}
 
+	getTopicForParam() {
+		this.ptopicArray = [];
+		const param: any = {};
+		if(this.paramform.value.param_class_id) {
+			param.topic_class_id = this.paramform.value.param_class_id;
+		}
+		if(this.paramform.value.param_sub_id) {
+			param.topic_sub_id = this.paramform.value.param_sub_id;
+		}
+		this.smartService.getTopic(param).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.ptopicArray = result.data;
+			}
+		});
+	}
+	getTopicForSubtopic() {
+		this.stopicArray = [];
+		const param: any = {};
+		const topicformgroup: FormGroup = this.formGroupArray[this.configValue-1].formGroup;
+		if(topicformgroup.value.topic_class_id) {
+			param.topic_class_id = topicformgroup.value.topic_class_id;
+		}
+		if(topicformgroup.value.topic_sub_id) {
+			param.topic_sub_id = topicformgroup.value.topic_sub_id;
+		}
+		this.smartService.getTopic(param).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.stopicArray = result.data;
+			}
+		});
+	}
+
 	getTopic(that) {
 		that.topicArray = [];
+		that.ptopicArray = [];
 		that.getClass(that);
-		that.getSubject(that);
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		const param: any = {};
@@ -365,21 +405,18 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		if(that.paramform.value.param_sub_id) {
 			param.topic_sub_id = that.paramform.value.param_sub_id;
 		}
-		const topicformgroup: FormGroup = this.formGroupArray[this.configValue-1].formGroup;
-		if(topicformgroup.value.topic_class_id) {
-			param.topic_class_id = topicformgroup.value.topic_class_id;
-		}
-		if(topicformgroup.value.topic_sub_id) {
-			param.topic_sub_id = topicformgroup.value.topic_sub_id;
-		}
 		that.smartService.getTopic(param).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				that.topicArray = result.data;
+				if(that.paramform.value.param_sub_id) {
+					that.ptopicArray = result.data;
+				} else {
+					that.topicArray = result.data;
+				}				
 				if (that.configValue === '4') {
 					let pos = 1;
 					for (const item of result.data) {
 						that.CONFIG_ELEMENT_DATA.push({
-							position: pos,
+							position: item.topic_id,
 							name: item.topic_name,
 							class_name: item.class_name,
 							sub_name: item.sub_name,
@@ -400,17 +437,30 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 
 	getSubTopic(that) {
-		that.getTopic(that);
+		//that.getTopic(that);
+		that.getClass(that);
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
-		that.smartService.getSubTopic().subscribe((result: any) => {
+		const param: any = {};
+		if(that.paramform.value.param_class_id) {
+			param.class_id = that.paramform.value.param_class_id;
+		}
+		if(that.paramform.value.param_sub_id) {
+			param.sub_id = that.paramform.value.param_sub_id;
+		}
+		if(that.paramform.value.param_topic_id) {
+			param.st_topic_id = that.paramform.value.param_topic_id;
+		}
+		that.smartService.getSubTopic(param).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				if (that.configValue === '5') {
 					let pos = 1;
 					for (const item of result.data) {
 						that.CONFIG_ELEMENT_DATA.push({
-							position: pos,
+							position: item.st_id,
 							name: item.st_name,
+							class_name: item.class_name,
+							sub_name: item.sub_name,
 							topic_name: item.topic_name,
 							order: item.st_order,
 							action: item
@@ -752,14 +802,18 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				topic_status: value.topic_status
 			});
 		} else if (Number(this.configValue) === 5) {
+			console.log(value);
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				st_id: value.st_id,
 				st_name: value.st_name,
+				topic_class_id: value.class_id,
+				topic_sub_id: value.sub_id,
 				st_topic_id: value.st_topic_id,
 				st_order: value.st_order,
 				st_status: value.st_status
 			});
+			this.getSubjectsByClassForTopic();
 		} else if (Number(this.configValue) === 6) {
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
@@ -805,7 +859,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 5) {
 			this.getSubTopic(this);
-			this.displayedColumns = ['position', 'name', 'topic_name', 'order', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'class_name', 'sub_name', 'topic_name', 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 6) {
 			this.getClassSectionSubject(this);
