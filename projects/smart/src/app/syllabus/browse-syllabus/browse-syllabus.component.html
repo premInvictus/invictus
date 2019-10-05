@@ -104,8 +104,8 @@
                                             <td class="custom-td text-left">
                                                 <div [innerHTML]="det.sd_desc"></div>
                                             </td>
-                                            <td class="custom-td text-center">
-                                                    {{termArray[det.syl_term_id]}}
+                                            <td class="custom-td text-center" *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                                    {{termArray[item.syl_term_id]}}
                                                 </td>
                                             <td class="custom-td">
                                                 {{det.sd_period_teacher}}
