@@ -163,7 +163,7 @@
             <mat-tab label="Class Wise">
               <div class="row">
                 <div class="col-12">
-                  <table class="table-100">
+                  <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['class']">
                     <tbody>
                       <ng-container *ngFor="let item of dashboardDueReservoirData['class']">
                         <tr *ngIf="item?.dueCount > 0">
@@ -187,7 +187,7 @@
             <mat-tab label="Teacher Wise">
               <div class="row">
                 <div class="col-12">
-                  <table class="table-100">
+                  <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['teacher']">
                     <tbody>
                       <ng-container *ngFor="let item of dashboardDueReservoirData['teacher']">
                       <tr>
@@ -212,7 +212,7 @@
             <mat-tab label="Staff Wise">
               <div class="row">
                 <div class="col-12">
-                  <table class="table-100">
+                  <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['staff']">
                     <tbody>
                         <ng-container *ngFor="let item of dashboardDueReservoirData['staff']">
                       <tr>
@@ -238,7 +238,7 @@
             <mat-tab label="Over Due">
               <div class="row">
                 <div class="col-12 remove-col-padding">
-                  <table class="table-100 custom-table">
+                  <table class="table-100 custom-table" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all']">
                     <thead>
                       <tr class="custom-tr text-center">
                         <th class="custom-th">Sr No.</th>
