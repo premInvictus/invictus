@@ -1,0 +1,42 @@
+.teacher-pink-gradiant {
+    background-color: darkorchid;
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-top: 10px;
+}
+
+.student-violet-gradiant {
+    background-color: violet;
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-top: 10px;
+}
+
+.staff-orange-gradiant {
+    background-color: orange;
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-top: 10px;
+}
+
+.reissue-gray-gradiant {
+    background-color: gray;
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-top: 10px;
+}
+
+.chart-label {
+    font-size: 18px;
+    font-weight: 700;
+    text-align: left;
+    
+}
+
+.chart-label-count {
+    color: #bbb;
+}

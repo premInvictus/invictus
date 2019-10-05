@@ -111,9 +111,30 @@
         <div class="col-12">
           <div class="font-size-24 text-center">
             <!-- <div class="margin-top-15per"> Chart will goes Here</div> -->
-            <app-common-dynamic-chart *ngIf="issuedBookchartflag"
-                                                    [options]="issuedBookchart">
-                                                </app-common-dynamic-chart>
+            <app-common-dynamic-chart *ngIf="issuedBookchartflag" [options]="issuedBookchart">
+            </app-common-dynamic-chart>
+            <div class="row">
+              <div class="col-4">
+                <div>
+                  <div class="teacher-pink-gradiant"></div> <span class="chart-label">Teachers : <span
+                      class="chart-label-count">{{issuedToTeacher}}</span></span>
+                </div>
+                <div>
+                  <div class="student-violet-gradiant"></div> <span class="chart-label">Students : <span
+                      class="chart-label-count">{{issuedToStudent}}</span></span>
+                </div>
+              </div>
+              <div class="col-4">
+                <div>
+                  <div class="staff-orange-gradiant"></div> <span class="chart-label">Staff : <span
+                      class="chart-label-count">{{issuedToStaff}}</span></span>
+                </div>
+                <div>
+                  <div class="reissue-gray-gradiant"></div> <span class="chart-label">Reissued : <span
+                      class="chart-label-count">{{reissued}} </span></span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -127,12 +148,13 @@
         </div>
         <div class="col-6 text-right margin-top-8">
           <span class="font-size-16">Today : </span>
-          <span class="font-size-16 font-color-red font-bold"> 218 Books</span>
+          <span class="font-size-16 font-color-red font-bold"> {{dashboardDueReservoirData?.total_due_count}}
+            Books</span>
         </div>
       </div>
       <div class="row remove-top-margin">
         <div class="col-12">
-          <span class=" opacity-7 font-bold font-size-14">Tuesday, 22-Sep-2019</span>
+          <span class=" opacity-7 font-bold font-size-14">{{currentDate | date : 'EEEE dd-MMM-yyyy'}}</span>
         </div>
       </div>
       <div class="row remove-top-margin">
@@ -143,41 +165,19 @@
                 <div class="col-12">
                   <table class="table-100">
                     <tbody>
-                      <tr>
-                        <th class="font-bold padding-8">Nursery</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">III</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">IV</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">V</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">VII</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">IV</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">V</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">VII</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                      </tr>
-                      <tr class="background-dash-grand">
+                      <ng-container *ngFor="let item of dashboardDueReservoirData['class']">
+                        <tr *ngIf="item?.dueCount > 0">
+                          <th class="font-bold padding-8">{{item?.class_name}}</th>
+                          <th class="font-color-red padding-8">{{item?.dueCount}} Books</th>
+                        </tr>
+                      </ng-container>
+                      <tr class="background-dash-grand" *ngIf="dashboardDueReservoirData['class'].length > 0">
                         <th class="font-bold padding-8 font-size-18"><span>Grand Total</span></th>
-                        <th class="font-color-red padding-8 font-size-18"><span>125 Books</span></th>
+                        <th class="font-color-red padding-8 font-size-18">
+                          <span>{{dashboardDueReservoirData?.class_total_due_count}} Books</span></th>
+                      </tr>
+                      <tr *ngIf="dashboardDueReservoirData?.class_total_due_count == 0">
+                          <td class="text-center" colspan="2">No Record Found</td>
                       </tr>
                     </tbody>
                   </table>
@@ -189,50 +189,20 @@
                 <div class="col-12">
                   <table class="table-100">
                     <tbody>
+                      <ng-container *ngFor="let item of dashboardDueReservoirData['teacher']">
                       <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
-                      </tr>
-                      <tr class="background-dash-grand">
+                        <th class="font-bold padding-8">{{item?.au_full_name}}</th>
+                        <th class="font-color-red padding-8">{{item?.due_count}} Books</th>
+                        <!-- <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th> -->
+                      </tr>         
+                    </ng-container>             
+                      <tr class="background-dash-grand" *ngIf="dashboardDueReservoirData['teacher'].length > 0">
                         <th class="font-bold padding-8 font-size-18"><span>Grand Total</span></th>
-                        <th class="font-color-red padding-8 font-size-18"><span>125 Books</span></th>
+                        <th class="font-color-red padding-8 font-size-18"><span>{{dashboardDueReservoirData?.teacher_total_due_count}} Books</span></th>
                         <th></th>
+                      </tr>
+                      <tr  *ngIf="dashboardDueReservoirData?.teacher_total_due_count == 0">
+                          <td class="text-center" colspan="2">No Record Found</td>
                       </tr>
                     </tbody>
                   </table>
@@ -244,26 +214,21 @@
                 <div class="col-12">
                   <table class="table-100">
                     <tbody>
+                        <ng-container *ngFor="let item of dashboardDueReservoirData['staff']">
                       <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
+                        <th class="font-bold padding-8">{{item?.au_full_name}}/th>
+                        <th class="font-color-red padding-8">{{item?.due_count}} Books</th>
+                        <!-- <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th> -->
                       </tr>
-                      <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
-                      </tr>
-                      <tr>
-                        <th class="font-bold padding-8">Ashok Kumar</th>
-                        <th class="font-color-red padding-8">12 Books</th>
-                        <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th>
-                      </tr>
-
-                      <tr class="background-dash-grand">
+                      </ng-container>
+                      
+                      <tr class="background-dash-grand" *ngIf="dashboardDueReservoirData['staff'].length > 0">
                         <th class="font-bold padding-8 font-size-18"><span>Grand Total</span></th>
-                        <th class="font-color-red padding-8 font-size-18"><span>125 Books</span></th>
+                        <th class="font-color-red padding-8 font-size-18"><span>{{dashboardDueReservoirData?.staff_total_due_count}}  Books</span></th>
                         <th></th>
+                      </tr>
+                      <tr *ngIf="dashboardDueReservoirData?.staff_total_due_count == 0">
+                          <td class="text-center" colspan="2">No Record Found</td>
                       </tr>
                     </tbody>
                   </table>
@@ -287,17 +252,19 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="custom-tr">
-                        <td class="custom-td"><span>1</span></td>
+                      <ng-container *ngFor="let item of dashboardDueReservoirData['all'];">
+                      <tr class="custom-tr" *ngFor="let subitem of item.reserv_user_logs; let i = index;">
+                        <td class="custom-td"><span>{{i+1}}</span></td>
                         <td class="custom-td">
-                          <span class="font-skyblue">12456879</span>
+                          <span class="font-skyblue">{{subitem?.reserv_id}}</span>
                         </td>
-                        <td class="custom-td"><span>Harry Porter</span></td>
-                        <td class="custom-td">Dolres umbridge</td>
-                        <td class="custom-td">20-Sep-2019</td>
-                        <td class="custom-td">25-Sep-2019</td>
-                        <td class="custom-td"><span class="font-color-red">36 Days</span></td>
+                        <td class="custom-td"><span>{{subitem?.title}}</span></td>
+                        <td class="custom-td">{{item?.user_full_name}}</td>
+                        <td class="custom-td">{{subitem?.issued_on}}</td>
+                        <td class="custom-td">{{subitem?.due_date}}</td>
+                        <td class="custom-td"><span class="font-color-red">{{getDaysDiff(subitem?.due_date)}} Days</span></td>
                       </tr>
+                    </ng-container>
                     </tbody>
                   </table>
                 </div>

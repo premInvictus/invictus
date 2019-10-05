@@ -359,5 +359,12 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/dashboard/getIssuedReservoir', value);
 	}
+
+	getDashboardDueReservoirData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/dashboard/getDueReservoir', value);
+	}
 }
+
+
 

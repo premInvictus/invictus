@@ -112,6 +112,7 @@ export class IssueReturnComponent implements OnInit {
       if (!bookAlreadyAddedStatus) {
         var issueBookStatus = this.checkForIssueBook(this.returnIssueReservoirForm.value.scanBookId);
         if (issueBookStatus.status) {
+          console.log(issueBookStatus.index);
           this.bookData.push(this.bookLogData[Number(issueBookStatus.index)]);
         } else {
           const inputJson = {  "reserv_id" : Number(this.returnIssueReservoirForm.value.scanBookId), 
@@ -221,20 +222,22 @@ export class IssueReturnComponent implements OnInit {
     var bookData = JSON.parse(JSON.stringify(this.bookData )); ;
     for (let i = 0; i < bookData.length; i++) {
       if (bookData[i]['reserv_status'] === 'issued') {
-        if (bookData[i]['due_date'] < this.common.dateConvertion(bookData[i]['fdue_date'], 'dd-MMM-yyyy')) {
-          bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
-          bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'dd-MMM-yyyy');
+        if (bookData[i]['due_date'] <= this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
+          bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+          bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
+          bookData[i]['fdue_date'] = bookData[i]['fdue_date'];
+          bookData[i]['reissue_status'] = 1;
         } else {
           bookData[i]['reserv_status'] = 'available';
-          bookData[i]['issued_on'] = '';
-          bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
+          bookData[i]['issued_on'] = this.common.dateConvertion(bookData[i]['issued_on'], 'yyyy-MM-dd');
+          bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
         }
         updatedBookData.push(bookData[i]);
       } else if (bookData[i]['reserv_status'] === 'available') {
         if (bookData[i]['fdue_date']) {
           bookData[i]['reserv_status'] = 'issued';
-          bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'dd-MMM-yyyy');
-          bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'dd-MMM-yyyy');
+          bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
+          bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
           updatedBookData.push(bookData[i]);
         }
       }
@@ -243,12 +246,16 @@ export class IssueReturnComponent implements OnInit {
     var inputJson = {
       reservoir_data: updatedBookData,
       user_login_id: this.userData.au_login_id,
-      user_role_id: this.userData.au_role_id
+      user_role_id: this.userData.au_role_id,
+      user_full_name: this.userData.au_full_name,
+      user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
+      user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
     }
     if (!this.userHaveBooksData) {
       this.erpCommonService.insertUserReservoirData(inputJson).subscribe((result: any) => {
         if (result && result.status == 'ok') {
           this.bookData = [];
+          this.issueBookData = [];
           this.resetIssueReturn();
           this.getUserIssueReturnLogData();
 
@@ -259,6 +266,7 @@ export class IssueReturnComponent implements OnInit {
       this.erpCommonService.updateUserReservoirData(inputJson).subscribe((result: any) => {
         if (result && result.status == 'ok') {
           this.bookData = [];
+          this.issueBookData = [];
           this.resetIssueReturn();
           this.getUserIssueReturnLogData();
 
@@ -274,6 +282,7 @@ export class IssueReturnComponent implements OnInit {
   }
 
   checkForIssueBook(searchBookId) {
+    console.log('this.bookLogData', this.bookLogData);
     var flag = { 'status': false, 'index': '' };
     for (var i = 0; i < this.bookLogData.length; i++) {
       if (Number(this.bookLogData[i]['reserv_id']) === Number(searchBookId) && this.bookLogData[i]['issued_on'] != '') {
