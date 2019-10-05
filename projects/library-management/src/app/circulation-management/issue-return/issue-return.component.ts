@@ -298,6 +298,7 @@ export class IssueReturnComponent implements OnInit {
       } else {
         this.userHaveBooksData = false;
         this.bookLogData = [];
+        this.bookReadTillDate = 0;
         this.BOOK_LOG_LIST_ELEMENT = [];
         this.bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
       }
