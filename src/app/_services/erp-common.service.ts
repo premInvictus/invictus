@@ -34,6 +34,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirDataBasedOnFilter', value);
 	}
+	getBookLogsPerBook(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/reservoir/getBookLogsPerBook', value);
+	}
 	getLanguages(value) {
 		return this.http.post(environment.apiReservUrl + '/reservoir/getLanguages', value);
 	}
