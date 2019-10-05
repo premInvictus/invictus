@@ -56,6 +56,7 @@ export class ComparitiveComponent implements OnInit {
 	session: any;
 	sessionName: any;
 	length: any;
+	hide = true;;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -847,6 +848,9 @@ export class ComparitiveComponent implements OnInit {
 		} else {
 			return 'no-bold';
 		}
+	}
+	sumarisedReport($event){
+		this.hide = $event.checked ? false: true;
 	}
 
 
