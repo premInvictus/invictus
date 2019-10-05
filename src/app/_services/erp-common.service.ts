@@ -38,6 +38,7 @@ export class ErpCommonService {
 		return this.http.post(environment.apiReservUrl + '/reservoir/getLanguages', value);
 	}
 	getVendor(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/vendor/getVendor', value);
 	}
 	getGenres(value) {
