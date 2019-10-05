@@ -40,6 +40,27 @@ export class MarksEntryComponent implements OnInit {
     public dialog: MatDialog
   ) { }
 
+  /*async getSubjectSync(){
+    const temp: any[] = [];
+    await  this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).toPromise().then((result: any) => {
+      if (result && result.status === 'ok') {
+        result.data.forEach( e => {
+          temp.push(e);
+        });
+      }
+    });
+    const param: any = {};
+    param.class_id = this.paramform.value.eme_class_id;
+    param.sec_id = this.paramform.value.eme_sec_id;
+    await this.examService.getAdditionalSubjectForClass(param).toPromise().then((result: any) => {
+      if(result && result.status === 'ok') {
+        result.data.forEach( e => {
+          temp.push(e);
+        });
+      }
+    });
+    console.log('class and aditional subjects', temp);
+  }*/
   getClassTerm() {
     this.termsArray = [];
     this.examService.getClassTerm({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
