@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { DatePipe } from '@angular/common';
@@ -16,7 +16,7 @@ import { MatDialog } from '@angular/material';
 
 
 
-export class PhysicalVerificationComponent implements OnInit {
+export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
   newBatchForm: FormGroup;
   verificationLogData:any [] = [];
   bookListData:any [] = [];
@@ -30,7 +30,7 @@ export class PhysicalVerificationComponent implements OnInit {
   currentDate = new Date();
   showBookDetail = false;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   VERIFICATION_LOG_ELEMENT: VerificationLogElement[] = [];
@@ -77,12 +77,14 @@ export class PhysicalVerificationComponent implements OnInit {
 
   ngAfterViewInit() {
 
-		this.logdataSource.paginator = this.paginator;
-    this.logdataSource.sort = this.sort;
-    this.batchdataSource.paginator = this.paginator;
-    this.batchdataSource.sort = this.sort;
-    this.booklistdataSource.paginator = this.paginator;
-		this.booklistdataSource.sort = this.sort;
+		// this.logdataSource.paginator = this.paginator;
+    // this.logdataSource.sort = this.sort;
+    // this.batchdataSource.paginator = this.paginator;
+    // this.batchdataSource.sort = this.sort;
+    // this.booklistdataSource.paginator = this.paginator;
+    // this.booklistdataSource.sort = this.sort;
+    
+    
 	}
 
   buildForm() {
@@ -143,12 +145,17 @@ export class PhysicalVerificationComponent implements OnInit {
           if (this.bookListData) {
             let pos = 1;
             recordArray = this.bookListData;
+            
             for (const item of recordArray) {
+              let aval = '';
+              for( const avalue of item.book_author ) {
+                aval+= avalue+",";
+              }
               element = {
                 srno: pos,
                 book_no: item.book_no,
                 book_name: item.book_name ? item.book_name : '-',
-                book_author: item.book_author ? item.book_author : '-',
+                book_author: aval ? aval.slice(0, -1) : '-',
                 book_publisher: item.book_publisher ? item.book_publisher : '-',
                 book_location : item.book_location ? item.book_location : '-'
               };
@@ -159,8 +166,10 @@ export class PhysicalVerificationComponent implements OnInit {
             this.booklistdataSource = new MatTableDataSource<BookListElement>(this.BOOK_LIST_ELEMENT);
             
             this.booklistdataSource.paginator = this.paginator;
-            this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-            this.booklistdataSource.sort = this.sort;
+            if (this.sort) {
+              this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+              this.booklistdataSource.sort = this.sort;
+            }
           } 
 
 
@@ -199,11 +208,15 @@ export class PhysicalVerificationComponent implements OnInit {
             let pos = 1;
             
             for (const item of this.bookData) {
+              let aval = '';
+              for( const avalue of item.book_author ) {
+                aval+= avalue+",";
+              }
               element = {
                 srno: pos,
                 book_no: item.reserv_id,
                 book_name: item.title ? item.title : '-',
-                book_author: item.authors ? item.authors : '-',
+                book_author: aval ? aval.slice(0,-1) : '-',
                 book_publisher: item.publisher ? item.publisher : '-',
                 book_location : item.location ? item.location : '-'
               };
@@ -212,6 +225,10 @@ export class PhysicalVerificationComponent implements OnInit {
               
             }
             this.batchdataSource = new MatTableDataSource<VerificationBatchElement>(this.VERIFICATION_BATCH_ELEMENT);
+            if (this.sort) {
+              //this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+              this.batchdataSource.sort = this.sort;
+            }
           } 
           this.searchBookId = '';
 

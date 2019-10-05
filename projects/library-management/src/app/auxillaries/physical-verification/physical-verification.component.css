@@ -12,6 +12,14 @@
     color: #fff;
 }
 
-#report_table td.text-left{
+#report_table1 td.text-left{
+    text-align: left !important;
+}
+
+#report_table2 td.text-left{
+    text-align: left !important;
+}
+
+#report_table3 td.text-left{
     text-align: left !important;
 }

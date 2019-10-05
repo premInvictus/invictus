@@ -262,11 +262,17 @@ export class IssueReturnComponent implements OnInit {
         recordArray = this.bookLogData;
         let returnedCount = 0;
         for (const item of recordArray) {
+
+          let aval = '';
+          for( const avalue of item.authors ) {
+            aval+= avalue+",";
+          }
+
           element = {
             srno: pos,
             reserv_id: item.reserv_id,
             title: item.title,
-            author: item.authors,
+            author: aval.slice(0, -1),
             publisher: item.publisher,
             issued_on: item.issued_on,
             due_date: item.due_date,
@@ -489,7 +495,6 @@ export class IssueReturnComponent implements OnInit {
     worksheet.getCell('H4').value = 'Fine';
     worksheet.columns = columns;
     this.length = worksheet._rows.length;
-    console.log('this.bookLogData', this.bookLogData);
     for (const item of this.bookLogData) {
       const prev = this.length + 1;
       const obj: any = {};
@@ -498,7 +503,6 @@ export class IssueReturnComponent implements OnInit {
             console.log('avalue', avalue);
             aval+= avalue+",";
           }
-          console.log(aval);
         
           this.length++;
           worksheet.getCell('A' + this.length).value = item.reserv_id;
