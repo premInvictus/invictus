@@ -17,6 +17,7 @@ export class AdvancedSearchModalComponent implements OnInit {
   fieldType: any[] = [];
   genreArray: any[] = [];
   languageArray: any[] = [];
+  currentUser: any = {};
   constructor(private dialog: MatDialog, private fbuild: FormBuilder,
     private common: ErpCommonService) { }
   typeArray: any[] = [{
@@ -83,69 +84,144 @@ export class AdvancedSearchModalComponent implements OnInit {
       type_name: 'Marked for return',
     }
   ];
-  filterArray: any[] = [
+  sourceArray: any[] = [
     {
-      id: 'title',
-      name: 'Title',
-      type: 'text',
-      placeholder: 'Search book by title'
+      type_id: 'Purchased',
+      type_name: 'Purchased',
     },
     {
-      id: 'subtitle',
-      name: 'Sub-Title',
-      type: 'text',
-      placeholder: 'Search book by subtitle'
+      type_id: 'Donated',
+      type_name: 'Donated',
     },
     {
-      id: 'reserv_id',
-      name: 'Book Id',
-      type: 'number',
-      placeholder: 'Search book by Book Id'
+      type_id: 'Gifted',
+      type_name: 'Gifted',
     },
     {
-      id: 'publisher',
-      name: 'Publisher',
-      placeholder: 'Search book by Publisher',
-      type: 'text',
-    },
-    {
-      id: 'published_date',
-      name: 'Published Date',
-      placeholder: 'Search book by Published Date',
-      type: 'text',
-    },
-    {
-      id: 'authors',
-      name: 'Authors',
-      placeholder: 'Search book by  Authors',
-      type: 'text',
-    },
-    {
-      id: 'tags',
-      name: 'Keywords',
-      placeholder: 'Search book by keywords',
-      type: 'text',
-    },
-    {
-      id: 'location',
-      name: 'Location',
-      placeholder: 'Search book by location',
-      type: 'text',
-    },
-    {
-      id: 'pages',
-      name: 'Pages',
-      placeholder: 'Search book by pages',
-      type: 'number',
+      type_id: 'Specimen',
+      type_name: 'Specimen',
     }
+  ];
+  filterArray: any[] = [
   ];
   generalFilterForm: FormGroup;
   ngOnInit() {
   }
   openModal(data) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (Number(this.currentUser.role_id) === 2) {
+      this.filterArray = [
+        {
+          id: 'reserv_id',
+          name: 'Book Id',
+          type: 'number',
+          placeholder: 'Search book by Book Id'
+        },
+        {
+          id: 'title',
+          name: 'Title',
+          type: 'text',
+          placeholder: 'Search book by title'
+        },
+        {
+          id: 'subtitle',
+          name: 'Sub-Title',
+          type: 'text',
+          placeholder: 'Search book by subtitle'
+        },
+        {
+          id: 'publisher',
+          name: 'Publisher',
+          placeholder: 'Search book by Publisher',
+          type: 'text',
+        },
+        {
+          id: 'published_date',
+          name: 'Published Date',
+          placeholder: 'Search book by Published Date',
+          type: 'text',
+        },
+        {
+          id: 'authors',
+          name: 'Authors',
+          placeholder: 'Search book by  Authors',
+          type: 'text',
+        },
+        {
+          id: 'reserv_tags',
+          name: 'Keywords',
+          placeholder: 'Search book by keywords',
+          type: 'text',
+        },
+        {
+          id: 'location',
+          name: 'Location',
+          placeholder: 'Search book by location',
+          type: 'text',
+        },
+        {
+          id: 'pages',
+          name: 'Pages',
+          placeholder: 'Search book by pages',
+          type: 'number',
+        }
+      ];
+    } else {
+      this.filterArray = [
+        {
+          id: 'title',
+          name: 'Title',
+          type: 'text',
+          placeholder: 'Search book by title'
+        },
+        {
+          id: 'subtitle',
+          name: 'Sub-Title',
+          type: 'text',
+          placeholder: 'Search book by subtitle'
+        },
+        {
+          id: 'publisher',
+          name: 'Publisher',
+          placeholder: 'Search book by Publisher',
+          type: 'text',
+        },
+        {
+          id: 'published_date',
+          name: 'Published Date',
+          placeholder: 'Search book by Published Date',
+          type: 'text',
+        },
+        {
+          id: 'authors',
+          name: 'Authors',
+          placeholder: 'Search book by  Authors',
+          type: 'text',
+        },
+        {
+          id: 'reserv_tags',
+          name: 'Keywords',
+          placeholder: 'Search book by keywords',
+          type: 'text',
+        },
+        {
+          id: 'location',
+          name: 'Location',
+          placeholder: 'Search book by location',
+          type: 'text',
+        },
+        {
+          id: 'pages',
+          name: 'Pages',
+          placeholder: 'Search book by pages',
+          type: 'number',
+        }
+      ];
+    }
     this.dialogRef = this.dialog.open(this.searchModal, {
       width: '750px',
     });
+    this.formGroupArray = [];
     this.getGenres();
     this.getLanguages();
     this.buildForm();
@@ -208,6 +284,7 @@ export class AdvancedSearchModalComponent implements OnInit {
     obj['genre.genre_name'] = [];
     obj['category_id'] = [];
     obj['reserv_status'] = [];
+    obj['source'] = [];
     obj['language_details.lang_code'] = [];
     obj['user'] = JSON.parse(localStorage.getItem('currentUser'))
     this.generalFilterForm = this.fbuild.group(obj);
