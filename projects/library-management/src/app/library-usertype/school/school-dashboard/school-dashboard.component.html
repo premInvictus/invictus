@@ -171,7 +171,7 @@
                           <th class="font-color-red padding-8">{{item?.dueCount}} Books</th>
                         </tr>
                       </ng-container>
-                      <tr class="background-dash-grand" *ngIf="dashboardDueReservoirData['class'].length > 0">
+                      <tr class="background-dash-grand" *ngIf="dashboardDueReservoirData?.class_total_due_count > 0">
                         <th class="font-bold padding-8 font-size-18"><span>Grand Total</span></th>
                         <th class="font-color-red padding-8 font-size-18">
                           <span>{{dashboardDueReservoirData?.class_total_due_count}} Books</span></th>
