@@ -54,7 +54,7 @@
                 </ng-container>
                 <ng-container matColumnDef="book_no">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Book No. </th>
-                  <td mat-cell *matCellDef="let item"> 
+                  <td mat-cell *matCellDef="let item">
                     <a [routerLink]="['../../auxillary/book-detail']" [queryParams]="{book_id:item.book_no}">
                       <u>{{item.book_no}}</u></a></td>
                 </ng-container>
@@ -89,7 +89,7 @@
             <div [hidden]="!(BOOK_ELEMENT_DATA.length === 0)">
               <div class="text-center">
                 <app-no-data
-                [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+                  [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
                   [noDataText]="'No books to display'" [subText]="'Please   add books'"></app-no-data>
               </div>
             </div>
@@ -105,8 +105,16 @@
     <div class="col-12">
       <mat-card>
         <div class="row">
-          <div class="col-12">
+          <div class="col-6">
             <span class="font-size-24">Add Books</span>
+          </div>
+          <div class="col-6 text-right">
+            <div class="margin-top-10">
+              <button mat-button class="btn-danger" style="border-radius: 5px !important;font-weight: bold"
+                (click)="backToListing()">
+                <i class="fas fa-chevron-left font-size-14"></i> Go Back
+              </button>
+            </div>
           </div>
         </div>
       </mat-card>
@@ -122,7 +130,7 @@
   <div class="row">
     <div class="col-12">
       <mat-card>
-        <form [formGroup]="bookForm">
+        <form [formGroup]="bookForm" autocomplete="off">
           <div class="row">
             <div class="col-12">
               <span class="font-size-20 font-bold">Book Details</span>
@@ -134,7 +142,7 @@
                 <div class="book-cover-img-2" *ngIf="!imageFlag">
                   <div class="text-center">
                     <label for="file-input">
-                      <img class="book-place-holder-img" src="../../../../../../assets/images/book_placeholder.png">
+                      <img src="../../../../../../assets/images/book_placeholder.png">
                     </label>
                     <input id="file-input" name="file-input" type="file" (change)="readUrl($event)" hidden />
                   </div>
@@ -326,7 +334,11 @@
                 <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Source</mat-label>
-                    <input matInput placeholder="Source" formControlName="source" tabindex="18" />
+                    <mat-select placeholder="Book Type" placeholder="Source" formControlName="source" tabindex="18">
+                      <mat-option *ngFor="let item of sourceArray" [value]="item.type_id">
+                        {{item.type_name}}
+                      </mat-option>
+                    </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="col-3">
@@ -382,8 +394,7 @@
                 <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Vendor ID</mat-label>
-                    <input matInput placeholder="Vendor ID" formControlName="vendor_id"
-                    tabindex="24"
+                    <input matInput placeholder="Vendor ID" formControlName="vendor_id" tabindex="24"
                       (blur)="getVenderDetails($event)" (keydown.enter)="getVenderDetails($event)" type="number" />
                   </mat-form-field>
                 </div>
@@ -438,15 +449,14 @@
                 <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>P O No</mat-label>
-                    <input matInput placeholder="P O No" formControlName="vendor_po_no" 
-                    tabindex="25" required />
+                    <input matInput placeholder="P O No" formControlName="vendor_po_no" tabindex="25" required />
                   </mat-form-field>
                 </div>
                 <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Invoice No.</mat-label>
-                    <input matInput placeholder="Invoice No." formControlName="vendor_invoice_no" 
-                    tabindex="26"required />
+                    <input matInput placeholder="Invoice No." formControlName="vendor_invoice_no" tabindex="26"
+                      required />
                   </mat-form-field>
                 </div>
               </div>

@@ -90,6 +90,24 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
       type_name: 'Marked for return',
     }
   ];
+  sourceArray: any[] = [
+    {
+      type_id: 'Purchased',
+      type_name: 'Purchased',
+    },
+    {
+      type_id: 'Donated',
+      type_name: 'Donated',
+    },
+    {
+      type_id: 'Gifted',
+      type_name: 'Gifted',
+    },
+    {
+      type_id: 'Specimen',
+      type_name: 'Specimen',
+    }
+  ];
   classArray: any[] = [];
   subjectArray: any[] = [];
   vendorDetail: any = {};
@@ -127,6 +145,11 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.bookDataSource.paginator = this.paginator;
     this.bookDataSource.sort = this.sort;
+  }
+  backToListing() {
+    this.assessionMasterContainer = true;
+    this.addBookContainer = false;
+    this.getReservoirData();
   }
   searchOk($event) {
     this.BOOK_ELEMENT_DATA = [];
