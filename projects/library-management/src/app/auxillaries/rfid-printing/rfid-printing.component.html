@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" [hidden]="!(RFID_LIST_ELEMENT.length > 0)">
     <div class="col-12">
       <mat-card class="card-height-730">
         <div class="row">
@@ -25,12 +25,13 @@
             <div class="row ">
               <div class="col-10 remove-col-padding">
                 <mat-form-field appearance="legacy lib-form">
-                  <input matInput placeholder="Search" />
+                  <input matInput placeholder="Search" (keyup)="applyFilterRFID($event.target.value)"/>
                   <mat-icon matPrefix>filter_list</mat-icon>
                 </mat-form-field>
+                
               </div>
             </div>
-            <table class="custom-table">
+            <!-- <table class="custom-table">
               <thead>
                 <tr class="custom-tr text-center">
                   <th class="custom-th">Sr No.</th>
@@ -65,7 +66,65 @@
                   </td>
                 </tr>
               </tbody>
+            </table> -->
+            <table mat-table [dataSource]="rfidlistdataSource" matSort class="table-100 text-center" id="book_log"
+              class="booklog">
+              <ng-container matColumnDef="srno">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="2%"> Sr. No. </th>
+                <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+              </ng-container>
+              <ng-container matColumnDef="reserv_id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Book No.</th>
+                <td mat-cell *matCellDef="let element">
+                  <a class="font-skyblue cursor-pointer" (click)="setBookId(element?.reserv_id)">{{element?.reserv_id}}
+                  </a>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="title">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="30%">Book Name</th>
+                <td mat-cell *matCellDef="let element" class="text-left">
+                  <span class="text-left text-capitalize">{{element?.title | slice:0:125}}</span>
+                  <span *ngIf="item?.title?.length > 76">...</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="author">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Author</th>
+                <td mat-cell *matCellDef="let element" class="text-left">
+                  <span class="text-left text-capitalize">{{element?.author | slice:0:76}}</span>
+                  <span *ngIf="item?.authors?.length > 76">...</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="location">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Location</th>
+                <td mat-cell *matCellDef="let element" class="text-left">
+                  <span class="text-left text-capitalize">{{element?.location | slice:0:76}}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> RFID No.</th>
+                <td mat-cell *matCellDef="let element">
+                  <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
+                    <mat-form-field class="form-field lib-form">
+                      <input matInput [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.rfid) ? 'Enter RFID No..' : ''"
+                        formControlName="rfid" />
+                    </mat-form-field>
+                  </form>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedRFIDListColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedRFIDListColumns;">
+              </tr>
             </table>
+
+            <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+              <tr *ngIf="RFID_LIST_ELEMENT.length == 0">
+                <td colspan="8">No Record Found</td>
+              </tr>
+            </table>
+            <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[5,10,25,100,500]" showFirstLastButtons>
+              </mat-paginator>
           </div>
           <div class=" col-2">
           </div>
@@ -82,4 +141,16 @@
       </mat-card>
     </div>
   </div>
+
+  <div class="row" *ngIf="RFID_LIST_ELEMENT.length==0">
+      <div class="col-12">
+        <mat-card>
+          <div class="text-center">
+            <app-no-data
+              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+              [noDataText]="" [subText]="'No Book Available'"></app-no-data>
+          </div>
+        </mat-card>
+      </div>
+    </div>
 </div>
