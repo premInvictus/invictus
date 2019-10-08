@@ -5,93 +5,96 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
 @Component({
-  selector: 'app-rfid-printing',
-  templateUrl: './rfid-printing.component.html',
-  styleUrls: ['./rfid-printing.component.css']
+	selector: 'app-rfid-printing',
+	templateUrl: './rfid-printing.component.html',
+	styleUrls: ['./rfid-printing.component.css']
 })
 export class RfidPrintingComponent implements OnInit {
-  bookData: any[] = [];
-  formGroupArray: any[] = [];
-  finalDataArray: any[] = [];
-  @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+	bookData: any[] = [];
+	formGroupArray: any[] = [];
+	finalDataArray: any[] = [];
+	@ViewChild('paginator') paginator: MatPaginator;
+	@ViewChild(MatSort) sort: MatSort;
+	@ViewChild('bookDet')bookDet;
+	RFID_LIST_ELEMENT: RFIDListElement[] = [];
+	rfidlistdataSource = new MatTableDataSource<RFIDListElement>(this.RFID_LIST_ELEMENT);
+	displayedRFIDListColumns: string[] = ['srno', 'reserv_id', 'title', 'author', 'location', 'action'];
+	constructor(private common: ErpCommonService, private fbuild: FormBuilder) { }
+	ngOnInit() {
+		this.getReservoirData();
+	}
+	openBookModal(book_no) {
+		this.bookDet.openModal(book_no);
+	}
+	getReservoirData() {
+		this.common.getReservoirData({}).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				let element: any = {};
+				this.bookData = [];
+				this.bookData = res.data.resultData;
+				console.log('this.bookData', this.bookData);
+				for (const item of this.bookData) {
+					this.formGroupArray.push({
+						formGroup: this.fbuild.group({
+							reserv_id: item.reserv_id,
+							rfid: item.rfid ? item.rfid : ''
+						})
+					});
+				}
 
-  RFID_LIST_ELEMENT: RFIDListElement[] = [];
-  rfidlistdataSource = new MatTableDataSource<RFIDListElement>(this.RFID_LIST_ELEMENT);
-  displayedRFIDListColumns: string[] = ['srno', 'reserv_id', 'title', 'author', 'location', 'action'];
-  constructor(private common: ErpCommonService, private fbuild: FormBuilder) { }
-  ngOnInit() {
-    this.getReservoirData();
-  }
-  getReservoirData() {
-    this.common.getReservoirData({}).subscribe((res: any) => {
-      if (res && res.status === 'ok') {
-        let element: any = {};
-        this.bookData = [];
-        this.bookData = res.data.resultData;
-        console.log('this.bookData', this.bookData);
-        for (const item of this.bookData) {
-          this.formGroupArray.push({
-            formGroup: this.fbuild.group({
-              reserv_id: item.reserv_id,
-              rfid: item.rfid ? item.rfid : ''
-            })
-          });
-        }
+				this.RFID_LIST_ELEMENT = [];
+				this.rfidlistdataSource = new MatTableDataSource<RFIDListElement>(this.RFID_LIST_ELEMENT);
 
-        this.RFID_LIST_ELEMENT = [];
-        this.rfidlistdataSource = new MatTableDataSource<RFIDListElement>(this.RFID_LIST_ELEMENT);
+				let pos = 1;
+				let returnedCount = 0;
+				for (const item of this.bookData) {
+					element = {
+						srno: pos,
+						reserv_id: item.reserv_id,
+						title: item.title,
+						author: item.authors,
+						location: item.publisher,
+						action: item
+					};
 
-        let pos = 1;
-        let returnedCount = 0;
-        for (const item of this.bookData) {
-          element = {
-            srno: pos,
-            reserv_id: item.reserv_id,
-            title: item.title,
-            author: item.authors,
-            location: item.publisher,
-            action: item
-          };
-          
 
-          this.RFID_LIST_ELEMENT.push(element);
-          pos++;
+					this.RFID_LIST_ELEMENT.push(element);
+					pos++;
 
-        }
-        this.rfidlistdataSource = new MatTableDataSource<RFIDListElement>(this.RFID_LIST_ELEMENT);
-        this.rfidlistdataSource.paginator = this.paginator;
-        if (this.sort) {
-          this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-          this.rfidlistdataSource.sort = this.sort;
-        }
+				}
+				this.rfidlistdataSource = new MatTableDataSource<RFIDListElement>(this.RFID_LIST_ELEMENT);
+				this.rfidlistdataSource.paginator = this.paginator;
+				if (this.sort) {
+					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+					this.rfidlistdataSource.sort = this.sort;
+				}
 
-      }
-    });
-  }
-  finalSubmit() {
-    this.finalDataArray = [];
-    for (const item of this.formGroupArray) {
-      this.finalDataArray.push(item.formGroup.value);
-    }
-      this.common.updateRFIDMapping({rfid_data: this.finalDataArray}).subscribe((res: any) => {
-        if (res && res.status === 'ok') {
-          this.getReservoirData();
-        }
-      });
-  }
+			}
+		});
+	}
+	finalSubmit() {
+		this.finalDataArray = [];
+		for (const item of this.formGroupArray) {
+			this.finalDataArray.push(item.formGroup.value);
+		}
+			this.common.updateRFIDMapping({rfid_data: this.finalDataArray}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.getReservoirData();
+				}
+			});
+	}
 
-  applyFilterRFID(filterValue: string) {
-    this.rfidlistdataSource.filter = filterValue.trim().toLowerCase();
-  }
+	applyFilterRFID(filterValue: string) {
+		this.rfidlistdataSource.filter = filterValue.trim().toLowerCase();
+	}
 
 }
 
 export interface RFIDListElement {
-  srno: number;
-  reserv_id: string;
-  title: string;
-  author: string;
-  location: string;
-  action: any;
+	srno: number;
+	reserv_id: string;
+	title: string;
+	author: string;
+	location: string;
+	action: any;
 }

@@ -16,6 +16,7 @@ import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
 })
 export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	@ViewChild('cropModal') cropModal;
+	@ViewChild('bookDet')bookDet;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('searchModal') searchModal;
 	@ViewChild(MatSort) sort: MatSort;
@@ -367,6 +368,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					this.imageFlag = true;
 				}
 			});
+	}
+	openBookModal(book_no) {
+		this.bookDet.openModal(book_no);
 	}
 	acceptCrop(result) {
 		this.uploadImage(result.filename, result.base64);

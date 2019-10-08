@@ -36,7 +36,7 @@ export class IssueReturnComponent implements OnInit {
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
-
+	@ViewChild('bookDet')bookDet;
 	BOOK_LOG_LIST_ELEMENT: BookLogListElement[] = [];
 	bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
 	// tslint:disable-next-line: max-line-length
@@ -100,7 +100,9 @@ export class IssueReturnComponent implements OnInit {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session_id = JSON.parse(localStorage.getItem('session'));
 	}
-
+	openBookModal(book_no) {
+		this.bookDet.openModal(book_no);
+	}
 	ngOnInit() {
 		this.buildForm();
 		this.getSession();
