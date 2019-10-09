@@ -8,6 +8,7 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 export class DeleteModalComponent implements OnInit {
 	inputData: any;
 	@Input() deleteMessage;
+	@Input() inputText;
 	@Output() deleteOk = new EventEmitter<any>();
 	@Output() deleteCancel = new EventEmitter<any>();
 	dialogRef: MatDialogRef<DeleteModalComponent>;
@@ -18,10 +19,6 @@ export class DeleteModalComponent implements OnInit {
 	}
 	openModal(data) {
 		this.inputData = data;
-
-		if (! (this.inputData && this.inputData.text)) {
-			this.inputData.text = 'Delete ';
-		}
 		this.dialogRef = this.dialog.open(this.deleteModal, {
 			'height': '30vh',
 			'width': '60vh',
