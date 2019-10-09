@@ -324,7 +324,9 @@ export class IssueReturnComponent implements OnInit {
 		const bookData = JSON.parse(JSON.stringify(this.bookData));
 		for (let i = 0; i < bookData.length; i++) {
 			if (bookData[i]['reserv_status'] === 'issued') {
-				if (bookData[i]['due_date'] <= this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
+        
+        if (bookData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') || 
+        bookData[i]['due_date'] < this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
 					bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 					bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
 					bookData[i]['fdue_date'] = bookData[i]['fdue_date'];
@@ -343,7 +345,10 @@ export class IssueReturnComponent implements OnInit {
 					updatedBookData.push(bookData[i]);
 				}
 			}
-		}
+    }
+    
+
+    
 
 		const inputJson = {
 			reservoir_data: updatedBookData,
