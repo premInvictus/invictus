@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 @Component({
@@ -9,23 +9,25 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 export class BarcodePrintingComponent implements OnInit {
   barCodePrintForm: FormGroup;
   barCodeArray: any[] = [];
+  @ViewChild('searchModal') searchModal;
   constructor(private common: ErpCommonService, private fbuild: FormBuilder) { }
 
   ngOnInit() {
     this.buildForm();
   }
+  openSearchDialog = (data) => { this.barCodePrintForm.reset();		this.searchModal.openModal(data);  this.barCodeArray = [];}
   buildForm() {
     this.barCodePrintForm = this.fbuild.group({
-      reserv_id_from: '',
-      reserv_id_to: ''
+      reserv_id: ''
     })
   }
   getBarCode() {
-    if (this.barCodePrintForm.value.reserv_id_from || this.barCodePrintForm.value.reserv_id_to) {
-      this.common.getBarcodePrint(this.barCodePrintForm.value).subscribe((res: any) => {
+    if (this.barCodePrintForm.value.reserv_id) {
+      let inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': this.barCodePrintForm.value.reserv_id, 'type': 'text' } ],search_from: 'master' };
+      this.common.getReservoirDataBasedOnFilter(inputJson).subscribe((res: any) => {
         if (res && res.status === 'ok') {
           this.barCodeArray = [];
-          this.barCodeArray = res.data;
+          this.barCodeArray = res.data.resultData;
           console.log(this.barCodeArray);
         }
       });
@@ -41,4 +43,21 @@ export class BarcodePrintingComponent implements OnInit {
       '<body onload="window.print()">' + barRow + '</body></html>');
     popupWin.document.close();
   }
+
+  searchOk($event) {
+		localStorage.removeItem('invoiceBulkRecords');
+		if ($event) {
+			this.common.getReservoirDataBasedOnFilter({ 
+				filters: $event.filters,
+        generalFilters: $event.generalFilters,
+        search_from: 'master'
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+          this.barCodeArray = [];
+          this.barCodeArray = res.data.resultData;		
+          this.barCodePrintForm.reset();		
+				}
+			});
+		}
+	}
 }

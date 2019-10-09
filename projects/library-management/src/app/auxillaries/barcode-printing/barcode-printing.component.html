@@ -9,14 +9,14 @@
           <div class="col-6 text-right">
             <form [formGroup]="barCodePrintForm">
               <mat-form-field appearance="outline" class=" form-field-150">
-                <mat-label>Book ID From</mat-label>
-                <input matInput placeholder="Book ID From" formControlName="reserv_id_from" type="number" />
+                <mat-label>Book ID </mat-label>
+                <input matInput placeholder="Book ID " formControlName="reserv_id" type="text" />
               </mat-form-field>
-              <mat-form-field appearance="outline" class="btn-spacer form-field-150">
+              <!-- <mat-form-field appearance="outline" class="btn-spacer form-field-150">
                 <mat-label>Book ID To</mat-label>
                 <input matInput placeholder="Book ID TO" formControlName="reserv_id_to" type="number" />
-              </mat-form-field>
-              <button mat-raised-button class="btn-success-blue btn-spacer align-btn-bar">
+              </mat-form-field> -->
+              <button mat-raised-button class="btn-success-blue btn-spacer align-btn-bar" (click)="openSearchDialog()">
                 Advanced Filter
               </button>
               <button mat-raised-button class="btn-success-green btn-spacer align-btn-bar" (click)="getBarCode()">
@@ -71,3 +71,4 @@
     </div>
   </div>
 </div>
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>
