@@ -82,7 +82,7 @@
                     <span class="margin-left-10 ver-line-divider"></span>
                     <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16">
                         {{sessionArray[session_id.ses_id]}}</span>
-                        <span class="margin-left-10 ver-line-divider"></span>
+                    <span class="margin-left-10 ver-line-divider"></span>
                     <span class="font-size-16 font-bold">As On :</span>
                     <span class="font-light font-size-16"> {{todaydate | date: 'd-MMM-y'}}</span>
                     <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="finalSpannedArray.length > 0">
@@ -138,6 +138,7 @@
                         </thead>
                         <tbody class="text-center">
                             <ng-container *ngFor="let item of finalSpannedArray;let i=index">
+
                                 <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
                                     <ng-container>
                                         <tr class="custom-tr2" *ngFor="let det of item.details;let j = index">
@@ -161,7 +162,7 @@
                                             </td>
                                             <td class="custom-td text-center bold" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
-                                                {{termArray[det.syl_term_id]}}
+                                                {{termArray[item.syl_term_id]}}
                                             </td>
                                             <td class="custom-td no-of-period" *ngIf="hide"
                                                 [ngClass]="getBold(j,item.details.length - 1)">
@@ -275,52 +276,102 @@
                                         </tr>
                                     </ng-container>
                                 </ng-container>
+                                <ng-container
+                                    *ngIf="getTermWiseTotal(item.syl_term_id, i) && comparitiveForm.value.syl_term_id ===''">
+                                    <tr class="custom-tr" *ngIf="!finalDivFlag">
+                                        <td class="custom-td-sub">
+                                            Sub Total
+                                        </td>
+                                        <td class="custom-td-sub" *ngIf="hide">
+                                        </td>
+                                        <td class="custom-td-sub">
+                                        </td>
+                                        <td class="custom-td-sub" *ngIf="hide">
+                                            {{getTeachingSubTotal(item.syl_term_id,'teacher')}}
+                                        </td>
+                                        <td class="custom-td-sub" *ngIf="hide">
+                                            {{getTeachingSubTotal(item.syl_term_id,'test')}}
+                                        </td>
+                                        <td class="custom-td-sub" *ngIf="hide">
+                                            {{getTeachingSubTotal(item.syl_term_id,'revise')}}
+                                        </td>
+                                        <td class="custom-td-sub">
+                                            {{getTeachingSubTotal(item.syl_term_id,'total')}}
+                                        </td>
+                                        <td class="custom-td-sub" *ngIf="hide">
+                                            {{getTeachingSubTotal(item.syl_term_id,'cw_teacher')}}
+                                        </td>
+                                        <td class="custom-td-sub" *ngIf="hide">
+                                            {{getTeachingSubTotal(item.syl_term_id,'cw_test')}}
+                                        </td>
+                                        <td class="custom-td-sub" *ngIf="hide">
+                                            {{getTeachingSubTotal(item.syl_term_id,'cw_revise')}}
+                                        </td>
+                                        <td class="custom-td-sub">
+                                            {{getTeachingSubTotal(item.syl_term_id,'cw_total')}}
+                                        </td>
+                                        <td class="custom-td-sub">
+                                            {{getTeachingSubTotal(item.syl_term_id,'deviation')}}
+                                        </td>
+                                        <td class="custom-td-sub">
+                                        </td>
+                                        <td class="custom-td-sub">
+                                        </td>
+                                        <!-- <td class="custom-td-sub">
+                                                        {{deviationSum}}
+                                                    </td> -->
+                                        <td class="custom-td-sub">
+                                        </td>
+                                        <td class="custom-td-sub">
+                                        </td>
+                                    </tr>
+                                </ng-container>
                             </ng-container>
                             <tr class="custom-tr" *ngIf="!finalDivFlag">
-                                <td class="custom-td">
+                                <td class="custom-td-total">
                                     Grand Total
                                 </td>
-                                <td class="custom-td" *ngIf="hide">
+                                <td class="custom-td-total" *ngIf="hide">
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td-total">
                                 </td>
-                                <td class="custom-td" *ngIf="hide">
+                                <td class="custom-td-total" *ngIf="hide">
                                     {{teachingSum}}
                                 </td>
-                                <td class="custom-td" *ngIf="hide">
+                                <td class="custom-td-total" *ngIf="hide">
                                     {{testSum}}
                                 </td>
-                                <td class="custom-td" *ngIf="hide">
+                                <td class="custom-td-total" *ngIf="hide">
                                     {{revisionSum}}
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td-total">
                                     {{teachingSum + testSum + revisionSum}}
                                 </td>
-                                <td class="custom-td" *ngIf="hide">
+                                <td class="custom-td-total" *ngIf="hide">
                                     {{cwteachingSum}}
                                 </td>
-                                <td class="custom-td" *ngIf="hide">
+                                <td class="custom-td-total" *ngIf="hide">
                                     {{cwtestSum}}
                                 </td>
-                                <td class="custom-td" *ngIf="hide">
+                                <td class="custom-td-total" *ngIf="hide">
                                     {{cwrevisionSum}}
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td-total">
                                     {{cwteachingSum + cwtestSum + cwrevisionSum}}
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td-total">
                                     {{deviationSum}}
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td-total">
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td-total">
                                 </td>
-                                <!-- <td class="custom-td">
+                                <!-- <td class="custom-td-total">
                                     {{deviationSum}}
                                 </td> -->
-                                <td class="custom-td">
+                                <td class="custom-td-total">
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td-total">
                                 </td>
                             </tr>
                         </tbody>

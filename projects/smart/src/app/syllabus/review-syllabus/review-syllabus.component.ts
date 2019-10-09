@@ -678,7 +678,8 @@ export class ReviewSyllabusComponent implements OnInit {
 													let sd_period_teacher1: any = '';
 													let sd_period_test1: any = '';
 													let sd_period_revision1: any = '';
-													if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id) {
+													if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id && 
+														this.finalSyllabusArray[i].syl_term_id === this.finalSyllabusArray[j].syl_term_id) {
 														if (this.finalSyllabusArray[j].sd_ctr_id === '1') {
 															sd_period_teacher1 = this.finalSyllabusArray[j].sd_period_req;
 														} else if (this.finalSyllabusArray[j].sd_ctr_id === '2') {
