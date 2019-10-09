@@ -19,11 +19,11 @@
          </div>
          <div class="row">
             <div class="col-2"></div>
-            <div class="col-8">
+            <div class="col-8" [hidden]="!(RESERVATION_DATA.length > 0)">
                <div class="row ">
                   <div class="col-10 remove-col-padding">
                      <mat-form-field appearance="legacy lib-form">
-                        <input matInput placeholder="Search" />
+                        <input matInput placeholder="Search" (keyup)="filterVal($event.target.value)" />
                         <mat-icon matPrefix>filter_list</mat-icon>
                      </mat-form-field>
                   </div>
@@ -33,6 +33,10 @@
                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr. No. </th>
                      <td mat-cell *matCellDef="let item"> {{item.sr_no}} </td>
                   </ng-container>
+                  <ng-container matColumnDef="request_id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Request No. </th>
+                        <td mat-cell *matCellDef="let item"> {{item.request_id}} </td>
+                     </ng-container>
                   <ng-container matColumnDef="reserv_id">
                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Book No. </th>
                      <td mat-cell *matCellDef="let item">
@@ -63,9 +67,15 @@
                   <ng-container matColumnDef="action">
                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
                      <td mat-cell *matCellDef="let item">
-                        <span><i class="fas fa-check-circle font-color-green font-size-14 margin-right-15"></i></span>
-                        <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
-                           (click)="deleteRequest(item.reserv_id)"></i></span>
+                        <ng-container *ngIf="item.action.request_status === 'pending'">
+                           <span><i class="fas fa-check-circle font-color-green font-size-14 margin-right-15"
+                                 (click)="approveRequest(item.action)"></i></span>
+                           <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
+                                 (click)="deleteRequest(item.action.requested_id)"></i></span>
+                        </ng-container>
+                        <ng-container *ngIf="item.action.request_status === 'approved'">
+                           <b>Approved</b>
+                        </ng-container>
                      </td>
                   </ng-container>
                   <tr mat-header-row *matHeaderRowDef="bookdisplayedcolumns"></tr>
@@ -74,6 +84,13 @@
                </table>
                <mat-paginator #paginator [pageSize]="bookpagesize" [pageSizeOptions]="bookpagesizeoptions"
                   showFirstLastButtons (page)="pageEvent = fetchData($event)"></mat-paginator>
+            </div>
+            <div class="col-8" [hidden]="!(RESERVATION_DATA.length === 0)">
+               <div class="text-center">
+                  <app-no-data
+                     [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+                     [noDataText]="'No tickets has been raised'" [subText]="''"></app-no-data>
+               </div>
             </div>
             <div class="col-2"></div>
          </div>
@@ -91,5 +108,5 @@
    </div>
 </div>
 <app-book-details-modal #bookDet></app-book-details-modal>
-<app-delete-modal #deleteModal (delete)="deleteOk($event)" (cancel)="deleteCancel($event)"
-[deleteMessage]="'Do you weant to delete this ticket?'"></app-delete-modal>
+<app-delete-modal #deleteModal (deleteOk)="deleteOk($event)" (cancel)="deleteCancel($event)"
+   [deleteMessage]="delMessage" [inputText]="delText"></app-delete-modal>

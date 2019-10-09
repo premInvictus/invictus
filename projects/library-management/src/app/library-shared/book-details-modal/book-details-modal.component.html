@@ -16,47 +16,25 @@
             <div class="col-lg-2 col-5 smart-col-12 remove-col-padding-left">
               <img style="border-radius: 5px" [src]="bookData?.images_links?.smallThumbnail">
             </div>
-            <div class="col-7 col-lg-8 smart-col-88 remove-col-padding">
+            <div class="col-7 col-lg-10 smart-col-88">
               <div class="row remove-top-margin">
                 <div class="col-lg-8 col-12">
-                  <span class="font-size-20 font-bold">{{bookData?.reserv_id}}</span><br>
-                  <span class="font-size-18">{{bookData?.title}}</span><br>
-                  <span class="font-skyblue font-size-14">{{bookData?.authors}}</span><br>
-                  <div class="margin-top-35">
-                    <span class="font-bold font-size-14">Edition : </span><span>{{bookData?.edition}}</span><br>
-                    <span class="font-bold font-size-14">Publisher : </span><span>{{bookData?.authors}}</span><br>
-                    <span class="font-bold font-size-14">Pages : </span><span>{{bookData?.pages}}</span><br>
-                    <span class="font-bold font-size-14">Location : </span><span>{{bookData?.location}}</span><br>
-                  </div>
-                  <hr>
-                  <div>
-                    <p>{{bookData?.description}}</p>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="row">
-                    <div class="col-12 text-right">
-                      <span class="font-size-16"><i class="fas fa-book-open font-size-16"></i>
-                        {{bookData?.reserv_flagged_status.status ? (bookData?.reserv_flagged_status.status | capitalize) : (bookData?.reserv_status | capitalize)}}
-                      </span>
+                  <div class="book-details-div">
+                    <span class="font-size-20 font-bold">{{bookData?.reserv_id}}</span> &nbsp;
+                    <span class="font-size-16"><i class="fas fa-book-open font-size-16"></i>
+                      {{bookData?.reserv_flagged_status.status ? (bookData?.reserv_flagged_status.status | capitalize) : (bookData?.reserv_status | capitalize)}}
+                    </span><br>
+                    <span class="font-size-18">{{bookData?.title}}</span><br>
+                    <span class="font-skyblue font-size-14">{{bookData?.authors}}</span><br>
+                    <div class="margin-top-35">
+                      <span class="font-bold font-size-14">Edition : </span><span>{{bookData?.edition}}</span><br>
+                      <span class="font-bold font-size-14">Publisher : </span><span>{{bookData?.authors}}</span><br>
+                      <span class="font-bold font-size-14">Pages : </span><span>{{bookData?.pages}}</span><br>
+                      <span class="font-bold font-size-14">Location : </span><span>{{bookData?.location}}</span><br>
                     </div>
-                  </div>
-                  <div class="row margin-top-35" *ngIf="bookData?.similarBooks.length > 0">
-                    <div class="col-12">
-                      <div class="text-right">
-                        <span class="font-bold font-size-16">Similar Books</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12 text-right">
-                      <div class="inline-flex">
-                        <div *ngFor="let sim of bookData?.similarBooks" class="book-img-small-similar margin-left-15">
-                          <img class="book-img-small-similar" [src]="sim?.images_links?.smallThumbnail"
-                            style="cursor:pointer" (click)="getBookDetail(sim.reserv_id)">
-                            <br>
-                        </div>
-                      </div>
+                    <hr>
+                    <div>
+                      <p>{{bookData?.description}}</p>
                     </div>
                   </div>
                 </div>

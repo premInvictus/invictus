@@ -38,6 +38,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/bookreservation/deleteReservationData', value);
 	}
+	updateReservationData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/bookreservation/updateReservationData', value);
+	}
 	getReservoirDataBasedOnFilter(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirDataBasedOnFilter', value);

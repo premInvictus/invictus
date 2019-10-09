@@ -19,7 +19,7 @@ export class BookDetailsModalComponent implements OnInit, AfterViewInit {
 	}
 	openModal(book_no) {
 		this.dialogRef = this.dialog.open(this.bookDet, {
-			width: '90%',
+			width: '30%',
 		});
 		this.getBookDetail(book_no);
 	}
