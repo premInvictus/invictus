@@ -7,16 +7,14 @@
           <div class="row">
             <div class="col-8">
               <mat-form-field class="form-field lib-form">
-                <input matInput [placeholder]="!searchForm.value.search ? 'Search Any Book ..' : ''"
-                type="text"
+                <input matInput [placeholder]="!searchForm.value.search ? 'Search Any Book ..' : ''" type="text"
                   formControlName="search" id="search_book" />
               </mat-form-field>
             </div>
             <div class="col-4 text-right">
               <div class="margin-top-10">
-                <span class="font-size-12 margin-top-15 font-skyblue" 
-                style="cursor:pointer">Advanced Search <i
-                    class="fas fa-chevron-down" ></i></span>
+                <span class="font-size-12 margin-top-15 font-skyblue" (click)="openSearchDialog()"
+                  style="cursor:pointer">Advanced Search <i class="fas fa-chevron-down"></i></span>
                 <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchBook()">
                   Search
                 </button>
@@ -30,17 +28,16 @@
   </div>
   <div class="row" *ngIf="!searchFlag">
     <div class="col-12">
-      <mat-card class="card-height-730" style="margin-left: 10px !important; margin-right: 10px !important">
-        <div class="row margin-top-15per">
-          <div class="col-12 text-center">
-            <span class="font-size-24 font-bold">No Books Selected</span><br /><br>
-            <span class="font-size-18 margin-top-10">It's seems there is no books searched yet. Scan Book or Enter Book
-              ID to view availaiable books in library.</span><br /><br>
-            <button mat-button class="btn-success-blue margin-top-10" (click)="intitiateSearch()"
-              style="width: 140px;height:40px">
-              Search Book
-            </button>
-          </div>
+      <mat-card style="margin-left: 10px !important; margin-right: 10px !important">
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="'No Books Selected'" [subText]="'It seems there is no books searched yet. Scan Book or Enter Book
+              ID to view availaiable books in library.'"></app-no-data><br>
+          <button mat-button class="btn-success-blue margin-top-10" (click)="intitiateSearch()"
+            style="width: 140px;height:40px">
+            Search Book
+          </button>
         </div>
       </mat-card>
     </div>
@@ -59,8 +56,7 @@
               *ngFor="let item of BOOK_ELEMENT_DATA; let i = index;">
               <div class="book-container">
                 <img class="book-cover-img" [src]="item.images_links ?item.images_links.thumbnail : ''"
-                style="cursor: pointer"
-                  (click)="openBookDetails(item.reserv_id)" />
+                  style="cursor: pointer" (click)="openBookDetails(item.reserv_id)" />
                 <div [class]="item.book_container_class">
                   <div class="book-title-content text-center" style="padding: 3px !important">
                     <div class="book-first-content" (click)="showSecondDetailDiv(i); $event.stopPropagation();">
@@ -71,7 +67,8 @@
                       <div class="font-size-12 margin-top-15 font-medium">
                         <b>BOOK ID</b>: {{item.reserv_id}}
                       </div>
-                      <span class="font-size-16 font-medium"><b>{{item.title ? (item.title| truncatetext : 12) : ''}}</b></span><br />
+                      <span
+                        class="font-size-16 font-medium"><b>{{item.title ? (item.title| truncatetext : 12) : ''}}</b></span><br />
                       <span class="font-size-14 font-medium">{{item.authors}}</span>
                       <div class="font-size-14 margin-top-15 font-medium">
                         <b>Location</b>: {{item.location}}

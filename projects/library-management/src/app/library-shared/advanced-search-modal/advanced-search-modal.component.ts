@@ -114,7 +114,7 @@ export class AdvancedSearchModalComponent implements OnInit {
         {
           id: 'reserv_id',
           name: 'Book Id',
-          type: 'number',
+          type: 'text',
           placeholder: 'Search book by Book Id'
         },
         {

@@ -1,104 +1,112 @@
 <div class="row">
-  <div class="col-12">
-    <mat-card>
-        <div class="row">
-            <div class="col-7 margin-top-15">
-              <span class="font-size-24">Book Reservations</span>
+   <div class="col-12">
+      <mat-card>
+         <div class="row">
+            <div class="col-12 margin-top-15">
+               <span class="font-size-24">Book Reservations</span>
             </div>
-            <div class="col-5">
-              <div class="search-container">
-                <div class="row remove-top-margin">
-                  <div class="col-8">
-                    <mat-form-field class="lib-form form-field">
-                      <input matInput placeholder="Search Any Book By Name or ID" />
-                    </mat-form-field>
-                  </div>
-                  <div class="col-4 margin-top-10  text-right">
-                    
-                    <button
-                      mat-button
-                      class="btn-spacer btn-lib-search margin-left-10"
-                    >
-                      Search
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-    </mat-card>
-  </div>
+         </div>
+      </mat-card>
+   </div>
 </div>
 <div class="row">
-  <div class="col-12">
-    <mat-card>
-      <div class="row">
-        <div class="col-12 remove-col-padding">
-          <span class="font-size-20 font-bold"> Reserve Requests</span>
-        </div>
-      </div>
-      <div class="row">
-          <div class="col-2"></div>
-          <div class="col-8">
-            <div class="row ">
-              <div class="col-10 remove-col-padding">
-                <mat-form-field appearance="legacy lib-form">
-                  <input matInput placeholder="Search" />
-                  <mat-icon matPrefix>filter_list</mat-icon>
-                </mat-form-field>
-              </div>
+   <div class="col-12">
+      <mat-card>
+         <div class="row">
+            <div class="col-12 remove-col-padding">
+               <span class="font-size-20 font-bold"> Reserve Requests</span>
             </div>
-            <table class="custom-table">
-              <thead>
-                <tr class="custom-tr text-center">
-                  <th class="custom-th">Sr No.</th>
-                  <th class="custom-th">Book ID</th>
-                  <th class="custom-th">Book Name</th>
-                  <th class="custom-th">Request By</th>
-                  <th class="custom-th">Request On</th>
-                  <th class="custom-th">Priority</th>
-               
-                  <th class="custom-th">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="custom-td">1</td>
-                  <td class="custom-td">
-                    <a class="font-skyblue cursor-pointer">12345689</a>
-                  </td>
-                  <td class="custom-td text-left">
-                    <span class="margin-left-15">Harry Porter</span>
-                  </td>
-                  <td class="custom-td text-left padding-left-15">
-                    <span class="margin-left-15">Vikram Singh Vedi</span>
-                  </td>
-                  <td class="custom-td text-left padding-left-15">
-                    <span class="margin-left-15">20-Sep-2019</span>
-                  </td>
-                  <td class="custom-td">Low</td>
-                 
-                  <td class="custom-td">
-                      <span><i class="fas fa-check-circle font-color-green font-size-14 margin-right-15" ></i></span>
-                    <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"></i></span>
-                            </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="col-2"></div>
-        </div>
-        <br />
-        <div class="row text-center">
-          <div class="col-12">
-            <button mat-raised-button class="btn-success-green">Submit</button>
-            <button mat-raised-button class="btn-reset btn-spacer">
-              Reset
-            </button>
-          </div>
-        </div>
-        <br>
-
-    </mat-card>
-  </div>
+         </div>
+         <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8" [hidden]="!(RESERVATION_DATA.length > 0)">
+               <div class="row ">
+                  <div class="col-10 remove-col-padding">
+                     <mat-form-field appearance="legacy lib-form">
+                        <input matInput placeholder="Search" (keyup)="filterVal($event.target.value)" />
+                        <mat-icon matPrefix>filter_list</mat-icon>
+                     </mat-form-field>
+                  </div>
+               </div>
+               <table mat-table [dataSource]="datasource" matSort class="table-100 text-center" id="report_table">
+                  <ng-container matColumnDef="sr_no">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr. No. </th>
+                     <td mat-cell *matCellDef="let item"> {{item.sr_no}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="request_id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Request No. </th>
+                        <td mat-cell *matCellDef="let item"> {{item.request_id}} </td>
+                     </ng-container>
+                  <ng-container matColumnDef="reserv_id">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Book No. </th>
+                     <td mat-cell *matCellDef="let item">
+                        <a (click)="openBookModal(item.reserv_id)" style="color: #258de7; cursor: pointer;">
+                           <u><b>{{item.reserv_id}}</b></u></a></td>
+                  </ng-container>
+                  <ng-container matColumnDef="book_name">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Book name</th>
+                     <td mat-cell *matCellDef="let item" class="text-left mar-left-5"> {{item.book_name | titlecase}}
+                     </td>
+                  </ng-container>
+                  <ng-container matColumnDef="requested_by">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Requested By </th>
+                     <td mat-cell *matCellDef="let item"> {{item.requested_by | titlecase}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="request_user">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Requested User </th>
+                     <td mat-cell *matCellDef="let item"> {{item.request_user | titlecase}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="request_on">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Requested On </th>
+                     <td mat-cell *matCellDef="let item"> {{item.request_on}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="priority">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Priority </th>
+                     <td mat-cell *matCellDef="let item"> {{item.priority}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+                     <td mat-cell *matCellDef="let item">
+                        <ng-container *ngIf="item.action.request_status === 'pending'">
+                           <span><i class="fas fa-check-circle font-color-green font-size-14 margin-right-15"
+                                 (click)="approveRequest(item.action)"></i></span>
+                           <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
+                                 (click)="deleteRequest(item.action.requested_id)"></i></span>
+                        </ng-container>
+                        <ng-container *ngIf="item.action.request_status === 'approved'">
+                           <b>Approved</b>
+                        </ng-container>
+                     </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="bookdisplayedcolumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: bookdisplayedcolumns;">
+                  </tr>
+               </table>
+               <mat-paginator #paginator [pageSize]="bookpagesize" [pageSizeOptions]="bookpagesizeoptions"
+                  showFirstLastButtons (page)="pageEvent = fetchData($event)"></mat-paginator>
+            </div>
+            <div class="col-8" [hidden]="!(RESERVATION_DATA.length === 0)">
+               <div class="text-center">
+                  <app-no-data
+                     [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+                     [noDataText]="'No tickets has been raised'" [subText]="''"></app-no-data>
+               </div>
+            </div>
+            <div class="col-2"></div>
+         </div>
+         <br />
+         <div class="row text-center">
+            <div class="col-12">
+               <button mat-raised-button class="btn-success-green">Submit</button>
+               <button mat-raised-button class="btn-reset btn-spacer">
+                  Reset
+               </button>
+            </div>
+         </div>
+         <br>
+      </mat-card>
+   </div>
 </div>
+<app-book-details-modal #bookDet></app-book-details-modal>
+<app-delete-modal #deleteModal (deleteOk)="deleteOk($event)" (cancel)="deleteCancel($event)"
+   [deleteMessage]="delMessage" [inputText]="delText"></app-delete-modal>
