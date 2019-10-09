@@ -596,16 +596,18 @@ export class BrowseSyllabusComponent implements OnInit {
 															sd_period_revision: sd_period_revision1,
 															sd_ctr_id: this.finalSyllabusArray[j].sd_ctr_id,
 															sd_desc: this.finalSyllabusArray[j].sd_desc,
-															syl_term_id: this.finalSyllabusArray[j].syl_term_id,
+															syl_term_id: this.finalSyllabusArray[i].syl_term_id,
 															sd_topic_name: this.finalSyllabusArray[j].topic_name,
 															sd_st_name: this.finalSyllabusArray[j].st_name,
 															sd_id: this.finalSyllabusArray[j].sd_id,
 														});
 													}
 												}
-												const findex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.finalSyllabusArray[i].sd_topic_id);
+												const findex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.finalSyllabusArray[i].sd_topic_id 
+													&& f.syl_term_id === this.finalSyllabusArray[i].syl_term_id);
 												if (findex === -1) {
 													this.finalSpannedArray.push({
+														syl_term_id:this.finalSyllabusArray[i].syl_term_id,
 														sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
 														details: spannArray,
 														total: this.finalSyllabusArray[i].sd_period_req,

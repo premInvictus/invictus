@@ -93,7 +93,7 @@ export class ReviewSyllabusComponent implements OnInit {
 
 	};
 	schooInfo: any;
-	termArray: any[] = ['','Term 1', 'Term 2', 'Term 3', 'Term 4','Term 5', 'Term 6', 'Term 7', 'Term 8','Term 9'];
+	termArray: any[] = ['', 'Term 1', 'Term 2', 'Term 3', 'Term 4', 'Term 5', 'Term 6', 'Term 7', 'Term 8', 'Term 9'];
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -705,9 +705,11 @@ export class ReviewSyllabusComponent implements OnInit {
 														});
 													}
 												}
-												const findex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.finalSyllabusArray[i].sd_topic_id);
+												const findex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.finalSyllabusArray[i].sd_topic_id
+													&& f.syl_term_id === this.finalSyllabusArray[i].syl_term_id);
 												if (findex === -1) {
 													this.finalSpannedArray.push({
+														syl_term_id:this.finalSyllabusArray[i].syl_term_id,
 														sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
 														details: spannArray,
 														total: this.finalSyllabusArray[i].sd_period_req,

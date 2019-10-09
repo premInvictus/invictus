@@ -13,7 +13,7 @@
     <div class="col-12 remove-col-padding">
       <ng-container *ngFor="let form of formGroupArray;let i = index;">
         <form [formGroup]="formGroupArray[i].formGroup">
-          <div class="row margin-top-30">
+          <div [class]="i == 0 ? 'row margin-top-30' : 'row'">
             <div class="col-4">
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Choose your filter..</mat-label>
@@ -35,15 +35,15 @@
                     </mat-form-field>
                   </div>
                   <div class="col-4 margin-top-10  text-right" *ngIf="(formGroupArray.length - 1) === i">
-                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="addNewFilter(i)">
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="addNewFilter(i)"
+                    [disabled]="!formGroupArray[i].formGroup.value.filter_type && !formGroupArray[i].formGroup.value.filter_value">
                       Add
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-1 text-center" *ngIf="i !== 0 
-            && (formGroupArray.length - 1 === i)">
+            <div class="col-1 text-center" *ngIf="i !== 0">
               <div class="margin-top-15" (click)="deleteForm(i)">
                 <i class="fas fa-trash font-size-20 font-color-red"></i>
               </div>
@@ -106,6 +106,15 @@
               </mat-select>
             </mat-form-field>
           </div>
+          <div class="col-4">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Source </mat-label>
+                <mat-select formControlName="source" multiple>
+                  <mat-option *ngFor="let item of sourceArray" [value]="item.type_id" placeholder="Source">
+                    {{item.type_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
         </div>
       </form>
       <br />

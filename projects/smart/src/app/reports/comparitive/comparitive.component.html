@@ -67,11 +67,11 @@
     <div class="col-12">
         <mat-card>
             <div class="row" *ngIf="headerDivFlag">
-                <div class="col-4">
+                <!-- <div class="col-4">
                     <span class="font-size-16 font-bold">As On :</span>
                     <span class="font-light font-size-16"> {{todaydate | date: 'd-MMM-y'}}</span>
-                </div>
-                <div class="col-8 text-right">
+                </div> -->
+                <div class="col-8 text-left">
                     <span class="font-size-16 font-bold">Class :</span>
                     <span class="font-light font-size-16"> {{getClassName(comparitiveForm.value.syl_class_id)}} -
                         {{getSectionName(comparitiveForm.value.syl_section_id)}}
@@ -82,6 +82,9 @@
                     <span class="margin-left-10 ver-line-divider"></span>
                     <span class="font-size-16 font-bold">Session :</span><span class="font-light font-size-16">
                         {{sessionArray[session_id.ses_id]}}</span>
+                        <span class="margin-left-10 ver-line-divider"></span>
+                    <span class="font-size-16 font-bold">As On :</span>
+                    <span class="font-light font-size-16"> {{todaydate | date: 'd-MMM-y'}}</span>
                     <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="finalSpannedArray.length > 0">
                         <div>
                             <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
@@ -95,6 +98,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-4 text-right">
+                    <span class="font-size-16 font-bold">Sumarised Report</span>
+                    <mat-slide-toggle class="inline-form-radio-spacing" aria-hidden="true"
+                        (change)="sumarisedReport($event)">
+                    </mat-slide-toggle>
+                </div>
             </div>
             <div class="row margin-top-0  text-right">
                 <div class="col-12">
@@ -102,12 +111,14 @@
                         <thead class="table-skill__head text-center" *ngIf="!finalDivFlag">
                             <tr class="custom-tr">
                                 <th class="custom-th" rowspan="2">Topic</th>
-                                <th class="custom-th" rowspan="2">SubTopic</th>
+                                <th class="custom-th" rowspan="2" *ngIf="hide">SubTopic</th>
                                 <th class="custom-th" rowspan="2">Term</th>
-                                <th class="custom-th" colspan="3">No. of Period Required To</th>
-                                <th class="custom-th" rowspan="2">Total</th>
-                                <th class="custom-th" colspan="3">No. of Period Taken To</th>
-                                <th class="custom-th" rowspan="2">Total</th>
+                                <th class="custom-th" colspan="3" *ngIf="hide">No. of Period Required To</th>
+                                <th class="custom-th" rowspan="2" *ngIf="hide">Total</th>
+                                <th class="custom-th" rowspan="2" *ngIf="!hide">No. of Period Required</th>
+                                <th class="custom-th" colspan="3" *ngIf="hide">No. of Period Taken To</th>
+                                <th class="custom-th" rowspan="2" *ngIf="hide">Total</th>
+                                <th class="custom-th" rowspan="2" *ngIf="!hide">No. of Period Taken</th>
                                 <!-- <th class="custom-th" rowspan="2" colspan="2">Deviation</th> -->
                                 <th class="custom-th" rowspan="2">Deviation</th>
                                 <th class="custom-th" rowspan="2">Available</th>
@@ -117,12 +128,12 @@
 
                             </tr>
                             <tr class="custom-tr">
-                                <th class="custom-th">Teach</th>
-                                <th class="custom-th">Test</th>
-                                <th class="custom-th">Revise</th>
-                                <th class="custom-th">Teach</th>
-                                <th class="custom-th">Test</th>
-                                <th class="custom-th">Revise</th>
+                                <th class="custom-th" *ngIf="hide">Teach</th>
+                                <th class="custom-th" *ngIf="hide">Test</th>
+                                <th class="custom-th" *ngIf="hide">Revise</th>
+                                <th class="custom-th" *ngIf="hide">Teach</th>
+                                <th class="custom-th" *ngIf="hide">Test</th>
+                                <th class="custom-th" *ngIf="hide">Revise</th>
                             </tr>
                         </thead>
                         <tbody class="text-center">
@@ -130,53 +141,68 @@
                                 <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
                                     <ng-container>
                                         <tr class="custom-tr2" *ngFor="let det of item.details;let j = index">
-                                            <td class="custom-td text-left bold topic-width" *ngIf="j == 0"
+                                            <td class="custom-td text-left bold topic-width" *ngIf="j == 0 "
                                                 [attr.rowspan]="item.details.length">
                                                 {{det.sd_topic_name}}</td>
                                             <td class="custom-td text-left topic-width"
                                                 [ngClass]="getBold(j,item.details.length - 1 )"
-                                                *ngIf="det.sd_ctr_id == 1">
+                                                *ngIf="det.sd_ctr_id == 1 && hide">
                                                 {{det.sd_st_name}}
                                             </td>
                                             <td class="custom-td text-left"
                                                 [ngClass]="getBold(j,item.details.length - 1)"
-                                                *ngIf="det.sd_ctr_id == 2">
+                                                *ngIf="det.sd_ctr_id == 2 && hide">
                                                 Test
                                             </td>
                                             <td class="custom-td text-left"
                                                 [ngClass]="getBold(j,item.details.length - 1)"
-                                                *ngIf="det.sd_ctr_id == 3">
+                                                *ngIf="det.sd_ctr_id == 3 && hide">
                                                 Revision
                                             </td>
                                             <td class="custom-td text-center bold" *ngIf="j == 0"
-                                            [attr.rowspan]="item.details.length">
+                                                [attr.rowspan]="item.details.length">
                                                 {{termArray[det.syl_term_id]}}
                                             </td>
-                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" *ngIf="hide"
+                                                [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.sd_period_teacher}}
                                             </td>
-                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" *ngIf="hide"
+                                                [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.sd_period_test}}
 
                                             </td>
-                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" *ngIf="hide"
+                                                [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.sd_period_revision}}
                                             </td>
-                                            <td class="custom-td bold fw-700 no-of-period" *ngIf="j == 0"
+                                            <td class="custom-td bold fw-700 no-of-period" *ngIf="j == 0 && hide"
                                                 [attr.rowspan]="item.details.length">
                                                 {{item.total}}
 
                                             </td>
-                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td bold fw-700 topic-width" *ngIf="j == 0 && !hide"
+                                                [attr.rowspan]="item.details.length">
+                                                {{item.total}}
+
+                                            </td>
+                                            <td class="custom-td no-of-period" *ngIf="hide"
+                                                [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.cw_period_teacher}}
                                             </td>
-                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" *ngIf="hide"
+                                                [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.cw_period_test}}
                                             </td>
-                                            <td class="custom-td no-of-period" [ngClass]="getBold(j,item.details.length - 1)">
+                                            <td class="custom-td no-of-period" *ngIf="hide"
+                                                [ngClass]="getBold(j,item.details.length - 1)">
                                                 {{det.cw_period_revision}}
                                             </td>
-                                            <td class="custom-td bold fw-700 no-of-period" *ngIf="j == 0"
+                                            <td class="custom-td bold fw-700 no-of-period" *ngIf="j == 0 && hide"
+                                                [attr.rowspan]="item.details.length">
+                                                {{item.total1}}
+                                            </td>
+                                            <td class="custom-td bold fw-700 topic-width" *ngIf="j == 0 && !hide"
                                                 [attr.rowspan]="item.details.length">
                                                 {{item.total1}}
                                             </td>
@@ -211,10 +237,13 @@
                                                 {{det.sd_period_revision - det.cw_period_revision}}
                                             </td> -->
 
-                                            <td rowspan="5" class="custom-td bold fw-700 additional-period" *ngIf="j == 0 && item.total1 !== 0"
+                                            <td rowspan="5" class="custom-td bold fw-700 additional-period"
+                                                *ngIf="j == 0 && item.total1 !== 0"
                                                 [ngStyle]="{'background-color': getcolor(item.total - item.total1)}"
-                                                [attr.rowspan]="item.details.length "> {{ item.total - item.total1}}</td>
-                                            <td rowspan="5" class="custom-td bold fw-700 additional-period" *ngIf="j == 0 && item.total1 === 0"
+                                                [attr.rowspan]="item.details.length "> {{ item.total - item.total1}}
+                                            </td>
+                                            <td rowspan="5" class="custom-td bold fw-700 additional-period"
+                                                *ngIf="j == 0 && item.total1 === 0"
                                                 [attr.rowspan]="item.details.length"> {{ item.total - item.total1}}</td>
 
                                             <td class="custom-td bold fw-700 additional-period" *ngIf="j == 0"
@@ -228,7 +257,7 @@
                                             <td class="custom-td bold" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
                                                 {{getDatePeriod(item.estimateDate, i)}}
-                                            </td> 
+                                            </td>
                                             <td class="custom-td bold" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
                                                 <ng-container>
@@ -251,29 +280,29 @@
                                 <td class="custom-td">
                                     Grand Total
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td" *ngIf="hide">
                                 </td>
                                 <td class="custom-td">
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td" *ngIf="hide">
                                     {{teachingSum}}
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td" *ngIf="hide">
                                     {{testSum}}
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td" *ngIf="hide">
                                     {{revisionSum}}
                                 </td>
                                 <td class="custom-td">
                                     {{teachingSum + testSum + revisionSum}}
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td" *ngIf="hide">
                                     {{cwteachingSum}}
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td" *ngIf="hide">
                                     {{cwtestSum}}
                                 </td>
-                                <td class="custom-td">
+                                <td class="custom-td" *ngIf="hide">
                                     {{cwrevisionSum}}
                                 </td>
                                 <td class="custom-td">
@@ -288,7 +317,7 @@
                                 </td>
                                 <!-- <td class="custom-td">
                                     {{deviationSum}}
-                                </td> -->                               
+                                </td> -->
                                 <td class="custom-td">
                                 </td>
                                 <td class="custom-td">

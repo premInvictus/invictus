@@ -16,6 +16,7 @@ import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
 })
 export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	@ViewChild('cropModal') cropModal;
+	@ViewChild('bookDet')bookDet;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('searchModal') searchModal;
 	@ViewChild(MatSort) sort: MatSort;
@@ -90,6 +91,24 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			type_name: 'Marked for return',
 		}
 	];
+	sourceArray: any[] = [
+		{
+			type_id: 'Purchased',
+			type_name: 'Purchased',
+		},
+		{
+			type_id: 'Donated',
+			type_name: 'Donated',
+		},
+		{
+			type_id: 'Gifted',
+			type_name: 'Gifted',
+		},
+		{
+			type_id: 'Specimen',
+			type_name: 'Specimen',
+		}
+	];
 	classArray: any[] = [];
 	subjectArray: any[] = [];
 	vendorDetail: any = {};
@@ -128,6 +147,11 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		this.bookDataSource.paginator = this.paginator;
 		this.bookDataSource.sort = this.sort;
 	}
+	backToListing() {
+		this.assessionMasterContainer = true;
+		this.addBookContainer = false;
+		this.getReservoirData();
+	}
 	searchOk($event) {
 		this.BOOK_ELEMENT_DATA = [];
 		this.filteredFlag = false;
@@ -142,7 +166,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				filters: $event.filters,
 				generalFilters: $event.generalFilters,
 				page_index: this.bookpageindex,
-				page_size: this.bookpagesize
+				page_size: this.bookpagesize,
+				search_from: 'master'
 			}).subscribe((res: any) => {
 				if (res && res.status === 'ok') {
 					this.searchViaText = true;
@@ -198,7 +223,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			filters: this.filters.filters,
 			generalFilters: this.filters.generalFilters,
 			page_index: this.bookpageindex,
-			page_size: this.bookpagesize
+			page_size: this.bookpagesize,
+			search_from: 'master'
 		}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.searchViaText = false;
@@ -279,7 +305,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			search: '',
 			page_size: this.bookpagesize,
 			page_index: this.bookpageindex,
-			role_id: this.currentUser.role_id
+			role_id: this.currentUser.role_id,
+			search_for: 'master'
 		});
 	}
 	readUrl(event: any) {
@@ -341,6 +368,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					this.imageFlag = true;
 				}
 			});
+	}
+	openBookModal(book_no) {
+		this.bookDet.openModal(book_no);
 	}
 	acceptCrop(result) {
 		this.uploadImage(result.filename, result.base64);
@@ -560,24 +590,26 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			};
 		}
 		this.bookForm.value['location'] = this.bookForm.value.stack + '-' + this.bookForm.value.row;
-		this.common.insertReservoirData({
-			bookDetails: this.bookForm.value
-		}).subscribe((res: any) => {
-			if (res && res.status === 'ok') {
-				this.notif.showSuccessErrorMessage(res.message, 'success');
-				if (!this.enableMultiFlag) {
-					this.assessionMasterContainer = true;
-					this.addBookContainer = false;
-					this.getReservoirData();
+		if (this.bookForm.valid) {
+			this.common.insertReservoirData({
+				bookDetails: this.bookForm.value
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.notif.showSuccessErrorMessage(res.message, 'success');
+					if (!this.enableMultiFlag) {
+						this.assessionMasterContainer = true;
+						this.addBookContainer = false;
+						this.getReservoirData();
+					}
+					this.builForm();
+					this.imageFlag = false;
+					this.bookDetails = {};
+					this.bookImage = '';
+				} else {
+					this.notif.showSuccessErrorMessage(res.message, 'error');
 				}
-				this.builForm();
-				this.imageFlag = false;
-				this.bookDetails = {};
-				this.bookImage = '';
-			} else {
-				this.notif.showSuccessErrorMessage(res.message, 'error');
-			}
-		});
+			});
+		}
 	}
 	fetchData(event?: PageEvent) {
 		this.bookpageindex = event.pageIndex;

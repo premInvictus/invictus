@@ -30,14 +30,27 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirData', value);
 	}
+	getBookReservations(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/bookreservation/getBookReservations', value);
+	}
+	deleteReservationData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/bookreservation/deleteReservationData', value);
+	}
 	getReservoirDataBasedOnFilter(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/getReservoirDataBasedOnFilter', value);
+	}
+	getBookLogsPerBook(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/reservoir/getBookLogsPerBook', value);
 	}
 	getLanguages(value) {
 		return this.http.post(environment.apiReservUrl + '/reservoir/getLanguages', value);
 	}
 	getVendor(value) {
+		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/vendor/getVendor', value);
 	}
 	getGenres(value) {
@@ -349,5 +362,26 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/users/getAllTeacher', param);
 	}
+
+	getDashboardReservoirData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/dashboard/getReservoirData', value);
+	}
+
+	getDashboardIssueBookData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/dashboard/getIssuedReservoir', value);
+	}
+
+	getDashboardDueReservoirData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/dashboard/getDueReservoir', value);
+	}
+	getSession() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/session');
+	}
 }
+
+
 
