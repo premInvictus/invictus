@@ -7,22 +7,26 @@
         </div>
         <div class="col-6">
           <div class="search-container">
+              <form [formGroup]="searchForm">
             <div class="row remove-top-margin">
-              <div class="col-8">
-                <mat-form-field class="lib-form form-field">
-                  <input matInput placeholder="Search Any Book By Name or ID" />
-                </mat-form-field>
-              </div>
+             
+                <div class="col-8">
+                  <mat-form-field class="lib-form form-field">
+                    <input matInput placeholder="Search Any Book By Name or ID" formControlName="searchId"/>
+                  </mat-form-field>
+                </div>
 
-              <div class="col-4 margin-top-10  text-right">
-                <a class="cursor-pointer" (click)="openAdvanceSearchDialog()"><span
-                    class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
-                      class="fas fa-chevron-down"></i></span></a>
-                <button mat-button class="btn-spacer btn-lib-search margin-left-10">
-                  Search
-                </button>
-              </div>
+                <div class="col-4 margin-top-10  text-right">
+                  <a class="cursor-pointer" (click)="openSearchDialog()"><span
+                      class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
+                        class="fas fa-chevron-down"></i></span></a>
+                  <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()" (keyup.enter)="search()">
+                    Search
+                  </button>
+                </div>
+              
             </div>
+          </form>
           </div>
         </div>
       </div>
@@ -177,7 +181,7 @@
                           <span>{{dashboardDueReservoirData?.class_total_due_count}} Books</span></th>
                       </tr>
                       <tr *ngIf="dashboardDueReservoirData?.class_total_due_count == 0">
-                          <td class="text-center" colspan="2">No Record Found</td>
+                        <td class="text-center" colspan="2">No Record Found</td>
                       </tr>
                     </tbody>
                   </table>
@@ -190,19 +194,20 @@
                   <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['teacher']">
                     <tbody>
                       <ng-container *ngFor="let item of dashboardDueReservoirData['teacher']">
-                      <tr>
-                        <th class="font-bold padding-8">{{item?.au_full_name}}</th>
-                        <th class="font-color-red padding-8">{{item?.due_count}} Books</th>
-                        <!-- <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th> -->
-                      </tr>         
-                    </ng-container>             
+                        <tr>
+                          <th class="font-bold padding-8">{{item?.au_full_name}}</th>
+                          <th class="font-color-red padding-8">{{item?.due_count}} Books</th>
+                          <!-- <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th> -->
+                        </tr>
+                      </ng-container>
                       <tr class="background-dash-grand" *ngIf="dashboardDueReservoirData['teacher'].length > 0">
                         <th class="font-bold padding-8 font-size-18"><span>Grand Total</span></th>
-                        <th class="font-color-red padding-8 font-size-18"><span>{{dashboardDueReservoirData?.teacher_total_due_count}} Books</span></th>
+                        <th class="font-color-red padding-8 font-size-18">
+                          <span>{{dashboardDueReservoirData?.teacher_total_due_count}} Books</span></th>
                         <th></th>
                       </tr>
-                      <tr  *ngIf="dashboardDueReservoirData?.teacher_total_due_count == 0">
-                          <td class="text-center" colspan="2">No Record Found</td>
+                      <tr *ngIf="dashboardDueReservoirData?.teacher_total_due_count == 0">
+                        <td class="text-center" colspan="2">No Record Found</td>
                       </tr>
                     </tbody>
                   </table>
@@ -214,21 +219,22 @@
                 <div class="col-12">
                   <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['staff']">
                     <tbody>
-                        <ng-container *ngFor="let item of dashboardDueReservoirData['staff']">
-                      <tr>
-                        <th class="font-bold padding-8">{{item?.au_full_name}}/th>
-                        <th class="font-color-red padding-8">{{item?.due_count}} Books</th>
-                        <!-- <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th> -->
-                      </tr>
+                      <ng-container *ngFor="let item of dashboardDueReservoirData['staff']">
+                        <tr>
+                          <th class="font-bold padding-8">{{item?.au_full_name}}/th>
+                          <th class="font-color-red padding-8">{{item?.due_count}} Books</th>
+                          <!-- <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th> -->
+                        </tr>
                       </ng-container>
-                      
+
                       <tr class="background-dash-grand" *ngIf="dashboardDueReservoirData['staff'].length > 0">
                         <th class="font-bold padding-8 font-size-18"><span>Grand Total</span></th>
-                        <th class="font-color-red padding-8 font-size-18"><span>{{dashboardDueReservoirData?.staff_total_due_count}}  Books</span></th>
+                        <th class="font-color-red padding-8 font-size-18">
+                          <span>{{dashboardDueReservoirData?.staff_total_due_count}} Books</span></th>
                         <th></th>
                       </tr>
                       <tr *ngIf="dashboardDueReservoirData?.staff_total_due_count == 0">
-                          <td class="text-center" colspan="2">No Record Found</td>
+                        <td class="text-center" colspan="2">No Record Found</td>
                       </tr>
                     </tbody>
                   </table>
@@ -238,7 +244,8 @@
             <mat-tab label="Over Due">
               <div class="row">
                 <div class="col-12 remove-col-padding">
-                  <table class="table-100 custom-table" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all']">
+                  <table class="table-100 custom-table"
+                    *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length > 0">
                     <thead>
                       <tr class="custom-tr text-center">
                         <th class="custom-th">Sr No.</th>
@@ -252,20 +259,28 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <ng-container *ngFor="let item of dashboardDueReservoirData['all'];">
-                      <tr class="custom-tr" *ngFor="let subitem of item.reserv_user_logs; let i = index;">
-                        <td class="custom-td"><span>{{i+1}}</span></td>
-                        <td class="custom-td">
-                          <span class="font-skyblue">{{subitem?.reserv_id}}</span>
-                        </td>
-                        <td class="custom-td"><span>{{subitem?.title}}</span></td>
-                        <td class="custom-td">{{item?.user_full_name}}</td>
-                        <td class="custom-td">{{subitem?.issued_on}}</td>
-                        <td class="custom-td">{{subitem?.due_date}}</td>
-                        <td class="custom-td"><span class="font-color-red">{{getDaysDiff(subitem?.due_date)}} Days</span></td>
-                      </tr>
-                    </ng-container>
+                      <ng-container *ngFor="let item of dashboardDueReservoirData['all']; let i = index;">
+                        <tr class="custom-tr" *ngFor="let subitem of item.reserv_user_logs; let j = index;">
+                          <td class="custom-td"><span *ngIf="i > 0">{{ getMainLoopLength(i)+j+1}}</span><span
+                              *ngIf="i === 0">{{j+1}}</span></td>
+                          <td class="custom-td">
+                            <span class="font-skyblue">{{subitem?.reserv_id}}</span>
+                          </td>
+                          <td class="custom-td text-left"><span>{{subitem?.title}}</span></td>
+                          <td class="custom-td text-left">{{item?.user_full_name}}</td>
+                          <td class="custom-td">{{subitem?.issued_on}}</td>
+                          <td class="custom-td">{{subitem?.due_date}}</td>
+                          <td class="custom-td"><span class="font-color-red">{{getDaysDiff(subitem?.due_date)}}
+                              Days</span></td>
+                        </tr>
+                      </ng-container>
                     </tbody>
+                  </table>
+                  <table class="table-100 custom-table"
+                    *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length  == 0">
+                    <tr class="custom-tr text-center">
+                      <td class="text-center" colspan="2">No Record Found</td>
+                    </tr>
                   </table>
                 </div>
               </div>
@@ -276,3 +291,4 @@
     </mat-card>
   </div>
 </div>
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>

@@ -32,6 +32,7 @@ export class CommonAPIService {
 	familyData: any;
 	familyNumber: any;
 	selectedChildData: any;
+	searchDashboardData:any;
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
 		tmp.innerHTML = html;
@@ -273,6 +274,14 @@ export class CommonAPIService {
 
 	getReservoirId() {
 		return this.reserv_id;
+	}
+
+	setDashboardSearchData(searchDashboardData) {
+		this.searchDashboardData = searchDashboardData;
+	}
+
+	getDashboardSearchData() {
+		return this.searchDashboardData ;
 	}
 
 }

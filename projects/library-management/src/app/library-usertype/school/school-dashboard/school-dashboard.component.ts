@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { MatDialog } from '@angular/material/dialog';
 import { AdvancedSearchModalComponent } from '../../../library-shared/advanced-search-modal/advanced-search-modal.component';
-
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroup, FormBuilder } from '@angular/forms';
 @Component({
   selector: 'app-school-dashboard',
   templateUrl: './school-dashboard.component.html',
@@ -22,14 +22,21 @@ export class SchoolDashboardComponent implements OnInit {
   reissued = 0;
   currentDate = new Date();
   result: any = {};
-  constructor(private common: CommonAPIService,
-    private erpCommonService: ErpCommonService, public dialog: MatDialog, ) { }
+  prevIndex = 0;
+  searchForm: FormGroup;
+  @ViewChild('searchModal') searchModal;
+  constructor(private fbuild: FormBuilder, private common: CommonAPIService,
+    private erpCommonService: ErpCommonService, public dialog: MatDialog, private route: ActivatedRoute,
+		private router: Router,) { }
 
   ngOnInit() {
+    this.buildForm();
     this.getReservoirData();
     this.getIssueBookData();
     this.getDueReservoir();
   }
+
+  openSearchDialog = (data) => { this.searchModal.openModal(data); }
 
 
   openAdvanceSearchDialog(): void {
@@ -42,6 +49,11 @@ export class SchoolDashboardComponent implements OnInit {
     });
   }
 
+  buildForm() {
+    this.searchForm = this.fbuild.group({
+      searchId : ''
+		});
+  }
   getReservoirData() {
     this.erpCommonService.getDashboardReservoirData({}).subscribe((res: any) => {
       if (res && res.status === 'ok') {
@@ -151,6 +163,32 @@ export class SchoolDashboardComponent implements OnInit {
       var parsedDate1: any = this.parseDate(date1);
       return Math.round((parsedDate2 - parsedDate1) / (1000 * 60 * 60 * 24));
     }
+  }
+
+  getMainLoopLength(i) {
+    var tot_length = 0;
+    for (var l=0; l<=i-1;l++) {
+      if (this.dashboardDueReservoirData['all'] && this.dashboardDueReservoirData['all'][l]) {
+        tot_length = tot_length +this.dashboardDueReservoirData['all'][l].reserv_user_logs.length;
+               
+        
+      }
+    }
+    return tot_length;
+    
+    
+  }
+
+  searchOk($event) {
+    this.common.setDashboardSearchData({	filters: $event.filters,
+      generalFilters: $event.generalFilters});
+      this.router.navigate(['../auxillary/book-search'], {relativeTo: this.route });	
+  }
+  
+  search() {
+    console.log(this.searchForm.value.searchId);
+    this.common.setDashboardSearchData({search:this.searchForm.value.searchId});
+      this.router.navigate(['../auxillary/book-search'], {relativeTo: this.route });	
   }
   
 }
