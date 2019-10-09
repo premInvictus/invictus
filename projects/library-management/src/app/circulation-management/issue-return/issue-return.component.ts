@@ -337,7 +337,7 @@ export class IssueReturnComponent implements OnInit {
 					bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 				}
 				updatedBookData.push(bookData[i]);
-			} else if (bookData[i]['reserv_status'] === 'available') {
+			} else if (bookData[i]['reserv_status'] === 'available' || bookData[i]['reserv_status'] === 'reserved') {
 				if (bookData[i]['fdue_date']) {
 					bookData[i]['reserv_status'] = 'issued';
 					bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
