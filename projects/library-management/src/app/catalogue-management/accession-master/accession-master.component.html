@@ -55,8 +55,8 @@
                 <ng-container matColumnDef="book_no">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Book No. </th>
                   <td mat-cell *matCellDef="let item">
-                    <a [routerLink]="['../../auxillary/book-detail']" [queryParams]="{book_id:item.book_no}">
-                      <u>{{item.book_no}}</u></a></td>
+                    <a (click)="openBookModal(item.book_no)" style="color: #258de7; cursor: pointer;">
+                      <u><b>{{item.book_no}}</b></u></a></td>
                 </ng-container>
                 <ng-container matColumnDef="book_name">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Book name</th>
@@ -486,3 +486,4 @@
 <app-imagecrop #cropModal (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)" [roundCropper]="false"
   [resizeToWidth]="160"></app-imagecrop>
 <app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>
+<app-book-details-modal #bookDet></app-book-details-modal>
