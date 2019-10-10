@@ -745,7 +745,7 @@ export class ComparitiveComponent implements OnInit {
 								// tslint:disable-next-line: max-line-length
 								this.finalSpannedArray[findex].deviation = Number(this.finalSpannedArray[findex].total) - Number(this.finalSpannedArray[findex].total1);
 							}
-							console.log('finalSpannedArray', this.finalSpannedArray);
+							// console.log('finalSpannedArray', this.finalSpannedArray);
 							this.dataArr = [];
 							for (const item of this.finalSpannedArray) {
 								const obj: any = {};

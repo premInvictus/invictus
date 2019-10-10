@@ -15,6 +15,7 @@
 
       <div class="row">
         <div class="col-lg-12">
+            <span class="font-size-16 font-black font-regular">Please Enter Student Details</span><br>
           <mat-form-field appearance="outline">
             <input id="search" matInput placeholder="Search" (keydown.enter)="searchStudentByName($event.target.value)"
               (blur)="searchStudentByName($event.target.value)">
@@ -33,11 +34,11 @@
                         <tr>
                           <th style="width: 5%">S.No</th>
                           <th style="width: 13%">Enrollment No</th>
-                          <th style="width: 40%">Name</th>
+                          <th style="width: 25%">Name</th>
                           <th>Class-Section</th>
                           <th>Parent Name</th>
                           <th>Contact No.</th>
-                          <th>Process</th>
+                          <th>Enrollment Status</th>
                         </tr>
                       </thead>
                       <tbody>

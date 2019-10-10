@@ -140,7 +140,7 @@
 
 
 
-            </div>
+            </div> 
         </div>
         <!-- <div *ngIf="transportFlag" class="row">
           <div *ngIf="modeFlag && transportFlag" class="col-3 remove-col-padding-left">
@@ -181,26 +181,35 @@
                     <table class="table table-borderd table-stripped custom-table">
                         <thead class="table-skill__head text-center">
                             <tr class="custom-tr">
-                                <th class="custom-th text-nowrap">Sr no.</th>
-                                <th class="custom-th">Transport Route</th>
-                                <th class="custom-th">Transport Stoppages</th>
-                                <th class="custom-th">Applicable From</th>
-                                <th class="custom-th">Applicable To</th>
-                                <th class="custom-th">Created Date</th>
+                                <th class="custom-th text-nowrap" style="width:5%">Sr no.</th>
+                                <th class="custom-th" style="width: 5%">Date</th>
+                                <th class="custom-th">Details</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="custom-tr" *ngFor="let item of transport_history; let i=index;">
-                                <td class="custom-td" width="5%">
+                                <td class="custom-td">
                                     {{i+1}}
                                 </td>
-                                <td class="custom-td text-capitalize text-left" width="15%">{{item?.uaal_created_date | date: 'd-MMM-y'}}</td>
-                                <td *ngIf="item?.uaal_status === '0'" colspan="4" class="custom-td text-capitalize text-center">Transport Opted Out</td>
+                                <td class="custom-td text-capitalize text-center" >{{item?.uaal_created_date | date: 'd-MMM-y'}}</td>
+<!-- 
+                                <th class="custom-th">Transport Stoppages</th>
+                                <th class="custom-th">Applicable From</th>
+                                <th class="custom-th">Applicable To</th>
+                                <th class="custom-th">Created Date</th> -->
+
+                                <td *ngIf="item?.uaal_status === '0'" class="custom-td text-capitalize text-center">Transport Opted Out</td>
+
                                 <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="25%">
-                                    <span *ngIf="item?.tr_route_name">{{item?.tr_route_name}}</span>
-                                    <span *ngIf="!(item?.tr_route_name)">-</span>
+                                    <span> Route : {{item?.tr_route_name ? item?.tr_route_name : '-' }}</span>, 
+                                    <span> Stoppages : {{item?.tsp_name ? item?.tsp_name : '-' }}</span>, 
+                                    <span> Applicable From : {{item?.uaal_transport_from ? (item?.uaal_transport_from | date: 'd-MMM-y') : '-' }}</span>, 
+                                    <span> Applicable To : {{item?.uaal_transport_to ? (item?.uaal_transport_to | date: 'd-MMM-y') : '-' }}</span>, 
+                                    <span> Remarks : {{item?.uaal_remark ? item?.uaal_remark  : '-' }}</span>, 
+                                    <span> Deleted by : {{item?.au_full_name ? item?.au_full_name  : '-' }}</span> 
+                                    
                                 </td>
-                                <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="25%">
+                                <!-- <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="25%">
                                     <span *ngIf="item?.tsp_name">{{item?.tsp_name}}</span>
                                     <span *ngIf="!(item?.tsp_name)">-</span>
                                 </td>
@@ -211,7 +220,7 @@
                                 <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="15%">
                                     <span *ngIf="item?.uaal_transport_to"> {{item?.uaal_transport_to | date: 'd-MMM-y'}}</span>
                                     <span *ngIf="!(item?.uaal_transport_to)"> - </span>
-                                </td>
+                                </td> -->
 
                             </tr>
                             <tr *ngIf="transport_history?.length ==0">
