@@ -112,37 +112,62 @@ export class SchoolDashboardComponent implements OnInit {
         height: '300px',
         options3d: {
           enabled: false,
-          alpha: 45
+          alpha: 35
         }
       },
       title: {
-        text: '<b><span class="bookIssuedCountFont">' + (Number(totalBookIssued)) + '</span><b><br><span>Book Issued <span>',
+        text: '<b><span class="bookIssuedCountFont">' + (Number(totalBookIssued)) + '</span><b><br><br><span class="bookIssuedText">Books Issued <span>',
         align: 'center',
         verticalAlign: 'middle',
         y: 25
       },
       plotOptions: {
         pie: {
-          innerSize: 200,
-          depth: 45,
+          innerSize: 220,
+          depth: 35,
           dataLabels: {
             enabled: false
           },
           colors: [
-            '#9932cc',
-            '#EE82EE',
-            '#FFA500',
-            '#808080',
+           
+            {
+              radialGradient: { cx: 0.5, cy: 0.3, r: 0.87 },
+              stops: [
+                [0, '#A2A5F9'],
+                [1, '#8774F3']
+              ]
+            },            
+            {
+              radialGradient: { cx: 0.5, cy: 0.3, r: 0.87 },
+              stops: [
+                [0, '#EBEBEB'],
+                [1, '#D2D2D2']
+              ]
+            },
+            {
+              radialGradient: { cx: 0.5, cy: 0.3, r: 0.87 },
+              stops: [
+                [0, '#FDC830'],
+                [1, '#F37335']
+              ]
+            },
+            {
+              radialGradient: { cx: 0.5, cy: 0.3, r: 0.87 },
+              stops: [
+                [0, '#FF839D'],
+                [1, '#F50B9A']
+              ]
+            },
           ],
         }
       },
       series: [{
         name: 'Book Issued',
-        data: [
-          ['issuedToTeacher', issuedToTeacher],
-          ['issuedToStudent', issuedToStudent],
-          ['issuedToStaff', issuedToStaff],
-          ['reissued', reissued],
+        data: [          
+          ['Students', issuedToStudent],         
+          ['Reissued', reissued],
+          ['Staff', issuedToStaff],
+          ['Teachers', issuedToTeacher],
 
         ]
       }]

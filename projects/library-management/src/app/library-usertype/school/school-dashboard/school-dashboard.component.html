@@ -118,22 +118,22 @@
             <app-common-dynamic-chart *ngIf="issuedBookchartflag" [options]="issuedBookchart">
             </app-common-dynamic-chart>
             <div class="row">
-              <div class="col-4">
-                <div>
+              <div class="col-6">
+                <div class="labeldiv">
                   <div class="teacher-pink-gradiant"></div> <span class="chart-label">Teachers : <span
                       class="chart-label-count">{{issuedToTeacher}}</span></span>
                 </div>
-                <div>
+                <div class="labeldiv">
                   <div class="student-violet-gradiant"></div> <span class="chart-label">Students : <span
                       class="chart-label-count">{{issuedToStudent}}</span></span>
                 </div>
               </div>
               <div class="col-4">
-                <div>
-                  <div class="staff-orange-gradiant"></div> <span class="chart-label">Staff : <span
+                <div class="labeldiv2">
+                  <div class="staff-orange-gradiant"></div> <span class="chart-label">Staff &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span
                       class="chart-label-count">{{issuedToStaff}}</span></span>
                 </div>
-                <div>
+                <div class="labeldiv2">
                   <div class="reissue-gray-gradiant"></div> <span class="chart-label">Reissued : <span
                       class="chart-label-count">{{reissued}} </span></span>
                 </div>
@@ -221,7 +221,7 @@
                     <tbody>
                       <ng-container *ngFor="let item of dashboardDueReservoirData['staff']">
                         <tr>
-                          <th class="font-bold padding-8">{{item?.au_full_name}}/th>
+                          <th class="font-bold padding-8">{{item?.au_full_name}}</th>
                           <th class="font-color-red padding-8">{{item?.due_count}} Books</th>
                           <!-- <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th> -->
                         </tr>

@@ -1,5 +1,5 @@
 .teacher-pink-gradiant {
-    background-color: darkorchid;
+    background: transparent linear-gradient(87deg, #FF839D 0%, #F50B9A 100%) 0% 0% no-repeat padding-box;
     height: 20px;
     width: 20px;
     float: left;
@@ -7,7 +7,7 @@
 }
 
 .student-violet-gradiant {
-    background-color: violet;
+    background: transparent linear-gradient(34deg, #A2A5F9 0%, #8774F3 100%) 0% 0% no-repeat padding-box;
     height: 20px;
     width: 20px;
     float: left;
@@ -15,7 +15,7 @@
 }
 
 .staff-orange-gradiant {
-    background-color: orange;
+    background: transparent linear-gradient(0deg, #FDC830 0%, #F37335 100%) 0% 0% no-repeat padding-box;
     height: 20px;
     width: 20px;
     float: left;
@@ -23,7 +23,7 @@
 }
 
 .reissue-gray-gradiant {
-    background-color: gray;
+    background: transparent linear-gradient(0deg, #EBEBEB 0%, #D2D2D2 100%) 0% 0% no-repeat padding-box;
     height: 20px;
     width: 20px;
     float: left;
@@ -31,12 +31,37 @@
 }
 
 .chart-label {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     text-align: left;
-    
+    margin-left: 5px;
 }
 
 .chart-label-count {
-    color: #bbb;
+    color:  #7f7f7f!important;
 }
+
+.labeldiv {
+    width: 124px;
+    text-align: left;
+}
+
+.labeldiv2 {
+    width: 124px;
+    text-align: left;
+    float: right;
+}
+
+:host ::ng-deep .bookIssuedCountFont{
+    font-weight: 700;
+    font-size: 68px;
+    
+}
+
+:host ::ng-deep .bookIssuedText{
+    font-weight: normal;
+    font-size: 20px;
+    color:  #7f7f7f!important;
+    fill: #7f7f7f !important;
+}
+

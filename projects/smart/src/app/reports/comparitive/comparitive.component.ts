@@ -56,7 +56,8 @@ export class ComparitiveComponent implements OnInit {
 	session: any;
 	sessionName: any;
 	length: any;
-	hide = true;;
+	hide = true;
+	subtotal = 0;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -104,6 +105,7 @@ export class ComparitiveComponent implements OnInit {
 		44: 'AR',
 
 	};
+	termObj: any = {};
 	schoolInfo: any;
 	termArray: any[] = ['', 'Term 1', 'Term 2', 'Term 3', 'Term 4', 'Term 5', 'Term 6', 'Term 7', 'Term 8', 'Term 9'];
 	constructor(
@@ -610,7 +612,7 @@ export class ComparitiveComponent implements OnInit {
 		}
 		return sum;
 	}
-	
+
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
 		this.teachingSum = 0;
@@ -692,7 +694,8 @@ export class ComparitiveComponent implements OnInit {
 								let cw_period_teacher1: any = '';
 								let cw_period_test1: any = '';
 								let cw_period_revision1: any = '';
-								if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id) {
+								if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id &&
+									this.finalSyllabusArray[i].syl_term_id === this.finalSyllabusArray[j].syl_term_id) {
 									if (this.finalSyllabusArray[j].sd_ctr_id === '1') {
 										sd_period_teacher1 = this.finalSyllabusArray[j].sd_period_req;
 										cw_period_teacher1 = this.finalSyllabusArray[j].cw_period_req;
@@ -723,9 +726,11 @@ export class ComparitiveComponent implements OnInit {
 									});
 								}
 							}
-							const findex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.finalSyllabusArray[i].sd_topic_id);
+							const findex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.finalSyllabusArray[i].sd_topic_id
+								&& f.syl_term_id === this.finalSyllabusArray[i].syl_term_id);
 							if (findex === -1) {
 								this.finalSpannedArray.push({
+									syl_term_id: this.finalSyllabusArray[i].syl_term_id,
 									sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
 									details: spannArray,
 									total: this.finalSyllabusArray[i].sd_period_req,
@@ -849,9 +854,66 @@ export class ComparitiveComponent implements OnInit {
 			return 'no-bold';
 		}
 	}
-	sumarisedReport($event){
-		this.hide = $event.checked ? false: true;
+	sumarisedReport($event) {
+		this.hide = $event.checked ? false : true;
 	}
+	getTermWiseTotal(syl_term_id, i) {
+		if (i < this.finalSpannedArray.length - 1 && this.finalSpannedArray[i + 1].syl_term_id !== syl_term_id) {
+			return true;
+		} else if (i == this.finalSpannedArray.length - 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	getTeachingSubTotal(syl_term_id, index) {
+		let teacher = 0;
+		let test = 0;
+		let revise = 0;
+		let total = 0;
+		let cw_teacher = 0;
+		let cw_test = 0;
+		let cw_revise = 0;
+		let cw_total = 0;
+		let deviation = 0;
+		for (const item of this.finalSpannedArray) {
+			if (item.syl_term_id === syl_term_id) {
+				const obj: any = {};
+				for (const dety of item.details) {
+					if (syl_term_id === dety.syl_term_id) {
+						teacher = teacher + Number(dety.sd_period_teacher);
+						test = test + Number(dety.sd_period_test);
+						revise = revise + Number(dety.sd_period_revision);
+						total = teacher + test + revise;
+						cw_teacher = cw_teacher + Number(dety.cw_period_teacher);
+						cw_test = cw_test + Number(dety.cw_period_test);
+						cw_revise = cw_revise + Number(dety.cw_period_revision);
+						cw_total = cw_teacher + cw_test + cw_revise;
+						deviation =  total - cw_total;
+					}
 
+				}
+			}
+		}
+		if (index === 'teacher') {
+			return teacher;
+		} else if (index === 'test') {
+			return test;
+		} else if (index === 'revise') {
+			return revise;
+		} else if (index === 'total') {
+			return total;
+		}else if (index === 'cw_teacher') {
+			return cw_teacher;
+		} else if (index === 'cw_test') {
+			return cw_test;
+		} else if (index === 'cw_revise') {
+			return cw_revise;
+		} else if (index === 'cw_total') {
+			return cw_total;
+		} else if (index === 'deviation') {
+			return deviation;
+		}
+	}
 
 }
