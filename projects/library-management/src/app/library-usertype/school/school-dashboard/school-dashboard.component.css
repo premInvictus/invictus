@@ -65,3 +65,21 @@
     fill: #7f7f7f !important;
 }
 
+.tab-content-card {
+    min-height: 295px;
+}
+
+.chart-content-card {
+    min-height: 400px;
+}
+
+.background-dash-grand {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+.padding-8 {
+    width: 50%;
+}
+

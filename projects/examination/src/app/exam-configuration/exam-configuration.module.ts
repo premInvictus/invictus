@@ -7,6 +7,7 @@ import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 import { ExamComponent } from './exam/exam.component';
 import { SubExamComponent } from './sub-exam/sub-exam.component';
 import { GradecardSettingComponent } from './gradecard-setting/gradecard-setting.component';
+import { UploadMarksComponent } from './upload-marks/upload-marks.component';
 
 
 @NgModule({
@@ -16,6 +17,6 @@ import { GradecardSettingComponent } from './gradecard-setting/gradecard-setting
 		ExaminationConfigurationRoutingModule,
 		ExamSharedModule
 	],
-	declarations: [SetupComponent, ExamComponent, SubExamComponent, GradecardSettingComponent]
+	declarations: [SetupComponent, ExamComponent, SubExamComponent, GradecardSettingComponent, UploadMarksComponent]
 })
 export class ExamConfigurationModule { }

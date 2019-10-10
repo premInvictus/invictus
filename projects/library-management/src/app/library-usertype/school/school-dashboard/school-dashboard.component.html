@@ -115,7 +115,7 @@
         <div class="col-12">
           <div class="font-size-24 text-center">
             <!-- <div class="margin-top-15per"> Chart will goes Here</div> -->
-            <app-common-dynamic-chart *ngIf="issuedBookchartflag" [options]="issuedBookchart">
+            <app-common-dynamic-chart *ngIf="issuedBookchartflag" [options]="issuedBookchart" class="chart-content-card">
             </app-common-dynamic-chart>
             <div class="row">
               <div class="col-6">
@@ -165,7 +165,7 @@
         <div class="col-12">
           <mat-tab-group class="library-dash-group">
             <mat-tab label="Class Wise">
-              <div class="row">
+              <div class="row tab-content-card" >
                 <div class="col-12">
                   <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['class']">
                     <tbody>
@@ -176,9 +176,10 @@
                         </tr>
                       </ng-container>
                       <tr class="background-dash-grand" *ngIf="dashboardDueReservoirData?.class_total_due_count > 0">
-                        <th class="font-bold padding-8 font-size-18"><span>Grand Total</span></th>
+                        <th class="font-bold padding-8 font-size-18 separationwidth"><span>Grand Total</span></th>
                         <th class="font-color-red padding-8 font-size-18">
                           <span>{{dashboardDueReservoirData?.class_total_due_count}} Books</span></th>
+                          <th></th>
                       </tr>
                       <tr *ngIf="dashboardDueReservoirData?.class_total_due_count == 0">
                         <td class="text-center" colspan="2">No Record Found</td>
@@ -189,7 +190,7 @@
               </div>
             </mat-tab>
             <mat-tab label="Teacher Wise">
-              <div class="row">
+              <div class="row tab-content-card">
                 <div class="col-12">
                   <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['teacher']">
                     <tbody>
@@ -201,7 +202,7 @@
                         </tr>
                       </ng-container>
                       <tr class="background-dash-grand" *ngIf="dashboardDueReservoirData['teacher'].length > 0">
-                        <th class="font-bold padding-8 font-size-18"><span>Grand Total</span></th>
+                        <th class="font-bold padding-8 font-size-18 separationwidth"><span>Grand Total</span></th>
                         <th class="font-color-red padding-8 font-size-18">
                           <span>{{dashboardDueReservoirData?.teacher_total_due_count}} Books</span></th>
                         <th></th>
@@ -215,7 +216,7 @@
               </div>
             </mat-tab>
             <mat-tab label="Staff Wise">
-              <div class="row">
+              <div class="row tab-content-card">
                 <div class="col-12">
                   <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['staff']">
                     <tbody>
@@ -228,7 +229,7 @@
                       </ng-container>
 
                       <tr class="background-dash-grand" *ngIf="dashboardDueReservoirData['staff'].length > 0">
-                        <th class="font-bold padding-8 font-size-18"><span>Grand Total</span></th>
+                        <th class="font-bold padding-8 font-size-18 separationwidth"><span>Grand Total</span></th>
                         <th class="font-color-red padding-8 font-size-18">
                           <span>{{dashboardDueReservoirData?.staff_total_due_count}} Books</span></th>
                         <th></th>
@@ -242,7 +243,7 @@
               </div>
             </mat-tab>
             <mat-tab label="Over Due">
-              <div class="row">
+              <div class="row tab-content-card">
                 <div class="col-12 remove-col-padding">
                   <table class="table-100 custom-table"
                     *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length > 0">
