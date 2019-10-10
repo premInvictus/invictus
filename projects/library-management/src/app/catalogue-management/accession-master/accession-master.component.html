@@ -10,12 +10,12 @@
             <div class="search-container">
               <form [formGroup]="searchForm">
                 <div class="row remove-top-margin">
-                  <div class="col-8">
+                  <div class="col-6">
                     <mat-form-field class="lib-form form-field">
                       <input matInput placeholder="Search Any Book.." formControlName="search" />
                     </mat-form-field>
                   </div>
-                  <div class="col-4 margin-top-10  text-right">
+                  <div class="col-6 margin-top-10  text-right">
                     <span class="font-size-12 margin-top-15 font-skyblue" (click)="openSearchDialog()">Advanced Search
                       <i class="fas fa-chevron-down"></i></span>
                     <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchBook()">

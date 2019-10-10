@@ -25,6 +25,7 @@ export class SchoolDashboardComponent implements OnInit {
   prevIndex = 0;
   searchForm: FormGroup;
   @ViewChild('searchModal') searchModal;
+  @ViewChild('bookDet')bookDet;
   constructor(private fbuild: FormBuilder, private common: CommonAPIService,
     private erpCommonService: ErpCommonService, public dialog: MatDialog, private route: ActivatedRoute,
 		private router: Router,) { }
@@ -214,6 +215,10 @@ export class SchoolDashboardComponent implements OnInit {
     console.log(this.searchForm.value.searchId);
     this.common.setDashboardSearchData({search:this.searchForm.value.searchId});
       this.router.navigate(['../auxillary/book-search'], {relativeTo: this.route });	
+  }
+  
+  openBookModal(book_no) {
+		this.bookDet.openModal(book_no);
   }
   
 }
