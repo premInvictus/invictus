@@ -233,6 +233,18 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/report/getMarksRegister', value);
 	}
+	getAdditionalSubjectForClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/getAdditionalSubjectForClass', value);
+	}
+	downloadMarkEntryTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/downloadMarkEntryTemplate', value);
+	}
+	uploadMarkEntryTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/uploadMarkEntryTemplate', value);
+	}
 	
 }
 
