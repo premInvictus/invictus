@@ -15,6 +15,7 @@ export class UploadMarksComponent implements OnInit {
 	paramform: FormGroup;
 	classArray: any[] = [];
 	gcssArray: any[] = [];
+	termsArray: any[] = [];
 	constructor(
 		private examService: ExamService,
 		private smartService: SmartService,
@@ -34,10 +35,20 @@ export class UploadMarksComponent implements OnInit {
 			term_id: ''
 		});
 	}
-	getClass() {
-		this.classArray = [];
-
-	}
+	getClassTerm() {
+		this.termsArray = [];
+		if(this.paramform.value.gcss_entry_id) {
+			const tempcg = this.gcssArray.find(e => e.gcss_entry_id === this.paramform.value.gcss_entry_id);
+			console.log(tempcg);
+			this.examService.getClassTerm({ class_id: tempcg.gcss_gc_id[0]}).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					result.data.ect_no_of_term.split(',').forEach(element => {
+						this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
+					});
+				}
+			  });
+		}
+	  }
 	async getGlobalClassSectionSubject() {
 		this.classArray = [];
 		this.gcssArray = [];
@@ -85,6 +96,7 @@ export class UploadMarksComponent implements OnInit {
 		}
 
 		console.log('file--', file);
+		this.myInputVariable.nativeElement.value = '';
 
 	}
 
