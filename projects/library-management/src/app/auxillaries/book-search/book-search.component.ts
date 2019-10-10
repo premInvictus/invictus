@@ -75,6 +75,46 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 		this.router.navigate(['../book-detail'], { queryParams: { book_id: id }, relativeTo: this.route });
 	}
 	searchBook() {
+		this.searchForm.patchValue({
+			page_size: 10,
+			page_index: 0,
+			role_id: this.currentUser.role_id
+		})
+		this.filters = {};
+		this.searchFlag = false;
+		this.BOOK_ELEMENT_DATA = [];
+		this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
+		if (this.searchForm.value.search) {
+			this.bookData = [];
+			this.enteredVal = true;
+			this.common.searchReservoir(this.searchForm.value).subscribe((res: any) => {
+				if (res && res.data.resultData) {
+					this.searchViaText = true;
+					this.searchViaSearch = false;
+					this.totalRecords = Number(res.data.totalRecords);
+					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+					for (const item of res.data.resultData) {
+						item.book_container_class = 'book-title-container-default';
+						this.BOOK_ELEMENT_DATA.push(item);
+					}
+					this.searchFlag = true;
+					this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
+					this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+					this.bookDataSource.paginator = this.paginator;
+				}
+			});
+		} else {
+			this.searchForm.patchValue(
+				{
+					'search': ''
+				}
+			);
+			this.enteredVal = false;
+			this.BOOK_ELEMENT_DATA = [];
+			this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
+		}
+	}
+	searchBookFilter() {
 		this.filters = {};
 		this.searchFlag = false;
 		this.BOOK_ELEMENT_DATA = [];
@@ -122,7 +162,7 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 			this.listViewClass = 'btn-success-blue-btn btn-spacer';
 		}
 	}
-	openSearchDialog = (data) => this.searchModal.openModal(data);
+	openSearchDialog = (data) => {this.searchForm.patchValue({search: ''});this.searchModal.openModal(data);};
 	showSecondDetailDiv(index) {
 		this.BOOK_ELEMENT_DATA[index].book_container_class = 'book-title-container-clicked';
 	}
@@ -148,12 +188,24 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 			this.filteredFlag = true;
 			this.searchViaText = false;
 			this.searchViaSearch = true;
-			this.common.getReservoirDataBasedOnFilter({
-				filters: $event.filters,
-				generalFilters: $event.generalFilters,
-				page_index: this.bookpageindex,
-				page_size: this.bookpagesize
-			}).subscribe((res: any) => {
+			let inputJSON: any = {};
+			if (Number(this.currentUser.role_id) === 2) {
+				inputJSON = {
+					filters: $event.filters,
+					generalFilters: $event.generalFilters,
+					page_index: this.bookpageindex,
+					page_size: this.bookpagesize,
+					search_from: 'master'
+				};
+			} else {
+				inputJSON = {
+					filters: $event.filters,
+					generalFilters: $event.generalFilters,
+					page_index: this.bookpageindex,
+					page_size: this.bookpagesize
+				};
+			}
+			this.common.getReservoirDataBasedOnFilter(inputJSON).subscribe((res: any) => {
 				if (res && res.status === 'ok') {
 					this.searchFlag = true;
 					this.totalRecords = Number(res.data.totalRecords);
@@ -185,7 +237,7 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 		if (this.searchViaSearch) {
 			this.getReservoirDataBasedOnFilter();
 		} else {
-			this.searchBook();
+			this.searchBookFilter();
 		}
 		return event;
 	}
@@ -193,12 +245,24 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 		let i = 0;
 		this.BOOK_ELEMENT_DATA = [];
 		this.searchFlag = false;
-		this.common.getReservoirDataBasedOnFilter({
-			filters: this.filters.filters,
-			generalFilters: this.filters.generalFilters,
-			page_index: this.bookpageindex,
-			page_size: this.bookpagesize
-		}).subscribe((res: any) => {
+		let inputJSON: any = {};
+		if (Number(this.currentUser.role_id) === 2) {
+			inputJSON = {
+				filters: this.filters.filters,
+				generalFilters: this.filters.generalFilters,
+				page_index: this.bookpageindex,
+				page_size: this.bookpagesize,
+				search_from: 'master'
+			};
+		} else {
+			inputJSON = {
+				filters: this.filters.filters,
+				generalFilters: this.filters.generalFilters,
+				page_index: this.bookpageindex,
+				page_size: this.bookpagesize
+			};
+		}
+		this.common.getReservoirDataBasedOnFilter(inputJSON).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.searchFlag = true;
 				this.searchViaText = false;
