@@ -44,6 +44,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   header: any;
   footer: any;
   remarksArr: any[] = [];
+  hasCoscholasticSub = false;
 
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
@@ -199,7 +200,7 @@ export class ViewGradecardDialogComponent implements OnInit {
               exam_max_marks: Number(element.exam_max_marks),
               se_id: element.se_id,
               sexam_name: element.sexam_name,
-              obtained_percentage: Math.round(per),
+              obtained_percentage: Number.parseFloat(per.toFixed(2)),
               obtained_marks: element1.emem_marks
             });
           }
@@ -410,6 +411,8 @@ export class ViewGradecardDialogComponent implements OnInit {
         this.subjectArray.forEach(element => {
           if (element.sub_type === '1') {
             this.totalSolasticSubject++;
+          } else if(element.sub_type === '2') {
+            this.hasCoscholasticSub = true;
           }
         });
         this.sflag = true;

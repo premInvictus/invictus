@@ -1,37 +1,37 @@
 .teacher-pink-gradiant {
     background: transparent linear-gradient(87deg, #FF839D 0%, #F50B9A 100%) 0% 0% no-repeat padding-box;
-    height: 20px;
-    width: 20px;
+    height: 15px;
+    width: 15px;
     float: left;
-    margin-top: 10px;
+    margin-top: 14px;
 }
 
 .student-violet-gradiant {
     background: transparent linear-gradient(34deg, #A2A5F9 0%, #8774F3 100%) 0% 0% no-repeat padding-box;
-    height: 20px;
-    width: 20px;
+    height: 15px;
+    width: 15px;
     float: left;
-    margin-top: 10px;
+    margin-top: 14px;
 }
 
 .staff-orange-gradiant {
     background: transparent linear-gradient(0deg, #FDC830 0%, #F37335 100%) 0% 0% no-repeat padding-box;
-    height: 20px;
-    width: 20px;
+    height: 15px;
+    width: 15px;
     float: left;
-    margin-top: 10px;
+    margin-top: 14px;
 }
 
 .reissue-gray-gradiant {
     background: transparent linear-gradient(0deg, #EBEBEB 0%, #D2D2D2 100%) 0% 0% no-repeat padding-box;
-    height: 20px;
-    width: 20px;
+    height: 15px;
+    width: 15px;
     float: left;
-    margin-top: 10px;
+    margin-top: 14px;
 }
 
 .chart-label {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     text-align: left;
     margin-left: 5px;
@@ -70,7 +70,7 @@
 }
 
 .chart-content-card {
-    min-height: 400px;
+    min-height: 405px;
 }
 
 .background-dash-grand {

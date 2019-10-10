@@ -191,19 +191,19 @@ export class SchoolDashboardComponent implements OnInit {
     }
   }
 
-  getMainLoopLength(i) {
-    var tot_length = 0;
-    for (var l=0; l<=i-1;l++) {
-      if (this.dashboardDueReservoirData['all'] && this.dashboardDueReservoirData['all'][l]) {
-        tot_length = tot_length +this.dashboardDueReservoirData['all'][l].reserv_user_logs.length;
+  // getMainLoopLength(i) {
+  //   var tot_length = 0;
+  //   for (var l=0; l<=i-1;l++) {
+  //     if (this.dashboardDueReservoirData['all'] && this.dashboardDueReservoirData['all'][l]) {
+  //       tot_length = tot_length +this.dashboardDueReservoirData['all'][l].reserv_user_logs.length;
                
         
-      }
-    }
-    return tot_length;
+  //     }
+  //   }
+  //   return tot_length;
     
     
-  }
+  // }
 
   searchOk($event) {
     this.common.setDashboardSearchData({	filters: $event.filters,
@@ -219,6 +219,10 @@ export class SchoolDashboardComponent implements OnInit {
   
   openBookModal(book_no) {
 		this.bookDet.openModal(book_no);
+  }
+
+  viewAllDue() {
+    this.router.navigate(['../view-all-due'], {relativeTo: this.route });	
   }
   
 }

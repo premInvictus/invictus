@@ -263,7 +263,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <ng-container *ngFor="let item of dashboardDueReservoirData['all']; let i = index;">
+                      <ng-container *ngFor="let item of dashboardDueReservoirData['all'] | slice:0:7; let i = index;">
                         <!-- <ng-container *ngFor="let subitem of item.reserv_user_logs; let j = index;"> -->
                         <!-- <tr class="custom-tr" *ngIf="getMainLoopLength(i)+j+1 <= 8"> -->
                         <tr class="custom-tr">
@@ -274,16 +274,19 @@
                             <span class="font-skyblue cursor-pointer"
                               (click)="openBookModal(item?.reserv_user_logs?.reserv_id)">{{item?.reserv_user_logs?.reserv_id}}</span>
                           </td>
-                          <td class="custom-td text-left text-capitalize"><span>{{item?.reserv_user_logs?.title}}</span></td>
+                          <td class="custom-td text-left text-capitalize"><span>{{item?.reserv_user_logs?.title}}</span>
+                          </td>
                           <td class="custom-td text-left text-capitalize">{{item?.user_full_name}}</td>
                           <td class="custom-td">{{item?.reserv_user_logs?.issued_on}}</td>
                           <td class="custom-td">{{item?.reserv_user_logs?.due_date}}</td>
-                          <td class="custom-td"><span class="font-color-red">{{getDaysDiff(item?.reserv_user_logs?.due_date)}}
+                          <td class="custom-td"><span
+                              class="font-color-red">{{getDaysDiff(item?.reserv_user_logs?.due_date)}}
                               Days</span></td>
                         </tr>
                         <!-- </tr> -->
                         <!-- </ng-container> -->
                       </ng-container>
+
                     </tbody>
                   </table>
                   <table class="table-100 custom-table"
@@ -292,6 +295,11 @@
                       <td class="text-center" colspan="2">No Record Found</td>
                     </tr>
                   </table>
+                  <div class="text-center" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length  > 0">
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" style="margin-top: 5px;" (click)="viewAllDue()">
+                      View All
+                    </button>
+                  </div>
                 </div>
               </div>
             </mat-tab>

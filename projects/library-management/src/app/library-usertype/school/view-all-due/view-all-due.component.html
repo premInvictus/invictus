@@ -1,0 +1,116 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-6">
+          <span class="font-size-24">Books Due List</span>
+        </div>
+        <div class="col-6 text-right">
+          <button mat-raised-button class="btn-reset btn-spacer" (click)="resetSearch()">
+                Reset Search
+          </button>
+          <button mat-raised-button class="btn-success-blue" style="margin-left: 5px;" (click)="openSearchDialog()">
+            Advance Search
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row" [hidden]="!(DUE_LIST_ELEMENT.length > 0)">
+  <div class="col-12">
+    <mat-card class="card-height-730">
+      <div class="row">
+        <div class="col-6">
+          <span class="font-bold font-size-20">Due List</span>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="col-12">
+          <div class="row ">
+            <div class="col-10 remove-col-padding">
+              <mat-form-field appearance="legacy lib-form">
+                <input matInput placeholder="Search" (keyup)="applyFilterDue($event.target.value)" />
+                <mat-icon matPrefix>filter_list</mat-icon>
+              </mat-form-field>
+
+            </div>
+          </div>
+          <table mat-table [dataSource]="duelistdataSource" matSort class="table-100 text-center"
+            id="report_table">
+            <ng-container matColumnDef="srno">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
+              <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+            </ng-container>
+            <ng-container matColumnDef="reserv_id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Book ID</th>
+              <td mat-cell *matCellDef="let element">
+                <a class="font-skyblue cursor-pointer"
+                (click)="openBookModal(element?.reserv_id)">{{element?.reserv_id}} </a>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Book Name</th>
+              <td mat-cell *matCellDef="let element" class="custom-td text-left text-capitalize">
+                {{element?.title}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="issued_to">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Issued To</th>
+              <td mat-cell *matCellDef="let element" class="custom-td text-left text-capitalize">
+                {{element?.issued_to}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="issued_on">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Issued On</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.issued_on}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="due_date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Due Date</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.due_date | date: 'd-MMM-y'}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="late_by">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Late By</th>
+              <td mat-cell *matCellDef="let element">
+                  <span class="font-color-red">{{getDaysDiff(element?.due_date)}} Days </span>
+              </td>
+            </ng-container>
+            
+
+            <tr mat-header-row *matHeaderRowDef="displayedDueListColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedDueListColumns;">
+            </tr>
+          </table>
+
+          <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+            <tr *ngIf="DUE_LIST_ELEMENT.length == 0">
+              <td colspan="9">No Record Found</td>
+            </tr>
+          </table>
+          <mat-paginator #paginator [pageSizeOptions]=[5,10,20] [pageSize]="10" showFirstLastButtons>
+          </mat-paginator>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="DUE_LIST_ELEMENT.length == 0">
+  <div class="col-12">
+    <mat-card>
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+          [noDataText]="" [subText]="'No Due Book Found'"></app-no-data>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>
+
+<app-book-details-modal #bookDet></app-book-details-modal>

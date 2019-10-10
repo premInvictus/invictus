@@ -4,6 +4,7 @@ import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
 import { LibraryusertypeRoutingModule } from './library-usertype.routing.module';
 import { LibrarySharedModule } from '../library-shared/library-shared.module';
+import { ViewAllDueComponent } from './school/view-all-due/view-all-due.component';
 
 @NgModule({
   imports: [
@@ -11,6 +12,6 @@ import { LibrarySharedModule } from '../library-shared/library-shared.module';
     LibraryusertypeRoutingModule,
     LibrarySharedModule
   ],
-  declarations: [SchoolComponent, SchoolDashboardComponent]
+  declarations: [SchoolComponent, SchoolDashboardComponent, ViewAllDueComponent]
 })
 export class LibraryUsertypeModule { }
