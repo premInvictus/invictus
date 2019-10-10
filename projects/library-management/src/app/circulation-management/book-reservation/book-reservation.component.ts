@@ -72,8 +72,8 @@ export class BookReservationComponent implements OnInit, AfterViewInit {
 					this.RESERVATION_DATA.push({
 						'sr_no': index + 1,
 						'request_id': item.requested_id,
-						'reserv_id': item.book_details.req_reserv_id,
-						'book_name': item.book_details.request_book_title,
+						'reserv_id': item.req_reserv_id,
+						'book_name': item.request_book_title,
 						'requested_by': item.request_user_name,
 						'request_user': userRole,
 						'request_on': item.requested_on.date ? new DatePipe('en-in').transform(item.requested_on.date, 'd-MMM-y') : '-',
@@ -110,8 +110,15 @@ export class BookReservationComponent implements OnInit, AfterViewInit {
 					this.getBookReservations();
 				}
 			});
-		} else {
+		} else if ($event && $event.from === 'approve'){
 			this.erp.updateReservationData({
+				request_details: $event.data
+			}).subscribe((res: any) => {
+				this.common.showSuccessErrorMessage(res.message, 'success');
+				this.getBookReservations();
+			});
+		} else if ($event && $event.from === 'expire'){
+			this.erp.expireReservationData({
 				request_details: $event.data
 			}).subscribe((res: any) => {
 				this.common.showSuccessErrorMessage(res.message, 'success');
@@ -130,6 +137,15 @@ export class BookReservationComponent implements OnInit, AfterViewInit {
 		const iteml: any = {
 			data: item,
 			from: 'approve'
+		}
+		this.deleteModal.openModal(iteml);
+	}
+	expireRequest(item) {
+		this.delMessage = 'Do you want to revoke ticket';
+		this.delText = 'Revoke Request';
+		const iteml: any = {
+			data: item,
+			from: 'expire'
 		}
 		this.deleteModal.openModal(iteml);
 	}
