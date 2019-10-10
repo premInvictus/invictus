@@ -57,8 +57,26 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 		private notif: CommonAPIService) { }
 
 	ngOnInit() {
-		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		
 		this.builForm();
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		var dashboardSearchData = this.notif.getDashboardSearchData();
+		console.log('this.common.setDashboardSearchData', this.notif.getDashboardSearchData())
+		if (dashboardSearchData && dashboardSearchData.filters) {
+			this.filters.filters = dashboardSearchData.filters;
+			this.filters.generalFilters = dashboardSearchData.generalFilters;
+			this.getReservoirDataBasedOnFilter();
+		} else if (dashboardSearchData && dashboardSearchData.search) {			
+			this.searchForm.patchValue({
+				search: dashboardSearchData.search,
+				page_size: this.bookpagesize,
+				page_index: this.bookpageindex,
+				role_id: this.currentUser.role_id
+			});
+			this.searchBook();
+		}
+		
+		
 	}
 	ngAfterViewInit() {
 		this.bookDataSource.paginator = this.paginator;
