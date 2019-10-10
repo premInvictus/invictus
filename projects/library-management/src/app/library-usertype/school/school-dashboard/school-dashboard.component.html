@@ -7,12 +7,12 @@
         </div>
         <div class="col-6">
           <div class="search-container">
-              <form [formGroup]="searchForm">
-            <div class="row remove-top-margin">
-             
+            <form [formGroup]="searchForm">
+              <div class="row remove-top-margin">
+
                 <div class="col-8">
                   <mat-form-field class="lib-form form-field">
-                    <input matInput placeholder="Search Any Book By Name or ID" formControlName="searchId"/>
+                    <input matInput placeholder="Search Any Book By Name or ID" formControlName="searchId" />
                   </mat-form-field>
                 </div>
 
@@ -20,13 +20,14 @@
                   <a class="cursor-pointer" (click)="openSearchDialog()"><span
                       class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
                         class="fas fa-chevron-down"></i></span></a>
-                  <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()" (keyup.enter)="search()">
+                  <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
+                    (keyup.enter)="search()">
                     Search
                   </button>
                 </div>
-              
-            </div>
-          </form>
+
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -105,7 +106,7 @@
 </div>
 <div class="row">
   <div class="col-4 remove-col-padding-right">
-    <mat-card>
+    <mat-card class="mat-card-482">
       <div class="row">
         <div class="col-12">
           <span class="font-bold font-size-20">Issued Books</span>
@@ -115,7 +116,8 @@
         <div class="col-12">
           <div class="font-size-24 text-center">
             <!-- <div class="margin-top-15per"> Chart will goes Here</div> -->
-            <app-common-dynamic-chart *ngIf="issuedBookchartflag" [options]="issuedBookchart" class="chart-content-card">
+            <app-common-dynamic-chart *ngIf="issuedBookchartflag" [options]="issuedBookchart"
+              class="chart-content-card">
             </app-common-dynamic-chart>
             <div class="row">
               <div class="col-6">
@@ -130,7 +132,8 @@
               </div>
               <div class="col-4">
                 <div class="labeldiv2">
-                  <div class="staff-orange-gradiant"></div> <span class="chart-label">Staff &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span
+                  <div class="staff-orange-gradiant"></div> <span class="chart-label">Staff
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span
                       class="chart-label-count">{{issuedToStaff}}</span></span>
                 </div>
                 <div class="labeldiv2">
@@ -165,7 +168,7 @@
         <div class="col-12">
           <mat-tab-group class="library-dash-group">
             <mat-tab label="Class Wise">
-              <div class="row tab-content-card" >
+              <div class="row tab-content-card">
                 <div class="col-12">
                   <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['class']">
                     <tbody>
@@ -179,7 +182,7 @@
                         <th class="font-bold padding-8 font-size-18 separationwidth"><span>Grand Total</span></th>
                         <th class="font-color-red padding-8 font-size-18">
                           <span>{{dashboardDueReservoirData?.class_total_due_count}} Books</span></th>
-                          <th></th>
+                        <th></th>
                       </tr>
                       <tr *ngIf="dashboardDueReservoirData?.class_total_due_count == 0">
                         <td class="text-center" colspan="2">No Record Found</td>
@@ -260,21 +263,30 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <ng-container *ngFor="let item of dashboardDueReservoirData['all']; let i = index;">
-                        <tr class="custom-tr" *ngFor="let subitem of item.reserv_user_logs; let j = index;">
-                          <td class="custom-td"><span *ngIf="i > 0">{{ getMainLoopLength(i)+j+1}}</span><span
-                              *ngIf="i === 0">{{j+1}}</span></td>
+                      <ng-container *ngFor="let item of dashboardDueReservoirData['all'] | slice:0:7; let i = index;">
+                        <!-- <ng-container *ngFor="let subitem of item.reserv_user_logs; let j = index;"> -->
+                        <!-- <tr class="custom-tr" *ngIf="getMainLoopLength(i)+j+1 <= 8"> -->
+                        <tr class="custom-tr">
+                          <!-- <td class="custom-td"><span *ngIf="i > 0">{{ getMainLoopLength(i)+j+1}}</span><span
+                              *ngIf="i === 0">{{j+1}}</span></td> -->
+                          <td class="custom-td"><span>{{i+1}}</span></td>
                           <td class="custom-td">
-                            <span class="font-skyblue">{{subitem?.reserv_id}}</span>
+                            <span class="font-skyblue cursor-pointer"
+                              (click)="openBookModal(item?.reserv_user_logs?.reserv_id)">{{item?.reserv_user_logs?.reserv_id}}</span>
                           </td>
-                          <td class="custom-td text-left"><span>{{subitem?.title}}</span></td>
-                          <td class="custom-td text-left">{{item?.user_full_name}}</td>
-                          <td class="custom-td">{{subitem?.issued_on}}</td>
-                          <td class="custom-td">{{subitem?.due_date}}</td>
-                          <td class="custom-td"><span class="font-color-red">{{getDaysDiff(subitem?.due_date)}}
+                          <td class="custom-td text-left text-capitalize"><span>{{item?.reserv_user_logs?.title}}</span>
+                          </td>
+                          <td class="custom-td text-left text-capitalize">{{item?.user_full_name}}</td>
+                          <td class="custom-td">{{item?.reserv_user_logs?.issued_on}}</td>
+                          <td class="custom-td">{{item?.reserv_user_logs?.due_date}}</td>
+                          <td class="custom-td"><span
+                              class="font-color-red">{{getDaysDiff(item?.reserv_user_logs?.due_date)}}
                               Days</span></td>
                         </tr>
+                        <!-- </tr> -->
+                        <!-- </ng-container> -->
                       </ng-container>
+
                     </tbody>
                   </table>
                   <table class="table-100 custom-table"
@@ -283,6 +295,11 @@
                       <td class="text-center" colspan="2">No Record Found</td>
                     </tr>
                   </table>
+                  <div class="text-center" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length  > 0">
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" style="margin-top: 5px;" (click)="viewAllDue()">
+                      View All
+                    </button>
+                  </div>
                 </div>
               </div>
             </mat-tab>
@@ -293,3 +310,5 @@
   </div>
 </div>
 <app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>
+
+<app-book-details-modal #bookDet></app-book-details-modal>

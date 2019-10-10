@@ -25,6 +25,7 @@ export class SchoolDashboardComponent implements OnInit {
   prevIndex = 0;
   searchForm: FormGroup;
   @ViewChild('searchModal') searchModal;
+  @ViewChild('bookDet')bookDet;
   constructor(private fbuild: FormBuilder, private common: CommonAPIService,
     private erpCommonService: ErpCommonService, public dialog: MatDialog, private route: ActivatedRoute,
 		private router: Router,) { }
@@ -190,19 +191,19 @@ export class SchoolDashboardComponent implements OnInit {
     }
   }
 
-  getMainLoopLength(i) {
-    var tot_length = 0;
-    for (var l=0; l<=i-1;l++) {
-      if (this.dashboardDueReservoirData['all'] && this.dashboardDueReservoirData['all'][l]) {
-        tot_length = tot_length +this.dashboardDueReservoirData['all'][l].reserv_user_logs.length;
+  // getMainLoopLength(i) {
+  //   var tot_length = 0;
+  //   for (var l=0; l<=i-1;l++) {
+  //     if (this.dashboardDueReservoirData['all'] && this.dashboardDueReservoirData['all'][l]) {
+  //       tot_length = tot_length +this.dashboardDueReservoirData['all'][l].reserv_user_logs.length;
                
         
-      }
-    }
-    return tot_length;
+  //     }
+  //   }
+  //   return tot_length;
     
     
-  }
+  // }
 
   searchOk($event) {
     this.common.setDashboardSearchData({	filters: $event.filters,
@@ -214,6 +215,14 @@ export class SchoolDashboardComponent implements OnInit {
     console.log(this.searchForm.value.searchId);
     this.common.setDashboardSearchData({search:this.searchForm.value.searchId});
       this.router.navigate(['../auxillary/book-search'], {relativeTo: this.route });	
+  }
+  
+  openBookModal(book_no) {
+		this.bookDet.openModal(book_no);
+  }
+
+  viewAllDue() {
+    this.router.navigate(['../view-all-due'], {relativeTo: this.route });	
   }
   
 }
