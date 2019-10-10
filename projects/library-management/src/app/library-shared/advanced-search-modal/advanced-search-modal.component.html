@@ -37,7 +37,7 @@
                   <div class="col-4 margin-top-10  text-right" *ngIf="(formGroupArray.length - 1) === i">
                     <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="addNewFilter(i)"
                     [disabled]="!formGroupArray[i].formGroup.value.filter_type && !formGroupArray[i].formGroup.value.filter_value">
-                      Add
+                      <span style="color:#fff !important">Add</span>
                     </button>
                   </div>
                 </div>

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { MatDialog } from '@angular/material/dialog';
 import { AdvancedSearchModalComponent } from '../../../library-shared/advanced-search-modal/advanced-search-modal.component';
-
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroup, FormBuilder } from '@angular/forms';
 @Component({
   selector: 'app-school-dashboard',
   templateUrl: './school-dashboard.component.html',
@@ -22,14 +22,21 @@ export class SchoolDashboardComponent implements OnInit {
   reissued = 0;
   currentDate = new Date();
   result: any = {};
-  constructor(private common: CommonAPIService,
-    private erpCommonService: ErpCommonService, public dialog: MatDialog, ) { }
+  prevIndex = 0;
+  searchForm: FormGroup;
+  @ViewChild('searchModal') searchModal;
+  constructor(private fbuild: FormBuilder, private common: CommonAPIService,
+    private erpCommonService: ErpCommonService, public dialog: MatDialog, private route: ActivatedRoute,
+		private router: Router,) { }
 
   ngOnInit() {
+    this.buildForm();
     this.getReservoirData();
     this.getIssueBookData();
     this.getDueReservoir();
   }
+
+  openSearchDialog = (data) => { this.searchModal.openModal(data); }
 
 
   openAdvanceSearchDialog(): void {
@@ -42,6 +49,11 @@ export class SchoolDashboardComponent implements OnInit {
     });
   }
 
+  buildForm() {
+    this.searchForm = this.fbuild.group({
+      searchId : ''
+		});
+  }
   getReservoirData() {
     this.erpCommonService.getDashboardReservoirData({}).subscribe((res: any) => {
       if (res && res.status === 'ok') {
@@ -100,37 +112,62 @@ export class SchoolDashboardComponent implements OnInit {
         height: '300px',
         options3d: {
           enabled: false,
-          alpha: 45
+          alpha: 35
         }
       },
       title: {
-        text: '<b><span class="bookIssuedCountFont">' + (Number(totalBookIssued)) + '</span><b><br><span>Book Issued <span>',
+        text: '<b><span class="bookIssuedCountFont">' + (Number(totalBookIssued)) + '</span><b><br><br><span class="bookIssuedText">Books Issued <span>',
         align: 'center',
         verticalAlign: 'middle',
         y: 25
       },
       plotOptions: {
         pie: {
-          innerSize: 200,
-          depth: 45,
+          innerSize: 220,
+          depth: 35,
           dataLabels: {
             enabled: false
           },
           colors: [
-            '#9932cc',
-            '#EE82EE',
-            '#FFA500',
-            '#808080',
+           
+            {
+              radialGradient: { cx: 0.5, cy: 0.3, r: 0.87 },
+              stops: [
+                [0, '#A2A5F9'],
+                [1, '#8774F3']
+              ]
+            },            
+            {
+              radialGradient: { cx: 0.5, cy: 0.3, r: 0.87 },
+              stops: [
+                [0, '#EBEBEB'],
+                [1, '#D2D2D2']
+              ]
+            },
+            {
+              radialGradient: { cx: 0.5, cy: 0.3, r: 0.87 },
+              stops: [
+                [0, '#FDC830'],
+                [1, '#F37335']
+              ]
+            },
+            {
+              radialGradient: { cx: 0.5, cy: 0.3, r: 0.87 },
+              stops: [
+                [0, '#FF839D'],
+                [1, '#F50B9A']
+              ]
+            },
           ],
         }
       },
       series: [{
         name: 'Book Issued',
-        data: [
-          ['issuedToTeacher', issuedToTeacher],
-          ['issuedToStudent', issuedToStudent],
-          ['issuedToStaff', issuedToStaff],
-          ['reissued', reissued],
+        data: [          
+          ['Students', issuedToStudent],         
+          ['Reissued', reissued],
+          ['Staff', issuedToStaff],
+          ['Teachers', issuedToTeacher],
 
         ]
       }]
@@ -151,6 +188,32 @@ export class SchoolDashboardComponent implements OnInit {
       var parsedDate1: any = this.parseDate(date1);
       return Math.round((parsedDate2 - parsedDate1) / (1000 * 60 * 60 * 24));
     }
+  }
+
+  getMainLoopLength(i) {
+    var tot_length = 0;
+    for (var l=0; l<=i-1;l++) {
+      if (this.dashboardDueReservoirData['all'] && this.dashboardDueReservoirData['all'][l]) {
+        tot_length = tot_length +this.dashboardDueReservoirData['all'][l].reserv_user_logs.length;
+               
+        
+      }
+    }
+    return tot_length;
+    
+    
+  }
+
+  searchOk($event) {
+    this.common.setDashboardSearchData({	filters: $event.filters,
+      generalFilters: $event.generalFilters});
+      this.router.navigate(['../auxillary/book-search'], {relativeTo: this.route });	
+  }
+  
+  search() {
+    console.log(this.searchForm.value.searchId);
+    this.common.setDashboardSearchData({search:this.searchForm.value.searchId});
+      this.router.navigate(['../auxillary/book-search'], {relativeTo: this.route });	
   }
   
 }
