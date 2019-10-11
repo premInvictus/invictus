@@ -11,7 +11,8 @@ import { SisService } from '../../_services';
 })
 export class DeleteWithReasonComponent implements OnInit {
 
-	inputData: any;
+	reason_type: any;
+	inputData: any = {};
 	reasonForm: FormGroup;
 	reasonArr: any;
 	@Input() deleteMessage;
@@ -23,7 +24,6 @@ export class DeleteWithReasonComponent implements OnInit {
 
 	ngOnInit() {
 		this.buildForm();
-		this.getReason();
 	}
 
 	buildForm() {
@@ -35,7 +35,8 @@ export class DeleteWithReasonComponent implements OnInit {
 	}
 
 
-	openModal(data) {
+	openModal(data) {	
+		this.getReason(11);		
 		this.inputData = data;
 		this.reasonForm.patchValue({
 			'inv_id': data
@@ -47,10 +48,23 @@ export class DeleteWithReasonComponent implements OnInit {
 			}
 		});
 	}
+	openModalFee(data) {
+		this.inputData = data;	
+		this.getReason(this.inputData.receipt_id);
+		this.reasonForm.patchValue({
+			'inv_id': this.inputData.id
+		});
+		this.dialogRef = this.dialog.open(this.deleteWithReasonModal, {
+			'height': '50vh',
+			position: {
+				'top': '20%'
+			}
+		});
+	}
 
-	getReason() {
+	getReason(reason_type) {
 		this.reasonArr = [];
-		this.sisService.getReason({ reason_type: '11' }).subscribe((result: any) => {
+		this.sisService.getReason({ reason_type: reason_type }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.reasonArr = result.data;
 			}
@@ -60,7 +74,7 @@ export class DeleteWithReasonComponent implements OnInit {
 
 	delete() {
 		if (this.reasonForm.valid) {
-			this.deleteOk.emit(this.reasonForm.value);
+			this.deleteOk.emit(this.reasonForm.value); 
 			this.dialogRef.close();
 			this.reasonForm.patchValue({
 				'inv_id': [],
