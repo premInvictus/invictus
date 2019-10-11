@@ -42,6 +42,7 @@ import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-s
 import { BarecodeScannerLivestreamModule } from 'ngx-barcode-scanner';
 import { BookReserveRequestConfirmationComponent } from './book-reserve-request-confirmation/book-reserve-request-confirmation.component';
 import { BookDetailsModalComponent } from './book-details-modal/book-details-modal.component';
+import { ReservoirEditModalComponent } from './reservoir-edit-modal/reservoir-edit-modal.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -115,7 +116,8 @@ export const MY_FORMATS = {
 		BookDetailComponent,
 		AdvancedSearchModalComponent,
 		BookReserveRequestConfirmationComponent,
-		BookDetailsModalComponent
+		BookDetailsModalComponent,
+		ReservoirEditModalComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -128,7 +130,8 @@ export const MY_FORMATS = {
 		BookDetailComponent,
 		AdvancedSearchModalComponent,
 		BookReserveRequestConfirmationComponent,
-		BookDetailsModalComponent
+		BookDetailsModalComponent,
+		ReservoirEditModalComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -171,7 +174,8 @@ export const MY_FORMATS = {
 		BookDetailComponent,
 		AdvancedSearchModalComponent,
 		BarecodeScannerLivestreamModule,
-		BookDetailsModalComponent
+		BookDetailsModalComponent,
+		ReservoirEditModalComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

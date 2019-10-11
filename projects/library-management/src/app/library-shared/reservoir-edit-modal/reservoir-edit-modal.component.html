@@ -1,0 +1,324 @@
+<ng-template #editReserv>
+  <div class="modal-custom-cotainer">
+    <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+        <div class="modal-title-box">
+          <span class="font-size-20 font-white font-regular">Edit</span><span class="float-right margin-top-5">
+            <a (click)="closeDialog()"> <i
+                class="far fa-times-circle font-white cursor-pointer font-size-24"></i></a></span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div>
+          <form [formGroup]="bookForm" autocomplete="off">
+            <div class="row">
+              <div class="col-12">
+                <span class="font-size-20 font-bold">Book Details</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <div class="book-cover-img-2">
+                  <div class="text-center">
+                    <label for="file-input">
+                      <img [src]="bookImage ? bookImage : '../../../../../../assets/images/book_placeholder.png'" style="width: 160px;
+                          height: 230px;
+                          border-radius: 5px;
+                          opacity: 1;">
+                    </label>
+                    <input id="file-input" #fileInput name="file-input" type="file" (change)="readUrl($event)" hidden />
+                  </div>
+                </div>
+              </div>
+              <div class="col-10">
+                <div class="row">
+                  <div class="col-3">
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>ISBN Code</mat-label>
+                          <input matInput placeholder="ISBN Code" formControlName="isbn" type="text" id="isbn_id"
+                            [readonly]="bookData.isbn" tabindex="1" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Publisher</mat-label>
+                          <input matInput placeholder="Publisher" tabindex="5" formControlName="publisher" required />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Tag</mat-label>
+                          <input matInput placeholder="Tag" tabindex="9" formControlName="tags" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Price</mat-label>
+                          <input matInput placeholder="Price" formControlName="price" type="number" step="0.01"
+                            tabindex="14" required />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Title</mat-label>
+                          <input matInput placeholder="Title" formControlName="title" required tabindex="2" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Published Date</mat-label>
+                          <input matInput placeholder="Published Date" tabindex="6" formControlName="publishedDate"
+                            required>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Volume Info</mat-label>
+                          <input matInput placeholder="Volume Info" tabindex="10" formControlName="volumeInfo" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Sub-Title</mat-label>
+                          <input matInput placeholder="Subtitle" tabindex="3" formControlName="subtitle" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Kind/ Genre</mat-label>
+                          <mat-select formControlName="genre_id" required tabindex="7">
+                            <mat-option *ngFor="let item of genreArray" [value]="item.genre_name">
+                              {{item.genre_name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Language</mat-label>
+                          <mat-select formControlName="lang_id" required tabindex="11">
+                            <mat-option *ngFor="let item of languageArray" [value]="item.lang_code">
+                              {{item.lang_name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Author</mat-label>
+                          <input matInput placeholder="Author" formControlName="authors" required tabindex="4" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Pages</mat-label>
+                          <input matInput placeholder="Pages" tabindex="8" formControlName="page_count" required
+                            type="number" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Description</mat-label>
+                          <textarea matInput rows="5" formControlName="description" tabindex="12"></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <span class="font-size-20 font-bold">School Details</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Book Type</mat-label>
+                      <mat-select placeholder="Book Type" formControlName="category_id" required tabindex="15">
+                        <mat-option *ngFor="let item of booktypeArray" [value]="item.type_id">
+                          {{item.type_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Source</mat-label>
+                      <mat-select placeholder="Book Type" placeholder="Source" formControlName="source" tabindex="18">
+                        <mat-option *ngFor="let item of sourceArray" [value]="item.type_id">
+                          {{item.type_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Stack</mat-label>
+                      <input matInput placeholder="Stack" formControlName="stack" required tabindex="19" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Row</mat-label>
+                      <input matInput placeholder="Row" formControlName="row" type="number" required tabindex="20" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Class</mat-label>
+                      <mat-select placeholder="Class" formControlName="reserv_class_id" multiple tabindex="21">
+                        <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                          {{item.class_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Subject</mat-label>
+                      <mat-select placeholder="Subject" formControlName="reserv_sub_id" tabindex="22">
+                        <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                          {{item.sub_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <span class="font-size-20 font-bold">Vendors Details</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Vendor ID</mat-label>
+                      <input matInput placeholder="Vendor ID" formControlName="vendor_id" tabindex="24"
+                        (blur)="getVenderDetails2($event);$event.stopPropagation()"
+                        (keydown.enter)="getVenderDetails2($event);$event.stopPropagation()" type="number" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Vendor Name</mat-label>
+                      <input matInput placeholder="Vendor Name" formControlName="vendor_name" readonly />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Address</mat-label>
+                      <input matInput placeholder="Address" formControlName="vendor_address" readonly />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Contact No.</mat-label>
+                      <input matInput placeholder="Contact No." formControlName="contact" readonly maxlength="10" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Email ID</mat-label>
+                      <input matInput placeholder="Email ID" formControlName="vendor_email" readonly />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Authorised Contact Person</mat-label>
+                      <input matInput placeholder="Authorised Contact Person" formControlName="name" readonly />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Mobile No.</mat-label>
+                      <input matInput placeholder="Mobile No." formControlName="vendor_contact" readonly
+                        maxlength="10" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>PAN</mat-label>
+                      <input matInput placeholder="PAN" formControlName="ven_pan_no" readonly />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>GST No.</mat-label>
+                      <input matInput placeholder="GST No." formControlName="ven_gst_no" readonly />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>P O No</mat-label>
+                      <input matInput placeholder="P O No" formControlName="vendor_po_no" tabindex="25" required />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Invoice No.</mat-label>
+                      <input matInput placeholder="Invoice No." formControlName="vendor_invoice_no" tabindex="26"
+                        required />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row text-center">
+              <div class="col-12">
+                <button mat-raised-button class="btn-success-green" (click)="update()">Update</button>
+                <button mat-raised-button class="btn-reset btn-spacer" (click)="cancel()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+            <br>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<app-imagecrop #cropModal (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)" [roundCropper]="false"
+  [resizeToWidth]="160"></app-imagecrop>
