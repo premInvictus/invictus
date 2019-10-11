@@ -256,7 +256,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 							authors: authName,
 							publisher: item.publisher,
 							location: item.location,
-							status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status
+							status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
+							action: item
 						});
 						i++;
 					}
@@ -313,7 +314,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 						authors: authName,
 						publisher: item.publisher,
 						location: item.location,
-						status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status
+						status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
+						action: item
 					});
 					i++;
 				}
@@ -406,7 +408,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 							authors: authName,
 							publisher: item.publisher,
 							location: item.location,
-							status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status
+							status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
+							action: item
 						});
 						i++;
 					}
@@ -605,7 +608,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 						authors: authName,
 						publisher: item.publisher,
 						location: item.location,
-						status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status
+						status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
+						action: item
 					});
 					i++;
 				}
