@@ -4,7 +4,7 @@ export const environment = {
 	apiSisUrl: 'http://dev-api-sis.invictusprojects.in',
 	apiFeeUrl: 'http://dev-api-fee.invictusprojects.in',
 	apiSmartUrl: 'http://dev-api-smart.invictusprojects.in',
-	apiExamUrl: 'http://dev-api-exam.invictusprojects.in',
+	apiExamUrl: 'http://localhost/invictus/examination-backend/index.php',
 	apiReservUrl: 'http://dev-api-reservoir.invictusprojects.in',
 	logoutUrl: 'http://devlogin.invictusprojects.in',
 	socketUrl: 'http://13.234.2.36:8081',
