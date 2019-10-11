@@ -245,6 +245,14 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/marksEntry/uploadMarkEntryTemplate', value);
 	}
+	addSubjectSubexamMapping(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/addSubjectSubexamMapping', value);
+	}
+	getSubjectSubexamMapping(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getSubjectSubexamMapping', value);
+	}
 	
 }
 
