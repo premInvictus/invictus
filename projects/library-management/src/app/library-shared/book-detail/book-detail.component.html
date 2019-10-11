@@ -18,7 +18,8 @@
       <mat-card *ngIf="bookData?.reserv_id">
         <div class="row">
           <div class="col-2 smart-col-12 remove-col-padding-left">
-            <img class="book-detail-img-big" [src]="bookData?.images_links?.smallThumbnail">
+            <img class="book-detail-img-big" 
+            [src]="(bookData?.images_links?.smallThumbnail) ? (bookData?.images_links?.smallThumbnail) : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_cover.png'">
           </div>
           <div class="col-8 smart-col-88 remove-col-padding">
             <div class="row remove-top-margin">
@@ -59,7 +60,7 @@
                   <div class="col-12 text-right">
                     <div class="inline-flex">
                       <div *ngFor="let sim of bookData?.similarBooks" class="book-img-small-similar margin-left-15">
-                        <img class="book-img-small-similar" [src]="sim?.images_links?.smallThumbnail"
+                        <img class="book-img-small-similar" [src]="(sim?.images_links?.smallThumbnail) ? sim?.images_links?.smallThumbnail : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_cover.png'"
                           style="cursor:pointer" (click)="getBookDetail2(sim.reserv_id)">
                       </div>
                     </div>
