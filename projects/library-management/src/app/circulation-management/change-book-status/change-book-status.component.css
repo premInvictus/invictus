@@ -33,3 +33,7 @@
     border-bottom-left-radius: 5px !important;
     cursor: pointer !important;
 }
+.red {
+    background-color: #ff0000;
+    cursor: pointer;
+}

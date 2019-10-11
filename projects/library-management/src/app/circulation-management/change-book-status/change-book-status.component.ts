@@ -164,4 +164,8 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			});
 		}
 	}
+
+	removeBookFromList(index) {
+		this.bookData.splice(index,1);
+	}
 }
