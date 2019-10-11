@@ -57,7 +57,7 @@ export class ViewAllDueComponent implements OnInit, AfterViewInit {
 
   getDueReservoir(bookArr) {
     const datePipe = new DatePipe('en-in');
-    let inputJson =  {};
+    let inputJson =  {'viewAll': true};
     if (bookArr && bookArr.length > 0) {
       inputJson['bookData'] = bookArr;
     }
