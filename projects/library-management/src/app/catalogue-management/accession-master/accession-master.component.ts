@@ -149,6 +149,12 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				reserv_id: $event.id
 			}).subscribe((res: any) => {
 				if (res && res.status === 'ok') {
+					this.notif.showSuccessErrorMessage(res.message, 'success');
+					if (!this.filteredFlag) {
+						this.getReservoirData();
+					} else {
+						this.getReservoirDataBasedOnFilter();
+					}
 				}
 			});
 		}

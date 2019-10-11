@@ -148,7 +148,7 @@ export class ReservoirEditModalComponent implements OnInit {
         }
         const loc: any = this.bookData.location;
         let row, stack;
-        if (loc.split('-')) {
+        if (loc && loc.split('-')) {
           const arr: any[] = loc.split('-');
           console.log(arr);
           row = Number(arr[1]);
