@@ -13,7 +13,8 @@
                 <div class="inline-flex">
                     <mat-form-field appearance="outline" class="form-field" appearance="outline">
                         <mat-label>Other Category</mat-label>
-                        <mat-select placeholder="Other Category" [disabled]="viewOnly" formControlName="accd_fo_id" [errorStateMatcher]="confirmValidParentMatcher" required>
+                        <mat-select placeholder="Other Category" [disabled]="viewOnly" formControlName="accd_fo_id"
+                            [errorStateMatcher]="confirmValidParentMatcher" required>
                             <mat-option>Please Select</mat-option>
                             <mat-option *ngFor="let item of feeOtherCategory" [value]="item.fo_id">{{item.fo_name}}
                             </mat-option>
@@ -23,7 +24,8 @@
                 <div class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Fee Structure</mat-label>
-                        <mat-select placeholder="Applicable Fee Structure" [disabled]="viewOnly" formControlName="accd_fs_id" [errorStateMatcher]="confirmValidParentMatcher" required>
+                        <mat-select placeholder="Applicable Fee Structure" [disabled]="viewOnly"
+                            formControlName="accd_fs_id" [errorStateMatcher]="confirmValidParentMatcher" required>
                             <mat-option>Please Select</mat-option>
                             <mat-option *ngFor="let item of feeStructureArray" [value]="item.fs_id">{{item.fs_name}}
                             </mat-option>
@@ -42,29 +44,68 @@
                 <div class="inline-flex">
                     <mat-form-field appearance="outline" class="form-field-225">
                         <mat-label>Concession Group</mat-label>
-                        <mat-select placeholder="Concession Group" [disabled]="viewOnly" formControlName="accd_fcg_id" [errorStateMatcher]="confirmValidParentMatcher" (selectionChange)="setDescription($event)">
+                        <mat-select placeholder="Concession Group" [disabled]="viewOnly" formControlName="accd_fcg_id"
+                            [errorStateMatcher]="confirmValidParentMatcher" (selectionChange)="setDescription($event)">
                             <mat-option>Please Select</mat-option>
-                            <mat-option *ngFor="let item of conGroupArray" [value]="item.fcg_id">{{item.fcg_name}}</mat-option>
+                            <mat-option *ngFor="let item of conGroupArray" [value]="item.fcg_id">{{item.fcg_name}}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
                 <div class="inline-flex margin-left-15" *ngIf="conDesc">
-                    Description: {{conDesc}}
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Reason For Approve Concession</mat-label>
+                        <mat-select placeholder="Reason For Approve Concession" [disabled]="viewOnly"
+                            formControlName="accd_reason_id" [errorStateMatcher]="confirmValidParentMatcher" required>
+                            <mat-option>Please Select</mat-option>
+                            <mat-option *ngFor="let item of reasonArr" [value]="item.reason_id">{{item.reason_title}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="inline-flex margin-left-15" *ngIf="conDesc">
+                    <mat-form-field appearance="outline" class="form-field-220">
+                        <mat-label>Remarks</mat-label>
+                        <input matInput placeholder="Remarks" formControlName="accd_remark_id" [readonly]="viewOnly" required>
+                    </mat-form-field>
+                </div>
+                <div class="inline-flex margin-left-50" *ngIf="conDesc">
+                    <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
+                    multiple="true" (change)="fileChangeEvent($event,docreq_id)" id="docreq_id"
+                    style="display: none !important">
+                
+                  <a class=" text-center cursor-pointer" *ngIf="!viewOnly">
+                    <mat-icon class="margin-top-10  cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
+                        class="sis-btn-document-label cursor-pointer" for="docreq_id">Choose
+                        File</label></a>
                 </div>
             </div>
+                <div class="col-12 remove-col-padding">
+                    <div class="inline-flex margin-left-15 pad-bot-10" *ngIf="conDesc">
+                        Description: {{conDesc}} <span *ngIf="conStatus === 'approved'" class="approved">{{conStatus | capitalize}}</span>
+                        <span *ngIf="conStatus === 'pending'" class="pending">{{conStatus | capitalize}}</span>
+                    </div>
+                </div>
+               
+            
             <div class="col-12 remove-col-padding">
                 <div class="inline-flex">
-                    <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_transport" (change)="enableTransport($event)">Whether the child has opted for Transport facility</mat-checkbox>
+                    <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_transport"
+                        (change)="enableTransport($event)">Whether the child has opted for Transport facility
+                    </mat-checkbox>
                 </div>
                 <div class="inline-flex margin-left-15">
-                    <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_hostel" (change)="enableHostel($event)">Whether the child has opted for Hostel facility.</mat-checkbox>
+                    <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_hostel"
+                        (change)="enableHostel($event)">Whether the child has opted for Hostel facility.</mat-checkbox>
                 </div>
 
             </div>
         </div>
         <div *ngIf="transportFlag" class="row remove-top-margin">
             <div class="col-12 remove-col-padding">
-                <span class="font-size-20 font-medium">Transport Details </span> <a class="pointer font-bold font-skyblue font-underline" *ngIf="(transport_history?.length > 0)" (click)="showTransport = !showTransport">View Transport History</a>
+                <span class="font-size-20 font-medium">Transport Details </span> <a
+                    class="pointer font-bold font-skyblue font-underline" *ngIf="(transport_history?.length > 0)"
+                    (click)="showTransport = !showTransport">View Transport History</a>
             </div>
         </div>
         <div *ngIf="transportFlag" class="row">
@@ -72,16 +113,21 @@
                 <div class="inline-flex">
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Mode</mat-label>
-                        <mat-select placeholder="Mode" [disabled]="viewOnly" (ngModelChange)="enableMode($event)" formControlName="accd_transport_mode" [errorStateMatcher]="confirmValidParentMatcher" required>
+                        <mat-select placeholder="Mode" [disabled]="viewOnly" (ngModelChange)="enableMode($event)"
+                            formControlName="accd_transport_mode" [errorStateMatcher]="confirmValidParentMatcher"
+                            required>
                             <mat-option>Please Select</mat-option>
-                            <mat-option *ngFor="let item of transPortModes" [value]="item.tm_id">{{item.tm_name}}</mat-option>
+                            <mat-option *ngFor="let item of transPortModes" [value]="item.tm_id">{{item.tm_name}}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
                 <div *ngIf="modeFlag && transportFlag" class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Route</mat-label>
-                        <mat-select placeholder="Route" [disabled]="viewOnly" (selectionChange)="getStoppages($event.value)" [errorStateMatcher]="confirmValidParentMatcher" formControlName="accd_tr_id" required>
+                        <mat-select placeholder="Route" [disabled]="viewOnly"
+                            (selectionChange)="getStoppages($event.value)"
+                            [errorStateMatcher]="confirmValidParentMatcher" formControlName="accd_tr_id" required>
                             <mat-option>Please Select</mat-option>
                             <mat-option *ngFor="let item of routeArray" [value]="item.tr_id">{{item.tr_route_name}}
                             </mat-option>
@@ -91,17 +137,22 @@
                 <div *ngIf="modeFlag && transportFlag" class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Stoppage</mat-label>
-                        <mat-select placeholder="Stoppage" [disabled]="viewOnly" (selectionChange)="getSlab($event.value)" [errorStateMatcher]="confirmValidParentMatcher" required formControlName="accd_tsp_id">
+                        <mat-select placeholder="Stoppage" [disabled]="viewOnly"
+                            (selectionChange)="getSlab($event.value)" [errorStateMatcher]="confirmValidParentMatcher"
+                            required formControlName="accd_tsp_id">
                             <mat-option>Please Select</mat-option>
-                            <mat-option *ngFor="let item of stoppageArray" [value]="item.tsp_id">{{item.tsp_name}}</mat-option>
+                            <mat-option *ngFor="let item of stoppageArray" [value]="item.tsp_id">{{item.tsp_name}}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
                 <div *ngIf="modeFlag && transportFlag" class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Applicable Slab</mat-label>
-                        <mat-select placeholder="Applicable Slab" disabled [(ngModel)]="slabModel" [errorStateMatcher]="confirmValidParentMatcher" formControlName="accd_ts_id" required>
-                            <mat-option *ngFor="let item of slabArray" [value]="item.ts_id">{{item.ts_name}}</mat-option>
+                        <mat-select placeholder="Applicable Slab" disabled [(ngModel)]="slabModel"
+                            [errorStateMatcher]="confirmValidParentMatcher" formControlName="accd_ts_id" required>
+                            <mat-option *ngFor="let item of slabArray" [value]="item.ts_id">{{item.ts_name}}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -109,7 +160,9 @@
                     <div *ngIf="modeFlag && transportFlag">
                         <mat-form-field appearance="outline" class="form-field-220">
                             <mat-label>Applicable From</mat-label>
-                            <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly" placeholder="Applicable From" formControlName="accd_transport_from" [errorStateMatcher]="confirmValidParentMatcher" required />
+                            <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
+                                placeholder="Applicable From" formControlName="accd_transport_from"
+                                [errorStateMatcher]="confirmValidParentMatcher" required />
                             <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker" [disabled]="viewOnly">
                             </mat-datepicker-toggle>
                             <mat-datepicker tabindex="-1" #picker [disabled]="viewOnly"></mat-datepicker>
@@ -121,7 +174,9 @@
                     <div *ngIf="terminationFlag">
                         <mat-form-field appearance="outline" class="form-field-220">
                             <mat-label>Applicable To</mat-label>
-                            <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly" placeholder="Termination Date" formControlName="accd_transport_to" [errorStateMatcher]="confirmValidParentMatcher" required />
+                            <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
+                                placeholder="Termination Date" formControlName="accd_transport_to"
+                                [errorStateMatcher]="confirmValidParentMatcher" required />
                             <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker" [disabled]="viewOnly">
                             </mat-datepicker-toggle>
                             <mat-datepicker tabindex="-1" #picker [disabled]="viewOnly"></mat-datepicker>
@@ -140,7 +195,7 @@
 
 
 
-            </div> 
+            </div>
         </div>
         <!-- <div *ngIf="transportFlag" class="row">
           <div *ngIf="modeFlag && transportFlag" class="col-3 remove-col-padding-left">
@@ -172,8 +227,9 @@
              </mat-form-field>
           </div>
        </div> -->
-        <mat-checkbox *ngIf="modeFlag && transportFlag" class="font-size-16" [disabled]="viewOnly" (change)="terminate($event)" formControlName="accd_is_terminate">{{terminateStatus}}</mat-checkbox>
-        <br/>
+        <mat-checkbox *ngIf="modeFlag && transportFlag" class="font-size-16" [disabled]="viewOnly"
+            (change)="terminate($event)" formControlName="accd_is_terminate">{{terminateStatus}}</mat-checkbox>
+        <br />
 
         <div *ngIf="showTransport">
             <div class="row">
@@ -191,23 +247,28 @@
                                 <td class="custom-td">
                                     {{i+1}}
                                 </td>
-                                <td class="custom-td text-capitalize text-center" >{{item?.uaal_created_date | date: 'd-MMM-y'}}</td>
-<!-- 
+                                <td class="custom-td text-capitalize text-center">
+                                    {{item?.uaal_created_date | date: 'd-MMM-y'}}</td>
+                                <!-- 
                                 <th class="custom-th">Transport Stoppages</th>
                                 <th class="custom-th">Applicable From</th>
                                 <th class="custom-th">Applicable To</th>
                                 <th class="custom-th">Created Date</th> -->
 
-                                <td *ngIf="item?.uaal_status === '0'" class="custom-td text-capitalize text-center">Transport Opted Out</td>
+                                <td *ngIf="item?.uaal_status === '0'" class="custom-td text-capitalize text-center">
+                                    Transport Opted Out</td>
 
-                                <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="25%">
-                                    <span> Route : {{item?.tr_route_name ? item?.tr_route_name : '-' }}</span>, 
-                                    <span> Stoppages : {{item?.tsp_name ? item?.tsp_name : '-' }}</span>, 
-                                    <span> Applicable From : {{item?.uaal_transport_from ? (item?.uaal_transport_from | date: 'd-MMM-y') : '-' }}</span>, 
-                                    <span> Applicable To : {{item?.uaal_transport_to ? (item?.uaal_transport_to | date: 'd-MMM-y') : '-' }}</span>, 
-                                    <span> Remarks : {{item?.uaal_remark ? item?.uaal_remark  : '-' }}</span>, 
-                                    <span> Deleted by : {{item?.au_full_name ? item?.au_full_name  : '-' }}</span> 
-                                    
+                                <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left"
+                                    width="25%">
+                                    <span> Route : {{item?.tr_route_name ? item?.tr_route_name : '-' }}</span>,
+                                    <span> Stoppages : {{item?.tsp_name ? item?.tsp_name : '-' }}</span>,
+                                    <span> Applicable From :
+                                        {{item?.uaal_transport_from ? (item?.uaal_transport_from | date: 'd-MMM-y') : '-' }}</span>,
+                                    <span> Applicable To :
+                                        {{item?.uaal_transport_to ? (item?.uaal_transport_to | date: 'd-MMM-y') : '-' }}</span>,
+                                    <span> Remarks : {{item?.uaal_remark ? item?.uaal_remark  : '-' }}</span>,
+                                    <span> Deleted by : {{item?.au_full_name ? item?.au_full_name  : '-' }}</span>
+
                                 </td>
                                 <!-- <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="25%">
                                     <span *ngIf="item?.tsp_name">{{item?.tsp_name}}</span>
@@ -241,17 +302,22 @@
                 <div class="inline-flex">
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Hostel Fee</mat-label>
-                        <mat-select placeholder="Applicable Hostel Fee" [disabled]="viewOnly" formControlName="accd_hostel_fs_id">
+                        <mat-select placeholder="Applicable Hostel Fee" [disabled]="viewOnly"
+                            formControlName="accd_hostel_fs_id">
                             <mat-option value="">Please Select</mat-option>
-                            <mat-option *ngFor="let item of hostelFeeStructureArray" [value]="item.fs_id">{{item.fs_name}}
+                            <mat-option *ngFor="let item of hostelFeeStructureArray" [value]="item.fs_id">
+                                {{item.fs_name}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="inline-flex margin-left-15" *ngIf="accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id !== '0'">
+                <div class="inline-flex margin-left-15"
+                    *ngIf="accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id !== '0'">
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Appplicable From</mat-label>
-                        <input matInput [matDatepicker]="picker3" [max]="maxDate" [readonly]="viewOnly" placeholder="Applicable From" formControlName="accd_hostel_from" [errorStateMatcher]="confirmValidParentMatcher" required />
+                        <input matInput [matDatepicker]="picker3" [max]="maxDate" [readonly]="viewOnly"
+                            placeholder="Applicable From" formControlName="accd_hostel_from"
+                            [errorStateMatcher]="confirmValidParentMatcher" required />
                         <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker3" [disabled]="viewOnly">
                         </mat-datepicker-toggle>
                         <mat-datepicker tabindex="-1" #picker3 [disabled]="viewOnly"></mat-datepicker>
@@ -260,7 +326,9 @@
                 <div *ngIf="hostelTerminateFlag && hostelFlag" class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Applicable To</mat-label>
-                        <input matInput [matDatepicker]="picker4" [max]="maxDate" [readonly]="viewOnly" placeholder="Hostel Termination Date" formControlName="accd_hostel_to" [errorStateMatcher]="confirmValidParentMatcher" required />
+                        <input matInput [matDatepicker]="picker4" [max]="maxDate" [readonly]="viewOnly"
+                            placeholder="Hostel Termination Date" formControlName="accd_hostel_to"
+                            [errorStateMatcher]="confirmValidParentMatcher" required />
                         <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker4" [disabled]="viewOnly">
                         </mat-datepicker-toggle>
                         <mat-datepicker tabindex="-1" #picker4 [disabled]="viewOnly"></mat-datepicker>
@@ -268,14 +336,23 @@
                 </div>
             </div>
         </div>
-        <mat-checkbox *ngIf="hostelFlag && accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id !== '0'" [disabled]="viewOnly" class="font-size-16" (change)="hostel($event)" formControlName="accd_is_hostel_terminate">{{hostelStatus}}</mat-checkbox>
+        <mat-checkbox
+            *ngIf="hostelFlag && accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id !== '0'"
+            [disabled]="viewOnly" class="font-size-16" (change)="hostel($event)"
+            formControlName="accd_is_hostel_terminate">{{hostelStatus}}</mat-checkbox>
         <br>
         <div class="text-center margin-top-35 ">
-            <button *ngIf="!viewOnly && !existFlag && isExist('351')" mat-raised-button class="btn-primary btn-success margin-bottom-115" (click)="submit()">Submit</button>
-            <button *ngIf="!viewOnly && existFlag &&  isExist('352')" mat-raised-button class="btn-primary btn-success margin-bottom-115" (click)="update()">Update</button> &nbsp;
-            <button *ngIf="!viewOnly && existFlag &&  isExist('374')" mat-raised-button class="btn-primary btn-success margin-bottom-115" (click)="editRequest()">Edit request</button>
-            <button *ngIf="!viewOnly && !existFlag" mat-raised-button class="btn-primary btn-danger margin-bottom-115 btn-spacer" (click)="accountsForm.reset()">Reset</button>
-            <button *ngIf="!viewOnly && existFlag" mat-raised-button class="btn-primary btn-danger margin-bottom-115 btn-spacer" (click)="getPreviousData()">Cancel</button>
+            <button *ngIf="!viewOnly && !existFlag && isExist('351')" mat-raised-button 
+                class="btn-primary btn-success margin-bottom-115" (click)="submit()">Submit</button>
+            <button *ngIf="!viewOnly && existFlag &&  isExist('352')" mat-raised-button
+                class="btn-primary btn-success margin-bottom-115" (click)="update()">Update</button> &nbsp;
+            <button *ngIf="!viewOnly && existFlag &&  isExist('374')" mat-raised-button
+                class="btn-primary btn-success margin-bottom-115" (click)="editRequest()">Edit request</button>
+            <button *ngIf="!viewOnly && !existFlag" mat-raised-button
+                class="btn-primary btn-danger margin-bottom-115 btn-spacer"
+                (click)="accountsForm.reset()">Reset</button>
+            <button *ngIf="!viewOnly && existFlag" mat-raised-button
+                class="btn-primary btn-danger margin-bottom-115 btn-spacer" (click)="getPreviousData()">Cancel</button>
         </div>
     </form>
 </mat-card>

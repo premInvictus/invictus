@@ -65,14 +65,13 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 		this.concessionremarkmodal.openModal(data);
 	}
 	approve(event) {
-		console.log(event);
 		const param: any = {};
-		if (event.reason_id) {
-			param.reason_id = event.reason_id;
-		}
-		if (event.reason_remark) {
-			param.reason_remark = event.reason_remark;
-		}
+		// if (event.reason_id) {
+		// 	param.reason_id = event.reason_id;
+		// }
+		// if (event.reason_remark) {
+		// 	param.reason_remark = event.reason_remark;
+		// }
 		if (event.callee_data.accd_id) {
 			param.accd_id = event.callee_data.accd_id;
 		}
@@ -80,7 +79,7 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 		this.feeService.updateConcessionRectification(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getConcessionRectification();
+				this.getConcessionRectification(); 
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
