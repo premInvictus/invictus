@@ -48,6 +48,9 @@
           <div class="col-1 smart-col-10" *ngFor="let item of bookData; let i = index;"
           style="margin-bottom: 30px !important">
             <div class="book-container">
+                <i class="material-icons font-size-24 float-right font-white margin-top-10 red" (click)="removeBookFromList(i)">
+                    cancel
+                  </i>
               <img class="book-cover-img" [src]="item.images_links.thumbnail" />
               <div [class]="item.book_container_class">
                 <div class="book-title-content text-center" style="padding: 3px !important">
