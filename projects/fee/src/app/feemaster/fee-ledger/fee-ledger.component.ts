@@ -426,11 +426,17 @@ export class FeeLedgerComponent implements OnInit {
 	openAttachDialog = (data) => this.searchModal.openModal(data);
 
 	deleteConfirm(value) {
-		this.deleteWithReasonModal.openModal(value);
+		const invoiceJson:any = {};
+		invoiceJson.id = value;
+		invoiceJson.receipt_id =  13;
+		this.deleteWithReasonModal.openModalFee(invoiceJson);
 	}
 
 	deleteReciptConfirm(value) {
-		this.deleteReceiptWithReasonModal.openModal(value);
+		const receiptJson:any = {};
+		receiptJson.id = value;
+		receiptJson.receipt_id =  14;
+		this.deleteReceiptWithReasonModal.openModalFee(receiptJson);
 	}
 
 	fetchInvId() {

@@ -44,7 +44,7 @@ export class ConcessionRemarkModalComponent implements OnInit {
 			'callee_data': data
 		});
 		this.dialogRef = this.dialog.open(this.deleteWithReasonModal, {
-			'height': '50vh',
+			'height': '25vh',
 			position: {
 				'top': '20%'
 			}

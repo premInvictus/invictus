@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SmartService, SisService, CommonAPIService } from '../../_services';
@@ -16,9 +16,11 @@ import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
 })
 export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	@ViewChild('cropModal') cropModal;
-	@ViewChild('bookDet')bookDet;
+	@ViewChild('bookDet') bookDet;
+	@ViewChild('fileInput') myInputVariable: ElementRef;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('searchModal') searchModal;
+	@ViewChild('editReservoir') editReservoir;
 	@ViewChild(MatSort) sort: MatSort;
 	filters: any = {};
 	bookpagesize = 10;
@@ -116,7 +118,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	url: any;
 	imageUrl: any = '';
 	enableMultiFlag = false;
-	displayedColumns: any[] = ['sr_no', 'book_no', 'book_name', 'author', 'publisher', 'location', 'status'];
+	displayedColumns: any[] = ['sr_no', 'book_no', 'book_name', 'author', 'publisher', 'location', 'status', 'action'];
 	BOOK_ELEMENT_DATA: AccessionMasterModel[] = [];
 	bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
 	totalRecords: number;
@@ -124,6 +126,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	currentUser: any;
 	searchViaSearch = false;
 	searchViaText = false;
+	delMessage = 'Do you want to archive';
+	delText = 'Archive';
+	@ViewChild('deleteModal') deleteModal;
 	constructor(private common: ErpCommonService, private fbuild: FormBuilder,
 		public dialog: MatDialog,
 		private notif: CommonAPIService,
@@ -133,6 +138,30 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	addBookContainer = false;
 	bookForm: FormGroup;
 	searchForm: FormGroup;
+	openDeleteModal(id) {
+		const itemL: any = {};
+		itemL.id = id;
+		this.deleteModal.openModal(itemL);
+	}
+	deleteOk($event) {
+		if ($event.id) {
+			this.common.deleteReservoirData({
+				reserv_id: $event.id
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.notif.showSuccessErrorMessage(res.message, 'success');
+					if (!this.filteredFlag) {
+						this.getReservoirData();
+					} else {
+						this.getReservoirDataBasedOnFilter();
+					}
+				}
+			});
+		}
+	}
+	deleteCancel($event) {
+		this.deleteModal.closeDialog();
+	}
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		localStorage.removeItem('invoiceBulkRecords');
@@ -142,6 +171,46 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		this.getClass();
 		this.getSubject();
 		this.getReservoirData();
+	}
+	updateOk($event) {
+		if ($event) {
+			let data: any = {}
+			data = $event;
+			data.value['language_details'] = {
+				lang_code: data.value.lang_id,
+				lang_name: this.getLanguageName(data.value.lang_id)
+			};
+			data.value['genre'] = {
+				genre_name: data.value.genre_id,
+				genre_id: this.getGenreId(data.value.genre_id)
+			};
+			data.value.authors = [data.value.authors];
+			data.value.images_links = {
+				smallThumbnail: data.value.bookImage,
+				thumbnail: data.value.bookImage
+			};
+			data.value['location'] = data.value.stack + '-' + data.value.row;
+			this.common.updateReservoirData({
+				bookDetails: data.value
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.notif.showSuccessErrorMessage(res.message, 'success');
+					if (!this.filteredFlag) {
+						this.getReservoirData();
+					} else {
+						this.getReservoirDataBasedOnFilter();
+					}
+				}
+			});
+		}
+	}
+	updateCancel() {
+		this.editReservoir.closeDialog();
+	}
+	editReserv(id) {
+		const iteml: any = {};
+		iteml.id = id;
+		this.editReservoir.openModal(iteml);
 	}
 	ngAfterViewInit() {
 		this.bookDataSource.paginator = this.paginator;
@@ -177,9 +246,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					for (const item of res.data.resultData) {
 						let authName = '';
 						for (const aut of item.authors) {
-							authName = new TitleCasePipe().transform(aut) + ',';
+							authName = authName + aut + ',';
 						}
-						authName = authName.substring(0, authName.length - 2);
+						authName = authName.substring(0, authName.length - 1);
 						this.BOOK_ELEMENT_DATA.push({
 							sr_no: i + 1,
 							book_name: item.title,
@@ -234,9 +303,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				for (const item of res.data.resultData) {
 					let authName = '';
 					for (const aut of item.authors) {
-						authName = new TitleCasePipe().transform(aut) + ',';
+						authName = authName + aut + ',';
 					}
-					authName = authName.substring(0, authName.length - 2);
+					authName = authName.substring(0, authName.length - 1);
 					this.BOOK_ELEMENT_DATA.push({
 						sr_no: i + 1,
 						book_name: item.title,
@@ -262,9 +331,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			title: '',
 			subtitle: '',
 			isbn_details: [],
-			authors: [],
+			authors: '',
 			publisher: '',
-			tags: [],
+			tags: '',
 			publishedDate: '',
 			description: '',
 			genre_id: '',
@@ -327,9 +396,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					for (const item of res.data.resultData) {
 						let authName = '';
 						for (const aut of item.authors) {
-							authName = new TitleCasePipe().transform(aut) + ',';
+							authName = authName + aut + ',';
 						}
-						authName = authName.substring(0, authName.length - 2);
+						authName = authName.substring(0, authName.length - 1);
 						this.BOOK_ELEMENT_DATA.push({
 							sr_no: i + 1,
 							book_name: item.title,
@@ -366,6 +435,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				if (result.status === 'ok') {
 					this.bookImage = result.data[0].file_url;
 					this.imageFlag = true;
+					this.myInputVariable.nativeElement.value = '';
+				} else {
+					this.myInputVariable.nativeElement.value = '';
 				}
 			});
 	}
@@ -410,9 +482,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				title: '',
 				subtitle: '',
 				isbn_details: [],
-				authors: [],
+				authors: '',
 				publisher: '',
-				tags: [],
+				tags: '',
 				publishedDate: '',
 				description: '',
 				genre_id: '',
@@ -523,9 +595,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				for (const item of res.data.resultData) {
 					let authName = '';
 					for (const aut of item.authors) {
-						authName = new TitleCasePipe().transform(aut) + ',';
+						authName = authName + aut + ',';
 					}
-					authName = authName.substring(0, authName.length - 2);
+					authName = authName.substring(0, authName.length - 1);
 					this.BOOK_ELEMENT_DATA.push({
 						sr_no: i + 1,
 						book_name: item.title,
@@ -560,7 +632,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			} else {
 				this.bookForm.value['genre'] = {
 					genre_name: this.bookForm.value.genre_id,
-					genre_id: this.getGenreId(this.bookForm.value.genre_name)
+					genre_id: this.getGenreId(this.bookForm.value.genre_id)
 				};
 			}
 		} else {
@@ -570,7 +642,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			};
 			this.bookForm.value['genre'] = {
 				genre_name: this.bookForm.value.genre_id,
-				genre_id: this.getGenreId(this.bookForm.value.genre_name)
+				genre_id: this.getGenreId(this.bookForm.value.genre_id)
 			};
 			this.bookForm.value.isbn_details = [
 

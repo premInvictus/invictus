@@ -147,15 +147,15 @@ export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
             recordArray = this.bookListData;
             
             for (const item of recordArray) {
-              let aval = '';
-              for( const avalue of item.book_author ) {
-                aval+= avalue+",";
-              }
+              // let aval = '';
+              // for( const avalue of item.book_author ) {
+              //   aval+= avalue+",";
+              // }
               element = {
                 srno: pos,
                 book_no: item.book_no,
                 book_name: item.book_name ? item.book_name : '-',
-                book_author: aval ? aval.slice(0, -1) : '-',
+                book_author: item.book_author  ? item.book_author  : '-',
                 book_publisher: item.book_publisher ? item.book_publisher : '-',
                 book_location : item.book_location ? item.book_location : '-'
               };

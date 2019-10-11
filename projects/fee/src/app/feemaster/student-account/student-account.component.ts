@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { CommonAPIService, FeeService } from '../../_services';
+import { CommonAPIService, SisService, FeeService } from '../../_services';
 import { DatePipe } from '@angular/common';
 import { ConfirmValidParentMatcher } from '../../_validationclass/confirmValidParentMatcher.class';
 
@@ -17,6 +17,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	feeStructureArray: any[] = [];
 	conGroupArray: any[] = [];
 	conDesc: string;
+	conStatus: any;
 	hostelFeeStructureArray: any[] = [];
 	hostelConGroupArray: any[] = [];
 	transportFlag = false;
@@ -41,13 +42,23 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	@Output() editChange = new EventEmitter();
 	finalSibReqArray: any[] = [];
 	finalArray: any[] = [];
+	reasonArr: any[] = [];
 	accountDetails: any = {};
 	slabModel: any = '';
 	reqObj: any = {};
+	currentImage: any;
+	documentsArray: any[] = [];
+	finalDocumentArray: any[] = [];
+	currentFileChangeEvent: any;
+	multipleFileArray: any[] = [];
+	counter: any = 0;
+	documentPath: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
 		private commonAPIService: CommonAPIService,
+		private sisService: SisService,
+
 	) { }
 
 	ngOnInit() {
@@ -56,6 +67,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.terminateStatus = 'Terminate Transport Facility';
 		this.hostelStatus = 'Terminate Hostel Facility';
 		this.buildForm();
+		this.getReason();
 		this.getFeeOtherCategory();
 		this.getConGroup();
 		this.getFeeStructures();
@@ -63,6 +75,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.getHostelFeeStructures();
 		this.getTransportMode();
 		this.getRoutes();
+		
 	}
 	ngOnChanges() {
 		if (this.feeLoginId) {
@@ -76,6 +89,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_fo_id: '',
 			accd_fs_id: '',
 			accd_fcg_id: '',
+			accd_fcg_document: '',
+			accd_reason_id: '',
+			accd_remark_id: '',
 			accd_is_transport: '',
 			accd_is_hostel: '',
 			accd_transport_mode: '',
@@ -122,6 +138,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			if (result && result.status === 'ok') {
 				this.existFlag = true;
 				this.accountDetails = result.data[0];
+				this.conStatus = this.accountDetails.accd_fcg_status;
 				this.transport_history = result.data[0]['transport_history'];
 				if (this.accountDetails.accd_is_transport === 'Y') {
 					this.transportFlag = true;
@@ -152,7 +169,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				} else {
 					this.hostelFlag = false;
 				}
-				console.log('aaaaaaaaa',this.accountDetails.accd_transport_mode);
+				console.log('aaaaaaaaa', this.accountDetails.accd_transport_mode);
 				this.enableMode(this.accountDetails.accd_transport_mode);
 				this.getStoppages(this.accountDetails.accd_tr_id);
 				this.getSlab(this.accountDetails.accd_tsp_id);
@@ -162,6 +179,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_fo_id: this.accountDetails.accd_fo_id,
 					accd_fs_id: this.accountDetails.accd_fs_id,
 					accd_fcg_id: this.accountDetails.accd_fcg_id,
+					accd_reason_id: this.accountDetails.mod_review_reason_id,
+					accd_remark_id: this.accountDetails.mod_review_remark,					
 					accd_is_transport: this.accountDetails.accd_is_transport === 'N' ? false : true,
 					accd_is_hostel: this.accountDetails.accd_is_hostel === 'N' ? false : true,
 					accd_transport_mode: this.accountDetails.accd_transport_mode,
@@ -276,7 +295,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.transportFlag = false;
 			this.terminationFlag = false;
 		}
-		console.log('bbbbb',this.accountsForm.value.accd_transport_mode)
+		console.log('bbbbb', this.accountsForm.value.accd_transport_mode)
 	}
 	enableHostel($event) {
 		if ($event.checked) {
@@ -465,6 +484,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_fo_id: this.accountsForm.value.accd_fo_id,
 				accd_fs_id: this.accountsForm.value.accd_fs_id,
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
+				accd_fcg_document: JSON.stringify(this.documentPath),
+				accd_reason_id: this.accountsForm.value.accd_reason_id,
+				accd_remark_id: this.accountsForm.value.accd_remark_id,
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
@@ -687,5 +709,45 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				}
 			});
 		}
+	}
+	getReason() {
+		this.reasonArr = [];
+		this.sisService.getReason({ reason_type: '11' }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.reasonArr = result.data;
+			}
+		});
+	}
+	fileChangeEvent(fileInput, doc_req_id) {
+		this.multipleFileArray = [];
+		this.counter = 0;
+		this.currentFileChangeEvent = fileInput;
+		const files = fileInput.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop(files[i], doc_req_id);
+		}
+	}
+	IterateFileLoop(files, doc_req_id) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage,
+				module: 'attachment'
+			};
+			this.multipleFileArray.push(fileJson);
+			this.counter++;
+			if (this.counter === this.currentFileChangeEvent.target.files.length) {
+				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+					if (result) {
+						this.documentPath = result.data[0].file_url;
+						console.log(this.documentPath);
+
+					}
+				});
+			}
+		};
+		reader.readAsDataURL(files);
 	}
 }

@@ -142,6 +142,19 @@
                 </div>
               </div>
             </div>
+
+            <div class="row" *ngIf="!issuedBookchartflag">
+              <div class="col-12">
+                <mat-card>
+                  <div class="text-center">
+                    <app-no-data
+                      [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_books_issued.png'"
+                      [noDataText]="" [subText]="'No Book Issued'"></app-no-data>
+                  </div>
+
+                </mat-card>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -184,11 +197,20 @@
                           <span>{{dashboardDueReservoirData?.class_total_due_count}} Books</span></th>
                         <th></th>
                       </tr>
-                      <tr *ngIf="dashboardDueReservoirData?.class_total_due_count == 0">
+                      <!-- <tr *ngIf="dashboardDueReservoirData?.class_total_due_count == 0">
                         <td class="text-center" colspan="2">No Record Found</td>
-                      </tr>
+                      </tr> -->
                     </tbody>
                   </table>
+
+                </div>
+
+                <div class="col-12" *ngIf="dashboardDueReservoirData?.class_total_due_count == 0">
+                  <div class="text-center">
+                    <app-no-data
+                      [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_due_books.png'"
+                      [noDataText]="" [subText]="'No Due Books'"></app-no-data>
+                  </div>
                 </div>
               </div>
             </mat-tab>
@@ -210,11 +232,18 @@
                           <span>{{dashboardDueReservoirData?.teacher_total_due_count}} Books</span></th>
                         <th></th>
                       </tr>
-                      <tr *ngIf="dashboardDueReservoirData?.teacher_total_due_count == 0">
+                      <!-- <tr *ngIf="dashboardDueReservoirData?.teacher_total_due_count == 0">
                         <td class="text-center" colspan="2">No Record Found</td>
-                      </tr>
+                      </tr> -->
                     </tbody>
                   </table>
+                  <div class="col-12" *ngIf="dashboardDueReservoirData?.teacher_total_due_count == 0">
+                    <div class="text-center">
+                      <app-no-data
+                        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_due_books.png'"
+                        [noDataText]="" [subText]="'No Due Books'"></app-no-data>
+                    </div>
+                  </div>
                 </div>
               </div>
             </mat-tab>
@@ -237,11 +266,18 @@
                           <span>{{dashboardDueReservoirData?.staff_total_due_count}} Books</span></th>
                         <th></th>
                       </tr>
-                      <tr *ngIf="dashboardDueReservoirData?.staff_total_due_count == 0">
+                      <!-- <tr *ngIf="dashboardDueReservoirData?.staff_total_due_count == 0">
                         <td class="text-center" colspan="2">No Record Found</td>
-                      </tr>
+                      </tr> -->
                     </tbody>
                   </table>
+                </div>
+                <div class="col-12" *ngIf="dashboardDueReservoirData?.staff_total_due_count == 0">
+                  <div class="text-center">
+                    <app-no-data
+                      [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_due_books.png'"
+                      [noDataText]="" [subText]="'No Due Books'"></app-no-data>
+                  </div>
                 </div>
               </div>
             </mat-tab>
@@ -289,14 +325,24 @@
 
                     </tbody>
                   </table>
-                  <table class="table-100 custom-table"
+                  <!-- <table class="table-100 custom-table"
                     *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length  == 0">
                     <tr class="custom-tr text-center">
                       <td class="text-center" colspan="2">No Book Due Till Today</td>
                     </tr>
-                  </table>
-                  <div class="text-center" >
-                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" style="margin-top: 5px;" (click)="viewAllDue()">
+                  </table> -->
+                  <div class="col-12"
+                    *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length  == 0">
+
+                    <div class="text-center">
+                      <app-no-data
+                        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_due_books.png'"
+                        [noDataText]="" [subText]="'No Due Books'"></app-no-data>
+                    </div>
+                  </div>
+                  <div class="text-center">
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" style="margin-top: 5px;"
+                      (click)="viewAllDue()">
                       View All
                     </button>
                   </div>
@@ -305,6 +351,7 @@
             </mat-tab>
           </mat-tab-group>
         </div>
+
       </div>
     </mat-card>
   </div>

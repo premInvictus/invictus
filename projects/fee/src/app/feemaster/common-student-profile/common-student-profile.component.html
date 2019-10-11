@@ -101,7 +101,7 @@
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Stop</span><br>
             <span
-              class="font-size-16 font-bold">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize) : '-'}}</span>
+              class="font-size-16 font-bold">{{studentdetails.ead_pickup_point ? (studentdetails.ead_pickup_point | capitalize | truncatetext:16) : '-'}}</span>
           </div>
         </div>
       </div>
@@ -131,7 +131,7 @@
 
 
               {{studentdetails.parentinfo && studentdetails.parentinfo[0] ? 
-              (studentdetails.parentinfo[0].epd_parent_name | capitalize) : '-'}}</span>
+              (studentdetails.parentinfo[0].epd_parent_name | capitalize | truncatetext:11) : '-'}}</span>
           </div>
         </div>
 
@@ -148,14 +148,14 @@
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Emergency Name </span><br>
             <span
-              class="font-size-16 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? (studentdetails.medicalinfo[0].mi_emergency_contact_name | capitalize) : '-'}}</span>
+              class="font-size-16 font-bold">{{studentdetails.medicalinfo.mi_emergency_contact_name && studentdetails.medicalinfo[0].mi_emergency_contact_name ? (studentdetails.medicalinfo[0].mi_emergency_contact_name | capitalize) : '-'}}</span>
           </div>
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Emergency Contact No</span><br>
             <span
-              class="font-size-16 font-bold">{{studentdetails.medicalinfo && studentdetails.medicalinfo[0] ? (studentdetails.medicalinfo[0].mi_emergency_contact_no | mask: '00000 00000') : '-'}}</span>
+              class="font-size-16 font-bold">{{studentdetails.medicalinfo.mi_emergency_contact_no && studentdetails.medicalinfo[0].mi_emergency_contact_no ? (studentdetails.medicalinfo[0].mi_emergency_contact_no | mask: '00000 00000') : '-'}}</span>
           </div>
         </div>
       </div>

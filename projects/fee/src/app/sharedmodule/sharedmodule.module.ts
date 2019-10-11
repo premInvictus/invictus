@@ -27,7 +27,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { NgxMaskModule } from 'ngx-mask';
 import * as _moment from 'moment';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
-import { CapitalizePipe, DateformatPipe } from '../_pipes';
+import { CapitalizePipe, DateformatPipe, TruncatetextPipe } from '../_pipes';
 import { SafePipe } from '../_pipes/safe.pipe';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EditRequestModalComponent } from './edit-request-modal/edit-request-modal.component';
@@ -112,7 +112,8 @@ export const MY_FORMATS = {
 		SearchViaStudentComponent,
 		DeleteWithReasonComponent,
 		CreateInvoiceModalComponent,
-		SearchDialogComponent
+		SearchDialogComponent,
+		TruncatetextPipe
 	],
 	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
@@ -156,7 +157,8 @@ export const MY_FORMATS = {
 		DeleteWithReasonComponent,
 		CreateInvoiceModalComponent,
 		SearchDialogComponent,
-		IndianCurrency
+		IndianCurrency,
+		TruncatetextPipe
 	],
 	entryComponents: [
 		DeleteModalComponent,

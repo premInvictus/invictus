@@ -10,7 +10,7 @@
             <form [formGroup]="barCodePrintForm">
               <mat-form-field appearance="outline" class=" form-field-150">
                 <mat-label>Book ID </mat-label>
-                <input matInput placeholder="Book ID " formControlName="reserv_id" type="text" />
+                <input matInput placeholder="Book ID " formControlName="reserv_id" type="text" (keydown.enter)="getBarCode();$event.preventDefault();"/>
               </mat-form-field>
               <!-- <mat-form-field appearance="outline" class="btn-spacer form-field-150">
                 <mat-label>Book ID To</mat-label>
@@ -64,8 +64,8 @@
       <mat-card *ngIf="barCodeArray.length === 0">
         <div class="text-center">
           <app-no-data
-            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-            [noDataText]="'No barcode to print'" [subText]="'Please filter data to print bar code'"></app-no-data>
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/bar_code_printing.png'"
+            [noDataText]="'No Book for Barcode Print'" [subText]="'Please filter data to print bar code'"></app-no-data>
         </div>
       </mat-card>
     </div>

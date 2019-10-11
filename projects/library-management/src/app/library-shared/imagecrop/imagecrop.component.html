@@ -4,7 +4,7 @@
       <br>
       <div>
          <div>
-            <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="16 / 9"
+            <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false" [aspectRatio]="16 / 9"
                 [imageQuality]="100"
                (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
                (loadImageFailed)="loadImageFailed()"></image-cropper>
