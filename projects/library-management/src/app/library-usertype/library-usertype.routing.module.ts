@@ -11,7 +11,7 @@ const routes: Routes = [
     {
         path: 'school', canActivate: [AuthGuard], component: ProjectComponent, children: [
             { path: '', component: SchoolDashboardComponent },
-            { path: 'view-all-due', component: ViewAllDueComponent },
+            { path: 'books-issued', component: ViewAllDueComponent },
             { path: 'auxillary', loadChildren: 'projects/library-management/src/app/auxillaries/auxillaries.module#AuxillariesModule' },
             {
                 path: 'circulation-management',

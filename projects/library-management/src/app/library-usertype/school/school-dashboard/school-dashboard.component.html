@@ -106,7 +106,7 @@
 </div>
 <div class="row">
   <div class="col-4 remove-col-padding-right">
-    <mat-card class="mat-card-482">
+    <mat-card class="mat-card-509">
       <div class="row">
         <div class="col-12">
           <span class="font-bold font-size-20">Issued Books</span>
@@ -119,7 +119,7 @@
             <app-common-dynamic-chart *ngIf="issuedBookchartflag" [options]="issuedBookchart"
               class="chart-content-card">
             </app-common-dynamic-chart>
-            <div class="row">
+            <div class="row"  *ngIf="issuedBookchartflag">
               <div class="col-6">
                 <div class="labeldiv">
                   <div class="teacher-pink-gradiant"></div> <span class="chart-label">Teachers : <span
@@ -145,14 +145,11 @@
 
             <div class="row" *ngIf="!issuedBookchartflag">
               <div class="col-12">
-                <mat-card>
                   <div class="text-center">
                     <app-no-data
                       [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_books_issued.png'"
                       [noDataText]="" [subText]="'No Book Issued'"></app-no-data>
                   </div>
-
-                </mat-card>
               </div>
             </div>
           </div>
@@ -313,8 +310,8 @@
                           <td class="custom-td text-left text-capitalize"><span>{{item?.reserv_user_logs?.title}}</span>
                           </td>
                           <td class="custom-td text-left text-capitalize">{{item?.user_full_name}}</td>
-                          <td class="custom-td">{{item?.reserv_user_logs?.issued_on}}</td>
-                          <td class="custom-td">{{item?.reserv_user_logs?.due_date}}</td>
+                          <td class="custom-td">{{item?.reserv_user_logs?.issued_on | date: 'd-MMM-y'}}</td>
+                          <td class="custom-td">{{item?.reserv_user_logs?.due_date | date: 'd-MMM-y'}}</td>
                           <td class="custom-td"><span
                               class="font-color-red">{{getDaysDiff(item?.reserv_user_logs?.due_date)}}
                               Days</span></td>
@@ -340,7 +337,7 @@
                         [noDataText]="" [subText]="'No Due Books'"></app-no-data>
                     </div>
                   </div>
-                  <div class="text-center">
+                  <div class="text-center" >
                     <button mat-button class="btn-spacer btn-lib-search margin-left-10" style="margin-top: 5px;"
                       (click)="viewAllDue()">
                       View All

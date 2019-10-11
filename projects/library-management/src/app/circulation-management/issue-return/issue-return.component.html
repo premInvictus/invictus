@@ -47,7 +47,7 @@
 </div>
 <div class="row" *ngIf="userData!=''">
   <div class="col-6 ">
-    <mat-card>
+    <mat-card class="mat-card-108">
       <div class="row">
         <div class="col-2 smart-col-12 remove-col-padding-left margin-top-8">
 
@@ -76,7 +76,7 @@
                     {{userData?.sec_name}}</span>
                 </div>
               </div>
-              <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
+              <!-- <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
                 <div class="col-4 remove-col-padding">
                   <span class="font-size-12 font-bold">House</span>
                   <span class="font-size-12 font-bold float-right">:</span>
@@ -84,7 +84,7 @@
                 <div class="col-8 remove-col-padding-right">
                   <span class="font-size-12 font-bold opacity-7">{{userData?.hou_house_name}}</span>
                 </div>
-              </div>
+              </div> -->
               <div class="row remove-top-margin">
                 <div class="col-4 remove-col-padding">
                   <span class="font-size-12 font-bold">Mobile No.</span>
@@ -123,13 +123,13 @@
         </div>
       </div>
     </mat-card>
-    <mat-card class="margin-top-10" [hidden]="!(issueBookData?.length > 0)">
+    <mat-card class="margin-top-10 card-height-325">
       <div class="row">
         <div class="col-12 remove-col-padding">
           <span class="font-size-20 font-bold">Issued Books</span>
         </div>
       </div>
-      <div class="row booklog">
+      <div class="row booklog" [hidden]="!(issueBookData?.length > 0)">
         <div class="col-12 remove-col-padding">
           <table class="table-100 custom-table">
             <thead>
@@ -146,8 +146,7 @@
                 <tr class="custom-tr" *ngIf="item.reserv_status === 'issued'">
                   <td class="custom-td"><span>{{i+1}}</span></td>
                   <td class="custom-td">
-                    <span class="font-skyblue"
-                    (click)="openBookModal(item.reserv_id)">{{item?.reserv_id}}</span>
+                    <span class="font-skyblue" (click)="openBookModal(item.reserv_id)">{{item?.reserv_id}}</span>
                   </td>
                   <td class="custom-td text-left"><span>{{item?.title | slice:0:76}}</span><span
                       *ngIf="item?.title.length > 76">...</span></td>
@@ -161,19 +160,18 @@
           </table>
         </div>
       </div>
-    </mat-card>
-    <mat-card *ngIf="issueBookData.length == 0">
-      <div class="text-center">
+      <div class="text-center" *ngIf="issueBookData.length == 0">
         <app-no-data
-          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_books_issued.png'"
           [noDataText]="" [subText]="'No Book Issued'"></app-no-data>
       </div>
     </mat-card>
+
   </div>
 
   <div class="col-6 remove-col-padding-left">
     <form [formGroup]="returnIssueReservoirForm">
-      <mat-card>
+      <mat-card class="mat-card-108">
         <div class="row">
           <div class="col-4 margin-top-15">
             <span class="font-size-20 font-bold">Return/Issue Book</span>
@@ -195,7 +193,9 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>        
+      </mat-card>
+      <mat-card class="margin-top-10 card-height-325">
         <div class="row margin-top-15 booklog" [hidden]="!(bookData.length > 0)">
           <div class="col-12 remove-col-padding">
             <table class="table-100 custom-table">
@@ -256,16 +256,16 @@
               Reset
             </button>
           </div>
-        </div>
-      </mat-card>
-    </form>
-    <mat-card *ngIf="bookData.length == 0">
-      <div class="text-center">
-        <app-no-data
+        </div>    
+        <div class="text-center" *ngIf="bookData.length == 0">
+          <app-no-data
           [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
           [noDataText]="" [subText]="'Please Search Book To Issue / Return'"></app-no-data>
-      </div>
-    </mat-card>
+        </div>    
+      </mat-card>
+      
+    </form>
+    
   </div>
 </div>
 <div class="row" *ngIf="userData!=''">

@@ -222,7 +222,7 @@ export class SchoolDashboardComponent implements OnInit {
   }
 
   viewAllDue() {
-    this.router.navigate(['../view-all-due'], {relativeTo: this.route });	
+    this.router.navigate(['../books-issued'], {relativeTo: this.route });	
   }
   
 }
