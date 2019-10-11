@@ -389,6 +389,16 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/siSetup/session');
 	}
+
+	uploadBulkDocuments(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/bulkUpdate/uploadBulkDocuments', value);
+	}
+
+	downloadBulkUpdateTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/bulkUpdate/downloadBulkUpdateTemplate', value);
+	}
 }
 
 

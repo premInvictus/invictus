@@ -292,10 +292,10 @@
                   <table class="table-100 custom-table"
                     *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length  == 0">
                     <tr class="custom-tr text-center">
-                      <td class="text-center" colspan="2">No Record Found</td>
+                      <td class="text-center" colspan="2">No Book Due Till Today</td>
                     </tr>
                   </table>
-                  <div class="text-center" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length  > 0">
+                  <div class="text-center" >
                     <button mat-button class="btn-spacer btn-lib-search margin-left-10" style="margin-top: 5px;" (click)="viewAllDue()">
                       View All
                     </button>

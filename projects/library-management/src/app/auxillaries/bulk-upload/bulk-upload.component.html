@@ -1,31 +1,86 @@
-<div class="row">
-  <div class="col-12">
-    <mat-card>
-      <div class="row">
-        <div class="col-12">
-          <span class="font-size-24 font-bold">Bulk Upload</span>
+<div class="padding-8">
+  <div class="container-box__white">
+    <div class="row">
+
+      <div class="col-12 text-center">
+        <h4 class="text-center"><b>Bulk Updates</b></h4>
+      </div>
+    </div>
+    <div class="row">
+
+      <!-- <div class="text-center">
+          <label for="bulkupdate">
+            <i class="fas fa-cloud-upload-alt fa-3x icon-green"></i><br> 
+            <span>Drag and Drop File</span>
+          </label>
+          <input style="display:none;" type="file" name="file" id="bulkupdate" (change)="bulkupdate($event)">
+        </div> -->
+
+      <div class="col-4">
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Setup Component</mat-label>
+              <mat-select (selectionChange)="loadComponent($event)" placeholder="Setup Component">
+                <mat-option value="">Please Select</mat-option>
+                <mat-option value="1">Book Upload</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
       </div>
-    </mat-card>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <mat-card class="card-height-730">
-      <div class="text-center margin-top-15per">
-      <span class="font-size-24 font-bold">Books Bulk Upload</span><br />
-      <span class="font-size-18 opacity-7">
-        Now you can numbers of books with few clicks. Click on download template
-        button for template format.</span
-      ><br />
-      <button mat-raised-button class="btn-success-blue margin-top-25 ">
-        Download Template
-      </button><br>
-      <mat-hint class="font-size-12"
-        >Have already template ?
-        <span class="font-skyblue">Upload File</span></mat-hint
-      >
+
+      <div class="col-8">
+        <div class="row">
+          <div class="col-12 remove-col-padding text-center">
+            <span style="float:left; cursor: pointer;padding-right: 10px; font-size:14px;" (click)="downloadTemplate()">
+              <img style="cursor: pointer" src="/assets/images/xml.svg" matTooltip="Click to Download">
+              &nbsp;&nbsp;Download Sample Excel Sheet
+            </span>
+          </div>
+        </div>
+        <br/>
+        <div class="container-box__uploadbox" *ngIf="uploadComponent !== '3'">
+          <div class="bulk-upload-main-content">
+            <label class="upload-box" for="bulkupdate">
+              <div class="bulk-upload-content">
+                <div class="bulk-upload-sub-content" style="margin-top:38%">
+                  <i class="material-icons bulk-upload-icon">
+                    save_alt
+                  </i><br>
+                  <span><b>Choose a file</b> or drag it here !</span>
+                  <input style="display:none;" #inputFile type="file" name="uploadFile" id="bulkupdate"
+                    (change)="bulkupdate($event)">
+                  <input style="display:none;" type="text" name="module" id="module"
+                    value="module">
+                    <input style="display:none;" type="text" name="component" id="component"
+                    value="{{uploadComponent}}">
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="container-box__uploadbox" *ngIf="uploadComponent === '3'">
+          <div class="bulk-upload-main-content">
+            <label class="upload-box" for="bulkupdate">
+              <div class="bulk-upload-content">
+                <div class="bulk-upload-sub-content" style="margin-top:38%">
+                  <i class="material-icons bulk-upload-icon">
+                    save_alt
+                  </i><br>
+                  <span><b>Choose a zip file and excel file</b> or drag it here !</span>
+                  <input style="display:none;" #inputFile type="file" name="uploadFile" id="bulkupdate"
+                    (change)="bulkDocumentUpdate($event)" multiple>
+                  <input style="display:none;" type="text" name="module" id="module"
+                    value="module">
+                    <input style="display:none;" type="text" name="component" id="component"
+                    value="{{uploadComponent}}">
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
-    </mat-card>
   </div>
 </div>
