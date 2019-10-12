@@ -82,7 +82,7 @@
   </div>
   <div class="row">
     <div class="col-12">
-      <mat-card *ngIf="BOOK_LOGS.length > 0">
+      <mat-card [hidden]="!(BOOK_LOGS.length > 0)">
         <div class="row">
           <div class="col-12">
             <span class="font-size-20">Book Log</span>
@@ -125,11 +125,11 @@
               </ng-container>
               <ng-container matColumnDef="issued_on">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Issued On </th>
-                <td mat-cell *matCellDef="let item"> {{item.issued_on | date: 'd-MMM-y'}} </td>
+                <td mat-cell *matCellDef="let item"> {{item.issued_on }} </td>
               </ng-container>
               <ng-container matColumnDef="return_on">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Returned On </th>
-                <td mat-cell *matCellDef="let item"> {{item.return_on | date: 'd-MMM-y'}} </td>
+                <td mat-cell *matCellDef="let item"> {{item.return_on }} </td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="logdisplayedcolumns"></tr>
               <tr mat-row *matRowDef="let row; columns: logdisplayedcolumns;">

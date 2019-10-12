@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 import { MatTableDataSource, MatPaginatorIntl, MatPaginator, MatSort, PageEvent } from '@angular/material';
 import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
+import { DatePipe } from '@angular/common';
 @Component({
 	selector: 'app-book-detail',
 	templateUrl: './book-detail.component.html',
@@ -84,15 +85,25 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 								} else {
 									prefix = 'S-';
 								}
+								let classSec = '';
+								if (Number(item.user_role_id) === 4) {
+									if (Number(item.user_sec_id) !== 0) {
+										classSec = item.user_class_name + '-' + item.user_sec_name;
+									} else {
+										classSec = item.user_class_name ;
+									}
+								} else {
+									classSec = '-';
+								}
 
 								this.BOOK_LOGS.push({
 									sr_no: i + 1,
 									enrollment_no: prefix + item.user_login_id,
 									issued_to: item.user_full_name,
-									class_sec: '',
+									class_sec: classSec,
 									role_id: item.user_role_id,
-									issued_on: item.reserv_user_logs[0].issued_on ? item.reserv_user_logs[0].issued_on : '-',
-									return_on: item.reserv_user_logs[0].returned_on ? item.reserv_user_logs[0].returned_on : '-'
+									issued_on: item.reserv_user_logs[0].issued_on ? new DatePipe('en-in').transform(item.reserv_user_logs[0].issued_on,  'd-MMM-y') : '-',
+									return_on: item.reserv_user_logs[0].returned_on ? new DatePipe('en-in').transform(item.reserv_user_logs[0].returned_on, 'd-MMM-y') : '-'
 								});
 								i++;
 							}
@@ -139,15 +150,24 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 								} else {
 									prefix = 'S-';
 								}
-
+								let classSec = '';
+								if (Number(item.user_role_id) === 4) {
+									if (Number(item.user_sec_id) !== 0) {
+										classSec = item.user_class_name + '-' + item.user_sec_name;
+									} else {
+										classSec = item.user_class_name ;
+									}
+								} else {
+									classSec = '-';
+								}
 								this.BOOK_LOGS.push({
 									sr_no: i + 1,
 									enrollment_no: prefix + item.user_login_id,
 									issued_to: item.user_full_name,
-									class_sec: '',
+									class_sec: classSec,
 									role_id: item.user_role_id,
-									issued_on: item.reserv_user_logs[0].issued_on ? item.reserv_user_logs[0].issued_on : '-',
-									return_on: item.reserv_user_logs[0].returned_on ? item.reserv_user_logs[0].returned_on : '-'
+									issued_on: item.reserv_user_logs[0].issued_on ? new DatePipe('en-in').transform(item.reserv_user_logs[0].issued_on,  'd-MMM-y') : '-',
+									return_on: item.reserv_user_logs[0].returned_on ? new DatePipe('en-in').transform(item.reserv_user_logs[0].returned_on, 'd-MMM-y') : '-'
 								});
 								i++;
 							}
