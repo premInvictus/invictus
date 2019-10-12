@@ -64,6 +64,10 @@ export class AdvancedSearchModalComponent implements OnInit {
     {
       type_id: 'flagged',
       type_name: 'Flagged',
+    },
+    {
+      type_id: 'reserved',
+      type_name: 'Reserved',
     }
   ];
   categoryArray: any[] = [

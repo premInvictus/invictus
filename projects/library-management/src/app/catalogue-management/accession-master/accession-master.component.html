@@ -49,38 +49,38 @@
             <div [hidden]="BOOK_ELEMENT_DATA.length === 0">
               <table mat-table [dataSource]="bookDataSource" matSort class="table-100 text-center" id="report_table">
                 <ng-container matColumnDef="sr_no">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr. No. </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:5px !important"> #</th>
                   <td mat-cell *matCellDef="let item"> {{item.sr_no}} </td>
                 </ng-container>
                 <ng-container matColumnDef="book_no">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Book No. </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:10px !important">Book No.</th>
                   <td mat-cell *matCellDef="let item">
                     <a (click)="openBookModal(item.book_no)" style="color: #258de7; cursor: pointer;">
                       <u><b>{{item.book_no}}</b></u></a></td>
                 </ng-container>
                 <ng-container matColumnDef="book_name">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Book name</th>
-                  <td mat-cell *matCellDef="let item" class="text-left mar-left-5"> {{item.book_name | titlecase}}
+                  <td mat-cell *matCellDef="let item" class="text-left mar-left-5"> {{item.book_name | titlecase | truncatetext: 20}}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="author">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Author </th>
-                  <td mat-cell *matCellDef="let item"> {{item.authors}} </td>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="mar-left-5"> Author </th>
+                  <td mat-cell *matCellDef="let item" class="text-left mar-left-5"> {{item.authors}} </td>
                 </ng-container>
                 <ng-container matColumnDef="publisher">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Publisher </th>
-                  <td mat-cell *matCellDef="let item"> {{item.publisher | titlecase}} </td>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="mar-left-5"> &nbsp;&nbsp;Publisher </th>
+                  <td mat-cell *matCellDef="let item"> {{item.publisher | titlecase | truncatetext: 20}} </td>
                 </ng-container>
                 <ng-container matColumnDef="location">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Location </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10px"> &nbsp;&nbsp;Location </th>
                   <td mat-cell *matCellDef="let item"> {{item.location}} </td>
                 </ng-container>
                 <ng-container matColumnDef="status">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> &nbsp;&nbsp;Status </th>
                   <td mat-cell *matCellDef="let item"> {{item.status | titlecase}} </td>
                 </ng-container>
                 <ng-container matColumnDef="action">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> &nbsp;&nbsp;Action </th>
                   <td mat-cell *matCellDef="let item">
                     <span><i class="fas fa-edit font-color-grey margin-right-15"
                       *ngIf="item.action.reserv_status !== 'archived'"
