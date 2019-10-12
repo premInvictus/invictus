@@ -91,6 +91,9 @@ export class MarksRegisterComponent implements OnInit {
       }
     })
   }
+  getExamName(e_id) {
+    return this.examArray.find(e => e.exam_id === e_id).exam_name;
+  }
   getSubexamName(se_id) {
     return this.subexamArray.find(e => e.se_id === se_id).sexam_name;
   }
@@ -190,32 +193,43 @@ export class MarksRegisterComponent implements OnInit {
           this.subExamArray = result.data[0].details;
           const subExam = result.data[0].subExam;
           Object.keys(subExam).forEach(key => {
-            const subExamArray = [];
+            const examArray = [];
+            let length = 0;
             if (key !== '-') {
               Object.keys(subExam[key]).forEach(key1 => {
-                subExamArray.push({
-                  sexam_id: key1,
-                  sub_exam_id: subExam[key][key1]
+                const subExamArray = [];
+                Object.keys(subExam[key][key1]).forEach(key2 => {
+                  length++;
+                  subExamArray.push({
+                    sexam_id: key2,
+                    sub_exam_id: subExam[key][key1][key2]
+                  });
                 });
-                //.push(result.data.subExamArray[key][key1]);
+                examArray.push({
+                  exam_id: key1,
+                  subExamData: subExamArray
+                });
               });
               this.responseMarksArray.push({
                 sub_id: key,
-                dataArr: subExamArray
+                examArray: examArray,
+                length: length,
+                dataArr: []
               });
             }
           });
         }
       })
-     console.log(this.responseMarksArray);
+      console.log('rrrr', this.responseMarksArray);
     } else {
       this.marksInputArray = [];
       this.tableDivFlag = false;
     }
   }
-  getInputMarks(sub_id, es_id, login_id) {
+  getInputMarks(sub_id, exam_id, es_id, login_id) {
     const ind = this.subExamArray.findIndex(e => Number(e.eme_subexam_id) === Number(es_id)
-      && Number(e.emem_login_id) === Number(login_id) && Number(e.eme_sub_id) === Number(sub_id));
+      && Number(e.emem_login_id) === Number(login_id) && Number(e.eme_sub_id) === Number(sub_id)
+      && Number(e.eme_exam_id) === Number(exam_id));
     if (ind !== -1) {
       return this.subExamArray[ind].emem_marks;
     } else {
@@ -224,7 +238,7 @@ export class MarksRegisterComponent implements OnInit {
 
   }
   getInputMarks2(login_id) {
-    const ind = this.subExamArray.findIndex(e=> Number(e.emem_login_id) === Number(login_id));
+    const ind = this.subExamArray.findIndex(e => Number(e.emem_login_id) === Number(login_id));
     if (ind !== -1) {
       return 1;
     } else {

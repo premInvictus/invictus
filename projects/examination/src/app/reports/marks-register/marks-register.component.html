@@ -41,7 +41,7 @@
                                 <ng-template [ngIf]="classterm?.ect_exam_type == 2" [ngIfElse]="ccepattern">
                                     <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                         {{item.sub_name}}</mat-option>
-                                </ng-template>
+                                </ng-template> 
                                 <!-- cce pattern -->
                                 <ng-template #ccepattern>
                                     <ng-container *ngFor="let item of subjectArray">
@@ -75,25 +75,35 @@
             <table class="custom-table">
                 <thead>
                     <tr class="custom-tr">
-                        <th rowspan="2" class="custom-th text-center" width="100">Roll No.</th>
-                        <th rowspan="2" class="custom-th text-center" width="250">Student name</th>
-                        <th rowspan="2" class="custom-th text-center" width="100">Admission</th>
+                        <th rowspan="3" class="custom-th text-center" width="100">Roll No.</th>
+                        <th rowspan="3" class="custom-th text-center" width="250">Student name</th>
+                        <th rowspan="3" class="custom-th text-center" width="100">Admission</th>
                         <ng-container *ngFor="let det of responseMarksArray; let m = index">
-                            <th [attr.colspan]="det.dataArr.length" class="custom-th text-center" width="100">
+                            <th [attr.colspan]="det.length" class="custom-th text-center" width="100">
                                 {{getSubjectName(det.sub_id)}}
                             </th>
-
                         </ng-container>
                     </tr>
                     <tr class="custom-tr">
                         <ng-container *ngFor="let det of responseMarksArray; let m = index">
-                            <ng-container *ngFor="let dety of det.dataArr; let n = index">
-                                <th class="custom-th text-center" width="100">
-                                    {{getSubexamName(dety.sexam_id) | titlecase}} ({{getSubexamMarks(dety.sexam_id)}})
+                            <ng-container *ngFor="let dety of det.examArray; let n = index">
+                                <th class="custom-th text-center" width="100" [attr.colspan]="dety.subExamData.length">
+                                    {{getExamName(dety.exam_id)}}
                                 </th>
                             </ng-container>
                         </ng-container>
                     </tr>
+                    <tr class="custom-tr">
+                            <ng-container *ngFor="let det of responseMarksArray; let m = index">
+                                <ng-container *ngFor="let detz of det.examArray; let n = index">
+                                        <ng-container *ngFor="let dety of detz.subExamData; let n = index">
+                                    <th class="custom-th text-center" width="100" >
+                                        {{getSubexamName(dety.sexam_id) | titlecase}} ({{getSubexamMarks(dety.sexam_id)}})
+                                    </th>
+                                </ng-container>
+                            </ng-container>
+                            </ng-container>
+                        </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let stu of studentArray; let s = index">
@@ -102,32 +112,19 @@
                                 class="margin-left-15">{{stu.au_full_name | titlecase}}</span> </td>
                         <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
                         <ng-container *ngFor="let det of responseMarksArray; let m = index">
-                            <ng-container *ngFor="let dety of det.dataArr; let n = index">
+                            <ng-container *ngFor="let detx of det.examArray; let n = index">
+                                <ng-container *ngFor="let dety of detx.subExamData; let n = index">
                                 <ng-container *ngFor="let detz of dety.sub_exam_id; let o = index">
                                     <ng-container *ngIf="det.sub_id === detz.eme_sub_id">
-                                        <ng-container *ngIf="stu.au_login_id === detz.emem_login_id
-                                        && getInputMarks(det.sub_id,detz.eme_subexam_id, stu.au_login_id) !== '-'">
-                                            <td class="custom-td text-center font-size-14">
-                                                {{getInputMarks(det.sub_id,detz.eme_subexam_id, stu.au_login_id)}}
-                                            </td>
-                                        </ng-container>
-                                        <ng-container *ngIf="stu.au_login_id === detz.emem_login_id
-                                        && getInputMarks(det.sub_id,detz.eme_subexam_id, stu.au_login_id) === '-'">
-                                            <td class="custom-td text-center font-size-14">
-                                                -
-                                            </td>
-                                        </ng-container>
+                                        <td class="custom-td text-center font-size-14"
+                                            *ngIf="stu.au_login_id === detz.emem_login_id">
+                                            {{getInputMarks(det.sub_id,detx.exam_id,detz.eme_subexam_id, stu.au_login_id)}}
+                                        </td>
                                     </ng-container>
                                 </ng-container>
-                                <ng-container *ngIf="getInputMarks2(stu.au_login_id) === -1">
-                                    <td class="custom-td text-center font-size-14">
-                                        -
-                                    </td>
                                 </ng-container>
                             </ng-container>
-
                         </ng-container>
-
                     </tr>
                 </tbody>
             </table>
