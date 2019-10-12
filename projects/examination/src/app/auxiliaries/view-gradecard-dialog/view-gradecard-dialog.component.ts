@@ -200,7 +200,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     } else {
       totalscore = this.getCalculatedMarks(sub_id, exam_id, term);
     }
-    return totalscore;
+    return Number.parseFloat(totalscore.toFixed(2));
   }
   getCalculatedMarks(sub_id, exam_id, term) {
     const curExam = this.examArray.find(e => e.exam_id === exam_id);
@@ -284,13 +284,27 @@ export class ViewGradecardDialogComponent implements OnInit {
     return Math.round(total / temp.length) > 32 ? 'Pass' : 'Fail';
 
   }
+  calculateExamTotal() {
+    let gradeMarks = 0;
+    this.sexamArray.forEach(element => {
+      gradeMarks = gradeMarks + Number(element.exam_weightage);
+    });
+    return gradeMarks;
+  }
+  calculateTotal(sub_id, term) {
+    let gradeMarks = 0;
+    this.sexamArray.forEach(element => {
+      gradeMarks = gradeMarks + this.getCalculatedMarksSub(sub_id, element.exam_id, term);
+    });
+    return Number.parseFloat(gradeMarks.toFixed(2));
+  }
   calculateGrade(sub_id, term) {
     let gradeMarks = 0;
     this.sexamArray.forEach(element => {
       gradeMarks = gradeMarks + this.getCalculatedMarksSub(sub_id, element.exam_id, term);
     });
     //const grade = Math.round(gradeMarks / this.sexamArray.length);
-    const grade = Math.round(gradeMarks);
+    const grade = Number.parseFloat(gradeMarks.toFixed(2));
     if (Number(term) === Number(this.data.param.eme_term_id)) {
       this.totalexecutedSolasticSubject++;
       this.gradePerTermOnScholastic.push({
