@@ -8,6 +8,8 @@ import { ExamComponent } from './exam/exam.component';
 import { SubExamComponent } from './sub-exam/sub-exam.component';
 import { GradecardSettingComponent } from './gradecard-setting/gradecard-setting.component';
 import { UploadMarksComponent } from './upload-marks/upload-marks.component';
+import { SubjectSubexamMappingComponent } from './subject-subexam-mapping/subject-subexam-mapping.component';
+import { SubjectSubexamModalComponent } from './subject-subexam-mapping/subject-subexam-modal/subject-subexam-modal.component';
 
 
 @NgModule({
@@ -17,6 +19,7 @@ import { UploadMarksComponent } from './upload-marks/upload-marks.component';
 		ExaminationConfigurationRoutingModule,
 		ExamSharedModule
 	],
-	declarations: [SetupComponent, ExamComponent, SubExamComponent, GradecardSettingComponent, UploadMarksComponent]
+	declarations: [SetupComponent, ExamComponent, SubExamComponent, GradecardSettingComponent, UploadMarksComponent, SubjectSubexamMappingComponent, SubjectSubexamModalComponent],
+	entryComponents: [SubjectSubexamModalComponent]
 })
 export class ExamConfigurationModule { }
