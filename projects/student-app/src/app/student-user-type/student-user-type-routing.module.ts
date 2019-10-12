@@ -28,6 +28,10 @@ const routes: Routes = [
 				path: 'academics',
 				loadChildren: '../academics/academics.module#AcademicsModule'
 			},
+			{
+				path: 'library',
+				loadChildren: '../library/library.module#LibraryModule'
+			},
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]
 	},
