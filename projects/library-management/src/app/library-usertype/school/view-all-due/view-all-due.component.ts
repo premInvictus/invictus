@@ -112,7 +112,11 @@ export class ViewAllDueComponent implements OnInit, AfterViewInit {
       var date2 = this.common.dateConvertion(dueDate, 'yyyy-MM-dd');
       var parsedDate2: any = this.parseDate(date2);
       var parsedDate1: any = this.parseDate(date1);
-      return Math.round((parsedDate2 - parsedDate1) / (1000 * 60 * 60 * 24));
+      if (parsedDate2 < parsedDate1) {
+        return Math.round((parsedDate2 - parsedDate1) / (1000 * 60 * 60 * 24))+' Days';
+      } else {
+        return '-'
+      }      
     }
   }
 

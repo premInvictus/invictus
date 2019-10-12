@@ -59,7 +59,7 @@ export class RfidPrintingComponent implements OnInit {
 						reserv_id: item.reserv_id,
 						title: item.title,
 						author: item.authors,
-						location: item.publisher,
+						location: item.location,
 						action: item
 					};
 
@@ -129,7 +129,7 @@ export class RfidPrintingComponent implements OnInit {
 							reserv_id: item.reserv_id,
 							title: item.title,
 							author: item.authors,
-							location: item.publisher,
+							location: item.location,
 							action: item
 						};
 
