@@ -13,6 +13,7 @@ export class MarksEntryComponent implements OnInit {
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
+  subSubjectArray: any[] = [];
   sectionArray: any[] = [];
   termsArray: any[] = [];
   examArray: any[] = [];
@@ -191,6 +192,7 @@ export class MarksEntryComponent implements OnInit {
     });
     this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
+        this.subSubjectArray = result.data;
         const temp = result.data;
         if (temp.length > 0) {
           temp.forEach(element => {
@@ -273,7 +275,7 @@ export class MarksEntryComponent implements OnInit {
   }
   
   getSubjectName() {
-    for (const item of this.subjectArray) {
+    for (const item of this.subSubjectArray) {
       if (item.sub_id === this.paramform.value.eme_sub_id) {
         return item.sub_name;
       }

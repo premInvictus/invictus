@@ -13,6 +13,7 @@ export class MarksRegisterComponent implements OnInit {
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
+  subSubjectArray: any[] = [];
   sectionArray: any[] = [];
   termsArray: any[] = [];
   examArray: any[] = [];
@@ -136,6 +137,7 @@ export class MarksRegisterComponent implements OnInit {
     });
     this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
+        this.subSubjectArray = result.data;
         const temp = result.data;
         if (temp.length > 0) {
           temp.forEach(element => {
@@ -174,9 +176,16 @@ export class MarksRegisterComponent implements OnInit {
     }
   }
   getSubjectName(sub_id) {
-    for (const item of this.subjectArray) {
+    for (const item of this.subSubjectArray) {
       if (item.sub_id === sub_id) {
-        return item.sub_name;
+        if (item.sub_parent_id > 0) {
+          const ind = this.subjectArray.findIndex(e => Number(e.sub_id) === Number(item.sub_parent_id));
+          if (ind !== -1) {
+            return item.sub_name + ' (' + this.subjectArray[ind].sub_name + ')';
+          }
+        } else {
+          return item.sub_name;
+        }
       }
     }
   }
@@ -220,7 +229,6 @@ export class MarksRegisterComponent implements OnInit {
           });
         }
       })
-      console.log('rrrr', this.responseMarksArray);
     } else {
       this.marksInputArray = [];
       this.tableDivFlag = false;
@@ -246,6 +254,7 @@ export class MarksRegisterComponent implements OnInit {
     }
   }
   resetTableDiv() {
+    this.responseMarksArray = [];
     this.tableDivFlag = false;
     this.paramform.patchValue({
       eme_exam_id: ''
