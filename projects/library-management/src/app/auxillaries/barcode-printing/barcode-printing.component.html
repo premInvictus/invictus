@@ -10,7 +10,7 @@
             <form [formGroup]="barCodePrintForm">
               <mat-form-field appearance="outline" class=" form-field-150">
                 <mat-label>Book ID </mat-label>
-                <input matInput placeholder="Book ID " formControlName="reserv_id" type="text" (keydown.enter)="getBarCode();$event.preventDefault();"/>
+                <input matInput placeholder="Book ID " formControlName="reserv_id" type="text" (keydown.enter)="getBarCode();$event.preventDefault();"  autocomplete="off" />
               </mat-form-field>
               <!-- <mat-form-field appearance="outline" class="btn-spacer form-field-150">
                 <mat-label>Book ID To</mat-label>
