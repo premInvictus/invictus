@@ -82,6 +82,9 @@ export class BookLogsComponent implements OnInit, AfterViewInit {
   constructor(private erpCommonService: ErpCommonService) { }
   ngAfterViewInit() {
   }
+  applyFilterBookLog(filterValue: string) {
+	this.bookLoglistdataSource.filter = filterValue.trim().toLowerCase();
+}
   ngOnInit() {
     this.getSession();
 		this.getSchool();
