@@ -89,11 +89,14 @@ export class SubjectSubexamModalComponent implements OnInit {
     console.log(this.NoncceClassArray);
   }
   getSubexam() {
+    this.mappingForm.patchValue({
+      ssm_se_id : ''
+    });
     this.subexamArray = [];
     for(let item of this.examArray) {
       const temparr = item.class_id.split(',');
       for(let e of temparr) {
-        if(e === this.mappingForm.value.ssm_class_id) {
+        if(e === this.mappingForm.value.ssm_class_id && item.exam_id === this.mappingForm.value.ssm_exam_id) {
           this.subexamArray = item.exam_sub_exam_max_marks;
         }
       }
