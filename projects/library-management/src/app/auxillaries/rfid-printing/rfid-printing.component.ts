@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ErpCommonService } from 'src/app/_services';
+import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
@@ -20,7 +20,7 @@ export class RfidPrintingComponent implements OnInit {
 	RFID_LIST_ELEMENT: RFIDListElement[] = [];
 	rfidlistdataSource = new MatTableDataSource<RFIDListElement>(this.RFID_LIST_ELEMENT);
 	displayedRFIDListColumns: string[] = ['srno', 'reserv_id', 'title', 'author', 'location', 'action'];
-	constructor(private common: ErpCommonService, private fbuild: FormBuilder) { }
+	constructor(private common: ErpCommonService, private notif : CommonAPIService, private fbuild: FormBuilder) { }
 	ngOnInit() {
 		this.getReservoirData();
 	}
@@ -86,6 +86,9 @@ export class RfidPrintingComponent implements OnInit {
 		this.common.updateRFIDMapping({ rfid_data: this.finalDataArray }).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.getReservoirData();
+				this.notif.showSuccessErrorMessage(res.message, res.status);
+			} else {
+				this.notif.showSuccessErrorMessage(res.message, res.status);
 			}
 		});
 	}

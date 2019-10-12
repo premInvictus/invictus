@@ -46,7 +46,7 @@
               <div class="row">
                 <div class="col-8">
                   <mat-form-field class="form-field lib-form">
-                    <input matInput [placeholder]="!enteredVal ? 'Search or Scan Any Book Code..' : ''" id="search_book"
+                    <input #search_book matInput [placeholder]="!enteredVal ? 'Search or Scan Any Book Code..' : ''" id="search_book"
                       (keyup.enter)="searchBook($event)" (keyup) = "searchBoodId($event)"/>
                   </mat-form-field>
                 </div>

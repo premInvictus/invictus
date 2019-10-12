@@ -28,7 +28,7 @@ export class BarcodePrintingComponent implements OnInit {
         if (res && res.status === 'ok') {
           this.barCodeArray = [];
           this.barCodeArray = res.data.resultData;
-          console.log(this.barCodeArray);
+          this.barCodeArray.reverse();
         }
       });
     }
