@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
+import { SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
@@ -45,6 +45,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   footer: any;
   remarksArr: any[] = [];
   hasCoscholasticSub = false;
+  subjectsubexam_marks_arr: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
@@ -62,6 +63,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     for (let i = 1; i <= this.data.param.eme_term_id; i++) {
       this.termArray.push(i);
     }
+    this.getSubjectSubexamMapping();
     this.ctForClass();
     this.getGlobalSetting();
     this.getSchool();
@@ -72,6 +74,21 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getExamDetails();
     //this.getGradeCardMark();
 
+  }
+  getSubjectSubexamMapping() {
+    this.examService.getSubjectSubexamMapping({ssm_class_id: this.data.class_id}).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        this.subjectsubexam_marks_arr = result.data;
+      }
+    })
+  }
+  getOneSubjectSubexamMark(class_id, exam_id, se_id, sub_id) {
+    for(let item of this.subjectsubexam_marks_arr) {
+      if(item.ssm_class_id == class_id && item.ssm_exam_id == exam_id && item.ssm_se_id == se_id && item.ssm_sub_id == sub_id) {
+        return Number(item.ssm_sub_mark);
+      }
+    }
+    return -1;
   }
   getRemarksEntryStudent(sub_id = null) {
     const param: any = {};
@@ -179,7 +196,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       currentSub.childSub.forEach(element => {
         totalscore += this.getCalculatedMarks(element.sub_id, exam_id, term);
       });
-      totalscore = totalscore / currentSub.childSub.length;
+      totalscore = totalscore/currentSub.childSub.length;
     } else {
       totalscore = this.getCalculatedMarks(sub_id, exam_id, term);
     }
@@ -193,11 +210,15 @@ export class ViewGradecardDialogComponent implements OnInit {
         this.gradeCardMarkArray.forEach(element1 => {
           if (element1.eme_sub_id === sub_id && element1.eme_exam_id === exam_id && element1.eme_subexam_id === element.se_id && Number(element1.eme_term_id) === Number(term)) {
             let per = 0;
+            let oneSubSubexamMark = this.getOneSubjectSubexamMark(this.data.class_id, exam_id, element.se_id,sub_id);
+            oneSubSubexamMark = oneSubSubexamMark === -1 ? element.exam_max_marks : oneSubSubexamMark;
             if(!isNaN(element1.emem_marks)) {
-              per = (element1.emem_marks / element.exam_max_marks) * 100;
+              per = (element1.emem_marks / oneSubSubexamMark) * 100;
             }
             percentageArray.push({
-              exam_max_marks: Number(element.exam_max_marks),
+              sub_id: sub_id,
+              exam_id: exam_id,
+              exam_max_marks: Number(oneSubSubexamMark),
               se_id: element.se_id,
               sexam_name: element.sexam_name,
               obtained_percentage: Number.parseFloat(per.toFixed(2)),
@@ -207,6 +228,7 @@ export class ViewGradecardDialogComponent implements OnInit {
         });
       }
     });
+    console.log(percentageArray);
     let score = 0;
     if (this.gradeCardMarkArray && this.gradeCardMarkArray.length > 0 && percentageArray.length > 0) {
       switch (Number(curExam.exam_calculation_rule)) {
