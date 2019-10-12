@@ -70,7 +70,7 @@
                   <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
                     <mat-form-field class="form-field lib-form">
                       <input matInput [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.rfid) ? 'Enter RFID No..' : ''"
-                        formControlName="rfid" />
+                        formControlName="rfid"  autocomplete="off" />
                     </mat-form-field>
                   </form>
                 </td>
