@@ -50,6 +50,10 @@ import { NoDataComponent } from './no-data/no-data.component';
 // tslint:disable-next-line:max-line-length
 import { CapitalizePipe, TruncatetextPipe, DateformatPipe, SafePipe, NumberToWordPipe, ZerodashPipe } from 'projects/teacherapp/src/app/_pipes';
 import { MatAutocompleteModule } from '@angular/material';
+import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
+import { BookDetailComponent } from './book-detail/book-detail.component';
+import { BookReserveRequestConfirmationComponent } from './book-reserve-request-confirmation/book-reserve-request-confirmation.component';
+import { BookDetailsModalComponent } from './book-details-modal/book-details-modal.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -111,6 +115,10 @@ import { MatAutocompleteModule } from '@angular/material';
 		SafePipe,
 		NumberToWordPipe,
 		ZerodashPipe,
+		AdvancedSearchModalComponent,
+		BookDetailComponent,
+		BookReserveRequestConfirmationComponent,
+		BookDetailsModalComponent
 	],
 	exports: [
 		DeleteModalComponent,
@@ -160,11 +168,18 @@ import { MatAutocompleteModule } from '@angular/material';
 		NoDataComponent,
 		NumberToWordPipe,
 		ZerodashPipe,
+		AdvancedSearchModalComponent,
+		BookDetailComponent,
+		BookReserveRequestConfirmationComponent,
+		BookDetailsModalComponent
 	],
 	entryComponents: [ImagecropComponent, EssayDialogsComponent, QuestionPaperDialogComponent, AddInstructionComponent,
 		ImageViewerComponent,
 		PreviewDocumentComponent,
-		AssignmentAttachmentDialogComponent]
+		AssignmentAttachmentDialogComponent,
+		AdvancedSearchModalComponent,
+		BookReserveRequestConfirmationComponent,
+		BookDetailsModalComponent]
 })
 export class SharedModule {
 	constructor() {

@@ -40,12 +40,16 @@ import { PaymentOrderModalComponent } from './payment-order-modal/payment-order-
 import { MakePaymentComponent } from '../student-fee/make-payment/make-payment.component';
 import { NumberToWordPipe } from '../_pipes/number-to-word.pipe';
 import { ZerodashPipe } from '../_pipes/zerodash.pipe';
-import { CapitalizePipe, DateformatPipe } from '../_pipes';
+import { CapitalizePipe, DateformatPipe, TruncatetextPipe } from '../_pipes';
 import { SafePipe } from '../_pipes/safe.pipe';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 import { ImageViewerModule } from 'ngx-image-viewer';
 import { NoDataComponent } from './no-data/no-data.component';
+import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
+import { BookDetailComponent } from './book-detail/book-detail.component';
+import { BookReserveRequestConfirmationComponent } from './book-reserve-request-confirmation/book-reserve-request-confirmation.component';
+import { BookDetailsModalComponent } from './book-details-modal/book-details-modal.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -95,15 +99,21 @@ import { NoDataComponent } from './no-data/no-data.component';
 		CapitalizePipe, DateformatPipe, SafePipe,
 		NumberToWordPipe,
 		ZerodashPipe,
+		TruncatetextPipe,
 		PreviewDocumentComponent,
 		ImageViewerComponent,
-		NoDataComponent
+		NoDataComponent,
+		AdvancedSearchModalComponent,
+		BookDetailComponent,
+		BookReserveRequestConfirmationComponent,
+		BookDetailsModalComponent
 	],
 	exports: [
 		MatProgressBarModule,
 		MatSlideToggleModule,
 		MatDialogModule,
 		MatDatepickerModule,
+		TruncatetextPipe,
 		MatNativeDateModule,
 		MatRadioModule,
 		MatChipsModule,
@@ -136,9 +146,16 @@ import { NoDataComponent } from './no-data/no-data.component';
 		PreviewDocumentComponent,
 		ImageViewerComponent,
 		ImageViewerModule,
-		NoDataComponent
+		NoDataComponent,
+		AdvancedSearchModalComponent,
+		BookDetailComponent,
+		BookReserveRequestConfirmationComponent,
+		BookDetailsModalComponent
 	],
-	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent]
+	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent,
+		AdvancedSearchModalComponent,
+		BookReserveRequestConfirmationComponent,
+		BookDetailsModalComponent]
 })
 export class SharedModuleModule {
 	constructor() {

@@ -355,6 +355,8 @@ export class IssueReturnComponent implements OnInit {
 			user_login_id: this.userData.au_login_id,
 			user_role_id: this.userData.au_role_id,
 			user_full_name: this.userData.au_full_name,
+			user_class_name: this.userData.class_name ? this.userData.class_name : '',
+			user_sec_name: this.userData.sec_name ? this.userData.sec_name : '',
 			user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
 			user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
 		};

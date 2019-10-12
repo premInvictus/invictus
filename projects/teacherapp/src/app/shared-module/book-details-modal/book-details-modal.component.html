@@ -1,0 +1,59 @@
+<ng-template #bookDet>
+  <div class="modal-custom-cotainer">
+    <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+        <div class="modal-title-box">
+          <span class="font-size-20 font-white font-regular">Book Details</span><span class="float-right margin-top-5">
+            <a (click)="closeDialog()"> <i
+                class="far fa-times-circle font-white cursor-pointer font-size-24"></i></a></span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div *ngIf="bookData?.reserv_id">
+          <div class="row">
+            <div class="col-lg-2 col-5 smart-col-12 remove-col-padding-left">
+              <img  [src]="(bookData?.images_links?.smallThumbnail) ? (bookData?.images_links?.smallThumbnail) : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_cover.png'"
+              style="width: 140px;
+              height: 205px;
+              border-radius: 5px;
+              opacity: 1;">
+            </div>
+            <div class="col-7 col-lg-10 smart-col-88">
+              <div class="row remove-top-margin">
+                <div class="col-lg-8 col-12">
+                  <div class="book-details-div">
+                    <span class="font-size-20 font-bold">{{bookData?.reserv_id}}</span> &nbsp;
+                    <span class="font-size-16"><i class="fas fa-book-open font-size-16"></i>
+                      {{bookData?.reserv_flagged_status.status ? (bookData?.reserv_flagged_status.status | capitalize) : (bookData?.reserv_status | capitalize)}}
+                    </span><br>
+                    <span class="font-size-18">{{bookData?.title}}</span><br>
+                    <span class="font-skyblue font-size-14">{{bookData?.authors}}</span><br>
+                    <div class="margin-top-35">
+                      <span class="font-bold font-size-14">Edition : </span><span>{{bookData?.edition}}</span><br>
+                      <span class="font-bold font-size-14">Publisher : </span><span>{{bookData?.authors}}</span><br>
+                      <span class="font-bold font-size-14">Pages : </span><span>{{bookData?.pages}}</span><br>
+                      <span class="font-bold font-size-14">Location : </span><span>{{bookData?.location}}</span><br>
+                    </div>
+                    <hr>
+                    <div>
+                      <p>{{bookData?.description}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!bookData?.reserv_id">
+          <div class="text-center">
+            <app-no-data
+              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+              [noDataText]="'Loading....'" [subText]="''"></app-no-data>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

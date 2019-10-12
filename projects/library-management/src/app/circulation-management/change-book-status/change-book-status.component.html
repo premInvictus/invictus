@@ -12,7 +12,8 @@
                 <div class="col-12">
                   <mat-form-field class="lib-form form-field">
                     <input matInput placeholder="Search Any Book By ID" id="search_book" type="number"
-                      formControlName="search" (keydown.enter)="searchBook($event);$event.stopPropagation()"  autocomplete="off" />
+                      formControlName="search" (keydown.enter)="searchBook($event);$event.stopPropagation()"
+                      autocomplete="off" />
                   </mat-form-field>
                   <barcode-scanner-livestream (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
                 </div>
@@ -46,11 +47,13 @@
       <div class="grid-view">
         <div class="row margin-top-20">
           <div class="col-1 smart-col-10" *ngFor="let item of bookData; let i = index;"
-          style="margin-bottom: 30px !important">
+            style="margin-bottom: 30px !important">
+            <div class="delete-div float-right">
+              <i class="material-icons font-size-24 font-white margin-top-10 red" (click)="removeBookFromList(i)">
+                cancel
+              </i>
+            </div>
             <div class="book-container">
-                <i class="material-icons font-size-24 float-right font-white margin-top-10 red" (click)="removeBookFromList(i)">
-                    cancel
-                  </i>
               <img class="book-cover-img" [src]="item.images_links.thumbnail" />
               <div [class]="item.book_container_class">
                 <div class="book-title-content text-center" style="padding: 3px !important">
@@ -91,8 +94,7 @@
               <div class="col-6">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Change to</mat-label>
-                  <mat-select formControlName="changed_to" placeholder="Change to"
-                  required>
+                  <mat-select formControlName="changed_to" placeholder="Change to" required>
                     <mat-option *ngFor="let item of statusArray" [value]="item.type_id">{{item.type_name}}</mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -111,8 +113,7 @@
               <div class="col-12">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Remarks</mat-label>
-                  <textarea matInput rows="5" formControlName="reason_desc" 
-                  required placeholder="Remarks"></textarea>
+                  <textarea matInput rows="5" formControlName="reason_desc" required placeholder="Remarks"></textarea>
                 </mat-form-field>
               </div>
             </div>
