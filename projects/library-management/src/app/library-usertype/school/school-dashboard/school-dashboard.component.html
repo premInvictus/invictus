@@ -42,7 +42,7 @@
           <span class="font-size-18 font-medium">Books Added</span>
           <div class="margin-top-15">
             <span class="font-size-14 font-bold font-skyblue">{{dashboardReservoirData?.books_added}}</span>
-            <span class="opacity-7 "> Books added in the Library</span>
+            <span class="opacity-7 "> Books added to the Library</span>
           </div>
         </div>
         <div class="col-4 text-right">
@@ -93,7 +93,7 @@
           <span class="font-size-18 font-medium">Books Issued</span>
           <div class="margin-top-15">
             <span class="font-size-14 font-bold font-color-gold">{{dashboardReservoirData?.books_issued}}</span>
-            <span class="opacity-7 "> Books issued in the Library</span>
+            <span class="opacity-7 "> Books issued to the Library</span>
           </div>
         </div>
         <div class="col-4 text-right">
@@ -337,12 +337,12 @@
                         [noDataText]="" [subText]="'No Due Books'"></app-no-data>
                     </div>
                   </div>
-                  <div class="text-center" >
+                  <!-- <div class="text-center" >
                     <button mat-button class="btn-spacer btn-lib-search margin-left-10" style="margin-top: 5px;"
                       (click)="viewAllDue()">
                       View All
                     </button>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </mat-tab>
