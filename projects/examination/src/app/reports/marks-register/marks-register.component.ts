@@ -28,6 +28,7 @@ export class MarksRegisterComponent implements OnInit {
   subExamArray: any[] = [];
   classterm: any;
   absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
+  tableWidth = '70%';
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -201,6 +202,11 @@ export class MarksRegisterComponent implements OnInit {
         if (result && result.status === 'ok') {
           this.subExamArray = result.data[0].details;
           const subExam = result.data[0].subExam;
+          if (result.data[0].length > 3) {
+            this.tableWidth = '100%';
+          } else {
+            this.tableWidth = '70%';
+          }
           Object.keys(subExam).forEach(key => {
             const examArray = [];
             let length = 0;

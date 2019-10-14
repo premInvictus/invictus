@@ -26,7 +26,7 @@ export class MarksEntryComponent implements OnInit {
   exam_grade_type = '0';
   exam_grade_type_arr: any[] = [];
   classterm: any;
-  absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
+  absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };  
   ngOnInit() {
     this.buildForm();
     this.getClass();

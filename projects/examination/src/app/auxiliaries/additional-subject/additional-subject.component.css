@@ -12,3 +12,7 @@ table {
 .mat-form-field-wrapper {
     padding-bottom: 0em !important;
 }
+.center-mr{
+    width: 70% ;
+    margin:auto ;
+}

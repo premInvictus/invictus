@@ -10,7 +10,7 @@
                         <mat-form-field appearance="outline" class="form-field-150">
                             <mat-label>Class</mat-label>
                             <mat-select placeholder="Class" formControlName="eme_class_id"
-                                (selectionChange)="getSectionsByClass();getClassTerm();" required>
+                                (selectionChange)="getSectionsByClass();getClassTerm();resetTableDiv();" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
                                 </mat-option>
@@ -19,7 +19,7 @@
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                             <mat-label>Section</mat-label>
                             <mat-select placeholder="Section" formControlName="eme_sec_id"
-                                (selectionChange)="getRollNoUser()" required>
+                                (selectionChange)="getRollNoUser();resetTableDiv();" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
                                 </mat-option>
@@ -64,63 +64,66 @@
 <div class="row" *ngIf="responseMarksArray.length > 0">
     <div class="col-12">
         <mat-card>
-            <table class="custom-table">
-                <thead>
-                    <tr class="custom-tr">
-                        <th rowspan="3" class="custom-th text-center" width="100">Roll No.</th>
-                        <th rowspan="3" class="custom-th text-center" width="250">Student name</th>
-                        <th rowspan="3" class="custom-th text-center" width="100">Admission</th>
-                        <ng-container *ngFor="let det of responseMarksArray; let m = index">
-                            <th [attr.colspan]="det.length" class="custom-th text-center" width="100">
-                                {{getSubjectName(det.sub_id)}}
-                            </th>
-                        </ng-container>
-                    </tr>
-                    <tr class="custom-tr">
-                        <ng-container *ngFor="let det of responseMarksArray; let m = index">
-                            <ng-container *ngFor="let dety of det.examArray; let n = index">
-                                <th class="custom-th text-center" width="100" [attr.colspan]="dety.subExamData.length">
-                                    {{getExamName(dety.exam_id)}}
+            <div class="text-center center-mr" [style.width]="tableWidth">
+                <table class="custom-table">
+                    <thead>
+                        <tr class="custom-tr">
+                            <th rowspan="3" class="custom-th text-center" width="100">Roll No.</th>
+                            <th rowspan="3" class="custom-th text-center" width="250">Student name</th>
+                            <th rowspan="3" class="custom-th text-center" width="100">Admission</th>
+                            <ng-container *ngFor="let det of responseMarksArray; let m = index">
+                                <th [attr.colspan]="det.length" class="custom-th text-center" width="100">
+                                    {{getSubjectName(det.sub_id)}}
                                 </th>
                             </ng-container>
-                        </ng-container>
-                    </tr>
-                    <tr class="custom-tr">
-                        <ng-container *ngFor="let det of responseMarksArray; let m = index">
-                            <ng-container *ngFor="let detz of det.examArray; let n = index">
-                                <ng-container *ngFor="let dety of detz.subExamData; let n = index">
-                                    <th class="custom-th text-center" width="100">
-                                        {{getSubexamName(dety.sexam_id) | titlecase}}
-                                        ({{getSubexamMarks(dety.sexam_id)}})
+                        </tr>
+                        <tr class="custom-tr">
+                            <ng-container *ngFor="let det of responseMarksArray; let m = index">
+                                <ng-container *ngFor="let dety of det.examArray; let n = index">
+                                    <th class="custom-th text-center" width="100"
+                                        [attr.colspan]="dety.subExamData.length">
+                                        {{getExamName(dety.exam_id)}}
                                     </th>
                                 </ng-container>
                             </ng-container>
-                        </ng-container>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let stu of studentArray; let s = index">
-                        <td class="custom-td text-center font-size-14">{{stu.r_rollno}}</td>
-                        <td class="custom-td text-left font-size-14"><span
-                                class="margin-left-15">{{stu.au_full_name | titlecase}}</span> </td>
-                        <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
-                        <ng-container *ngFor="let det of responseMarksArray; let m = index">
-                            <ng-container *ngFor="let detx of det.examArray; let n = index">
-                                <ng-container *ngFor="let dety of detx.subExamData; let n = index">
-                                    <ng-container *ngFor="let detz of dety.sub_exam_id; let o = index">
-                                        <ng-container *ngIf="det.sub_id === detz.eme_sub_id">
-                                            <td class="custom-td text-center font-size-14"
-                                                *ngIf="stu.au_login_id === detz.emem_login_id">
-                                                {{getInputMarks(det.sub_id,detx.exam_id,detz.eme_subexam_id, stu.au_login_id)}}
-                                            </td>
+                        </tr>
+                        <tr class="custom-tr">
+                            <ng-container *ngFor="let det of responseMarksArray; let m = index">
+                                <ng-container *ngFor="let detz of det.examArray; let n = index">
+                                    <ng-container *ngFor="let dety of detz.subExamData; let n = index">
+                                        <th class="custom-th text-center" width="100">
+                                            {{getSubexamName(dety.sexam_id) | titlecase}}
+                                            ({{getSubexamMarks(dety.sexam_id)}})
+                                        </th>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let stu of studentArray; let s = index">
+                            <td class="custom-td text-center font-size-14">{{stu.r_rollno}}</td>
+                            <td class="custom-td text-left font-size-14"><span
+                                    class="margin-left-15">{{stu.au_full_name | titlecase}}</span> </td>
+                            <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
+                            <ng-container *ngFor="let det of responseMarksArray; let m = index">
+                                <ng-container *ngFor="let detx of det.examArray; let n = index">
+                                    <ng-container *ngFor="let dety of detx.subExamData; let n = index">
+                                        <ng-container *ngFor="let detz of dety.sub_exam_id; let o = index">
+                                            <ng-container *ngIf="det.sub_id === detz.eme_sub_id">
+                                                <td class="custom-td text-center font-size-14"
+                                                    *ngIf="stu.au_login_id === detz.emem_login_id">
+                                                    {{getInputMarks(det.sub_id,detx.exam_id,detz.eme_subexam_id, stu.au_login_id)}}
+                                                </td>
+                                            </ng-container>
                                         </ng-container>
                                     </ng-container>
                                 </ng-container>
                             </ng-container>
-                        </ng-container>
-                    </tr>
-                </tbody>
-            </table>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </mat-card>
     </div>
 </div>
