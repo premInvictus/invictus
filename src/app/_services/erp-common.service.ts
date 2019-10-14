@@ -427,6 +427,27 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
 	}
+
+	getClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getClass', value);
+	}
+
+	getSection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/setup/getSection', value);
+	}
+
+	getBookIssued(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/issuereturnprocess/getBookIssued', value);
+	}
+
+	getClassTeacher(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/ctForClass', value);
+	}
+
 }
 
 

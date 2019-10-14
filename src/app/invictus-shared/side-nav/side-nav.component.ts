@@ -200,25 +200,32 @@ export class SideNavComponent implements OnInit, OnChanges {
 		if (menuToggle && menuToggle.menuIndex !== index) {
 			const showdiv2 = document.getElementById(menuToggle.menuId);
 			this.showSubmenuArray[menuToggle.menuIndex] = false;
-			showdiv2.style.display = menuToggle.display === 'block' ? 'block' : 'none';
-			if (showdiv2.style.display === 'none' || showdiv2.style.display === '') {
-				showdiv2.style.display = 'block';
-			} else {
-				showdiv2.style.display = 'none';
+			if (showdiv2) {
+				showdiv2.style.display = menuToggle.display === 'block' ? 'block' : 'none';
+				if (showdiv2.style.display === 'none' || showdiv2.style.display === '') {
+					showdiv2.style.display = 'block';
+				} else {
+					showdiv2.style.display = 'none';
+				}
 			}
+
 		}
 		const showdiv = document.getElementById('menu' + index);
-		showdiv.style.display = showdiv.style.display === 'block' ? 'block' : 'none';
-		if (showdiv.style.display === 'none' || showdiv.style.display === '') {
-			showdiv.style.display = 'block';
-		} else {
-			showdiv.style.display = 'none';
+		if (showdiv) {
+			showdiv.style.display = showdiv.style.display === 'block' ? 'block' : 'none';
+			if (showdiv.style.display === 'none' || showdiv.style.display === '') {
+				showdiv.style.display = 'block';
+			} else {
+				showdiv.style.display = 'none';
+			}
+			const menuJSon = {
+				menuId: 'menu' + index,
+				menuIndex: index,
+				display: showdiv.style.display
+			};
+			localStorage.setItem('menuToggle', JSON.stringify(menuJSon));
 		}
-		const menuJSon = {
-			menuId: 'menu' + index,
-			menuIndex: index,
-			display: showdiv.style.display
-		};
-		localStorage.setItem('menuToggle', JSON.stringify(menuJSon));
+
+		
 	}
 }

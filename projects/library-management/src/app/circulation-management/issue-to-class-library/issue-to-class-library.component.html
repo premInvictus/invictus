@@ -1,3 +1,145 @@
-<p>
-  issue-to-class-library works!
-</p>
+<div class="main-physical-verification">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24 font-bold">Issue To Class Library</span>
+          </div>
+          <div class="col-6 text-right">
+
+            <form [formGroup]="issuedToClassForm">
+
+              <mat-form-field class="form-field-150" appearance="outline">
+                <mat-label>Choose Class</mat-label>
+                <mat-select formControlName="class_id" required (selectionChange)="getBookIssued($event)">
+                  <mat-option value="">Choose Class</mat-option>
+                  <mat-option *ngFor="let item of classArray" value="{{item?.class_id}}">{{item?.class_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+
+              <mat-form-field class="form-field-150" appearance="outline" style="margin-left: 5px;">
+                <mat-label>Choose Section</mat-label>
+                <mat-select formControlName="sec_id" required (selectionChange)="getBookIssued($event)">
+                  <mat-option value="">Choose Section</mat-option>
+                  <mat-option *ngFor="let item of sectionArray" value="{{item?.sec_id}}">{{item?.sec_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </form>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="ISSUED_BOOK_ELEMENT.length > 0">
+  <div class="col-12">
+    <mat-card class="card-height-730">
+      <div class="row">
+        <div class="col-6">
+          <span class="font-bold font-size-20">Books Issued</span>
+        </div>
+        <br/>
+        <div class="col-12 remove-col-padding">
+            <span class="font-size-14 font-bold">Class  : </span><span
+              class="font-size-14 opacity-7">{{currentClassName}} <span *ngIf="currentSectionName"> - {{currentSectionName}}</span></span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">No. of Students : </span><span
+              class="font-size-14 opacity-7">
+              {{noOfStudents}}
+            </span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Class Teacher : </span>
+            <span
+              class="font-size-14 font-bold" *ngIf="currentClassTeacher">{{currentClassTeacher}} </span>
+              <span
+              class="font-size-14 font-bold" *ngIf="!currentClassTeacher"> - </span>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+          <div class="row ">
+            <div class="col-10 remove-col-padding">
+              <mat-form-field appearance="legacy lib-form">
+                <input matInput placeholder="Search" (keyup)="applyFilterVerificationLog($event.target.value)" />
+                <mat-icon matPrefix>filter_list</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <table mat-table [dataSource]="issuedBookDataSource" matSort class="table-100 text-center" id="report_table1">
+            <ng-container matColumnDef="srno">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
+              <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+            </ng-container>
+            <ng-container matColumnDef="book_no">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Book No </th>
+              <td mat-cell *matCellDef="let element">
+                <a class="font-skyblue cursor-pointer"
+                  (click)="getBookDetail(element?.book_no)">{{element?.book_no}} </a>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="30%"> Title </th>
+              <td mat-cell *matCellDef="let element" class="text-left">{{element?.title}} 
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="author">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="20%"> Author </th>
+              <td mat-cell *matCellDef="let element" class="text-left">{{element?.author}} 
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="publisher">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Publisher </th>
+              <td mat-cell *matCellDef="let element" class="text-left">{{element?.publisher}} 
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="issued_on">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%"> Issued On </th>
+              <td mat-cell *matCellDef="let element">{{element?.issued_on | date: 'd-MMM-y'}} 
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="return_date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%"> Return Date </th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.return_date | date: 'd-MMM-y'}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Action </th>
+                <td mat-cell *matCellDef="let element">
+                  test
+                </td>
+              </ng-container>
+
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedIssuedBookColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedIssuedBookColumns;">
+            </tr>
+          </table>
+
+          <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+            <tr *ngIf="ISSUED_BOOK_ELEMENT.length == 0">
+              <td colspan="8">No Record Found</td>
+            </tr>
+          </table>
+          <mat-paginator #paginator  [pageSizeOptions]=[5,10,20] [pageSize]="10"  showFirstLastButtons></mat-paginator>
+        </div>
+        <div class="col-1"></div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="ISSUED_BOOK_ELEMENT.length == 0">
+  <div class="col-12">
+    <mat-card>
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_books_issued.png'"
+          [noDataText]="" [subText]="'No Issued Book Found'"></app-no-data>
+      </div>
+    </mat-card>
+  </div>
+</div>

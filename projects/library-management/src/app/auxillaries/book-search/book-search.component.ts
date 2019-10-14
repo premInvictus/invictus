@@ -117,8 +117,9 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 					}
 					this.searchFlag = true;
 					this.bookDataSource = new MatTableDataSource<any>(this.BOOK_ELEMENT_DATA);
-					this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
 					this.bookDataSource.paginator = this.paginator;
+					this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+					
 				}
 			});
 		} else {
