@@ -32,6 +32,7 @@ export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('search_book') search_book_elem;
 
   VERIFICATION_LOG_ELEMENT: VerificationLogElement[] = [];
   logdataSource = new MatTableDataSource<VerificationLogElement>(this.VERIFICATION_LOG_ELEMENT);
@@ -189,7 +190,7 @@ export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
   }
 
   searchBook() {
-    if (this.searchBookId) {
+    if (this.searchBookId) {      
       this.enteredVal = true;
       const inputJson = { "filters": [{ "filter_type": "reserv_id", "filter_value": Number(this.searchBookId), "type": "text" }],  "search_from" : 'master' };
 		  this.erpCommonService.getReservoirDataBasedOnFilter
@@ -229,9 +230,12 @@ export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
               //this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
               this.batchdataSource.sort = this.sort;
             }
+            this.enteredVal = false;
+            this.searchBookId = '';
+            this.search_book_elem.nativeElement.value = '';
           } 
-          this.searchBookId = '';
-
+          
+          
         }
       });
     } else {

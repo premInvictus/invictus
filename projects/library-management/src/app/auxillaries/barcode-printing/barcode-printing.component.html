@@ -10,13 +10,13 @@
             <form [formGroup]="barCodePrintForm">
               <mat-form-field appearance="outline" class=" form-field-150">
                 <mat-label>Book ID </mat-label>
-                <input matInput placeholder="Book ID " formControlName="reserv_id" type="text" (keydown.enter)="getBarCode();$event.preventDefault();"/>
+                <input matInput placeholder="Book ID " formControlName="reserv_id" type="text" (keydown.enter)="getBarCode();$event.preventDefault();"  autocomplete="off" />
               </mat-form-field>
               <!-- <mat-form-field appearance="outline" class="btn-spacer form-field-150">
                 <mat-label>Book ID To</mat-label>
                 <input matInput placeholder="Book ID TO" formControlName="reserv_id_to" type="number" />
               </mat-form-field> -->
-              <button mat-raised-button class="btn-success-blue btn-spacer align-btn-bar" (click)="openSearchDialog()">
+              <button mat-raised-button class="btn-success-blue btn-spacer align-btn-bar" (click)="openSearchDialog({})">
                 Advanced Filter
               </button>
               <button mat-raised-button class="btn-success-green btn-spacer align-btn-bar" (click)="getBarCode()">

@@ -100,20 +100,20 @@
             </div>
             <div class="col-6 remove-col-padding">
               <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
-                <div class="col-4 remove-col-padding">
-                  <span class="font-size-12 font-bold">Book OS Fine</span>
+                <div class="col-6 remove-col-padding">
+                  <span class="font-size-12 font-bold">Book Outstanding Fine</span>
                   <span class="font-size-12 font-bold float-right">:</span>
                 </div>
-                <div class="col-8 remove-col-padding-right">
+                <div class="col-6 remove-col-padding-right">
                   <span class="font-size-12 font-bold opacity-7">-</span>
                 </div>
               </div>
               <div class="row remove-top-margin">
-                <div class="col-5 remove-col-padding">
+                <div class="col-6 remove-col-padding">
                   <span class="font-size-12 font-bold">Books Read Till Date</span>
                   <span class="font-size-12 font-bold float-right">:</span>
                 </div>
-                <div class="col-7 remove-col-padding-right">
+                <div class="col-6 remove-col-padding-right">
                   <span class="font-size-12 font-bold opacity-7">{{bookReadTillDate}}</span>
                 </div>
 
@@ -138,6 +138,7 @@
                 <th class="custom-th">Book No</th>
                 <th class="custom-th">Book Name</th>
                 <th class="custom-th">Publisher</th>
+                <th class="custom-th">Issued On</th>
                 <th class="custom-th">Due On</th>
               </tr>
             </thead>
@@ -150,6 +151,7 @@
                   </td>
                   <td class="custom-td text-left"><span>{{item?.title | titlecase | truncatetext: 55}}</span></td>
                   <td class="custom-td text-left">{{item?.publisher | titlecase | truncatetext: 20}}</td>
+                  <td class="custom-td">{{item?.issued_on | date: 'd-MMM-y' }}</td>
                   <td class="custom-td">{{item?.due_date | date: 'd-MMM-y' }}</td>
                 </tr>
               </ng-container>
@@ -219,7 +221,7 @@
                     </td>
                     <td  width="50%" class="custom-td text-left"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span>{{item?.title | titlecase | truncatetext: 55}}</span>
+                      <span>{{item?.title | titlecase | truncatetext: 45}}</span>
                     </td>
                     <td  width="20%" class="custom-td text-left"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">

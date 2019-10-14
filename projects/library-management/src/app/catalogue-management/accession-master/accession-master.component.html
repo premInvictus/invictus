@@ -168,7 +168,7 @@
                     <div class="col-12">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Publisher</mat-label>
-                        <input matInput placeholder="Publisher" tabindex="5" formControlName="publisher" required />
+                        <input matInput placeholder="Publisher" tabindex="5" formControlName="publisher"/>
                       </mat-form-field>
                     </div>
                   </div>
@@ -184,7 +184,7 @@
                     <div class="col-12">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Print Type</mat-label>
-                        <mat-select placeholder="Print Type" formControlName="type_id" required tabindex="13">
+                        <mat-select placeholder="Print Type" formControlName="type_id" tabindex="13">
                           <mat-option *ngFor="let item of typeArray" [value]="item.type_id">
                             {{item.type_name}}
                           </mat-option>
@@ -207,7 +207,7 @@
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Published Date</mat-label>
                         <input matInput placeholder="Published Date" tabindex="6" formControlName="publishedDate"
-                          required>
+                        >
                       </mat-form-field>
                     </div>
                   </div>
@@ -224,7 +224,7 @@
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Price</mat-label>
                         <input matInput placeholder="Price" formControlName="price" type="number" step="0.01"
-                          tabindex="14" required />
+                          tabindex="14"/>
                       </mat-form-field>
                     </div>
                   </div>
@@ -242,7 +242,7 @@
                     <div class="col-12">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Kind/ Genre</mat-label>
-                        <mat-select formControlName="genre_id" required tabindex="7">
+                        <mat-select formControlName="genre_id" tabindex="7">
                           <mat-option *ngFor="let item of genreArray" [value]="item.genre_name">
                             {{item.genre_name}}
                           </mat-option>
@@ -254,7 +254,7 @@
                     <div class="col-12">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Language</mat-label>
-                        <mat-select formControlName="lang_id" required tabindex="11">
+                        <mat-select formControlName="lang_id"  tabindex="11">
                           <mat-option *ngFor="let item of languageArray" [value]="item.lang_code">
                             {{item.lang_name}}
                           </mat-option>
@@ -276,7 +276,7 @@
                     <div class="col-12">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Pages</mat-label>
-                        <input matInput placeholder="Pages" tabindex="8" formControlName="page_count" required
+                        <input matInput placeholder="Pages" tabindex="8" formControlName="page_count"
                           type="number" />
                       </mat-form-field>
                     </div>
@@ -342,13 +342,13 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Stack</mat-label>
                     <input matInput placeholder="Stack" formControlName="stack" required tabindex="19" />
                   </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-1">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Row</mat-label>
                     <input matInput placeholder="Row" formControlName="row" type="number" required tabindex="20" />
@@ -450,14 +450,14 @@
                 <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>P O No</mat-label>
-                    <input matInput placeholder="P O No" formControlName="vendor_po_no" tabindex="25" required />
+                    <input matInput placeholder="P O No" formControlName="vendor_po_no" tabindex="25"/>
                   </mat-form-field>
                 </div>
                 <div class="col-3">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Invoice No.</mat-label>
                     <input matInput placeholder="Invoice No." formControlName="vendor_invoice_no" tabindex="26"
-                      required />
+                      />
                   </mat-form-field>
                 </div>
               </div>
@@ -490,5 +490,5 @@
 <app-book-details-modal #bookDet></app-book-details-modal>
 <app-delete-modal #deleteModal (deleteOk)="deleteOk($event)" (cancel)="deleteCancel($event)"
   [deleteMessage]="delMessage" [inputText]="delText"></app-delete-modal>
-<app-reservoir-edit-modal #editReservoir (updateReserv)="updateOk($event)" (cancelUpdate)="updateCancel($event)">
+<app-reservoir-edit-modal #editReservoir (updateReserv)="updateOk($event)" (cancelUpdate)="updateCancel()">
 </app-reservoir-edit-modal>
