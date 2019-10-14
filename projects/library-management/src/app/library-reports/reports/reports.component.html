@@ -54,32 +54,16 @@
             </div>
             <div class="row">
               <div class="col-12">
-                <app-collection-report (displyRep)="displyRep($event)"
+                <app-accession-report (displyRep)="displyRep($event)"
                 [userName]="userName"
-                *ngIf="reportType === '1'"></app-collection-report>
-                <app-outstanding-report (displyRep)="displyRep($event)"
+                *ngIf="reportType === '1'"></app-accession-report>
+                <app-issue-return-report (displyRep)="displyRep($event)"
                 [userName]="userName"
-                *ngIf="reportType === '2'"></app-outstanding-report>
-                <app-fee-ledger-report [userName]="userName"
-                *ngIf="reportType === '5'"></app-fee-ledger-report>
-                <app-deleted-feetrans-report [userName]="userName"
-                *ngIf="reportType === '6'"></app-deleted-feetrans-report>
-                <app-feeadj-report [userName]="userName"
-                *ngIf="reportType === '7'"></app-feeadj-report>
-                <app-feecon-report [userName]="userName"
-                (displyRep)="displyRep($event)"
-                *ngIf="reportType === '8'"></app-feecon-report>
-                <app-missing-feeinv-report [userName]="userName"
-                *ngIf="reportType === '9'"></app-missing-feeinv-report>
-                <app-feestruc-report [userName]="userName"
-                (displyRep)="displyRep($event)"
-                *ngIf="reportType === '10'"></app-feestruc-report>
-                <app-chequeclearance-report [userName]="userName" 
-                *ngIf="reportType === '11'"></app-chequeclearance-report>
-                <app-security-deposit-report *ngIf="reportType === '12'"></app-security-deposit-report>
-                <app-transport-report [userName]="userName"
-                (displyRep)="displyRep($event)"
-                *ngIf="reportType === '15'"></app-transport-report>
+                *ngIf="reportType === '2'"></app-issue-return-report>
+                <app-over-due-book-report (displyRep)="displyRep($event)" 
+                [userName]="userName"
+                *ngIf="reportType === '3'"></app-over-due-book-report>
+                
               </div>
             </div>
           </mat-expansion-panel>

@@ -338,12 +338,12 @@
                                     </form>
                                  </div>
                                  <div *ngIf="configValue == 18">
-                                       <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                       <form [formGroup]="formGroupArray[configValue-1].formGroup"> 
                                              <mat-form-field class="form-field" appearance="outline">
                                                    <mat-label>Select Type</mat-label>
                                                    <mat-select placeholder="Select Type.." formControlName="reason_type" 
                                                    (selectionChange)="getReasonViaType($event)" required>
-                                                      <mat-option *ngFor="let item of reasonTypeArray" [value]="item.reason_type">{{item.reason_type_desc}}</mat-option>
+                                                      <mat-option *ngFor="let item of reasonTypeArray" [value]="item.rt_id">{{item.rt_name}}</mat-option>
                                                    </mat-select>
                                                 </mat-form-field>
                                                 <mat-form-field class="form-field" appearance="outline">

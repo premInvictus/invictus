@@ -75,7 +75,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.getHostelFeeStructures();
 		this.getTransportMode();
 		this.getRoutes();
-		
+
 	}
 	ngOnChanges() {
 		if (this.feeLoginId) {
@@ -114,6 +114,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		});
 	}
 	getFeeAccount(au_login_id) {
+		this.showTransport = false;
 		this.accountDetails = {};
 		this.accountsForm.reset();
 		this.accountsForm.patchValue({
@@ -169,7 +170,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				} else {
 					this.hostelFlag = false;
 				}
-				console.log('aaaaaaaaa', this.accountDetails.accd_transport_mode);
 				this.enableMode(this.accountDetails.accd_transport_mode);
 				this.getStoppages(this.accountDetails.accd_tr_id);
 				this.getSlab(this.accountDetails.accd_tsp_id);
@@ -179,8 +179,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_fo_id: this.accountDetails.accd_fo_id,
 					accd_fs_id: this.accountDetails.accd_fs_id,
 					accd_fcg_id: this.accountDetails.accd_fcg_id,
-					accd_reason_id: this.accountDetails.mod_review_reason_id,
-					accd_remark_id: this.accountDetails.mod_review_remark,					
+					accd_reason_id: this.accountDetails.accd_reason_id,
+					accd_remark_id: this.accountDetails.accd_remark_id,
 					accd_is_transport: this.accountDetails.accd_is_transport === 'N' ? false : true,
 					accd_is_hostel: this.accountDetails.accd_is_hostel === 'N' ? false : true,
 					accd_transport_mode: this.accountDetails.accd_transport_mode,
@@ -199,7 +199,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_ses_id: this.accountDetails.ses_id,
 					accd_status: this.accountDetails.accd_status
 				});
-				console.log('this.accountsForm.value.accd_fcg_id', this.accountsForm.value.accd_fcg_id);
 				this.setDescription({ value: this.accountsForm.value.accd_fcg_id });
 				this.slabModel = this.accountDetails.accd_ts_id;
 			} else {
@@ -295,7 +294,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.transportFlag = false;
 			this.terminationFlag = false;
 		}
-		console.log('bbbbb', this.accountsForm.value.accd_transport_mode)
+		//console.log('bbbbb', this.accountsForm.value.accd_transport_mode)
 	}
 	enableHostel($event) {
 		if ($event.checked) {
@@ -475,6 +474,12 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
+		if (this.accountsForm.value.accd_fcg_id !== '0') {
+			if (!this.accountsForm.value.accd_reason_id ||
+				!this.accountsForm.value.accd_remark_id) {
+				validateFlag = false;
+			}
+		}
 		if (validateFlag) {
 			const datePipe = new DatePipe('en-in');
 			let accountJSON = {};
@@ -548,6 +553,15 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.accountsForm.get('accd_tsp_id').markAsDirty();
 				this.accountsForm.get('accd_ts_id').markAsDirty();
 				this.accountsForm.get('accd_transport_from').markAsDirty();
+				validateFlag = false;
+			}
+		}
+		if (this.accountsForm.value.accd_fcg_id !== '0') {
+			if (!this.accountsForm.value.accd_reason_id ||
+				!this.accountsForm.value.accd_remark_id) {
+				this.accountsForm.get('accd_fcg_id').markAsDirty();
+				this.accountsForm.get('accd_reason_id').markAsDirty();
+				this.accountsForm.get('accd_remark_id').markAsDirty();
 				validateFlag = false;
 			}
 		}
@@ -654,6 +668,15 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 						rff_new_field_value: formControl.value ? 'Y' : 'N',
 						rff_old_field_value: this.accountDetails[key],
 					});
+				} else if (key === 'accd_fcg_id' || key === 'accd_reason_id'
+					|| key === 'accd_remark_id') {
+					sibReqArray.push({
+						rff_where_id: 'accd_id',
+						rff_where_value: this.accountDetails['accd_id'],
+						rff_field_name: key,
+						rff_new_field_value: formControl.value,
+						rff_old_field_value: this.accountDetails[key],
+					});
 				} else {
 					sibReqArray.push({
 						rff_where_id: 'accd_id',
@@ -683,7 +706,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			req_param: []
 		};
 		if (this.finalArray.length > 0) {
-			console.log('reqObj', this.reqObj);
+			//console.log('reqObj', this.reqObj);
 			this.editModal.openModal({ data: [this.finalArray], reqParam: [this.reqObj] });
 		}
 	}
@@ -712,7 +735,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 	getReason() {
 		this.reasonArr = [];
-		this.sisService.getReason({ reason_type: '11' }).subscribe((result: any) => {
+		this.sisService.getReason({ reason_type: '15' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.reasonArr = result.data;
 			}
@@ -742,7 +765,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
 					if (result) {
 						this.documentPath = result.data[0].file_url;
-						console.log(this.documentPath);
+						//console.log(this.documentPath);
 
 					}
 				});

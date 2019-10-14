@@ -15,7 +15,7 @@ export class ReportsComponent implements OnInit {
 	feeReportArray: any[] = [
 		{
 			report_id: '1',
-			report_name: 'Collection Report',
+			report_name: 'Accession Report',
 			report_image: '/assets/images/Fee Reports/collection_report.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
@@ -24,127 +24,17 @@ export class ReportsComponent implements OnInit {
 		},
 		{
 			report_id: '2',
-			report_name: 'Outstanding Report',
+			report_name: 'Issue / Return Log',
 			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
 		},
-		// {
-		// 	report_id: '3',
-		// 	report_name: 'Fee Projection Report',
-		// 	report_image: '/assets/images/Fee Reports/fee_projection.png',
-		// 	main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-		// 	report_main_image_class: '',
-		// 	report_middle_class: 'inline-flex',
-		// 	report_check_icon_class: ''
-		// },
-		// {
-		// 	report_id: '4',
-		// 	report_name: 'Fee Transaction Report',
-		// 	report_image: '/assets/images/Fee Reports/fee_transaction.png',
-		// 	main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-		// 	report_main_image_class: '',
-		// 	report_middle_class: 'inline-flex',
-		// 	report_check_icon_class: ''
-		// },
 		{
-			report_id: '5',
-			report_name: 'Fee Ledger Report',
+			report_id: '3',
+			report_name: 'Over Due Books Log',
 			report_image: '/assets/images/Fee Reports/fee_ledger.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
-		{
-			report_id: '6',
-			report_name: 'Deleted Fee Transactions',
-			report_image:
-				'/assets/images/Fee Reports/deleted_fee_transaction.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
-		{
-			report_id: '7',
-			report_name: 'Fee Adjustment Report',
-			report_image: '/assets/images/Fee Reports/fee_adjustment.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
-		{
-			report_id: '8',
-			report_name: 'Concession Report',
-			report_image: '/assets/images/Fee Reports/fee_concession.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
-		{
-			report_id: '9',
-			report_name: 'Missing Fee Invoice',
-			report_image:
-				'/assets/images/Fee Reports/missing_fee_invoice.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
-		{
-			report_id: '10',
-			report_name: 'Fee Structure Report',
-			report_image: '/assets/images/Fee Reports/fee_structure.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
-		{
-			report_id: '11',
-			report_name: 'Cheque Clearance Report',
-			report_image: '/assets/images/Fee Reports/cheque_clearance.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
-		{
-			report_id: '12',
-			report_name: 'Security Deposit',
-			report_image: '/assets/images/Fee Reports/advanced_security.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
-		},
-		// {
-		// 	report_id: '13',
-		// 	report_name: 'Online Transaction Details',
-		// 	report_image: '/assets/images/Fee Reports/online_transaction.png',
-		// 	main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-		// 	report_main_image_class: '',
-		// 	report_middle_class: 'inline-flex',
-		// 	report_check_icon_class: ''
-		// },
-		// {
-		// 	report_id: '14',
-		// 	report_name: 'Dynamic Report',
-		// 	report_image: '/assets/images/Fee Reports/dynamics.png',
-		// 	main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-		// 	report_main_image_class: '',
-		// 	report_middle_class: 'inline-flex',
-		// 	report_check_icon_class: ''
-		// },
-		{
-			report_id: '15',
-			report_name: 'Transport Report',
-			report_image: '/assets/images/Fee Reports/transport_report.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
@@ -159,6 +49,7 @@ export class ReportsComponent implements OnInit {
 	constructor(private erpCommonService: ErpCommonService) { }
 
 	ngOnInit() {
+		console.log('fdgn');
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		// this.erpCommonService.getUser().subscribe((res: any) => {
 		// 	if (res && res.status === 'ok') {
@@ -172,12 +63,7 @@ export class ReportsComponent implements OnInit {
 		// });
 	}
 	checkEnable(report_id) {
-		if (Number(report_id) === 3 || Number(report_id) === 4 || Number(report_id) === 13
-			|| Number(report_id) === 14) {
-			return 'report-card1 mat-card';
-		} else {
-			return 'report-card mat-card';
-		}
+		return 'report-card mat-card';
 	}
 	executeReport(report_id) {
 		this.reportTypeArray = [];
@@ -219,28 +105,28 @@ export class ReportsComponent implements OnInit {
 		}
 	}
 	displyRep($event) {
-		if ($event.report_id) {
-			if ($event.report_index === 1) {
-				if ($event.report_id !== 'mfr') {
-					this.reportHeader = 'Collection Report - ' + $event.report_name;
-				} else {
-					this.reportHeader = 'Collection  - ' + $event.report_name;
-				}
-			}
-			if ($event.report_index === 2) {
-				this.reportHeader = 'Outstanding Report - ' + $event.report_name;
-			}
-			if ($event.report_index === 8) {
-				this.reportHeader = 'Concession - ' + $event.report_name;
-			}
-			if ($event.report_index === 10) {
-				this.reportHeader = 'Structure - ' + $event.report_name;
-			}
-			if ($event.report_index === 15) {
-				this.reportHeader = 'Transport - ' + $event.report_name;
-			}
-		} else {
+		// if ($event.report_id) {
+		// 	// if ($event.report_index === 1) {
+		// 	// 	if ($event.report_id !== 'mfr') {
+		// 	// 		this.reportHeader = 'Collection Report - ' + $event.report_name;
+		// 	// 	} else {
+		// 	// 		this.reportHeader = 'Collection  - ' + $event.report_name;
+		// 	// 	}
+		// 	// }
+		// 	// if ($event.report_index === 2) {
+		// 	// 	this.reportHeader = 'Outstanding Report - ' + $event.report_name;
+		// 	// }
+		// 	// if ($event.report_index === 8) {
+		// 	// 	this.reportHeader = 'Concession - ' + $event.report_name;
+		// 	// }
+		// 	// if ($event.report_index === 10) {
+		// 	// 	this.reportHeader = 'Structure - ' + $event.report_name;
+		// 	// }
+		// 	// if ($event.report_index === 15) {
+		// 	// 	this.reportHeader = 'Transport - ' + $event.report_name;
+		// 	// }
+		// } else {
 			this.reportHeader = $event.report_name;
-		}
+		// }
 	}
 }

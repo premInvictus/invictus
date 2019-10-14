@@ -86,6 +86,12 @@ export class SubjectSubexamModalComponent implements OnInit {
         this.NoncceClassArray.push(element);
       }
     });
+    if(this.data && this.data.length > 0) {
+      this.mappingForm.patchValue({
+        ssm_class_id: this.data[0].ssm_class_id
+      });
+      this.getExamDetails();
+    }
     console.log(this.NoncceClassArray);
   }
   getSubexam() {
@@ -101,6 +107,12 @@ export class SubjectSubexamModalComponent implements OnInit {
         }
       }
     }
+    if(this.data && this.data.length > 0) {
+      this.mappingForm.patchValue({
+        ssm_se_id: this.data[0].ssm_se_id
+      });
+      this.getSubjectsByClass();
+    }
   }
   getMaxMarksOfSubExam(se_id) {
     return (this.subexamArray.find(e => e.se_id === se_id)).exam_max_marks;
@@ -110,12 +122,31 @@ export class SubjectSubexamModalComponent implements OnInit {
     this.examService.getExamDetails({ exam_class: this.mappingForm.value.ssm_class_id, exam_category: '1',egs_point_type: '2'}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
+        if(this.data && this.data.length > 0) {
+          this.mappingForm.patchValue({
+            ssm_exam_id: this.data[0].ssm_exam_id
+          });
+          this.getSubexam();
+        }
       } else {
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
   }
  
+  getSubMark(sub_id, sub_mark) {
+    console.log(sub_id,sub_mark);
+    let item: any;
+    if(this.data && this.data.length > 0) {
+      item = this.data.find(e => e.ssm_sub_id === sub_id);
+    }
+    if(item) {
+      console.log(item.ssm_sub_mark);
+      return item.ssm_sub_mark;
+    }
+    return sub_mark;
+
+  }
   getSubjectsByClass() {
     this.subjectArray = [];
     this.submarkFormArr = [];
@@ -138,13 +169,13 @@ export class SubjectSubexamModalComponent implements OnInit {
                 //this.addSubjectMark(element.sub_id, se_max_mark);
                 this.submarkFormArr.push({
                   sub_id: element.sub_id,
-                  sub_mark: se_max_mark
+                  sub_mark: this.getSubMark(element.sub_id,se_max_mark)
                 })
               } else {
                 for(let item of element.childSub) {
                   this.submarkFormArr.push({
                     sub_id: item.sub_id,
-                    sub_mark: se_max_mark
+                    sub_mark: this.getSubMark(item.sub_id,se_max_mark)
                   })
                 }
               }
@@ -153,8 +184,8 @@ export class SubjectSubexamModalComponent implements OnInit {
           });
         }
         this.submarkDivFlag = true;
-        console.log(this.submarkFormArr);
-        console.log(this.subjectArray);
+        console.log('submarkFormArr',this.submarkFormArr);
+        console.log('subjectArray',this.subjectArray);
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
@@ -180,7 +211,7 @@ export class SubjectSubexamModalComponent implements OnInit {
     this.examService.addSubjectSubexamMapping(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-        this.closeDialog();
+        this.dialogRef.close({list: true});
       }
     })
   }

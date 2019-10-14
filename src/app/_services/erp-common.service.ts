@@ -448,6 +448,16 @@ export class ErpCommonService {
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/ctForClass', value);
 	}
 
+	getSectionsByClass(value) {
+		const param: any = {};
+		param.class_id = value.class_id;
+		if (value.role_id) {
+			param.role_id = value.role_id;
+		}
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setupdetail/getSectionsByClass', param);
+	}
+
 }
 
 

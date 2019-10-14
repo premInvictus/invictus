@@ -37,11 +37,23 @@
               </ng-container>
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Student Name </th>
-                <td mat-cell *matCellDef="let item" class="text-left"> {{item.name | titlecase}}</td>
+                <td mat-cell *matCellDef="let item" class="text-left"> {{item.name | titlecase}}</td> 
+              </ng-container>
+              <ng-container matColumnDef="class_sec">
+                <th mat-header-cell *matHeaderCellDef> Class & Section </th>
+                <td mat-cell *matCellDef="let item" class="text-center"> {{item.class_sec}}</td> 
+              </ng-container>
+              <ng-container matColumnDef="remarks">
+                <th mat-header-cell *matHeaderCellDef> Remarks</th>
+                <td mat-cell *matCellDef="let item" class="text-left"> {{item.remarks}}</td> 
               </ng-container>
               <ng-container matColumnDef="concession">
                 <th mat-header-cell *matHeaderCellDef> Concession Group </th>
                 <td mat-cell *matCellDef="let item" class="text-left"> {{item.concession | capitalize}} </td>
+              </ng-container>
+              <ng-container matColumnDef="proposed_by">
+                <th mat-header-cell *matHeaderCellDef> Proposed By</th>
+                <td mat-cell *matCellDef="let item" class="text-center"> {{item.proposed_by}}</td> 
               </ng-container>
               <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef> Action </th>

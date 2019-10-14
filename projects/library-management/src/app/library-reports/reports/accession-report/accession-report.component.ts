@@ -12,28 +12,65 @@ import * as XLSX from 'xlsx';
 import * as Excel from 'exceljs/dist/exceljs';
 import * as ExcelProper from 'exceljs';
 import { TranslateService } from '@ngx-translate/core';
-import { FeeService, CommonAPIService, SisService } from '../../../_services';
+import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
-import { CapitalizePipe } from '../../../_pipes';
-import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
+//import { CapitalizePipe } from '../../../_pipes';
+//import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportFilterComponent } from '../../reports-filter-sort/report-filter/report-filter.component';
 import { ReportSortComponent } from '../../reports-filter-sort/report-sort/report-sort.component';
-import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
+//import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 @Component({
-	selector: 'app-deleted-feetrans-report',
-	templateUrl: './deleted-feetrans-report.component.html',
-	styleUrls: ['./deleted-feetrans-report.component.css']
+	selector: 'app-accession-report',
+	templateUrl: './accession-report.component.html',
+	styleUrls: ['./accession-report.component.css']
 })
-export class DeletedFeetransReportComponent implements OnInit {
-	@Input() userName: any = '';
+export class AccessionReportComponent implements OnInit {
+	sessionArray: any[] = [];
 	totalRow: any;
 	groupColumns: any[] = [];
 	groupLength: any;
+	session: any = {};
+	columnDefinitions1: Column[] = [];
+	exportColumnDefinitions: any[] = [];
+	columnDefinitions2: Column[] = [];
+	gridOptions1: GridOption;
+	gridOptions2: GridOption;
+	tableFlag = false;
+	dataset1: any[];
+	@Input() userName: any = '';
+	dataset2: any[];
+	initgrid = false;
+	columnDefinitions: Column[] = [];
+	gridOptions: GridOption = {};
+	dataset: any[] = [];
+	angularGrid: AngularGridInstance;
+	dataviewObj: any;
+	draggableGroupingPlugin: any;
+	durationOrderByCount = false;
+	gridObj: any;
+	processing = false;
+	selectedGroupingFields: string[] = ['', '', ''];
+	totalRecords: number;
+	aggregatearray: any[] = [];
+	reportFilterForm: FormGroup;
+	valueArray: any[] = [];
+	classDataArray: any[] = [];
+	reportTypeArray: any[] = [];
+	valueLabel: any = '';
+	reportType = '1';
+	filterFlag = false;
+	filterResult: any[] = [];
+	sortResult: any[] = [];
+	dataArr: any[] = [];
+	sectionArray: any[] = [];
+	schoolInfo: any;
+	gridHeight: number;
+	sessionName: any;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -79,45 +116,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		42: 'AP',
 		43: 'AQ',
 		44: 'AR',
-
 	};
-	columnDefinitions1: Column[] = [];
-	columnDefinitions2: Column[] = [];
-	gridOptions1: GridOption;
-	gridOptions2: GridOption;
-	tableFlag = false;
-	dataset1: any[];
-	dataset2: any[];
-	initgrid = false;
-	columnDefinitions: Column[] = [];
-	gridOptions: GridOption = {};
-	dataset: any[] = [];
-	angularGrid: AngularGridInstance;
-	dataviewObj: any;
-	draggableGroupingPlugin: any;
-	durationOrderByCount = false;
-	gridObj: any;
-	processing = false;
-	selectedGroupingFields: string[] = ['', '', ''];
-	totalRecords: number;
-	aggregatearray: any[] = [];
-	reportFilterForm: FormGroup;
-	valueArray: any[] = [];
-	classDataArray: any[] = [];
-	reportTypeArray: any[] = [];
-	valueLabel: any = '';
-	reportType = '1';
-	filterFlag = false;
-	filterResult: any[] = [];
-	sortResult: any[] = [];
-	dataArr: any[] = [];
-	sectionArray: any[] = [];
-	schoolInfo: any;
-	sessionName: any;
-	sessionArray: any;
-	session: any;
-	gridHeight: number;
-	exportColumnDefinitions: any;
 	filteredAs: any = {};
 	currentUser: any;
 	pdfrowdata: any[] = [];
@@ -126,9 +125,8 @@ export class DeletedFeetransReportComponent implements OnInit {
 	levelSubtotalFooter: any[] = [];
 	notFormatedCellArray: any[] = [];
 	constructor(translate: TranslateService,
-		private feeService: FeeService,
 		private common: CommonAPIService,
-		private sisService: SisService,
+		private erpCommonService: ErpCommonService,
 		public dialog: MatDialog,
 		private fbuild: FormBuilder) { }
 
@@ -140,7 +138,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		this.buildForm();
 		this.getClassData();
 		this.filterFlag = true;
-		this.getDeletedFeeReport(this.reportFilterForm.value);
+		this.getAccessionReport(this.reportFilterForm.value);
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -156,18 +154,10 @@ export class DeletedFeetransReportComponent implements OnInit {
 			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
 		}
 	}
-	getSchool() {
-		this.sisService.getSchool().subscribe((res: any) => {
-			if (res && res.status === 'ok') {
-				this.schoolInfo = res.data[0];
-				console.log(this.schoolInfo);
-			}
-		});
-	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
+			'class_value':'',
 			'report_type': '',
-			'fee_value': '',
 			'from_date': '',
 			'to_date': '',
 			'downloadAll': true,
@@ -177,28 +167,15 @@ export class DeletedFeetransReportComponent implements OnInit {
 			'hidden_value4': '',
 			'hidden_value5': '',
 			'filterReportBy': '',
-			'admission_no': '',
-			'au_full_name': '',
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'orderBy': ''
+			'order_by': ''
 		});
 	}
-	filtered(event) {
-		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + event.source.selected.viewValue;
-	}
-	getParamValue() {
-		const filterArr = [];
-		Object.keys(this.filteredAs).forEach(key => {
-			filterArr.push(this.filteredAs[key]);
-		});
-		filterArr.push(
-			this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') + ' - ' +
-			this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
-		return filterArr;
-	}
-	getDeletedFeeReport(value: any) {
+
+	getAccessionReport(value: any) {
+		console.log("in");
 		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
@@ -219,9 +196,9 @@ export class DeletedFeetransReportComponent implements OnInit {
 			showFooterRow: true,
 			footerRowHeight: 35,
 			enableExcelCopyBuffer: true,
+			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
-			fullWidthRows: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -316,16 +293,16 @@ export class DeletedFeetransReportComponent implements OnInit {
 		let repoArray = [];
 		this.columnDefinitions = [];
 		this.dataset = [];
-		const collectionJSON: any = {
+		const accessionJSON: any = {
 			'from_date': value.from_date,
 			'to_date': value.to_date,
 			'pageSize': value.pageSize,
 			'pageIndex': value.pageIndex,
 			'classId': value.fee_value,
 			'secId': value.hidden_value,
-			'downloadAll': true,
 			'login_id': value.login_id,
-			'orderBy': value.orderBy
+			'orderBy': value.orderBy,
+			'downloadAll': true,
 		};
 		this.columnDefinitions = [
 			{
@@ -336,30 +313,30 @@ export class DeletedFeetransReportComponent implements OnInit {
 				maxWidth: 40
 			},
 			{
-				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
+				id: 'book_no', name: 'Book No', field: 'book_no', sortable: true,
 				filterable: true,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
-				groupTotalsFormatter: this.srnTotalsFormatter,
-				width: 30,
+				width: 80,
 				grouping: {
-					getter: 'stu_admission_no',
+					getter: 'book_no',
 					formatter: (g) => {
-						return `${g.value}  <span style="color:green"> [${g.count} records]</span>`;
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
-					collapsed: false,
+					collapsed: false
 				},
+				groupTotalsFormatter: this.srnTotalsFormatter
 			},
 			{
-				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
-				sortable: true,
+				id: 'book_name', name: 'Book Name', field: 'book_name', sortable: true,
+				filterable: true,
+				width: 120,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
-				width: 60,
 				grouping: {
-					getter: 'stu_full_name',
+					getter: 'book_name',
 					formatter: (g) => {
 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
@@ -369,13 +346,13 @@ export class DeletedFeetransReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
+				id: 'author', name: 'Author', field: 'author', sortable: true,
 				filterable: true,
-				width: 30,
+				width: 80,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
 				grouping: {
-					getter: 'stu_class_name',
+					getter: 'author',
 					formatter: (g) => {
 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
@@ -385,92 +362,14 @@ export class DeletedFeetransReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'invoice_no',
-				name: 'Invoice No..',
-				field: 'invoice_no',
-				sortable: true,
+				id: 'publisher', name: 'Publisher', field: 'publisher', sortable: true,
 				filterable: true,
-				filterSearchType: FieldType.number,
-				filter: { model: Filters.compoundInputNumber },
-				cssClass: 'fee-ledger-no',
-				width: 3,
-				formatter: this.checkReceiptFormatter
-			},
-			{
-				id: 'invoice_created_date', name: 'Invoice. Date', field: 'invoice_created_date', sortable: true, width: 4,
-				filterable: true,
-				formatter: this.checkDateFormatter,
-				filter: { model: Filters.compoundDate },
+				width: 120,
 				filterSearchType: FieldType.dateIso,
-				grouping: {
-					getter: 'invoice_created_date',
-					formatter: (g) => {
-						return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'invoice_amount',
-				name: 'Quantum',
-				field: 'invoice_amount',
-				sortable: true,
-				filterable: true,
-				filterSearchType: FieldType.string,
-				cssClass: 'amount-report-fee',
-				groupTotalsFormatter: this.sumTotalsFormatter,
-				formatter: this.checkFeeFormatter,
-				filter: { model: Filters.compoundInput },
-				width: 3,
-			},
-			{
-				id: 'inv_paid_status',
-				name: 'Status',
-				field: 'inv_paid_status',
-				sortable: true,
-				filterable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				width: 3,
-			},
-			{
-				id: 'fp_name',
-				name: 'Fee period',
-				field: 'fp_name',
-				sortable: true,
-				filterable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				width: 3,
-			},
-			{
-				id: 'deleted_date', name: 'Deleted. Date', field: 'deleted_date', sortable: true, width: 4,
-				filterable: true,
-				formatter: this.checkDateFormatter,
 				filter: { model: Filters.compoundDate },
-				filterSearchType: FieldType.dateIso,
+				formatter: this.checkDateFormatter,
 				grouping: {
-					getter: 'deleted_date',
-					formatter: (g) => {
-						return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'mod_review_by',
-				name: 'Deleted By',
-				field: 'mod_review_by',
-				sortable: true,
-				filterable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'mod_review_by',
+					getter: 'publisher',
 					formatter: (g) => {
 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
@@ -478,30 +377,45 @@ export class DeletedFeetransReportComponent implements OnInit {
 					aggregateCollapsed: true,
 					collapsed: false,
 				},
-				width: 3,
 			},
 			{
-				id: 'reason_title',
-				name: 'Reason',
-				field: 'reason_title',
-				sortable: true,
+				id: 'location', name: 'Location', field: 'location', sortable: true,
 				filterable: true,
-				filterSearchType: FieldType.string,
-				filter: { model: Filters.compoundInput },
-				width: 90,
+				width: 120,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundDate },
+				formatter: this.checkDateFormatter,
+				grouping: {
+					getter: 'location',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
 			},
 			{
-				id: 'mod_review_remark',
-				name: 'Remark',
-				field: 'mod_review_remark',
-				sortable: true,
-				width: 70,
+				id: 'status', name: 'Status', field: 'status', sortable: true,
 				filterable: true,
+				width: 150,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundDate },
+				formatter: this.checkDateFormatter,
+				grouping: {
+					getter: 'status',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
 			}];
-		this.feeService.getDeletedFeeTransactionReport(collectionJSON).subscribe((result: any) => {
+		this.erpCommonService.getReservoirData(accessionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-				repoArray = result.data.reportData;
+				this.common.showSuccessErrorMessage(result.message, 'success');
+				repoArray = result.data.resultData;
 				this.totalRecords = Number(result.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				let index = 0;
@@ -511,71 +425,50 @@ export class DeletedFeetransReportComponent implements OnInit {
 						(index + 1);
 					obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 						(index + 1);
-					obj['stu_admission_no'] = repoArray[Number(index)]['au_admission_no'] ?
-						repoArray[Number(index)]['au_admission_no'] : '-';
-					obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
-					if (repoArray[Number(index)]['sec_id'] !== '0') {
-						obj['stu_class_name'] = repoArray[Number(index)]['class_name'] + '-' +
-							repoArray[Number(index)]['sec_name'];
-					} else {
-						obj['stu_class_name'] = repoArray[Number(index)]['class_name'];
-					}
-					obj['invoice_no'] = item['inv_invoice_no'] ? item['inv_invoice_no'] : '-';
-					obj['inv_id'] = item['inv_id'];
-					obj['invoice_created_date'] = repoArray[Number(index)]['inv_due_date'];
-					obj['invoice_amount'] = Number(repoArray[Number(index)]['inv_fee_amount']) + Number(repoArray[Number(index)]['inv_fine_amount']);
-					obj['inv_paid_status'] = new CapitalizePipe().transform(item['inv_paid_status']);
-					obj['fp_name'] = repoArray[Number(index)]['fp_name'];
-					obj['deleted_date'] = repoArray[Number(index)]['deleted_date'] ? repoArray[Number(index)]['deleted_date'] : '-';
-					obj['mod_review_by'] = repoArray[Number(index)]['created_by'] ?
-						new CapitalizePipe().transform(repoArray[Number(index)]['created_by']) : '-';
-					obj['reason_title'] = repoArray[Number(index)]['reason_title'] ?
-						new CapitalizePipe().transform(repoArray[Number(index)]['reason_title']) : '-';
-					obj['mod_review_remark'] = repoArray[Number(index)]['mod_review_remark'] ?
-						new CapitalizePipe().transform(repoArray[Number(index)]['mod_review_remark']) : '-';
+					obj['book_no'] = repoArray[Number(index)]['reserv_id'] ?
+						repoArray[Number(index)]['reserv_id'] : '-';
+					// new CapitalizePipe().transform(repoArray[Number(index)]['title']);
+					obj['book_name'] = repoArray[Number(index)]['title'];
+						
+					
 					this.dataset.push(obj);
 					index++;
 				}
-				this.totalRow = {};
-				const obj3: any = {};
-				obj3['id'] = '';
-				obj3['srno'] = '';
-				obj3['stu_admission_no'] = this.common.htmlToText('<b class="total-footer-report">Grand Total</b>');
-				obj3['stu_full_name'] = '';
-				obj3['stu_class_name'] = '';
-				obj3['invoice_no'] = '';
-				obj3['inv_id'] = '';
-				obj3['invoice_created_date'] = '';
-				obj3['invoice_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0));
-				obj3['inv_paid_status'] = '';
-				obj3['fp_name'] = '';
-				obj3['deleted_date'] = '';
-				obj3['mod_review_by'] = '';
-				obj3['reason_title'] = '';
-				obj3['mod_review_remark'] = '';
-				this.aggregatearray.push(new Aggregators.Sum('invoice_amount'));
-				this.totalRow = obj3;
-				if (this.dataset.length <= 5) {
-					this.gridHeight = 300;
-				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-					this.gridHeight = 400;
-				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-					this.gridHeight = 550;
-				} else if (this.dataset.length > 20) {
-					this.gridHeight = 750;
-				}
+				// this.totalRow = {};
+				// const obj3: any = {};
+				// obj3['id'] = '';
+				// obj3['srno'] = '';
+				// obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+				// obj3['stu_full_name'] = '';
+				// obj3['stu_class_name'] = '';
+				// obj3['deposite_date'] = '';
+				// obj3['cheque_date'] = '';
+				// obj3['dishonor_date'] = '';
+				// obj3['invoice_id'] = '';
+				// obj3['invoice_no'] = '';
+				// obj3['receipt_no'] = '';
+				// obj3['receipt_id'] = '';
+				// obj3['receipt_amount'] =
+				// 	new DecimalPipe('en-in').transform(this.dataset.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0));
+				// obj3['bank_name'] = '';
+				// obj3['status'] = '';
+				// obj3['fcc_reason_id'] = '';
+				// obj3['fcc_remarks'] = '';
+				// this.totalRow = obj3;
+				// if (this.dataset.length <= 5) {
+				// 	this.gridHeight = 300;
+				// } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+				// 	this.gridHeight = 400;
+				// } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+				// 	this.gridHeight = 550;
+				// } else if (this.dataset.length > 20) {
+				// 	this.gridHeight = 750;
+				// }
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;
 			}
 		});
-	}
-	checkReturn(data) {
-		if (Number(data)) {
-			return Number(data);
-		} else {
-			return data;
-		}
 	}
 	clearGroupsAndSelects() {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
@@ -617,8 +510,11 @@ export class DeletedFeetransReportComponent implements OnInit {
 		this.gridObj.setPreHeaderPanelVisibility(!this.gridObj.getOptions().showPreHeaderPanel);
 	}
 	onCellClicked(e, args) {
-		if (args.cell === args.grid.getColumnIndex('invoice_no')) {
+		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
 			const item: any = args.grid.getDataItem(args.row);
+			if (item['receipt_no'] !== '-') {
+				this.openDialogReceipt(item['receipt_id'], false);
+			}
 		}
 	}
 	onCellChanged(e, args) {
@@ -641,6 +537,13 @@ export class DeletedFeetransReportComponent implements OnInit {
 			return new DecimalPipe('en-in').transform(value);
 		}
 	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
+		}
+	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === 0) {
 			return '-';
@@ -656,7 +559,11 @@ export class DeletedFeetransReportComponent implements OnInit {
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
-		return new DatePipe('en-in').transform(value, 'd-MMM-y');
+		if (value !== '-') {
+			return new DatePipe('en-in').transform(value, 'd-MMM-y');
+		} else {
+			return '-';
+		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
 		if (totals.group.level === 0) {
@@ -667,36 +574,16 @@ export class DeletedFeetransReportComponent implements OnInit {
 		}
 	}
 	openDialogReceipt(invoiceNo, edit): void {
-		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
-			width: '80%',
-			data: {
-				invoiceNo: invoiceNo,
-				edit: edit
-			},
-			hasBackdrop: true
-		});
+		// const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
+		// 	width: '80%',
+		// 	data: {
+		// 		rpt_id: invoiceNo,
+		// 		edit: edit
+		// 	},
+		// 	hasBackdrop: true
+		// });
 	}
-	resetValues() {
-		this.reportFilterForm.patchValue({
-			'login_id': '',
-			'orderBy': ''
-		});
-		this.sortResult = [];
-		this.filterResult = [];
-	}
-	getFeeHeads() {
-		this.valueArray = [];
-		this.feeService.getFeeHeads({ fh_is_hostel_fee: '' }).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				for (const item of result.data) {
-					this.valueArray.push({
-						id: item.fh_id,
-						name: item.fh_name
-					});
-				}
-			}
-		});
-	}
+	
 	getClass() {
 		this.valueArray = [];
 		for (const item of this.classDataArray) {
@@ -707,41 +594,16 @@ export class DeletedFeetransReportComponent implements OnInit {
 		}
 	}
 	getClassData() {
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.erpCommonService.getClass({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classDataArray = result.data;
 				this.getClass();
 			}
 		});
 	}
-	getModes() {
-		this.valueArray = [];
-		this.feeService.getPaymentMode({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				for (const item of result.data) {
-					this.valueArray.push({
-						id: item.pay_id,
-						name: item.pay_name
-					});
-				}
-			}
-		});
-	}
-	getRoutes() {
-		this.valueArray = [];
-		this.feeService.getRoutes({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				for (const item of result.data) {
-					this.valueArray.push({
-						id: item.tr_id,
-						name: item.tr_route_name
-					});
-				}
-			}
-		});
-	}
+	
 	getSectionByClass($event) {
-		this.sisService.getSectionsByClass({ class_id: $event.value }).subscribe((result: any) => {
+		this.erpCommonService.getSectionsByClass({ class_id: $event.value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				for (const item of result.data) {
 					this.sectionArray.push({
@@ -766,13 +628,13 @@ export class DeletedFeetransReportComponent implements OnInit {
 		dialogRefFilter.componentInstance.filterResult.subscribe((data: any) => {
 			this.filterResult = [];
 			this.filterResult = data;
-			this.feeService.getStudentsForFilter({ filters: this.filterResult }).subscribe((res: any) => {
-				if (res && res.status === 'ok') {
-					this.reportFilterForm.patchValue({
-						login_id: res.data
-					});
-				}
-			});
+			// this.feeService.getStudentsForFilter({ filters: this.filterResult }).subscribe((res: any) => {
+			// 	if (res && res.status === 'ok') {
+			// 		this.reportFilterForm.patchValue({
+			// 			login_id: res.data
+			// 		});
+			// 	}
+			// });
 		});
 	}
 	openSort() {
@@ -791,27 +653,20 @@ export class DeletedFeetransReportComponent implements OnInit {
 		});
 	}
 	renderDialog(inv_id, edit) {
-		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-			width: '80%',
-			data: {
-				invoiceNo: inv_id,
-				edit: edit,
-				paidStatus: 'paid'
-			},
-			hasBackdrop: true
-		});
+		// const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
+		// 	width: '80%',
+		// 	data: {
+		// 		invoiceNo: inv_id,
+		// 		edit: edit,
+		// 		paidStatus: 'paid'
+		// 	},
+		// 	hasBackdrop: true
+		// });
 	}
-	getSessionName(id) {
-		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
-		if (findex !== -1) {
-			return this.sessionArray[findex].ses_name;
-		}
-	}
-	getSession() {
-		this.sisService.getSession().subscribe((result2: any) => {
-			if (result2.status === 'ok') {
-				this.sessionArray = result2.data;
-				this.sessionName = this.getSessionName(this.session.ses_id);
+	getSchool() {
+		this.erpCommonService.getSchool().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.schoolInfo = res.data[0];
 			}
 		});
 	}
@@ -825,15 +680,63 @@ export class DeletedFeetransReportComponent implements OnInit {
 			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
 		});
 	}
+	getSessionName(id) {
+		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
+		if (findex !== -1) {
+			return this.sessionArray[findex].ses_name;
+		}
+	}
+	getSession() {
+		this.erpCommonService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				this.sessionArray = result2.data;
+				this.sessionName = this.getSessionName(this.session.ses_id);
+			}
+		});
+	}
+	resetValues() {
+		this.reportFilterForm.patchValue({
+			'login_id': '',
+			'orderBy': '',
+			'from_date': '',
+			'to_date': '',
+			'class_value': '',
+			'hidden_value': '',
+			'hidden_value2': '',
+			'hidden_value3': '',
+			'hidden_value4': '',
+			'hidden_value5': '',
+		});
+		this.sortResult = [];
+		this.filterResult = [];
+	}
 	exportToFile(type = 'csv') {
 		let reportType: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		reportType = new TitleCasePipe().transform('Deleted Fee_: ') + this.sessionName;
+		reportType = new TitleCasePipe().transform('Accession Master:') + this.sessionName;
 		this.angularGrid.exportService.exportToFile({
 			delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
 			filename: reportType + '_' + new Date(),
 			format: (type === 'csv') ? FileType.csv : FileType.txt
 		});
+	}
+	checkWidth(id, header) {
+		const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
+	}
+	getGroupColumns(columns) {
+		let grName = '';
+		for (const item of columns) {
+			for (const titem of this.columnDefinitions) {
+				if (item.getter === titem.id) {
+					grName = grName + titem.name + ',';
+					break;
+				}
+			}
+		}
+		return grName.substring(0, grName.length - 1);
 	}
 	exportToExcel(json: any[]) {
 		this.notFormatedCellArray = [];
@@ -850,9 +753,9 @@ export class DeletedFeetransReportComponent implements OnInit {
 			columValue.push(item.name);
 		}
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		reportType = new TitleCasePipe().transform('deleted feetrans_') + this.sessionName;
+		reportType = new TitleCasePipe().transform('accession_') + this.sessionName;
 		let reportType2: any = '';
-		reportType2 = new TitleCasePipe().transform('deleted fee transaction report: ') + this.sessionName;
+		reportType2 = new TitleCasePipe().transform('accession report: ') + this.sessionName;
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -869,15 +772,14 @@ export class DeletedFeetransReportComponent implements OnInit {
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
-				for (const item2 of this.columnDefinitions) {
-					if (item2.id === 'invoice_created_date' || item2.id === 'deleted_date'
-						|| item2.id === 'rpt_receipt_date') {
+				for (const item2 of this.exportColumnDefinitions) {
+					if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+						|| item2.id === 'dishonor_date') && json[key][item2.id] !== '-') {
 						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
 					} else {
 						obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 					}
 				}
-
 				worksheet.addRow(obj);
 			});
 		} else {
@@ -1045,6 +947,19 @@ export class DeletedFeetransReportComponent implements OnInit {
 			saveAs(blob, fileName);
 		});
 	}
+	filtered(event) {
+		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + event.source.selected.viewValue;
+	}
+	getParamValue() {
+		const filterArr = [];
+		Object.keys(this.filteredAs).forEach(key => {
+			filterArr.push(this.filteredAs[key]);
+		});
+		filterArr.push(
+			this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') + ' - ' +
+			this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
+			return filterArr;
+	}
 	getLevelFooter(level, groupItem) {
 		if (level === 0) {
 			return 'Total';
@@ -1088,16 +1003,18 @@ export class DeletedFeetransReportComponent implements OnInit {
 					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
+					obj3['deposite_date'] = '';
+					obj3['cheque_date'] = '';
+					obj3['dishonor_date'] = '';
+					obj3['invoice_id'] = '';
 					obj3['invoice_no'] = '';
-					obj3['inv_id'] = '';
-					obj3['invoice_created_date'] = '';
-					obj3['invoice_amount'] = groupItem.rows.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0);
-					obj3['inv_paid_status'] = '';
-					obj3['fp_name'] = '';
-					obj3['deleted_date'] = '';
-					obj3['mod_review_by'] = '';
-					obj3['reason_title'] = '';
-					obj3['mod_review_remark'] = '';
+					obj3['receipt_no'] = '';
+					obj3['receipt_id'] = '';
+					obj3['receipt_amount'] = groupItem.rows.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['bank_name'] = '';
+					obj3['status'] = '';
+					obj3['fcc_reason_id'] = '';
+					obj3['fcc_remarks'] = '';
 					worksheet.addRow(obj3);
 					this.notFormatedCellArray.push(worksheet._rows.length);
 					// style row having total
@@ -1145,13 +1062,14 @@ export class DeletedFeetransReportComponent implements OnInit {
 				} else {
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
-						for (const item2 of this.columnDefinitions) {
-							if (item2.id === 'invoice_created_date' || item2.id === 'deleted_date'
-								|| item2.id === 'rpt_receipt_date') {
+						for (const item2 of this.exportColumnDefinitions) {
+							if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+								|| item2.id === 'dishonor_date') && groupItem.rows[key][item2.id] !== '-') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
 								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
 							}
+
 						}
 						worksheet.addRow(obj);
 					});
@@ -1161,17 +1079,18 @@ export class DeletedFeetransReportComponent implements OnInit {
 					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
+					obj3['deposite_date'] = '';
+					obj3['cheque_date'] = '';
+					obj3['dishonor_date'] = '';
+					obj3['invoice_id'] = '';
 					obj3['invoice_no'] = '';
-					obj3['inv_id'] = '';
-					obj3['invoice_created_date'] = '';
-					obj3['invoice_amount'] = groupItem.rows.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0);
-					obj3['inv_paid_status'] = '';
-					obj3['fp_name'] = '';
-					obj3['deleted_date'] = '';
-					obj3['mod_review_by'] = '';
-					obj3['reason_title'] = '';
-					obj3['mod_review_remark'] = '';
-					worksheet.addRow(obj3);
+					obj3['receipt_no'] = '';
+					obj3['receipt_id'] = '';
+					obj3['receipt_amount'] = groupItem.rows.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['bank_name'] = '';
+					obj3['status'] = '';
+					obj3['fcc_reason_id'] = '';
+					obj3['fcc_remarks'] = '';
 					worksheet.addRow(obj3);
 					this.notFormatedCellArray.push(worksheet._rows.length);
 					if (groupItem.level === 0) {
@@ -1219,24 +1138,6 @@ export class DeletedFeetransReportComponent implements OnInit {
 			}
 		}
 	}
-	checkWidth(id, header) {
-		const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
-		const max2 = header.toString().length;
-		const max = Math.max.apply(null, res);
-		return max2 > max ? max2 : max;
-	}
-	getGroupColumns(columns) {
-		let grName = '';
-		for (const item of columns) {
-			for (const titem of this.exportColumnDefinitions) {
-				if (item.getter === titem.id) {
-					grName = grName + titem.name + ',';
-					break;
-				}
-			}
-		}
-		return grName.substring(0, grName.length - 1);
-	}
 	exportAsPDF(json: any[]) {
 		const headerData: any[] = [];
 		this.pdfrowdata = [];
@@ -1247,7 +1148,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
 		let reportType: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		reportType = new TitleCasePipe().transform('fee ledger report: ') + this.sessionName;
+		reportType = new TitleCasePipe().transform('cheque clearance report: ') + this.sessionName;
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
@@ -1289,12 +1190,12 @@ export class DeletedFeetransReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
-					if (item2.id === 'inv_invoice_date' || item2.id === 'flgr_created_date'
-						|| item2.id === 'rpt_receipt_date') {
-						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
-					} else {
-						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-					}
+					if (this.dataset[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
+					|| item2.id === 'deposite_date')) {
+					arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+				} else {
+					arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+				}
 				}
 				rowData.push(arr);
 				this.pdfrowdata.push(arr);
@@ -1466,6 +1367,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		});
 		doc.save(reportType + '_' + new Date() + '.pdf');
 	}
+
 	checkGroupLevelPDF(item, doc, headerData) {
 		if (item.length > 0) {
 			for (const groupItem of item) {
@@ -1478,19 +1380,21 @@ export class DeletedFeetransReportComponent implements OnInit {
 					const obj3: any = {};
 					obj3['id'] = '';
 					obj3['srno'] = '';
-					obj3['stu_admission_no'] = 'Sub Total';
+					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
+					obj3['deposite_date'] = '';
+					obj3['cheque_date'] = '';
+					obj3['dishonor_date'] = '';
+					obj3['invoice_id'] = '';
 					obj3['invoice_no'] = '';
-					obj3['inv_id'] = '';
-					obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-					obj3['invoice_amount'] = groupItem.rows.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0);
-					obj3['inv_paid_status'] = '';
-					obj3['fp_name'] = '';
-					obj3['deleted_date'] = '';
-					obj3['mod_review_by'] = '';
-					obj3['reason_title'] = '';
-					obj3['mod_review_remark'] = '';
+					obj3['receipt_no'] = '';
+					obj3['receipt_id'] = '';
+					obj3['receipt_amount'] = groupItem.rows.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['bank_name'] = '';
+					obj3['status'] = '';
+					obj3['fcc_reason_id'] = '';
+					obj3['fcc_remarks'] = '';
 					for (const col of this.exportColumnDefinitions) {
 						Object.keys(obj3).forEach((key: any) => {
 							if (col.id === key) {
@@ -1511,25 +1415,11 @@ export class DeletedFeetransReportComponent implements OnInit {
 					Object.keys(groupItem.rows).forEach(key => {
 						const arr: any = [];
 						for (const item2 of this.columnDefinitions) {
-							if (this.reportType !== 'mfr') {
-								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
-									arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y'));
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
-									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
-								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
+							if (groupItem.rows[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
+								|| item2.id === 'deposite_date')) {
+								arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id])));
 							} else {
-								if (item2.id.toString().match(/Q/)) {
-									arr.push(groupItem.rows[key][item2.id].status);
-								} else {
-									arr.push(groupItem.rows[key][item2.id]);
-								}
+								arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
 							}
 						}
 						rowData.push(arr);
@@ -1539,19 +1429,21 @@ export class DeletedFeetransReportComponent implements OnInit {
 					const obj3: any = {};
 					obj3['id'] = '';
 					obj3['srno'] = '';
-					obj3['stu_admission_no'] = 'Sub Total';
+					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
 					obj3['stu_full_name'] = '';
 					obj3['stu_class_name'] = '';
+					obj3['deposite_date'] = '';
+					obj3['cheque_date'] = '';
+					obj3['dishonor_date'] = '';
+					obj3['invoice_id'] = '';
 					obj3['invoice_no'] = '';
-					obj3['inv_id'] = '';
-					obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-					obj3['invoice_amount'] = groupItem.rows.map(t => t.invoice_amount).reduce((acc, val) => acc + val, 0);
-					obj3['inv_paid_status'] = '';
-					obj3['fp_name'] = '';
-					obj3['deleted_date'] = '';
-					obj3['mod_review_by'] = '';
-					obj3['reason_title'] = '';
-					obj3['mod_review_remark'] = '';
+					obj3['receipt_no'] = '';
+					obj3['receipt_id'] = '';
+					obj3['receipt_amount'] = groupItem.rows.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['bank_name'] = '';
+					obj3['status'] = '';
+					obj3['fcc_reason_id'] = '';
+					obj3['fcc_remarks'] = '';
 					for (const col of this.exportColumnDefinitions) {
 						Object.keys(obj3).forEach((key: any) => {
 							if (col.id === key) {
@@ -1570,5 +1462,4 @@ export class DeletedFeetransReportComponent implements OnInit {
 			}
 		}
 	}
-
 }
