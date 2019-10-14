@@ -19,6 +19,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	formGroupArray: any[] = [];
 	configValue: any;
 	vaccinationArray: any[] = [];
+	reasonTypeArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
 	displayedColumns: any[] = ['position', 'name', 'alias', 'action', 'modify'];
@@ -39,19 +40,19 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	updateFlag = false;
 	requiredArray: any[] = [{ docreq_is_required: '1', docreq_is_required_name: 'Yes' },
 	{ docreq_is_required: '0', docreq_is_required_name: 'No' }];
-	reasonTypeArray: any[] = [
-		{ reason_type: '1', reason_type_desc: 'Question' },
-		{ reason_type: '2', reason_type_desc: 'Question Paper' },
-		{ reason_type: '3', reason_type_desc: 'Question Template' },
-		{ reason_type: '4', reason_type_desc: 'Education Details' },
-		{ reason_type: '5', reason_type_desc: 'Edit Request' },
-		{ reason_type: '6', reason_type_desc: 'Suspension' },
-		{ reason_type: '7', reason_type_desc: 'Change Enrolment Number' },
-		{ reason_type: '8', reason_type_desc: 'Change Enrolment Status' },
-		{ reason_type: '9', reason_type_desc: 'Request SLC/TC' },
-		{ reason_type: '10', reason_type_desc: 'SLC/TC' },
-		{ reason_type: '11', reason_type_desc: 'Cheque Bounced' },
-		{ reason_type: '12', reason_type_desc: 'Change Book Status' }];
+	// reasonTypeArray: any[] = [
+	// 	{ reason_type: '1', reason_type_desc: 'Question' },
+	// 	{ reason_type: '2', reason_type_desc: 'Question Paper' },
+	// 	{ reason_type: '3', reason_type_desc: 'Question Template' },
+	// 	{ reason_type: '4', reason_type_desc: 'Education Details' },
+	// 	{ reason_type: '5', reason_type_desc: 'Edit Request' },
+	// 	{ reason_type: '6', reason_type_desc: 'Suspension' },
+	// 	{ reason_type: '7', reason_type_desc: 'Change Enrolment Number' },
+	// 	{ reason_type: '8', reason_type_desc: 'Change Enrolment Status' },
+	// 	{ reason_type: '9', reason_type_desc: 'Request SLC/TC' },
+	// 	{ reason_type: '10', reason_type_desc: 'SLC/TC' },
+	// 	{ reason_type: '11', reason_type_desc: 'Cheque Bounced' },
+	// 	{ reason_type: '12', reason_type_desc: 'Change Book Status' }];
 	reason_type: any = '1';
 	constructor(private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -59,6 +60,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 
 	ngOnInit() {
 		this.buildForm();
+		this.getReasonType();
 		this.getVaccinations();
 	}
 	ngAfterViewInit() {
@@ -626,6 +628,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				if (result.status === 'ok') {
 					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
 					this.getReasonsAll(this);
+
 				}
 			});
 		} else if (Number(this.configValue) === 19) {
@@ -1612,6 +1615,17 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+	// get end month and start month of school
+	getReasonType() {
+		this.sisService.getReasonType()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.reasonTypeArray = result.data;
+					}
+				});
+	}
+
 }
 // export class ConfirmValidParentMatcher implements ErrorStateMatcher {
 // 	isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {

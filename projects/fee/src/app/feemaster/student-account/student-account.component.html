@@ -64,7 +64,7 @@
                     </mat-form-field>
                 </div>
                 <div class="inline-flex margin-left-15" *ngIf="conDesc">
-                    <mat-form-field appearance="outline" class="form-field-220">
+                    <mat-form-field appearance="outline" class="form-field-320">
                         <mat-label>Remarks</mat-label>
                         <input matInput placeholder="Remarks" formControlName="accd_remark_id" [readonly]="viewOnly" required>
                     </mat-form-field>
@@ -267,7 +267,7 @@
                                     <span> Applicable To :
                                         {{item?.uaal_transport_to ? (item?.uaal_transport_to | date: 'd-MMM-y') : '-' }}</span>,
                                     <span> Remarks : {{item?.uaal_remark ? item?.uaal_remark  : '-' }}</span>,
-                                    <span> Deleted by : {{item?.au_full_name ? item?.au_full_name  : '-' }}</span>
+                                    <span> Changed by : {{item?.au_full_name ? item?.au_full_name  : '-' }}</span>
 
                                 </td>
                                 <!-- <td *ngIf="item?.uaal_status === '1'" class="custom-td text-capitalize text-left" width="25%">
