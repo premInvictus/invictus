@@ -77,40 +77,78 @@
 <div class="row" *ngIf="formGroupArray.length > 0 || formGroupArray2.length > 0">
     <div class="col-12">
         <mat-card>
-            <table class="custom-table">
-                <thead>
-                    <tr class="custom-tr">
-                        <th rowspan="2" class="custom-th text-center" width="100">Roll No.</th>
-                        <th rowspan="2" class="custom-th text-center" width="250">Student name</th>
-                        <th rowspan="2" class="custom-th text-center" width="100">Admission</th>
-                        <th rowspan="2" class="custom-th text-center" *ngIf="formGroupArray2.length > 0" width="100">
-                            Remarks</th>
-                        <th [attr.colspan]="paramform.value.ere_sub_exam_id.length" *ngIf="formGroupArray.length > 0"
-                            class="custom-th text-center">
-                            {{getSubjectName() | titlecase}}</th>
-                    </tr>
-                    <tr class="custom-tr" *ngIf="formGroupArray.length > 0">
-                        <th class="custom-th text-center" *ngFor="let item of paramform.value.ere_sub_exam_id">
-                            {{getSubexamName(item) | titlecase}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let stu of studentArray; let s = index">
-                        <td class="custom-td text-center font-size-14">{{stu.r_rollno}}</td>
-                        <td class="custom-td text-left font-size-14"><span
-                                class="margin-left-15">{{stu.au_full_name | titlecase}}</span> </td>
-                        <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
-                        <ng-container *ngIf="formGroupArray.length > 0">
-                            <ng-container *ngFor="let item of paramform.value.ere_sub_exam_id;let i=index">
+            <div class="text-center center-mr">
+                <table class="custom-table">
+                    <thead>
+                        <tr class="custom-tr">
+                            <th rowspan="2" class="custom-th text-center" width="100">Roll No.</th>
+                            <th rowspan="2" class="custom-th text-center" width="250">Student name</th>
+                            <th rowspan="2" class="custom-th text-center" width="100">Admission</th>
+                            <th rowspan="2" class="custom-th text-center" *ngIf="formGroupArray2.length > 0"
+                                width="100">
+                                Remarks</th>
+                            <th [attr.colspan]="paramform.value.ere_sub_exam_id.length"
+                                *ngIf="formGroupArray.length > 0" class="custom-th text-center">
+                                {{getSubjectName() | titlecase}}</th>
+                        </tr>
+                        <tr class="custom-tr" *ngIf="formGroupArray.length > 0">
+                            <th class="custom-th text-center" *ngFor="let item of paramform.value.ere_sub_exam_id">
+                                {{getSubexamName(item) | titlecase}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let stu of studentArray; let s = index">
+                            <td class="custom-td text-center font-size-14">{{stu.r_rollno}}</td>
+                            <td class="custom-td text-left font-size-14"><span
+                                    class="margin-left-15">{{stu.au_full_name | titlecase}}</span> </td>
+                            <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
+                            <ng-container *ngIf="formGroupArray.length > 0">
+                                <ng-container *ngFor="let item of paramform.value.ere_sub_exam_id;let i=index">
+                                    <td class="custom-td text-center font-size-14 ">
+                                        <form [formGroup]="formGroupArray[s].formGroup[i]">
+                                            <ng-template [ngIf]="checkEditable(item, '0')" [ngIfElse]="elseContaint">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Remark</mat-label>
+                                                            <mat-select
+                                                                (selectionChange)="onSelectChange($event, s , i)"
+                                                                [formControlName]="'svalue' + s + i">
+                                                                <mat-option *ngFor="let item of remarkSet"
+                                                                    [value]="item.ers_id">
+                                                                    {{item.ers_name}}</mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <input matInput type="text"
+                                                                [value]="getInputRemarks(item, stu.au_login_id)"
+                                                                (change)="enterInputMarks(item, stu.au_login_id, $event.target.value)"
+                                                                [formControlName]="'sdesc' + s + i">
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                </div>
+                                            </ng-template>
+                                            <ng-template #elseContaint>
+                                                {{getInputRemarks(item, stu.au_login_id)}}
+                                            </ng-template>
+                                        </form>
+                                    </td>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="formGroupArray2.length > 0">
                                 <td class="custom-td text-center font-size-14 ">
-                                    <form [formGroup]="formGroupArray[s].formGroup[i]">
-                                        <ng-template [ngIf]="checkEditable(item, '0')" [ngIfElse]="elseContaint">
+                                    <form [formGroup]="formGroupArray2[s].formGroup[0]">
+                                        <ng-template [ngIf]="checkExternalEdit('0')" [ngIfElse]="elseContaint">
                                             <div class="row">
                                                 <div class="col-4">
                                                     <mat-form-field class="form-field" appearance="outline">
                                                         <mat-label>Remark</mat-label>
-                                                        <mat-select (selectionChange)="onSelectChange($event, s , i)"
-                                                            [formControlName]="'svalue' + s + i">
+                                                        <mat-select
+                                                            (selectionChange)="onSelectExternalChange($event, s)"
+                                                            formControlName="remark_id">
                                                             <mat-option *ngFor="let item of remarkSet"
                                                                 [value]="item.ers_id">
                                                                 {{item.ers_name}}</mat-option>
@@ -119,69 +157,36 @@
                                                 </div>
                                                 <div class="col-8">
                                                     <mat-form-field class="form-field" appearance="outline">
-                                                        <input matInput type="text"
-                                                            [value]="getInputRemarks(item, stu.au_login_id)"
-                                                            (change)="enterInputMarks(item, stu.au_login_id, $event.target.value)"
-                                                            [formControlName]="'sdesc' + s + i">
+                                                        <input matInput type="text" formControlName="remark"
+                                                            (change)="changeFlagStatus()"
+                                                            [value]="getInputRemarks2(stu.au_login_id)">
                                                     </mat-form-field>
                                                 </div>
-
                                             </div>
                                         </ng-template>
                                         <ng-template #elseContaint>
-                                            {{getInputRemarks(item, stu.au_login_id)}}
+                                            {{getInputRemarks2(stu.au_login_id)}}
                                         </ng-template>
                                     </form>
                                 </td>
                             </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="formGroupArray2.length > 0">
-                            <td class="custom-td text-center font-size-14 ">
-                                <form [formGroup]="formGroupArray2[s].formGroup[0]">
-                                    <ng-template [ngIf]="checkExternalEdit('0')" [ngIfElse]="elseContaint">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <mat-form-field class="form-field" appearance="outline">
-                                                    <mat-label>Remark</mat-label>
-                                                    <mat-select (selectionChange)="onSelectExternalChange($event, s)"
-                                                        formControlName="remark_id">
-                                                        <mat-option *ngFor="let item of remarkSet"
-                                                            [value]="item.ers_id">
-                                                            {{item.ers_name}}</mat-option>
-                                                    </mat-select>
-                                                </mat-form-field>
-                                            </div>
-                                            <div class="col-8">
-                                                <mat-form-field class="form-field" appearance="outline">
-                                                    <input matInput type="text" formControlName="remark"
-                                                        (change)="changeFlagStatus()"
-                                                        [value]="getInputRemarks2(stu.au_login_id)">
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-                                    </ng-template>
-                                    <ng-template #elseContaint>
-                                        {{getInputRemarks2(stu.au_login_id)}}
-                                    </ng-template>
-                                </form>
-                            </td>
-                        </ng-container>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
-            <div class="row margin-top-25">
-                <div class="col-12 text-center" *ngIf="isAnyoneEditable('0') && submitFlag">
-                    <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0 "
-                        (click)="saveForm()">Save</button>
-                    <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0 "
-                        (click)="saveForm2()">Save</button>
-                    <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0 "
-                        (click)="saveForm('1') ">Save &
-                        Submit</button>
-                    <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0 "
-                        (click)="saveForm2('1') ">Save &
-                        Submit</button>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div class="row margin-top-25">
+                    <div class="col-12 text-center" *ngIf="isAnyoneEditable('0') && submitFlag">
+                        <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0 "
+                            (click)="saveForm()">Save</button>
+                        <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0 "
+                            (click)="saveForm2()">Save</button>
+                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0 "
+                            (click)="saveForm('1') ">Save &
+                            Submit</button>
+                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0 "
+                            (click)="saveForm2('1') ">Save &
+                            Submit</button>
+                    </div>
                 </div>
             </div>
         </mat-card>

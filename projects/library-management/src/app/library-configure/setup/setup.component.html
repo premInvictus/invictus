@@ -24,8 +24,7 @@
                                                         placeholder="Setup Options">
                                                         <mat-option value="">Please Select</mat-option>
                                                         <mat-option value="1">Genre</mat-option>
-                                                        <mat-option value="2">Due Date Setup</mat-option>
-                                                        <mat-option value="3">Issue Book Count Setup</mat-option>
+                                                        <mat-option value="2">Setup Configuration</mat-option>
                                                     </mat-select>
                                                 </mat-form-field>
                                             </div>
@@ -48,111 +47,7 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <div *ngIf="configValue == '2'">
-                                            <form [formGroup]="formGroupArray[configValue-1].formGroup">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Enter Section Name</mat-label>
-                                                            <input matInput placeholder="Enter Section Name"
-                                                                class="text-capitalize" type="text"
-                                                                formControlName="sec_name"
-                                                                [errorStateMatcher]="confirmValidParentMatcher"
-                                                                [value]="formGroupArray[configValue-1].formGroup.get('sec_name').value | capitalize"
-                                                                required>
-                                                            <mat-error>Please Enter Section Name</mat-error>
-                                                        </mat-form-field>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div *ngIf="configValue == '3'">
-                                            <form [formGroup]="formGroupArray[configValue-1].formGroup">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Enter Subject Name</mat-label>
-                                                            <input matInput placeholder="Enter Subject Name" type="text"
-                                                                class="text-capitalize" formControlName="sub_name"
-                                                                [errorStateMatcher]="confirmValidParentMatcher"
-                                                                [value]="formGroupArray[configValue-1].formGroup.get('sub_name').value | capitalize"
-                                                                required>
-                                                            <mat-error>Please Enter Subject Name</mat-error>
-                                                        </mat-form-field>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Enter Subject Code</mat-label>
-                                                            <input matInput placeholder="Enter Subject Code" type="text"
-                                                                class="text-capitalize" formControlName="sub_code"
-                                                                [value]="formGroupArray[configValue-1].formGroup.get('sub_code').value | capitalize">
-                                                        </mat-form-field>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12  remove-col-padding">
-                                                        <mat-checkbox formControlName="sub_timetable"
-                                                            [checked]="formGroupArray[configValue-1].formGroup.get('sub_timetable').value === '1' ? 'checked':''">
-                                                            Is this a
-                                                            timetable subject ?
-                                                        </mat-checkbox>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Subject Type</mat-label>
-                                                            <mat-select formControlName="sub_type_id" required
-                                                                placeholder="Select Type" [disabled]="editFlag"
-                                                                [errorStateMatcher]="confirmValidParentMatcher"
-                                                                required>
-                                                                <mat-option value="">Please select</mat-option>
-                                                                <mat-option *ngFor="let item of subjectTypeArr"
-                                                                    [value]="item.eac_id">
-                                                                    {{item.eac_name}}
-                                                                </mat-option>
-                                                            </mat-select>
-                                                            <mat-error>Please Choose Subject Type</mat-error>
-                                                        </mat-form-field>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Enter Subject Color</mat-label>
-                                                            <input type="color" matInput
-                                                                placeholder="Enter Subject Color"
-                                                                class="text-capitalize" formControlName="sub_color"
-                                                                [value]="formGroupArray[configValue-1].formGroup.get('sub_color').value | capitalize">
-                                                        </mat-form-field>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Parent Subject</mat-label>
-                                                            <mat-select formControlName="sub_parent_id"
-                                                                placeholder="Select Parent Subject"
-                                                                [disabled]="editFlag"
-                                                                [errorStateMatcher]="confirmValidParentMatcher">
-                                                                <mat-option value="">Please Select Parent Subject
-                                                                </mat-option>
-                                                                <mat-option *ngFor="let item of parentSubArray"
-                                                                    [value]="item.sub_id">
-                                                                    {{item.sub_name}}
-                                                                </mat-option>
-                                                            </mat-select>
-                                                            <mat-error>Please Choose Parent Subject</mat-error>
-                                                        </mat-form-field>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
+                                        
                                         <div class="text-center margin-top-15">
                                             <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
                                                 (click)="addConfiguration(configValue)">Add</button>
@@ -226,7 +121,7 @@
                                                                                     mat-sort-header>
                                                                                     Action
                                                                                 </th>
-                                                                                
+
                                                                                 <td mat-cell *matCellDef="let item">
                                                                                     <i class="far fa-edit table-edit-icon"
                                                                                         data-toggle="tooltip"

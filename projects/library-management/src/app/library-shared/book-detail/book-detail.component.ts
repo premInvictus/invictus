@@ -192,6 +192,7 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 	fetchData($event) {
 		this.pageIndex = $event.pageIndex;
 		this.pageSize = $event.pageSize;
+		return $event;
 	}
 	getBookLogsPerPage() {
 		this.BOOK_LOGS = [];

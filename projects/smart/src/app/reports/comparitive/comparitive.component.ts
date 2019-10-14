@@ -330,9 +330,11 @@ export class ComparitiveComponent implements OnInit {
 			key: 'finaldeviation',
 			width: this.checkWidth('finaldeviation', 'Deviation')
 		});
-		reportType2 = new TitleCasePipe().transform('comparative analysis repo_') + this.sessionName;
+		reportType2 = new TitleCasePipe().transform('comparative analysis repo_') +
+		this.getClassName(this.comparitiveForm.value.syl_class_id) + '_' +
+		this.getSectionName(this.comparitiveForm.value.syl_section_id) + '_' + this.sessionName;
 		reportType = new TitleCasePipe().transform('comparative analysis report: ') + this.sessionName;
-		const fileName = reportType + '.xlsx';
+		const fileName = reportType2 + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });

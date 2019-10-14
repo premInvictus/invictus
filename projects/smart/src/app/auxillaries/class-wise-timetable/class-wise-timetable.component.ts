@@ -133,7 +133,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 	}
 
 	// get section list according to selected class
-	getSectionsByClass() {	
+	getSectionsByClass() {
 		this.classwiseForm.patchValue({
 			'tt_section_id': ''
 		});
@@ -209,6 +209,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 
 	// export excel code
 	exportAsExcel() {
+		this.period = 0;
 		let reportType: any = '';
 		let reportType2: any = '';
 		const columns: any = [];
@@ -216,9 +217,11 @@ export class ClassWiseTimetableComponent implements OnInit {
 			key: 'subject_name',
 			width: this.checkWidth('subject_name', 'Subject')
 		});
-		reportType2 = new TitleCasePipe().transform('class wise timetable _') + this.sessionName;
+		reportType2 = new TitleCasePipe().transform('class wise timetable _') +
+			this.getClassName(this.classwiseForm.value.tt_class_id) + '_' +
+			this.getSectionName(this.classwiseForm.value.tt_section_id) + '_' + this.sessionName;
 		reportType = new TitleCasePipe().transform('class wise timetable report: ') + this.sessionName;
-		const fileName = reportType + '.xlsx';
+		const fileName = reportType2 + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
@@ -283,7 +286,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 					cell.font = {
 						name: 'Arial',
 						size: 10,
-						bold: true, 
+						bold: true,
 						color: { argb: '636a6a' }
 					};
 					cell.fill = {

@@ -68,6 +68,11 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				genre_name: '',
 				genre_status: '',
 			})
+		}, {
+			formGroup: this.fbuild.group({
+				book_issued_admin: '',
+				book_return_days_admin: '',
+			})
 		}];
 	}
 	

@@ -41,6 +41,7 @@
 <div class="row ">
   <div class="col-12">
     <mat-card>
+        <div class="text-center center-mr">
       <table mat-table [dataSource]="rollNoDataSource" class="table-100" *ngIf="defaultFlag">
 
         <ng-container matColumnDef="sr_no">
@@ -99,6 +100,7 @@
           <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
         </div>
       </div>
+        </div>
     </mat-card>
   </div>
 </div>

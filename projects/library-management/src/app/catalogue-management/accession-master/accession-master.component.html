@@ -490,5 +490,5 @@
 <app-book-details-modal #bookDet></app-book-details-modal>
 <app-delete-modal #deleteModal (deleteOk)="deleteOk($event)" (cancel)="deleteCancel($event)"
   [deleteMessage]="delMessage" [inputText]="delText"></app-delete-modal>
-<app-reservoir-edit-modal #editReservoir (updateReserv)="updateOk($event)" (cancelUpdate)="updateCancel($event)">
+<app-reservoir-edit-modal #editReservoir (updateReserv)="updateOk($event)" (cancelUpdate)="updateCancel()">
 </app-reservoir-edit-modal>
