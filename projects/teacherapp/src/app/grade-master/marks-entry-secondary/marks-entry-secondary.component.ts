@@ -69,6 +69,9 @@ export class MarksEntrySecondaryComponent implements OnInit {
   }
   getExamDetails() {
     this.examArray = [];
+    this.paramform.patchValue({
+      eme_exam_id: ''
+    });
     this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType() }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
@@ -97,6 +100,26 @@ export class MarksEntrySecondaryComponent implements OnInit {
         if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
           this.subexamArray = result.data[0].exam_sub_exam_max_marks;
           console.log(this.subexamArray);
+          const subexam_id_arr: any[] = [];
+          for(let item of this.subexamArray) {
+            subexam_id_arr.push(item.se_id);
+          }
+          const param: any = {};
+          param.ssm_class_id = this.paramform.value.eme_class_id;
+          param.ssm_exam_id =this.paramform.value.eme_exam_id;
+          param.ssm_se_id = subexam_id_arr;
+          param.ssm_sub_id =this.paramform.value.eme_sub_id;
+          this.examService.getSubjectSubexamMapping(param).subscribe((result: any) => {
+            if(result && result.status === 'ok') {
+              for(let item of result.data) {
+                for(let item1 of this.subexamArray) {
+                  if(item.ssm_se_id === item1.se_id) {
+                    item1.exam_max_marks = item.ssm_sub_mark;
+                  }
+                }
+              }
+            }
+          })
         }
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
@@ -182,7 +205,7 @@ export class MarksEntrySecondaryComponent implements OnInit {
     }
   }
   enterInputMarks(es_id, login_id, marktarget) {
-    const subexammarks = this.getSubexamMarks(es_id);
+    const subexammarks = Number(this.getSubexamMarks(es_id));
     const mark = marktarget.value;
     console.log(mark);
     if (!isNaN(mark)) {
