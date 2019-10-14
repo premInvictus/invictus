@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/cor
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ErpCommonService } from 'src/app/_services';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-advanced-search-modal',
@@ -104,6 +105,20 @@ export class AdvancedSearchModalComponent implements OnInit {
     {
       type_id: 'Specimen',
       type_name: 'Specimen',
+    }
+  ];
+  rfIdArray: any[] = [
+    {
+      type_id: 'with-rfid',
+      type_name: 'With RFID',
+    },
+    {
+      type_id: 'without-rfid',
+      type_name: 'Without RFID',
+    },
+    {
+      type_id: 'all',
+      type_name: 'All',
     }
   ];
   filterArray: any[] = [
@@ -290,7 +305,10 @@ export class AdvancedSearchModalComponent implements OnInit {
     obj['reserv_status'] = [];
     obj['source'] = [];
     obj['language_details.lang_code'] = [];
-    obj['user'] = JSON.parse(localStorage.getItem('currentUser'))
+    obj['user'] = JSON.parse(localStorage.getItem('currentUser'));
+    obj['from_date'] = '';
+    obj['to_date'] = '';
+    obj['rfid'] = '';
     this.generalFilterForm = this.fbuild.group(obj);
   }
   closeDialog() {
@@ -301,6 +319,12 @@ export class AdvancedSearchModalComponent implements OnInit {
     for (const item of this.formGroupArray) {
       dataArr.push(item.formGroup.value);
     }
+    if (this.generalFilterForm.value.from_date || this.generalFilterForm.value.to_date) {
+      this.generalFilterForm.patchValue({
+        from_date: new DatePipe('en-in').transform(this.generalFilterForm.value.from_date, 'yyyy-MM-dd'),
+        to_date: new DatePipe('en-in').transform(this.generalFilterForm.value.to_date, 'yyyy-MM-dd')
+      });
+    }
     this.searchOk.emit({
       filters: dataArr,
       generalFilters: this.generalFilterForm.value
@@ -309,6 +333,16 @@ export class AdvancedSearchModalComponent implements OnInit {
   }
   cancel() {
     this.closeDialog();
+  }
+  getFromDate(value) {
+    this.generalFilterForm.patchValue({
+      from_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+    });
+  }
+  getToDate(value) {
+    this.generalFilterForm.patchValue({
+      to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+    });
   }
 
 }
