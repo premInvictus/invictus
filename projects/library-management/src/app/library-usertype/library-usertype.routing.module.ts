@@ -20,6 +20,10 @@ const routes: Routes = [
             {
                 path: 'catalogue-management',
                 loadChildren: 'projects/library-management/src/app/catalogue-management/catalogue-management.module#CatalogueManagementModule'
+            },
+            {
+                path: 'configure',
+                loadChildren: 'projects/library-management/src/app/library-configure/library-configure.module#LibraryConfigureModule'
             }]
     }];
 @NgModule({
