@@ -15,15 +15,16 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('concessionremarkmodal') concessionremarkmodal;
 	displayedColumns: string[] =
-		['srno', 'enrollment', 'name', 'concession', 'action'];
+		['srno', 'enrollment', 'name','class_sec','remarks', 'concession', 'proposed_by', 'action'];
 	ELEMENT_DATA: ConcessionList[] = [];
 	dataSource = new MatTableDataSource<ConcessionList>(this.ELEMENT_DATA);
 	crArray: any[] = [];
+	classSectionName: any;
 	constructor(
 		public feeService: FeeService,
 		public commonAPIService: CommonAPIService
 	) { }
-
+ 
 	ngOnInit() {
 		this.getConcessionRectification();
 	}
@@ -42,13 +43,21 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 				this.crArray = result.data;
 				if (this.crArray.length > 0) {
 					let sno = 0;
-					this.crArray.forEach(element => {
+					this.crArray.forEach(element => { 
+						if(element.sec_name !== null){
+							this.classSectionName = element.class_name + ' - ' + element.sec_name;
+						} else{
+							this.classSectionName = element.class_name;
+						}
 						this.ELEMENT_DATA.push({
 							srno: ++sno,
-							enrollment: element.accd_login_id,
+							enrollment: element.accd_login_id,							
+							class_sec: this.classSectionName,
+							remarks: element.mod_review_remark,
 							admno: element.au_admission_no,
 							name: element.au_full_name,
 							concession: element.fcc_name,
+							proposed_by: element.proposed_by,
 							action: element
 						});
 					});
