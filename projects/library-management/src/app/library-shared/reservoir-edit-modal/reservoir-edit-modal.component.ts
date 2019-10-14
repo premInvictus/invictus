@@ -122,8 +122,8 @@ export class ReservoirEditModalComponent implements OnInit {
     this.getSubject();
     this.inputData = item;
     this.dialogRef = this.dialog.open(this.editReserv, {
-      width: '50%',
-      height: '70vh'
+      width: '70%',
+      height: '90vh'
     });
     this.getBookData(item.id)
   }
