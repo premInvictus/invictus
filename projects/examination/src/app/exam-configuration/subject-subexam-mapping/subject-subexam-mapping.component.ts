@@ -30,15 +30,18 @@ export class SubjectSubexamMappingComponent implements OnInit {
   ngOnInit() {
     this.getSubjectSubexamMapping();
   }
-  openDialog(): void {
+  openDialog(data=null): void {
     const dialogRef = this.dialog.open(SubjectSubexamModalComponent, {
       width: '80%',
       height: '80%',
-      data: {}
+      data: data
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      if(result && result.list) {
+        this.getSubjectSubexamMapping();
+      }
     });
   }
   applyFilter(filterValue: string) {
@@ -59,15 +62,28 @@ export class SubjectSubexamMappingComponent implements OnInit {
     this.examService.getSubjectSubexamMapping({}).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         const temp = result.data;
+        let group_result = temp.reduce(function (r, a) {
+          r[a.ssm_ces_id] = r[a.ssm_ces_id] || [];
+          r[a.ssm_ces_id].push(a);
+          return r;
+          }, Object.create(null));
+        console.log(group_result);
         console.log(temp);
-        for(let item of temp) {
-          this.ELEMENT_DATA.push({
-            class_name: item.class_name,
-            exam_name: item.exam_name,
-            se_name: item.sexam_name,
-            subjects: item.sub_name + ' - ' + item.ssm_sub_mark,
-            action: item,
-          });
+        if(group_result && Object.keys(group_result).length > 0) {
+          for(let key in group_result) {
+            const eachelement: any = {};
+            eachelement.ssm_ces_id = key;
+            const tempSub: any[] = [];
+            for(let item of group_result[key]) {
+              eachelement.class_name = item.class_name;
+              eachelement.exam_name = item.exam_name;
+              eachelement.sexam_name = item.sexam_name;
+              tempSub.push(item.sub_name + ' - ' + item.ssm_sub_mark);
+            }
+            eachelement.subjects = tempSub;
+            eachelement.action = group_result[key];
+            this.ELEMENT_DATA.push(eachelement);
+          }
         }
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
         this.tableDivFlag = true;
