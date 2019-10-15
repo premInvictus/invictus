@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
@@ -14,13 +14,11 @@ import * as ExcelProper from 'exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
-//import { CapitalizePipe } from '../../../_pipes';
-//import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
+import { CapitalizePipe } from '../../../_pipes';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ReportFilterComponent } from '../../reports-filter-sort/report-filter/report-filter.component';
-import { ReportSortComponent } from '../../reports-filter-sort/report-sort/report-sort.component';
-//import { InvoiceDetailsModalComponent } from '../../../feemaster/invoice-details-modal/invoice-details-modal.component';
+import { AdvancedSearchModalComponent } from '../../../library-shared/advanced-search-modal/advanced-search-modal.component';
+
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
@@ -42,7 +40,6 @@ export class AccessionReportComponent implements OnInit {
 	gridOptions2: GridOption;
 	tableFlag = false;
 	dataset1: any[];
-	@Input() userName: any = '';
 	dataset2: any[];
 	initgrid = false;
 	columnDefinitions: Column[] = [];
@@ -63,9 +60,6 @@ export class AccessionReportComponent implements OnInit {
 	reportTypeArray: any[] = [];
 	valueLabel: any = '';
 	reportType = '1';
-	filterFlag = false;
-	filterResult: any[] = [];
-	sortResult: any[] = [];
 	dataArr: any[] = [];
 	sectionArray: any[] = [];
 	schoolInfo: any;
@@ -124,6 +118,9 @@ export class AccessionReportComponent implements OnInit {
 	levelTotalFooter: any[] = [];
 	levelSubtotalFooter: any[] = [];
 	notFormatedCellArray: any[] = [];
+	@Input() userName: any = '';
+	@ViewChild('searchModal') searchModal;
+	@ViewChild('bookDet') bookDet;
 	constructor(translate: TranslateService,
 		private common: CommonAPIService,
 		private erpCommonService: ErpCommonService,
@@ -137,8 +134,8 @@ export class AccessionReportComponent implements OnInit {
 		this.getSchool();
 		this.buildForm();
 		this.getClassData();
-		this.filterFlag = true;
-		this.getAccessionReport(this.reportFilterForm.value);
+		const value = { "filters": [{ "filter_type": "", "filter_value": "", "type": "" }], "generalFilters": { "type_id": null, "genre.genre_name": null, "category_id": null, "reserv_status": null, "source": null, "language_details.lang_code": null, "user": localStorage.getItem('currentUser'), "from_date": "", "to_date": "", "rfid": "" }, "search_from": "master" };
+		// this.getAccessionReport(value);
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -147,37 +144,26 @@ export class AccessionReportComponent implements OnInit {
 		this.updateTotalRow(angularGrid.slickGrid);
 	}
 	updateTotalRow(grid: any) {
-		let columnIdx = grid.getColumns().length;
-		while (columnIdx--) {
-			const columnId = grid.getColumns()[columnIdx].id;
-			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		if (this.totalRow) {
+			let columnIdx = grid.getColumns().length;
+			while (columnIdx--) {
+				const columnId = grid.getColumns()[columnIdx].id;
+				const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+				columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+			}
 		}
+
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
-			'class_value':'',
-			'report_type': '',
-			'from_date': '',
-			'to_date': '',
-			'downloadAll': true,
+			'class_value': '',
 			'hidden_value': '',
-			'hidden_value2': '',
-			'hidden_value3': '',
-			'hidden_value4': '',
-			'hidden_value5': '',
-			'filterReportBy': '',
-			'pageSize': '10',
-			'pageIndex': '0',
-			'login_id': '',
-			'order_by': ''
+			'report_type': '',
+			'downloadAll': true,
 		});
 	}
 
 	getAccessionReport(value: any) {
-		console.log("in");
-		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
-		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
 		this.aggregatearray = [];
 		this.columnDefinitions = [];
@@ -293,17 +279,13 @@ export class AccessionReportComponent implements OnInit {
 		let repoArray = [];
 		this.columnDefinitions = [];
 		this.dataset = [];
-		const accessionJSON: any = {
-			'from_date': value.from_date,
-			'to_date': value.to_date,
-			'pageSize': value.pageSize,
-			'pageIndex': value.pageIndex,
-			'classId': value.fee_value,
-			'secId': value.hidden_value,
-			'login_id': value.login_id,
-			'orderBy': value.orderBy,
-			'downloadAll': true,
-		};
+		let accessionJSON: any;
+		if (value) {
+			accessionJSON = value;
+		} else {
+			accessionJSON = { "filters": [{ "filter_type": "", "filter_value": "", "type": "" }], "generalFilters": { "type_id": null, "genre.genre_name": null, "category_id": null, "reserv_status": null, "source": null, "language_details.lang_code": null, "user": localStorage.getItem('currentUser'), "from_date": "", "to_date": "", "rfid": "" }, "search_from": "master" }
+		}
+
 		this.columnDefinitions = [
 			{
 				id: 'srno',
@@ -346,6 +328,22 @@ export class AccessionReportComponent implements OnInit {
 				},
 			},
 			{
+				id: 'book_sub_title', name: 'Book Sub Title', field: 'book_sub_title', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'book_sub_title',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+			},
+			{
 				id: 'author', name: 'Author', field: 'author', sortable: true,
 				filterable: true,
 				width: 80,
@@ -362,14 +360,151 @@ export class AccessionReportComponent implements OnInit {
 				},
 			},
 			{
+				id: 'genre', name: 'Genre', field: 'genre', sortable: true,
+				filterable: true,
+				width: 80,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'genre',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'pages', name: 'Pages', field: 'pages', sortable: true,
+				filterable: true,
+				width: 80,
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'pages',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'price', name: 'Price', field: 'price', sortable: true,
+				filterable: true,
+				width: 80,
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'price',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
 				id: 'publisher', name: 'Publisher', field: 'publisher', sortable: true,
 				filterable: true,
 				width: 120,
 				filterSearchType: FieldType.dateIso,
-				filter: { model: Filters.compoundDate },
-				formatter: this.checkDateFormatter,
+				filter: { model: Filters.compoundInput },
 				grouping: {
 					getter: 'publisher',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'published_date', name: 'Publish Date', field: 'published_date', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.number,
+				grouping: {
+					getter: 'published_date',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'tags', name: 'Tag', field: 'tags', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'tags',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'volume_info', name: 'Volume Info', field: 'volume_info', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'volume_info',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'language', name: 'Language', field: 'language', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'language',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'print_type', name: 'Print Type', field: 'print_type', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'print_type',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'book_type', name: 'Book Type', field: 'book_type', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'book_type',
 					formatter: (g) => {
 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
@@ -382,11 +517,54 @@ export class AccessionReportComponent implements OnInit {
 				id: 'location', name: 'Location', field: 'location', sortable: true,
 				filterable: true,
 				width: 120,
-				filterSearchType: FieldType.dateIso,
-				filter: { model: Filters.compoundDate },
-				formatter: this.checkDateFormatter,
+				filter: { model: Filters.compoundInput },
 				grouping: {
 					getter: 'location',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'class', name: 'class', field: 'class', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'class',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'subject', name: 'subject', field: 'subject', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'subject',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'vendor_name', name: 'vendor_name', field: 'vendor_name', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'vendor_name',
 					formatter: (g) => {
 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
@@ -399,9 +577,7 @@ export class AccessionReportComponent implements OnInit {
 				id: 'status', name: 'Status', field: 'status', sortable: true,
 				filterable: true,
 				width: 150,
-				filterSearchType: FieldType.dateIso,
-				filter: { model: Filters.compoundDate },
-				formatter: this.checkDateFormatter,
+				filter: { model: Filters.compoundInput },
 				grouping: {
 					getter: 'status',
 					formatter: (g) => {
@@ -412,28 +588,44 @@ export class AccessionReportComponent implements OnInit {
 					collapsed: false,
 				},
 			}];
-		this.erpCommonService.getReservoirData(accessionJSON).subscribe((result: any) => {
+		this.erpCommonService.getReservoirDataBasedOnFilter(accessionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
 				repoArray = result.data.resultData;
 				this.totalRecords = Number(result.data.totalRecords);
-				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				let index = 0;
 				for (const item of repoArray) {
 					const obj: any = {};
-					obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-						(index + 1);
-					obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-						(index + 1);
+					obj['id'] = (index + 1);
+					obj['srno'] = (index + 1);
 					obj['book_no'] = repoArray[Number(index)]['reserv_id'] ?
 						repoArray[Number(index)]['reserv_id'] : '-';
 					// new CapitalizePipe().transform(repoArray[Number(index)]['title']);
-					obj['book_name'] = repoArray[Number(index)]['title'];
-						
-					
+					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['title']);
+					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['subtitle']);
+					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['authors'][0]);
+					obj['genre'] = new CapitalizePipe().transform(repoArray[Number(index)]['genre']['genre_name']);
+					obj['pages'] = repoArray[Number(index)]['pages'];
+					obj['price'] = repoArray[Number(index)]['price'];
+					obj['publisher'] = repoArray[Number(index)]['publisher'];
+					obj['published_date'] = repoArray[Number(index)]['published_date'];
+					obj['tags'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_tags']);
+					obj['volume_info'] = repoArray[Number(index)]['edition'];
+					obj['language'] = new CapitalizePipe().transform(repoArray[Number(index)]['language_details']['lang_name']);
+					obj['print_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['type_id']);
+					obj['book_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['category_id']);
+					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['location']);
+					obj['class'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_class_id']);
+					obj['subject'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_sub_id']);
+					obj['vendor_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['vendor_details']['vendor_id']);
+					obj['status'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_status']);
+
+
 					this.dataset.push(obj);
 					index++;
 				}
+
+				console.log('dataset', this.dataset);
 				// this.totalRow = {};
 				// const obj3: any = {};
 				// obj3['id'] = '';
@@ -510,12 +702,12 @@ export class AccessionReportComponent implements OnInit {
 		this.gridObj.setPreHeaderPanelVisibility(!this.gridObj.getOptions().showPreHeaderPanel);
 	}
 	onCellClicked(e, args) {
-		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
-			const item: any = args.grid.getDataItem(args.row);
-			if (item['receipt_no'] !== '-') {
-				this.openDialogReceipt(item['receipt_id'], false);
-			}
-		}
+		// if (args.cell === args.grid.getColumnIndex('receipt_no')) {
+		// 	const item: any = args.grid.getDataItem(args.row);
+		// 	if (item['receipt_no'] !== '-') {
+		// 		this.openDialogReceipt(item['receipt_id'], false);
+		// 	}
+		// }
 	}
 	onCellChanged(e, args) {
 		console.log(e);
@@ -573,17 +765,7 @@ export class AccessionReportComponent implements OnInit {
 			return '<b class="total-footer-report">Sub Total (' + totals.group.value + ') </b>';
 		}
 	}
-	openDialogReceipt(invoiceNo, edit): void {
-		// const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
-		// 	width: '80%',
-		// 	data: {
-		// 		rpt_id: invoiceNo,
-		// 		edit: edit
-		// 	},
-		// 	hasBackdrop: true
-		// });
-	}
-	
+
 	getClass() {
 		this.valueArray = [];
 		for (const item of this.classDataArray) {
@@ -601,7 +783,7 @@ export class AccessionReportComponent implements OnInit {
 			}
 		});
 	}
-	
+
 	getSectionByClass($event) {
 		this.erpCommonService.getSectionsByClass({ class_id: $event.value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -614,55 +796,20 @@ export class AccessionReportComponent implements OnInit {
 			}
 		});
 	}
-	openFilterDialog() {
-		const dialogRefFilter = this.dialog.open(ReportFilterComponent, {
-			width: '70%',
-			height: '80%',
-			data: {
-				filterResult: this.filterResult,
-				pro_id: '3',
-			}
-		});
-		dialogRefFilter.afterClosed().subscribe(result => {
-		});
-		dialogRefFilter.componentInstance.filterResult.subscribe((data: any) => {
-			this.filterResult = [];
-			this.filterResult = data;
-			// this.feeService.getStudentsForFilter({ filters: this.filterResult }).subscribe((res: any) => {
-			// 	if (res && res.status === 'ok') {
-			// 		this.reportFilterForm.patchValue({
-			// 			login_id: res.data
-			// 		});
-			// 	}
-			// });
-		});
+	openSearchDialog = (data) => { this.searchModal.openModal(data); }
+
+
+	searchOk($event) {
+		const value = {
+			filters: $event.filters,
+			generalFilters: $event.generalFilters,
+			search_from: "master"
+		};
+
+		this.getAccessionReport(value);
 	}
-	openSort() {
-		const sortDialog = this.dialog.open(ReportSortComponent, {
-			width: '60vh',
-			height: '50vh',
-			data: {}
-		});
-		sortDialog.afterClosed().subscribe((result: any) => {
-			if (result) {
-				this.sortResult = result;
-				this.reportFilterForm.patchValue({
-					'orderBy': this.sortResult.length > 0 ? [this.sortResult] : ''
-				});
-			}
-		});
-	}
-	renderDialog(inv_id, edit) {
-		// const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-		// 	width: '80%',
-		// 	data: {
-		// 		invoiceNo: inv_id,
-		// 		edit: edit,
-		// 		paidStatus: 'paid'
-		// 	},
-		// 	hasBackdrop: true
-		// });
-	}
+
+
 	getSchool() {
 		this.erpCommonService.getSchool().subscribe((res: any) => {
 			if (res && res.status === 'ok') {
@@ -696,19 +843,11 @@ export class AccessionReportComponent implements OnInit {
 	}
 	resetValues() {
 		this.reportFilterForm.patchValue({
-			'login_id': '',
-			'orderBy': '',
-			'from_date': '',
-			'to_date': '',
 			'class_value': '',
 			'hidden_value': '',
-			'hidden_value2': '',
-			'hidden_value3': '',
-			'hidden_value4': '',
-			'hidden_value5': '',
+			'report_type': '',
+			'downloadAll': true,
 		});
-		this.sortResult = [];
-		this.filterResult = [];
 	}
 	exportToFile(type = 'csv') {
 		let reportType: any = '';
@@ -958,7 +1097,7 @@ export class AccessionReportComponent implements OnInit {
 		filterArr.push(
 			this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') + ' - ' +
 			this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
-			return filterArr;
+		return filterArr;
 	}
 	getLevelFooter(level, groupItem) {
 		if (level === 0) {
@@ -1148,7 +1287,7 @@ export class AccessionReportComponent implements OnInit {
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
 		let reportType: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		reportType = new TitleCasePipe().transform('cheque clearance report: ') + this.sessionName;
+		reportType = new TitleCasePipe().transform('Accession report: ') + this.sessionName;
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
@@ -1191,11 +1330,11 @@ export class AccessionReportComponent implements OnInit {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
 					if (this.dataset[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
-					|| item2.id === 'deposite_date')) {
-					arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
-				} else {
-					arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-				}
+						|| item2.id === 'deposite_date')) {
+						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+					} else {
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+					}
 				}
 				rowData.push(arr);
 				this.pdfrowdata.push(arr);

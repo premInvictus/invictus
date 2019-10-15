@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
@@ -12,9 +12,9 @@ import * as XLSX from 'xlsx';
 import * as Excel from 'exceljs/dist/exceljs';
 import * as ExcelProper from 'exceljs';
 import { TranslateService } from '@ngx-translate/core';
-import { CommonAPIService, SisService } from '../../../_services';
+import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { DecimalPipe, DatePipe, TitleCasePipe, CurrencyPipe } from '@angular/common';
-//import { CapitalizePipe, IndianCurrency } from '../../../_pipes';
+import { CapitalizePipe, IndianCurrency } from '../../../_pipes';
 //import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -33,17 +33,17 @@ import { arrayObjectToCsvFormatter } from 'angular-slickgrid/app/modules/angular
 })
 export class IssueReturnReportComponent implements OnInit {
 	sessionArray: any[] = [];
-	session: any = {};
-	notFormatedCellArray: any[] = [];
 	totalRow: any;
+	groupColumns: any[] = [];
+	groupLength: any;
+	session: any = {};
 	columnDefinitions1: Column[] = [];
+	exportColumnDefinitions: any[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
 	gridOptions2: GridOption;
 	tableFlag = false;
 	dataset1: any[];
-	gridHeight: any;
-	exportColumnDefinitions: any[] = [];
 	dataset2: any[];
 	initgrid = false;
 	columnDefinitions: Column[] = [];
@@ -53,33 +53,22 @@ export class IssueReturnReportComponent implements OnInit {
 	dataviewObj: any;
 	draggableGroupingPlugin: any;
 	durationOrderByCount = false;
-	pdfrowdata: any[] = [];
-	levelHeading: any[] = [];
-	levelTotalFooter: any[] = [];
-	levelSubtotalFooter: any[] = [];
 	gridObj: any;
-	@Input() userName: any = '';
-	@Output() displyRep = new EventEmitter();
 	processing = false;
 	selectedGroupingFields: string[] = ['', '', ''];
 	totalRecords: number;
 	aggregatearray: any[] = [];
 	reportFilterForm: FormGroup;
 	valueArray: any[] = [];
-	feeHeadJSON: any[] = [];
 	classDataArray: any[] = [];
 	reportTypeArray: any[] = [];
 	valueLabel: any = '';
 	reportType = '1';
-	filterFlag = false;
-	filterResult: any[] = [];
-	sortResult: any[] = [];
 	dataArr: any[] = [];
-	schoolInfo: any = {};
-	groupColumns: any[] = [];
+	sectionArray: any[] = [];
+	schoolInfo: any;
+	gridHeight: number;
 	sessionName: any;
-	filteredAs: any = {};
-	groupLength: any;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -125,48 +114,32 @@ export class IssueReturnReportComponent implements OnInit {
 		42: 'AP',
 		43: 'AQ',
 		44: 'AR',
-
 	};
+	filteredAs: any = {};
 	currentUser: any;
+	pdfrowdata: any[] = [];
+	levelHeading: any[] = [];
+	levelTotalFooter: any[] = [];
+	levelSubtotalFooter: any[] = [];
+	notFormatedCellArray: any[] = [];
+	@Input() userName: any = '';
+	@ViewChild('searchModal') searchModal;
+	@ViewChild('bookDet') bookDet;
 	constructor(translate: TranslateService,
 		private common: CommonAPIService,
-		private sisService: SisService,
+		private erpCommonService: ErpCommonService,
 		public dialog: MatDialog,
 		private fbuild: FormBuilder) { }
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		this.getSchool();
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getSession();
+		this.getSchool();
 		this.buildForm();
 		this.getClassData();
-		this.reportTypeArray.push({
-			report_type: 'headwise', report_name: 'Head Wise'
-		},
-			{
-				report_type: 'classwise', report_name: 'Class Wise'
-			},
-			{
-				report_type: 'modewise', report_name: 'Mode Wise'
-			},
-			{
-				report_type: 'routewise', report_name: 'Route Wise'
-			},
-			{
-				report_type: 'mfr', report_name: 'Monthly Fee Report (MFR)'
-			},
-			{
-				report_type: 'summary', report_name: 'Collection Summary'
-			});
-		this.reportType = 'headwise';
-		const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
-		const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
-		this.reportFilterForm.patchValue({
-			'from_date': firstDay,
-			'to_date': date
-		});
-		this.filterFlag = true;
+		const value = { "filters": [{ "filter_type": "", "filter_value": "", "type": "" }], "generalFilters": { "type_id": null, "genre.genre_name": null, "category_id": null, "reserv_status": null, "source": null, "language_details.lang_code": null, "user": localStorage.getItem('currentUser'), "from_date": "", "to_date": "", "rfid": "" }, "search_from": "master" };
+		// this.getAccessionReport(value);
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -175,83 +148,35 @@ export class IssueReturnReportComponent implements OnInit {
 		this.updateTotalRow(angularGrid.slickGrid);
 	}
 	updateTotalRow(grid: any) {
-		let columnIdx = grid.getColumns().length;
-		while (columnIdx--) {
-			const columnId = grid.getColumns()[columnIdx].id;
-			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-			columnElement.innerHTML = '<b>' + (this.totalRow[columnId] ? this.totalRow[columnId] : '') + '<b>';
-		}
-	}
-	getSchool() {
-		this.sisService.getSchool().subscribe((res: any) => {
-			if (res && res.status === 'ok') {
-				this.schoolInfo = res.data[0];
+		if (this.totalRow) {
+			let columnIdx = grid.getColumns().length;
+			while (columnIdx--) {
+				const columnId = grid.getColumns()[columnIdx].id;
+				const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+				columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
 			}
-		});
-	}
-	getSessionName(id) {
-		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
-		if (findex !== -1) {
-			return this.sessionArray[findex].ses_name;
 		}
-	}
-	getSession() {
-		this.sisService.getSession().subscribe((result2: any) => {
-			if (result2.status === 'ok') {
-				this.sessionArray = result2.data;
-				this.sessionName = this.getSessionName(this.session.ses_id);
-			}
-		});
-	}
-	resetValues() {
-		this.reportFilterForm.patchValue({
-			'login_id': '',
-			'orderBy': '',
-			'from_date': '',
-			'to_date': '',
-			'fee_value': '',
-			'hidden_value': '',
-			'hidden_value2': '',
-			'hidden_value3': '',
-			'hidden_value4': '',
-			'hidden_value5': '',
-		});
-		this.sortResult = [];
-		this.filterResult = [];
+
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
-			'report_type': '',
-			'fee_value': '',
-			'from_date': '',
-			'to_date': '',
-			'downloadAll': '',
+			'class_value': '',
 			'hidden_value': '',
-			'hidden_value2': '',
-			'hidden_value3': '',
-			'hidden_value4': '',
-			'hidden_value5': '',
-			'filterReportBy': '',
-			'admission_no': '',
-			'au_full_name': '',
-			'pageSize': '10',
-			'pageIndex': '0',
-			'login_id': '',
-			'orderBy': ''
+			'report_type': '',
+			'downloadAll': true,
 		});
 	}
-	getHeadWiseCollectionReport(value: any) {
-		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
-		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
+
+	getUserReservoirData(value: any) {
 		this.dataArr = [];
 		this.aggregatearray = [];
 		this.columnDefinitions = [];
 		this.dataset = [];
 		this.tableFlag = false;
 		this.gridOptions = {
-			enableDraggableGrouping: this.reportType !== 'summary' ? true : false,
+			enableDraggableGrouping: true,
 			createPreHeaderPanel: true,
-			showPreHeaderPanel: this.reportType !== 'summary' ? true : false,
+			showPreHeaderPanel: true,
 			enableHeaderMenu: true,
 			preHeaderPanelHeight: 40,
 			enableFiltering: true,
@@ -261,9 +186,9 @@ export class IssueReturnReportComponent implements OnInit {
 			showFooterRow: true,
 			footerRowHeight: 35,
 			enableExcelCopyBuffer: true,
+			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
-			fullWidthRows: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -336,6 +261,7 @@ export class IssueReturnReportComponent implements OnInit {
 					}
 				},
 				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
 					this.updateTotalRow(this.angularGrid.slickGrid);
 				},
 			},
@@ -357,1446 +283,458 @@ export class IssueReturnReportComponent implements OnInit {
 		let repoArray = [];
 		this.columnDefinitions = [];
 		this.dataset = [];
-		if (this.reportFilterForm.value.report_type) {
-			if (this.reportType === 'headwise') {
-				const collectionJSON: any = {
-					'admission_no': '',
-					'studentName': '',
-					'report_type': value.report_type,
-					'feeHeadId': value.fee_value,
-					'from_date': value.from_date,
-					'to_date': value.to_date,
-					'pageSize': '10',
-					'pageIndex': '0',
-					'filterReportBy': 'collection',
-					'login_id': value.login_id,
-					'orderBy': value.orderBy,
-					'downloadAll': true
-				};
-				// this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
-				// 	if (result && result.status === 'ok') {
-				// 		this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-				// 		repoArray = result.data.reportData;
-				// 		this.totalRecords = Number(result.data.totalRecords);
-				// 		localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-				// 		let i = 0;
-				// 		let j = 0;
-				// 		const feeHead: any[] = [];
-				// 		Object.keys(repoArray).forEach((keys: any) => {
-				// 			const obj: any = {};
-				// 			if (Number(keys) === 0) {
-				// 				this.columnDefinitions = [
-				// 					{
-				// 						id: 'srno',
-				// 						name: 'SNo.',
-				// 						field: 'srno',
-				// 						sortable: true,
-				// 						width: 2
-				// 					},
-				// 					{
-				// 						id: 'stu_admission_no',
-				// 						name: 'Enrollment No.',
-				// 						field: 'stu_admission_no',
-				// 						filterable: true,
-				// 						filterSearchType: FieldType.string,
-				// 						filter: { model: Filters.compoundInputText },
-				// 						sortable: true,
-				// 						width: 90,
-				// 						grouping: {
-				// 							getter: 'stu_admission_no',
-				// 							formatter: (g) => {
-				// 								return `${g.value} <span style="color:green"> (${g.count})</span>`;
-				// 							},
-				// 							aggregators: this.aggregatearray,
-				// 							aggregateCollapsed: true,
-				// 							collapsed: false
-				// 						},
-				// 					},
-				// 					{
-				// 						id: 'stu_full_name',
-				// 						name: 'Student Name',
-				// 						field: 'stu_full_name',
-				// 						filterable: true,
-				// 						sortable: true,
-				// 						width: 180,
-				// 						filterSearchType: FieldType.string,
-				// 						filter: { model: Filters.compoundInputText },
-				// 						grouping: {
-				// 							getter: 'stu_full_name',
-				// 							formatter: (g) => {
-				// 								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				// 							},
-				// 							aggregators: this.aggregatearray,
-				// 							aggregateCollapsed: true,
-				// 							collapsed: false
-				// 						},
-				// 					},
-				// 					{
-				// 						id: 'stu_class_name',
-				// 						name: 'Class-Section',
-				// 						field: 'stu_class_name',
-				// 						sortable: true,
-				// 						filterable: true,
-				// 						width: 60,
-				// 						filterSearchType: FieldType.string,
-				// 						filter: { model: Filters.compoundInputText },
-				// 						grouping: {
-				// 							getter: 'stu_class_name',
-				// 							formatter: (g) => {
-				// 								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				// 							},
-				// 							aggregators: this.aggregatearray,
-				// 							aggregateCollapsed: true,
-				// 							collapsed: false,
-				// 						},
-				// 					},
-				// 					{
-				// 						id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date',
-				// 						sortable: true,
-				// 						filterable: true,
-				// 						width: 120,
-				// 						formatter: this.checkDateFormatter,
-				// 						filterSearchType: FieldType.dateIso,
-				// 						filter: { model: Filters.compoundDate },
-				// 						grouping: {
-				// 							getter: 'invoice_created_date',
-				// 							formatter: (g) => {
-				// 								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-				// 									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-				// 								} else {
-				// 									return `${''}`;
-				// 								}
-				// 							},
-				// 							aggregators: this.aggregatearray,
-				// 							aggregateCollapsed: true,
-				// 							collapsed: false
-				// 						},
-				// 						groupTotalsFormatter: this.srnTotalsFormatter,
-				// 					},
-				// 					{
-				// 						id: 'fp_name',
-				// 						name: 'Fee Period',
-				// 						field: 'fp_name',
-				// 						sortable: true,
-				// 						filterable: true,
-				// 						width: 100,
-				// 						filterSearchType: FieldType.string,
-				// 						filter: { model: Filters.compoundInputText },
-				// 						grouping: {
-				// 							getter: 'fp_name',
-				// 							formatter: (g) => {
-				// 								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				// 							},
-				// 							aggregators: this.aggregatearray,
-				// 							aggregateCollapsed: true,
-				// 							collapsed: false,
-				// 						},
-				// 					},
-				// 					{
-				// 						id: 'receipt_no',
-				// 						name: 'Reciept No.',
-				// 						field: 'receipt_no',
-				// 						sortable: true,
-				// 						width: 70,
-				// 						filterable: true,
-				// 						filterSearchType: FieldType.number,
-				// 						filter: { model: Filters.compoundInputNumber },
-				// 						formatter: this.checkReceiptFormatter,
-				// 						cssClass: 'receipt_collection_report'
-				// 					},
-				// 					{
-				// 						id: 'inv_opening_balance', name: 'Opening Balance (₹)', field: 'inv_opening_balance',
-				// 						filterable: true,
-				// 						cssClass: 'amount-report-fee',
-				// 						filterSearchType: FieldType.number,
-				// 						filter: { model: Filters.compoundInputNumber },
-				// 						sortable: true,
-				// 						formatter: this.checkFeeFormatter,
-				// 						groupTotalsFormatter: this.sumTotalsFormatter
-				// 					}];
-				// 			}
-				// 			if (repoArray[Number(keys)]['fee_head_data'].length > 0) {
-				// 				let k = 0;
-				// 				let tot = 0;
-				// 				for (const titem of repoArray[Number(keys)]['fee_head_data']) {
-				// 					Object.keys(titem).forEach((key2: any) => {
-				// 						if (key2 === 'fh_name' && Number(keys) === 0) {
-				// 							const feeObj: any = {};
-				// 							this.columnDefinitions.push({
-				// 								id: 'fh_name' + j,
-				// 								name: new CapitalizePipe().transform(titem[key2]) + ' (₹)',
-				// 								field: 'fh_name' + j,
-				// 								cssClass: 'amount-report-fee',
-				// 								sortable: true,
-				// 								filterable: true,
-				// 								filterSearchType: FieldType.number,
-				// 								filter: { model: Filters.compoundInput },
-				// 								formatter: this.checkFeeFormatter,
-				// 								groupTotalsFormatter: this.sumTotalsFormatter
-				// 							});
-				// 							feeObj['fh_name' + j] = '';
-				// 							feeHead.push(feeObj);
-				// 							this.feeHeadJSON.push(feeObj);
-				// 							this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
-				// 							j++;
-				// 						}
-				// 						if (key2 === 'fh_name') {
-				// 							obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
-				// 								repoArray[Number(keys)]['rpt_id'];
-				// 							obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
-				// 								(Number(keys) + 1);
-				// 							obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
-				// 								repoArray[Number(keys)]['stu_admission_no'] : '-';
-				// 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
-				// 							if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
-				// 								obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
-				// 									repoArray[Number(keys)]['stu_sec_name'];
-				// 							} else {
-				// 								obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
-				// 							}
-				// 							obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
-				// 								repoArray[Number(keys)]['rpt_id'] : '-';
-				// 							obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
-				// 							obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
-				// 								repoArray[Number(keys)]['fp_name'] : '-';
-				// 							obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
-				// 								repoArray[Number(keys)]['receipt_no'] : '-';
-				// 							obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
-				// 							tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
-				// 							obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
-				// 								? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-				// 							obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
-				// 								? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
-				// 							obj['total'] = repoArray[Number(keys)]['invoice_amount']
-				// 								? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
-				// 							obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
-				// 								repoArray[Number(keys)]['pay_name'] : '-';
-				// 							obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
-				// 								repoArray[Number(keys)]['tb_name'] : '-';
-
-				// 							k++;
-				// 						}
-				// 					});
-				// 				}
-				// 			}
-				// 			i++;
-				// 			this.dataset.push(obj);
-				// 		});
-				// 		this.columnDefinitions.push(
-				// 			{
-				// 				id: 'invoice_fine_amount', name: 'Fine Amount (₹)', field: 'invoice_fine_amount',
-				// 				filterable: true,
-				// 				filterSearchType: FieldType.number,
-				// 				filter: { model: Filters.compoundInputNumber },
-				// 				sortable: true,
-				// 				formatter: this.checkFeeFormatter,
-				// 				groupTotalsFormatter: this.sumTotalsFormatter
-				// 			},
-				// 			{
-				// 				id: 'total', name: 'Total (₹)', field: 'total',
-				// 				filterable: true,
-				// 				filterSearchType: FieldType.number,
-				// 				filter: { model: Filters.compoundInputNumber },
-				// 				sortable: true,
-				// 				formatter: this.checkTotalFormatter,
-				// 				cssClass: 'amount-report-fee',
-				// 				groupTotalsFormatter: this.sumTotalsFormatter
-				// 			},
-				// 			{
-				// 				id: 'receipt_mode_name', name: 'Mode', field: 'receipt_mode_name', sortable: true, filterable: true,
-				// 				filterSearchType: FieldType.string,
-				// 				filter: { model: Filters.compoundInputText },
-				// 				width: 100,
-				// 				grouping: {
-				// 					getter: 'receipt_mode_name',
-				// 					formatter: (g) => {
-				// 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				// 					},
-				// 					aggregators: this.aggregatearray,
-				// 					aggregateCollapsed: true,
-				// 					collapsed: false
-				// 				},
-				// 			},
-				// 			{
-				// 				id: 'tb_name', name: 'Bank Name', field: 'tb_name', sortable: true, filterable: true,
-				// 				filterSearchType: FieldType.string,
-				// 				filter: { model: Filters.compoundInputText },
-				// 				width: 100,
-				// 				grouping: {
-				// 					getter: 'tb_name',
-				// 					formatter: (g) => {
-				// 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				// 					},
-				// 					aggregators: this.aggregatearray,
-				// 					aggregateCollapsed: true,
-				// 					collapsed: false
-				// 				},
-				// 			}
-				// 		);
-				// 		this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
-				// 		this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
-				// 		this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
-				// 		this.aggregatearray.push(new Aggregators.Sum('total'));
-				// 		this.aggregatearray.push(new Aggregators.Sum('srno'));
-				// 		this.totalRow = {};
-				// 		const obj3: any = {};
-				// 		obj3['id'] = 'footer';
-				// 		obj3['srno'] = '';
-				// 		obj3['invoice_created_date'] = 'Grand Total';
-				// 		obj3['stu_admission_no'] = '';
-				// 		obj3['stu_full_name'] = '';
-				// 		obj3['stu_class_name'] = '';
-				// 		obj3['receipt_id'] = '';
-				// 		obj3['fp_name'] = '';
-				// 		obj3['receipt_no'] = '';
-				// 		obj3['inv_opening_balance'] =
-				// 			new IndianCurrency().transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
-				// 		obj3['invoice_fine_amount'] =
-				// 			new IndianCurrency().transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
-				// 		Object.keys(feeHead).forEach((key: any) => {
-				// 			Object.keys(feeHead[key]).forEach(key2 => {
-				// 				Object.keys(this.dataset).forEach(key3 => {
-				// 					Object.keys(this.dataset[key3]).forEach(key4 => {
-				// 						if (key4 === key2) {
-				// 							obj3[key2] = new IndianCurrency().transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
-				// 						}
-				// 					});
-				// 				});
-				// 			});
-				// 		});
-				// 		obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
-				// 		obj3['receipt_mode_name'] = '';
-				// 		obj3['tb_name'] = '';
-				// 		this.totalRow = obj3;
-				// 		if (this.dataset.length <= 5) {
-				// 			this.gridHeight = 300;
-				// 		} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-				// 			this.gridHeight = 400;
-				// 		} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-				// 			this.gridHeight = 550;
-				// 		} else if (this.dataset.length > 20) {
-				// 			this.gridHeight = 750;
-				// 		}
-				// 		this.tableFlag = true;
-				// 	} else {
-				// 		this.tableFlag = true;
-				// 	}
-				// });
-			} else if (this.reportType === 'classwise') {
-				const collectionJSON: any = {
-					'admission_no': '',
-					'studentName': '',
-					'report_type': value.report_type,
-					'classId': value.fee_value,
-					'from_date': value.from_date,
-					'to_date': value.to_date,
-					'pageSize': '10',
-					'pageIndex': '0',
-					'filterReportBy': 'collection',
-					'login_id': value.login_id,
-					'orderBy': value.orderBy,
-					'downloadAll': true
-				};
-				this.columnDefinitions = [
-					{
-						id: 'srno',
-						name: 'SNo.',
-						field: 'srno',
-						sortable: true,
-						width: 2,
-						maxWidth: 40,
-					},
-					{
-						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no',
-						sortable: true,
-						filterable: true,
-						width: 20,
-						grouping: {
-							getter: 'stu_admission_no',
-							formatter: (g) => {
-								return `${g.value} <span style="color:green"> (${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false
-						},
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-					},
-					{
-						id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
-						filterable: true,
-						width: 90,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'stu_full_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false
-						},
-					},
-					{
-						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-						filterable: true,
-						width: 15,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'stu_class_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false,
-						},
-					},
-					{
-						id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
-						filterable: true,
-						width: 30,
-						formatter: this.checkDateFormatter,
-						filterSearchType: FieldType.dateIso,
-						filter: { model: Filters.compoundDate },
-						grouping: {
-							getter: 'invoice_created_date',
-							formatter: (g) => {
-								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-								} else {
-									return `${''}`;
-								}
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false
-						},
-						groupTotalsFormatter: this.srnTotalsFormatter,
-					},
-					{
-						id: 'fp_name',
-						name: 'Fee Period',
-						field: 'fp_name',
-						sortable: true,
-						width: 30,
-						filterable: true,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'fp_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count} items)</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false,
-						},
-					},
-					{
-						id: 'receipt_no',
-						name: 'Reciept No.',
-						field: 'receipt_no',
-						width: 15,
-						sortable: true,
-						filterable: true,
-						filterSearchType: FieldType.number,
-						filter: { model: Filters.compoundInputNumber },
-						formatter: this.checkReceiptFormatter,
-						cssClass: 'receipt_collection_report'
-					},
-					{
-						id: 'rpt_amount',
-						name: 'Reciept Amt.',
-						field: 'rpt_amount',
-						sortable: true,
-						width: 20,
-						cssClass: 'amount-report-fee',
-						filterable: true,
-						filterSearchType: FieldType.number,
-						filter: { model: Filters.compoundInputNumber },
-						formatter: this.checkFeeFormatter,
-						groupTotalsFormatter: this.sumTotalsFormatter
-					}];
-				// this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
-				// 	if (result && result.status === 'ok') {
-				// 		this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-				// 		repoArray = result.data.reportData;
-				// 		this.totalRecords = Number(result.data.totalRecords);
-				// 		localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-				// 		let index = 0;
-				// 		for (const item of repoArray) {
-				// 			const obj: any = {};
-				// 			obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-				// 				(index + 1);
-				// 			obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-				// 				(index + 1);
-				// 			obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-				// 				repoArray[Number(index)]['stu_admission_no'] : '-';
-				// 			obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-				// 			if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
-				// 				obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-				// 					repoArray[Number(index)]['stu_sec_name'];
-				// 			} else {
-				// 				obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
-				// 			}
-				// 			obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
-				// 				repoArray[Number(index)]['rpt_id'] : '-';
-				// 			obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
-				// 			obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
-				// 				repoArray[Number(index)]['fp_name'] : '-';
-				// 			obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-				// 				repoArray[Number(index)]['receipt_no'] : '-';
-				// 			obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
-				// 				Number(repoArray[Number(index)]['rpt_amount']) : 0;
-				// 			this.dataset.push(obj);
-				// 			index++;
-				// 		}
-				// 		this.totalRow = {};
-				// 		const obj3: any = {};
-				// 		obj3['id'] = 'footer';
-				// 		obj3['srno'] = '';
-				// 		obj3['invoice_created_date'] = '<b>Grand Total</b>';
-				// 		obj3['stu_admission_no'] = '';
-				// 		obj3['stu_full_name'] = '';
-				// 		obj3['stu_class_name'] = '';
-				// 		obj3['receipt_no'] = '';
-				// 		obj3['rpt_amount'] = new IndianCurrency().transform(this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0));
-				// 		obj3['fp_name'] = '';
-				// 		this.totalRow = obj3;
-				// 		this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
-				// 		this.aggregatearray.push(new Aggregators.Sum('srno'));
-				// 		if (this.dataset.length <= 5) {
-				// 			this.gridHeight = 300;
-				// 		} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-				// 			this.gridHeight = 400;
-				// 		} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-				// 			this.gridHeight = 550;
-				// 		} else if (this.dataset.length > 20) {
-				// 			this.gridHeight = 750;
-				// 		}
-				// 		this.tableFlag = true;
-				// 	} else {
-				// 		this.tableFlag = true;
-				// 	}
-				// });
-			} else if (this.reportType === 'modewise') {
-				const collectionJSON: any = {
-					'admission_no': '',
-					'studentName': '',
-					'report_type': value.report_type,
-					'modeId': value.fee_value,
-					'from_date': value.from_date,
-					'to_date': value.to_date,
-					'pageSize': '10',
-					'pageIndex': '0',
-					'filterReportBy': 'collection',
-					'login_id': value.login_id,
-					'orderBy': value.orderBy,
-					'downloadAll': true
-				};
-				// this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
-				// 	if (result && result.status === 'ok') {
-				// 		this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-				// 		repoArray = result.data.reportData;
-				// 		this.totalRecords = Number(result.data.totalRecords);
-				// 		localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-				// 		let i = 0;
-				// 		let j = 0;
-				// 		const feeHead: any[] = [];
-				// 		Object.keys(repoArray).forEach((keys: any) => {
-				// 			const obj: any = {};
-				// 			if (Number(keys) === 0) {
-				// 				this.columnDefinitions = [
-				// 					{
-				// 						id: 'srno',
-				// 						name: 'SNo.',
-				// 						field: 'srno',
-				// 						sortable: true,
-				// 						width: 3
-				// 					},
-				// 					{
-				// 						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
-				// 						filterable: true,
-				// 						width: 70,
-				// 						grouping: {
-				// 							getter: 'stu_admission_no',
-				// 							formatter: (g) => {
-				// 								return `${g.value} <span style="color:green"> (${g.count})</span>`;
-				// 							},
-				// 							aggregators: this.aggregatearray,
-				// 							aggregateCollapsed: true,
-				// 							collapsed: false
-				// 						},
-				// 						filterSearchType: FieldType.string,
-				// 						filter: { model: Filters.compoundInput },
-				// 					},
-				// 					{
-				// 						id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
-				// 						filterable: true,
-				// 						width: 160,
-				// 						filterSearchType: FieldType.string,
-				// 						filter: { model: Filters.compoundInput },
-				// 						grouping: {
-				// 							getter: 'stu_full_name',
-				// 							formatter: (g) => {
-				// 								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				// 							},
-				// 							aggregators: this.aggregatearray,
-				// 							aggregateCollapsed: true,
-				// 							collapsed: false
-				// 						},
-				// 					},
-				// 					{
-				// 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-				// 						filterable: true,
-				// 						width: 40,
-				// 						filterSearchType: FieldType.string,
-				// 						filter: { model: Filters.compoundInput },
-				// 						grouping: {
-				// 							getter: 'stu_class_name',
-				// 							formatter: (g) => {
-				// 								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				// 							},
-				// 							aggregators: this.aggregatearray,
-				// 							aggregateCollapsed: true,
-				// 							collapsed: false,
-				// 						},
-				// 					},
-				// 					{
-				// 						id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
-				// 						filterable: true,
-				// 						formatter: this.checkDateFormatter,
-				// 						width: 80,
-				// 						filterSearchType: FieldType.dateIso,
-				// 						filter: { model: Filters.compoundDate },
-				// 						grouping: {
-				// 							getter: 'invoice_created_date',
-				// 							formatter: (g) => {
-				// 								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-				// 									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-				// 								} else {
-				// 									return `${''}`;
-				// 								}
-				// 							},
-				// 							aggregators: this.aggregatearray,
-				// 							aggregateCollapsed: true,
-				// 							collapsed: false
-				// 						},
-				// 						groupTotalsFormatter: this.srnTotalsFormatter,
-				// 					},
-				// 					{
-				// 						id: 'fp_name',
-				// 						name: 'Fee Period',
-				// 						field: 'fp_name',
-				// 						sortable: true,
-				// 						width: 90,
-				// 						filterable: true,
-				// 						filterSearchType: FieldType.string,
-				// 						filter: { model: Filters.compoundInput },
-				// 						grouping: {
-				// 							getter: 'fp_name',
-				// 							formatter: (g) => {
-				// 								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				// 							},
-				// 							aggregators: this.aggregatearray,
-				// 							aggregateCollapsed: true,
-				// 							collapsed: false,
-				// 						},
-				// 					},
-				// 					{
-				// 						id: 'receipt_no',
-				// 						name: 'Reciept No.',
-				// 						field: 'receipt_no',
-				// 						width: 30,
-				// 						sortable: true,
-				// 						filterable: true,
-				// 						filterSearchType: FieldType.number,
-				// 						filter: { model: Filters.compoundInputNumber },
-				// 						formatter: this.checkReceiptFormatter,
-				// 						cssClass: 'receipt_collection_report'
-				// 					}];
-				// 			}
-				// 			if (repoArray[Number(keys)]['pay_data']) {
-				// 				let k = 0;
-				// 				let tot = 0;
-				// 				for (const titem of repoArray[Number(keys)]['pay_data']) {
-				// 					Object.keys(titem).forEach((key2: any) => {
-				// 						if (key2 === 'pay_name' && Number(keys) === 0) {
-				// 							this.columnDefinitions.push({
-				// 								id: 'pay_name' + j,
-				// 								name: titem[key2],
-				// 								field: 'pay_name' + j,
-				// 								cssClass: 'amount-report-fee',
-				// 								sortable: true,
-				// 								filterable: true,
-				// 								filterSearchType: FieldType.string,
-				// 								filter: { model: Filters.compoundInput },
-				// 								formatter: this.checkFeeFormatter,
-				// 								groupTotalsFormatter: this.sumTotalsFormatter
-				// 							});
-				// 							this.aggregatearray.push(new Aggregators.Sum('pay_name' + j));
-				// 							const payObj: any = {};
-				// 							payObj['pay_name' + j] = '';
-				// 							feeHead.push(payObj);
-				// 							this.feeHeadJSON.push(payObj);
-				// 							j++;
-				// 						}
-				// 						if (key2 === 'pay_name') {
-				// 							obj['id'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
-				// 								(Number(keys) + 1);
-				// 							obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
-				// 								(Number(keys) + 1);
-				// 							obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
-				// 								repoArray[Number(keys)]['stu_admission_no'] : '-';
-				// 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
-				// 							if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
-				// 								obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
-				// 									repoArray[Number(keys)]['stu_sec_name'];
-				// 							} else {
-				// 								obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
-				// 							}
-				// 							obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
-				// 								repoArray[Number(keys)]['rpt_id'] : '0';
-				// 							obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
-				// 							obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
-				// 								repoArray[Number(keys)]['fp_name'] : '-';
-				// 							obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
-				// 								repoArray[Number(keys)]['receipt_no'] : '-';
-				// 							obj[key2 + k] = titem['pay_amount'] ? Number(titem['pay_amount']) : 0;
-				// 							tot = tot + (titem['pay_amount'] ? Number(titem['pay_amount']) : 0);
-				// 							obj['bank_name'] = repoArray[Number(keys)]['bank_name'] ?
-				// 								repoArray[Number(keys)]['bank_name'] : '-';
-				// 							obj['total'] = tot;
-				// 							k++;
-				// 						}
-				// 					});
-				// 				}
-				// 			}
-				// 			i++;
-				// 			this.dataset.push(obj);
-				// 		});
-				// 		this.columnDefinitions.push(
-				// 			{
-				// 				id: 'bank_name', name: 'Bank Name', field: 'bank_name',
-				// 				filterable: true,
-				// 				filterSearchType: FieldType.string,
-				// 				filter: { model: Filters.compoundInput },
-				// 				sortable: true,
-				// 				width: 120,
-				// 				grouping: {
-				// 					getter: 'bank_name',
-				// 					formatter: (g) => {
-				// 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				// 					},
-				// 					aggregators: this.aggregatearray,
-				// 					aggregateCollapsed: true,
-				// 					collapsed: false
-				// 				},
-				// 			},
-				// 			{
-				// 				id: 'total', name: 'Total', field: 'total',
-				// 				filterable: true,
-				// 				filterSearchType: FieldType.number,
-				// 				filter: { model: Filters.compoundInput },
-				// 				sortable: true,
-				// 				cssClass: 'amount-report-fee',
-				// 				width: 50,
-				// 				formatter: this.checkTotalFormatter,
-				// 				groupTotalsFormatter: this.sumTotalsFormatter
-				// 			},
-				// 		);
-				// 		this.totalRow = {};
-				// 		const obj3: any = {};
-				// 		obj3['id'] = 'footer';
-				// 		obj3['srno'] = '';
-				// 		obj3['invoice_created_date'] = '<b>Grand Total</b>';
-				// 		obj3['stu_admission_no'] = '';
-				// 		obj3['stu_full_name'] = '';
-				// 		obj3['stu_class_name'] = '';
-				// 		obj3['receipt_id'] = '';
-				// 		obj3['receipt_no'] = '';
-				// 		Object.keys(feeHead).forEach((key: any) => {
-				// 			Object.keys(feeHead[key]).forEach(key2 => {
-				// 				Object.keys(this.dataset).forEach(key3 => {
-				// 					Object.keys(this.dataset[key3]).forEach(key4 => {
-				// 						if (key4 === key2) {
-				// 							obj3[key4] = new IndianCurrency().transform(this.dataset.map(t => t[key4]).reduce((acc, val) => acc + val, 0));
-				// 						}
-				// 					});
-				// 				});
-				// 			});
-				// 		});
-				// 		obj3['bank_name'] = '';
-				// 		obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t['total']).reduce((acc, val) => acc + val, 0));
-				// 		obj3['fp_name'] = '';
-				// 		this.totalRow = obj3;
-				// 		this.aggregatearray.push(new Aggregators.Sum('total'));
-				// 		this.aggregatearray.push(new Aggregators.Sum('srno'));
-				// 		if (this.dataset.length <= 5) {
-				// 			this.gridHeight = 300;
-				// 		} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-				// 			this.gridHeight = 400;
-				// 		} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-				// 			this.gridHeight = 550;
-				// 		} else if (this.dataset.length > 20) {
-				// 			this.gridHeight = 750;
-				// 		}
-				// 		this.tableFlag = true;
-				// 	} else {
-				// 		this.tableFlag = true;
-				// 	}
-				// });
-			} else if (this.reportType === 'routewise') {
-				const collectionJSON: any = {
-					'admission_no': '',
-					'studentName': '',
-					'report_type': value.report_type,
-					'routeId': value.fee_value,
-					'from_date': value.from_date,
-					'to_date': value.to_date,
-					'pageSize': '10',
-					'pageIndex': '0',
-					'filterReportBy': 'collection',
-					'login_id': value.login_id,
-					'orderBy': value.orderBy,
-					'downloadAll': true
-				};
-				this.columnDefinitions = [
-					{
-						id: 'srno',
-						name: 'SNo.',
-						field: 'srno',
-						sortable: true,
-						width: 1
-					},
-					{
-						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
-						filterable: true,
-						width: 60,
-						grouping: {
-							getter: 'stu_admission_no',
-							formatter: (g) => {
-								return `${g.value} <span style="color:green"> (${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false
-						},
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-					},
-					{
-						id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
-						filterable: true,
-						width: 140,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'stu_full_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false
-						},
-					},
-					{
-						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-						filterable: true,
-						width: 60,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'stu_class_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false,
-						},
-					},
-					{
-						id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
-						filterable: true,
-						width: 120,
-						formatter: this.checkDateFormatter,
-						filterSearchType: FieldType.dateIso,
-						filter: { model: Filters.compoundDate },
-						grouping: {
-							getter: 'invoice_created_date',
-							formatter: (g) => {
-								if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
-									return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-								} else {
-									return `${''}`;
-								}
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false
-						},
-						groupTotalsFormatter: this.srnTotalsFormatter,
-					},
-					{
-						id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
-						filterable: true,
-						width: 120,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'fp_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false,
-						},
-					},
-					{
-						id: 'receipt_no',
-						name: 'Reciept No.',
-						field: 'receipt_no',
-						sortable: true,
-						width: 60,
-						filterable: true,
-						filterSearchType: FieldType.number,
-						filter: { model: Filters.compoundInputNumber },
-						formatter: this.checkReceiptFormatter,
-						cssClass: 'receipt_collection_report'
-					},
-					{
-						id: 'transport_amount',
-						name: 'Transport Amt.',
-						field: 'transport_amount',
-						width: 60,
-						cssClass: 'amount-report-fee',
-						sortable: true,
-						filterable: true,
-						filterSearchType: FieldType.number,
-						filter: { model: Filters.compoundInputNumber },
-						formatter: this.checkFeeFormatter,
-						groupTotalsFormatter: this.sumTotalsFormatter
-					},
-					{
-						id: 'route_name',
-						name: 'Route',
-						field: 'route_name',
-						sortable: true,
-						width: 100,
-						filterable: true,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'route_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false,
-						},
-					},
-					{
-						id: 'stoppages_name',
-						name: 'Stoppage',
-						width: 100,
-						field: 'stoppages_name',
-						sortable: true,
-						filterable: true,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'stoppages_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false,
-						},
-					},
-					{
-						id: 'slab_name',
-						name: 'Slab',
-						field: 'slab_name',
-						width: 100,
-						sortable: true,
-						filterable: true,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'slab_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false,
-						},
-					}];
-				// this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
-				// 	if (result && result.status === 'ok') {
-				// 		this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-				// 		repoArray = result.data.reportData;
-				// 		this.totalRecords = Number(result.data.totalRecords);
-				// 		localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-				// 		let index = 0;
-				// 		for (const item of repoArray) {
-				// 			const obj: any = {};
-				// 			obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-				// 				(index + 1);
-				// 			obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-				// 				(index + 1);
-				// 			obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-				// 				repoArray[Number(index)]['stu_admission_no'] : '-';
-				// 			obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-				// 			if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
-				// 				obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-				// 					repoArray[Number(index)]['stu_sec_name'];
-				// 			} else {
-				// 				obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
-				// 			}
-				// 			obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
-				// 			obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
-				// 				repoArray[Number(index)]['fp_name'] : '-';
-				// 			obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
-				// 				repoArray[Number(index)]['rpt_id'] : '0';
-				// 			obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-				// 				repoArray[Number(index)]['receipt_no'] : '-';
-				// 			obj['transport_amount'] = repoArray[Number(index)]['transport_amount'] ?
-				// 				Number(repoArray[Number(index)]['transport_amount']) : 0;
-				// 			obj['route_name'] = repoArray[Number(index)]['route_name'] ?
-				// 				repoArray[Number(index)]['route_name'] : '-';
-				// 			obj['stoppages_name'] = repoArray[Number(index)]['stoppages_name'] ?
-				// 				repoArray[Number(index)]['stoppages_name'] : '-';
-				// 			obj['slab_name'] = repoArray[Number(index)]['slab_name'] ?
-				// 				repoArray[Number(index)]['slab_name'] : '-';
-				// 			this.dataset.push(obj);
-				// 			index++;
-				// 		}
-				// 		this.totalRow = {};
-				// 		const obj3: any = {};
-				// 		obj3['id'] = 'footer';
-				// 		obj3['srno'] = '';
-				// 		obj3['invoice_created_date'] = '<b>Grand Total</b>';
-				// 		obj3['stu_admission_no'] = '';
-				// 		obj3['stu_full_name'] = '';
-				// 		obj3['stu_class_name'] = '';
-				// 		obj3['fp_name'] = '';
-				// 		obj3['receipt_no'] = '';
-				// 		obj3['transport_amount'] =
-				// 			new IndianCurrency().transform(this.dataset.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0));
-				// 		obj3['route_name'] = '';
-				// 		obj3['stoppages_name'] = '';
-				// 		obj3['slab_name'] = '';
-				// 		this.totalRow = obj3;
-				// 		this.aggregatearray.push(new Aggregators.Sum('transport_amount'));
-				// 		this.aggregatearray.push(new Aggregators.Sum('srno'));
-				// 		if (this.dataset.length <= 5) {
-				// 			this.gridHeight = 300;
-				// 		} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-				// 			this.gridHeight = 400;
-				// 		} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-				// 			this.gridHeight = 550;
-				// 		} else if (this.dataset.length > 20) {
-				// 			this.gridHeight = 750;
-				// 		}
-				// 		this.tableFlag = true;
-				// 	} else {
-				// 		this.tableFlag = true;
-				// 	}
-				// });
-			} else if (this.reportType === 'mfr') {
-				const collectionJSON: any = {
-					'admission_no': '',
-					'studentName': '',
-					'report_type': value.report_type,
-					'classId': value.fee_value,
-					'pageSize': '10',
-					'pageIndex': '0',
-					'filterReportBy': 'collection',
-					'login_id': value.login_id,
-					'orderBy': value.orderBy,
-					'downloadAll': true
-				};
-				this.columnDefinitions = [
-					{
-						id: 'srno',
-						name: 'SNo.',
-						field: 'srno',
-						sortable: true,
-						maxWidth: 40
-					},
-					{
-						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
-						width: 140,
-						filterable: true,
-						grouping: {
-							getter: 'stu_admission_no',
-							formatter: (g) => {
-								return `${g.value} <span style="color:green"> (${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false
-						},
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						groupTotalsFormatter: this.srnTotalsFormatter
-					},
-					{
-						id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
-						filterable: true,
-						width: 200,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'stu_full_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false
-						},
-						groupTotalsFormatter: this.countTotalsFormatter
-					},
-					{
-						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
-						filterable: true,
-						width: 200,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
-						grouping: {
-							getter: 'stu_class_name',
-							formatter: (g) => {
-								return `${g.value}  <span style="color:green">(${g.count})</span>`;
-							},
-							aggregators: this.aggregatearray,
-							aggregateCollapsed: true,
-							collapsed: false,
-						},
-					},
-					{
-						id: 'stu_opening_balance',
-						name: 'Opening Bal.',
-						field: 'stu_opening_balance',
-						filterSearchType: FieldType.number,
-						filter: { model: Filters.compoundInputNumber },
-						filterable: true,
-						sortable: true,
-						width: 160,
-						formatter: this.checkFeeFormatter,
-						cssClass: 'amount-report-fee',
-						groupTotalsFormatter: this.sumTotalsFormatter
-					}];
-				// this.feeService.getMFRReport(collectionJSON).subscribe((result: any) => {
-				// 	if (result && result.status === 'ok') {
-				// 		this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-				// 		repoArray = result.data.reportData;
-				// 		this.totalRecords = Number(result.data.totalRecords);
-				// 		localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-				// 		let index = 0;
-				// 		let qindex = 1;
-				// 		for (const item of repoArray) {
-				// 			const obj: any = {};
-				// 			obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-				// 				(index + 1);
-				// 			obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-				// 				(index + 1);
-				// 			obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-				// 				repoArray[Number(index)]['stu_admission_no'] : '-';
-				// 			obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-				// 			if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
-				// 				obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-				// 					repoArray[Number(index)]['stu_sec_name'];
-				// 			} else {
-				// 				obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
-				// 			}
-				// 			obj['stu_opening_balance'] = repoArray[Number(index)]['stu_opening_balance'] ?
-				// 				Number(repoArray[Number(index)]['stu_opening_balance']) : 0;
-				// 			obj['inv_fp_id'] = repoArray[Number(index)]['inv_fp_id'];
-				// 			for (const titem of item['inv_invoice_generated_status']) {
-				// 				Object.keys(titem).forEach((key: any) => {
-				// 					if (key === 'fm_name' && index === 0 &&
-				// 						Number(item.inv_fp_id) === 2) {
-				// 						this.columnDefinitions.push({
-				// 							id: 'Q' + qindex,
-				// 							name: titem[key],
-				// 							field: 'Q' + qindex,
-				// 							formatter: this.getMFRFormatter
-				// 						});
-				// 						qindex++;
-				// 					} else if (key === 'fm_name' && index === 0 &&
-				// 						Number(item.inv_fp_id) === 1) {
-				// 						this.columnDefinitions.push({
-				// 							id: 'Q' + qindex,
-				// 							name: titem[key],
-				// 							field: 'Q' + qindex,
-				// 							formatter: this.getMFRFormatter
-				// 						});
-				// 						qindex++;
-				// 					} else if (key === 'fm_name' && index === 0 &&
-				// 						Number(item.inv_fp_id) === 3) {
-				// 						this.columnDefinitions.push({
-				// 							id: 'Q' + qindex,
-				// 							name: titem[key],
-				// 							field: 'Q' + qindex,
-				// 							formatter: this.getMFRFormatter
-				// 						});
-				// 						qindex++;
-				// 					} else if (key === 'fm_name' && index === 0 &&
-				// 						Number(item.inv_fp_id) === 4) {
-				// 						this.columnDefinitions.push({
-				// 							id: 'Q' + qindex,
-				// 							name: titem[key],
-				// 							field: 'Q' + qindex,
-				// 							formatter: this.getMFRFormatter
-				// 						});
-				// 						qindex++;
-				// 					}
-				// 					if (key === 'fm_name' &&
-				// 						Number(item.inv_fp_id) === 2) {
-				// 						obj['Q1'] = {
-				// 							status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][0]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][0]['inv_invoice_no']
-				// 						};
-				// 						obj['Q2'] = {
-				// 							status: item['inv_invoice_generated_status'][1]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][1]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][1]['inv_invoice_no']
-				// 						};
-				// 						obj['Q3'] = {
-				// 							status: item['inv_invoice_generated_status'][2]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][2]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][2]['inv_invoice_no']
-				// 						};
-				// 						obj['Q4'] = {
-				// 							status: item['inv_invoice_generated_status'][3]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][3]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][3]['inv_invoice_no']
-				// 						};
-				// 					} else if (key === 'fm_name' &&
-				// 						Number(item.inv_fp_id) === 1) {
-				// 						obj['Q1'] = {
-				// 							status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][0]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][0]['inv_invoice_no']
-				// 						};
-				// 						obj['Q2'] = {
-				// 							status: item['inv_invoice_generated_status'][1]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][1]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][1]['inv_invoice_no']
-				// 						};
-				// 						obj['Q3'] = {
-				// 							status: item['inv_invoice_generated_status'][2]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][2]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][2]['inv_invoice_no']
-				// 						};
-				// 						obj['Q4'] = {
-				// 							status: item['inv_invoice_generated_status'][3]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][3]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][3]['inv_invoice_no']
-				// 						};
-				// 						obj['Q5'] = {
-				// 							status: item['inv_invoice_generated_status'][4]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][4]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][4]['inv_invoice_no']
-				// 						};
-				// 						obj['Q6'] = {
-				// 							status: item['inv_invoice_generated_status'][5]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][5]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][5]['inv_invoice_no']
-				// 						};
-				// 						obj['Q7'] = {
-				// 							status: item['inv_invoice_generated_status'][6]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][6]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][6]['inv_invoice_no']
-				// 						};
-				// 						obj['Q8'] = {
-				// 							status: item['inv_invoice_generated_status'][7]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][7]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][7]['inv_invoice_no']
-				// 						};
-				// 						obj['Q9'] = {
-				// 							status: item['inv_invoice_generated_status'][8]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][8]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][8]['inv_invoice_no']
-				// 						};
-				// 						obj['Q10'] = {
-				// 							status: item['inv_invoice_generated_status'][9]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][9]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][9]['inv_invoice_no']
-				// 						};
-				// 						obj['Q11'] = {
-				// 							status: item['inv_invoice_generated_status'][10]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][10]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][10]['inv_invoice_no']
-				// 						};
-				// 						obj['Q12'] = {
-				// 							status: item['inv_invoice_generated_status'][11]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][11]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][11]['inv_invoice_no']
-				// 						};
-				// 					} else if (key === 'fm_name' &&
-				// 						Number(item.inv_fp_id) === 3) {
-				// 						obj['Q1'] = {
-				// 							status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][0]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][0]['inv_invoice_no']
-				// 						};
-				// 						obj['Q2'] = {
-				// 							status: item['inv_invoice_generated_status'][1]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][1]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][1]['inv_invoice_no']
-				// 						};
-				// 					} else if (key === 'fm_name' &&
-				// 						Number(item.inv_fp_id) === 4) {
-				// 						obj['Q1'] = {
-				// 							status: item['inv_invoice_generated_status'][0]['invoice_paid_status'],
-				// 							invoice_id: item['inv_invoice_generated_status'][0]['invoice_id'],
-				// 							inv_invoice_no: item['inv_invoice_generated_status'][0]['inv_invoice_no']
-				// 						};
-				// 					}
-				// 				});
-				// 			}
-				// 			this.dataset.push(obj);
-				// 			index++;
-				// 		}
-				// 		this.aggregatearray.push(new Aggregators.Sum('stu_opening_balance'));
-				// 		if (this.dataset.length <= 5) {
-				// 			this.gridHeight = 300;
-				// 		} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-				// 			this.gridHeight = 400;
-				// 		} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-				// 			this.gridHeight = 550;
-				// 		} else if (this.dataset.length > 20) {
-				// 			this.gridHeight = 750;
-				// 		}
-				// 		this.totalRow = {};
-				// 		const obj2: any = {};
-				// 		obj2['id'] = '';
-				// 		obj2['srno'] = '';
-				// 		obj2['au_login_id'] = '';
-				// 		obj2['stu_opening_balance'] = this.dataset.map(f => f.stu_opening_balance).reduce((acc, val) => acc + val, 0);
-				// 		obj2['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
-				// 		obj2['stu_full_name'] = this.dataset.length;
-				// 		obj2['stu_class_name'] = '';
-				// 		obj2['fp_name'] = '';
-				// 		this.totalRow = obj2;
-				// 		this.tableFlag = true;
-				// 		setTimeout(() => this.groupByClass(), 2);
-				// 		this.selectedGroupingFields.push('stu_class_name');
-				// 	} else {
-				// 		this.tableFlag = true;
-				// 	}
-				// });
-			} else if (this.reportType === 'summary') {
-				const collectionJSON: any = {
-				};
-				// this.feeService.getFeeCollectionSummaryReport(collectionJSON).subscribe((result: any) => {
-				// 	if (result && result.status === 'ok') {
-				// 		this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
-				// 		repoArray = result.data.reportData;
-				// 		let i = 0;
-				// 		let j = 0;
-				// 		const feeHead: any[] = [];
-				// 		Object.keys(repoArray).forEach((keys: any) => {
-				// 			const obj: any = {};
-				// 			if (Number(keys) === 0) {
-				// 				this.columnDefinitions = [
-				// 					{
-				// 						id: 'fh_name',
-				// 						name: 'Fee Heads',
-				// 						field: 'fh_name',
-				// 						filterable: true,
-				// 						filterSearchType: FieldType.string,
-				// 						filter: { model: Filters.compoundInputText },
-				// 						sortable: true,
-				// 						width: 90,
-				// 						groupTotalsFormatter: this.srnTotalsFormatter
-				// 					}];
-				// 			}
-				// 			if (repoArray[Number(keys)]['modes_arr'].length > 0) {
-				// 				let k = 0;
-				// 				let tot = 0;
-				// 				for (const titem of repoArray[Number(keys)]['modes_arr']) {
-				// 					Object.keys(titem).forEach((key2: any) => {
-				// 						if (key2 === 'pay_name' && Number(keys) === 0) {
-				// 							const feeObj: any = {};
-				// 							this.columnDefinitions.push({
-				// 								id: 'pay_name' + j,
-				// 								name: new CapitalizePipe().transform(titem[key2]) + ' (₹)',
-				// 								field: 'pay_name' + j,
-				// 								cssClass: 'amount-report-fee',
-				// 								sortable: true,
-				// 								filterable: true,
-				// 								filterSearchType: FieldType.number,
-				// 								filter: { model: Filters.compoundInput },
-				// 								formatter: this.checkFeeFormatter,
-				// 								groupTotalsFormatter: this.sumTotalsFormatter
-				// 							});
-				// 							feeObj['pay_name' + j] = '';
-				// 							feeHead.push(feeObj);
-				// 							this.feeHeadJSON.push(feeObj);
-				// 							this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
-				// 							j++;
-				// 						}
-				// 						if (key2 === 'pay_name') {
-				// 							obj['id'] = repoArray[Number(keys)]['pay_name'] + keys ;
-				// 							obj['fh_name'] = repoArray[Number(keys)]['fh_name'] ?
-				// 								repoArray[Number(keys)]['fh_name'] : '-';
-				// 							obj[key2 + k] = titem['total_amount'] ? Number(titem['total_amount']) : 0;
-				// 							k++;
-				// 						}
-				// 					});
-				// 				}
-				// 			}
-				// 			i++;
-				// 			this.dataset.push(obj);
-				// 		});
-				// 		this.totalRow = {};
-				// 		const obj3: any = {};
-				// 		obj3['id'] = 'footer';
-				// 		obj3['fh_name'] = 'Grand Total';
-				// 		Object.keys(feeHead).forEach((key: any) => {
-				// 			Object.keys(feeHead[key]).forEach(key2 => {
-				// 				Object.keys(this.dataset).forEach(key3 => {
-				// 					Object.keys(this.dataset[key3]).forEach(key4 => {
-				// 						if (key4 === key2) {
-				// 							obj3[key2] = new IndianCurrency().transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
-				// 						}
-				// 					});
-				// 				});
-				// 			});
-				// 		});
-				// 		this.totalRow = obj3;
-				// 		if (this.dataset.length <= 5) {
-				// 			this.gridHeight = 350;
-				// 		} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-				// 			this.gridHeight = 450;
-				// 		} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-				// 			this.gridHeight = 550;
-				// 		} else if (this.dataset.length > 20) {
-				// 			this.gridHeight = 750;
-				// 		}
-				// 		this.tableFlag = true;
-				// 	} else {
-				// 		this.tableFlag = true;
-				// 	}
-				// });
-			}
+		let accessionJSON: any;
+		if (value) {
+			accessionJSON = value;
 		} else {
-			this.common.showSuccessErrorMessage('Please choose report type', 'error');
+			accessionJSON = {viewAll: true}
 		}
+
+		this.columnDefinitions = [
+			{
+				id: 'srno',
+				name: 'SNo.',
+				field: 'srno',
+				sortable: true,
+				maxWidth: 40
+			},
+			{
+				id: 'book_no', name: 'Book No', field: 'book_no', sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 80,
+				grouping: {
+					getter: 'book_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+				groupTotalsFormatter: this.srnTotalsFormatter
+			},
+			{
+				id: 'book_name', name: 'Book Name', field: 'book_name', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'book_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+			},
+			{
+				id: 'book_sub_title', name: 'Book Sub Title', field: 'book_sub_title', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'book_sub_title',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+			},
+			{
+				id: 'issued_to', name: 'Issued To', field: 'issued_to', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'book_sub_title',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+			},
+			{
+				id: 'issued_on', name: 'Issued On', field: 'issued_on', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundDate },
+				filterSearchType: FieldType.dateIso,
+				formatter: this.checkDateFormatter,
+				grouping: {
+					getter: 'issued_on',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+			},
+			{
+				id: 'due_date', name: 'Due Date', field: 'due_date', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundDate },
+				filterSearchType: FieldType.dateIso,
+				formatter: this.checkDateFormatter,
+				grouping: {
+					getter: 'due_date',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+			},
+			{
+				id: 'returned_on', name: 'Returned On', field: 'returned_on', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundDate },
+				filterSearchType: FieldType.dateIso,
+				formatter: this.checkDateFormatter,
+				grouping: {
+					getter: 'returned_on',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+			},
+			{
+				id: 'author', name: 'Author', field: 'author', sortable: true,
+				filterable: true,
+				width: 80,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'author',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'genre', name: 'Genre', field: 'genre', sortable: true,
+				filterable: true,
+				width: 80,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'genre',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'pages', name: 'Pages', field: 'pages', sortable: true,
+				filterable: true,
+				width: 80,
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'pages',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'price', name: 'Price', field: 'price', sortable: true,
+				filterable: true,
+				width: 80,
+				filterSearchType: FieldType.number,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'price',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'publisher', name: 'Publisher', field: 'publisher', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'publisher',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'published_date', name: 'Publish Date', field: 'published_date', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.number,
+				grouping: {
+					getter: 'published_date',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'tags', name: 'Tag', field: 'tags', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'tags',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'volume_info', name: 'Volume Info', field: 'volume_info', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'volume_info',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'language', name: 'Language', field: 'language', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'language',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'print_type', name: 'Print Type', field: 'print_type', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'print_type',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'book_type', name: 'Book Type', field: 'book_type', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'book_type',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'location', name: 'Location', field: 'location', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'location',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'class', name: 'class', field: 'class', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'class',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'subject', name: 'subject', field: 'subject', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'subject',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'vendor_name', name: 'vendor_name', field: 'vendor_name', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'vendor_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'status', name: 'Status', field: 'status', sortable: true,
+				filterable: true,
+				width: 150,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'status',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			}];
+		this.erpCommonService.getDashboardDueReservoirData(accessionJSON).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.common.showSuccessErrorMessage(result.message, 'success');
+				repoArray = result.data.all;
+				this.totalRecords = Number(result.data.all.length);
+				let index = 0;
+				for (const item of repoArray) {
+					const obj: any = {};
+					obj['id'] = (index + 1);
+					obj['srno'] = (index + 1);
+					obj['book_no'] = repoArray[Number(index)]['reserv_user_logs'] ?
+						repoArray[Number(index)]['reserv_user_logs']['reserv_id'] : '-';
+					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['title']);
+					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['subtitle']);
+					obj['issued_to'] = new CapitalizePipe().transform(repoArray[Number(index)]['user_full_name']);
+					obj['issued_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_on']);
+					obj['due_date'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['due_date']);
+					obj['returned_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_on']);
+					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['authors'][0]);
+					obj['genre'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['genre']['genre_name']);
+					obj['pages'] = repoArray[Number(index)]['reserv_user_logs']['pages'];
+					obj['price'] = repoArray[Number(index)]['reserv_user_logs']['price'];
+					obj['publisher'] = repoArray[Number(index)]['reserv_user_logs']['publisher'];
+					obj['published_date'] = repoArray[Number(index)]['reserv_user_logs']['published_date'];
+					obj['tags'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_tags']);
+					obj['volume_info'] = repoArray[Number(index)]['reserv_user_logs']['edition'];
+					obj['language'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['language_details']['lang_name']);
+					obj['print_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['type_id']);
+					obj['book_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['category_id']);
+					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['location']);
+					obj['class'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_class_id']);
+					obj['subject'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_sub_id']);
+					obj['vendor_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id']);
+					obj['status'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_status']);
+
+
+					this.dataset.push(obj);
+					index++;
+				}
+
+				console.log('dataset', this.dataset);
+				// this.totalRow = {};
+				// const obj3: any = {};
+				// obj3['id'] = '';
+				// obj3['srno'] = '';
+				// obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+				// obj3['stu_full_name'] = '';
+				// obj3['stu_class_name'] = '';
+				// obj3['deposite_date'] = '';
+				// obj3['cheque_date'] = '';
+				// obj3['dishonor_date'] = '';
+				// obj3['invoice_id'] = '';
+				// obj3['invoice_no'] = '';
+				// obj3['receipt_no'] = '';
+				// obj3['receipt_id'] = '';
+				// obj3['receipt_amount'] =
+				// 	new DecimalPipe('en-in').transform(this.dataset.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0));
+				// obj3['bank_name'] = '';
+				// obj3['status'] = '';
+				// obj3['fcc_reason_id'] = '';
+				// obj3['fcc_remarks'] = '';
+				// this.totalRow = obj3;
+				// if (this.dataset.length <= 5) {
+				// 	this.gridHeight = 300;
+				// } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+				// 	this.gridHeight = 400;
+				// } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+				// 	this.gridHeight = 550;
+				// } else if (this.dataset.length > 20) {
+				// 	this.gridHeight = 750;
+				// }
+				this.tableFlag = true;
+			} else {
+				this.tableFlag = true;
+			}
+		});
 	}
 	clearGroupsAndSelects() {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
@@ -1821,9 +759,7 @@ export class IssueReturnReportComponent implements OnInit {
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
 			// update all Group By select dropdown
-			this.selectedGroupingFields.forEach((g, i) => {
-				this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '';
-			});
+			this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
 		}
 	}
 
@@ -1840,40 +776,45 @@ export class IssueReturnReportComponent implements OnInit {
 		this.gridObj.setPreHeaderPanelVisibility(!this.gridObj.getOptions().showPreHeaderPanel);
 	}
 	onCellClicked(e, args) {
-		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
-			const item: any = args.grid.getDataItem(args.row);
-			if (item['receipt_id'] !== '-') {
-				this.openDialogReceipt(item['receipt_id'], false);
-			}
-		}
-		if (e.target.className === 'invoice-span-mfr2') {
-			const inv_id = Number(e.target.innerHTML);
-			this.renderDialog(inv_id, false);
-		}
+		// if (args.cell === args.grid.getColumnIndex('receipt_no')) {
+		// 	const item: any = args.grid.getDataItem(args.row);
+		// 	if (item['receipt_no'] !== '-') {
+		// 		this.openDialogReceipt(item['receipt_id'], false);
+		// 	}
+		// }
 	}
 	onCellChanged(e, args) {
 		console.log(e);
 		console.log(args);
 	}
 	sumTotalsFormatter(totals, columnDef) {
+		console.log(totals);
+		console.log(columnDef);
 		const val = totals.sum && totals.sum[columnDef.field];
-		// if (val != null && totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>') {
-		// 	return '<b class="total-footer-report">' + new IndianCurrency().transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
-		// }
+		if (val != null) {
+			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+		}
 		return '';
 	}
 	checkFeeFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === 0) {
 			return '-';
 		} else {
-			// return new IndianCurrency().transform(value);
+			return new DecimalPipe('en-in').transform(value);
+		}
+	}
+	checkReturn(data) {
+		if (Number(data)) {
+			return Number(data);
+		} else {
+			return data;
 		}
 	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === 0) {
 			return '-';
 		} else {
-			//return new IndianCurrency().transform(value);
+			return new DecimalPipe('en-in').transform(value);
 		}
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
@@ -1884,10 +825,10 @@ export class IssueReturnReportComponent implements OnInit {
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
-		if (value !== '<b>Grand Total</b>' && value !== '-' && value !== '') {
+		if (value !== '-') {
 			return new DatePipe('en-in').transform(value, 'd-MMM-y');
 		} else {
-			return value;
+			return '-';
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
@@ -1898,60 +839,7 @@ export class IssueReturnReportComponent implements OnInit {
 			return '<b class="total-footer-report">Sub Total (' + totals.group.value + ') </b>';
 		}
 	}
-	getMFRFormatter(row, cell, value, columnDef, dataContext) {
-		if (value) {
-			if (value.status === 'unpaid') {
-				return '<div style="background-color:#4a7bec !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-					+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
-					'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
-			} else if (value.status === 'paid') {
-				return '<div style="background-color:#29A341 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-					+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
-					'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
-			} else if (value.status === 'Not Generated') {
-				return '<div style="background-color:#d2d8e0 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;' +
-					'border-right: 1px solid #89a8c8; border-top: 0px !important;' +
-					'border-bottom: 0px !important; border-left: 0px !important; margin: auto;">'
-					+ '<span style="margin-left:40px">' + '-' + '</span>' +
-					'<span>' + '' + '</span>' + '</div>';
-			} else if (value.status === 'Unpaid with fine') {
-				return '<div style="background-color:#f93435 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-					+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
-					'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
-			} else {
-				return '<div style="background-color:#7bd450 !important;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
-					+ '<span class="invoice-span-mfr">' + value.inv_invoice_no + '</span>' +
-					'<span class="invoice-span-mfr2">' + value.invoice_id + '</span>' + '</div>';
-			}
-		}
-	}
-	openDialogReceipt(invoiceNo, edit): void {
-		// const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
-		// 	width: '80%',
-		// 	data: {
-		// 		rpt_id: invoiceNo,
-		// 		edit: edit
-		// 	},
-		// 	hasBackdrop: true
-		// });
-	}
-	getFeeHeads() {
-		this.valueArray = [];
-		// this.feeService.getFeeHeads({ fh_is_hostel_fee: '' }).subscribe((result: any) => {
-		// 	if (result && result.status === 'ok') {
-		// 		for (const item of result.data) {
-		// 			this.valueArray.push({
-		// 				id: item.fh_id,
-		// 				name: new CapitalizePipe().transform(item.fh_name)
-		// 			});
-		// 		}
-		// 		this.valueArray.push({
-		// 			id: '0',
-		// 			name: 'Transport'
-		// 		});
-		// 	}
-		// });
-	}
+
 	getClass() {
 		this.valueArray = [];
 		for (const item of this.classDataArray) {
@@ -1962,522 +850,93 @@ export class IssueReturnReportComponent implements OnInit {
 		}
 	}
 	getClassData() {
-		// this.sisService.getClass({}).subscribe((result: any) => {
-		// 	if (result.status === 'ok') {
-		// 		this.classDataArray = result.data;
-		// 	}
-		// });
-	}
-	getModes() {
-		this.valueArray = [];
-		// this.feeService.getPaymentMode({}).subscribe((result: any) => {
-		// 	if (result && result.status === 'ok') {
-		// 		for (const item of result.data) {
-		// 			this.valueArray.push({
-		// 				id: item.pay_id,
-		// 				name: item.pay_name
-		// 			});
-		// 		}
-		// 	}
-		// });
-	}
-	getRoutes() {
-		this.valueArray = [];
-		// this.feeService.getRoutes({}).subscribe((result: any) => {
-		// 	if (result && result.status === 'ok') {
-		// 		for (const item of result.data) {
-		// 			this.valueArray.push({
-		// 				id: item.tr_id,
-		// 				name: item.tr_route_name
-		// 			});
-		// 		}
-		// 	}
-		// });
-	}
-	changeReportType($event) {
-		this.filterResult = [];
-		this.sortResult = [];
-		this.tableFlag = false;
-		this.reportType = $event.value,
-			this.reportFilterForm.patchValue({
-				'admission_no': '',
-				'studentName': '',
-				'fee_value': '',
-				'feeHeadId': '',
-				'classId': '',
-				'secId': '',
-				'from_date': '',
-				'to_date': '',
-				'pageSize': '10',
-				'pageIndex': '0',
-				'filterReportBy': 'collection',
-				'login_id': '',
-				'orderBy': '',
-				'downloadAll': true
-			});
-		if (Number(this.sessionName.split('-')[0]) < Number(new Date().getFullYear())) {
-			const date2 = new Date(Number(this.sessionName.split('-')[0]) + 1, Number(this.schoolInfo.session_end_month), 0);
-			const firstDay2 = new Date(this.sessionName.split('-')[0], Number(this.schoolInfo.session_start_month) - 1, 1);
-			this.reportFilterForm.patchValue({
-				'from_date': firstDay2,
-				'to_date': date2
-			});
-		} else {
-			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
-			const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
-			this.reportFilterForm.patchValue({
-				'from_date': firstDay,
-				'to_date': date
-			});
-		}
-		if ($event.value) {
-			this.displyRep.emit({ report_index: 1, report_id: $event.value, report_name: this.getReportName($event.value) });
-			if ($event.value === 'headwise') {
-				this.filterFlag = true;
-				this.valueLabel = 'Fee Heads';
-				this.getFeeHeads();
-			} else if ($event.value === 'classwise') {
-				this.filterFlag = true;
-				this.valueLabel = 'Class';
+		this.erpCommonService.getClass({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.classDataArray = result.data;
 				this.getClass();
-			} else if ($event.value === 'modewise') {
-				this.filterFlag = true;
-				this.valueLabel = 'Modes';
-				this.getModes();
-			} else if ($event.value === 'routewise') {
-				this.filterFlag = true;
-				this.valueLabel = 'Routes';
-				this.getRoutes();
-			} else if ($event.value === 'mfr') {
-				this.filterFlag = true;
-				this.reportFilterForm.patchValue({
-					'from_date': '',
-					'to_date': ''
-				});
-				this.valueLabel = 'Class';
-				this.getClass();
-			} else {
-				this.filterFlag = false;
-			}
-		} else {
-			this.displyRep.emit({ report_index: 1, report_id: '', report_name: 'Collection Report' });
-			this.filterFlag = false;
-		}
-	}
-	getReportName(value) {
-		const findex = this.reportTypeArray.findIndex(f => f.report_type === value);
-		if (findex !== -1) {
-			return this.reportTypeArray[findex].report_name;
-		}
-	}
-	openFilterDialog() {
-		const dialogRefFilter = this.dialog.open(ReportFilterComponent, {
-			width: '70%',
-			height: '80%',
-			data: {
-				filterResult: this.filterResult,
-				pro_id: '3',
-			}
-		});
-		dialogRefFilter.afterClosed().subscribe(result => {
-		});
-		dialogRefFilter.componentInstance.filterResult.subscribe((data: any) => {
-			this.filterResult = [];
-			this.filterResult = data;
-			// this.feeService.getStudentsForFilter({ filters: this.filterResult }).subscribe((res: any) => {
-			// 	if (res && res.status === 'ok') {
-			// 		this.reportFilterForm.patchValue({
-			// 			login_id: res.data
-			// 		});
-			// 	}
-			// });
-		});
-	}
-	openSort() {
-		const sortDialog = this.dialog.open(ReportSortComponent, {
-			width: '60vh',
-			height: '50vh',
-			data: {}
-		});
-		sortDialog.afterClosed().subscribe((result: any) => {
-			if (result) {
-				this.sortResult = result;
-				this.reportFilterForm.patchValue({
-					'orderBy': this.sortResult.length > 0 ? [this.sortResult] : ''
-				});
 			}
 		});
 	}
-	renderDialog(inv_id, edit) {
-		// const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
-		// 	width: '80%',
-		// 	data: {
-		// 		invoiceNo: inv_id,
-		// 		edit: edit,
-		// 		paidStatus: 'paid'
-		// 	},
-		// 	hasBackdrop: true
-		// });
-	}
-	groupByClass() {
-		this.dataviewObj.setGrouping({
-			getter: 'stu_class_name',
-			formatter: (g) => {
-				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
-			},
-			aggregators: this.aggregatearray,
-			aggregateCollapsed: true,
-			collapsed: false,
-		});
-		this.draggableGroupingPlugin.setDroppedGroups('stu_class_name');
-	}
-	checkReturn(data) {
-		if (Number(data)) {
-			return Number(data);
-		} else {
-			return data;
-		}
-	}
-	filtered(event) {
-		let commonFilter: any = '';
-		for (const item of event.source.selected) {
-			commonFilter = commonFilter + item.viewValue + ',';
-		}
-		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + commonFilter.substring(0, commonFilter.length - 1);
-	}
-	getParamValue() {
-		const filterArr = [];
-		Object.keys(this.filteredAs).forEach(key => {
-			filterArr.push(this.filteredAs[key]);
-		});
-		filterArr.push(
-			this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') + ' - ' +
-			this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
-		return filterArr;
-	}
-	getLevelFooter(level, groupItem) {
-		if (level === 0) {
-			return 'Total';
-		} else if (level > 0) {
-			return 'Sub Total (' + groupItem.value + ')';
-		}
-	}
-	checkGroupLevel(item, worksheet) {
-		if (item.length > 0) {
-			for (const groupItem of item) {
-				worksheet.addRow({});
-				this.notFormatedCellArray.push(worksheet._rows.length);
-				// style for groupeditem level heading
-				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
-					this.alphabetJSON[this.exportColumnDefinitions.length] + (worksheet._rows.length));
-				worksheet.getCell('A' + worksheet._rows.length).value = this.common.htmlToText(groupItem.title);
-				worksheet.getCell('A' + worksheet._rows.length).fill = {
-					type: 'pattern',
-					pattern: 'solid',
-					fgColor: { argb: 'c8d6e5' },
-					bgColor: { argb: 'ffffff' },
-				};
-				worksheet.getCell('A' + worksheet._rows.length).border = {
-					top: { style: 'thin' },
-					left: { style: 'thin' },
-					bottom: { style: 'thin' },
-					right: { style: 'thin' }
-				};
-				worksheet.getCell('A' + worksheet._rows.length).font = {
-					name: 'Arial',
-					size: 10,
-					bold: true
-				};
 
-				if (groupItem.groups) {
-					this.checkGroupLevel(groupItem.groups, worksheet);
-					const obj3: any = {};
-					if (this.reportType === 'headwise') {
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_id'] = '';
-						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
-						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-								Object.keys(groupItem.rows).forEach(key3 => {
-									Object.keys(groupItem.rows[key3]).forEach(key4 => {
-										if (key4 === key2) {
-											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-										}
-									});
-								});
-							});
-						});
-						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-						obj3['receipt_mode_name'] = '';
-						obj3['tb_name'] = '';
-					}
-					if (this.reportType === 'modewise') {
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_id'] = '';
-						obj3['receipt_no'] = '';
-						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-								Object.keys(groupItem.rows).forEach(key3 => {
-									Object.keys(groupItem.rows[key3]).forEach(key4 => {
-										if (key4 === key2) {
-											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-										}
-									});
-								});
-							});
-						});
-						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-						obj3['fp_name'] = '';
-					}
-					if (this.reportType === 'classwise') {
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
-						obj3['fp_name'] = '';
-					}
-					if (this.reportType === 'routewise') {
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['transport_amount'] = groupItem.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
-						obj3['route_name'] = '';
-						obj3['stoppages_name'] = '';
-						obj3['slab_name'] = '';
-					}
-					if (this.reportType === 'mfr') {
-						obj3['id'] = '';
-						obj3['srno'] = '';
-						obj3['au_login_id'] = '';
-						obj3['stu_opening_balance'] = groupItem.rows.map(t => t['stu_opening_balance']).reduce((acc, val) => acc + val, 0);
-						obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_full_name'] = groupItem.rows.length;
-						obj3['stu_class_name'] = '';
-						obj3['fp_name'] = '';
-					}
-					worksheet.addRow(obj3);
-					this.notFormatedCellArray.push(worksheet._rows.length);
-					// style row having total
-					if (groupItem.level === 0) {
-						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.exportColumnDefinitions.forEach(element => {
-								cell.font = {
-									name: 'Arial',
-									size: 10,
-									bold: true,
-									color: { argb: 'ffffff' }
-								};
-								cell.alignment = { wrapText: true, horizontal: 'center' };
-								cell.fill = {
-									type: 'pattern',
-									pattern: 'solid',
-									fgColor: { argb: '004261' },
-									bgColor: { argb: '004261' },
-								};
-								cell.border = {
-									top: { style: 'thin' },
-									left: { style: 'thin' },
-									bottom: { style: 'thin' },
-									right: { style: 'thin' }
-								};
-							});
-						});
-					} else if (groupItem.level > 0) {
-						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.exportColumnDefinitions.forEach(element => {
-								cell.font = {
-									name: 'Arial',
-									size: 10,
-								};
-								cell.alignment = { wrapText: true, horizontal: 'center' };
-								cell.border = {
-									top: { style: 'thin' },
-									left: { style: 'thin' },
-									bottom: { style: 'thin' },
-									right: { style: 'thin' }
-								};
-							});
-						});
-					}
-				} else {
-					Object.keys(groupItem.rows).forEach(key => {
-						const obj = {};
-						for (const item2 of this.exportColumnDefinitions) {
-							if (this.reportType !== 'mfr') {
-								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-									obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
-									obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y');
-								}
-								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-									obj[item2.id] = this.common.htmlToText(groupItem.rows[key][item2.id]);
-								}
-							} else {
-								if (item2.id.toString().match(/Q/)) {
-										obj[item2.id] = groupItem.rows[key][item2.id].status !== 'Not Generated' ? groupItem.rows[key][item2.id].status
-											: '-';
-									} else {
-										obj[item2.id] = groupItem.rows[key][item2.id];
-								}
-							}
-						}
-						worksheet.addRow(obj);
+	getSectionByClass($event) {
+		this.erpCommonService.getSectionsByClass({ class_id: $event.value }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				for (const item of result.data) {
+					this.sectionArray.push({
+						id: item.sec_id,
+						name: item.sec_name
 					});
-					const obj3: any = {};
-					if (this.reportType === 'headwise') {
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_id'] = '';
-						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
-						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-								Object.keys(groupItem.rows).forEach(key3 => {
-									Object.keys(groupItem.rows[key3]).forEach(key4 => {
-										if (key4 === key2) {
-											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-										}
-									});
-								});
-							});
-						});
-						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-						obj3['receipt_mode_name'] = '';
-						obj3['tb_name'] = '';
-					}
-					if (this.reportType === 'modewise') {
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_id'] = '';
-						obj3['receipt_no'] = '';
-						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-								Object.keys(groupItem.rows).forEach(key3 => {
-									Object.keys(groupItem.rows[key3]).forEach(key4 => {
-										if (key4 === key2) {
-											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-										}
-									});
-								});
-							});
-						});
-						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-						obj3['fp_name'] = '';
-					}
-					if (this.reportType === 'classwise') {
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
-						obj3['fp_name'] = '';
-					}
-					if (this.reportType === 'routewise') {
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['transport_amount'] = groupItem.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
-						obj3['route_name'] = '';
-						obj3['stoppages_name'] = '';
-						obj3['slab_name'] = '';
-					}
-					if (this.reportType === 'mfr') {
-						obj3['id'] = '';
-						obj3['srno'] = '';
-						obj3['au_login_id'] = '';
-						obj3['stu_opening_balance'] = groupItem.rows.map(t => t['stu_opening_balance']).reduce((acc, val) => acc + val, 0);
-						obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_full_name'] = groupItem.rows.length;
-						obj3['stu_class_name'] = '';
-						obj3['fp_name'] = '';
-					}
-					worksheet.addRow(obj3);
-					this.notFormatedCellArray.push(worksheet._rows.length);
-					if (groupItem.level === 0) {
-						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.exportColumnDefinitions.forEach(element => {
-								cell.font = {
-									name: 'Arial',
-									size: 10,
-									bold: true,
-									color: { argb: 'ffffff' }
-								};
-								cell.alignment = { wrapText: true, horizontal: 'center' };
-								cell.fill = {
-									type: 'pattern',
-									pattern: 'solid',
-									fgColor: { argb: '004261' },
-									bgColor: { argb: '004261' },
-								};
-								cell.border = {
-									top: { style: 'thin' },
-									left: { style: 'thin' },
-									bottom: { style: 'thin' },
-									right: { style: 'thin' }
-								};
-							});
-						});
-					} else if (groupItem.level > 0) {
-						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
-							this.exportColumnDefinitions.forEach(element => {
-								cell.font = {
-									name: 'Arial',
-									size: 10,
-								};
-								cell.alignment = { wrapText: true, horizontal: 'center' };
-								cell.border = {
-									top: { style: 'thin' },
-									left: { style: 'thin' },
-									bottom: { style: 'thin' },
-									right: { style: 'thin' }
-								};
-							});
-						});
-					}
+				}
+			}
+		});
+	}
+	
+	getSchool() {
+		this.erpCommonService.getSchool().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.schoolInfo = res.data[0];
+			}
+		});
+	}
+	getFromDate(value) {
+		this.reportFilterForm.patchValue({
+			from_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+		});
+	}
+	getToDate(value) {
+		this.reportFilterForm.patchValue({
+			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+		});
+	}
+	getSessionName(id) {
+		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
+		if (findex !== -1) {
+			return this.sessionArray[findex].ses_name;
+		}
+	}
+	getSession() {
+		this.erpCommonService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				this.sessionArray = result2.data;
+				this.sessionName = this.getSessionName(this.session.ses_id);
+			}
+		});
+	}
+	resetValues() {
+		this.reportFilterForm.patchValue({
+			'class_value': '',
+			'hidden_value': '',
+			'report_type': '',
+			'downloadAll': true,
+		});
+	}
+	exportToFile(type = 'csv') {
+		let reportType: any = '';
+		this.sessionName = this.getSessionName(this.session.ses_id);
+		reportType = new TitleCasePipe().transform('Accession Master:') + this.sessionName;
+		this.angularGrid.exportService.exportToFile({
+			delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
+			filename: reportType + '_' + new Date(),
+			format: (type === 'csv') ? FileType.csv : FileType.txt
+		});
+	}
+	checkWidth(id, header) {
+		const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
+	}
+	getGroupColumns(columns) {
+		let grName = '';
+		for (const item of columns) {
+			for (const titem of this.columnDefinitions) {
+				if (item.getter === titem.id) {
+					grName = grName + titem.name + ',';
+					break;
 				}
 			}
 		}
+		return grName.substring(0, grName.length - 1);
 	}
 	exportToExcel(json: any[]) {
 		this.notFormatedCellArray = [];
@@ -2494,39 +953,13 @@ export class IssueReturnReportComponent implements OnInit {
 			columValue.push(item.name);
 		}
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		if (this.reportType === 'headwise') {
-			reportType = new TitleCasePipe().transform('head wise_') + this.sessionName;
-		} else if (this.reportType === 'classwise') {
-			reportType = new TitleCasePipe().transform('class wise_') + this.sessionName;
-		} else if (this.reportType === 'modewise') {
-			reportType = new TitleCasePipe().transform('mode wise_') + this.sessionName;
-		} else if (this.reportType === 'routewise') {
-			reportType = new TitleCasePipe().transform('route wise_') + this.sessionName;
-		} else if (this.reportType === 'mfr') {
-			reportType = new TitleCasePipe().transform('monthly fee_') + this.sessionName;
-		}
-		else if (this.reportType === 'summary') {
-			reportType = new TitleCasePipe().transform('summaryfee_') + this.sessionName;
-		}
+		reportType = new TitleCasePipe().transform('issue_return_report_') + this.sessionName;
 		let reportType2: any = '';
-		this.sessionName = this.getSessionName(this.session.ses_id);
-		if (this.reportType === 'headwise') {
-			reportType2 = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'classwise') {
-			reportType2 = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'modewise') {
-			reportType2 = new TitleCasePipe().transform('mode wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'routewise') {
-			reportType2 = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'mfr') {
-			reportType2 = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
-		}
-		else if (this.reportType === 'summary') {
-			reportType2 = new TitleCasePipe().transform('collection summary report: ') + this.sessionName;
-		}
+		reportType2 = new TitleCasePipe().transform('Issue Return Report : ') + this.sessionName;
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
-		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } });
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
@@ -2540,27 +973,11 @@ export class IssueReturnReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.exportColumnDefinitions) {
-					if (this.reportType !== 'mfr' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
-						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
-						}
-						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
-							obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]), 'd-MMM-y');
-						}
-						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& json[key][item2.id] === '<b>Grand Total</b>') {
-							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
-						}
-						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
-						}
-					} else if (this.reportType === 'mfr' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
-						if (item2.id.toString().match(/Q/)) {
-							obj[item2.id] = json[key][item2.id].status !== 'Not Generated' ? json[key][item2.id].status : '-';
-						} else {
-							obj[item2.id] = json[key][item2.id];
-						}
+					if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+						|| item2.id === 'dishonor_date') && json[key][item2.id] !== '-') {
+						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
+					} else {
+						obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 					}
 				}
 				worksheet.addRow(obj);
@@ -2730,53 +1147,196 @@ export class IssueReturnReportComponent implements OnInit {
 			saveAs(blob, fileName);
 		});
 	}
-	exportToFile(type = 'csv') {
-		let reportType: any = '';
-		this.sessionName = this.getSessionName(this.session.ses_id);
-		if (this.reportType === 'headwise') {
-			reportType = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'classwise') {
-			reportType = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'modewise') {
-			reportType = new TitleCasePipe().transform('mode wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'routewise') {
-			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'mfr') {
-			reportType = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
+	filtered(event) {
+		this.filteredAs[event.source.ngControl.name] = event.source._placeholder + ' - ' + event.source.selected.viewValue;
+	}
+	getParamValue() {
+		const filterArr = [];
+		Object.keys(this.filteredAs).forEach(key => {
+			filterArr.push(this.filteredAs[key]);
+		});
+		filterArr.push(
+			this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') + ' - ' +
+			this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
+		return filterArr;
+	}
+	getLevelFooter(level, groupItem) {
+		if (level === 0) {
+			return 'Total';
 		}
-		this.angularGrid.exportService.exportToFile({
-			delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
-			filename: reportType + '_' + new Date(),
-			format: (type === 'csv') ? FileType.csv : FileType.txt
-		});
+		if (level > 0) {
+			return 'Sub Total (' + groupItem.value + ')';
+		}
 	}
-	getFromDate(value) {
-		this.reportFilterForm.patchValue({
-			from_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
-		});
-	}
-	getToDate(value) {
-		this.reportFilterForm.patchValue({
-			to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
-		});
-	}
-	checkWidth(id, header) {
-		const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
-		const max2 = header.toString().length;
-		const max = Math.max.apply(null, res);
-		return max2 > max ? max2 : max;
-	}
-	getGroupColumns(columns) {
-		let grName = '';
-		for (const item of columns) {
-			for (const titem of this.exportColumnDefinitions) {
-				if (item.getter === titem.id) {
-					grName = grName + titem.name + ',';
-					break;
+	checkGroupLevel(item, worksheet) {
+		if (item.length > 0) {
+			for (const groupItem of item) {
+				worksheet.addRow({});
+				this.notFormatedCellArray.push(worksheet._rows.length);
+				// style for groupeditem level heading
+				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
+					this.alphabetJSON[this.exportColumnDefinitions.length] + (worksheet._rows.length));
+				worksheet.getCell('A' + worksheet._rows.length).value = this.common.htmlToText(groupItem.title);
+				worksheet.getCell('A' + worksheet._rows.length).fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: 'c8d6e5' },
+					bgColor: { argb: 'ffffff' },
+				};
+				worksheet.getCell('A' + worksheet._rows.length).border = {
+					top: { style: 'thin' },
+					left: { style: 'thin' },
+					bottom: { style: 'thin' },
+					right: { style: 'thin' }
+				};
+				worksheet.getCell('A' + worksheet._rows.length).font = {
+					name: 'Arial',
+					size: 10,
+					bold: true
+				};
+
+				if (groupItem.groups) {
+					this.checkGroupLevel(groupItem.groups, worksheet);
+					const obj3: any = {};
+					obj3['id'] = '';
+					obj3['srno'] = '';
+					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
+					obj3['stu_full_name'] = '';
+					obj3['stu_class_name'] = '';
+					obj3['deposite_date'] = '';
+					obj3['cheque_date'] = '';
+					obj3['dishonor_date'] = '';
+					obj3['invoice_id'] = '';
+					obj3['invoice_no'] = '';
+					obj3['receipt_no'] = '';
+					obj3['receipt_id'] = '';
+					obj3['receipt_amount'] = groupItem.rows.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['bank_name'] = '';
+					obj3['status'] = '';
+					obj3['fcc_reason_id'] = '';
+					obj3['fcc_remarks'] = '';
+					worksheet.addRow(obj3);
+					this.notFormatedCellArray.push(worksheet._rows.length);
+					// style row having total
+					if (groupItem.level === 0) {
+						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+							this.exportColumnDefinitions.forEach(element => {
+								cell.font = {
+									name: 'Arial',
+									size: 10,
+									bold: true,
+									color: { argb: 'ffffff' }
+								};
+								cell.alignment = { wrapText: true, horizontal: 'center' };
+								cell.fill = {
+									type: 'pattern',
+									pattern: 'solid',
+									fgColor: { argb: '004261' },
+									bgColor: { argb: '004261' },
+								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						});
+					} else if (groupItem.level > 0) {
+						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+							this.exportColumnDefinitions.forEach(element => {
+								cell.font = {
+									name: 'Arial',
+									size: 10,
+								};
+								cell.alignment = { wrapText: true, horizontal: 'center' };
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						});
+					}
+				} else {
+					Object.keys(groupItem.rows).forEach(key => {
+						const obj = {};
+						for (const item2 of this.exportColumnDefinitions) {
+							if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+								|| item2.id === 'dishonor_date') && groupItem.rows[key][item2.id] !== '-') {
+								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
+							} else {
+								obj[item2.id] = this.checkReturn(this.common.htmlToText(groupItem.rows[key][item2.id]));
+							}
+
+						}
+						worksheet.addRow(obj);
+					});
+					const obj3: any = {};
+					obj3['id'] = '';
+					obj3['srno'] = '';
+					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
+					obj3['stu_full_name'] = '';
+					obj3['stu_class_name'] = '';
+					obj3['deposite_date'] = '';
+					obj3['cheque_date'] = '';
+					obj3['dishonor_date'] = '';
+					obj3['invoice_id'] = '';
+					obj3['invoice_no'] = '';
+					obj3['receipt_no'] = '';
+					obj3['receipt_id'] = '';
+					obj3['receipt_amount'] = groupItem.rows.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['bank_name'] = '';
+					obj3['status'] = '';
+					obj3['fcc_reason_id'] = '';
+					obj3['fcc_remarks'] = '';
+					worksheet.addRow(obj3);
+					this.notFormatedCellArray.push(worksheet._rows.length);
+					if (groupItem.level === 0) {
+						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+							this.exportColumnDefinitions.forEach(element => {
+								cell.font = {
+									name: 'Arial',
+									size: 10,
+									bold: true,
+									color: { argb: 'ffffff' }
+								};
+								cell.alignment = { wrapText: true, horizontal: 'center' };
+								cell.fill = {
+									type: 'pattern',
+									pattern: 'solid',
+									fgColor: { argb: '004261' },
+									bgColor: { argb: '004261' },
+								};
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						});
+					} else if (groupItem.level > 0) {
+						worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+							this.exportColumnDefinitions.forEach(element => {
+								cell.font = {
+									name: 'Arial',
+									size: 10,
+								};
+								cell.alignment = { wrapText: true, horizontal: 'center' };
+								cell.border = {
+									top: { style: 'thin' },
+									left: { style: 'thin' },
+									bottom: { style: 'thin' },
+									right: { style: 'thin' }
+								};
+							});
+						});
+					}
 				}
 			}
 		}
-		return grName.substring(0, grName.length - 1);
 	}
 	exportAsPDF(json: any[]) {
 		const headerData: any[] = [];
@@ -2788,17 +1348,7 @@ export class IssueReturnReportComponent implements OnInit {
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
 		let reportType: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		if (this.reportType === 'headwise') {
-			reportType = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'classwise') {
-			reportType = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'modewise') {
-			reportType = new TitleCasePipe().transform('mode wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'routewise') {
-			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'mfr') {
-			reportType = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
-		}
+		reportType = new TitleCasePipe().transform('Issue Return report: ') + this.sessionName;
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
@@ -2840,27 +1390,11 @@ export class IssueReturnReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
-					if (this.reportType !== 'mfr') {
-						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
-						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
-							arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id]), 'd-MMM-y'));
-						}
-						if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date'
-							&& this.dataset[key][item2.id] === '<b>Grand Total</b>') {
-							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
-						if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-						}
-					} else if (this.reportType === 'mfr') {
-						if (item2.id.toString().match(/Q/)) {
-							arr.push(this.dataset[key][item2.id].status);
-						} else {
-							arr.push(this.dataset[key][item2.id]);
-						}
+					if (this.dataset[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
+						|| item2.id === 'deposite_date')) {
+						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+					} else {
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 					}
 				}
 				rowData.push(arr);
@@ -3033,9 +1567,7 @@ export class IssueReturnReportComponent implements OnInit {
 		});
 		doc.save(reportType + '_' + new Date() + '.pdf');
 	}
-	countTotalsFormatter(totals, columnDef) {
-		return '<b class="total-footer-report">' + totals.group.rows.length + '</b>';
-	}
+
 	checkGroupLevelPDF(item, doc, headerData) {
 		if (item.length > 0) {
 			for (const groupItem of item) {
@@ -3045,113 +1577,30 @@ export class IssueReturnReportComponent implements OnInit {
 				if (groupItem.groups) {
 					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
 					const levelArray: any[] = [];
-					if (this.reportType === 'headwise') {
-						const obj3: any = {};
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_id'] = '';
-						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
-						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-								Object.keys(groupItem.rows).forEach(key3 => {
-									Object.keys(groupItem.rows[key3]).forEach(key4 => {
-										if (key4 === key2) {
-											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-										}
-									});
-								});
-							});
+					const obj3: any = {};
+					obj3['id'] = '';
+					obj3['srno'] = '';
+					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
+					obj3['stu_full_name'] = '';
+					obj3['stu_class_name'] = '';
+					obj3['deposite_date'] = '';
+					obj3['cheque_date'] = '';
+					obj3['dishonor_date'] = '';
+					obj3['invoice_id'] = '';
+					obj3['invoice_no'] = '';
+					obj3['receipt_no'] = '';
+					obj3['receipt_id'] = '';
+					obj3['receipt_amount'] = groupItem.rows.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['bank_name'] = '';
+					obj3['status'] = '';
+					obj3['fcc_reason_id'] = '';
+					obj3['fcc_remarks'] = '';
+					for (const col of this.exportColumnDefinitions) {
+						Object.keys(obj3).forEach((key: any) => {
+							if (col.id === key) {
+								levelArray.push(obj3[key]);
+							}
 						});
-						obj3['bank_name'] = '';
-						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-						obj3['receipt_mode_name'] = '';
-						obj3['tb_name'] = '';
-						for (const col of this.exportColumnDefinitions) {
-							Object.keys(obj3).forEach((key: any) => {
-								if (col.id === key) {
-									levelArray.push(obj3[key]);
-								}
-							});
-						}
-					}
-					if (this.reportType === 'modewise') {
-						const obj3: any = {};
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_id'] = '';
-						obj3['receipt_no'] = '';
-						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-								Object.keys(groupItem.rows).forEach(key3 => {
-									Object.keys(groupItem.rows[key3]).forEach(key4 => {
-										if (key4 === key2) {
-											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-										}
-									});
-								});
-							});
-						});
-						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-						obj3['fp_name'] = '';
-						for (const col of this.exportColumnDefinitions) {
-							Object.keys(obj3).forEach((key: any) => {
-								if (col.id === key) {
-									levelArray.push(obj3[key]);
-								}
-							});
-						}
-					}
-					if (this.reportType === 'classwise') {
-						const obj3: any = {};
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
-						obj3['fp_name'] = '';
-						for (const col of this.exportColumnDefinitions) {
-							Object.keys(obj3).forEach((key: any) => {
-								if (col.id === key) {
-									levelArray.push(obj3[key]);
-								}
-							});
-						}
-					}
-					if (this.reportType === 'routewise') {
-						const obj3: any = {};
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['transport_amount'] = groupItem.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
-						obj3['route_name'] = '';
-						obj3['stoppages_name'] = '';
-						obj3['slab_name'] = '';
-						for (const col of this.exportColumnDefinitions) {
-							Object.keys(obj3).forEach((key: any) => {
-								if (col.id === key) {
-									levelArray.push(obj3[key]);
-								}
-							});
-						}
 					}
 					if (groupItem.level === 0) {
 						this.pdfrowdata.push(levelArray);
@@ -3165,141 +1614,43 @@ export class IssueReturnReportComponent implements OnInit {
 					const rowData: any[] = [];
 					Object.keys(groupItem.rows).forEach(key => {
 						const arr: any = [];
-						for (const item2 of this.exportColumnDefinitions) {
-							if (this.reportType !== 'mfr') {
-								if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
-									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
-									arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id]), 'd-MMM-y'));
-								}
-								if (item2.id !== 'fp_name' && item2.id === 'invoice_created_date') {
-									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
-								if (item2.id !== 'invoice_created_date' && item2.id === 'fp_name') {
-									arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
-								}
+						for (const item2 of this.columnDefinitions) {
+							if (groupItem.rows[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
+								|| item2.id === 'deposite_date')) {
+								arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id])));
 							} else {
-								if (item2.id.toString().match(/Q/)) {
-									arr.push(groupItem.rows[key][item2.id].status);
-								} else {
-									arr.push(groupItem.rows[key][item2.id]);
-								}
+								arr.push(this.common.htmlToText(groupItem.rows[key][item2.id]));
 							}
 						}
 						rowData.push(arr);
 						this.pdfrowdata.push(arr);
 					});
 					const levelArray: any[] = [];
-					if (this.reportType === 'headwise') {
-						const obj3: any = {};
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_id'] = '';
-						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
-						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
-						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-								Object.keys(groupItem.rows).forEach(key3 => {
-									Object.keys(groupItem.rows[key3]).forEach(key4 => {
-										if (key4 === key2) {
-											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-										}
-									});
-								});
-							});
+					const obj3: any = {};
+					obj3['id'] = '';
+					obj3['srno'] = '';
+					obj3['stu_admission_no'] = this.getLevelFooter(groupItem.level, groupItem);
+					obj3['stu_full_name'] = '';
+					obj3['stu_class_name'] = '';
+					obj3['deposite_date'] = '';
+					obj3['cheque_date'] = '';
+					obj3['dishonor_date'] = '';
+					obj3['invoice_id'] = '';
+					obj3['invoice_no'] = '';
+					obj3['receipt_no'] = '';
+					obj3['receipt_id'] = '';
+					obj3['receipt_amount'] = groupItem.rows.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0);
+					obj3['bank_name'] = '';
+					obj3['status'] = '';
+					obj3['fcc_reason_id'] = '';
+					obj3['fcc_remarks'] = '';
+					for (const col of this.exportColumnDefinitions) {
+						Object.keys(obj3).forEach((key: any) => {
+							if (col.id === key) {
+								levelArray.push(obj3[key]);
+							}
 						});
-						obj3['bank_name'] = '';
-						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-						obj3['receipt_mode_name'] = '';
-						obj3['tb_name'] = '';
-						for (const col of this.exportColumnDefinitions) {
-							Object.keys(obj3).forEach((key: any) => {
-								if (col.id === key) {
-									levelArray.push(obj3[key]);
-								}
-							});
-						}
 					}
-					if (this.reportType === 'modewise') {
-						const obj3: any = {};
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_id'] = '';
-						obj3['receipt_no'] = '';
-						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
-							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
-								Object.keys(groupItem.rows).forEach(key3 => {
-									Object.keys(groupItem.rows[key3]).forEach(key4 => {
-										if (key4 === key2) {
-											obj3[key2] = groupItem.rows.map(t => t[key2]).reduce((acc, val) => acc + val, 0);
-										}
-									});
-								});
-							});
-						});
-						obj3['total'] = groupItem.rows.map(t => t.total).reduce((acc, val) => acc + val, 0);
-						obj3['fp_name'] = '';
-						for (const col of this.exportColumnDefinitions) {
-							Object.keys(obj3).forEach((key: any) => {
-								if (col.id === key) {
-									levelArray.push(obj3[key]);
-								}
-							});
-						}
-					}
-					if (this.reportType === 'classwise') {
-						const obj3: any = {};
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['rpt_amount'] = groupItem.rows.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0);
-						obj3['fp_name'] = '';
-						for (const col of this.exportColumnDefinitions) {
-							Object.keys(obj3).forEach((key: any) => {
-								if (col.id === key) {
-									levelArray.push(obj3[key]);
-								}
-							});
-						}
-					}
-					if (this.reportType === 'routewise') {
-						const obj3: any = {};
-						obj3['id'] = 'footer';
-						obj3['srno'] = '';
-						obj3['invoice_created_date'] = this.getLevelFooter(groupItem.level, groupItem);
-						obj3['stu_admission_no'] = '';
-						obj3['stu_full_name'] = '';
-						obj3['stu_class_name'] = '';
-						obj3['fp_name'] = '';
-						obj3['receipt_no'] = '';
-						obj3['transport_amount'] = groupItem.rows.map(t => t['transport_amount']).reduce((acc, val) => acc + val, 0);
-						obj3['route_name'] = '';
-						obj3['stoppages_name'] = '';
-						obj3['slab_name'] = '';
-						for (const col of this.exportColumnDefinitions) {
-							Object.keys(obj3).forEach((key: any) => {
-								if (col.id === key) {
-									levelArray.push(obj3[key]);
-								}
-							});
-						}
-					}
-					// style row having total
 					if (groupItem.level === 0) {
 						this.pdfrowdata.push(levelArray);
 						this.levelTotalFooter.push(this.pdfrowdata.length - 1);

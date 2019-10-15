@@ -135,13 +135,13 @@ export class SubjectSubexamModalComponent implements OnInit {
   }
  
   getSubMark(sub_id, sub_mark) {
-    console.log(sub_id,sub_mark);
+    //console.log(sub_id,sub_mark);
     let item: any;
     if(this.data && this.data.length > 0) {
       item = this.data.find(e => e.ssm_sub_id === sub_id);
     }
     if(item) {
-      console.log(item.ssm_sub_mark);
+      //console.log(item.ssm_sub_mark);
       return item.ssm_sub_mark;
     }
     return sub_mark;
@@ -184,8 +184,8 @@ export class SubjectSubexamModalComponent implements OnInit {
           });
         }
         this.submarkDivFlag = true;
-        console.log('submarkFormArr',this.submarkFormArr);
-        console.log('subjectArray',this.subjectArray);
+        //console.log('submarkFormArr',this.submarkFormArr);
+        //console.log('subjectArray',this.subjectArray);
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
