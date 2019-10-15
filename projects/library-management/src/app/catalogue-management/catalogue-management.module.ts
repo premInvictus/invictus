@@ -8,7 +8,7 @@ import { PeriodicalMasterComponent } from './periodical-master/periodical-master
 import { AddSubscriptionDialog } from './periodical-master/add-subscription-dialog/add-subscription-dialog.component';
 
 import { VendorMasterComponent } from './vendor-master/vendor-master.component';
-import { AddVendorDialog } from './vendor-master/add-vendor-dialog/add-vendor-dialog.component';
+// import { AddVendorDialog } from './vendor-master/add-vendor-dialog/add-vendor-dialog.component';
 import { PurchaseMasterComponent } from './purchase-master/purchase-master.component';
 
 @NgModule({
@@ -17,10 +17,9 @@ import { PurchaseMasterComponent } from './purchase-master/purchase-master.compo
     CatalogueManagementRoutingModule,
     LibrarySharedModule
   ],
-  declarations: [AccessionMasterComponent, PeriodicalMasterComponent, VendorMasterComponent, PurchaseMasterComponent, AddSubscriptionDialog, AddVendorDialog],
+  declarations: [AccessionMasterComponent, PeriodicalMasterComponent, VendorMasterComponent, PurchaseMasterComponent, AddSubscriptionDialog],
   entryComponents: [
-    AddSubscriptionDialog,
-    AddVendorDialog
+    AddSubscriptionDialog
   ],
 })
 export class CatalogueManagementModule { }
