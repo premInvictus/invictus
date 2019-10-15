@@ -11,10 +11,10 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-3 col-mobile-view-add-ques"> 
+            <div class="col-3 col-mobile-view-add-ques">
 
               <div class="left-side-box">
-                <div class="left-side-box-content">
+                <div class="left-side-box-content" style="padding-left: 0px; padding-right: 0px;">
                   <div>
                     <div class="row">
                       <div class="col-12">
@@ -117,59 +117,90 @@
                             <ng-container *ngFor="let gradeDatafrm of gradeDataFrmArr; let rowIndex=index;">
                               <form [formGroup]="gradeDatafrm.formGroup">
                                 <div class="row">
-                                  <div class="col-12">
-                                    <div class="col-12">
-                                      <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Grade Name</mat-label>
-                                        <input matInput placeholder="Enter Grade Name" type="text"
-                                          class="text-capitalize" formControlName="egs_grade_name"
-                                          [errorStateMatcher]="confirmValidParentMatcher"
-                                          [value]="gradeDatafrm.formGroup.get('egs_grade_name').value | capitalize"
-                                          required>
-                                        <mat-error>Please Enter Grade Name</mat-error>
-                                      </mat-form-field>
+                                  <div class="col-11" style="padding-right: 5px; padding-left: 2px;">
+                                    <div class="row">
+                                      <div 
+                                      [ngClass]="{
+                                        'col-6':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '1',
+                                        'col-4':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '2'
+                                      }"
+                                      style="padding-right: 5px; padding-left: 2px;">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                          <mat-label>Grade Name</mat-label>
+                                          <input matInput placeholder="Enter Grade Name" type="text"
+                                            class="text-capitalize" formControlName="egs_grade_name"
+                                            [errorStateMatcher]="confirmValidParentMatcher"
+                                            [value]="gradeDatafrm.formGroup.get('egs_grade_name').value | capitalize"
+                                            required>
+                                          <mat-error>Please Enter Grade Name</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div 
+                                      [ngClass]="{
+                                        'col-6':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '1',
+                                        'col-4':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '2'
+                                      }" 
+                                      style="padding-right: 5px; padding-left: 2px;"
+                                        *ngIf="formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '1'">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                          <mat-label>Value</mat-label>
+                                          <input matInput placeholder="Enter Grade Value" type="text"
+                                            class="text-capitalize" formControlName="egs_grade_value"
+                                            [errorStateMatcher]="confirmValidParentMatcher"
+                                            [value]="gradeDatafrm.formGroup.get('egs_grade_value').value | capitalize"
+                                            required>
+                                          <mat-error>Please Enter Grade Value</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div 
+                                      [ngClass]="{
+                                        'col-6':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '1',
+                                        'col-4':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '2'
+                                      }"
+                                      style="padding-right: 5px; padding-left: 2px;"
+                                        *ngIf="formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '2'">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                          <mat-label>Start</mat-label>
+                                          <mat-select formControlName="egs_range_start" placeholder="Start Range"
+                                            [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher">
+                                            <mat-option value="">Please Select Start Range
+                                            </mat-option>
+                                            <mat-option *ngFor="let item of rangeArray" [value]="item.rng_id">
+                                              {{item.rng_value}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
+                                      <div 
+                                      [ngClass]="{
+                                        'col-6':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '1',
+                                        'col-4':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '2'
+                                      }"
+                                      style="padding-right: 5px; padding-left: 2px;"
+                                        *ngIf="formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '2'">
+                                        <mat-form-field class="form-field" appearance="outline">
+                                          <mat-label>End</mat-label>
+                                          <mat-select formControlName="egs_range_end" placeholder="End Range"
+                                            [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher">
+                                            <mat-option value="">Please Select End Range
+                                            </mat-option>
+                                            <mat-option *ngFor="let item of rangeArray" [value]="item.rng_id">
+                                              {{item.rng_value}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
                                     </div>
-                                    <div class="col-12">
-                                      <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Grade Value</mat-label>
-                                        <input matInput placeholder="Enter Grade Value" type="text"
-                                          class="text-capitalize" formControlName="egs_grade_value"
-                                          [errorStateMatcher]="confirmValidParentMatcher"
-                                          [value]="gradeDatafrm.formGroup.get('egs_grade_value').value | capitalize"
-                                          required>
-                                        <mat-error>Please Enter Grade Value</mat-error>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-12">
-                                      <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Range Start</mat-label>
-                                        <mat-select formControlName="egs_range_start" placeholder="Select Start Range"
-                                          [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher">
-                                          <mat-option value="">Please Select Start Range
-                                          </mat-option>
-                                          <mat-option *ngFor="let item of rangeArray" [value]="item.rng_id">
-                                            {{item.rng_value}}
-                                          </mat-option>
-                                        </mat-select>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-12">
-                                      <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Range End</mat-label>
-                                        <mat-select formControlName="egs_range_end" placeholder="Select End Range"
-                                          [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher">
-                                          <mat-option value="">Please Select End Range
-                                          </mat-option>
-                                          <mat-option *ngFor="let item of rangeArray" [value]="item.rng_id">
-                                            {{item.rng_value}}
-                                          </mat-option>
-                                        </mat-select>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-12">
-
-                                      <button mat-raised-button class="btn-danger btn-spacer"
-                                        (click)="deleteGradeData(rowIndex)">X</button>
+                                  </div>
+                                  <div class="col-1" style="padding-right: 2px; padding-left: 0px;">
+                                    <div class="row">
+                                      <div class="col-12" style="padding-right: 0px; padding-left: 0px; margin-top: 15px">
+                                        <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip"
+                                          data-placement="top" matTooltip="Delete" aria-hidden="true"
+                                          (click)="deleteGradeData(rowIndex)"></i>
+                                        <!-- <button mat-raised-button class="btn-danger btn-spacer"
+                                                (click)="deleteGradeData(rowIndex)">X</button> -->
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -374,8 +405,8 @@
                           <div class="col-12">
                             <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Class</mat-label>
-                              <mat-select formControlName="ect_class_id" placeholder="Select Class" [disabled]="editFlag"
-                                multiple [errorStateMatcher]="confirmValidParentMatcher" required>
+                              <mat-select formControlName="ect_class_id" placeholder="Select Class"
+                                [disabled]="editFlag" multiple [errorStateMatcher]="confirmValidParentMatcher" required>
                                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                                   {{item.class_name}}
                                 </mat-option>
@@ -390,7 +421,7 @@
                             <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Terms</mat-label>
                               <mat-select formControlName="ect_term_id" placeholder="Select Section"
-                                [disabled]="editFlag"  [errorStateMatcher]="confirmValidParentMatcher" required>
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
                                 <mat-option *ngFor="let item of termArray" [value]="item.term_id">
                                   {{item.term_name}}
                                 </mat-option>
@@ -399,7 +430,7 @@
                             </mat-form-field>
                           </div>
                         </div>
- 
+
                         <div class="row">
                           <div class="col-12">
                             <mat-form-field class="form-field" appearance="outline">
@@ -445,7 +476,7 @@
                           </div>
                         </div>
 
-                        
+
                       </form>
                     </div>
 
@@ -508,8 +539,7 @@
                                           Terms
                                         </th>
                                         <td class="left" mat-cell *matCellDef="let item">
-                                          <span
-                                            *ngIf="item.term_name">{{ item.term_name }}</span>
+                                          <span *ngIf="item.term_name">{{ item.term_name }}</span>
                                           <span *ngIf="!item.term_name">-</span>
                                         </td>
                                       </ng-container>
@@ -531,9 +561,10 @@
                                           <span *ngIf="!item.no_of_tiers">-</span>
                                         </td>
                                       </ng-container>
-                                      <ng-container *ngIf="configValue == '3' || configValue == '7'" matColumnDef="grade_name">
+                                      <ng-container *ngIf="configValue == '3' || configValue == '7'"
+                                        matColumnDef="grade_name">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                          Scholastic 
+                                          Scholastic
                                         </th>
                                         <td class="left" mat-cell *matCellDef="let item">
                                           <span *ngIf="item.grade_name">{{ item.grade_name }}</span>
@@ -542,7 +573,7 @@
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '7'" matColumnDef="co_grade_name">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                          Co-Scholastic 
+                                          Co-Scholastic
                                         </th>
                                         <td class="left" mat-cell *matCellDef="let item">
                                           <span *ngIf="item.co_grade_name">{{ item.co_grade_name }}</span>

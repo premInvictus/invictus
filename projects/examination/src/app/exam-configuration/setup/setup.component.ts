@@ -449,10 +449,10 @@ export class SetupComponent implements OnInit {
 		const gradeDataTier = event.value;
 		this.gradeDataFrmArr = [];
 
-		for (let i = 0; i < 100; i++) {
+		for (let i = 0; i <= 100; i++) {
 			this.rangeArray.push({
-				'rng_id': (i + 1),
-				'rng_value': (i + 1)
+				'rng_id': i,
+				'rng_value': i
 			});
 		}
 
@@ -624,6 +624,7 @@ export class SetupComponent implements OnInit {
 		this.configFlag = false;
 		this.setupUpdateFlag = false;
 		this.configValue = event.value;
+		this.formGroupArray[this.configValue-1].formGroup.reset();
 		if (Number(this.configValue) === 1) { // for exam setup
 			this.getExam(this);
 			this.displayedColumns = ['position', 'name', 'order', 'action', 'modify'];
@@ -633,6 +634,7 @@ export class SetupComponent implements OnInit {
 			this.displayedColumns = ['position', 'name', 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) { // for exam grade setup
+			this.gradeDataFrmArr = [];
 			this.getExamGradeSetup(this);
 			this.displayedColumns = ['position', 'name', 'point_type_id', 'no_of_tiers', 'grade_name', 'grade_value', 'start_range', 'end_range', 'grade_set_description', 'action', 'modify'];
 			this.configFlag = true;
