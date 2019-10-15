@@ -293,21 +293,12 @@ export class ClassWiseComponent implements OnInit, OnChanges {
 			if (rowNum >= 5 && rowNum <= worksheet._rows.length) {
 				row.eachCell(cell => {
 					if (cell._address.charAt(0) !== 'A') {
-						if (rowNum % 2 === 0) {
-							cell.fill = {
-								type: 'pattern',
-								pattern: 'solid',
-								fgColor: { argb: 'ffffff' },
-								bgColor: { argb: 'ffffff' },
-							};
-						} else {
-							cell.fill = {
-								type: 'pattern',
-								pattern: 'solid',
-								fgColor: { argb: '888888' },
-								bgColor: { argb: '888888' },
-							};
-						}
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
 					}
 					cell.font = {
 						color: { argb: 'black' },
