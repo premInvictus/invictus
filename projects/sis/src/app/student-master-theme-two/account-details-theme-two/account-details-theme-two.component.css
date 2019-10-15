@@ -1,0 +1,22 @@
+.margin-left-50{
+    margin-left: 50px;
+    margin-right: 50px;
+}
+.pad-bot-10{
+    padding-bottom: 10px;
+}
+.approved{
+    margin-left: 10px;
+    color:green;
+    font-size: 16px;
+    font-weight: 700
+}
+.pending{
+    margin-left: 10px;
+    color:red;
+    font-size: 16px;
+    font-weight: 700
+}
+.form-field-320{
+    width: 320px !important;
+}

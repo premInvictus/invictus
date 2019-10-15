@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FeeService } from 'projects/fee/src/app/_services';
-import { ProcesstypeService, CommonAPIService } from '../../_services';
+import { ProcesstypeService, CommonAPIService, SisService } from '../../_services';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -29,11 +29,13 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	stoppageArray: any[] = [];
 	slabArray: any[] = [];
 	transPortModes: any[] = [];
+	reasonArr: any[] = [];
 	lastRecordId;
 	loginId: any;
 	terminateStatus: any;
 	hostelStatus: any;
 	existFlag = false;
+	conStatus: any;
 	hostelTerminateFlag = false;
 	@Input() editFlag = true;
 	@Input() permissionFlag = false;
@@ -41,17 +43,27 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	validateFlag = false;
 	slabModel: any;
 	conDesc: string;
+	currentImage: any;
+	documentsArray: any[] = [];
+	finalDocumentArray: any[] = [];
+	currentFileChangeEvent: any;
+	multipleFileArray: any[] = [];
+	counter: any = 0;
+	documentPath: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
 		private commonAPIService: CommonAPIService,
-		public processtypeService: ProcesstypeService
+		public processtypeService: ProcesstypeService,
+		public sisService: SisService
+		
 	) { }
 
 	ngOnInit() {
 		this.terminateStatus = 'Terminate Transport Facility';
 		this.hostelStatus = 'Terminate Hostel Facility';
 		this.buildForm();
+		this.getReason();
 		this.getFeeOtherCategory();
 		this.getConGroup();
 		this.getFeeStructures();
@@ -70,6 +82,9 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			accd_fo_id: '',
 			accd_fs_id: '',
 			accd_fcg_id: '',
+			accd_fcg_document: '',
+			accd_reason_id: '',
+			accd_remark_id: '',
 			accd_is_transport: '',
 			accd_is_hostel: '',
 			accd_transport_mode: '',
@@ -100,6 +115,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.modeFlag = false;
 		this.terminationFlag = false;
 		this.existFlag = false;
+		console.log('tttttt',this.feeDet)
+		this.conStatus = this.feeDet.accd_fcg_status;
 		if (this.feeDet.accd_login_id) {
 			if (this.feeDet.accd_is_transport === 'Y') {
 				this.transportFlag = true;
@@ -139,6 +156,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_fo_id: this.feeDet.accd_fo_id,
 				accd_fs_id: this.feeDet.accd_fs_id,
 				accd_fcg_id: this.feeDet.accd_fcg_id,
+				accd_reason_id: this.feeDet.accd_reason_id,
+				accd_remark_id: this.feeDet.accd_remark_id,
 				accd_is_transport: this.feeDet.accd_is_transport === 'N' ? false : true,
 				accd_is_hostel: this.feeDet.accd_is_hostel === 'N' ? false : true,
 				accd_transport_mode: this.feeDet.accd_transport_mode,
@@ -363,6 +382,12 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				this.validateFlag = false;
 			}
 		}
+		if (this.accountsForm.value.accd_fcg_id !== '0') {
+			if (!this.accountsForm.value.accd_reason_id ||
+				!this.accountsForm.value.accd_remark_id) {
+				this.validateFlag = false;
+			}
+		}
 
 		return this.validateFlag;
 	}
@@ -376,6 +401,9 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_fo_id: this.accountsForm.value.accd_fo_id,
 				accd_fs_id: this.accountsForm.value.accd_fs_id,
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
+				accd_fcg_document: JSON.stringify(this.documentPath),
+				accd_reason_id: this.accountsForm.value.accd_reason_id,
+				accd_remark_id: this.accountsForm.value.accd_remark_id,
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
@@ -410,6 +438,9 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_fo_id: this.accountsForm.value.accd_fo_id,
 				accd_fs_id: this.accountsForm.value.accd_fs_id,
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
+				accd_fcg_document: JSON.stringify(this.documentPath),
+				accd_reason_id: this.accountsForm.value.accd_reason_id,
+				accd_remark_id: this.accountsForm.value.accd_remark_id,
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
@@ -458,5 +489,45 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				}
 			});
 		}
+	}
+	getReason() {
+		this.reasonArr = [];
+		this.sisService.getReason({ reason_type: '15' }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.reasonArr = result.data;
+			}
+		});
+	}
+	fileChangeEvent(fileInput, doc_req_id) {
+		this.multipleFileArray = [];
+		this.counter = 0;
+		this.currentFileChangeEvent = fileInput;
+		const files = fileInput.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop(files[i], doc_req_id);
+		}
+	}
+	IterateFileLoop(files, doc_req_id) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage,
+				module: 'attachment'
+			};
+			this.multipleFileArray.push(fileJson);
+			this.counter++;
+			if (this.counter === this.currentFileChangeEvent.target.files.length) {
+				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+					if (result) {
+						this.documentPath = result.data[0].file_url;
+						//console.log(this.documentPath);
+
+					}
+				});
+			}
+		};
+		reader.readAsDataURL(files);
 	}
 }
