@@ -327,9 +327,9 @@ export class SetupComponent implements OnInit {
 						const tempgradevalue: any[] = [];
 						for (const det of item.egs_grade_data) {
 							if(item.egs_point_type === '1') {
-								tempgradevalue.push(det.egs_grade_name + '(' + det.egs_grade_value +')');
+								tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_grade_value +')');
 							} else if(item.egs_point_type === '2') {
-								tempgradevalue.push(det.egs_grade_name + '(' + det.egs_range_start + '-' + det.egs_range_end +')');
+								tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_range_start + '-' + det.egs_range_end +')');
 							}
 							
 						}
@@ -454,6 +454,7 @@ export class SetupComponent implements OnInit {
 		return finalData;
 	}
 	prepareGradeData(event) {
+		this.rangeArray = [];
 		const gradeDataTier = event.value;
 		this.gradeDataFrmArr = [];
 
@@ -481,6 +482,7 @@ export class SetupComponent implements OnInit {
 	}
 
 	setGradeData(gradeDataTier) {
+		this.rangeArray = [];
 		this.gradeDataFrmArr = [];
 		for (let i = 0; i < 100; i++) {
 			this.rangeArray.push({
