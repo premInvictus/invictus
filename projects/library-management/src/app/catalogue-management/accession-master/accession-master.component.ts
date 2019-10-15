@@ -616,8 +616,9 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
 				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 				this.bookDataSource.sort = this.sort;
-				this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
 				this.bookDataSource.paginator = this.paginator;
+				this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
+				
 			}
 		});
 	}
