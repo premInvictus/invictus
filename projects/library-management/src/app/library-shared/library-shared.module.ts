@@ -41,6 +41,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 import { BarecodeScannerLivestreamModule } from 'ngx-barcode-scanner';
 import { BookReserveRequestConfirmationComponent } from './book-reserve-request-confirmation/book-reserve-request-confirmation.component';
+import { AddVendorDialog } from './../catalogue-management/vendor-master/add-vendor-dialog/add-vendor-dialog.component';
 import { BookDetailsModalComponent } from './book-details-modal/book-details-modal.component';
 import { ReservoirEditModalComponent } from './reservoir-edit-modal/reservoir-edit-modal.component';
 
@@ -117,7 +118,8 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
-		ReservoirEditModalComponent
+		ReservoirEditModalComponent,
+		AddVendorDialog
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -131,7 +133,8 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
-		ReservoirEditModalComponent
+		ReservoirEditModalComponent,
+		AddVendorDialog
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -175,7 +178,8 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		BarecodeScannerLivestreamModule,
 		BookDetailsModalComponent,
-		ReservoirEditModalComponent
+		ReservoirEditModalComponent,
+		AddVendorDialog
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

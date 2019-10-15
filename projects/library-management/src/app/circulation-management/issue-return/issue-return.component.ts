@@ -253,6 +253,10 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	getUserIssueReturnLogData() {
+		if (this.returnIssueReservoirForm && this.returnIssueReservoirForm.value.scanBookId) {
+			this.returnIssueReservoirForm.controls['scanBookId'].setValue('');
+		}
+		
 		const inputJson = {
 			user_login_id: this.userData.au_login_id,
 			user_role_id: this.userData.au_role_id,
