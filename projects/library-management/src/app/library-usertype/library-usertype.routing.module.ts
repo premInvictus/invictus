@@ -24,6 +24,10 @@ const routes: Routes = [
             {
                 path: 'configure',
                 loadChildren: 'projects/library-management/src/app/library-configure/library-configure.module#LibraryConfigureModule'
+            },
+            {
+                path: 'reports',
+                loadChildren: 'projects/library-management/src/app/library-reports/library-reports.module#LibraryReportsModule'
             }]
     }];
 @NgModule({
