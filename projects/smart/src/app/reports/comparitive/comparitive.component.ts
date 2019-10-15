@@ -331,8 +331,8 @@ export class ComparitiveComponent implements OnInit {
 			width: this.checkWidth('finaldeviation', 'Deviation')
 		});
 		reportType2 = new TitleCasePipe().transform('comparative analysis repo_') +
-		this.getClassName(this.comparitiveForm.value.syl_class_id) + '_' +
-		this.getSectionName(this.comparitiveForm.value.syl_section_id) + '_' + this.sessionName;
+			this.getClassName(this.comparitiveForm.value.syl_class_id) + '_' +
+			this.getSectionName(this.comparitiveForm.value.syl_section_id) + '_' + this.sessionName;
 		reportType = new TitleCasePipe().transform('comparative analysis report: ') + this.sessionName;
 		const fileName = reportType2 + '.xlsx';
 		const workbook = new Excel.Workbook();
@@ -444,21 +444,12 @@ export class ComparitiveComponent implements OnInit {
 				row.eachCell(cell => {
 					// tslint:disable-next-line: max-line-length
 					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'F' && cell._address.charAt(0) !== 'J' && cell._address.charAt(0) !== 'L') {
-						if (rowNum % 2 === 0) {
-							cell.fill = {
-								type: 'pattern',
-								pattern: 'solid',
-								fgColor: { argb: 'ffffff' },
-								bgColor: { argb: 'ffffff' },
-							};
-						} else {
-							cell.fill = {
-								type: 'pattern',
-								pattern: 'solid',
-								fgColor: { argb: '888888' },
-								bgColor: { argb: '888888' },
-							};
-						}
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
 					}
 					cell.font = {
 						color: { argb: 'black' },
@@ -891,7 +882,7 @@ export class ComparitiveComponent implements OnInit {
 						cw_test = cw_test + Number(dety.cw_period_test);
 						cw_revise = cw_revise + Number(dety.cw_period_revision);
 						cw_total = cw_teacher + cw_test + cw_revise;
-						deviation =  total - cw_total;
+						deviation = total - cw_total;
 					}
 
 				}
@@ -905,7 +896,7 @@ export class ComparitiveComponent implements OnInit {
 			return revise;
 		} else if (index === 'total') {
 			return total;
-		}else if (index === 'cw_teacher') {
+		} else if (index === 'cw_teacher') {
 			return cw_teacher;
 		} else if (index === 'cw_test') {
 			return cw_test;

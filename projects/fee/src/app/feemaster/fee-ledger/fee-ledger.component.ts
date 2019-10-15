@@ -3,8 +3,11 @@ import { FeeLedgerElement } from './fee-ledger.model';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
-import { DatePipe } from '@angular/common';
+import { TitleCasePipe, DatePipe } from '@angular/common';
+import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+declare var require;
+import * as Excel from 'exceljs/dist/exceljs';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
@@ -57,15 +60,73 @@ export class FeeLedgerComponent implements OnInit {
 	};
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('table') table: ElementRef;
+	schoolInfo: any;
+	session: any;
+	sessionName: any;
+	sessionArray: any[] = [];
+	currentUser: any;
+	session_id: any;
+	length: any;
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR',
+
+	};
 	constructor(private sisService: SisService,
 		private feeService: FeeService,
 		public processtypeService: ProcesstypeFeeService,
 		public dialog: MatDialog,
 		public studentRouteMoveStoreService: StudentRouteMoveStoreService,
 		private commonAPIService: CommonAPIService
-	) { }
+	) {
+		this.session_id = JSON.parse(localStorage.getItem('session'));
+	}
 
 	ngOnInit() {
+		this.getSchool();
+		this.getSession();
 		this.recordArray = [];
 		this.FEE_LEDGER_ELEMENT = [];
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
@@ -106,6 +167,30 @@ export class FeeLedgerComponent implements OnInit {
 			});
 		}
 	}
+	// get session year of the selected session
+	getSession() {
+		this.sisService.getSession()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.sessionArray[citem.ses_id] = citem.ses_name;
+						}
+						this.sessionName = this.sessionArray[this.session_id.ses_id];
+					}
+				});
+	}
+	// get end month and start month of school
+	getSchool() {
+		this.sisService.getSchool()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.schoolInfo = result.data[0];
+					}
+				});
+	}
+
 	getFeeLedger(login_id) {
 		this.selection.clear();
 		this.resetActionFlag();
@@ -190,6 +275,7 @@ export class FeeLedgerComponent implements OnInit {
 					this.footerRecord.netpayabletotal += Number(element.netpayableamount);
 					this.footerRecord.finetotal += Number(element.fine);
 					this.footerRecord.balancetotal += Number(element.balance);
+					console.log(this.FEE_LEDGER_ELEMENT);
 				}
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				this.feeRenderId = '';
@@ -198,7 +284,258 @@ export class FeeLedgerComponent implements OnInit {
 			}
 		});
 	}
+	// export excel code
+	exportAsExcel() {
+		let reportType: any = '';
+		let reportType2: any = '';
+		const columns: any = [];
+		columns.push({
+			key: 'feeperiod',
+			width: this.checkWidth('feeperiod', 'Fee Period')
+		});
+		columns.push({
+			key: 'invoiceno',
+			width: this.checkWidth('invoiceno', 'Inv. No.')
+		});
+		columns.push({
+			key: 'particular',
+			width: this.checkWidth('particular', 'Particulars')
+		});
+		columns.push({
+			key: 'date',
+			width: this.checkWidth('date', 'Inv. date')
+		});
+		columns.push({
+			key: 'duedate',
+			width: this.checkWidth('duedate', 'Due Date')
+		});
+		columns.push({
+			key: 'amount',
+			width: this.checkWidth('amount', 'Amt. Due')
+		});
+		columns.push({
+			key: 'concession',
+			width: this.checkWidth('concession', 'Con.')
+		});
+		columns.push({
+			key: 'adjustment',
+			width: this.checkWidth('adjustment', 'Adj.')
+		});
+		columns.push({
+			key: 'fine',
+			width: this.checkWidth('fine', 'Fine')
+		});
+		columns.push({
+			key: 'netpayableamount',
+			width: this.checkWidth('netpayableamount', 'Net Payable')
+		});
+		columns.push({
+			key: 'reciept',
+			width: this.checkWidth('reciept', 'Reciept')
+		});
+		columns.push({
+			key: 'balance',
+			width: this.checkWidth('balance', 'Balance')
+		});
+		columns.push({
+			key: 'receiptdate',
+			width: this.checkWidth('receiptdate', 'Rpt. Date')
+		});
+		columns.push({
+			key: 'receiptno',
+			width: this.checkWidth('receiptno', 'Rpt. No.')
+		});
+		columns.push({
+			key: 'mop',
+			width: this.checkWidth('mop', 'Mop')
+		});
+		columns.push({
+			key: 'remarks',
+			width: this.checkWidth('remarks', 'Remarks')
+		});
+		reportType = new TitleCasePipe().transform('Fee ledger report: ' + this.sessionName);
+		const fileName = reportType + '.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[7] + '1');
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[7] + '2');
+		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A3:' + this.alphabetJSON[7] + '3');
+		worksheet.getCell('A3').value = this.commonStudentProfileComponent.studentdetails.au_full_name + '(' +
+			this.commonStudentProfileComponent.studentdetails.em_admission_no + ')';
+		worksheet.getCell(`A3`).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A4:' + this.alphabetJSON[7] + '4');
+		worksheet.getCell('A4').value = 'Class : ' + this.commonStudentProfileComponent.studentdetails.class_name +  ' ' +
+			this.commonStudentProfileComponent.studentdetails.sec_name;
+		worksheet.getCell(`A4`).alignment = { horizontal: 'left' };
+		worksheet.getCell('A6').value = 'Fee Period';
+		worksheet.getCell('B6').value = 'Inv.No.';
+		worksheet.getCell('C6').value = 'Particulars';
+		worksheet.getCell('D6').value = 'Inv. Date';
+		worksheet.getCell('E6').value = 'Due Date';
+		worksheet.getCell('F6').value = 'Amt. Due';
+		worksheet.getCell('G6').value = 'Con.';
+		worksheet.getCell('H6').value = 'Adj.';
+		worksheet.getCell('I6').value = 'Fine';
+		worksheet.getCell('J6').value = 'Net Payable';
+		worksheet.getCell('K6').value = 'Amt.Rec.';
+		worksheet.getCell('L6').value = 'Balance';
+		worksheet.getCell('M6').value = 'Rpt.Date';
+		worksheet.getCell('N6').value = 'Rpt. No';
+		worksheet.getCell('O6').value = 'Mop';
+		worksheet.getCell('P6').value = 'Remarks';
+		worksheet.columns = columns;
+		this.length = worksheet._rows.length;
+		for (const dety of this.FEE_LEDGER_ELEMENT) {
+			const prev = this.length + 1;
+			const obj: any = {};
+			this.length++;
+			worksheet.getCell('A' + this.length).value = dety.feeperiod;
+			worksheet.getCell('B' + this.length).value = dety.invoiceno;
+			worksheet.getCell('C' + this.length).value = dety.particular;
+			worksheet.getCell('D' + this.length).value = dety.date;
+			worksheet.getCell('E' + this.length).value = dety.duedate;
+			worksheet.getCell('F' + this.length).value = dety.amount;
+			worksheet.getCell('G' + this.length).value = dety.concession;
+			worksheet.getCell('H' + this.length).value = dety.adjustment;
+			worksheet.getCell('I' + this.length).value = dety.fine;
+			worksheet.getCell('J' + this.length).value = dety.netpayableamount;
+			worksheet.getCell('K' + this.length).value = dety.reciept;
+			worksheet.getCell('L' + this.length).value = dety.balance;
+			worksheet.getCell('M' + this.length).value = new DatePipe('en-in').transform(dety.receiptdate, 'd-MMM-y');
+			worksheet.getCell('N' + this.length).value = dety.receiptno;
+			worksheet.getCell('O' + this.length).value = dety.mop;
+			worksheet.getCell('P' + this.length).value = dety.remarks;
+			worksheet.addRow(obj);
+		}
 
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 16,
+					bold: true
+				};
+			}
+			if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			}
+			if (rowNum === 6) {
+				row.eachCell(cell => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true,
+						color: { argb: '636a6a' }
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'c8d6e5' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+			if (rowNum > 6 && rowNum <= worksheet._rows.length) {
+				row.eachCell(cell => {
+					// tslint:disable-next-line: max-line-length
+					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'F' && cell._address.charAt(0) !== 'J' && cell._address.charAt(0) !== 'L') {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+					}
+					cell.font = {
+						color: { argb: 'black' },
+						bold: false,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+		});
+
+		const obj3: any = {};
+		obj3['feeperiod'] = '';
+		obj3['invoiceno'] = '';
+		obj3['particular'] = '';
+		obj3['date'] = '';
+		obj3['duedate'] = '';
+		obj3['amount'] = this.footerRecord.feeduetotal ? this.footerRecord.feeduetotal : '-';
+		obj3['concession'] = this.footerRecord.concessiontotal ? this.footerRecord.concessiontotal : '-';
+		obj3['adjustment'] = this.footerRecord.adjustmenttotal ? this.footerRecord.adjustmenttotal : '-';
+		obj3['fine'] = this.footerRecord.finetotal ? this.footerRecord.finetotal : '-';
+		obj3['netpayableamount'] = this.footerRecord.netpayabletotal ? this.footerRecord.netpayabletotal : '-';
+		obj3['reciept'] = this.footerRecord.receipttotal ? this.footerRecord.receipttotal : '-';
+		obj3['balance'] = this.footerRecord.balancetotal ? this.footerRecord.balancetotal : '-';
+		obj3['receiptdate'] = '';
+		obj3['receiptno'] = '';
+		obj3['mop'] = '';
+		obj3['remarks'] = '';
+		worksheet.addRow(obj3);
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === worksheet._rows.length) {
+				row.eachCell(cell => {
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: '004261' },
+						bgColor: { argb: '004261' },
+					};
+					cell.font = {
+						color: { argb: 'ffffff' },
+						bold: true,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			}
+		});
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
+
+	}
+	// check the max  width of the cell
+	checkWidth(id, header) {
+		const res = this.FEE_LEDGER_ELEMENT.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
+	}
 	getColor(element) {
 		if (element && element.colorCode) {
 			return element.colorCode;
@@ -287,14 +624,6 @@ export class FeeLedgerComponent implements OnInit {
 			this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 			this.getFeeLedger(this.loginId);
 		}
-	}
-	exportAsExcel() {
-		// tslint:disable-next-line:max-line-length
-		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(document.getElementById('fee_ledger')); // converts a DOM TABLE element to a worksheet
-		const wb: XLSX.WorkBook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-		XLSX.writeFile(wb, 'FeeLedger_' + this.loginId + '_' + (new Date).getTime() + '.xlsx');
-
 	}
 	// to veiw invoice details
 	openDialog(item, edit): void {
@@ -426,16 +755,16 @@ export class FeeLedgerComponent implements OnInit {
 	openAttachDialog = (data) => this.searchModal.openModal(data);
 
 	deleteConfirm(value) {
-		const invoiceJson:any = {};
+		const invoiceJson: any = {};
 		invoiceJson.id = value;
-		invoiceJson.receipt_id =  13;
+		invoiceJson.receipt_id = 13;
 		this.deleteWithReasonModal.openModalFee(invoiceJson);
 	}
 
 	deleteReciptConfirm(value) {
-		const receiptJson:any = {};
+		const receiptJson: any = {};
 		receiptJson.id = value;
-		receiptJson.receipt_id =  14;
+		receiptJson.receipt_id = 14;
 		this.deleteReceiptWithReasonModal.openModalFee(receiptJson);
 	}
 
@@ -546,7 +875,6 @@ export class FeeLedgerComponent implements OnInit {
 		});
 	}
 	detachReceiptConfirm(value) {
-		console.log('value--', value);
 		this.feeService.detachReceipt({ inv_id: value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -562,7 +890,6 @@ export class FeeLedgerComponent implements OnInit {
 
 	}
 	openCreateInvoiceModal() {
-		console.log(this.commonStudentProfileComponent.studentdetails);
 		const stuDetails: any = {};
 		stuDetails.stu_admission_no = this.commonStudentProfileComponent.studentdetails.em_admission_no;
 		stuDetails.stu_full_name = this.commonStudentProfileComponent.studentdetails.au_full_name;

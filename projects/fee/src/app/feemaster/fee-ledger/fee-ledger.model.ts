@@ -17,4 +17,5 @@ export interface FeeLedgerElement {
 	mop: any;
 	eachActionFlag: any;
 	action: any;
+	netpayableamount:any;
 }

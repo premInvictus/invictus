@@ -28,22 +28,22 @@
         &nbsp;
         <!-- <button class="btn-success text-uppercase" mat-raised-button (click)="getAccessionReport('')">
           generate
-        </button>
-        <button class="btn-danger text-uppercase" mat-raised-button (click)="resetValues()">
-          reset
         </button> -->
+        <button class="btn-danger text-uppercase" mat-raised-button (click)="getAccessionReport('')">
+          reset
+        </button>
       </div>
     </div>
   </div>
 </form>
-<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0">
+<div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length > 0">
   <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
     [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
     (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
     (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
   </angular-slickgrid>
 </div>
-<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
+<div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length === 0">
   <div class="text-center margin-top-20" style="margin-bottom:20px !important">
     No Records Found
   </div>
