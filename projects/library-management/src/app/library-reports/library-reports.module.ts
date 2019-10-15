@@ -11,6 +11,7 @@ import { ReportSortComponent } from './reports-filter-sort/report-sort/report-so
 import { AccessionReportComponent } from './reports/accession-report/accession-report.component';
 import { IssueReturnReportComponent } from './reports/issue-return-report/issue-return-report.component';
 import { OverDueBookReportComponent } from './reports/over-due-book-report/over-due-book-report.component';
+import { AddVendorDialog } from './../catalogue-management/vendor-master/add-vendor-dialog/add-vendor-dialog.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -18,8 +19,8 @@ import { OverDueBookReportComponent } from './reports/over-due-book-report/over-
     LibrarySharedModule,
     AngularSlickgridModule.forRoot()
   ],
-  declarations: [ReportsComponent, AccessionReportComponent, IssueReturnReportComponent, OverDueBookReportComponent, ReportFilterComponent, ReportSortComponent],
-  entryComponents: [ReportFilterComponent, ReportSortComponent],
+  declarations: [ReportsComponent, AccessionReportComponent, IssueReturnReportComponent, OverDueBookReportComponent, ReportFilterComponent, ReportSortComponent, AddVendorDialog],
+  entryComponents: [ReportFilterComponent, ReportSortComponent, AddVendorDialog],
 	providers: [TranslateService],
 })
 export class LibraryReportsModule { }

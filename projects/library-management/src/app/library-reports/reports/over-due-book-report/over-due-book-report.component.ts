@@ -20,6 +20,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import { AddVendorDialog } from './../../../catalogue-management/vendor-master/add-vendor-dialog/add-vendor-dialog.component';
 @Component({
 	selector: 'app-over-due-book-report',
 	templateUrl: './over-due-book-report.component.html',
@@ -116,6 +117,8 @@ export class OverDueBookReportComponent implements OnInit {
 	levelTotalFooter: any[] = [];
 	levelSubtotalFooter: any[] = [];
 	notFormatedCellArray: any[] = [];
+	vendorData = '';
+	subjectDataArray: any[] = [];
 	@Input() userName: any = '';
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('bookDet') bookDet;
@@ -132,6 +135,8 @@ export class OverDueBookReportComponent implements OnInit {
 		this.getSchool();
 		this.buildForm();
 		this.getClassData();
+		this.getSubject();
+		this.getVendorDetails('', false);
 		const value = { "filters": [{ "filter_type": "", "filter_value": "", "type": "" }], "generalFilters": { "type_id": null, "genre.genre_name": null, "category_id": null, "reserv_status": null, "source": null, "language_details.lang_code": null, "user": localStorage.getItem('currentUser'), "from_date": "", "to_date": "", "rfid": "" }, "search_from": "master" };
 		// this.getAccessionReport(value);
 	}
@@ -297,6 +302,7 @@ export class OverDueBookReportComponent implements OnInit {
 				filterable: true,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
+				formatter: this.bookNoFormatter,
 				width: 80,
 				grouping: {
 					getter: 'book_no',
@@ -593,7 +599,7 @@ export class OverDueBookReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'class', name: 'class', field: 'class', sortable: true,
+				id: 'class', name: 'Class', field: 'class', sortable: true,
 				filterable: true,
 				width: 120,
 				filter: { model: Filters.compoundInput },
@@ -608,7 +614,7 @@ export class OverDueBookReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'subject', name: 'subject', field: 'subject', sortable: true,
+				id: 'subject', name: 'Subject', field: 'subject', sortable: true,
 				filterable: true,
 				width: 120,
 				filter: { model: Filters.compoundInput },
@@ -623,10 +629,11 @@ export class OverDueBookReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'vendor_name', name: 'vendor_name', field: 'vendor_name', sortable: true,
+				id: 'vendor_name', name: 'Vendor Name', field: 'vendor_name', sortable: true,
 				filterable: true,
 				width: 120,
 				filter: { model: Filters.compoundInput },
+				formatter: this.vendorFormatter,
 				grouping: {
 					getter: 'vendor_name',
 					formatter: (g) => {
@@ -659,6 +666,33 @@ export class OverDueBookReportComponent implements OnInit {
 				this.totalRecords = Number(result.data.all.length);
 				let index = 0;
 				for (const item of repoArray) {
+
+					let currentVendorName = '';
+					let currentClassName = '';
+					let currentSubjectName = '';
+					for (let i =0; i < this.vendorData.length;i++) {
+						if (this.vendorData[i]['ven_id'] === repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id']) {
+							currentVendorName = this.vendorData[i]['ven_name'];
+							break;
+						}
+					}
+
+					for (let i =0; i < this.classDataArray.length;i++) {
+						console.log(this.classDataArray[i]['class_id'] , repoArray[Number(index)]['reserv_user_logs']['reserv_class_id']);
+						var cindex = repoArray[Number(index)]['reserv_user_logs']['reserv_class_id'].indexOf(this.classDataArray[i]['class_id']);
+						if (cindex > -1) {
+							currentClassName += this.classDataArray[cindex]['class_name']+",";						
+						}						
+					}
+
+					for (let i =0; i < this.subjectDataArray.length;i++) {
+						if (this.subjectDataArray[i]['sub_id'] === repoArray[Number(index)]['reserv_user_logs']['reserv_sub_id']) {
+							currentSubjectName = this.subjectDataArray[i]['sub_name'];
+							break;
+						}
+					}
+
+
 					const obj: any = {};
 					obj['id'] = (index + 1);
 					obj['srno'] = (index + 1);
@@ -682,9 +716,10 @@ export class OverDueBookReportComponent implements OnInit {
 					obj['print_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['type_id']);
 					obj['book_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['category_id']);
 					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['location']);
-					obj['class'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_class_id']);
-					obj['subject'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_sub_id']);
-					obj['vendor_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id']);
+					obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1));
+					obj['subject'] = new CapitalizePipe().transform(currentSubjectName);
+					obj['vendor_id'] = repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id'];
+					obj['vendor_name'] = currentVendorName ? new CapitalizePipe().transform(currentVendorName ) :  '-'; 
 					obj['status'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_status']);
 
 
@@ -728,6 +763,24 @@ export class OverDueBookReportComponent implements OnInit {
 				this.tableFlag = true;
 			}
 		});
+	}
+
+	bookNoFormatter(row, cell, value, columnDef, dataContext) {
+		if (value !== '-') {
+			return '<div style="position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+					+ '<span class="book-no"><a href="javascript:void(0)">' + value + '</a></span>' + '</div>';
+		} else {
+			return '-';
+		}
+	}
+
+	vendorFormatter(row, cell, value, columnDef, dataContext) {
+		if (value !== '-') {
+			return '<div style="position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">'
+					+ '<span class="vendor-no"><a href="javascript:void(0)">' + value + '</a></span>' + '</div>';
+		} else {
+			return '-';
+		}
 	}
 
 	parseDate(str) {
@@ -791,6 +844,20 @@ export class OverDueBookReportComponent implements OnInit {
 		// 		this.openDialogReceipt(item['receipt_id'], false);
 		// 	}
 		// }
+		if (args.cell === args.grid.getColumnIndex('book_no')) {
+			const item: any = args.grid.getDataItem(args.row);
+			console.log('item', item);
+			if (item['book_no'] !== '-') {
+				this.openBookModal(item['book_no']);
+			}
+		}
+		if (args.cell === args.grid.getColumnIndex('vendor_name')) {
+			const item: any = args.grid.getDataItem(args.row);
+			console.log('item', item);
+			if (item['vendor_id'] !== '-') {
+				this.getVendorDetails(item['vendor_id'], true);
+			}
+		}
 	}
 	onCellChanged(e, args) {
 		console.log(e);
@@ -910,6 +977,70 @@ export class OverDueBookReportComponent implements OnInit {
 				this.sessionName = this.getSessionName(this.session.ses_id);
 			}
 		});
+	}
+	getSubject() {
+		this.erpCommonService.getSubject({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.subjectDataArray = result.data;
+			}
+		});
+	}
+
+	openBookModal(book_no) {
+		this.bookDet.openModal(book_no);
+	}
+
+
+	getVendorDetails(ven_id, showDialog) {
+		let inputJson = {};
+		if (showDialog) {
+			if (ven_id) {
+				inputJson = {ven_id:ven_id};
+			} else {
+				inputJson = {};
+			}
+			this.erpCommonService.getVendor(inputJson).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					const element:any = result.data[0];
+					console.log('element', element);
+					const dialogRef = this.dialog.open(AddVendorDialog, {
+						width: '750px',
+						data: {
+							ven_id: ven_id,
+							ven_name: element.ven_name,
+							ven_category: element.ven_category,
+							ven_address: element.ven_address,
+							ven_contact: element.ven_contact,
+							ven_email: element.ven_email,
+							ven_frequency: element.ven_frequency ? element.ven_frequency : '',
+							ven_items_tags: element.ven_items_tags ? element.ven_items_tags : '',
+							ven_authorised_person_detail_name : element.ven_authorised_person_detail_name ? element.ven_authorised_person_detail_name : '',
+							ven_authorised_person_detail_designation : element.ven_authorised_person_detail_designation ? element.ven_authorised_person_detail_designation : '',
+							ven_authorised_person_detail_contact : element.ven_authorised_person_detail_contact ? element.ven_authorised_person_detail_contact : '',
+							ven_pan_no : element.ven_pan_no ? element.ven_pan_no : '',
+							ven_gst_no : element.ven_gst_no ? element.ven_gst_no : '',
+							ven_status: element.ven_status ? element.ven_status : '1',
+							ven_created_date: element.ven_created_date ? element.ven_created_date : '',
+							ven_updated_date: element.ven_updated_date ? element.ven_updated_date : '',
+							showButtonStatus: false
+						}
+					  });
+					
+					  dialogRef.afterClosed().subscribe(result => {
+				
+					});
+				}
+			});
+		} else {
+			this.erpCommonService.getVendor({ven_id}).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					const element:any = result.data;
+					this.vendorData = element;
+			}});
+		}
+		
+
+		
 	}
 	resetValues() {
 		this.reportFilterForm.patchValue({
