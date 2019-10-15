@@ -24,7 +24,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	hostelFlag = false;
 	modeFlag = false;
 	terminationFlag = false;
-	routeArray: any[] = [];
+	routeArray: any[] = []; 
 	stoppageArray: any[] = [];
 	slabArray: any[] = [];
 	transPortModes: any[] = [];
@@ -394,6 +394,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_fo_id: this.accountsForm.value.accd_fo_id,
 				accd_fs_id: this.accountsForm.value.accd_fs_id,
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
+				accd_fcg_document: JSON.stringify(this.documentPath),
+				accd_reason_id: this.accountsForm.value.accd_reason_id,
+				accd_remark_id: this.accountsForm.value.accd_remark_id,
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
@@ -580,6 +583,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_fo_id: this.accountsForm.value.accd_fo_id,
 				accd_fs_id: this.accountsForm.value.accd_fs_id,
 				accd_fcg_id: this.accountsForm.value.accd_fcg_id,
+				accd_fcg_document: JSON.stringify(this.documentPath),
+				accd_reason_id: this.accountsForm.value.accd_reason_id,
+				accd_remark_id: this.accountsForm.value.accd_remark_id,
 				accd_is_transport: this.transportFlag ? 'Y' : 'N',
 				accd_is_hostel: this.hostelFlag ? 'Y' : 'N',
 				accd_transport_mode: this.accountsForm.value.accd_transport_mode,
