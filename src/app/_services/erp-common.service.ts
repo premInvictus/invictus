@@ -407,6 +407,26 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/bulkUpdate/downloadBulkUpdateTemplate', value);
 	}
+
+	insertGenre(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/genre/insertGenre', value);
+	}
+
+	getGenre(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/genre/getGenre', value);
+	}
+
+	getGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
+
+	updateGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
+	}
 }
 
 

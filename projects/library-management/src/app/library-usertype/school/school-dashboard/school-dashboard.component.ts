@@ -106,7 +106,6 @@ export class SchoolDashboardComponent implements OnInit {
   }
 
   issueBookChart(issuedToTeacher, issuedToStudent, issuedToStaff, reissued, totalBookIssued) {
-    console.log(issuedToTeacher, issuedToStudent, issuedToStaff, reissued, totalBookIssued);
     this.issuedBookchart = {
       chart: {
         type: 'pie',
