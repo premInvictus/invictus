@@ -19,7 +19,7 @@ import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
 export class BrowseSyllabusComponent implements OnInit {
 	@ViewChild('UnpublishModal') UnpublishModal;
 	public reviewform: FormGroup;
-	public classArray: any[]; 
+	public classArray: any[];
 	public subjectArray: any[];
 	public finalSyllabusArray: any[];
 	public topicArray: any[];
@@ -28,7 +28,7 @@ export class BrowseSyllabusComponent implements OnInit {
 	dataArr: any[] = [];
 	sessionArray: any[] = [];
 	editRequestFlag = false;
-	finaldivflag = true; 
+	finaldivflag = true;
 	syl_id: any;
 	sd_status: any;
 	param: any = {};
@@ -88,7 +88,7 @@ export class BrowseSyllabusComponent implements OnInit {
 
 	};
 	schooInfo: any;
-	termArray: any[] = ['','Term 1', 'Term 2', 'Term 3', 'Term 4','Term 5', 'Term 6', 'Term 7', 'Term 8','Term 9'];
+	termArray: any[] = ['', 'Term 1', 'Term 2', 'Term 3', 'Term 4', 'Term 5', 'Term 6', 'Term 7', 'Term 8', 'Term 9'];
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -366,21 +366,12 @@ export class BrowseSyllabusComponent implements OnInit {
 			if (rowNum > 5 && rowNum <= worksheet._rows.length) {
 				row.eachCell(cell => {
 					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'G') {
-						if (rowNum % 2 === 0) {
-							cell.fill = {
-								type: 'pattern',
-								pattern: 'solid',
-								fgColor: { argb: 'ffffff' },
-								bgColor: { argb: 'ffffff' },
-							};
-						} else {
-							cell.fill = {
-								type: 'pattern',
-								pattern: 'solid',
-								fgColor: { argb: '888888' },
-								bgColor: { argb: '888888' },
-							};
-						}
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
 					}
 					cell.font = {
 						color: { argb: 'black' },
@@ -579,7 +570,7 @@ export class BrowseSyllabusComponent implements OnInit {
 													let sd_period_teacher1: any = '';
 													let sd_period_test1: any = '';
 													let sd_period_revision1: any = '';
-													if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id && 
+													if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id &&
 														this.finalSyllabusArray[i].syl_term_id === this.finalSyllabusArray[j].syl_term_id) {
 														if (this.finalSyllabusArray[j].sd_ctr_id === '1') {
 															sd_period_teacher1 = this.finalSyllabusArray[j].sd_period_req;
@@ -604,11 +595,11 @@ export class BrowseSyllabusComponent implements OnInit {
 														});
 													}
 												}
-												const findex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.finalSyllabusArray[i].sd_topic_id 
+												const findex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.finalSyllabusArray[i].sd_topic_id
 													&& f.syl_term_id === this.finalSyllabusArray[i].syl_term_id);
 												if (findex === -1) {
 													this.finalSpannedArray.push({
-														syl_term_id:this.finalSyllabusArray[i].syl_term_id,
+														syl_term_id: this.finalSyllabusArray[i].syl_term_id,
 														sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
 														details: spannArray,
 														total: this.finalSyllabusArray[i].sd_period_req,
