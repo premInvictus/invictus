@@ -1,5 +1,5 @@
-<div >
-      <div class="row">
+<div>
+   <div class="row">
       <div class="col-7  col-padding-right-eight">
          <div class="container-box__white">
             <div class="row">
@@ -64,7 +64,8 @@
                               Process Type
                            </th>
                            <td mat-cell *matCellDef="let item">
-                              <span class="text-capitalize">{{configService.getProccessTypeName(item.processType)}}</span>
+                              <span
+                                 class="text-capitalize">{{configService.getProccessTypeName(item.processType)}}</span>
                            </td>
                         </ng-container>
                         <ng-container matColumnDef="tabName">
@@ -81,12 +82,14 @@
                            </th>
                            <td mat-cell *matCellDef="let item">
                               <div>
-                                 
-                                 <p style="color: #e11022;font-size: 16px;" class="text-center" *ngIf="item.status == '3'"><b>Partial</b></p>
+
+                                 <p style="color: #e11022;font-size: 16px;" class="text-center"
+                                    *ngIf="item.status == '3'"><b>Partial</b></p>
                               </div>
                               <div>
-                                
-                                 <p style="color:#2dcf00;font-size: 16px;" class="text-center" *ngIf="item.status == '1'"><b>Active</b></p>
+
+                                 <p style="color:#2dcf00;font-size: 16px;" class="text-center"
+                                    *ngIf="item.status == '1'"><b>Active</b></p>
                               </div>
                            </td>
                         </ng-container>
@@ -97,19 +100,19 @@
                            </th>
                            <td mat-cell *matCellDef="let item">
                               <!-- <button *ngIf="isExistUserAccessMenu('269')" mat-flat-button class="btn-neutral-dull edit-request-btn" (click)="viewRequest(item.action)">View Request</button> -->
-                              <mat-icon *ngIf="isExistUserAccessMenu('269')" 
-                              [id]="'view' + item.no"
-                              class="material-icons icon-pointer view-icon" (click)="viewRequest(item.action, item.no)">visibility</mat-icon>
+                              <mat-icon *ngIf="isExistUserAccessMenu('269')" [id]="'view' + item.no"
+                                 class="material-icons icon-pointer view-icon"
+                                 (click)="viewRequest(item.action, item.no)">visibility</mat-icon>
                            </td>
                         </ng-container>
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
                      </table>
                      <table class="table-100 text-center" style="margin-top:5px;">
-                           <tr *ngIf="EDIT_REQUEST_ELEMENT_DATA.length == 0">
-                             <td colspan="12">No Record Found</td>
-                           </tr>
-                         </table>
+                        <tr *ngIf="EDIT_REQUEST_ELEMENT_DATA.length == 0">
+                           <td colspan="12">No Record Found</td>
+                        </tr>
+                     </table>
                   </div>
                </div>
             </div>
@@ -120,6 +123,21 @@
             <div class="row">
                <div class="col-12 text-center">
                   <h4 class="text-uppercase text-center"><b>Request Details</b></h4>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-2 text-center">
+                  <span>Req. id. - <b>{{currentRequestid}}</b></span>
+               </div>
+               <div class="col-3 text-center">
+                  <span>Adm. No. - <b>{{studentInfo?.au_admission_no}}</b></span>
+               </div>
+               <div class="col-4 text-center">
+                  <span>Name - <b>{{studentInfo?.au_full_name | titlecase}}</b></span>
+               </div>
+               <div class="col-2 text-center">
+                  <span>Class -
+                     <b>{{studentInfo?.sec_name.trim() != '' ? studentInfo.class_name + '-' + studentInfo.sec_name : studentInfo.class_name}}</b></span>
                </div>
             </div>
             <br>
@@ -142,12 +160,11 @@
                                  <td class="custom-td">
                                     <!-- <mat-checkbox class="mat-checkbox-edit-request-modal" *ngIf="item.rff_status === '0'"
                                     (change)="getRequestedId($event,item.rff_req_id)" [value]="item.rff_id"></mat-checkbox> -->
-                                    <mat-checkbox class="mat-checkbox-edit-request-modal" 
-                                    [value]="item.rff_id" [checked]="item.rff_status !== '0'" 
-                                    [disabled] = "item.rff_status !== '0'"
-                                    (change)="getRequestedId($event,item.rff_req_id)"></mat-checkbox>
+                                    <mat-checkbox class="mat-checkbox-edit-request-modal" [value]="item.rff_id"
+                                       [checked]="item.rff_status !== '0'" [disabled]="item.rff_status !== '0'"
+                                       (change)="getRequestedId($event,item.rff_req_id)"></mat-checkbox>
                                  </td>
-                                 <td class="custom-td"*ngIf="isArray(item.rff_field_name)">
+                                 <td class="custom-td" *ngIf="isArray(item.rff_field_name)">
                                     <p *ngFor="let field of item.rff_field_name">{{getFieldName(field)}}</p>
                                  </td>
                                  <td class="custom-td" *ngIf="isArray(item.rff_old_field_value)">
@@ -156,29 +173,34 @@
                                  <td class="custom-td" *ngIf="isArray(item.rff_new_field_value)">
                                     <p *ngFor="let field of item.rff_new_field_value">{{field}}</p>
                                  </td>
-                                 <td class="custom-td" *ngIf="!isArray(item.rff_field_name)">{{getFieldName(item.rff_field_name)}}</td>
+                                 <td class="custom-td" *ngIf="!isArray(item.rff_field_name)">
+                                    {{getFieldName(item.rff_field_name)}}</td>
                                  <td class="custom-td" *ngIf="!isArray(item.rff_old_field_value)">
                                     {{item.ff_field_type !== 'dropdown' ? item.rff_old_field_value: item.rff_old_value }}
                                  </td>
                                  <td class="custom-td" *ngIf="!isArray(item.rff_new_field_value)">
                                     {{item.ff_field_type !== 'dropdown' ? item.rff_new_field_value: item.rff_new_value }}
                                  </td>
-                                 <td class="custom-td" *ngIf="item.rff_status == '0'"><span style="color: #e11022;font-size: 16px; font-weight: 600" class="text-center">Pending</span></td>
-                                 <td class="custom-td" *ngIf="item.rff_status !== '0'"> <span style="color:#2dcf00;font-size: 16px; font-weight: 600" class="text-center">Approved</span></td>
+                                 <td class="custom-td" *ngIf="item.rff_status == '0'"><span
+                                       style="color: #e11022;font-size: 16px; font-weight: 600"
+                                       class="text-center">Pending</span></td>
+                                 <td class="custom-td" *ngIf="item.rff_status !== '0'"> <span
+                                       style="color:#2dcf00;font-size: 16px; font-weight: 600"
+                                       class="text-center">Approved</span></td>
                               </tr>
                            </tbody>
                         </table>
                      </div>
                      <br>
                      <div class="row">
-                           <div class="col-12">
-                          <ul>
-                             <li>Request Priority - {{reqPriority}}</li>
-                             <li>Request Reason - {{reqReason}}</li>
-                             <li>Request Remarks - {{reqRemarks}}</li>
-                          </ul>
-                           </div>
+                        <div class="col-12">
+                           <ul>
+                              <li>Request Priority - {{reqPriority}}</li>
+                              <li>Request Reason - {{reqReason}}</li>
+                              <li>Request Remarks - {{reqRemarks}}</li>
+                           </ul>
                         </div>
+                     </div>
                      <div class="row">
                         <div class="col-12">
                            <mat-form-field class="form-field">
@@ -191,12 +213,14 @@
             </div>
             <br>
             <div class="text-center">
-               <button *ngIf="isExistUserAccessMenu('270')" mat-raised-button class="btn-success" (click)="openDeleteDialog({data:requestFields})">Approve</button>
-               <button *ngIf="isExistUserAccessMenu('271')" mat-raised-button class="btn-delete btn-spacer">Decline</button>
+               <button *ngIf="isExistUserAccessMenu('270')" mat-raised-button class="btn-success"
+                  (click)="openDeleteDialog({data:requestFields})">Approve</button>
+               <button *ngIf="isExistUserAccessMenu('271')" mat-raised-button
+                  class="btn-delete btn-spacer">Decline</button>
             </div>
             <br>
             <br>
          </div>
       </div>
-      <app-delete-modal #deleteModal [deleteMessage]="confirmMessage"
-      (deleteOk)="approveRequest($event)" (deleteCancel)="deleteCancel()"></app-delete-modal>
+      <app-delete-modal #deleteModal [deleteMessage]="confirmMessage" (deleteOk)="approveRequest($event)"
+         (deleteCancel)="deleteCancel()"></app-delete-modal>
