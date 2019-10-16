@@ -18,7 +18,7 @@
                             <mat-option>Please Select</mat-option>
                             <mat-option *ngFor="let item of feeOtherCategory" [value]="item.fo_id">{{item.fo_name}}
                             </mat-option>
-                        </mat-select>
+                        </mat-select> 
                     </mat-form-field>
                 </div>
                 <div class="inline-flex margin-left-15">
@@ -45,14 +45,15 @@
                     <mat-form-field appearance="outline" class="form-field-225">
                         <mat-label>Concession Group</mat-label>
                         <mat-select placeholder="Concession Group" [disabled]="viewOnly" formControlName="accd_fcg_id"
-                            [errorStateMatcher]="confirmValidParentMatcher" (selectionChange)="setDescription($event)">
+                            [errorStateMatcher]="confirmValidParentMatcher"
+                             (selectionChange)="setDescription($event);changeValue($event)">
                             <mat-option>Please Select</mat-option>
                             <mat-option *ngFor="let item of conGroupArray" [value]="item.fcg_id">{{item.fcg_name}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="inline-flex margin-left-15" *ngIf="conDesc">
+                <div class="inline-flex margin-left-15" *ngIf="conDesc && conStatus === 'pending'">
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Reason For Approve Concession</mat-label>
                         <mat-select placeholder="Reason For Approve Concession" [disabled]="viewOnly"
@@ -63,13 +64,13 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="inline-flex margin-left-15" *ngIf="conDesc">
+                <div class="inline-flex margin-left-15" *ngIf="conDesc && conStatus === 'pending'">
                     <mat-form-field appearance="outline" class="form-field-320">
                         <mat-label>Remarks</mat-label>
                         <input matInput placeholder="Remarks" formControlName="accd_remark_id" [readonly]="viewOnly" required>
                     </mat-form-field>
                 </div>
-                <div class="inline-flex margin-left-50" *ngIf="conDesc">
+                <div class="inline-flex margin-left-50" *ngIf="conDesc && conStatus === 'pending'">
                     <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
                     multiple="true" (change)="fileChangeEvent($event,docreq_id)" id="docreq_id"
                     style="display: none !important">
