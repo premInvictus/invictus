@@ -19,6 +19,7 @@ import { FeeFilterModalComponent } from './fee-filter-modal/fee-filter-modal.com
 import { FeeTransactionEntryBulkComponent } from './fee-transaction-entry-bulk/fee-transaction-entry-bulk.component';
 import { StudentRouteMoveStoreService } from './student-route-move-store.service';
 import { LoadingModule } from 'ngx-loading';
+import { InvoiceSearchModalComponent } from './invoice-search-modal/invoice-search-modal.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -28,7 +29,7 @@ import { LoadingModule } from 'ngx-loading';
 		LoadingModule,
 		BarecodeScannerLivestreamModule
 	],
-	entryComponents: [InvoiceDetailsModalComponent],
+	entryComponents: [InvoiceDetailsModalComponent, InvoiceSearchModalComponent],
 	declarations: [StudentProfileComponent,
 		InvoiceCreationComponent,
 		InvoiceCreationBulkComponent,
@@ -41,6 +42,7 @@ import { LoadingModule } from 'ngx-loading';
 		FeeModificationComponent,
 		FeeFilterModalComponent,
 		FeeTransactionEntryBulkComponent,
+		InvoiceSearchModalComponent,
 	],
 	providers: [StudentRouteMoveStoreService]
 })
