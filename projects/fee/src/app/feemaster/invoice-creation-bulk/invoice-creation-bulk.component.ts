@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
+import { InvoiceSearchModalComponent } from '../invoice-search-modal/invoice-search-modal.component';
 import { FilterModalComponent } from '../../common-filter/filter-modal/filter-modal.component';
 import { FeeService, CommonAPIService, SisService, ProcesstypeFeeService } from '../../_services/index';
 import { InvoiceElement } from './invoice-element.model';
@@ -32,8 +33,12 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('searchModal') searchModal;
 	@ViewChild('deleteWithReasonModal') deleteWithReasonModal;
 	@ViewChild('recalculateModal') recalculateModal;
+	searchparam: any;
+	pageIndex = 0;
+	pageSize = 10;
 	ELEMENT_DATA: InvoiceElement[] = [];
 	displayedColumns: string[] =
 		['select', 'srno', 'admno',
@@ -242,6 +247,10 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.getSession();
 		const filterModal = document.getElementById('formFlag');
 		filterModal.style.display = 'none';
+		this.searchparam = {
+			pageIndex: this.pageIndex,
+			pageSize: this.pageSize,
+		}
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -289,7 +298,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 				}
 			}
 			this.ELEMENT_DATA.push({
-				srno: (this.invoiceSearchForm.value.pageSize * this.invoiceSearchForm.value.pageIndex) + (index + 1),
+				srno: (this.searchparam.pageSize * this.searchparam.pageIndex) + (index + 1),
 				admno: element.inv_process_usr_no,
 				studentname: element.au_full_name,
 				classsection: element.class_name + ' - ' + element.sec_name,
@@ -316,9 +325,12 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	addTo(row) {
 	}
 	fetchData(event?: PageEvent) {
-		this.invoiceSearchForm.value.pageIndex = event.pageIndex;
-		this.invoiceSearchForm.value.pageSize = event.pageSize;
-		this.getInvoice(this.invoiceSearchForm.value);
+		//this.invoiceSearchForm.value.pageIndex = event.pageIndex;
+		//this.invoiceSearchForm.value.pageSize = event.pageSize;
+		this.searchparam.pageIndex = event.pageIndex;
+		this.searchparam.pageSize = event.pageSize;
+		//this.getInvoice(this.invoiceSearchForm.value);
+		this.getInvoice(this.searchparam);
 		return event;
 	}
 	fetchInvId() {
@@ -384,6 +396,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.invoiceSearchForm = this.fb.group({
 			class_id: '',
 			sec_id: '',
+			inv_fm_id: '',
 			inv_process_usr_no: '',
 			invoice_no: '',
 			user_name: '',
@@ -402,6 +415,25 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			filter.style.display = 'none';
 			this.resetSearch();
 		}
+	}
+	openSearchDialog = (data) => { this.searchModal.openModal(data); }
+	searchOk(value) {
+		console.log(value);
+		this.searchparam = {};
+		this.searchparam.pageIndex = this.pageIndex;
+		this.searchparam.pageSize = this.pageSize;
+		Object.keys(value.generalFilters).forEach( key => {
+			if(value.generalFilters[key]) {
+				this.searchparam[key] = value.generalFilters[key];
+			}
+		})
+		value.filters.forEach(element => {
+			if(element.filter_value) {
+				this.searchparam[element.filter_type] = element.filter_value
+			}
+		});
+		console.log('searchparam',this.searchparam);
+		this.getInvoice(this.searchparam);
 	}
 	searchInvoice() {
 		this.invoiceSearchForm.patchValue({
@@ -693,13 +725,13 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			}
 		});
 		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-		this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
-	worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + this.totalRecords;
-	worksheet.getCell('A' + worksheet._rows.length).font = {
-		name: 'Arial',
-		size: 10,
-		bold: true
-	};
+			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + this.totalRecords;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+			name: 'Arial',
+			size: 10,
+			bold: true
+		};
 		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
 			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
 		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
