@@ -308,25 +308,33 @@ export class SetupComponent implements OnInit {
 		that.examService.getGradeSet().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				that.gradeSetArray = result.data;
+				console.log(that.gradeSetArray);
 				if (that.configValue === '3') {
 					let pos = 1;
 					for (const item of result.data) {
+						const eachElement: any = {};
+						eachElement.position = pos++;
+						eachElement.name= item.egs_name;
+						eachElement.point_type_id = item.egs_point_type;
+						eachElement.no_of_tiers = item.egs_no_of_tiers;
+						eachElement.grade_set_description = item.egs_description;
+						eachElement.order = item.class_order;
+						eachElement.action = item;
+						eachElement.grade_name = '';
+						eachElement.grade_value = '';
+						eachElement.range_start = '';
+						eachElement.range_end = '';
+						const tempgradevalue: any[] = [];
 						for (const det of item.egs_grade_data) {
-							that.CONFIG_ELEMENT_DATA.push({
-								position: pos,
-								name: item.egs_name,
-								point_type_id: item.egs_point_type,
-								no_of_tiers: item.egs_no_of_tiers,
-								grade_name: det.egs_grade_name,
-								grade_value: det.egs_grade_value,
-								range_start: det.egs_range_start,
-								range_end: det.egs_range_end,
-								grade_set_description: item.egs_description,
-								order: item.class_order,
-								action: item
-							});
-							pos++;
+							if(item.egs_point_type === '1') {
+								tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_grade_value +')');
+							} else if(item.egs_point_type === '2') {
+								tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_range_start + '-' + det.egs_range_end +')');
+							}
+							
 						}
+						eachElement.grade_name = tempgradevalue;
+						that.CONFIG_ELEMENT_DATA.push(eachElement);
 					}
 					that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 					that.configDataSource.paginator = that.paginator;
@@ -446,13 +454,14 @@ export class SetupComponent implements OnInit {
 		return finalData;
 	}
 	prepareGradeData(event) {
+		this.rangeArray = [];
 		const gradeDataTier = event.value;
 		this.gradeDataFrmArr = [];
 
-		for (let i = 0; i < 100; i++) {
+		for (let i = 0; i <= 100; i++) {
 			this.rangeArray.push({
-				'rng_id': (i + 1),
-				'rng_value': (i + 1)
+				'rng_id': i,
+				'rng_value': i
 			});
 		}
 
@@ -473,6 +482,7 @@ export class SetupComponent implements OnInit {
 	}
 
 	setGradeData(gradeDataTier) {
+		this.rangeArray = [];
 		this.gradeDataFrmArr = [];
 		for (let i = 0; i < 100; i++) {
 			this.rangeArray.push({
@@ -624,6 +634,7 @@ export class SetupComponent implements OnInit {
 		this.configFlag = false;
 		this.setupUpdateFlag = false;
 		this.configValue = event.value;
+		this.formGroupArray[this.configValue-1].formGroup.reset();
 		if (Number(this.configValue) === 1) { // for exam setup
 			this.getExam(this);
 			this.displayedColumns = ['position', 'name', 'order', 'action', 'modify'];
@@ -633,8 +644,9 @@ export class SetupComponent implements OnInit {
 			this.displayedColumns = ['position', 'name', 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) { // for exam grade setup
+			this.gradeDataFrmArr = [];
 			this.getExamGradeSetup(this);
-			this.displayedColumns = ['position', 'name', 'point_type_id', 'no_of_tiers', 'grade_name', 'grade_value', 'start_range', 'end_range', 'grade_set_description', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'point_type_id', 'no_of_tiers', 'grade_name', 'grade_set_description', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 4) { // for exam remark setup
 			this.getExamActivityCategory(this);

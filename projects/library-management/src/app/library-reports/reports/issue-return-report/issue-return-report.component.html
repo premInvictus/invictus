@@ -1,49 +1,80 @@
 <form [formGroup]="reportFilterForm">
-    <div class="row">
-      <div class="col-2">
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Class</mat-label>
-          <mat-select formControlName="class_value" (selectionChange)="getSectionByClass($event);filtered($event)"
-          placeholder="Class">
-            <mat-option value="">Please Select</mat-option>
-            <mat-option *ngFor="let item of valueArray" [value]="item.id">
-              {{item.name}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div *ngIf="filterFlag" class="col-2">
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Section</mat-label>
-          <mat-select formControlName="hidden_value" [placeholder]="valueLabel" (selectionChange)="filtered($event)">
-            <mat-option *ngFor="let item of sectionArray" [value]="item.id">{{item.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="col-4">
-        <div class="margin-top-10">
-          &nbsp;
-          <button class="btn-success text-uppercase" mat-raised-button (click)="getUserReservoirData('')">
-            generate
-          </button>
-          <button class="btn-danger text-uppercase" mat-raised-button (click)="resetValues()">
-            reset
-          </button>
-        </div>
+  <div class="row">
+    <div class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>User Role</mat-label>
+        <mat-select formControlName="role_value" (selectionChange)="getUserReservoirData('')" placeholder="Class">
+          <mat-option value="">Please Select</mat-option>
+          <mat-option value="2">Staff</mat-option>
+          <mat-option value="3">Teacher</mat-option>
+          <mat-option value="2">Student</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Class</mat-label>
+        <mat-select formControlName="class_value" (selectionChange)="getSectionByClass($event);filtered($event)"
+        placeholder="Class">
+          <mat-option value="">Please Select</mat-option>
+          <mat-option *ngFor="let item of valueArray" [value]="item.id">
+            {{item.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status_value" (selectionChange)="getUserReservoirData('')" placeholder="Class">
+          <mat-option value="">All</mat-option>          
+          <mat-option value="issued">Issued</mat-option>
+          <mat-option value="returned">Returned</mat-option>
+          <mat-option value="due">Due</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>From Date</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
+          (blur)="getFromDate($event.target.value)" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>To Date</mat-label>
+        <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
+          (blur)="getToDate($event.target.value)" />
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <div class="margin-top-10 margin-bottom-10">
+        &nbsp;
+        <button class="btn-success text-uppercase" mat-raised-button (click)="getUserReservoirData('')">
+          generate
+        </button>
+        <button class="btn-danger text-uppercase" mat-raised-button (click)="resetValues()">
+          reset
+        </button>
       </div>
     </div>
-  </form>
-  <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0">
-    <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
-      [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
-      (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
-      (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
-    </angular-slickgrid>
   </div>
-  <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
-    <div class="text-center margin-top-20" style="margin-bottom:20px !important">
-      No Records Found
-    </div>
+</form>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0">
+  <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
+    (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+    (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+  </angular-slickgrid>
+</div>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
+  <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+    No Records Found
   </div>
-  
-  <app-book-details-modal #bookDet></app-book-details-modal>
+</div>
+
+<app-book-details-modal #bookDet></app-book-details-modal>

@@ -960,6 +960,9 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 	}
 	getParamValue() {
 		const paramArr: any[] = [];
+		if(this.studentDetailReportForm.value.enrolment_type) {
+			paramArr.push(this.enrollMentTypeArray.find(e => e.au_process_type === this.studentDetailReportForm.value.enrolment_type).au_process_name);
+		}
 		if (this.showDateRange) {
 			paramArr.push(
 				this.notif.dateConvertion(this.studentDetailReportForm.value.fdate, 'd-MMM-y') + ' - ' +
@@ -1046,7 +1049,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			inputJson['from_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.fdate, 'yyyy-MM-dd');
 			inputJson['to_date'] = this.notif.dateConvertion(this.studentDetailReportForm.value.tdate, 'yyyy-MM-dd');
 		}
-
+		inputJson['au_process_type'] = this.studentDetailReportForm.value.enrolment_type;
 		const validateFlag = this.checkValidation();
 		if (validateFlag) {
 			this.sisService.getStudentReportDetails(inputJson).subscribe((result: any) => {

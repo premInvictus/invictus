@@ -105,5 +105,11 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} 
 	}
+	deleteConfirm($event){
+
+	}
+	deleteCancel(){
+		
+	}
 
 }

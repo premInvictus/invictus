@@ -402,21 +402,12 @@ export class ReviewSyllabusComponent implements OnInit {
 			if (rowNum > 5 && rowNum <= worksheet._rows.length) {
 				row.eachCell(cell => {
 					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'G') {
-						if (rowNum % 2 === 0) {
-							cell.fill = {
-								type: 'pattern',
-								pattern: 'solid',
-								fgColor: { argb: 'ffffff' },
-								bgColor: { argb: 'ffffff' },
-							};
-						} else {
-							cell.fill = {
-								type: 'pattern',
-								pattern: 'solid',
-								fgColor: { argb: '888888' },
-								bgColor: { argb: '888888' },
-							};
-						}
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
 					}
 					cell.font = {
 						color: { argb: 'black' },
@@ -678,7 +669,7 @@ export class ReviewSyllabusComponent implements OnInit {
 													let sd_period_teacher1: any = '';
 													let sd_period_test1: any = '';
 													let sd_period_revision1: any = '';
-													if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id && 
+													if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id &&
 														this.finalSyllabusArray[i].syl_term_id === this.finalSyllabusArray[j].syl_term_id) {
 														if (this.finalSyllabusArray[j].sd_ctr_id === '1') {
 															sd_period_teacher1 = this.finalSyllabusArray[j].sd_period_req;
@@ -710,7 +701,7 @@ export class ReviewSyllabusComponent implements OnInit {
 													&& f.syl_term_id === this.finalSyllabusArray[i].syl_term_id);
 												if (findex === -1) {
 													this.finalSpannedArray.push({
-														syl_term_id:this.finalSyllabusArray[i].syl_term_id,
+														syl_term_id: this.finalSyllabusArray[i].syl_term_id,
 														sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
 														details: spannArray,
 														total: this.finalSyllabusArray[i].sd_period_req,

@@ -126,6 +126,7 @@ export class IssueReturnReportComponent implements OnInit {
 	notFormatedCellArray: any[] = [];
 	vendorData = '';
 	subjectDataArray: any[] = [];
+	sectionDataArray: any[] = [];
 	@Input() userName: any = '';
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('bookDet') bookDet;
@@ -142,10 +143,11 @@ export class IssueReturnReportComponent implements OnInit {
 		this.getSchool();
 		this.buildForm();
 		this.getClassData();
+		this.getSectionData();
 		this.getSubject();
 		this.getVendorDetails('', false);
-		const value = { "filters": [{ "filter_type": "", "filter_value": "", "type": "" }], "generalFilters": { "type_id": null, "genre.genre_name": null, "category_id": null, "reserv_status": null, "source": null, "language_details.lang_code": null, "user": localStorage.getItem('currentUser'), "from_date": "", "to_date": "", "rfid": "" }, "search_from": "master" };
-		// this.getAccessionReport(value);
+		const value = {viewAll: true};
+		this.getUserReservoirData(value);
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -167,7 +169,10 @@ export class IssueReturnReportComponent implements OnInit {
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
 			'class_value': '',
-			'hidden_value': '',
+			'role_value': '',
+			'status_value': '',
+			'from_date' : '',
+			'to_date' : '',
 			'report_type': '',
 			'downloadAll': true,
 		});
@@ -305,6 +310,55 @@ export class IssueReturnReportComponent implements OnInit {
 				maxWidth: 40
 			},
 			{
+				id: 'user_login_id', name: 'Admission No.', field: 'user_login_id', sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				formatter: this.bookNoFormatter,
+				width: 80,
+				grouping: {
+					getter: 'user_login_id',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+				groupTotalsFormatter: this.srnTotalsFormatter
+			},
+			{
+				id: 'class', name: 'Class', field: 'class', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'class',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'section', name: 'Section', field: 'section', sortable: true,
+				filterable: true,
+				width: 120,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'section',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			
+			{
 				id: 'book_no', name: 'Book No', field: 'book_no', sortable: true,
 				filterable: true,
 				filterSearchType: FieldType.string,
@@ -313,6 +367,23 @@ export class IssueReturnReportComponent implements OnInit {
 				width: 80,
 				grouping: {
 					getter: 'book_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+				groupTotalsFormatter: this.srnTotalsFormatter
+			},
+			{
+				id: 'issued_to', name: 'Name', field: 'issued_to', sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 80,
+				grouping: {
+					getter: 'issued_to',
 					formatter: (g) => {
 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
@@ -338,20 +409,54 @@ export class IssueReturnReportComponent implements OnInit {
 					collapsed: false
 				},
 			},
+			// {
+			// 	id: 'book_sub_title', name: 'Book Sub Title', field: 'book_sub_title', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filterSearchType: FieldType.string,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'book_sub_title',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false
+			// 	},
+			// },
+			
+			
 			{
-				id: 'book_sub_title', name: 'Book Sub Title', field: 'book_sub_title', sortable: true,
+				id: 'author', name: 'Author', field: 'author', sortable: true,
 				filterable: true,
-				width: 120,
+				width: 80,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
 				grouping: {
-					getter: 'book_sub_title',
+					getter: 'author',
 					formatter: (g) => {
 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
-					collapsed: false
+					collapsed: false,
+				},
+			},
+			{
+				id: 'publisher', name: 'Publisher', field: 'publisher', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'publisher',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
 				},
 			},
 			{
@@ -371,7 +476,7 @@ export class IssueReturnReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'issued_on', name: 'Issued On', field: 'issued_on', sortable: true,
+				id: 'issued_on', name: 'Issued Date', field: 'issued_on', sortable: true,
 				filterable: true,
 				width: 120,
 				filter: { model: Filters.compoundDate },
@@ -422,236 +527,237 @@ export class IssueReturnReportComponent implements OnInit {
 				},
 			},
 			{
-				id: 'author', name: 'Author', field: 'author', sortable: true,
+				id: 'due_by', name: 'Late By', field: 'due_by', sortable: true,
 				filterable: true,
-				width: 80,
+				width: 120,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
 				grouping: {
-					getter: 'author',
+					getter: 'due_by',
 					formatter: (g) => {
 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
-					collapsed: false,
+					collapsed: false
 				},
 			},
 			{
-				id: 'genre', name: 'Genre', field: 'genre', sortable: true,
+				id: 'fine', name: 'Fine', field: 'fine', sortable: true,
 				filterable: true,
-				width: 80,
+				width: 120,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
 				grouping: {
-					getter: 'genre',
+					getter: 'fine',
 					formatter: (g) => {
 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
-					collapsed: false,
+					collapsed: false
 				},
 			},
-			{
-				id: 'pages', name: 'Pages', field: 'pages', sortable: true,
-				filterable: true,
-				width: 80,
-				filterSearchType: FieldType.number,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'pages',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'price', name: 'Price', field: 'price', sortable: true,
-				filterable: true,
-				width: 80,
-				filterSearchType: FieldType.number,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'price',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'publisher', name: 'Publisher', field: 'publisher', sortable: true,
-				filterable: true,
-				width: 120,
-				filterSearchType: FieldType.dateIso,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'publisher',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'published_date', name: 'Publish Date', field: 'published_date', sortable: true,
-				filterable: true,
-				width: 120,
-				filterSearchType: FieldType.number,
-				grouping: {
-					getter: 'published_date',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'tags', name: 'Tag', field: 'tags', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'tags',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'volume_info', name: 'Volume Info', field: 'volume_info', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'volume_info',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'language', name: 'Language', field: 'language', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'language',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'print_type', name: 'Print Type', field: 'print_type', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'print_type',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'book_type', name: 'Book Type', field: 'book_type', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'book_type',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'location', name: 'Location', field: 'location', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'location',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'class', name: 'Class', field: 'class', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'class',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'subject', name: 'Subject', field: 'subject', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'subject',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'vendor_name', name: 'Vendor Name', field: 'vendor_name', sortable: true,
-				filterable: true,
-				width: 120,
-				filter: { model: Filters.compoundInput },
-				formatter: this.vendorFormatter,
-				grouping: {
-					getter: 'vendor_name',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
+			// {
+			// 	id: 'genre', name: 'Genre', field: 'genre', sortable: true,
+			// 	filterable: true,
+			// 	width: 80,
+			// 	filterSearchType: FieldType.string,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'genre',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'pages', name: 'Pages', field: 'pages', sortable: true,
+			// 	filterable: true,
+			// 	width: 80,
+			// 	filterSearchType: FieldType.number,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'pages',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'price', name: 'Price', field: 'price', sortable: true,
+			// 	filterable: true,
+			// 	width: 80,
+			// 	filterSearchType: FieldType.number,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'price',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			
+			// {
+			// 	id: 'published_date', name: 'Publish Date', field: 'published_date', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filterSearchType: FieldType.number,
+			// 	grouping: {
+			// 		getter: 'published_date',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'tags', name: 'Tag', field: 'tags', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'tags',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'volume_info', name: 'Volume Info', field: 'volume_info', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'volume_info',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'language', name: 'Language', field: 'language', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'language',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'print_type', name: 'Print Type', field: 'print_type', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'print_type',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'book_type', name: 'Book Type', field: 'book_type', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'book_type',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'location', name: 'Location', field: 'location', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'location',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'class', name: 'Class', field: 'class', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'class',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'subject', name: 'Subject', field: 'subject', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'subject',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
+			// {
+			// 	id: 'vendor_name', name: 'Vendor Name', field: 'vendor_name', sortable: true,
+			// 	filterable: true,
+			// 	width: 120,
+			// 	filter: { model: Filters.compoundInput },
+			// 	formatter: this.vendorFormatter,
+			// 	grouping: {
+			// 		getter: 'vendor_name',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
 			{
 				id: 'status', name: 'Status', field: 'status', sortable: true,
 				filterable: true,
@@ -686,10 +792,17 @@ export class IssueReturnReportComponent implements OnInit {
 					}
 
 					for (let i =0; i < this.classDataArray.length;i++) {
-						console.log(this.classDataArray[i]['class_id'] , repoArray[Number(index)]['reserv_user_logs']['reserv_class_id']);
-						var cindex = repoArray[Number(index)]['reserv_user_logs']['reserv_class_id'].indexOf(this.classDataArray[i]['class_id']);
+						console.log(this.classDataArray[i]['class_id'] , repoArray[Number(index)]['user_class_id']);
+						var cindex = repoArray[Number(index)]['user_class_id'].indexOf(this.classDataArray[i]['class_id']);
 						if (cindex > -1) {
 							currentClassName += this.classDataArray[cindex]['class_name']+",";						
+						}						
+					}
+					for (let i =0; i < this.sectionDataArray.length;i++) {
+						console.log(this.sectionDataArray[i]['sec_id'] , repoArray[Number(index)]['user_sec_id']);
+						var cindex = repoArray[Number(index)]['user_sec_id'].indexOf(this.classDataArray[i]['sec_id']);
+						if (cindex > -1) {
+							currentClassName += this.sectionDataArray[cindex]['sec_name']+",";						
 						}						
 					}
 
@@ -707,10 +820,12 @@ export class IssueReturnReportComponent implements OnInit {
 					obj['book_no'] = repoArray[Number(index)]['reserv_user_logs'] ?
 						repoArray[Number(index)]['reserv_user_logs']['reserv_id'] : '-';
 					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['title']);
+					obj['user_login_id'] = new CapitalizePipe().transform(repoArray[Number(index)]['user_login_id']);					
 					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['subtitle']);
 					obj['issued_to'] = new CapitalizePipe().transform(repoArray[Number(index)]['user_full_name']);
 					obj['issued_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_on']);
 					obj['due_date'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['due_date']);
+					obj['due_by'] = this.getDaysDiff(repoArray[Number(index)]['reserv_user_logs']['due_date'])+' Days';
 					obj['returned_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_on']);
 					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['authors'][0]);
 					obj['genre'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['genre']['genre_name']);
@@ -724,6 +839,7 @@ export class IssueReturnReportComponent implements OnInit {
 					obj['print_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['type_id']);
 					obj['book_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['category_id']);
 					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['location']);
+					obj['fine'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['fine']);
 					obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1));
 					obj['subject'] = new CapitalizePipe().transform(currentSubjectName);
 					obj['vendor_id'] = repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id'];
@@ -773,6 +889,20 @@ export class IssueReturnReportComponent implements OnInit {
 		});
 	}
 
+	parseDate(str) {
+		var mdy = str.split('-');
+		return new Date(mdy[0], mdy[1] - 1, mdy[2]);
+	}
+
+	getDaysDiff(dueDate) {
+		if (dueDate) {
+			var date1 = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+			var date2 = this.common.dateConvertion(dueDate, 'yyyy-MM-dd');
+			var parsedDate2: any = this.parseDate(date2);
+			var parsedDate1: any = this.parseDate(date1);
+			return Math.round((parsedDate2 - parsedDate1) / (1000 * 60 * 60 * 24));
+		}
+	}
 
 	bookNoFormatter(row, cell, value, columnDef, dataContext) {
 		if (value !== '-') {
@@ -929,6 +1059,15 @@ export class IssueReturnReportComponent implements OnInit {
 		});
 	}
 
+	getSectionData() {
+		this.erpCommonService.getSection({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.sectionDataArray = result.data;
+				
+			}
+		});
+	}
+
 	getSectionByClass($event) {
 		this.erpCommonService.getSectionsByClass({ class_id: $event.value }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -1042,7 +1181,10 @@ export class IssueReturnReportComponent implements OnInit {
 	resetValues() {
 		this.reportFilterForm.patchValue({
 			'class_value': '',
-			'hidden_value': '',
+			'role_value': '',
+			'status_value': '',
+			'from_date' : '',
+			'to_date' : '',
 			'report_type': '',
 			'downloadAll': true,
 		});

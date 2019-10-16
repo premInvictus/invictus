@@ -125,7 +125,39 @@ export class AccessionReportComponent implements OnInit {
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('bookDet') bookDet;
 	
-	
+	typeArray: any[] = [{
+		type_id: '1',
+		type_name: 'Hardbound',
+	},
+	{
+		type_id: '2',
+		type_name: 'Paperback',
+	},
+	{
+		type_id: '3',
+		type_name: 'ePub/eBook',
+	},
+	{
+		type_id: '4',
+		type_name: 'PDF',
+	}];
+	booktypeArray: any[] = [{
+		type_id: '1',
+		type_name: 'General',
+	},
+	{
+		type_id: '2',
+		type_name: 'Reference',
+	},
+	{
+		type_id: '3',
+		type_name: 'Periodical',
+	},
+	{
+		type_id: '4',
+		type_name: 'Sample',
+	}];
+
 	constructor(translate: TranslateService,
 		private common: CommonAPIService,
 		private erpCommonService: ErpCommonService,
@@ -143,7 +175,7 @@ export class AccessionReportComponent implements OnInit {
 		this.getSubject();
 		this.getVendorDetails('', false);
 		const value = { "filters": [{ "filter_type": "", "filter_value": "", "type": "" }], "generalFilters": { "type_id": null, "genre.genre_name": null, "category_id": null, "reserv_status": null, "source": null, "language_details.lang_code": null, "user": localStorage.getItem('currentUser'), "from_date": "", "to_date": "", "rfid": "" }, "search_from": "master" };
-		// this.getAccessionReport(value);
+		this.getAccessionReport(value);
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -420,7 +452,7 @@ export class AccessionReportComponent implements OnInit {
 				id: 'publisher', name: 'Publisher', field: 'publisher', sortable: true,
 				filterable: true,
 				width: 120,
-				filterSearchType: FieldType.dateIso,
+				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
 				grouping: {
 					getter: 'publisher',
@@ -447,6 +479,24 @@ export class AccessionReportComponent implements OnInit {
 					collapsed: false,
 				},
 			},
+			{
+				id: 'created_date', name: 'Created Date', field: 'created_date', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.dateIso,
+				formatter: this.checkDateFormatter,
+				grouping: {
+					getter: 'created_date',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+
+			
 			{
 				id: 'tags', name: 'Tag', field: 'tags', sortable: true,
 				filterable: true,
@@ -609,6 +659,8 @@ export class AccessionReportComponent implements OnInit {
 					let currentVendorName = '';
 					let currentClassName = '';
 					let currentSubjectName = '';
+					let currentBookType = '';
+					let currentPrintType = '';
 					for (let i =0; i < this.vendorData.length;i++) {
 						if (this.vendorData[i]['ven_id'] === repoArray[Number(index)]['vendor_details']['vendor_id']) {
 							currentVendorName = this.vendorData[i]['ven_name'];
@@ -631,7 +683,19 @@ export class AccessionReportComponent implements OnInit {
 						}
 					}
 
-					
+					for (let i =0; i < this.typeArray.length;i++) {
+						if (this.typeArray[i]['type_id'] === repoArray[Number(index)]['type_id']) {
+							currentPrintType = this.typeArray[i]['type_name'];
+							break;
+						}
+					}
+
+					for (let i =0; i < this.booktypeArray.length;i++) {
+						if (this.booktypeArray[i]['type_id'] === repoArray[Number(index)]['category_id']) {
+							currentBookType = this.booktypeArray[i]['type_name'];
+							break;
+						}
+					}
 
 					
 					
@@ -648,11 +712,12 @@ export class AccessionReportComponent implements OnInit {
 					obj['price'] = repoArray[Number(index)]['price'];
 					obj['publisher'] = repoArray[Number(index)]['publisher'];
 					obj['published_date'] = repoArray[Number(index)]['published_date'];
+					obj['created_date'] = repoArray[Number(index)]['created_date']['date'];
 					obj['tags'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_tags']);
 					obj['volume_info'] = repoArray[Number(index)]['edition'];
 					obj['language'] = new CapitalizePipe().transform(repoArray[Number(index)]['language_details']['lang_name']);
-					obj['print_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['type_id']);
-					obj['book_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['category_id']);
+					obj['print_type'] = new CapitalizePipe().transform(currentPrintType);
+					obj['book_type'] = new CapitalizePipe().transform(currentBookType);
 					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['location']);
 					obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1));
 					obj['subject'] = new CapitalizePipe().transform(currentSubjectName);
