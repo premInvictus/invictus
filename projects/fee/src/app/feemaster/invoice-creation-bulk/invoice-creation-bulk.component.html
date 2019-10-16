@@ -195,23 +195,23 @@
                         </div>
                      </div>
                   </form>
-                  <div class="row" *ngIf="ELEMENT_DATA.length > 0">
+                  <div class="row">
                      <div class="col-12 remove-col-padding text-right ">
                         <button
-                           *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0"
+                           *ngIf="commonAPIService.isExistUserAccessMenu('354') && this.selection.selected.length > 0 && ELEMENT_DATA.length > 0"
                            mat-raised-button class=" recalulate-invoice-btn btn-spacer"
                            (click)="openRecalculateDialog({})">Recalculate</button>
                         <button
-                           *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0"
+                           *ngIf="commonAPIService.isExistUserAccessMenu('355') && this.selection.selected.length > 0 && ELEMENT_DATA.length > 0"
                            mat-raised-button class=" btn-danger btn-spacer"
                            (click)="openDeleteDialog(fetchInvId())">Delete</button>
                         <!-- <button mat-raised-button class="btn-filter-grey" (click)="advanceSearchToggle()">Filter
                            Search</button> -->
                            <button mat-raised-button class="btn-filter-grey" (click)="openSearchDialog({})">Filter
                               Search</button>
-                        <button *ngIf="ELEMENT_DATA.length !== 0" mat-raised-button
+                        <button *ngIf="ELEMENT_DATA.length > 0" mat-raised-button
                            class=" btn-print-invoice btn-spacer" (click)="printInvoice()">Print</button>
-                        <div class="inline-flex btn-spacer">
+                        <div class="inline-flex btn-spacer" *ngIf="ELEMENT_DATA.length > 0">
                            <div>
                               <img style="cursor: pointer; height: 33px !important" src="/assets/images/xml.svg"
                                  matTooltip="Export as excel" (click)="exportAsExcel()" />
