@@ -66,14 +66,13 @@ export class CommonAPIService {
 		if (this.menus.length === 0) {
 			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
 				(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
-		} else {
-			for (const mitem of this.menus) {
-				if (Number(mitem.menu_mod_id) === Number(mod_id)) {
-					return true;
-				}
+		} 
+		for (const mitem of this.menus) {
+			if (Number(mitem.menu_mod_id) === Number(mod_id)) {
+				return true;
 			}
-			return false;
 		}
+		return false;
 	}
 	isExist(arrayhas, field, id) {
 		if (arrayhas.length > 0) {
