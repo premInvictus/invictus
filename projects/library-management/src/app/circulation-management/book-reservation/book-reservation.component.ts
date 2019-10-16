@@ -24,7 +24,7 @@ export class BookReservationComponent implements OnInit, AfterViewInit {
 	bookpagesizeoptions = [10, 25, 50, 100];
 	totalRecords: number;
 	constructor(private erp: ErpCommonService, private common: CommonAPIService) { }
-	bookdisplayedcolumns: any[] = ['sr_no', 'request_id', 'reserv_id', 'book_name', 'requested_by', 'request_user', 'request_on', 'priority', 'action'];
+	bookdisplayedcolumns: any[] = ['sr_no', 'request_id', 'reserv_id', 'book_name', 'requested_by', 'request_user', 'request_on', 'action'];
 	RESERVATION_DATA: any[] = [];
 	datasource = new MatTableDataSource<any>(this.RESERVATION_DATA);
 	delMessage = '';
@@ -86,8 +86,11 @@ export class BookReservationComponent implements OnInit, AfterViewInit {
 				this.datasource = new MatTableDataSource<any>(this.RESERVATION_DATA);
 				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 				this.datasource.sort = this.sort;
-				this.datasource.paginator.length = this.paginator.length = this.totalRecords;
-				this.datasource.paginator = this.paginator;
+				if (this.datasource.paginator) {
+					this.datasource.paginator.length = this.paginator.length = this.totalRecords;
+					this.datasource.paginator = this.paginator;
+				}
+				
 			}
 		});
 	}

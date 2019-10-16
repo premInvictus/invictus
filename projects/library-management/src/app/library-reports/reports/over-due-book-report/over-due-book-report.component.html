@@ -1,0 +1,49 @@
+<form [formGroup]="reportFilterForm">
+  <div class="row">
+    <!-- <div class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Class</mat-label>
+        <mat-select formControlName="class_value" (selectionChange)="getSectionByClass($event);filtered($event)"
+        placeholder="Class">
+          <mat-option value="">Please Select</mat-option>
+          <mat-option *ngFor="let item of valueArray" [value]="item.id">
+            {{item.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="filterFlag" class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Section</mat-label>
+        <mat-select formControlName="hidden_value" [placeholder]="valueLabel" (selectionChange)="filtered($event)">
+          <mat-option *ngFor="let item of sectionArray" [value]="item.id">{{item.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div> -->
+    <div class="col-4">
+      <div class="margin-top-10">
+        &nbsp;
+        <button class="btn-success text-uppercase" mat-raised-button (click)="getUserReservoirData('')">
+          generate
+        </button>
+        <button class="btn-danger text-uppercase" mat-raised-button (click)="resetValues()">
+          reset
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0">
+  <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
+    (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+    (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+  </angular-slickgrid>
+</div>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
+  <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+    No Records Found
+  </div>
+</div>
+
+<app-book-details-modal #bookDet></app-book-details-modal>

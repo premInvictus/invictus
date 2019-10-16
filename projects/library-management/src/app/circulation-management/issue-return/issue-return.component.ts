@@ -253,6 +253,10 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	getUserIssueReturnLogData() {
+		if (this.returnIssueReservoirForm && this.returnIssueReservoirForm.value.scanBookId) {
+			this.returnIssueReservoirForm.controls['scanBookId'].setValue('');
+		}
+		
 		const inputJson = {
 			user_login_id: this.userData.au_login_id,
 			user_role_id: this.userData.au_role_id,
@@ -260,7 +264,7 @@ export class IssueReturnComponent implements OnInit {
 		};
 		this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.bookLogData = result.data.reserv_user_logs;
+				this.bookLogData = result.data[0]['reserv_user_logs'];
 				this.userHaveBooksData = true;
 				this.bookReadTillDate = 0;
 				let element: any = {};
@@ -282,7 +286,7 @@ export class IssueReturnComponent implements OnInit {
 						srno: pos,
 						reserv_id: item.reserv_id,
 						title: item.title,
-						author: aval.slice(0, -1),
+						author:  item.authors[0],
 						publisher: item.publisher,
 						issued_on: item.issued_on,
 						due_date: item.due_date,
