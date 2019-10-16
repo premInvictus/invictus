@@ -5,8 +5,7 @@ import { TitleCasePipe, DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
-import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
-import { BookListElement } from '../../auxillaries/physical-verification/physical-verification.component';
+
 import * as Excel from 'exceljs/dist/exceljs';
 import * as XLSX from 'xlsx';
 import * as moment from 'moment/moment';
@@ -90,6 +89,9 @@ export class IssueReturnComponent implements OnInit {
 	};
 	schoolInfo: any;
 	length: any;
+	classTeacherClassId = '';
+	classTeacherSecId = '';
+	classTeacher = false;
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -107,6 +109,7 @@ export class IssueReturnComponent implements OnInit {
 		this.buildForm();
 		this.getSession();
 		this.getSchool();
+		this.getTeacher();
 	}
 
 	buildForm() {
@@ -139,6 +142,27 @@ export class IssueReturnComponent implements OnInit {
 				});
 	}
 
+	getTeacher() {
+		this.erpCommonService.getUser({login_id:this.currentUser['login_id'], role_id:this.currentUser['role_id']})
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						var teacherInfo = result.data[0];
+						if (teacherInfo && teacherInfo.cs_relations.length > 0) {
+							for (let i = 0; i< teacherInfo.cs_relations.length; i++) {
+								if (teacherInfo.cs_relations[i]['uc_class_teacher'] === '1') {
+									this.classTeacherClassId = teacherInfo.cs_relations[i]['class_id'];
+									this.classTeacherSecId = teacherInfo.cs_relations[i]['sec_id'];
+									this.classTeacher = true;
+									break;
+								}
+							}
+						}
+						
+					}
+				});
+	}
+
 	getSchool() {
 		this.erpCommonService.getSchool()
 			.subscribe(
@@ -150,52 +174,33 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	searchUser() {
+		this.userData = [];
 		if (this.searchForm && this.searchForm.value.searchId) {
 			const au_role_id = this.searchForm.value.user_role_id;
 			const au_admission_no = this.searchForm.value.searchId;
+			this.erpCommonService.getStudentInformation({ 'admission_no': au_admission_no, 'au_role_id': '4' }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					const userData = result.data ? result.data[0] : '';
+					console.log(userData.class_id , this.classTeacherClassId , userData.sec_id , this.classTeacherSecId);
+					if ((userData.class_id === this.classTeacherClassId) && (userData.sec_id === this.classTeacherSecId)) {
+						this.userData = userData;
+						this.bookData = [];
+						this.getUserIssueReturnLogData();
+					} else {
+						this.userData = [];
+						this.bookData = [];
+						this.common.showSuccessErrorMessage('No Record Found', 'error');
+					}
+					
+				} else {
+					this.userData = [];
+					this.bookData = [];					
+				}
+			});
+			
 
-			if (au_role_id === '4') {
-				this.erpCommonService.getStudentInformation({ 'admission_no': au_admission_no, 'au_role_id': au_role_id }).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
-						this.userData = result.data ? result.data[0] : '';
-						this.bookData = [];
-						this.getUserIssueReturnLogData();
-					} else {
-						this.userData = [];
-						this.bookData = [];
-						this.getUserIssueReturnLogData();
-					}
-				});
-			} else if (au_role_id === '3') {
-				// tslint:disable-next-line: max-line-length
-				this.erpCommonService.getTeacher({ 'login_id': this.searchForm.value.searchId, 'role_id': Number(au_role_id) }).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
-						this.userData = result.data ? result.data[0] : '';
-						this.bookData = [];
-						this.getUserIssueReturnLogData();
-					} else {
-						this.userData = [];
-						this.bookData = [];
-						this.getUserIssueReturnLogData();
-					}
-				});
-			} else if (au_role_id === '2') {
-				this.erpCommonService.getUser({
-					'login_id': this.searchForm.value.searchId,
-					'role_id': Number(au_role_id)
-				}).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
-						this.userData = result.data ? result.data[0] : '';
-						this.bookData = [];
-						this.getUserIssueReturnLogData();
-					} else {
-						this.userData = [];
-						this.bookData = [];
-						this.getUserIssueReturnLogData();
-					}
-				});
-			}
-
+		} else {
+			this.common.showSuccessErrorMessage('No Record Found', 'error');
 		}
 	}
 
@@ -208,10 +213,16 @@ export class IssueReturnComponent implements OnInit {
 					console.log(issueBookStatus.index);
 					this.bookData.push(this.bookLogData[Number(issueBookStatus.index)]['reserv_user_logs']);
 				} else {
+					const class_id = this.classTeacherClassId;
+					const sec_id = this.classTeacherSecId;
 					const inputJson = {
 						'reserv_id': Number(this.returnIssueReservoirForm.value.scanBookId),
 						'reserv_status': ['available'],
 						'user_login_id': this.userData.au_login_id,
+						'location_type' : 'class',
+						'classTeacher' : this.classTeacher, 
+						'class_id' : class_id, 
+						'sec_id' : sec_id
 					};
 					const date = new Date();
 					date.setDate(date.getDate() + 7);
@@ -260,7 +271,8 @@ export class IssueReturnComponent implements OnInit {
 		const inputJson = {
 			user_login_id: this.userData.au_login_id,
 			user_role_id: this.userData.au_role_id,
-			log: true
+			log: true,
+			onlyclass : true
 		};
 		this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -328,9 +340,7 @@ export class IssueReturnComponent implements OnInit {
 	saveIssueReturn() {
 		const updatedBookData = [];
 		const bookData = JSON.parse(JSON.stringify(this.bookData));
-		
 		for (let i = 0; i < bookData.length; i++) {
-			console.log('bookData[i]', bookData[i]);
 			if (bookData[i]['reserv_status'] === 'issued') {
         
         if (bookData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') || 
@@ -415,7 +425,7 @@ export class IssueReturnComponent implements OnInit {
 	checkBookAlreadyAdded(value) {
 		let flag = false;
 		for (let i = 0; i < this.bookData.length; i++) {
-			if (Number(this.bookData[i]['reserv_id']) === Number(value)) {
+			if (Number(this.bookData[i]['reserv_user_logs']['reserv_id']) === Number(value)) {
 				flag = true;
 				break;
 			}
@@ -447,7 +457,6 @@ export class IssueReturnComponent implements OnInit {
 
 	// check the max  width of the cell
 	checkWidth(id, header) {
-		
 		const res = this.bookLogData.map((f) => f.reserv_user_logs[id] !== '-' && f.reserv_user_logs[id] ? f.reserv_user_logs[id].toString().length : 1);
 		const max2 = header.toString().length;
 		const max = Math.max.apply(null, res);

@@ -55,21 +55,24 @@
                     <div class="row">
                       <div class="col-2">
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         Issue Book Limit
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         Return Book (In No. of Days)
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         Reserve Books Request Limit
+                      </div>
+                      <div class="col-2">
+                        Class Book Issue Limit
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-2 middle">
                         Staff
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <mat-form-field class="form-field" appearance="outline">
                           <input type="number" matInput placeholder="No. of Books Issue for Staff"
                             class="text-capitalize" type="text" formControlName="book_issued_limit_staff"
@@ -77,7 +80,7 @@
                         </mat-form-field>
                         <!-- <mat-error>Enter No. of Books to Issued to Admin</mat-error> -->
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <mat-form-field class="form-field" appearance="outline">
                           <input type="number" matInput placeholder="No. of Days to Return Book" class="text-capitalize"
                             type="text" formControlName="book_return_days_staff"
@@ -85,7 +88,7 @@
                         </mat-form-field>
                         <!-- <mat-error>Enter No. of Days to Return a Book</mat-error> -->
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <mat-form-field class="form-field" appearance="outline">
                           <input type="number" matInput placeholder="No. of Reserve Reuqest for Staff"
                             class="text-capitalize" type="text" formControlName="book_request_for_staff"
@@ -98,7 +101,7 @@
                       <div class="col-2 middle">
                         Teacher
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <mat-form-field class="form-field" appearance="outline">
                           <input type="number" matInput placeholder="No. of Books Issue for Teacher"
                             class="text-capitalize" type="text" formControlName="book_issued_limit_teacher"
@@ -106,7 +109,7 @@
                         </mat-form-field>
                         <!-- <mat-error>Enter No. of Books to Issued to Teacher</mat-error> -->
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <mat-form-field class="form-field" appearance="outline">
                           <input type="number" matInput placeholder="No. of Days to Return Book" class="text-capitalize"
                             type="text" formControlName="book_return_days_teacher"
@@ -114,7 +117,7 @@
                         </mat-form-field>
                         <!-- <mat-error>Enter No. of Days to Return a Book</mat-error> -->
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <mat-form-field class="form-field" appearance="outline">
                           <input type="number" matInput placeholder="No. of Reserve Reuqest for Teacher"
                             class="text-capitalize" type="text" formControlName="book_request_for_teacher"
@@ -127,7 +130,7 @@
                       <div class="col-2 middle">
                         Student
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <mat-form-field class="form-field" appearance="outline">
                           <input type="number" matInput placeholder="No. of Books Issue for Student"
                             class="text-capitalize" type="text" formControlName="book_issued_limit_student"
@@ -135,7 +138,7 @@
                         </mat-form-field>
                         <!-- <mat-error>Enter No. of Books to Issued to Student</mat-error> -->
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <mat-form-field class="form-field" appearance="outline">
                           <input type="number" matInput placeholder="No. of Days to Return Book" class="text-capitalize"
                             type="text" formControlName="book_return_days_student"
@@ -143,10 +146,18 @@
                           <!-- <mat-error>Enter No. of Days to Return a Book</mat-error> -->
                         </mat-form-field>
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <mat-form-field class="form-field" appearance="outline">
                           <input type="number" matInput placeholder="No. of Reserve Reuqest for Student"
                             class="text-capitalize" type="text" formControlName="book_request_for_student"
+                            [errorStateMatcher]="confirmValidParentMatcher" required>
+                        </mat-form-field>
+                        <!-- <mat-error>Enter No. of Reserve Reuqest for Student</mat-error> -->
+                      </div>
+                      <div class="col-2">
+                        <mat-form-field class="form-field" appearance="outline">
+                          <input type="number" matInput placeholder="No. of Class Book Issue for Student"
+                            class="text-capitalize" type="text" formControlName="class_book_issue_for_student"
                             [errorStateMatcher]="confirmValidParentMatcher" required>
                         </mat-form-field>
                         <!-- <mat-error>Enter No. of Reserve Reuqest for Student</mat-error> -->

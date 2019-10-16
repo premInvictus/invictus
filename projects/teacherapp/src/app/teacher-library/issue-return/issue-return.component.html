@@ -8,16 +8,14 @@
             <span class="font-size-24">Books Issue Return Process</span>
           </div>
 
-          <div class="col-2">
+          <!-- <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Choose User Type</mat-label>
               <mat-select formControlName="user_role_id" required (selectionChange)="resetAll()">
                 <mat-option value="4">Student</mat-option>
-                <mat-option value="3">Teacher</mat-option>
-                <mat-option value="2">Staff</mat-option>
               </mat-select>
             </mat-form-field>
-          </div>
+          </div> -->
           <div class="col-3">
 
             <div class="search-container">
@@ -27,7 +25,7 @@
                 <div class="col-8">
                   <mat-form-field class="lib-form form-field">
                     <input matInput
-                      [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Teacher By Login Id'"
+                      [placeholder]="'Search Student By Admission No'"
                       formControlName="searchId" autocomplete="off" />
                   </mat-form-field>
                 </div>
@@ -144,7 +142,7 @@
             </thead>
             <tbody>
               <ng-container *ngFor="let item of bookLogData; let i = index;">
-                <tr class="custom-tr" *ngIf="item?.reserv_user_logs?.reserv_status === 'issued'">
+                <tr class="custom-tr" *ngIf="item.reserv_user_logs.reserv_status === 'issued'">
                   <td class="custom-td"><span>{{i+1}}</span></td>
                   <td class="custom-td">
                     <span class="font-skyblue" (click)="openBookModal(item.reserv_id)">{{item?.reserv_user_logs?.reserv_id}}</span>
@@ -400,7 +398,7 @@
       <div class="text-center">
         <app-no-data
           [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
-          [noDataText]="" [subText]="'Please Select User'"></app-no-data>
+          [noDataText]="" [subText]="'Please Select Student'"></app-no-data>
       </div>
     </mat-card>
   </div>
