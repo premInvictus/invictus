@@ -102,10 +102,13 @@ export class ReservoirEditModalComponent implements OnInit {
   bookForm: FormGroup;
   classArray: any[] = [];
   subjectArray: any[] = [];
+  sectionArray: any[] = [];
   inputData: any = {};
   dialogRef: MatDialogRef<ReservoirEditModalComponent>;
   bookData: any = {};
   vendorDetail: any;
+  classChange = false;
+  sectionChange = false;
   constructor(private common: ErpCommonService, private fbuild: FormBuilder,
     private notif: CommonAPIService,
     private dialog: MatDialog,
@@ -119,6 +122,7 @@ export class ReservoirEditModalComponent implements OnInit {
     this.getGenres();
     this.builForm();
     this.getClass();
+    this.getSection();
     this.getSubject();
     this.inputData = item;
     this.dialogRef = this.dialog.open(this.editReserv, {
@@ -147,13 +151,24 @@ export class ReservoirEditModalComponent implements OnInit {
             (this.bookData.images_links.thumbnail ? this.bookData.images_links.smallThumbnail : '')
         }
         const loc: any = this.bookData.location;
+        const location_type: any = this.bookData.location_type;
         let row, stack;
-        if (loc && loc.split('-')) {
-          const arr: any[] = loc.split('-');
-          console.log(arr);
-          row = Number(arr[1]);
-          stack = arr[0];
+        if (location_type === 'library') {
+          if (loc && loc.split('-')) {
+            const arr: any[] = loc.split('-');
+            console.log(arr);
+            row = Number(arr[1]);
+            stack = arr[0];
+          }
+        } else {
+          if (loc && loc.split('-')) {
+            const arr: any[] = loc.split('-');
+            console.log(arr);
+            row = Number(arr[1]);
+            stack = arr[0];
+          }
         }
+        
         let aut: any = '';
         if (this.bookData.authors) {
           for(const item of this.bookData.authors) {
@@ -177,6 +192,11 @@ export class ReservoirEditModalComponent implements OnInit {
           description: this.bookData.description ? this.bookData.description : '',
           category_id: this.bookData.category_id ? this.bookData.category_id : '',
           source: this.bookData.source ? this.bookData.source : '',
+          location_type : this.bookData.location_type ? this.bookData.location_type : 'library',
+          location_class_id : this.bookData.location_class_id ? this.bookData.location_class_id : '',
+          location_sec_id : this.bookData.location_sec_id ? this.bookData.location_sec_id : '',
+          location_class_name : this.bookData.location_class_name ? this.bookData.location_class_name : '',
+          location_sec_name : this.bookData.location_sec_name ? this.bookData.location_sec_name : '',
           stack: stack,
           row: row,
           reserv_class_id: this.bookData.reserv_class_id ? this.bookData.reserv_class_id : [],
@@ -190,6 +210,7 @@ export class ReservoirEditModalComponent implements OnInit {
         });
       }
     });
+    console.log('this.bookForm', this.bookForm);
   }
   acceptCrop(result) {
 		this.uploadImage(result.filename, result.base64);
@@ -197,6 +218,14 @@ export class ReservoirEditModalComponent implements OnInit {
 	acceptNo(event) {
 		event.target.value = '';
   }
+  getSection() {
+		this.common.getSection({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.sectionArray = result.data;
+				
+			}
+		});
+	}
   openCropDialog = (imageFile) => this.cropModal.openModal(imageFile);
 	uploadImage(fileName, au_profileimage) {
     this.imageFlag = false;
@@ -281,6 +310,11 @@ export class ReservoirEditModalComponent implements OnInit {
       source: '',
       page_count: '',
       price: '',
+      location_type: '',
+			location_class_id : '',
+			location_sec_id : '',
+			location_class_name : '',
+			location_sec_name : '',
       stack: '',
       row: '',
       buy_link: '',
@@ -328,9 +362,18 @@ export class ReservoirEditModalComponent implements OnInit {
         this.bookForm.value['bookImage'] = this.bookImage;
         this.bookForm.value['reserv_id'] = this.bookData.reserv_id;
       }
+      if (!this.classChange) {
+        this.bookForm.value['location_class_name'] = this.bookData.location_class_name;
+      }
+      if (!this.sectionChange) {
+        this.bookForm.value['location_sec_name'] = this.bookData.location_sec_name;
+      }
+      console.log(' this.bookData',  this.bookData);
+      console.log('this.bookForm', this.bookForm);
     this.updateReserv.emit(this.bookForm);
     this.closeDialog();
     }
+    
   }
   cancel() {
     this.cancelUpdate.emit(this.inputData);
@@ -338,4 +381,20 @@ export class ReservoirEditModalComponent implements OnInit {
   closeDialog() {
     this.dialogRef.close();
   }
+  setClassLocation(event) {
+    console.log('event', event);
+    this.classChange = true;
+		this.bookForm.patchValue({
+			'location_class_name' : event ? event: this.bookForm.value.location_class_name
+		});
+	}
+
+	setSectionLocation(event) {
+    console.log('event', event);
+    this.sectionChange = true;
+		this.bookForm.patchValue({
+			'location_sec_name' : event ? event : this.bookForm.value.location_sec_name
+		});
+	}
+
 }

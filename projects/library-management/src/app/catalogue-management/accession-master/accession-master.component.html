@@ -326,20 +326,49 @@
                 </div>
                 <div class="col-1">
                   <mat-form-field class="form-field" appearance="outline">
-                    <mat-label>Stack</mat-label>
-                    <input matInput placeholder="Stack" formControlName="stack" required tabindex="19" />
+                    <mat-label>Location Type</mat-label>
+                    <mat-select placeholder="Location Type" formControlName="location_type" tabindex="19">
+                      <mat-option value="class">Class Library</mat-option>
+                      <mat-option value="library">Master Library</mat-option>
+                    </mat-select>
                   </mat-form-field>
                 </div>
-                <div class="col-1">
-                  <mat-form-field class="form-field" appearance="outline">
-                    <mat-label>Row</mat-label>
-                    <input matInput placeholder="Row" formControlName="row" type="number" required tabindex="20" />
-                  </mat-form-field>
-                </div>
-                <div class="col-1">
+                <div class="col-1" *ngIf="bookForm?.value?.location_type=='class'">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Class</mat-label>
-                    <mat-select placeholder="Class" formControlName="reserv_class_id" multiple tabindex="21">
+                    <mat-select placeholder="Class" formControlName="location_class_id" tabindex="20">
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id" (click)="setClassLocation(item?.class_name)">
+                        {{item.class_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-1" *ngIf="bookForm?.value?.location_type=='class'">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Section</mat-label>
+                    <mat-select placeholder="Section" formControlName="location_sec_id" tabindex="21">
+                      <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id"  (click)="setSectionLocation(item?.sec_name)">
+                        {{item.sec_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-1" *ngIf="bookForm?.value?.location_type=='library'">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Stack</mat-label>
+                    <input matInput placeholder="Stack" formControlName="stack" required tabindex="20" />
+                  </mat-form-field>
+                </div>
+                <div class="col-1" *ngIf="bookForm?.value?.location_type=='library'">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Row</mat-label>
+                    <input matInput placeholder="Row" formControlName="row" type="number" required tabindex="21" />
+                  </mat-form-field>
+                </div>
+                <div class="col-1">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Reference Class</mat-label>
+                    <mat-select placeholder="Reference Class" formControlName="reserv_class_id" multiple tabindex="22">
                       <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                         {{item.class_name}}
                       </mat-option>

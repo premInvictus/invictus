@@ -3,7 +3,7 @@
     <div class="col-2">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>User Role</mat-label>
-        <mat-select formControlName="role_value" (selectionChange)="getUserReservoirData('')" placeholder="Class">
+        <mat-select formControlName="role_value" (selectionChange)="getFilterOptions($event)" placeholder="Class">
           <mat-option value="">Please Select</mat-option>
           <mat-option value="2">Staff</mat-option>
           <mat-option value="3">Teacher</mat-option>
@@ -14,7 +14,7 @@
     <div class="col-2">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Class</mat-label>
-        <mat-select formControlName="class_value" (selectionChange)="getSectionByClass($event);filtered($event)"
+        <mat-select formControlName="class_value" (selectionChange)="getFilterOptions($event);"
         placeholder="Class">
           <mat-option value="">Please Select</mat-option>
           <mat-option *ngFor="let item of valueArray" [value]="item.id">
@@ -25,7 +25,7 @@
     <div class="col-2">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Status</mat-label>
-        <mat-select formControlName="status_value" (selectionChange)="getUserReservoirData('')" placeholder="Class">
+        <mat-select formControlName="status_value" (selectionChange)="getFilterOptions($event)" placeholder="Class">
           <mat-option value="">All</mat-option>          
           <mat-option value="issued">Issued</mat-option>
           <mat-option value="returned">Returned</mat-option>
@@ -37,7 +37,7 @@
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>From Date</mat-label>
         <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
-          (blur)="getFromDate($event.target.value)" />
+          (blur)="getFilterOptions($event)" />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -46,7 +46,7 @@
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>To Date</mat-label>
         <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
-          (blur)="getToDate($event.target.value)" />
+          (blur)="getFilterOptions($event)" />
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
         <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>

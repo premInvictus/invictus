@@ -704,33 +704,32 @@ export class AccessionReportComponent implements OnInit {
 					obj['srno'] = (index + 1);
 					obj['book_no'] = repoArray[Number(index)]['reserv_id'] ? repoArray[Number(index)]['reserv_id'] : '-';
 					// new CapitalizePipe().transform(repoArray[Number(index)]['title']);
-					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['title']);
-					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['subtitle']);
-					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['authors'][0]);
-					obj['genre'] = new CapitalizePipe().transform(repoArray[Number(index)]['genre']['genre_name']);
-					obj['pages'] = repoArray[Number(index)]['pages'];
-					obj['price'] = repoArray[Number(index)]['price'];
-					obj['publisher'] = repoArray[Number(index)]['publisher'];
-					obj['published_date'] = repoArray[Number(index)]['published_date'];
-					obj['created_date'] = repoArray[Number(index)]['created_date']['date'];
-					obj['tags'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_tags']);
-					obj['volume_info'] = repoArray[Number(index)]['edition'];
-					obj['language'] = new CapitalizePipe().transform(repoArray[Number(index)]['language_details']['lang_name']);
-					obj['print_type'] = new CapitalizePipe().transform(currentPrintType);
-					obj['book_type'] = new CapitalizePipe().transform(currentBookType);
-					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['location']);
-					obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1));
-					obj['subject'] = new CapitalizePipe().transform(currentSubjectName);
-					obj['vendor_id'] = repoArray[Number(index)]['vendor_details']['vendor_id'];
+					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['title']) ? new CapitalizePipe().transform(repoArray[Number(index)]['title']) : '-';
+					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['subtitle']) ? new CapitalizePipe().transform(repoArray[Number(index)]['subtitle']) : '-';
+					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['authors'][0]) ? new CapitalizePipe().transform(repoArray[Number(index)]['authors'][0]) : '-';
+					obj['genre'] = new CapitalizePipe().transform(repoArray[Number(index)]['genre']['genre_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['genre']['genre_name']) : '-';
+					obj['pages'] = repoArray[Number(index)]['pages'] ? repoArray[Number(index)]['pages'] : '-';
+					obj['price'] = repoArray[Number(index)]['price'] ? repoArray[Number(index)]['price'] : '-';
+					obj['publisher'] = repoArray[Number(index)]['publisher'] ? repoArray[Number(index)]['publisher'] : '-';
+					obj['published_date'] = repoArray[Number(index)]['published_date'] ? repoArray[Number(index)]['published_date'] : '-';
+					obj['created_date'] = repoArray[Number(index)]['created_date']['date'] ? repoArray[Number(index)]['created_date']['date'] : '-';
+					obj['tags'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_tags']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_tags']) : '-';
+					obj['volume_info'] = repoArray[Number(index)]['edition'] ? repoArray[Number(index)]['edition'] : '-';
+					obj['language'] = new CapitalizePipe().transform(repoArray[Number(index)]['language_details']['lang_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['language_details']['lang_name']) : '-';
+					obj['print_type'] = new CapitalizePipe().transform(currentPrintType) ? new CapitalizePipe().transform(currentPrintType) : '-';
+					obj['book_type'] = new CapitalizePipe().transform(currentBookType) ? new CapitalizePipe().transform(currentBookType) : '-';
+					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['location']) ? new CapitalizePipe().transform(repoArray[Number(index)]['location']) : '-';
+					obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1)) ? new CapitalizePipe().transform(currentClassName.slice(0, -1)) : '-';
+					obj['subject'] = new CapitalizePipe().transform(currentSubjectName) ? new CapitalizePipe().transform(currentSubjectName) : '-';
+					obj['vendor_id'] = repoArray[Number(index)]['vendor_details']['vendor_id'] ? repoArray[Number(index)]['vendor_details']['vendor_id'] : '-';
 					obj['vendor_name'] = currentVendorName ? new CapitalizePipe().transform(currentVendorName ) :  '-'; 
-					obj['status'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_status']);
+					obj['status'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_status']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_status']) : '-';
 
 
 					this.dataset.push(obj);
 					index++;
 				}
 
-				console.log('dataset', this.dataset);
 				// this.totalRow = {};
 				// const obj3: any = {};
 				// obj3['id'] = '';

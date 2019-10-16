@@ -301,6 +301,16 @@ export class IssueReturnReportComponent implements OnInit {
 			accessionJSON = {viewAll: true}
 		}
 
+		const filterOptions =  {
+			role_value : this.reportFilterForm.value.role_value,
+			class_value : this.reportFilterForm.value.class_value,
+			status_value : this.reportFilterForm.value.status_value,
+			from_date : this.reportFilterForm.value.from_date,
+			to_date: this.reportFilterForm.value.to_date
+		}
+
+		accessionJSON['filter_options'] = filterOptions;
+
 		this.columnDefinitions = [
 			{
 				id: 'srno',
@@ -314,7 +324,6 @@ export class IssueReturnReportComponent implements OnInit {
 				filterable: true,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
-				formatter: this.bookNoFormatter,
 				width: 80,
 				grouping: {
 					getter: 'user_login_id',
@@ -773,7 +782,7 @@ export class IssueReturnReportComponent implements OnInit {
 					collapsed: false,
 				},
 			}];
-		this.erpCommonService.getDashboardDueReservoirData(accessionJSON).subscribe((result: any) => {
+		this.erpCommonService.getIssueReturnReport(accessionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
 				repoArray = result.data.all;
@@ -783,6 +792,7 @@ export class IssueReturnReportComponent implements OnInit {
 
 					let currentVendorName = '';
 					let currentClassName = '';
+					let currentSectionName = '';
 					let currentSubjectName = '';
 					for (let i =0; i < this.vendorData.length;i++) {
 						if (this.vendorData[i]['ven_id'] === repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id']) {
@@ -792,17 +802,15 @@ export class IssueReturnReportComponent implements OnInit {
 					}
 
 					for (let i =0; i < this.classDataArray.length;i++) {
-						console.log(this.classDataArray[i]['class_id'] , repoArray[Number(index)]['user_class_id']);
 						var cindex = repoArray[Number(index)]['user_class_id'].indexOf(this.classDataArray[i]['class_id']);
 						if (cindex > -1) {
 							currentClassName += this.classDataArray[cindex]['class_name']+",";						
 						}						
 					}
 					for (let i =0; i < this.sectionDataArray.length;i++) {
-						console.log(this.sectionDataArray[i]['sec_id'] , repoArray[Number(index)]['user_sec_id']);
-						var cindex = repoArray[Number(index)]['user_sec_id'].indexOf(this.classDataArray[i]['sec_id']);
+						var cindex = repoArray[Number(index)]['user_sec_id'].indexOf(this.sectionDataArray[i]['sec_id']);
 						if (cindex > -1) {
-							currentClassName += this.sectionDataArray[cindex]['sec_name']+",";						
+							currentSectionName += this.sectionDataArray[cindex]['sec_name'];						
 						}						
 					}
 
@@ -813,38 +821,51 @@ export class IssueReturnReportComponent implements OnInit {
 						}
 					}
 
+					var login_id = '';
+
+					if (repoArray[Number(index)]['user_role_id'] === '2') {
+						login_id = repoArray[Number(index)]['user_login_id'] ? 'A - '+repoArray[Number(index)]['user_login_id'] : '';
+					}
+					if (repoArray[Number(index)]['user_role_id'] === '3') {
+						login_id = repoArray[Number(index)]['user_login_id'] ? ' T - '+repoArray[Number(index)]['user_login_id']  : '';
+					}
+					if (repoArray[Number(index)]['user_role_id'] === '4') {
+						login_id = repoArray[Number(index)]['user_admission_no'] ? ' S - ' +repoArray[Number(index)]['user_admission_no'] : '';
+					}
+
 
 					const obj: any = {};
 					obj['id'] = (index + 1);
 					obj['srno'] = (index + 1);
 					obj['book_no'] = repoArray[Number(index)]['reserv_user_logs'] ?
 						repoArray[Number(index)]['reserv_user_logs']['reserv_id'] : '-';
-					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['title']);
-					obj['user_login_id'] = new CapitalizePipe().transform(repoArray[Number(index)]['user_login_id']);					
-					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['subtitle']);
-					obj['issued_to'] = new CapitalizePipe().transform(repoArray[Number(index)]['user_full_name']);
-					obj['issued_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_on']);
-					obj['due_date'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['due_date']);
-					obj['due_by'] = this.getDaysDiff(repoArray[Number(index)]['reserv_user_logs']['due_date'])+' Days';
-					obj['returned_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_on']);
-					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['authors'][0]);
-					obj['genre'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['genre']['genre_name']);
-					obj['pages'] = repoArray[Number(index)]['reserv_user_logs']['pages'];
-					obj['price'] = repoArray[Number(index)]['reserv_user_logs']['price'];
-					obj['publisher'] = repoArray[Number(index)]['reserv_user_logs']['publisher'];
-					obj['published_date'] = repoArray[Number(index)]['reserv_user_logs']['published_date'];
-					obj['tags'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_tags']);
-					obj['volume_info'] = repoArray[Number(index)]['reserv_user_logs']['edition'];
-					obj['language'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['language_details']['lang_name']);
-					obj['print_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['type_id']);
-					obj['book_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['category_id']);
-					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['location']);
-					obj['fine'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['fine']);
-					obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1));
-					obj['subject'] = new CapitalizePipe().transform(currentSubjectName);
-					obj['vendor_id'] = repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id'];
+					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['title']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['title']) : '-';
+					obj['user_login_id'] = login_id ? login_id : '-';					
+					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['subtitle']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['subtitle']) : '-';
+					obj['issued_to'] = new CapitalizePipe().transform(repoArray[Number(index)]['user_full_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['user_full_name']) : '-';
+					obj['issued_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_on']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_on']) : '-';
+					obj['due_date'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['due_date']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['due_date']) : '-';
+					obj['due_by'] = this.getDaysDiff(repoArray[Number(index)]['reserv_user_logs']['due_date']) > 0 ? this.getDaysDiff(repoArray[Number(index)]['reserv_user_logs']['due_date'])+' Days' : '-';
+					obj['returned_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_on']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_on']) : '-';
+					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['authors'][0]) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['authors'][0]) : '-';
+					obj['genre'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['genre']['genre_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['genre']['genre_name']) : '-';
+					obj['pages'] = repoArray[Number(index)]['reserv_user_logs']['pages'] ? repoArray[Number(index)]['reserv_user_logs']['pages'] : '-';
+					obj['price'] = repoArray[Number(index)]['reserv_user_logs']['price'] ? repoArray[Number(index)]['reserv_user_logs']['price'] : '-';
+					obj['publisher'] = repoArray[Number(index)]['reserv_user_logs']['publisher'] ? repoArray[Number(index)]['reserv_user_logs']['publisher'] : '-';
+					obj['published_date'] = repoArray[Number(index)]['reserv_user_logs']['published_date'] ? repoArray[Number(index)]['reserv_user_logs']['published_date'] : '-';
+					obj['tags'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_tags']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_tags']) : '-';
+					obj['volume_info'] = repoArray[Number(index)]['reserv_user_logs']['edition'] ? repoArray[Number(index)]['reserv_user_logs']['edition'] : '-';
+					obj['language'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['language_details']['lang_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['language_details']['lang_name']) : '-';
+					obj['print_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['type_id']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['type_id']) : '-';
+					obj['book_type'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['category_id']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['category_id']) : '-';
+					obj['location'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['location']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['location']) : '-';
+					obj['fine'] = repoArray[Number(index)]['reserv_user_logs']['fine'] > 0 ? repoArray[Number(index)]['reserv_user_logs']['fine'] :  '-';
+					obj['class'] = new CapitalizePipe().transform(currentClassName.slice(0, -1)) ? new CapitalizePipe().transform(currentClassName.slice(0, -1)) : '-';
+					obj['section'] = new CapitalizePipe().transform(currentSectionName) ? new CapitalizePipe().transform(currentSectionName) : '-';
+					obj['subject'] = new CapitalizePipe().transform(currentSubjectName) ? new CapitalizePipe().transform(currentSubjectName) : '-';
+					obj['vendor_id'] = repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id'] ? repoArray[Number(index)]['reserv_user_logs']['vendor_details']['vendor_id'] : '-';
 					obj['vendor_name'] = currentVendorName ? new CapitalizePipe().transform(currentVendorName ) :  '-'; 
-					obj['status'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_status']);
+					obj['status'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_status']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['reserv_status']) : '-';
 
 
 					this.dataset.push(obj);
@@ -900,9 +921,11 @@ export class IssueReturnReportComponent implements OnInit {
 			var date2 = this.common.dateConvertion(dueDate, 'yyyy-MM-dd');
 			var parsedDate2: any = this.parseDate(date2);
 			var parsedDate1: any = this.parseDate(date1);
-			return Math.round((parsedDate2 - parsedDate1) / (1000 * 60 * 60 * 24));
+			return Math.round((parsedDate1 - parsedDate2) / (1000 * 60 * 60 * 24));
 		}
 	}
+
+	
 
 	bookNoFormatter(row, cell, value, columnDef, dataContext) {
 		if (value !== '-') {

@@ -359,6 +359,7 @@ export class IssueReturnComponent implements OnInit {
 		const inputJson = {
 			reservoir_data: updatedBookData,
 			user_login_id: this.userData.au_login_id,
+			user_admission_no: this.userData.au_admission_no,
 			user_role_id: this.userData.au_role_id,
 			user_full_name: this.userData.au_full_name,
 			user_class_name: this.userData.class_name ? this.userData.class_name : '',
