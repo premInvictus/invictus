@@ -105,7 +105,8 @@
                   <span class="font-size-12 font-bold float-right">:</span>
                 </div>
                 <div class="col-6 remove-col-padding-right">
-                  <span class="font-size-12 font-bold opacity-7">-</span>
+                  <span class="font-size-12 font-bold opacity-7" *ngIf="!stuOutStandingFine">-</span>
+                  <span class="font-size-12 font-bold opacity-7" *ngIf="stuOutStandingFine">{{stuOutStandingFine}}</span>
                 </div>
               </div>
               <div class="row remove-top-margin">
