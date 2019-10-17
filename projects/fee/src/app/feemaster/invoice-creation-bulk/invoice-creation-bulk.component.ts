@@ -422,6 +422,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.searchparam = {};
 		this.searchparam.pageIndex = this.pageIndex;
 		this.searchparam.pageSize = this.pageSize;
+		this.paginator.pageSize = this.pageSize;
 		Object.keys(value.generalFilters).forEach( key => {
 			if(value.generalFilters[key]) {
 				this.searchparam[key] = value.generalFilters[key];
@@ -703,8 +704,8 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 							cell.fill = {
 								type: 'pattern',
 								pattern: 'solid',
-								fgColor: { argb: '888888' },
-								bgColor: { argb: '888888' },
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
 							};
 						}
 					}

@@ -131,11 +131,11 @@
               <ng-container matColumnDef="processingdate">
                 <th mat-header-cell *matHeaderCellDef> Date of Clearence/Dishonoured</th>
                 <td mat-cell *matCellDef="let item">
-                  <span style="font-size: 14px" *ngIf="item.action.status === '2'">
+                  <span style="font-size: 14px" *ngIf="item.action.fcc_status === 'b'">
                     <b *ngIf="item.action.dishonor_date">{{item.action.dishonor_date | date : 'd-MMM-y'}}</b>
                     <b *ngIf="!item.action.dishonor_date">-</b>
                   </span>
-                  <span style="font-size: 14px" *ngIf="item.action.status === '1'">
+                  <span style="font-size: 14px" *ngIf="item.action.fcc_status === 'c'">
                     <b *ngIf="item.action.fcc_process_date">{{item.action.fcc_process_date | date : 'd-MMM-y'}}</b>
                     <b *ngIf="!item.action.fcc_process_date">-</b>
                   </span>
@@ -225,7 +225,7 @@
                 <td colspan="11">No Record Found</td>
               </tr>
             </table>
-            <mat-paginator [hidden]="!(CHEQUE_ELEMENT_DATA.length > 0)" #paginator [pageSize]="8"
+            <mat-paginator [hidden]="!(CHEQUE_ELEMENT_DATA.length > 0)" #paginator [pageSize]="10"
               [pageSizeOptions]="[5,10,25,100]" (page)="pageEvent = fetchData($event)"></mat-paginator>
           </div>
         </div>
