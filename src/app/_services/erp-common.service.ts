@@ -393,6 +393,11 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/dashboard/getDueReservoir', value);
 	}
+
+	getIssueReturnReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/dashboard/getIssueReturnReport', value);
+	}
 	getSession() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/siSetup/session');

@@ -19,6 +19,7 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 	ELEMENT_DATA: ConcessionList[] = [];
 	dataSource = new MatTableDataSource<ConcessionList>(this.ELEMENT_DATA);
 	crArray: any[] = [];
+	review_array: any[] = [];	
 	classSectionName: any;
 	constructor(
 		public feeService: FeeService,
@@ -40,7 +41,8 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 		param.accd_process_type = '4';
 		this.feeService.getConcessionRectification(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.crArray = result.data;
+				this.crArray = result.data.table_result;
+				this.review_array = result.data.review_result;
 				if (this.crArray.length > 0) {
 					let sno = 0;
 					this.crArray.forEach(element => { 
@@ -53,11 +55,11 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 							srno: ++sno,
 							enrollment: element.accd_login_id,							
 							class_sec: this.classSectionName,
-							remarks: element.mod_review_remark,
+							remarks: this.getRemarks(element.mod_rev_id),
 							admno: element.au_admission_no,
 							name: element.au_full_name,
 							concession: element.fcc_name,
-							proposed_by: element.proposed_by,
+							proposed_by: this.getProposedBy(element.mod_rev_id),
 							action: element
 						});
 					});
@@ -73,6 +75,7 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 	openConcessionRemarkModal(data) {
 		this.concessionremarkmodal.openModal(data);
 	}
+
 	approve(event) {
 		const param: any = {};
 		// if (event.reason_id) {
@@ -84,7 +87,7 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 		if (event.callee_data.accd_id) {
 			param.accd_id = event.callee_data.accd_id;
 		}
-		param.accd_fcg_status = 'approved';
+		param.accd_fcg_status = 'approved'; 
 		this.feeService.updateConcessionRectification(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
@@ -97,5 +100,16 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 	applyFilter(filterValue: string) {
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
-
+	getRemarks(mod_rev_id){
+		const findex = this.review_array.findIndex(f => f.mod_rev_id === mod_rev_id);
+		if (findex !== -1) {
+			return this.review_array[findex].mod_review_remark;
+		}
+	}
+	getProposedBy(mod_rev_id){
+		const findex = this.review_array.findIndex(f => f.mod_rev_id === mod_rev_id);
+		if (findex !== -1) {
+			return this.review_array[findex].proposed_by;
+		}
+	}
 }

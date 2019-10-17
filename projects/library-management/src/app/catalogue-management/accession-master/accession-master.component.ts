@@ -112,6 +112,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		}
 	];
 	classArray: any[] = [];
+	sectionArray: any[] = [];
 	subjectArray: any[] = [];
 	vendorDetail: any = {};
 	bookDetails: any = {};
@@ -169,6 +170,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		this.getGenres();
 		this.builForm();
 		this.getClass();
+		this.getSection();
 		this.getSubject();
 		this.getReservoirData();
 	}
@@ -220,6 +222,14 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		this.assessionMasterContainer = true;
 		this.addBookContainer = false;
 		this.getReservoirData();
+	}
+	getSection() {
+		this.common.getSection({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.sectionArray = result.data;
+				
+			}
+		});
 	}
 	searchOk($event) {
 		this.BOOK_ELEMENT_DATA = [];
@@ -347,6 +357,11 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			source: '',
 			page_count: '',
 			price: '',
+			location_type: '',
+			location_class_id : '',
+			location_sec_id : '',
+			location_class_name : '',
+			location_sec_name : '',
 			stack: '',
 			row: '',
 			buy_link: '',
@@ -582,16 +597,18 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		}
 	}
 	getReservoirData() {
-		this.BOOK_ELEMENT_DATA = [];
+		
 		let i = 0;
 		localStorage.removeItem('invoiceBulkRecords');
-		this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
 		this.common.getReservoirData({
 			page_index: this.bookpageindex,
 			page_size: this.bookpagesize
 		}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
+				this.BOOK_ELEMENT_DATA = [];
+				this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
 				this.searchViaText = false;
+				
 				this.searchViaSearch = true;
 				this.totalRecords = Number(res.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
@@ -613,12 +630,18 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					});
 					i++;
 				}
+				this.paginator.pageIndex = this.bookpageindex;
+				this.paginator.pageSize = this.bookpagesize;
 				this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
 				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 				this.bookDataSource.sort = this.sort;
-				this.bookDataSource.paginator = this.paginator;
-				this.bookDataSource.paginator.length = this.paginator.length = this.totalRecords;
 				
+				this.bookDataSource.paginator['length'] = this.paginator['length'] = this.totalRecords;
+				this.bookDataSource.paginator = this.paginator;
+				
+			} else {
+				this.BOOK_ELEMENT_DATA = [];
+				this.bookDataSource = new MatTableDataSource<AccessionMasterModel>(this.BOOK_ELEMENT_DATA);
 			}
 		});
 	}
@@ -705,4 +728,17 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 			this.enableMultiFlag = false;
 		}
 	}
+
+	setClassLocation(event) {
+		this.bookForm.patchValue({
+			'location_class_name' : event ? event : ''
+		});
+	}
+
+	setSectionLocation(event) {
+		this.bookForm.patchValue({
+			'location_sec_name' : event ? event : ''
+		});
+	}
+
 }

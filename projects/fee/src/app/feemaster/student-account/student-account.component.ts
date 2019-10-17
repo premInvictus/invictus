@@ -17,14 +17,14 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	feeStructureArray: any[] = [];
 	conGroupArray: any[] = [];
 	conDesc: string;
-	conStatus: any;
+	conStatus = 'pending';
 	hostelFeeStructureArray: any[] = [];
 	hostelConGroupArray: any[] = [];
 	transportFlag = false;
 	hostelFlag = false;
 	modeFlag = false;
 	terminationFlag = false;
-	routeArray: any[] = []; 
+	routeArray: any[] = [];
 	stoppageArray: any[] = [];
 	slabArray: any[] = [];
 	transPortModes: any[] = [];
@@ -216,6 +216,13 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		const cindex = this.conGroupArray.findIndex(e => e.fcg_id === event.value);
 		if (cindex !== -1) {
 			this.conDesc = this.conGroupArray[cindex].fcg_description;
+		}
+	}
+	changeValue(event) {
+		if (Number(this.accountDetails.accd_fcg_id) === Number(event.value)) {
+			this.conStatus = 'approval';
+		} else {
+			this.conStatus = 'pending';
 		}
 	}
 	getFeeOtherCategory() {

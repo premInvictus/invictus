@@ -44,7 +44,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				book_request_for_teacher: '',
 				book_issued_limit_student: '',
 				book_return_days_student: '',
-				book_request_for_student: ''
+				book_request_for_student: '',
+				class_book_issue_for_student:''
 			})
 		}];
 	}
@@ -66,7 +67,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 							'book_request_for_teacher': settingData['book_request_for_teacher'],
 							'book_issued_limit_student': settingData['book_issued_limit_student'],
 							'book_return_days_student': settingData['book_return_days_student'],
-							'book_request_for_student': settingData['book_request_for_student']
+							'book_request_for_student': settingData['book_request_for_student'],
+							'class_book_issue_for_student' : settingData['class_book_issue_for_student'],
 						});
 					}
 				}
