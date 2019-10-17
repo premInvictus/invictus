@@ -7,6 +7,7 @@ import { MarksEntryFinalComponent } from './marks-entry-final/marks-entry-final.
 import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.component';
 import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.component';
 import { AdditionalSubjectComponent } from './additional-subject/additional-subject.component';
+import { RemarksEntryComponent } from './remarks-entry/remarks-entry.component';
 
 const routes: Routes = [
 	{
@@ -29,6 +30,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'additional-subject', component: AdditionalSubjectComponent
+	},
+	{
+		path: 'remarks-entry', component: RemarksEntryComponent
 	}
 ];
 
