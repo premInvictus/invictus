@@ -484,10 +484,10 @@ export class SetupComponent implements OnInit {
 	setGradeData(gradeDataTier) {
 		this.rangeArray = [];
 		this.gradeDataFrmArr = [];
-		for (let i = 0; i < 100; i++) {
+		for (let i = 0; i <= 100; i++) {
 			this.rangeArray.push({
-				'rng_id': (i + 1).toString(),
-				'rng_value': (i + 1)
+				'rng_id': (i).toString(),
+				'rng_value': (i)
 			});
 		}
 		for (let i = 0; i < gradeDataTier.length; i++) {

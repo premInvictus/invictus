@@ -1,0 +1,143 @@
+<ng-template #searchModal>
+  <div class="row remove-modal-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="dialog-title-container ">
+        <span class="font-size-24 font-white">Advanced Search</span>
+        <i class="material-icons font-size-24 float-right font-white margin-top-10" (click)="closeDialog()">
+          cancel
+        </i>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 remove-col-padding">
+      <ng-container *ngFor="let form of formGroupArray;let i = index;">
+        <form [formGroup]="formGroupArray[i].formGroup">
+          <div [class]="i == 0 ? 'row margin-top-30' : 'row'">
+            <div class="col-4">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Choose your filter..</mat-label>
+                <mat-select formControlName="filter_type" (selectionChange)="setPlaceHolder($event.value, i)">
+                  <mat-option *ngFor="let item of filterArray" [value]="item.id">{{item.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-7">
+              <div>
+                <div class="row remove-top-margin">
+                  <div class="col-8">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>
+                        {{placeholder[i] ? placeholder[i] : 'Select a filter type'}}</mat-label>
+                      <input matInput [placeholder]="placeholder[i] ? placeholder[i] : 'Select a filter type'"
+                        [type]="fieldType[i]" formControlName="filter_value"
+                        [readonly]="!(formGroupArray[i].formGroup.value.filter_type)" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4 margin-top-10  text-right" *ngIf="(formGroupArray.length - 1) === i">
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10"
+                      (click)="addNewFilter(i);$event.stopPropagation()"
+                      [disabled]="!formGroupArray[i].formGroup.value.filter_type && !formGroupArray[i].formGroup.value.filter_value">
+                      <span style="color:#fff !important">Add</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-1 text-center" *ngIf="i !== 0">
+              <div class="margin-top-15" (click)="deleteForm(i)">
+                <i class="fas fa-trash font-size-20 font-color-red"></i>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+      <hr>
+      <div class="row">
+        <div class="col-12">
+          <div class="float-left">
+            <span class="font-size-16"><b>General Filters</b></span>
+          </div>
+        </div>
+      </div>
+      <form [formGroup]="generalFilterForm">
+        <div class="row">
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Class</mat-label>
+              <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass()">
+                <mat-option>please Select</mat-option>
+                <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Section</mat-label>
+              <mat-select formControlName="sec_id">
+                <mat-option>please Select</mat-option>
+                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Fee Period</mat-label>
+              <mat-select placeholder="Fee Period" formControlName="inv_fm_id">
+                <mat-option *ngFor="let item of feePeriod" [value]="item.fm_id">{{item.fm_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option>Please Select</mat-option>
+                <mat-option value="paid">Paid</mat-option>
+                <mat-option value="unpaid">Unpaid</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="float-left">
+              <span class="font-size-16"><b>Additional Filters</b></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>From</mat-label>
+              <input matInput [matDatepicker]="picker4" placeholder="From" formControlName="from_date">
+              <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+              <mat-datepicker #picker4></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>To</mat-label>
+              <input matInput [matDatepicker]="picker5" placeholder="To" formControlName="to_date">
+              <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+              <mat-datepicker #picker5></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+      <br />
+      <div class="row text-center">
+        <div class="col-12">
+          <button mat-raised-button class="btn-success-green" (click)="submit()">Submit</button>
+          <button mat-raised-button class="btn-reset btn-spacer" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+      <br>
+    </div>
+  </div>
+</ng-template>
