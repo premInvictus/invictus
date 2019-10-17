@@ -35,7 +35,7 @@ export class IssueReturnComponent implements OnInit {
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
-	@ViewChild('bookDet')bookDet;
+	@ViewChild('bookDet') bookDet;
 	BOOK_LOG_LIST_ELEMENT: BookLogListElement[] = [];
 	bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
 	// tslint:disable-next-line: max-line-length
@@ -88,10 +88,12 @@ export class IssueReturnComponent implements OnInit {
 
 	};
 	schoolInfo: any;
+	settingData: any;
 	length: any;
 	classTeacherClassId = '';
 	classTeacherSecId = '';
 	classTeacher = false;
+	finIssueBook : any = [];
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -110,6 +112,7 @@ export class IssueReturnComponent implements OnInit {
 		this.getSession();
 		this.getSchool();
 		this.getTeacher();
+		this.getGlobalSetting();
 	}
 
 	buildForm() {
@@ -123,6 +126,34 @@ export class IssueReturnComponent implements OnInit {
 			due_date: '',
 			issue_date: '',
 			return_date: ''
+		});
+	}
+
+	getGlobalSetting() {
+		this.erpCommonService.getGlobalSetting({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const settings = result.data;
+				for (let i = 0; i < settings.length; i++) {
+					if (settings[i]['gs_alias'] === 'library_user_setting') {
+						this.settingData = JSON.parse(settings[i]['gs_value']);
+						console.log('settingData', this.settingData);
+						// this.formGroupArray[this.configValue-1].formGroup.patchValue({
+						// 	'book_issued_limit_staff': settingData['book_issued_limit_staff'],
+						// 	'book_return_days_staff': settingData['book_return_days_staff'],
+						// 	'book_request_for_staff': settingData['book_request_for_staff'],
+						// 	'book_issued_limit_teacher': settingData['book_issued_limit_teacher'],
+						// 	'book_return_days_teacher': settingData['book_return_days_teacher'],
+						// 	'book_request_for_teacher': settingData['book_request_for_teacher'],
+						// 	'book_issued_limit_student': settingData['book_issued_limit_student'],
+						// 	'book_return_days_student': settingData['book_return_days_student'],
+						// 	'book_request_for_student': settingData['book_request_for_student'],
+						// 	'class_book_issue_for_student' : settingData['class_book_issue_for_student'],
+						// });
+					}
+				}
+
+
+			}
 		});
 	}
 
@@ -143,13 +174,13 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	getTeacher() {
-		this.erpCommonService.getUser({login_id:this.currentUser['login_id'], role_id:this.currentUser['role_id']})
+		this.erpCommonService.getUser({ login_id: this.currentUser['login_id'], role_id: this.currentUser['role_id'] })
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						var teacherInfo = result.data[0];
 						if (teacherInfo && teacherInfo.cs_relations.length > 0) {
-							for (let i = 0; i< teacherInfo.cs_relations.length; i++) {
+							for (let i = 0; i < teacherInfo.cs_relations.length; i++) {
 								if (teacherInfo.cs_relations[i]['uc_class_teacher'] === '1') {
 									this.classTeacherClassId = teacherInfo.cs_relations[i]['class_id'];
 									this.classTeacherSecId = teacherInfo.cs_relations[i]['sec_id'];
@@ -158,7 +189,7 @@ export class IssueReturnComponent implements OnInit {
 								}
 							}
 						}
-						
+
 					}
 				});
 	}
@@ -181,7 +212,7 @@ export class IssueReturnComponent implements OnInit {
 			this.erpCommonService.getStudentInformation({ 'admission_no': au_admission_no, 'au_role_id': '4' }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					const userData = result.data ? result.data[0] : '';
-					console.log(userData.class_id , this.classTeacherClassId , userData.sec_id , this.classTeacherSecId);
+					console.log(userData.class_id, this.classTeacherClassId, userData.sec_id, this.classTeacherSecId);
 					if ((userData.class_id === this.classTeacherClassId) && (userData.sec_id === this.classTeacherSecId)) {
 						this.userData = userData;
 						this.bookData = [];
@@ -191,13 +222,13 @@ export class IssueReturnComponent implements OnInit {
 						this.bookData = [];
 						this.common.showSuccessErrorMessage('No Record Found', 'error');
 					}
-					
+
 				} else {
 					this.userData = [];
-					this.bookData = [];					
+					this.bookData = [];
 				}
 			});
-			
+
 
 		} else {
 			this.common.showSuccessErrorMessage('No Record Found', 'error');
@@ -219,13 +250,16 @@ export class IssueReturnComponent implements OnInit {
 						'reserv_id': Number(this.returnIssueReservoirForm.value.scanBookId),
 						'reserv_status': ['available'],
 						'user_login_id': this.userData.au_login_id,
-						'location_type' : 'class',
-						'classTeacher' : this.classTeacher, 
-						'class_id' : class_id, 
-						'sec_id' : sec_id
+						'location_type': 'class',
+						'classTeacher': this.classTeacher,
+						'class_id': class_id,
+						'sec_id': sec_id
 					};
 					const date = new Date();
-					date.setDate(date.getDate() + 7);
+					var bookReturnDays = parseInt(this.settingData['book_return_days_student'], 10) ? parseInt(this.settingData['book_return_days_student'], 10) : 7;
+					date.setDate(date.getDate() + bookReturnDays);
+
+					// date.setDate(date.getDate() + 7);
 					this.erpCommonService.searchReservoirByStatus(inputJson).subscribe((result: any) => {
 						if (result && result.status === 'ok') {
 							if (result && result.data && result.data.resultData[0]) {
@@ -267,16 +301,17 @@ export class IssueReturnComponent implements OnInit {
 		if (this.returnIssueReservoirForm && this.returnIssueReservoirForm.value.scanBookId) {
 			this.returnIssueReservoirForm.controls['scanBookId'].setValue('');
 		}
-		
+
 		const inputJson = {
 			user_login_id: this.userData.au_login_id,
 			user_role_id: this.userData.au_role_id,
 			log: true,
-			onlyclass : true
+			onlyclass: true
 		};
 		this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.bookLogData = result.data;
+				this.finIssueBook = [];
 				this.userHaveBooksData = true;
 				this.bookReadTillDate = 0;
 				let element: any = {};
@@ -298,7 +333,7 @@ export class IssueReturnComponent implements OnInit {
 						srno: pos,
 						reserv_id: item.reserv_user_logs.reserv_id,
 						title: item.reserv_user_logs.title,
-						author:  item.reserv_user_logs.authors[0],
+						author: item.reserv_user_logs.authors[0],
 						publisher: item.reserv_user_logs.publisher,
 						issued_on: item.reserv_user_logs.issued_on,
 						due_date: item.reserv_user_logs.due_date,
@@ -311,6 +346,7 @@ export class IssueReturnComponent implements OnInit {
 
 					if (item.reserv_user_logs.reserv_status === 'issued') {
 						this.issueBookData.push(item);
+						this.finIssueBook.push(item);
 					}
 
 					this.BOOK_LOG_LIST_ELEMENT.push(element);
@@ -330,8 +366,10 @@ export class IssueReturnComponent implements OnInit {
 			} else {
 				this.userHaveBooksData = false;
 				this.bookLogData = [];
+				this.issueBookData = [];
 				this.bookReadTillDate = 0;
 				this.BOOK_LOG_LIST_ELEMENT = [];
+				this.finIssueBook = [];
 				this.bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
 			}
 		});
@@ -342,9 +380,9 @@ export class IssueReturnComponent implements OnInit {
 		const bookData = JSON.parse(JSON.stringify(this.bookData));
 		for (let i = 0; i < bookData.length; i++) {
 			if (bookData[i]['reserv_status'] === 'issued') {
-        
-        if (bookData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') || 
-        bookData[i]['due_date'] < this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
+
+				if (bookData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') ||
+					bookData[i]['due_date'] < this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
 					bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 					bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
 					bookData[i]['fdue_date'] = bookData[i]['fdue_date'];
@@ -353,6 +391,11 @@ export class IssueReturnComponent implements OnInit {
 					bookData[i]['reserv_status'] = 'available';
 					bookData[i]['issued_on'] = this.common.dateConvertion(bookData[i]['issued_on'], 'yyyy-MM-dd');
 					bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+					for (let j=0; j< this.finIssueBook.length;j++) {
+						if (this.finIssueBook[j]['reserv_user_logs']['reserv_id'] === bookData[i]['reserv_id']) {
+							this.finIssueBook.splice(j,1);
+						}
+					}
 				}
 				updatedBookData.push(bookData[i]);
 			} else if (bookData[i]['reserv_status'] === 'available' || bookData[i]['reserv_status'] === 'reserved') {
@@ -360,13 +403,14 @@ export class IssueReturnComponent implements OnInit {
 					bookData[i]['reserv_status'] = 'issued';
 					bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
 					bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+					this.finIssueBook.push(bookData[i]);
 					updatedBookData.push(bookData[i]);
 				}
 			}
-    }
-    
+		}
 
-    
+
+
 
 		const inputJson = {
 			reservoir_data: updatedBookData,
@@ -409,6 +453,19 @@ export class IssueReturnComponent implements OnInit {
 		this.bookData[index]['fdue_date'] = date;
 	}
 
+	checkForIssueBookLimit() {
+		let flag = false;
+		//parseInt(this.settingData['book_return_days_staff'], 10)
+
+		if (this.finIssueBook.length > parseInt(this.settingData['class_book_issue_for_student'], 10)) {
+			flag = true;
+		}
+
+
+		return flag;
+
+	}
+
 	checkForIssueBook(searchBookId) {
 		console.log('this.bookLogData', this.bookLogData);
 		let flag = { 'status': false, 'index': '' };
@@ -434,7 +491,8 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	resetIssueReturn() {
-		this.bookData = [];		
+		this.bookData = [];
+		this.finIssueBook = [];
 		this.returnIssueReservoirForm.reset();
 		this.returnIssueReservoirForm.controls['scanBookId'].setValue('');
 
@@ -444,6 +502,7 @@ export class IssueReturnComponent implements OnInit {
 		this.bookData = [];
 		this.bookLogData = [];
 		this.issueBookData = [];
+		this.finIssueBook = [];
 		this.userData = [];
 		this.searchForm.controls['searchId'].setValue('');
 		this.returnIssueReservoirForm.reset();
@@ -503,7 +562,7 @@ export class IssueReturnComponent implements OnInit {
 		});
 
 		reportType2 = new TitleCasePipe().transform(this.userData.au_full_name + ' booklogreport_') + this.sessionName;
-		reportType = new TitleCasePipe().transform(this.userData.au_full_name+' Book Log report: ') + this.sessionName;
+		reportType = new TitleCasePipe().transform(this.userData.au_full_name + ' Book Log report: ') + this.sessionName;
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -516,13 +575,13 @@ export class IssueReturnComponent implements OnInit {
 		worksheet.getCell('A2').value = new TitleCasePipe().transform(' Book Log report: ') + this.sessionName;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A3:B3');
-		worksheet.getCell('A3').value = 'Admission No : ' +this.userData.em_admission_no;
+		worksheet.getCell('A3').value = 'Admission No : ' + this.userData.em_admission_no;
 		worksheet.getCell(`A3`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('C3:D3');
-		worksheet.getCell('C3').value = 'Name : ' +this.userData.au_full_name;
+		worksheet.getCell('C3').value = 'Name : ' + this.userData.au_full_name;
 		worksheet.getCell(`C3`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('E3:F3');
-		worksheet.getCell('E3').value = 'Class : ' +this.userData.class_name+'     '+'Section: '+this.userData.sec_name;
+		worksheet.getCell('E3').value = 'Class : ' + this.userData.class_name + '     ' + 'Section: ' + this.userData.sec_name;
 		worksheet.getCell(`E3`).alignment = { horizontal: 'left' };
 		worksheet.getCell('A5').value = 'Book No.';
 		worksheet.getCell('B5').value = 'Book Name';
@@ -532,20 +591,20 @@ export class IssueReturnComponent implements OnInit {
 		worksheet.getCell('F5').value = 'Due Date';
 		worksheet.getCell('G5').value = 'Returned On';
 		worksheet.getCell('H5').value = 'Fine';
-		
-		
+
+
 
 		worksheet.columns = columns;
 		this.length = worksheet._rows.length;
-		let totRow = this.length+this.bookLogData.length+5;
+		let totRow = this.length + this.bookLogData.length + 5;
 		console.log(worksheet._rows.length, this.currentUser, totRow);
-		
-		worksheet.mergeCells('A'+totRow+':'+'B'+totRow);
-		worksheet.getCell('A'+totRow+':'+'B'+totRow).value = 'Report Generated By : ' +this.currentUser.full_name;
-		worksheet.getCell('A'+totRow+':'+'B'+totRow).alignment = { horizontal: 'left' };
-		worksheet.mergeCells('A'+(totRow+1)+':'+'B'+(totRow+1));
-		worksheet.getCell('A'+(totRow+1)+':'+'B'+(totRow+1)).value = 'No. of Records : ' +this.bookLogData.length;
-		worksheet.getCell('A'+(totRow+1)+':'+'B'+(totRow+1)).alignment = { horizontal: 'left' };
+
+		worksheet.mergeCells('A' + totRow + ':' + 'B' + totRow);
+		worksheet.getCell('A' + totRow + ':' + 'B' + totRow).value = 'Report Generated By : ' + this.currentUser.full_name;
+		worksheet.getCell('A' + totRow + ':' + 'B' + totRow).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A' + (totRow + 1) + ':' + 'B' + (totRow + 1));
+		worksheet.getCell('A' + (totRow + 1) + ':' + 'B' + (totRow + 1)).value = 'No. of Records : ' + this.bookLogData.length;
+		worksheet.getCell('A' + (totRow + 1) + ':' + 'B' + (totRow + 1)).alignment = { horizontal: 'left' };
 		for (const item of this.bookLogData) {
 			const prev = this.length + 1;
 			const obj: any = {};
@@ -566,7 +625,7 @@ export class IssueReturnComponent implements OnInit {
 
 			worksheet.addRow(obj);
 		}
-		
+
 
 		worksheet.eachRow((row, rowNum) => {
 			if (rowNum === 1) {
@@ -590,8 +649,8 @@ export class IssueReturnComponent implements OnInit {
 					bold: true
 				};
 			}
-			
-			if (rowNum === totRow || rowNum === (totRow+1)) {
+
+			if (rowNum === totRow || rowNum === (totRow + 1)) {
 				row.font = {
 					name: 'Arial',
 					size: 14,
@@ -621,7 +680,7 @@ export class IssueReturnComponent implements OnInit {
 					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
 			}
-			if (rowNum >= 5 && rowNum <= this.bookLogData.length+5) {
+			if (rowNum >= 5 && rowNum <= this.bookLogData.length + 5) {
 				row.eachCell(cell => {
 					// tslint:disable-next-line: max-line-length
 
@@ -655,7 +714,7 @@ export class IssueReturnComponent implements OnInit {
 					};
 					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
-			} else if (rowNum === totRow || rowNum === (totRow+1)) {
+			} else if (rowNum === totRow || rowNum === (totRow + 1)) {
 				row.font = {
 					name: 'Arial',
 					size: 12,
@@ -709,7 +768,7 @@ export class IssueReturnComponent implements OnInit {
 			theme: 'striped'
 		});
 		doc.autoTable({
-			head: [['Admission No : ' + this.userData.em_admission_no + '    Name : ' +this.userData.au_full_name + '     Class : ' +this.userData.class_name+'     '+' Section: '+this.userData.sec_name]],
+			head: [['Admission No : ' + this.userData.em_admission_no + '    Name : ' + this.userData.au_full_name + '     Class : ' + this.userData.class_name + '     ' + ' Section: ' + this.userData.sec_name]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},
@@ -743,7 +802,7 @@ export class IssueReturnComponent implements OnInit {
 		});
 
 		doc.autoTable({
-			head: [['Report Generated By : ' +this.currentUser.full_name]],
+			head: [['Report Generated By : ' + this.currentUser.full_name]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},
@@ -758,7 +817,7 @@ export class IssueReturnComponent implements OnInit {
 			theme: 'striped'
 		});
 		doc.autoTable({
-			head: [['No. of Records : ' +this.bookLogData.length]],
+			head: [['No. of Records : ' + this.bookLogData.length]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},

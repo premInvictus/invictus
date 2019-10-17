@@ -232,8 +232,8 @@
                           (dateChange)="setDueDate(i, returnIssueReservoirForm.value.due_date)"
                           [value]="item?.fdue_date">
                         <mat-datepicker #picker></mat-datepicker>
-                        <div class="inline-flex" [hidden]="!(item?.reserv_status == 'available')">
-                          <i class="fa fa-calendar" aria-hidden="true" (click)="picker.open();"></i>
+                        <div class="inline-flex" [hidden]="(item?.reserv_status == 'available')">
+                          <i class="fa fa-calendar" *ngIf="!(item?.reserv_status == 'available')" aria-hidden="true" (click)="picker.open();"></i>
                         </div>
                       </div>
                     </td>
