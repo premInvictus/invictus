@@ -323,6 +323,9 @@ export class ErpCommonService {
 		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);
 	}
 
+
+	
+
 	insertUserReservoirData(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/issuereturnprocess/insertUserReservoirData', value);
@@ -461,6 +464,12 @@ export class ErpCommonService {
 		}
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/setupdetail/getSectionsByClass', param);
+	}
+
+	getUserOutstandingFine(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiReservUrl + '/issuereturnprocess/getUserOutstandingFine', value);
+		
 	}
 
 }

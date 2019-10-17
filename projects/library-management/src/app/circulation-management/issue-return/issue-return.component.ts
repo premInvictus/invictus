@@ -38,6 +38,7 @@ export class IssueReturnComponent implements OnInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('bookDet')bookDet;
 	finIssueBook : any = [];
+	stuOutStandingFine = 0;
 	BOOK_LOG_LIST_ELEMENT: BookLogListElement[] = [];
 	bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
 	// tslint:disable-next-line: max-line-length
@@ -348,7 +349,7 @@ export class IssueReturnComponent implements OnInit {
 						returned_on: item.reserv_user_logs.returned_on,
 						fine: item.reserv_user_logs.fine ? item.reserv_user_logs.fine : '',
 					};
-					if (item.returned_on) {
+					if (item.reserv_user_logs.returned_on) {
 						this.bookReadTillDate++;
 					}
 
@@ -379,6 +380,14 @@ export class IssueReturnComponent implements OnInit {
 				this.BOOK_LOG_LIST_ELEMENT = [];
 				this.finIssueBook = [];
 				this.bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
+			}
+		});
+
+		this.erpCommonService.getUserOutstandingFine(inputJson).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.stuOutStandingFine = result.data;
+			} else {
+				this.stuOutStandingFine = 0;
 			}
 		});
 	}
