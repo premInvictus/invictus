@@ -422,6 +422,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 		this.searchparam = {};
 		this.searchparam.pageIndex = this.pageIndex;
 		this.searchparam.pageSize = this.pageSize;
+		this.paginator.pageSize = this.pageSize;
 		Object.keys(value.generalFilters).forEach( key => {
 			if(value.generalFilters[key]) {
 				this.searchparam[key] = value.generalFilters[key];
