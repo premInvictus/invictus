@@ -27,6 +27,7 @@ export class MarksEntryComponent implements OnInit {
   exam_grade_type_arr: any[] = [];
   classterm: any;
   absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };  
+  editFlag = false;
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -336,6 +337,31 @@ export class MarksEntryComponent implements OnInit {
       return '';
     }
   }
+  cancelForm(){
+    this.editFlag = false;
+    this.displayData();
+  }
+  updateForm(status = '0', savelog = '0') {
+    this.editFlag = false;
+    console.log('this.marksInputArray.length', this.marksInputArray.length);
+      if (this.marksInputArray.length === this.paramform.value.eme_subexam_id.length * this.studentArray.length) {
+        if (this.paramform.valid && this.marksInputArray.length > 0) {
+          const param: any = {};
+          param.examEntry = this.paramform.value;
+          param.examEntryMapping = this.marksInputArray;
+          param.examEntryStatus = status;
+          param.edit = '1';
+          param.savelog = savelog;
+          this.examService.addMarksEntry(param).subscribe((result: any) => {
+            if (result && result.status === 'ok') {
+              this.displayData();
+            }
+          })
+        }
+      } else {
+        this.commonAPIService.showSuccessErrorMessage('Still few student has empty mark!', 'error');
+      }
+  }
 
   saveForm(status = '0', savelog = '0') {
     console.log('this.marksInputArray.length', this.marksInputArray.length);
@@ -395,6 +421,10 @@ export class MarksEntryComponent implements OnInit {
       }
     }
   }
+  enableEdit() {
+    console.log('enableedita');
+    this.editFlag = true;
+  }
   resetTableDiv() {
     this.tableDivFlag = false;
     this.paramform.patchValue({
@@ -402,20 +432,24 @@ export class MarksEntryComponent implements OnInit {
     });
   }
   checkEditable(es_id, eme_review_status) {
-    //console.log('this.responseMarksArray', this.responseMarksArray.length);
-    if (this.responseMarksArray.length > 0) {
-      const rindex = this.responseMarksArray.findIndex(item => item.examEntry.eme_subexam_id === es_id);
-      if (rindex === -1) {
-        return true;
-      } else {
-        if (this.responseMarksArray[rindex].examEntry.eme_review_status === eme_review_status) {
+    console.log('this.responseMarksArray', this.responseMarksArray.length);
+    if(this.editFlag) {
+      return true;
+    } else {
+      if (this.responseMarksArray.length > 0) {
+        const rindex = this.responseMarksArray.findIndex(item => item.examEntry.eme_subexam_id === es_id);
+        if (rindex === -1) {
           return true;
         } else {
-          return false;
+          if (this.responseMarksArray[rindex].examEntry.eme_review_status === eme_review_status) {
+            return true;
+          } else {
+            return false;
+          }
         }
+      } else {
+        return true;
       }
-    } else {
-      return true;
     }
   }
 
@@ -432,6 +466,9 @@ export class MarksEntryComponent implements OnInit {
     } else {
       return true;
     }
+  }
+  isExistUserAccessMenu(mod_id) {
+    return this.commonAPIService.isExistUserAccessMenu(mod_id);
   }
 
 }

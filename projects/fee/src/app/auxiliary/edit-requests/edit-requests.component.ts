@@ -40,6 +40,8 @@ export class EditRequestsComponent implements OnInit {
 	reqReason: any;
 	reqRemarks: any;
 	confirmMessage: any = 'Are you sure you want to approve?';
+	studentInfo:any;
+	currentRequestid;
 	constructor(
 		private commonService: CommonAPIService,
 		private sisService: SisService,
@@ -104,6 +106,7 @@ export class EditRequestsComponent implements OnInit {
 	}
 	viewRequest(value: any, index) {
 		console.log('value', value);
+		this.currentRequestid = value.req_id;
 		this.getValuePosition = index;
 		this.sisService.getFormFields({
 			ff_tb_id: value.req_tab_id
@@ -182,6 +185,14 @@ export class EditRequestsComponent implements OnInit {
 								rff_where_value: item.rff_where_value
 							});
 						}
+					}
+					if(value.req_login_id) {
+						this.studentInfo = {};
+						this.sisService.getUser({login_id: value.req_login_id, role_id: '4'}).subscribe((result: any) => {
+							if(result && result.status === 'ok') {
+								this.studentInfo = result.data[0];
+							}
+						});
 					}
 					this.viewRequestFlag = true;
 				} else {
