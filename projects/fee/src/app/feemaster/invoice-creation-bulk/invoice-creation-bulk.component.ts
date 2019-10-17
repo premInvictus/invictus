@@ -704,8 +704,8 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 							cell.fill = {
 								type: 'pattern',
 								pattern: 'solid',
-								fgColor: { argb: '888888' },
-								bgColor: { argb: '888888' },
+								fgColor: { argb: 'ffffff' },
+								bgColor: { argb: 'ffffff' },
 							};
 						}
 					}
