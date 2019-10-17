@@ -31,6 +31,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	class_sec: any;
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 	gender: any;
+	balance: number;
 	constructor(
 		public dialogRef: MatDialogRef<ReceiptDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -95,7 +96,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		});
 		adj.remark = this.adjRemark;
 		this.modificationFlag = false;
-		// this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365')
+		// this.commonAPIService.isExistUserAccessMenu('358') || this.commonAPIService.isExistUserAccessMenu('365') 
 		if (false) {
 			this.feeService.invoiceAdjustmentRemark(adj).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -217,6 +218,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 					this.invoiceDetails = result.data[0];
 					this.class_name = this.invoiceDetails.class_name;
 					this.section_name = this.invoiceDetails.sec_name;
+					this.balance = Number(this.invoiceDetails.inv_fee_amount) - Number(this.invoiceDetails.rpt_net_amount);
 					if (this.section_name !== ' ') {
 						this.class_sec = this.class_name + ' - ' + this.section_name;
 					} else {
