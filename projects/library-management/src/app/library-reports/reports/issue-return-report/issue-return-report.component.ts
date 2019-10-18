@@ -14,7 +14,7 @@ import * as ExcelProper from 'exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { DecimalPipe, DatePipe, TitleCasePipe, CurrencyPipe } from '@angular/common';
-import { CapitalizePipe, IndianCurrency } from '../../../_pipes';
+import { CapitalizePipe, IndianCurrency } from 'src/app/_pipes';
 //import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
