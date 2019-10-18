@@ -101,9 +101,11 @@
                 <div class="col-6 remove-col-padding">
                   <span class="font-size-12 font-bold">Book Outstanding Fine</span>
                   <span class="font-size-12 font-bold float-right">:</span>
+                  
                 </div>
                 <div class="col-6 remove-col-padding-right">
-                  <span class="font-size-12 font-bold opacity-7">-</span>
+                    <span class="font-size-12 font-bold opacity-7" *ngIf="!stuOutStandingFine">-</span>
+                    <span class="font-size-12 font-bold opacity-7" *ngIf="stuOutStandingFine">{{stuOutStandingFine}}</span>
                 </div>
               </div>
               <div class="row remove-top-margin">
@@ -232,8 +234,8 @@
                           (dateChange)="setDueDate(i, returnIssueReservoirForm.value.due_date)"
                           [value]="item?.fdue_date">
                         <mat-datepicker #picker></mat-datepicker>
-                        <div class="inline-flex" [hidden]="!(item?.reserv_status == 'available')">
-                          <i class="fa fa-calendar" aria-hidden="true" (click)="picker.open();"></i>
+                        <div class="inline-flex" [hidden]="(item?.reserv_status == 'available')">
+                          <i class="fa fa-calendar" *ngIf="!(item?.reserv_status == 'available')" aria-hidden="true" (click)="picker.open();"></i>
                         </div>
                       </div>
                     </td>
