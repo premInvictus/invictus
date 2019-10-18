@@ -94,6 +94,12 @@
     "../projects/library-management/src/app/catalogue-management/catalogue-management.module.ts",
     "../projects/library-management/src/app/circulation-management/circulation-management.module.ts",
     "../projects/library-management/src/app/library-reports/library-reports.module.ts",
-    "../projects/library-management/src/app/library-configure/library-configure.module.ts"
+    "../projects/library-management/src/app/library-configure/library-configure.module.ts",
+    "../projects/human-resource/src/app/hr-configure/hr-configure.module.ts",
+    "../projects/human-resource/src/app/reports/reports.module.ts",
+    "../projects/human-resource/src/app/auxiliaries/auxiliaries.module.ts",
+    "../projects/human-resource/src/app/employee-master/employee-master.module.ts",
+    "../projects/human-resource/src/app/payroll-master/payroll-master.module.ts",
+    "../projects/human-resource/src/app/hrusertype/hrusertype.module.ts",
   ]
 }
