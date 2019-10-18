@@ -42,6 +42,7 @@
     "../projects/sis/src/app/usertypesis/usertypesis.module.ts",
     "../projects/sis/src/app/standard-reports/standard-reports.module.ts",
     "../projects/sis/src/app/dynamic-reports/dynamic-reports.module.ts",
+    "../projects/sis/src/app/certificate-printing/certificate-printing.module.ts",
     "../projects/sis/src/app/setup/setup.module.ts",
     "../projects/sis/src/app/manage-users/manage-users.module.ts",
     "../projects/sis/src/app/scheduler-notifications/scheduler-notifications.module.ts",

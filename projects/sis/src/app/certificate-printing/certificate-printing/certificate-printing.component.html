@@ -1,0 +1,176 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <form>
+        <div class="row">
+          <div class="col-6 remove-col-padding-left margin-top-15">
+            <span class="font-size-24">Certificate Printing</span>
+          </div>
+          <div class="col-6 remove-col-padding-right text-right">
+
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>
+
+<div class=" card-height-860-lp">
+  <div class="row ">
+    <div class="col-12 ">
+      <div class="row remove-top-margin">
+        <div class="col-12 remove-col-padding-left remove-col-padding-right">
+          <div class="container-box__white card-height-830">
+            <form [formGroup]="paramForm">
+              <div class="row">
+                <div class="col-2">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Enrollment Type</mat-label>
+                    <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">
+                        {{item.au_process_name}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select enrollment type
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-2">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Class</mat-label>
+                    <mat-select placeholder="Current Class" #promoClass_id formControlName="class_id"
+                      (selectionChange)="getSectionsByClass()" [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select previous class
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-2">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Section</mat-label>
+                    <mat-select placeholder="Section" formControlName="sec_id">
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-2">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Certificate Type</mat-label>
+                    <mat-select placeholder="Enrollment type" formControlName="certificate_type"
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of certificate_type_arr" [value]="item.usts_id">
+                        {{item.usts_alias}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select enrollment type
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-2">
+                  <button mat-raised-button class="btn-success margin-top-12" (click)="getAllStudent()">Apply</button>
+                </div>
+              </div>
+            </form>
+            <div class="row">
+              <div class="col-2">
+              </div>
+              <div class="col-8">
+                <div [hidden]="!tabledivflag">
+                  <div class="row remove-top-margin">
+                    <div class="col-12">
+                      <div class="row remove-top-margin">
+                        <div class="col-4 remove-col-padding-left">
+                          <mat-form-field>
+                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" />
+                          </mat-form-field>
+                        </div>
+                        <div class="col-8 margin-top-12 text-right">
+                          <div *ngIf="selection.selected.length > 0" class="float-right">
+                            <span><b>Selected Students: </b></span>
+                            <span>{{selection.selected.length}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center">
+                        <!-- Checkbox Column -->
+                        <ng-container matColumnDef="select">
+                          <th mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
+                          </th>
+                          <td mat-cell *matCellDef="let row">
+                            <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
+                              [aria-label]="checkboxLabel(row)">
+                            </mat-checkbox>
+                          </td>
+                        </ng-container>
+                        <!-- Admission Column -->
+                        <ng-container matColumnDef="no">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{paramForm.value.enrollment_type === '4' ? 'Admission No.': 
+                          'Pro. Adm. No.'}}
+                          </th>
+                          <td mat-cell *matCellDef="let item">
+                            <span class="text-center">{{ item.em_admission_no }}</span>
+                          </td>
+                        </ng-container>
+                        <!-- Student Column -->
+                        <ng-container matColumnDef="name">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:40%; text-align: left !important; padding-left: 5px;">
+                            Student Name
+                          </th>
+                          <td mat-cell *matCellDef="let item" style="text-align: left !important; padding-left: 5px">
+                            <span class="text-center text-capitalize">{{ item.name | titlecase }}</span>
+                          </td>
+                        </ng-container>
+                        <!-- Class Column -->
+                        <ng-container matColumnDef="class">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            Class
+                          </th>
+                          <td mat-cell *matCellDef="let item">
+                            <span class="text-center">{{ item.class }}</span>
+                          </td>
+                        </ng-container>
+                        <!-- Promote Column -->
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef>
+                            Action
+                          </th>
+                          <td mat-cell *matCellDef="let item">
+                              <i class="fas fa-print icon-skyblue" (click)="printcertificate(item.action)"></i>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
+                      </table>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="col-12 text-center">
+                        <button mat-button class="btn-success-blue btn-spacer text-capitalize" (click)="printcertificate()">Print</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-2">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
