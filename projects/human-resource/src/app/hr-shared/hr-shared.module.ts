@@ -21,7 +21,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
-// import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from 'src/app/_pipes';
+import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from 'src/app/_pipes';
 import { NgxMaskModule } from 'ngx-mask';
 import * as _moment from 'moment';
 import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/invictus-shared.module';
@@ -37,7 +37,7 @@ import { PreviewDocumentComponent } from './preview-document/preview-document.co
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 const moment = _moment;
 import {PopoverModule} from 'ngx-bootstrap/popover';
-import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
+//import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -95,14 +95,20 @@ export const MY_FORMATS = {
 		DeleteModalComponent,
 		ImagecropComponent,
 		EditRequestModalComponent,
+		CapitalizePipe,
+		TruncatetextPipe,
+		DateformatPipe,
+		SafePipe,
 		ImageViewerComponent,
+		NumberToWordPipe,
+		ZerodashPipe,
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
 		NoDataComponent,
 		UnpublishModalComponent,
 		PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
-		EmployeeDetailsComponent
+		//EmployeeDetailsComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -145,13 +151,15 @@ export const MY_FORMATS = {
 		CKEditorModule,
 		MatSortModule,
 		RouterModule, DeleteModalComponent, ImagecropComponent, PublishModalComponent, UnpublishModalComponent,
-		NgxMaskModule, ImageViewerComponent,
+		NgxMaskModule, CapitalizePipe, TruncatetextPipe, DateformatPipe, SafePipe, ImageViewerComponent,
 		EditRequestModalComponent,
+		NumberToWordPipe,
+		ZerodashPipe,
 		CommonDynamicChartComponent,
 		AssignmentAttachmentDialogComponent,
 		NoDataComponent, PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
-		EmployeeDetailsComponent
+		//EmployeeDetailsComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
