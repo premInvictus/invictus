@@ -14,7 +14,7 @@ import { FormControl } from '@angular/forms';
 	styleUrls: ['./employee-tab-one-container.component.scss']
 })
 export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
-
+	addressFlag = false;
 	panelOpenState = true;
 	addOnly = false;
 	editOnly = false;
@@ -764,4 +764,11 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		// }
 	}
 	editConfirm() { }
+	address_change(event){
+		if(event.checked){
+		  this.addressFlag = true;
+		} else{
+		  this.addressFlag = false;
+		}
+	  }
 }
