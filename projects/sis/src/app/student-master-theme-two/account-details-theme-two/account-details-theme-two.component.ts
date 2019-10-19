@@ -56,7 +56,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		private commonAPIService: CommonAPIService,
 		public processtypeService: ProcesstypeService,
 		public sisService: SisService
-		
+
 	) { }
 
 	ngOnInit() {
@@ -115,7 +115,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.modeFlag = false;
 		this.terminationFlag = false;
 		this.existFlag = false;
-		console.log('tttttt',this.feeDet)
 		this.conStatus = this.feeDet.accd_fcg_status;
 		if (this.feeDet.accd_login_id) {
 			if (this.feeDet.accd_is_transport === 'Y') {
@@ -382,7 +381,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				this.validateFlag = false;
 			}
 		}
-		if (this.accountsForm.value.accd_fcg_id !== '0') {
+		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
+			console.log('ekekekekek', this.accountsForm.value.accd_fcg_id);
 			if (!this.accountsForm.value.accd_reason_id ||
 				!this.accountsForm.value.accd_remark_id) {
 				this.validateFlag = false;
