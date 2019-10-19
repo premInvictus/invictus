@@ -2,10 +2,265 @@
     <div class="container-box__white">
         <div class="row">
             <div class="col-12">
-                <div>New Html</div>
+                <div class="padding-15">
+                    <div class="row remove-top-margin">
+                        <div class="col-4 col-pad-5">
+                            <div class="row salary-card">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Pan No.</mat-label>
+                                    <input class="text-capitalize" matInput placeholder="Pan No." required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Aadhaar No.</mat-label>
+                                    <input type="text" matInput placeholder="Aadhaar No." required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>PF A/c No.| UAN</mat-label>
+                                    <input type="text" matInput placeholder="PF A/c No.| UAN" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>ESI A/c No.</mat-label>
+                                    <input type="text" matInput placeholder="ESI A/c No." required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Nominee</mat-label>
+                                    <input type="text" matInput placeholder="Nominee" required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="row salary-card">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Date of Joining</mat-label>
+                                    <input type="text" matInput placeholder="Date of Joining" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>PF Joining Date</mat-label>
+                                    <input type="text" matInput placeholder="PF Joining Date" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>ESIC Joining Date</mat-label>
+                                    <input type="text" matInput placeholder="ESIC Joining Date" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Probation</mat-label>
+                                    <input type="text" matInput placeholder="Probation" required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Confirmation Date</mat-label>
+                                    <input type="text" matInput placeholder="Confirmation Date" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-4 col-pad-5">
+                            <div class="row salary-card">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Category I</mat-label>
+                                    <input class="text-capitalize" matInput placeholder="Category I" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Category II</mat-label>
+                                    <input type="text" matInput placeholder="Category II" required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Category III</mat-label>
+                                    <input type="text" matInput placeholder="Category III" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Increment Month</mat-label>
+                                    <input type="text" matInput placeholder="Increment Month" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Contract Period</mat-label>
+                                    <input type="text" matInput placeholder="Contract Period" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="row salary-card">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Bank Name</mat-label>
+                                    <input class="text-capitalize" matInput placeholder="Bank Name" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Bank A/c No.</mat-label>
+                                    <input type="text" matInput placeholder="Bank A/c No." required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>IFSC Code</mat-label>
+                                    <input type="text" matInput placeholder="IFSC Code" required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-4 col-pad-5">
+                            <div class="row salary-card">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Salary Structure/Pay Scale</mat-label>
+                                    <input class="text-capitalize" matInput placeholder="Salary Structure/Pay Scale"
+                                        required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher" />
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Pay Mode</mat-label>
+                                    <input type="text" matInput placeholder="Pay Mode" required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Basic Pay</mat-label>
+                                    <input type="text" matInput placeholder="Basic Pay" required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>D.A</mat-label>
+                                    <input type="text" matInput placeholder="D.A" required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>H.R.A</mat-label>
+                                    <input type="text" matInput placeholder="H.R.A" required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Allowances</mat-label>
+                                    <input type="text" matInput placeholder="Allowances" required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="row salary-card">
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>PF Deduction</mat-label>
+                                    <input class="text-capitalize" matInput placeholder="PF Deduction" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>ESIC Deduction</mat-label>
+                                    <input type="text" matInput placeholder="ESIC Deduction" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>TDS Deduction</mat-label>
+                                    <input type="text" matInput placeholder="TDS Deduction" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Net Salary</mat-label>
+                                    <input type="text" matInput placeholder="Net Salary" required [readonly]="viewOnly"
+                                        [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Total Deduction</mat-label>
+                                    <input type="text" matInput placeholder="Total Deduction" required
+                                        [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-error>
+                                        This field is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+            <br>
         </div>
-        <br>
         <div class="row" *ngIf="!viewOnly">
             <div class="col-12 text-center ">
                 <form>
@@ -17,7 +272,5 @@
                     <button class="btn-danger btn-spacer" mat-raised-button (click)="cancelForm()">Cancel</button>
                 </form>
             </div>
-
         </div>
     </div>
-</div>

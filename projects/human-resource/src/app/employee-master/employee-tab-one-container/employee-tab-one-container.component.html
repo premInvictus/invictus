@@ -6,7 +6,122 @@
         <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span>
       </button>
     </div>
-    <div>New Html</div>
+    <div class="padding-15">
+      <div class="row remove-top-margin">
+        <div class="col-4 col-pad-5">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Permanent Address</mat-label>
+            <input class="text-capitalize" matInput placeholder="Permanent Address" required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher" />
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>City</mat-label>
+            <input type="text" matInput placeholder="City" required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher">
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>State</mat-label>
+            <input type="text" matInput placeholder="State" required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher">
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Pincode</mat-label>
+            <input type="text" matInput placeholder="Pincode" required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher">
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4 col-pad-5" *ngIf="addressFlag">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Correspondence Address</mat-label>
+            <input class="text-capitalize" matInput placeholder="Correspondence Address" required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher" />
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>City</mat-label>
+            <input type="text" matInput placeholder="City" required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher">
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>State</mat-label>
+            <input type="text" matInput placeholder="State" required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher">
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Pincode</mat-label>
+            <input type="text" matInput placeholder="Pincode" required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher">
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-4 col-pad-5">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Primary Mobile No.</mat-label>
+            <input class="text-capitalize" matInput placeholder="Primary Mobile No." required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher" />
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Secondary Mobile No.</mat-label>
+            <input type="text" matInput placeholder="Secondary Mobile No." required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher">
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Whatsapp No.</mat-label>
+            <input type="text" matInput placeholder="Whatsapp No." required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher">
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Email Id</mat-label>
+            <input type="text" matInput placeholder="Email Id" required [readonly]="viewOnly"
+              [errorStateMatcher]="confirmValidParentMatcher">
+            <mat-error>
+              This field is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4 col-pad-5" *ngIf="!addressFlag">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+          <span>Whether the address of correspondence is different from the Permanent address?</span>
+          <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" (change)="address_change($event)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-12 text-center ">
         <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
