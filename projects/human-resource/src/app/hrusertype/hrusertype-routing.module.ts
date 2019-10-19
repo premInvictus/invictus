@@ -12,6 +12,9 @@ const routes: Routes = [
 		path: 'school', canActivate: [AuthGuard], component: ProjectComponent, children: [
 			{ path: '', component: SchoolDashboardComponent },
 			{ path: 'employee', loadChildren:  '../employee-master/employee-master.module#EmployeeMasterModule' },
+			{ path: 'payroll-master', loadChildren:  '../payroll-master/payroll-master.module#PayrollMasterModule' },
+			{ path: 'auxillaries', loadChildren:  '../hr-auxiliaries/auxiliaries.module#AuxiliariesModule' },
+			{ path: 'reports', loadChildren:  '../hr-reports/reports.module#ReportsModule' },
 		]
 	}
 ];
