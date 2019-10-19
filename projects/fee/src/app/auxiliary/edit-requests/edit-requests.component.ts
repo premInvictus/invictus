@@ -191,6 +191,7 @@ export class EditRequestsComponent implements OnInit {
 						this.sisService.getUser({login_id: value.req_login_id, role_id: '4'}).subscribe((result: any) => {
 							if(result && result.status === 'ok') {
 								this.studentInfo = result.data[0];
+								Object.keys(this.studentInfo).length
 							}
 						});
 					}
@@ -202,6 +203,7 @@ export class EditRequestsComponent implements OnInit {
 			}
 		});
 	}
+	
 	getFieldName(field_name) {
 		const findex = this.formFields.findIndex(f => f.ff_field_name === field_name);
 		if (findex !== -1) {
