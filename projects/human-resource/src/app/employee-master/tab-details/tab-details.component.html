@@ -1,0 +1,24 @@
+<div class="row remove-top-margin">
+  <div class="col-12 remove-col-padding">
+    <div>
+      <app-employee-details></app-employee-details>
+      <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
+        <ng-container *ngFor="let tab of tabDetailsArray; let i=index">
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <div>
+                <span>{{tab.name}}</span>
+              </div>
+            </ng-template>
+            <app-personal-details *ngIf="tabIndex === 0"></app-personal-details>
+            <app-personal-contact *ngIf="tabIndex === 1"></app-personal-contact>            
+            <app-salary *ngIf="tabIndex === 2"></app-salary>
+            <app-remarks *ngIf="tabIndex === 3"></app-remarks>
+            <app-class-section *ngIf="tabIndex === 4"></app-class-section>
+            <app-documents *ngIf="tabIndex === 5"></app-documents>
+          </mat-tab>
+        </ng-container>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>
