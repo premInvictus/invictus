@@ -37,7 +37,7 @@ import { PreviewDocumentComponent } from './preview-document/preview-document.co
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 const moment = _moment;
 import {PopoverModule} from 'ngx-bootstrap/popover';
-import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
+//import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -108,7 +108,7 @@ export const MY_FORMATS = {
 		UnpublishModalComponent,
 		PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
-		EmployeeDetailsComponent
+		//EmployeeDetailsComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -159,7 +159,7 @@ export const MY_FORMATS = {
 		AssignmentAttachmentDialogComponent,
 		NoDataComponent, PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
-		EmployeeDetailsComponent
+		//EmployeeDetailsComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

@@ -1,0 +1,26 @@
+<div class="container-box__white">
+    <div class="functional-button-five">
+        <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request') && editableStatus == '1')"
+        mat-raised-button (click)="editRequest()"
+        (keydown.enter)="$event.preventDefault()"> <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span></button>
+      </div>
+  <div class="row">
+    <div class="col-12">
+        <div>New Html</div>
+    </div>
+  </div>
+  <br>
+  <div class="row remove-top-margin">
+    <div class="col-12">
+    <div class="text-center ">
+        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save & Continue</button>
+        <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+        <button  *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer btn-save-continue" (click)="updateForm(false)">Update & Continue</button>
+        <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag" (click)="checkFormChangedValue();openEditDialog({data: [finalArray] ,reqParam: params})">Edit & Continue</button>
+        <button   *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+  </div>
+  </div>
+  </div>
+  
+</div>
+<app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>
