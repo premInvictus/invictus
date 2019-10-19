@@ -21,7 +21,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
-import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from 'src/app/_pipes';
+// import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from 'src/app/_pipes';
 import { NgxMaskModule } from 'ngx-mask';
 import * as _moment from 'moment';
 import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/invictus-shared.module';
@@ -95,13 +95,7 @@ export const MY_FORMATS = {
 		DeleteModalComponent,
 		ImagecropComponent,
 		EditRequestModalComponent,
-		CapitalizePipe,
-		TruncatetextPipe,
-		DateformatPipe,
-		SafePipe,
 		ImageViewerComponent,
-		NumberToWordPipe,
-		ZerodashPipe,
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
 		NoDataComponent,
@@ -151,10 +145,8 @@ export const MY_FORMATS = {
 		CKEditorModule,
 		MatSortModule,
 		RouterModule, DeleteModalComponent, ImagecropComponent, PublishModalComponent, UnpublishModalComponent,
-		NgxMaskModule, CapitalizePipe, TruncatetextPipe, DateformatPipe, SafePipe, ImageViewerComponent,
+		NgxMaskModule, ImageViewerComponent,
 		EditRequestModalComponent,
-		NumberToWordPipe,
-		ZerodashPipe,
 		CommonDynamicChartComponent,
 		AssignmentAttachmentDialogComponent,
 		NoDataComponent, PreviewDocumentComponent,

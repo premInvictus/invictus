@@ -2,7 +2,7 @@
   <div class="col-12 remove-col-padding">
     <div>
       <app-employee-details></app-employee-details>
-      <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
+      <mat-tab-group  (selectedIndexChange)="setTabValue($event)">
         <ng-container *ngFor="let tab of tabDetailsArray; let i=index">
           <mat-tab>
             <ng-template mat-tab-label>
