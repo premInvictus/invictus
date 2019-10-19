@@ -30,7 +30,10 @@ export class SlctcPrintingSetupComponent implements OnInit {
 					 {'usts_id': '4', 'usts_name': 'Acknowledgement', 'usts_value' : 'acknowledgement'},
 					 {'usts_id': '5', 'usts_name': 'TC Issue Acknowledgement', 'usts_value' : 'tcissueacknowledgement'},
 					 {'usts_id': '6', 'usts_name': 'TC Re-issue Acknowledgement', 'usts_value' : 'tcreissueacknowledgement'},
-					 {'usts_id': '7', 'usts_name': 'Tc Cancel Acknowledgement', 'usts_value' : 'tcancelacknowledgement'}
+					 {'usts_id': '7', 'usts_name': 'Tc Cancel Acknowledgement', 'usts_value' : 'tcancelacknowledgement'},
+					 {'usts_id': '7', 'usts_name': 'Tc Cancel Acknowledgement', 'usts_value' : 'tcancelacknowledgement'},
+					 {'usts_id': '8', 'usts_name': 'Bus Pass Front', 'usts_value' : 'buspassfront'},
+					 {'usts_id': '9', 'usts_name': 'Bus Pass Back', 'usts_value' : 'buspassback'}
 					];
 	templateIndex = 0;
 	ckeConfig: any;

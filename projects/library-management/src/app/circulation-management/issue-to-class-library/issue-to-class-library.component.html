@@ -12,7 +12,7 @@
 
               <mat-form-field class="form-field-150" appearance="outline">
                 <mat-label>Choose Class</mat-label>
-                <mat-select formControlName="class_id" required (selectionChange)="getBookIssued($event)">
+                <mat-select formControlName="class_id" required (selectionChange)="getBookIssued()">
                   <mat-option value="">Choose Class</mat-option>
                   <mat-option *ngFor="let item of classArray" value="{{item?.class_id}}">{{item?.class_name}}
                   </mat-option>
@@ -22,7 +22,7 @@
 
               <mat-form-field class="form-field-150" appearance="outline" style="margin-left: 5px;">
                 <mat-label>Choose Section</mat-label>
-                <mat-select formControlName="sec_id" required (selectionChange)="getBookIssued($event)">
+                <mat-select formControlName="sec_id" required (selectionChange)="getBookIssued()">
                   <mat-option value="">Choose Section</mat-option>
                   <mat-option *ngFor="let item of sectionArray" value="{{item?.sec_id}}">{{item?.sec_name}}</mat-option>
                 </mat-select>

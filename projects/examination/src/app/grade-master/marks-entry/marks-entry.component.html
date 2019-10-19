@@ -140,12 +140,15 @@
                 </table>
                 <br>
                 <div class="row margin-top-25">
-                    <div class="col-12 text-center" *ngIf="marksInputArray.length > 0 && isAnyoneEditable('0')">
-                        <button mat-button class="btn-success-green" (click)="saveForm()">Save</button>
-                        <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
+                    <div class="col-12 text-center" *ngIf="marksInputArray.length > 0">
+                        <button *ngIf="isAnyoneEditable('0')" mat-button class="btn-success-green" (click)="saveForm()">Save</button>
+                        <button *ngIf="isAnyoneEditable('0')" mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
                             (click)="saveForm('1','1')">Save & Submit</button>
-                        <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
+                        <button *ngIf="isAnyoneEditable('0') && isExistUserAccessMenu('475')" mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
                             (click)="saveForm('4','1')">Final Publish</button>
+                        <button *ngIf="!editFlag && isExistUserAccessMenu('474')" mat-button class="btn-success-green" (click)="enableEdit()">Update</button>
+                        <button *ngIf="editFlag" mat-button class="btn-success-green" (click)="updateForm()">Save</button>
+                        <button *ngIf="editFlag" mat-button class="btn-success-green btn-spacer" (click)="cancelForm()">Cancel</button>
                     </div>
                 </div>
             </div>

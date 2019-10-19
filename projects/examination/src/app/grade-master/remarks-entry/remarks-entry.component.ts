@@ -29,6 +29,7 @@ export class RemarksEntryComponent implements OnInit {
 	remarkArray: any[] = [];
 	remarkInputArray: any[] = [];
 	marksEditable = true;
+	editTable = false;
 	examType: any;
 	responseMarksArray: any[] = [];
 	remarksTypeArray: any[] = [
@@ -74,13 +75,14 @@ export class RemarksEntryComponent implements OnInit {
 	}
 
 	getSectionsByClass() {
+		this.dataReset();
 		this.paramform.patchValue({
-			eme_sec_id: '',
-			eme_term_id: '',
-			eme_exam_id: '',
-			eme_subexam_id: ''
+			ere_remarks_type:'',
+			ere_term_id: '',
+			ere_sub_id: '',
+			ere_exam_id: '',
+			ere_sub_exam_id: ''
 		});
-		this.tableDivFlag = false;
 		this.sectionArray = [];
 		this.smartService.getSectionsByClass({ class_id: this.paramform.value.ere_class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -201,10 +203,13 @@ export class RemarksEntryComponent implements OnInit {
 		this.formGroupArray2[s].formGroup[0].patchValue(obj);
 	}
 	getRollNoUser() {
+		this.dataReset();
 		this.paramform.patchValue({
-			eme_term_id: '',
-			eme_exam_id: '',
-			eme_subexam_id: ''
+			ere_remarks_type:'',
+			ere_term_id: '',
+			ere_sub_id: '',
+			ere_exam_id: '',
+			ere_sub_exam_id: ''
 		});
 		this.tableDivFlag = false;
 		if (this.paramform.value.ere_class_id && this.paramform.value.ere_sec_id) {
@@ -310,33 +315,44 @@ export class RemarksEntryComponent implements OnInit {
 						formGroup: subjectDes
 					});
 				}
+				console.log(this.formGroupArray2);
 				this.tableDivFlag = true;
 			}
 		});
+
 	}
-	checkEditable(es_id, ere_review_status) {
+	checkEditable(es_id, ere_review_status, editTable) {
 		if (this.responseMarksArray.length > 0) {
-			const rindex = this.responseMarksArray.findIndex(item => item.examEntry.ere_sub_exam_id === es_id);
-			if (rindex === -1) {
+			if (editTable) {
 				return true;
 			} else {
-				if (this.responseMarksArray[rindex].examEntry.ere_review_status === ere_review_status) {
+				const rindex = this.responseMarksArray.findIndex(item => item.examEntry.ere_sub_exam_id === es_id);
+				if (rindex === -1) {
 					return true;
 				} else {
-					return false;
+					if (this.responseMarksArray[rindex].examEntry.ere_review_status === ere_review_status) {
+						return true;
+					} else {
+						return false;
+					}
 				}
 			}
 		} else {
 			return true;
 		}
 	}
-	checkExternalEdit(ere_review_status) {
+	checkExternalEdit(ere_review_status, editTable) {
 		if (this.responseMarksArray.length > 0) {
-			const rindex = this.responseMarksArray.findIndex(item => Number(item.examEntry.ere_review_status) === Number(ere_review_status));
-			if (rindex !== -1) {
+			if (editTable) {
 				return true;
 			} else {
-				return false;
+				const rindex = this.responseMarksArray.findIndex(item => Number(item.examEntry.ere_review_status) === Number(ere_review_status));
+				if (rindex !== -1) {
+					return true;
+				} else {
+					return false;
+				}
+
 			}
 		} else {
 			return true;
@@ -394,6 +410,7 @@ export class RemarksEntryComponent implements OnInit {
 		}
 	}
 	saveForm(status = '0') {
+		this.editTable = false;
 		this.remarkArray = [];
 		if (this.paramform.valid && this.marksInputArray.length > 0) {
 			let i = 0;
@@ -437,6 +454,7 @@ export class RemarksEntryComponent implements OnInit {
 		}
 	}
 	saveForm2(status = '0') {
+		this.editTable = false;
 		this.remarksEntry = [];
 		for (const item of this.formGroupArray2) {
 			for (const det of item.formGroup) {
@@ -472,7 +490,7 @@ export class RemarksEntryComponent implements OnInit {
 		});
 
 	}
-	changeFlagStatus(){
+	changeFlagStatus() {
 		this.submitFlag = true;
 	}
 	dataReset() {
@@ -485,6 +503,16 @@ export class RemarksEntryComponent implements OnInit {
 		this.remarkInputArray = [];
 		this.tableDivFlag = false;
 		this.submitFlag = false;
+	}
+	edit() {
+		this.editTable = true;
+	}
+	isExist(mod_id) {		
+		if (mod_id === '471') {
+			if (this.commonAPIService.isExistUserAccessMenu(mod_id)) {
+				return true;
+			}
+		}
 	}
 }
 

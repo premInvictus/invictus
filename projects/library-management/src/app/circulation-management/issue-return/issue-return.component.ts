@@ -37,6 +37,8 @@ export class IssueReturnComponent implements OnInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('bookDet')bookDet;
+	finIssueBook : any = [];
+	stuOutStandingFine = 0;
 	BOOK_LOG_LIST_ELEMENT: BookLogListElement[] = [];
 	bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
 	// tslint:disable-next-line: max-line-length
@@ -90,6 +92,7 @@ export class IssueReturnComponent implements OnInit {
 	};
 	schoolInfo: any;
 	length: any;
+	settingData: any;
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -107,6 +110,7 @@ export class IssueReturnComponent implements OnInit {
 		this.buildForm();
 		this.getSession();
 		this.getSchool();
+		this.getGlobalSetting();
 	}
 
 	buildForm() {
@@ -120,6 +124,34 @@ export class IssueReturnComponent implements OnInit {
 			due_date: '',
 			issue_date: '',
 			return_date: ''
+		});
+	}
+
+	getGlobalSetting() {
+		this.erpCommonService.getGlobalSetting({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const settings = result.data;
+				for (let i=0; i< settings.length;i++) {
+					if (settings[i]['gs_alias'] === 'library_user_setting') {
+						this.settingData = JSON.parse(settings[i]['gs_value']);
+						console.log('settingData', this.settingData);
+						// this.formGroupArray[this.configValue-1].formGroup.patchValue({
+						// 	'book_issued_limit_staff': settingData['book_issued_limit_staff'],
+						// 	'book_return_days_staff': settingData['book_return_days_staff'],
+						// 	'book_request_for_staff': settingData['book_request_for_staff'],
+						// 	'book_issued_limit_teacher': settingData['book_issued_limit_teacher'],
+						// 	'book_return_days_teacher': settingData['book_return_days_teacher'],
+						// 	'book_request_for_teacher': settingData['book_request_for_teacher'],
+						// 	'book_issued_limit_student': settingData['book_issued_limit_student'],
+						// 	'book_return_days_student': settingData['book_return_days_student'],
+						// 	'book_request_for_student': settingData['book_request_for_student'],
+						// 	'class_book_issue_for_student' : settingData['class_book_issue_for_student'],
+						// });
+					}
+				}
+				
+				
+			}
 		});
 	}
 
@@ -205,8 +237,9 @@ export class IssueReturnComponent implements OnInit {
 			if (!bookAlreadyAddedStatus) {
 				const issueBookStatus = this.checkForIssueBook(this.returnIssueReservoirForm.value.scanBookId);
 				if (issueBookStatus.status) {
-					console.log(issueBookStatus.index);
+					console.log(issueBookStatus.index);					
 					this.bookData.push(this.bookLogData[Number(issueBookStatus.index)]['reserv_user_logs']);
+
 				} else {
 					const inputJson = {
 						'reserv_id': Number(this.returnIssueReservoirForm.value.scanBookId),
@@ -214,7 +247,29 @@ export class IssueReturnComponent implements OnInit {
 						'user_login_id': this.userData.au_login_id,
 					};
 					const date = new Date();
-					date.setDate(date.getDate() + 7);
+					if (this.searchForm.value.user_role_id === '4') {
+						if (this.settingData['book_return_days_student']) {
+							date.setDate(date.getDate() + parseInt(this.settingData['book_return_days_student'], 10));
+						} else {
+							date.setDate(date.getDate() + 7);
+						}
+						
+					} else if (this.searchForm.value.user_role_id === '3') {
+						if (this.settingData['book_return_days_teacher']) {
+							date.setDate(date.getDate() + parseInt(this.settingData['book_return_days_teacher'], 10));
+						} else {
+							date.setDate(date.getDate() + 7);
+						}
+						
+					} else if (this.searchForm.value.user_role_id === '2') {
+						if (this.settingData['book_return_days_staff']) {
+							date.setDate(date.getDate() + parseInt(this.settingData['book_return_days_staff'], 10));
+						} else {
+							date.setDate(date.getDate() + 7);
+						}
+						
+					}
+					
 					this.erpCommonService.searchReservoirByStatus(inputJson).subscribe((result: any) => {
 						if (result && result.status === 'ok') {
 							if (result && result.data && result.data.resultData[0]) {
@@ -265,6 +320,7 @@ export class IssueReturnComponent implements OnInit {
 		this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.bookLogData = result.data;
+				this.finIssueBook = [];
 				this.userHaveBooksData = true;
 				this.bookReadTillDate = 0;
 				let element: any = {};
@@ -293,12 +349,13 @@ export class IssueReturnComponent implements OnInit {
 						returned_on: item.reserv_user_logs.returned_on,
 						fine: item.reserv_user_logs.fine ? item.reserv_user_logs.fine : '',
 					};
-					if (item.returned_on) {
+					if (item.reserv_user_logs.returned_on) {
 						this.bookReadTillDate++;
 					}
 
 					if (item.reserv_user_logs.reserv_status === 'issued') {
 						this.issueBookData.push(item);
+						this.finIssueBook.push(item);
 					}
 
 					this.BOOK_LOG_LIST_ELEMENT.push(element);
@@ -318,9 +375,19 @@ export class IssueReturnComponent implements OnInit {
 			} else {
 				this.userHaveBooksData = false;
 				this.bookLogData = [];
+				this.issueBookData = [];
 				this.bookReadTillDate = 0;
 				this.BOOK_LOG_LIST_ELEMENT = [];
+				this.finIssueBook = [];
 				this.bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
+			}
+		});
+
+		this.erpCommonService.getUserOutstandingFine(inputJson).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.stuOutStandingFine = result.data;
+			} else {
+				this.stuOutStandingFine = 0;
 			}
 		});
 	}
@@ -330,68 +397,112 @@ export class IssueReturnComponent implements OnInit {
 		const bookData = JSON.parse(JSON.stringify(this.bookData));
 		
 		for (let i = 0; i < bookData.length; i++) {
-			console.log('bookData[i]', bookData[i]);
 			if (bookData[i]['reserv_status'] === 'issued') {
-        
-        if (bookData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') || 
-        bookData[i]['due_date'] < this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
-					bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
-					bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
-					bookData[i]['fdue_date'] = bookData[i]['fdue_date'];
-					bookData[i]['reissue_status'] = 1;
-				} else {
-					bookData[i]['reserv_status'] = 'available';
-					bookData[i]['issued_on'] = this.common.dateConvertion(bookData[i]['issued_on'], 'yyyy-MM-dd');
-					bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
-				}
-				updatedBookData.push(bookData[i]);
+				if (bookData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') || 
+				bookData[i]['due_date'] < this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
+							bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+							bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
+							bookData[i]['fdue_date'] = bookData[i]['fdue_date'];
+							bookData[i]['reissue_status'] = 1;
+						} else {
+							
+							bookData[i]['reserv_status'] = 'available';
+							bookData[i]['issued_on'] = this.common.dateConvertion(bookData[i]['issued_on'], 'yyyy-MM-dd');
+							bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+							for (let j=0; j< this.finIssueBook.length;j++) {
+								if (this.finIssueBook[j]['reserv_user_logs']['reserv_id'] === bookData[i]['reserv_id']) {
+									this.finIssueBook.splice(j,1);
+								}
+							}
+							
+						}
+						updatedBookData.push(bookData[i]);
 			} else if (bookData[i]['reserv_status'] === 'available' || bookData[i]['reserv_status'] === 'reserved') {
 				if (bookData[i]['fdue_date']) {
+					
 					bookData[i]['reserv_status'] = 'issued';
 					bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
 					bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+					this.finIssueBook.push(bookData[i]);
 					updatedBookData.push(bookData[i]);
 				}
 			}
     }
     
 
-    
-
-		const inputJson = {
-			reservoir_data: updatedBookData,
-			user_login_id: this.userData.au_login_id,
-			user_admission_no: this.userData.au_admission_no,
-			user_role_id: this.userData.au_role_id,
-			user_full_name: this.userData.au_full_name,
-			user_class_name: this.userData.class_name ? this.userData.class_name : '',
-			user_sec_name: this.userData.sec_name ? this.userData.sec_name : '',
-			user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
-			user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
-		};
-		if (!this.userHaveBooksData) {
-			this.erpCommonService.insertUserReservoirData(inputJson).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.bookData = [];
-					this.issueBookData = [];
-					this.resetIssueReturn();
-					this.getUserIssueReturnLogData();
-
-				}
-				this.common.showSuccessErrorMessage(result.message, result.status);
-			});
+		var limitFlag = this.checkForIssueBookLimit();
+		if (!limitFlag) {
+			const inputJson = {
+				reservoir_data: updatedBookData,
+				user_login_id: this.userData.au_login_id,
+				user_admission_no: this.userData.em_admission_no,
+				user_role_id: this.userData.au_role_id,
+				user_full_name: this.userData.au_full_name,
+				user_class_name: this.userData.class_name ? this.userData.class_name : '',
+				user_sec_name: this.userData.sec_name ? this.userData.sec_name : '',
+				user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
+				user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
+			};
+			console.log('inputJson', inputJson);
+			if (!this.userHaveBooksData) {
+				this.erpCommonService.insertUserReservoirData(inputJson).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.bookData = [];
+						this.issueBookData = [];
+						this.resetIssueReturn();
+						this.getUserIssueReturnLogData();
+	
+					}
+					this.common.showSuccessErrorMessage(result.message, result.status);
+				});
+			} else {
+				this.erpCommonService.updateUserReservoirData(inputJson).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.bookData = [];
+						this.issueBookData = [];
+						this.resetIssueReturn();
+						this.getUserIssueReturnLogData();
+	
+					}
+					this.common.showSuccessErrorMessage(result.message, result.status);
+				});
+			}
 		} else {
-			this.erpCommonService.updateUserReservoirData(inputJson).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.bookData = [];
-					this.issueBookData = [];
-					this.resetIssueReturn();
-					this.getUserIssueReturnLogData();
-
-				}
-				this.common.showSuccessErrorMessage(result.message, result.status);
-			});
+			if (this.searchForm.value.user_role_id === '4') {
+				this.common.showSuccessErrorMessage('More than '+this.settingData['book_issued_limit_student']+' Book Cannot be Issued to Student', 'error');
+			} else if (this.searchForm.value.user_role_id === '3') {
+				this.common.showSuccessErrorMessage('More than '+this.settingData['book_issued_limit_teacher']+' Book Cannot be Issued to Teacher', 'error');				
+			} else if (this.searchForm.value.user_role_id === '2') {
+				this.common.showSuccessErrorMessage('More than '+this.settingData['book_issued_limit_staff']+' Book Cannot be Issued to Staff', 'error');				
+			}
+			
 		}
+
+		
+
+	}
+
+	checkForIssueBookLimit() {
+		let flag = false;
+		//parseInt(this.settingData['book_return_days_staff'], 10)
+		console.log('this.finIssueBook.length', this.finIssueBook , this.finIssueBook.length);
+		if (this.searchForm.value.user_role_id === '4') {
+			if (this.finIssueBook.length >  parseInt(this.settingData['book_issued_limit_student'], 10)) {
+				flag = true;
+			}
+			
+		} else if (this.searchForm.value.user_role_id === '3') {
+			if (this.finIssueBook.length >  parseInt(this.settingData['book_issued_limit_teacher'], 10)) {
+				flag = true;
+			}
+			
+		} else if (this.searchForm.value.user_role_id === '2') {
+			if (this.finIssueBook.length >  parseInt(this.settingData['book_issued_limit_staff'], 10)) {
+				flag = true;
+			}
+			
+		}
+		return flag;
 
 	}
 
@@ -425,6 +536,7 @@ export class IssueReturnComponent implements OnInit {
 
 	resetIssueReturn() {
 		this.bookData = [];		
+		this.finIssueBook = [];
 		this.returnIssueReservoirForm.reset();
 		this.returnIssueReservoirForm.controls['scanBookId'].setValue('');
 
@@ -434,6 +546,7 @@ export class IssueReturnComponent implements OnInit {
 		this.bookData = [];
 		this.bookLogData = [];
 		this.issueBookData = [];
+		this.finIssueBook = [];
 		this.userData = [];
 		this.searchForm.controls['searchId'].setValue('');
 		this.returnIssueReservoirForm.reset();
