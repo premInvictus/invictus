@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SisService, CommonAPIService } from '../../_services/index';
+import { FormGroup } from '@angular/forms';
 
 @Component({
 	selector: 'app-employee-attendance',
@@ -8,10 +9,11 @@ import { SisService, CommonAPIService } from '../../_services/index';
 	styleUrls: ['./employee-attendance.component.scss']
 })
 export class EmployeeAttendanceComponent implements OnInit {
-	
+	employeeForm : FormGroup;
+	searchForm : FormGroup;
 	tabSelectedIndex = 0;
 	formsTab: any[] = [];
-	settingsArray: any[] = [];
+	employeeData: any[] = [];
 	reRenderFormSubscription: any;
 	reRenderTabSubscription: any;
 	studentRecord: any = {};
