@@ -13,23 +13,14 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Address</mat-label>
               <input class="text-capitalize" matInput placeholder="Address" formControlName="p_address" required
-                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
+                 [errorStateMatcher]="confirmValidParentMatcher" />
               <mat-error>
                 This field is required
               </mat-error>
             </mat-form-field>
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>City</mat-label>
-              <input type="text" matInput placeholder="City" required formControlName="p_city" [readonly]="viewOnly"
-                [errorStateMatcher]="confirmValidParentMatcher">
-              <mat-error>
-                This field is required
-              </mat-error>
-            </mat-form-field>
-            
-            <mat-form-field class="form-field" appearance="outline">
-              <mat-label>City</mat-label>
-              <input type="text" matInput placeholder="City" formControlName="ea_city" required [readonly]="viewOnly"
+              <input type="text" matInput placeholder="City" formControlName="p_city" required
                 [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
                 (keyup)="filterCityStateCountry($event)">
               <mat-autocomplete #autoGroup="matAutocomplete">
@@ -42,20 +33,24 @@
                 This field is required
               </mat-error>
             </mat-form-field>
-
-
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>State</mat-label>
-              <input type="text" matInput placeholder="State" required formControlName="p_state" [readonly]="viewOnly"
+              <mat-select formControlName="p_state" placeholder="State" required disabled="true"
                 [errorStateMatcher]="confirmValidParentMatcher">
+                <mat-option value="">Please Select</mat-option>
+                <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
+                  {{item.sta_name}}
+                </mat-option>
+              </mat-select>
               <mat-error>
                 This field is required
               </mat-error>
             </mat-form-field>
+
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Pincode</mat-label>
               <input type="text" matInput placeholder="Pincode" required formControlName="p_pincode"
-                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                 [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
                 This field is required
               </mat-error>
@@ -65,31 +60,43 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Residential Address</mat-label>
               <input class="text-capitalize" matInput placeholder="Residential Address" formControlName="r_address"
-                required [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
+                required  [errorStateMatcher]="confirmValidParentMatcher" />
               <mat-error>
                 This field is required
               </mat-error>
             </mat-form-field>
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>City</mat-label>
-              <input type="text" matInput placeholder="City" required formControlName="r_city" [readonly]="viewOnly"
-                [errorStateMatcher]="confirmValidParentMatcher">
+              <input type="text" matInput placeholder="City" formControlName="r_city" required
+                [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
+                (keyup)="filterCityStateCountry($event)">
+              <mat-autocomplete #autoGroup="matAutocomplete">
+                <mat-option (onSelectionChange)="getCityResId(item)" (click)="getCityResId(item)"
+                  *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
+                  {{item.sta_name}} - {{item.cou_name}}</mat-option>
+              </mat-autocomplete>
               <mat-error>
                 This field is required
               </mat-error>
             </mat-form-field>
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>State</mat-label>
-              <input type="text" matInput placeholder="State" required formControlName="r_state" [readonly]="viewOnly"
+              <mat-select formControlName="r_state" placeholder="State" required disabled="true"
                 [errorStateMatcher]="confirmValidParentMatcher">
+                <mat-option value="">Please Select</mat-option>
+                <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
+                  {{item.sta_name}}
+                </mat-option>
+              </mat-select>
               <mat-error>
                 This field is required
               </mat-error>
             </mat-form-field>
+
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Pincode</mat-label>
               <input type="text" matInput placeholder="Pincode" required formControlName="r_pincode"
-                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                 [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
                 This field is required
               </mat-error>
@@ -100,7 +107,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Primary Mobile No.</mat-label>
               <input class="text-capitalize" matInput placeholder="Primary Mobile No." required
-                formControlName="pri_mobile" [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
+                formControlName="pri_mobile"  [errorStateMatcher]="confirmValidParentMatcher" />
               <mat-error>
                 This field is required
               </mat-error>
@@ -108,7 +115,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Secondary Mobile No.</mat-label>
               <input type="text" matInput placeholder="Secondary Mobile No." required formControlName="sec_mobile"
-                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                 [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
                 This field is required
               </mat-error>
@@ -116,7 +123,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Whatsapp No.</mat-label>
               <input type="text" matInput placeholder="Whatsapp No." required formControlName="whatsapp_no"
-                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                 [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
                 This field is required
               </mat-error>
@@ -124,7 +131,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Email Id</mat-label>
               <input type="text" matInput placeholder="Email Id" required formControlName="email_id"
-                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                 [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
                 This field is required
               </mat-error>
@@ -136,7 +143,7 @@
         <div class="row">
           <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
             <span>Whether the address of correspondence is different from the Permanent address?</span>
-            <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" (change)="address_change($event)">
+            <mat-slide-toggle class="btn-spacer" (change)="address_change($event)">
             </mat-slide-toggle>
           </div>
         </div>
@@ -144,7 +151,7 @@
     </div>
     <div class="row">
       <div class="col-12 text-center ">
-        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
+        <button mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
           Continue</button>
         <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
         <button *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer btn-save-continue"
