@@ -14,6 +14,9 @@ import { EmployeeTabThreeContainerComponent } from './employee-tab-three-contain
 import { EmployeeTabFourContainerComponent } from './employee-tab-four-container/employee-tab-four-container.component';
 import { EmployeeTabFiveContainerComponent } from './employee-tab-five-container/employee-tab-five-container.component';
 import { EmployeeTabSixContainerComponent } from './employee-tab-six-container/employee-tab-six-container.component';
+import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
+import { EmployeeLeaveComponent } from './employee-leave/employee-leave.component';
+import { EmployeeLedgerComponent } from './employee-ledger/employee-ledger.component';
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -41,6 +44,9 @@ export const MY_FORMATS = {
 		EmployeeTabFourContainerComponent,
 		EmployeeTabFiveContainerComponent,
 		EmployeeTabSixContainerComponent,
+		EmployeeAttendanceComponent,
+		EmployeeLeaveComponent,
+		EmployeeLedgerComponent,
 		EmployeeCommonComponent],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
