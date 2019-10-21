@@ -16,6 +16,8 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	personalDetails: FormGroup;
 	personaldetails: any = {};
+	cityId: any;
+	cityId2: any;
 	addressFlag = false;
 	panelOpenState = true;
 	addOnly = false;
@@ -29,6 +31,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	studentdetails: any = {};
 	parentDetails2: any = {};
 	addressDetails: any[] = [];
+	arrayState: any[] = [];
 	parentJson: any[] = [];
 	reqParamArray = [];
 	finalSibReqArray = [];
@@ -77,6 +80,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 
 	ngOnInit() {
 		this.buildForm();
+		this.getState();
 	}
 	ngOnChanges() {
 	}
@@ -97,20 +101,260 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	saveForm() {
-		this.personaldetails.value['city'] = {
-			cit_name: 'varanasi',
-			cit_id: this.personalDetails.value.p_city
+		this.personaldetails['emp_id'] = '';
+		this.personaldetails['emp_name'] = '';
+		this.personaldetails['emp_honorific_detail'] = {
+			hon_id: '',
+			hon_name: ''
 		};
-		this.personaldetails.value['state'] = {
-			sta_name: 'varanasi',
-			sta_id: this.personalDetails.value.p_state
+		this.personaldetails['emp_designation_detail'] = {
+			des_id: '',
+			des_name: ''
 		};
-		if (this.personalDetails.valid) {
-
+		this.personaldetails['emp_department_detail'] = {
+			dpt_id: '',
+			des_name: ''
+		};
+		this.personaldetails['emp_wing_detail'] = {
+			wing_id: '',
+			wing_name: ''
+		};
+		if (this.addressFlag) {
+			this.personaldetails['emp_personal_detail'] = {
+				same_as_residential: false,
+				residential_address_detail: {
+					address: this.personalDetails.value.r_address,
+					city: {
+						cit_id: this.personalDetails.value.r_city,
+						cit_name: this.getCityName(this.personalDetails.value.r_city)
+					},
+					state: {
+						sta_id: this.personalDetails.value.r_state,
+						sta_name: this.getStateName(this.personalDetails.value.r_state)
+					},
+					country: {
+						ct_id: 101,
+						ct_name: "India"
+					},
+					pin: this.personalDetails.value.r_pincode
+				},
+				address_detail: {
+					address: this.personalDetails.value.p_address,
+					city: {
+						cit_id: this.personalDetails.value.p_city,
+						cit_name: this.getCityName(this.personalDetails.value.p_city)
+					},
+					state: {
+						sta_id: this.personalDetails.value.p_state,
+						sta_name: this.getStateName(this.personalDetails.value.p_state)
+					},
+					country: {
+						ct_id: 101,
+						ct_name: "India"
+					},
+					pin: this.personalDetails.value.p_pincode
+				},
+				contact_detail: {
+					primary_mobile_no: this.personalDetails.value.pri_mobile,
+					secondary_mobile_no: this.personalDetails.value.sec_mobile,
+					whatsup_no: this.personalDetails.value.whatsapp_no,
+					email_id: this.personalDetails.value.email_id
+				}
+			};
+		} else {
+			this.personaldetails['emp_personal_detail'] = {
+				same_as_residential: true,
+				residential_address_detail: {
+					address: this.personalDetails.value.p_address,
+					city: {
+						cit_id: this.personalDetails.value.p_city,
+						cit_name: this.getCityName(this.personalDetails.value.p_city)
+					},
+					state: {
+						sta_id: this.personalDetails.value.p_state,
+						sta_name: this.getStateName(this.personalDetails.value.p_state)
+					},
+					country: {
+						ct_id: 101,
+						ct_name: "India"
+					},
+					pin: this.personalDetails.value.p_pincode
+				},
+				address_detail: {
+					address: this.personalDetails.value.p_address,
+					city: {
+						cit_id: this.personalDetails.value.p_city,
+						cit_name: this.getCityName(this.personalDetails.value.p_city)
+					},
+					state: {
+						sta_id: this.personalDetails.value.p_state,
+						sta_name: this.getStateName(this.personalDetails.value.p_state)
+					},
+					country: {
+						ct_id: 101,
+						ct_name: "India"
+					},
+					pin: this.personalDetails.value.p_pincode
+				},
+				contact_detail: {
+					primary_mobile_no: this.personalDetails.value.pri_mobile,
+					secondary_mobile_no: this.personalDetails.value.sec_mobile,
+					whatsup_no: this.personalDetails.value.whatsapp_no,
+					email_id: this.personalDetails.value.email_id
+				}
+			};
 		}
+		this.personaldetails['emp_personal_contact'] = {
+			relationship_personal_detail: {
+				rel_category: '',
+				rel_full_name: '',
+				rel_occupation: '',
+				rel_organisation: '',
+				rel_designation: '',
+				rel_contact_detail: {
+					rel_mobile_no: '',
+					rel_email: ''
+				},
+				rel_address_detail: {
+					address: '',
+					city: {
+						cit_id: '',
+						cit_name: ''
+					},
+					state: {
+						sta_id: '',
+						sta_name: ''
+					},
+					country: {
+						ct_id: '',
+						ct_name: ''
+					},
+					pin: ''
+				},
+				rel_reference_detail: {
+					ref_person_name: ''
+				}
+			}
+		};
+		this.personaldetails['emp_salary_detail'] = {
+			account_docment_detail: {
+				pan_no: '',
+				aadhar_no: '',
+				pf_acc_no: '',
+				esi_ac_no: ''
+			},
+			nominee_detail: {
+				name: ''
+			},
+			emp_organisation_relation_detail: {
+				doj: '',
+				pf_joining_date: '',
+				esic_joining_date: '',
+				probation_till_date: ''
+			},
+			emp_job_detail: {
+				category_1: {
+					cat_id: '',
+					cat_name: ''
+				},
+				category_2: {
+					cat_id: '',
+					cat_name: ''
+				},
+				category_3: {
+					cat_id: '',
+					cat_name: ''
+				},
+				contact_period: ''
+			},
+			emp_incremental_month_detail: {
+				month_data: {
+					month_id: '',
+					month_name: ''
+				}
+			},
+			emp_bank_detail: [
+				{
+					bnk_detail: {
+						bnk_id: '',
+						bnk_name: '',
+						bnk_ifsc: '',
+						bnk_acc_no: ''
+					}
+				}
+			],
+			emp_salary_structure: {
+				emp_pay_scale: {
+					pc_id: '',
+					pc_name: ''
+				},
+				emp_pay_mode: {
+					pm_id: '',
+					pm_name: ''
+				},
+				emp_basic_pay_scale: {
+					bps_id: '',
+					bps_name: ''
+				},
+				emp_salary_heads: [
+					{
+						id: '',
+						name: '',
+						value: ''
+					}
+				],
+				emp_deduction_detail: [
+					{
+						pf_deduction: '',
+						esic_deduction: '',
+						tds_deduction: ''
+					}
+				],
+				emp_net_salary: '',
+				emp_total_earning: ''
+			}
+		};
+		this.personaldetails['emp_remark_detail'] = {
+			management_remark: '',
+			interview_remark: '',
+			skills: ''
+		};
+		this.personaldetails['emp_class_section_detail'] = [
+			{
+				class_detail: {
+					class_id: '',
+					class_name: ''
+				},
+				section_detail: {
+					sec_id: '',
+					sec_name: ''
+				},
+				subject_detail: {
+					sub_id: '',
+					sub_name: ''
+				},
+				class_teacher_staus: '',
+				status: ''
+			}
+		];
+		this.personaldetails['emp_document_detail'] = [
+			{
+				document_id: '',
+				document_name: '',
+				document_data: {
+					verified_staus: '',
+					files_data: [
+						{
+							file_id: '',
+							file_name: '',
+							file_url: ''
+						}
+					]
+				}
+			}
+		];
+		console.log(this.personaldetails);
 	}
-
-
 	isExistUserAccessMenu(actionT) {
 		// if (this.context && this.context.studentdetails) {
 		// 	return this.context.studentdetails.isExistUserAccessMenu(actionT);
@@ -128,7 +372,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	filterCityStateCountry($event) {
 		// keyCode
 		if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
-			if ($event.target.value !== '' && $event.target.value.length >= 3 && !(this.viewOnly)) {
+			if ($event.target.value !== '' && $event.target.value.length >= 3) {
 				this.cityCountryArray = [];
 				this.sisService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
 					if (result.status === 'ok') {
@@ -138,5 +382,40 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			}
 		}
 	}
-	
+	getCityResId(item: any) {
+		this.cityId2 = item.cit_id;
+		this.personalDetails.patchValue({
+			r_city: this.getCityName(item.cit_id),
+			r_state: item.sta_id
+		});
+	}
+	getCityPerId(item: any) {
+		this.cityId = item.cit_id;
+		this.personalDetails.patchValue({
+			p_city: this.getCityName(item.cit_id),
+			p_state: item.sta_id,
+		});
+	}
+
+	getCityName(id) {
+		const findIndex = this.cityCountryArray.findIndex(f => f.cit_id === id);
+		if (findIndex !== -1) {
+			return this.cityCountryArray[findIndex].cit_name;
+		}
+	}
+	getStateName(id) {
+		const findIndex = this.arrayState.findIndex(f => f.sta_id === id);
+		if (findIndex !== -1) {
+			return this.arrayState[findIndex].sta_name;
+		}
+	}
+	getState() {
+		this.sisService.getState().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					this.arrayState = result.data;
+				}
+			}
+		);
+	}
 }
