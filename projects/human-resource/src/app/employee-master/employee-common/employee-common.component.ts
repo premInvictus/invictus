@@ -209,6 +209,7 @@ export class EmployeeCommonComponent implements OnInit {
 
 	openCropDialog = (imageFile) => this.cropModal.openModal(imageFile);
 	openEditDialog = (data) => this.editReference.openModal(data);
+
 	buildForm() {
 		this.studentdetailsform = this.fbuild.group({
 			au_profileimage: '',
@@ -216,15 +217,10 @@ export class EmployeeCommonComponent implements OnInit {
 			au_login_id: '',
 			au_full_name: '',
 			au_class_id: '',
-			au_mobile: '',
-			au_email: '',
-			au_hou_id: '',
-			au_sec_id: '',
-			epd_parent_name: '',
-			epd_contact_no: '',
-			epd_whatsapp_no: '',
-			mi_emergency_contact_name: '',
-			mi_emergency_contact_no: ''
+			au_honorific_id: '',
+			au_designation_id: '',
+			au_department_id: '',
+			au_wing_id: '',			
 		});
 
 	}
