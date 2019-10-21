@@ -1,0 +1,141 @@
+<div class="container-box__white">
+    <div class="functional-button-five">
+        <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request') && editableStatus == '1')"
+        mat-raised-button (click)="editRequest()"
+        (keydown.enter)="$event.preventDefault()"> <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span></button>
+      </div>
+  <div class="row">
+    <div class="col-12">
+
+<div class="padding-15">
+  <div class="row remove-top-margin">
+    <div class="col-4 col-pad-5">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Relationship</mat-label>
+        <input class="text-capitalize" matInput placeholder="Relationship" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher" />
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Full Name</mat-label>
+        <input type="text" matInput placeholder="Full Name" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher">
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Occupation</mat-label>
+        <input type="text" matInput placeholder="Occupation" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher">
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Education</mat-label>
+        <input type="text" matInput placeholder="Education" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher">
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Phone/Mobile</mat-label>
+        <input type="text" matInput placeholder="Phone/Mobile" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher">
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input type="text" matInput placeholder="Email" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher">
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-4 col-pad-5" >
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Organisation</mat-label>
+        <input class="text-capitalize" matInput placeholder="Organisation" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher" />
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Designation</mat-label>
+        <input type="text" matInput placeholder="Designation" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher">
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Address</mat-label>
+        <input type="text" matInput placeholder="Address" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher">
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>City</mat-label>
+        <input type="text" matInput placeholder="City" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher">
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>State</mat-label>
+        <input type="text" matInput placeholder="State" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher">
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Pincode</mat-label>
+        <input type="text" matInput placeholder="Pincode" required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher">
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="col-4 col-pad-5">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Reference/Resource(optional)</mat-label>
+        <input class="text-capitalize" matInput placeholder="Primary Mobile No." required [readonly]="viewOnly"
+          [errorStateMatcher]="confirmValidParentMatcher" />
+        <mat-error>
+          This field is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+    </div>
+  </div>
+  <br>
+  <div class="row remove-top-margin">
+    <div class="col-12">
+    <div class="text-center ">
+        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save & Continue</button>
+        <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+        <button  *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer btn-save-continue" (click)="updateForm(false)">Update & Continue</button>
+        <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag" (click)="checkFormChangedValue();openEditDialog({data: [finalArray] ,reqParam: params})">Edit & Continue</button>
+        <button   *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+  </div>
+  </div>
+  </div>
+  
+</div>
+<app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>

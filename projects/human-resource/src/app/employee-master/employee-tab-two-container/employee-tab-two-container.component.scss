@@ -1,0 +1,50 @@
+.functional-button-five {
+    z-index: 11111;
+    position: fixed;
+    top: 40%;
+    right: 20px;
+}
+
+.functional-button-five button {
+    background-color: #009eff;
+    color: #ffffff;
+}
+
+.functional-button-five button:hover {
+    background-color: #026eb1;
+    color: #ffffff;
+}
+
+.right-btn-text {
+    color: #fff;
+    opacity: 0;
+    text-align: center;
+    padding-top: 0px;
+    transition: all .3s ease-in-out;
+    display: none;
+}
+
+  button.mat-fab:hover {
+    border-radius: 0%;
+    width: 120px;
+    height: 60px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    transition: all .3s ease-in-out;
+  }
+
+  button.mat-fab:hover .right-btn-text {
+    padding-top: 40px;
+    opacity: 1;
+    color: #fff;
+    text-align: center;
+    padding-top: 0px;
+    transition: all .3s ease-in-out;
+    display: block;
+    
+  }
+
+
+  button.mat-fab:hover mat-icon {
+    display:none;
+  }

@@ -14,7 +14,7 @@ import * as ExcelProper from 'exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
-import { CapitalizePipe } from '../../../_pipes';
+import { CapitalizePipe } from 'src/app/_pipes';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AddVendorDialog } from './../../../catalogue-management/vendor-master/add-vendor-dialog/add-vendor-dialog.component';

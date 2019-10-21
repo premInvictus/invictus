@@ -62,7 +62,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
-		console.log('this.loginId',this.loginId);
+		console.log('this.loginId', this.loginId);
 		this.stoppageArray = [];
 		this.slabArray = [];
 		this.terminateStatus = 'Terminate Transport Facility';
@@ -79,7 +79,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 
 	}
 	ngOnChanges() {
-		console.log('this.feeLoginId',this.feeLoginId);
+		console.log('this.feeLoginId', this.feeLoginId);
 		if (this.feeLoginId) {
 			this.getFeeAccount(this.feeLoginId);
 		}
@@ -395,6 +395,12 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
+		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
+			if (!this.accountsForm.value.accd_reason_id ||
+				!this.accountsForm.value.accd_remark_id) {
+				validateFlag = false;
+			}
+		}
 		if (validateFlag) {
 			const datePipe = new DatePipe('en-in');
 			let accountJSON = {};
@@ -487,7 +493,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
-		if (this.accountsForm.value.accd_fcg_id !== '0') {
+		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
 			if (!this.accountsForm.value.accd_reason_id ||
 				!this.accountsForm.value.accd_remark_id) {
 				validateFlag = false;
@@ -569,7 +575,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
-		if (this.accountsForm.value.accd_fcg_id !== '0') {
+		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
 			if (!this.accountsForm.value.accd_reason_id ||
 				!this.accountsForm.value.accd_remark_id) {
 				this.accountsForm.get('accd_fcg_id').markAsDirty();

@@ -14,7 +14,7 @@ import * as ExcelProper from 'exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
-import { CapitalizePipe, IndianCurrency } from '../../../_pipes';
+import { CapitalizePipe, IndianCurrency } from 'src/app/_pipes';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 declare var require;

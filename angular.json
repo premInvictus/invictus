@@ -1231,6 +1231,129 @@
           }
         }
       }
+    },
+    "human-resource": {
+      "root": "projects/human-resource/",
+      "sourceRoot": "projects/human-resource/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/human-resource",
+            "index": "projects/human-resource/src/index.html",
+            "main": "projects/human-resource/src/main.ts",
+            "polyfills": "projects/human-resource/src/polyfills.ts",
+            "tsConfig": "projects/human-resource/tsconfig.app.json",
+            "assets": [
+              "projects/human-resource/src/favicon.ico",
+              "projects/human-resource/src/assets"
+            ],
+            "styles": [
+              "projects/human-resource/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/human-resource/src/environments/environment.ts",
+                  "with": "projects/human-resource/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "human-resource:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "human-resource:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "human-resource:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/human-resource/src/test.ts",
+            "polyfills": "projects/human-resource/src/polyfills.ts",
+            "tsConfig": "projects/human-resource/tsconfig.spec.json",
+            "karmaConfig": "projects/human-resource/karma.conf.js",
+            "styles": [
+              "projects/human-resource/src/styles.scss"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/human-resource/src/favicon.ico",
+              "projects/human-resource/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/human-resource/tsconfig.app.json",
+              "projects/human-resource/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "human-resource-e2e": {
+      "root": "projects/human-resource-e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/human-resource-e2e/protractor.conf.js",
+            "devServerTarget": "human-resource:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "human-resource:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/human-resource-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "invictus"
