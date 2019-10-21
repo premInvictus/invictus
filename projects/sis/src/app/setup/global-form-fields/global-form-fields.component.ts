@@ -68,9 +68,10 @@ export class GlobalFormFieldsComponent implements OnInit {
 		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				for (const item of result.data) {
-					if (Number(item.ff_tb_id) < 12) {
+					/*if (Number(item.ff_tb_id) < 12) {
 						this.formfields.push(item);
-					}
+					}*/
+					this.formfields.push(item);
 				}
 				this.getSLCTCFormConfig();
 			}
