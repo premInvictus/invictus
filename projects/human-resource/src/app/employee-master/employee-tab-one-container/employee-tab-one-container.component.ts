@@ -333,7 +333,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					sub_id: '',
 					sub_name: ''
 				},
-				class_teacher_staus: '',
+				class_teacher_staus: false,
 				status: ''
 			}
 		];
@@ -342,7 +342,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				document_id: '',
 				document_name: '',
 				document_data: {
-					verified_staus: '',
+					verified_staus: false,
 					files_data: [
 						{
 							file_id: '',
@@ -354,10 +354,16 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			}
 		];
 		console.log(this.personaldetails);
+		this.commonAPIService.insertEmployeeDetails(this.personaldetails).subscribe((result: any) => {
+			if (result.status === 'ok') {
+
+			}
+		});
+		
 	}
 	isExistUserAccessMenu(actionT) {
 		// if (this.context && this.context.studentdetails) {
-		// 	return this.context.studentdetails.isExistUserAccessMenu(actionT);
+		// 	return this.context.studentdetails.isExistUserAccessMenu(actionT); 
 		// }
 	}
 	editConfirm() { }

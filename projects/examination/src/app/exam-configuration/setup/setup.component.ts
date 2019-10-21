@@ -671,7 +671,7 @@ export class SetupComponent implements OnInit {
 			this.configFlag = true;
 		}
 	}
-	deleteCancel(){
+	deleteCancel(){ 
 		
 	}
 	deleteConfirm({ data, type }) {
