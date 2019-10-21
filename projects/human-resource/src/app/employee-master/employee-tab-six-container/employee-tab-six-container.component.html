@@ -6,7 +6,108 @@
         <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span>
       </button>
     </div>
-    <div>New Html</div>
+
+    <div class="container-box__white">
+      <div>
+        <div class="row remove-top-margin">
+          <div class="col-6 remove-col-padding vertical-line-1">
+            <div class="row remove-top-margin">
+              <div class="col-12 remove-col-padding-left">
+                <div class="document-main-card border-bottom" *ngFor="let item of documentsArray;let i =index">
+                  <div class="row margin-top-10 margin-bottom-20">
+                    <div class="col-12">
+                      <span class="document-title font-size-16"><b>{{item.docreq_name}}</b></span>
+                    </div>
+                  </div>
+                  <div class="row height-100">
+                    <div class="col-2 text-center">
+                      <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
+                        multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
+                        style="display: none !important">
+
+                      <a class=" text-center cursor-pointer" *ngIf="!viewOnly">
+                        <mat-icon class="margin-top-10  cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>
+                        &nbsp; &nbsp;<label class="sis-btn-document-label cursor-pointer" [for]="item.docreq_id">Choose
+                          File</label>
+                      </a>
+                    </div>
+                    <ng-container *ngFor="let img of this.imageArray;let i = index">
+
+                      <div class="col-1 tab-custom-col-20 col-doc-img-3 custom-col-15"
+                        *ngIf="img.ed_docreq_id === item.docreq_id">
+                        <div class="remove-col-padding">
+                          <div>
+                            <div>
+                              <div>
+                                <div *ngIf="img.ed_docreq_id === item.docreq_id" style="float:right;">
+                                  <button *ngIf="!viewOnly" mat-button class="upload-document-delete-btn"
+                                    (click)="deleteFile(img.imgName,img.ed_docreq_id)">
+                                    <mat-icon class="btn-upload-icon">delete</mat-icon>
+                                  </button>
+                                </div>
+                                <div *ngIf="img.ed_docreq_id ===  item.docreq_id">
+                                  <img *ngIf="checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
+                                    [src]="img.imgName" (click)="previewImage(imageArray, i)">
+                                  <img *ngIf="!checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
+                                    src="https://icons-for-free.com/free-icons/png/512/2109135.png"
+                                    (click)="previewImage(imageArray, i)"><br>
+                                </div>
+                                <br>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-12">
+                <div>
+                  <span><b>Instruction for Uploading Instruction</b></span>
+                  <br>
+                  <br>
+                  <ol>
+                    <li>You can upload multiple file</li>
+                    <li>Try selecting more than one file when browsing for file in particular section.
+                    </li>
+                    <li>Please compress your file to 154kb before uploading.</li>
+                    <li>Uploading file format can be of following instruction jpeg, jpg, pdf, doc.
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div>
+                  <span><b>List of Document Required for Admission</b></span>
+                  <br>
+                  <br>
+                  <ol class="remove-col-padding" *ngFor="let item of documentsArray;let i =index">
+                    <mat-checkbox [disabled]="viewOnly || !(fileUploadedStatus(item?.docreq_id))"
+                      class="inline-form-doc-checkbox" [checked]="checkVerifiedStatus(item.docreq_id)"
+                      [value]="item.docreq_id" (change)="insertVerifyId($event)">
+                    </mat-checkbox>{{item.docreq_name}}
+                  </ol>
+                  <br>
+                  <div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
     <div class="row">
       <div class="col-12 text-center ">
         <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
