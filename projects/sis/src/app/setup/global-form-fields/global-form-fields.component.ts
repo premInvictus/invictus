@@ -26,22 +26,7 @@ export class GlobalFormFieldsComponent implements OnInit {
 	CONFIG_ELEMENT_DATA: ConfigSLCElement[] = [];
 	mappedArray: any[] = [];
 	configDataSource = new MatTableDataSource<ConfigSLCElement>(this.CONFIG_ELEMENT_DATA);
-	typeArray: any[] = [{
-		tmap_usts_id: '1',
-		tmap_usts_type: 'SLC'
-	},
-	{
-		tmap_usts_id: '2',
-		tmap_usts_type: 'Certificate'
-	},
-	{
-		tmap_usts_id: '3',
-		tmap_usts_type: 'Admit Card'
-	},
-	{
-		tmap_usts_id: '4',
-		tmap_usts_type: 'Acknowledgement'
-	}];
+	typeArray: any[] = [];
 	type_id: any;
 	constructor(private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -50,6 +35,21 @@ export class GlobalFormFieldsComponent implements OnInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getFormFields();
+		this.getSlcTcTemplateSetting();
+	}
+	getSlcTcTemplateSetting(){
+		this.sisService.getSlcTcTemplateSetting({}).subscribe((result: any) => {
+			if(result && result.status === 'ok') {
+				if(result.data && result.data.length > 0) {
+					result.data.forEach(element => {
+						this.typeArray.push({
+							tmap_usts_id: element.usts_id,
+							tmap_usts_type: element.usts_alias
+						})
+					});
+				}
+			}
+		})
 	}
 	buildForm() {
 		this.labelForm = this.fbuild.group({
