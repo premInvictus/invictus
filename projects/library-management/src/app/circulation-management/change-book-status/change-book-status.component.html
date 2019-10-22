@@ -54,7 +54,7 @@
               </i>
             </div>
             <div class="book-container">
-              <img class="book-cover-img" [src]="item.images_links.thumbnail" />
+              <img class="book-cover-img" [src]="item.images_links.thumbnail ? item.images_links.thumbnail : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_cover.png' " />
               <div [class]="item.book_container_class">
                 <div class="book-title-content text-center" style="padding: 3px !important">
                   <div class="book-first-content" (click)="showSecondDetailDiv(i); $event.stopPropagation();">
