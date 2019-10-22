@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
-
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-employee-tab-three-container',
@@ -25,238 +25,133 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	managementRemarkData: any;
 	settingsArray: any[] = [];
 	currentTab: number;
-	constructor(public commonAPIService: CommonAPIService,
+	salaryDetails: FormGroup;
+	salaryDetailsArray: any[] = [];
+	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder,
 		private sisService: SisService) {
 
 	}
 
 	ngOnInit() {
-		// this.settingsArray = this.context.configSetting;
-		// this.commonAPIService.studentData.subscribe((data: any) => {
-		// 	if (data && data.au_login_id) {
-		// 		if (this.currentTab === 2) {
-		// 			this.getRemarkData(data.au_login_id);
-		// 		}
-		// 	}
-		// 	// 	const processType = this.processTypeService.getProcesstype();
-		// 	// 	if (processType === '3' || processType === '4') {
-		// 	// 		this.getRemarkData(this.login_id);
-		// 	// 	}
-		// 	// 	if (processType === '3') {
-		// 	// 		this.parentId = '159';
-		// 	// 	}
-		// 	// 	if (processType === '4') {
-		// 	// 		this.parentId = '160';
-		// 	// 	}
-		// 	// }
-
-		// });
-
-		// this.commonAPIService.reRenderForm.subscribe((data: any) => {
-		// 	if (data && data.addMode) {
-		// 		this.viewOnly = false;
-		// 		this.addOnly = true;
-		// 		this.generalRemarkData = [];
-		// 		this.managementRemarkData = [];
-		// 		this.admissionRemarkData = [];
-		// 	}
-		// 	if (data && data.viewMode) {
-		// 		this.viewOnly = true;
-		// 		this.addOnly = false;
-		// 		this.editOnly = false;
-		// 		this.saveFlag = false;
-		// 	}
-		// 	if (data && data.editMode) {
-		// 		this.viewOnly = false;
-		// 		this.saveFlag = true;
-		// 		this.editOnly = true;
-		// 	}
-		// });
-
-		// this.commonAPIService.tabChange.subscribe((data: any) => {
-		// 	this.currentTab = data.currrentTab;
-		// 	if (data && (data.currrentTab === 2)) {
-		// 		// this.login_id = data.au_login_id;
-		// 		const processType = this.processTypeService.getProcesstype();
-		// 		if (processType === '3' || processType === '4') {
-		// 			this.getRemarkData(this.context.studentdetails.studentdetailsform.value.au_login_id);
-		// 		}
-		// 		if (processType === '3') {
-		// 			this.parentId = '159';
-		// 		}
-		// 		if (processType === '4') {
-		// 			this.parentId = '160';
-		// 		}
-		// 	}
-		// });
+		this.buildForm();
 	}
-
+	buildForm() {
+		this.salaryDetails = this.fbuild.group({
+			pan: '',
+			aadhar: '',
+			pf_ac: '',
+			esi_ac: '',
+			nominee: '',
+			doj: '',
+			pf_doj: '',
+			esi_doj: '',
+			probation: '',
+			confirm_date: '',
+			category_1: '',
+			category_2: '',
+			category_3: '',
+			increment_month: '',
+			contract_period: '',
+			bank_name: '',
+			bank_ac: '',
+			ifsc_code: '',
+			sal_str: '',
+			pay_mode: '',
+			basic_pay: '',
+			da: '',
+			hra: '',
+			allowances: '',
+			pf_deduction: '',
+			esi_deduction: '',
+			tds_deduction: '',
+			net_salary: '',
+			total_deduction: ''
+		});
+	}
 	ngOnChanges() {
 		// this.getRemarkData(this.login_id);
 	}
 
-	getRemarkData(login_id) {
-		// this.generalRemarkData = [];
-		// this.managementRemarkData = [];
-		// this.admissionRemarkData = [];
-		// if (login_id) {
-		// 	this.sisService.getStudentRemarkDataEmployee({ au_login_id: login_id }).subscribe((result: any) => {
-		// 		if (result.status === 'ok') {
-		// 			const remarkData = result.data;
-		// 			this.generalRemarkData = remarkData[0]['remarksGeneral'];
-		// 			this.managementRemarkData = remarkData[0]['remarksManagement'];
-		// 			this.admissionRemarkData = remarkData[0]['remarkAdmission'];
-		// 		}
-		// 	});
-		// }
-	}
-
 	saveForm() {
-		// const generalRemarkFormData = this.getGeneralRemarkFormData();
-		// const managementRemarkFormData = this.getManagementRemarkFormData();
-		// const admissionRemarkFormData = this.getAdmissionRemarkFormData();
-		// const remarkQuestionData = [];
-		// const markSplitData = this.prepareMarkSplitData();
-		// if (admissionRemarkFormData && admissionRemarkFormData['admissionRemarkFieldData']) {
-		// 	for (let i = 0; i < admissionRemarkFormData['admissionRemarkFieldData'].length; i++) {
-		// 		remarkQuestionData.push(admissionRemarkFormData['admissionRemarkFieldData'][i]);
-		// 	}
-		// }
-
-		// const remarkJson = {
-		// 	'au_login_id': this.context.studentdetails.studentdetailsform.value.au_login_id ?
-		// 		this.context.studentdetails.studentdetailsform.value.au_login_id : '',
-		// 	'remarksGeneral': generalRemarkFormData ? generalRemarkFormData : [],
-		// 	'remarksManagement': {
-		// 		'managementRemarks': managementRemarkFormData['concessionFormData'] ? managementRemarkFormData['concessionFormData'] : {},
-		// 		'finalRemark': managementRemarkFormData['finalRemarkData'] ? managementRemarkFormData['finalRemarkData'] : {},
-		// 		'remarksMarks': [
-		// 			managementRemarkFormData['admissionRemarkData'] ? managementRemarkFormData['admissionRemarkData'] : {},
-		// 			managementRemarkFormData['studentRemarkData'] ? managementRemarkFormData['studentRemarkData'] : {},
-		// 			managementRemarkFormData['parentRemarkData'] ? managementRemarkFormData['parentRemarkData'] : {}
-		// 		],
-		// 		'markSplit': markSplitData
-		// 	},
-		// 	'remarkAdmission': {
-		// 		'remarkQuestion': remarkQuestionData,
-		// 		'remarkLearn': admissionRemarkFormData['learnFieldData'] ? admissionRemarkFormData['learnFieldData'] : []
-		// 	}
-		// };
-
-		// let message = '';
-		// this.sisService.saveStudentRemarkDataEmployee(remarkJson).subscribe((result: any) => {
-		// 	if (result.status === 'ok') {
-		// 		message = this.addOnly ? 'Remarks Added Successfully' : this.editOnly ? 'Remarks Updated Successfully' : '';
-		// 		if (message) {
-		// 			this.commonAPIService.showSuccessErrorMessage(message, 'success');
-		// 			const invoiceJSON = { login_id: [this.context.studentdetails.studentdetailsform.value.au_login_id] };
-		// 			this.getRemarkData(this.context.studentdetails.studentdetailsform.value.au_login_id);
-		// 			if (this.processTypeService.getProcesstype() === '3' || this.processTypeService.getProcesstype() === '4') {
-		// 			this.sisService.insertInvoice(invoiceJSON).subscribe((result2: any) => {
-		// 				if (result2.data && result2.status === 'ok') {
-		// 					const length = result2.data.split('/').length;
-		// 					saveAs(result2.data, result2.data.split('/')[length - 1]);
-		// 					this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
-		// 				} else {
-		// 					this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
-		// 				}
-		// 			});
-		// 		}
-		// 			if (!this.isSubmit) {
-		// 				this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
-		// 			} else {
-		// 				this.isSubmit = false;
-		// 			}
-		// 		}
-		// 	} else {
-		// 		message = this.addOnly ? result.data : this.editOnly ? result.data : '';
-		// 		this.commonAPIService.showSuccessErrorMessage(message, 'error');
-		// 	}
-		// });
-
-		// if (this.context && this.context.studentdetails &&
-		// 	this.context.studentdetails.studentdetailsform &&
-		// 	this.context.studentdetails.studentdetailsform.valid) {
-		// 	this.sisService.addStudentInformation(this.context.studentdetails.studentdetailsform.value).subscribe((result1: any) => {
-		// 		if (result1.status === 'ok') {
-		// 		}
-		// 	});
-		// }
-	}
-
-	getGeneralRemarkFormData() {
-		// let finalGeneralRemarkArray = [];
-		// if (this.general_remark && this.general_remark.finalGeneralRemarkArray && this.general_remark.finalGeneralRemarkArray.length > 0) {
-		// 	finalGeneralRemarkArray = this.general_remark.finalGeneralRemarkArray;
-		// 	for (const item of finalGeneralRemarkArray) {
-		// 		item.era_doj = this.commonAPIService.dateConvertion(item.era_doj, 'yyyy-MM-dd');
-		// 	}
-		// 	return finalGeneralRemarkArray;
-		// } else {
-		// 	finalGeneralRemarkArray = [];
-		// }
-	}
-
-	getManagementRemarkFormData() {
-		// const admissionRemarkData = this.management_remark && this.management_remark.admissionremarkform ?
-		// 	this.management_remark.admissionremarkform.value : {};
-		// const studentRemarkData = this.management_remark && this.management_remark.studentremarkform ?
-		// 	this.management_remark.studentremarkform.value : {};
-		// const parentRemarkData = this.management_remark && this.management_remark.parentremarkform ?
-		// 	this.management_remark.parentremarkform.value : {};
-		// const finalRemarkData = this.management_remark && this.management_remark ? this.management_remark.finalremarksform.value : {};
-		// const concessionFormData = this.management_remark && this.management_remark.concessionArray ?
-		// 	this.management_remark.concessionArray : [];
-		// /*
-		// 	&& (this.management_remark.studentremarkform.valid &&
-		// 	this.management_remark.admissionremarkform.valid &&
-		// 	this.management_remark.parentremarkform.valid &&
-		// 	this.management_remark.finalremarksform.valid &&
-		// 	concessionFormData.length > 0)
-		// */
-		// if (this.management_remark) {
-		// 	for (const item of concessionFormData) {
-		// 		item.era_doj = this.commonAPIService.dateConvertion(item.era_doj, 'yyyy-MM-dd');
-		// 	}
-		// 	return { admissionRemarkData, studentRemarkData, parentRemarkData, finalRemarkData, concessionFormData };
-		// } else {
-		// 	this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Field for Management Remark', 'error');
-		// }
-	}
-
-	getAdmissionRemarkFormData() {
-		const admissionRemarkFieldData = (this.admission_remark && this.admission_remark.admissionRemarkFields
-			&& this.admission_remark.admissionRemarkFields.value) ? this.admission_remark.admissionRemarkFields.value : [];
-		const learnFieldData = (this.admission_remark && this.admission_remark.learnFieldData
-			&& this.admission_remark.learnFieldData.value) ? this.admission_remark.learnFields.value : [];
-		return { admissionRemarkFieldData, learnFieldData };
-	}
-
-	cancelForm() {
-		this.isSubmit = false;
-		if (this.addOnly) {
-			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
-		} else if (this.saveFlag) {
-			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
-		}
-	}
-
-	remainOnSame() {
-		this.isSubmit = true;
-		this.saveForm();
-		this.commonAPIService.reRenderForm.next({ reRenderForm: false, viewMode: false, editMode: true, deleteMode: false, addMode: false });
-	}
-
-	prepareMarkSplitData() {
-		const markSplitData = this.managementRemarkData['markSplit'];
-		const dynamicRemarkForm = this.management_remark.dynamicMarksForm;
-
-		for (let i = 0; i < markSplitData.length; i++) {
-			for (let j = 0; j < markSplitData[i]['data'].length; j++) {
-				markSplitData[i]['data'][j]['erms_value'] = dynamicRemarkForm[i]['value']['col' + j];
+		this.salaryDetailsArray['emp_salary_detail'] = {
+			account_docment_detail: {
+				pan_no: this.salaryDetails.value.pan,
+				aadhar_no: this.salaryDetails.value.addhar,
+				pf_acc_no: this.salaryDetails.value.pf_ac,
+				esi_ac_no: this.salaryDetails.value.esi_ac
+			},
+			nominee_detail: {
+				name: this.salaryDetails.value.nominee
+			},
+			emp_organisation_relation_detail: {
+				doj: this.salaryDetails.value.doj,
+				pf_joining_date: this.salaryDetails.value.pf_doj,
+				esic_joining_date: this.salaryDetails.value.esi_doj,
+				probation_till_date: this.salaryDetails.value.probation
+			},
+			emp_job_detail: {
+				category_1: {
+					cat_id: this.salaryDetails.value.category_1,
+					cat_name: this.salaryDetails.value.category_1
+				},
+				category_2: {
+					cat_id: this.salaryDetails.value.category_2,
+					cat_name: this.salaryDetails.value.category_2
+				},
+				category_3: {
+					cat_id: this.salaryDetails.value.category_3,
+					cat_name: this.salaryDetails.value.category_3
+				},
+				contact_period: this.salaryDetails.value.contract_period
+			},
+			emp_incremental_month_detail: {
+				month_data: {
+					month_id: this.salaryDetails.value.increment_month,
+					month_name: this.salaryDetails.value.increment_month
+				}
+			},
+			emp_bank_detail: [
+				{
+					bnk_detail: {
+						bnk_id: this.salaryDetails.value.bank_name,
+						bnk_name: this.salaryDetails.value.bank_name,
+						bnk_ifsc: this.salaryDetails.value.ifsc_code,
+						bnk_acc_no: this.salaryDetails.value.bank_ac
+					}
+				}
+			],
+			emp_salary_structure: {
+				emp_pay_scale: {
+					pc_id: this.salaryDetails.value.sal_str,
+					pc_name: this.salaryDetails.value.sal_str
+				},
+				emp_pay_mode: {
+					pm_id: this.salaryDetails.value.pay_mode,
+					pm_name: this.salaryDetails.value.pay_mode
+				},
+				emp_basic_pay_scale: {
+					bps_id: this.salaryDetails.value.basic_pay,
+					bps_name: this.salaryDetails.value.basic_pay
+				},
+				emp_salary_heads: [
+					{
+						id: '',
+						name: '',
+						value: ''
+					}
+				],
+				emp_deduction_detail: [
+					{
+						pf_deduction: this.salaryDetails.value.pf_deduction,
+						esic_deduction: this.salaryDetails.value.esi_deduction,
+						tds_deduction: this.salaryDetails.value.tds_deduction
+					}
+				],
+				emp_net_salary: this.salaryDetails.value.net_salary,
+				emp_total_earning: this.salaryDetails.value.total_deduction
 			}
-		}
-		return markSplitData;
+		};
+
 	}
 
 }

@@ -1,9 +1,5 @@
 import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
-
-// import { ChildDetailsEmployeeComponent } from '../child-details-theme-two/child-details-theme-two.component';
-// import { ParentDetailsEmployeeComponent } from '../parent-details-theme-two/parent-details-theme-two.component';
-// import { MedicalInformationEmployeeComponent } from '../medical-information-theme-two/medical-information-theme-two.component';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
@@ -35,9 +31,6 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 	finalArray: any = [];
 	settingsArray: any[] = [];
 	parentId;
-	// @ViewChild(ChildDetailsEmployeeComponent) childDetails: ChildDetailsEmployeeComponent;
-	// @ViewChild(ParentDetailsEmployeeComponent) parentDetails: ParentDetailsEmployeeComponent;
-	// @ViewChild(MedicalInformationEmployeeComponent) medicalDetails: MedicalInformationEmployeeComponent;
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder,
@@ -49,7 +42,6 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 		if (data.addMode) {
 			this.addOnly = true;
 			this.viewOnly = false;
-			this.resetForm();
 		}
 		if (data.editMode) {
 			this.editOnly = true;
@@ -76,35 +68,6 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 
 	ngOnInit() {
 		this.buildForm();
-		// this.settingsArray = this.context.configSetting;
-		// const processType = this.processTypeService.getProcesstype();
-		// if (processType === '1') {
-		// 	this.parentId = '157';
-		// }
-		// if (processType === '2') {
-		// 	this.parentId = '158';
-		// }
-		// if (processType === '3') {
-		// 	this.parentId = '159';
-		// }
-		// if (processType === '4') {
-		// 	this.parentId = '160';
-		// }
-		// if (processType === '5') {
-		// 	this.parentId = '161';
-		// }
-
-		// this.commonAPIService.studentData.subscribe((data: any) => {
-		// 	if (data && data.au_login_id) {
-		// 		this.login_id = data.au_login_id;
-		// 		this.getStudent(this.login_id);
-		// 	}
-		// });
-		// this.commonAPIService.reRenderForm.subscribe((data: any) => {
-		// 	this.setActionControls(data);
-		// });
-
-		// this.getConfigureSetting();
 	}
 	ngOnChanges() {
 	}
@@ -118,16 +81,6 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 	saveForm() {
 	
 	}
-	cancelForm() {
-		// if (this.addOnly) {
-		// 	this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
-		// } else if (this.saveFlag || this.editRequestFlag) {
-		// 	this.context.studentdetails.getStudentInformation(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
-		// 	this.getStudent(this.login_id);
-		// 	this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
-		// }
-	}
-
 	updateForm(isview) {
 		this.classSection['emp_class_section_detail'] = [
 			{
