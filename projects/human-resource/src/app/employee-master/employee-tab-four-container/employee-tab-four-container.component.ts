@@ -13,6 +13,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 
 	Education_Form: FormGroup;
 	educationsArray: any[] = [];
+	qualficationArray: any[] = [];
 	panelOpenState = true;
 	addOnly = false;
 	editOnly = false;
@@ -59,6 +60,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 
 	ngOnInit() {
 		this.buildForm();
+		this.getQualifications();
 	}
 	ngOnChanges() {
 
@@ -92,6 +94,13 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 				}
 			});
 		}
+	}
+	getQualifications(){
+		this.sisService.getQualifications().subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.qualficationArray = result.data;
+			}
+		});
 	}
 	isExistUserAccessMenu(actionT) {
 		// if (this.context && this.context.studentdetails) {

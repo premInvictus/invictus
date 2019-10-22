@@ -5,7 +5,7 @@ import { environment } from '../../../../../src/environments/environment';
 import { of } from 'rxjs';
 @Injectable()
 export class SisService {
-
+ 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 	getEnrollmentStatus() {
 		return of({
@@ -113,5 +113,9 @@ export class SisService {
 	getState() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/setup/getState/');
+	}
+	getQualifications() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/qualifications/getQualifications');
 	}
 }

@@ -18,6 +18,7 @@ export class MarksRegisterComponent implements OnInit {
   termsArray: any[] = [];
   examArray: any[] = [];
   subexamArray: any[] = [];
+  finalSubexamArray: any[] = [];
   studentArray: any[] = [];
   tableDivFlag = false;
   marksInputArray: any[] = [];
@@ -79,11 +80,17 @@ export class MarksRegisterComponent implements OnInit {
     this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType() }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
-        this.subexamArray = result.data[0].exam_sub_exam_max_marks;
-      } else {
-        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-      }
-    });
+        this.subexamArray.push(result.data[0].exam_sub_exam_max_marks);
+        for (const item of this.examArray) {
+          for (const dety of item.exam_sub_exam_max_marks) {   
+            const ind = this.finalSubexamArray.findIndex(e => Number(e.se_id) === Number(dety.se_id));
+            if (ind === -1) {
+              this.finalSubexamArray.push(dety);
+            }
+          }
+        }
+      } 
+    });  
   }
   getGradeSet(param) {
     this.examService.getGradeSet(param).subscribe((result: any) => {
@@ -94,13 +101,28 @@ export class MarksRegisterComponent implements OnInit {
     })
   }
   getExamName(e_id) {
-    return this.examArray.find(e => e.exam_id === e_id).exam_name;
+    const ind = this.examArray.findIndex(e => Number(e.exam_id) === Number(e_id));
+    if (ind !== -1) {
+      return this.examArray[ind].exam_name;
+    } else {
+      return '-';
+    }
   }
   getSubexamName(se_id) {
-    return this.subexamArray.find(e => e.se_id === se_id).sexam_name;
+    const ind = this.finalSubexamArray.findIndex(e => Number(e.se_id) ===  Number(se_id));
+    if (ind !== -1) {
+      return this.finalSubexamArray[ind].sexam_name;
+    } else {
+      return '-';
+    }
   }
   getSubexamMarks(se_id) {
-    return this.subexamArray.find(e => e.se_id === se_id).exam_max_marks;
+    const ind = this.finalSubexamArray.findIndex(e => Number(e.se_id) === Number(se_id));
+    if (ind !== -1) {
+      return this.finalSubexamArray[ind].exam_max_marks;
+    } else {
+      return '-';
+    }
   }
   getClass() {
     this.classArray = [];
