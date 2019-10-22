@@ -204,7 +204,11 @@ export class CommonAPIService {
 	}
 	insertEmployeeDetails(value){
 		this.loader.startLoading();
-		return this.http.post(environment.apiHrUrl + '/employee/insert', value);
+		return this.http.post(environment.apiHRUrl + '/employee/insert', value);
 	}
 
+	getEmployeeDetail(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'employee/getAll', value);
+	}
 }

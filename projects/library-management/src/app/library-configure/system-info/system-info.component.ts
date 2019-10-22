@@ -51,7 +51,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	}
 
 	getGlobalSetting(that) {
-		this.erpCommonService.getGlobalSetting({}).subscribe((result: any) => {
+		this.erpCommonService.getGlobalSetting({"gs_alias":"library_user_setting"}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.settings = result.data;
 				for (let i=0; i< this.settings.length;i++) {
