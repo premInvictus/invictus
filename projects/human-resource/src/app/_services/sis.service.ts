@@ -118,4 +118,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/qualifications/getQualifications');
 	}
+	getDepartment(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/department');
+	}
 }
