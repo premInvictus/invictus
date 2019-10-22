@@ -14,15 +14,15 @@ import { MatDialog } from '@angular/material';
 
 export class EmployeeCommonComponent implements OnInit {
 
-	@Input() belongToForm: string;
-	@Input() config: any;
-	@Input() configSetting: any;
+	// @Input() belongToForm: string;
+	// @Input() config: any;
+	@Input() employeedetails: any;
 	@ViewChild('cropModal') cropModal;
 	@ViewChild('editReference') editReference;
 	@ViewChild('enrollmentFocus') enrollmentFocus: ElementRef;
 	nextEvent = new Subject();
 	@Output() nextUserEvent: EventEmitter<any> = new EventEmitter<any>();
-	studentdetailsform: FormGroup;
+	employeeDetailsForm: FormGroup;
 	studentdetails: any = {};
 	lastStudentDetails: any = {};
 	lastrecordFlag = true;
@@ -78,91 +78,49 @@ export class EmployeeCommonComponent implements OnInit {
 	) {
 	}
 	ngOnInit() {
-		//this.getConfigureSetting();
-		this.settingsArray = this.configSetting;
+		//this.settingsArray = this.configSetting;
 		this.buildForm();
-		// this.getClass();
-		// this.getHouses();
-		// const inputElem = <HTMLInputElement>this.myInput.nativeElement;
-		// inputElem.select();
-		// this.commonAPIService.studentData.subscribe((data: any) => {
-		// 	if (data && data.last_record) {
-		// 		if (this.login_id !== data.last_record) {
-		// 			this.studentdetailsflag = true;
-		// 		}
-		// 		this.login_id = data.last_record;
-		// 		this.lastRecordId = data.last_record;
-		// 		if (this.lastrecordFlag) {
-		// 			this.lastStudentDetails.enrollment_id = data.last_record;
-		// 			this.lastrecordFlag = false;
-		// 		}
-		// 		this.getStudentInformation(data.last_record);
-		// 		this.divFlag = true;
-		// 		this.stopFlag = true;
-		// 	}
-		// });
-	}
+		console.log( this.employeedetails);
+		//this.getEmployeeNavigationRecords();
 
-		// this.commonAPIService.reRenderForm.subscribe((data: any) => {
-		// 	if (data) {
-		// 		this.studentdetailsflag = true;
-		// 		if ((data && data.reRenderForm) || (data && data.viewMode)) {
-		// 			this.getStudentInformation(this.lastRecordId);
-		// 		}
-		// 	}
-		// 	this.setActionControls(data);
-		// });
-		// this.commonAPIService.studentSearchByName.subscribe((data: any) => {
-		// 	if (data) {
-		// 		this.getStudentDetailsByAdmno(data);
-		// 	}
-		// });
-
-		// if (localStorage.getItem('suspension_last_state')) {
-		// 	this.backOnly = true;
-		// }
-
-		// if (localStorage.getItem('change_enrolment_number_last_state')) {
-		// 	this.backOnly = true;
-		// }
-
-		// if (localStorage.getItem('change_enrolment_status_last_state')) {
-		// 	this.backOnly = true;
-		// }
-
-		// if (localStorage.getItem('id_card_view_last_state')) {
-		// 	this.backOnly = true;
-		// }
-		// if (this.processtypeService.getProcesstype() === '1' ||
-		// 	this.processtypeService.getProcesstype() === '2') {
-		// 	this.classPlaceHolder = 'Class Applied For';
-		// } else {
-		// 	this.classPlaceHolder = 'Class';
-		// }
-	
-	// ngOnChanges() {
-	// 	if (localStorage.getItem('remark_entry_last_state')) {
-	// 		this.backOnly = true;
-	// 	}
-	// }
-
-	// ngOnDestroy() {
-	// 	localStorage.removeItem('suspension_last_state');
-	// 	localStorage.removeItem('change_enrolment_number_last_state');
-	// 	localStorage.removeItem('change_enrolment_status_last_state');
-	// 	localStorage.removeItem('id_card_view_last_state');
-	// 	localStorage.removeItem('remark_entry_last_state');
-	// }
-	checkIfFieldExist(value) {
-		const findex = this.settingsArray.findIndex(f => f.ff_field_name === value);
-		if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'Y') {
-			return true;
-		} else if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'N') {
-			return false;
-		} else {
-			return false;
+		var result = this.employeedetails;
+		if (result) {
+			this.employeeDetailsForm.patchValue({
+				emp_profile_pic: '',
+				emp_id: result.emp_id,
+				emp_name: result.emp_name,			
+				emp_honorific_id: result.emp_honorific_detail && result.emp_honorific_detail.hon_id ? result.emp_honorific_detail.hon_id : '',
+				emp_designation_id: result.emp_designation_detail && result.emp_designation_detail.des_id ? result.emp_designation_detail.des_id : '',
+				emp_department_id:  result.emp_department_detail && result.emp_department_detail.dpt_id ? result.emp_department_detail.dpt_id : '',
+				emp_wing_id: result.emp_wing_detail && result.emp_wing_detail.wing_id ? result.emp_wing_detail.wing_id : '',			
+			});
 		}
+		
 	}
+
+	// getEmployeeNavigationRecords() {
+	// 	this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
+	// 		console.log('result', result);
+	// 		this.getEmployeeDetail(result[0].emp_id);
+	// 	});
+	// }
+
+	getEmployeeDetail(emp_id) {
+		this.commonAPIService.getEmployeeDetail({emp_id:emp_id}).subscribe((result: any) => {
+			console.log('result', result);
+			this.employeeDetailsForm.patchValue({
+				emp_profile_pic: '',
+				emp_id: result.emp_id,
+				emp_name: result.emp_name,			
+				emp_honorific_id: result.emp_honorific_detail.hon_id,
+				emp_designation_id: result.emp_designation_detail.des_id,
+				emp_department_id:  result.emp_department_detail.dpt_id,
+				emp_wing_id: result.emp_wing_detail.wing_id,			
+			});
+			console.log('this.employeeDetailsForm', this.employeeDetailsForm);
+		});
+	}
+	
 	setActionControls(data) {
 		if (data.addMode) {
 			this.editOnly = false;
@@ -171,7 +129,7 @@ export class EmployeeCommonComponent implements OnInit {
 			this.addOnly = false;
 			this.viewOnly = false;
 			this.deleteOnly = false;
-			this.studentdetailsform.reset();
+			this.employeeDetailsForm.reset();
 			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 			this.enrolmentPlaceholder = 'New Enrollment Id';
 
@@ -194,8 +152,8 @@ export class EmployeeCommonComponent implements OnInit {
 			this.deleteOnly = true;
 			const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 			inputElem.select();
-			// this.commonAPIService.studentData.next(this.studentdetailsform.value.au_enrollment_id);
-			if (this.lastStudentDetails.enrollment_id === this.studentdetailsform.value.au_enrollment_id) {
+			// this.commonAPIService.studentData.next(this.employeeDetailsForm.value.au_enrollment_id);
+			if (this.lastStudentDetails.enrollment_id === this.employeeDetailsForm.value.au_enrollment_id) {
 				this.firstB = false;
 				this.previousB = false;
 				this.lastB = true;
@@ -211,38 +169,21 @@ export class EmployeeCommonComponent implements OnInit {
 	openEditDialog = (data) => this.editReference.openModal(data);
 
 	buildForm() {
-		this.studentdetailsform = this.fbuild.group({
-			au_profileimage: '',
-			au_enrollment_id: '',
-			au_login_id: '',
-			au_full_name: '',
-			au_class_id: '',
-			au_honorific_id: '',
-			au_designation_id: '',
-			au_department_id: '',
-			au_wing_id: '',			
+		this.employeeDetailsForm = this.fbuild.group({
+			emp_profile_pic: '',
+			emp_id: '',
+			emp_name: '',			
+			emp_honorific_id: '',
+			emp_designation_id: '',
+			emp_department_id: '',
+			emp_wing_id: '',			
 		});
 
 	}
-	getClass() {
-		this.classArray = [];
-		// this.sisService.getClass({}).subscribe((result: any) => {
-		// 	if (result.status === 'ok') {
-		// 		this.classArray = result.data;
-		// 	}
-		// });
-	}
-	getHouses() {
-		this.houseArray = [];
-		// this.sisService.getHouses().subscribe((result: any) => {
-		// 	if (result.status === 'ok') {
-		// 		this.houseArray = result.data;
-		// 	}
-		// });
-	}
+	
 	getSectionsByClass() {
 		this.sectionArray = [];
-		this.sisService.getSectionsByClass({ class_id: this.studentdetailsform.value.au_class_id }).subscribe((result: any) => {
+		this.sisService.getSectionsByClass({ class_id: this.employeeDetailsForm.value.au_class_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.sectionArray = result.data;
 			}
@@ -273,23 +214,23 @@ export class EmployeeCommonComponent implements OnInit {
 			// 			this.navigation_record = result.data[0].navigation[0];
 			// 		}
 			// 		if (this.processtypeService.getProcesstype() === '1') {
-			// 			this.studentdetailsform.patchValue({
+			// 			this.employeeDetailsForm.patchValue({
 			// 				au_enrollment_id: this.studentdetails.em_enq_no
 			// 			});
 			// 		} else if (this.processtypeService.getProcesstype() === '2') {
-			// 			this.studentdetailsform.patchValue({
+			// 			this.employeeDetailsForm.patchValue({
 			// 				au_enrollment_id: this.studentdetails.em_regd_no
 			// 			});
 			// 		} else if (this.processtypeService.getProcesstype() === '3') {
-			// 			this.studentdetailsform.patchValue({
+			// 			this.employeeDetailsForm.patchValue({
 			// 				au_enrollment_id: this.studentdetails.em_provisional_admission_no
 			// 			});
 			// 		} else if (this.processtypeService.getProcesstype() === '4') {
-			// 			this.studentdetailsform.patchValue({
+			// 			this.employeeDetailsForm.patchValue({
 			// 				au_enrollment_id: this.studentdetails.em_admission_no
 			// 			});
 			// 		} else if (this.processtypeService.getProcesstype() === '5') {
-			// 			this.studentdetailsform.patchValue({
+			// 			this.employeeDetailsForm.patchValue({
 			// 				au_enrollment_id: this.studentdetails.em_alumini_no
 			// 			});
 			// 		}
@@ -300,12 +241,12 @@ export class EmployeeCommonComponent implements OnInit {
 			// 		if (this.navigation_record) {
 			// 			this.viewOnly = true;
 			// 			if (this.navigation_record.first_record &&
-			// 				this.navigation_record.first_record !== this.studentdetailsform.value.au_enrollment_id &&
+			// 				this.navigation_record.first_record !== this.employeeDetailsForm.value.au_enrollment_id &&
 			// 				this.viewOnly) {
 			// 				this.firstB = false;
 			// 			}
 			// 			if (this.navigation_record.last_record &&
-			// 				this.navigation_record.last_record !== this.studentdetailsform.value.au_enrollment_id &&
+			// 				this.navigation_record.last_record !== this.employeeDetailsForm.value.au_enrollment_id &&
 			// 				this.viewOnly) {
 			// 				this.lastB = false;
 			// 			}
@@ -332,7 +273,7 @@ export class EmployeeCommonComponent implements OnInit {
 		this.openCropDialog(event);
 	}
 	patchStudentDetails() {
-		this.studentdetailsform.patchValue({
+		this.employeeDetailsForm.patchValue({
 			au_profileimage: this.studentdetails.au_profileimage ? this.studentdetails.au_profileimage : this.defaultsrc,
 			au_login_id: this.studentdetails.au_login_id,
 			au_full_name: this.studentdetails.au_full_name,
@@ -355,12 +296,12 @@ export class EmployeeCommonComponent implements OnInit {
 			{ fileName: fileName, imagebase64: au_profileimage, module: 'profile' }]).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.defaultsrc = result.data[0].file_url;
-					this.studentdetailsform.patchValue({
+					this.employeeDetailsForm.patchValue({
 						au_profileimage: result.data[0].file_url
 					});
-					if (result.data[0].file_url && this.studentdetailsform.value.au_login_id) {
+					if (result.data[0].file_url && this.employeeDetailsForm.value.au_login_id) {
 						// this.sisService.studentImageProfileUpload({
-						// 	au_login_id: this.studentdetailsform.value.au_login_id,
+						// 	au_login_id: this.employeeDetailsForm.value.au_login_id,
 						// 	au_profileimage: result.data[0].file_url
 						// }).subscribe((result1: any) => {
 						// 	if (result1 && result1.status === 'ok') {
@@ -374,14 +315,14 @@ export class EmployeeCommonComponent implements OnInit {
 
 	// function to check filed belong to provisional or admission
 	fieldEnableAtAdmission() {
-		if (this.belongToForm === 'provisional' || this.belongToForm === 'admission' || this.belongToForm === 'alumini') {
-			return true;
-		}
+		// if (this.belongToForm === 'provisional' || this.belongToForm === 'admission' || this.belongToForm === 'alumini') {
+		// 	return true;
+		// }
 		return false;
 	}
 	nextUser(next_au_login_id) {
 		this.nextEvent.next('1000');
-		this.router.navigate([`../${this.belongToForm}`], { queryParams: { login_id: next_au_login_id }, relativeTo: this.route });
+		//this.router.navigate([`../${this.belongToForm}`], { queryParams: { login_id: next_au_login_id }, relativeTo: this.route });
 		this.commonAPIService.studentData.next('1001');
 	}
 	nextId(admno) {
@@ -403,9 +344,9 @@ export class EmployeeCommonComponent implements OnInit {
 		event.target.value = '';
 	}
 
-	loadOnEnrollmentId($event) {
+	getEmployeeId($event) {
 		$event.preventDefault();
-		this.getStudentDetailsByAdmno($event.target.value);
+		this.getEmployeeDetail($event.target.value);
 	}
 	getStudentDetailsByAdmno(admno) {
 		// this.sisService.getStudentInformation({ au_login_id: admno }).subscribe((result: any) => {
@@ -437,7 +378,7 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	deleteUser() {
-		// this.sisService.deleteStudentDetails({ au_login_id: this.studentdetailsform.value.au_login_id }).subscribe((result: any) => {
+		// this.sisService.deleteStudentDetails({ au_login_id: this.employeeDetailsForm.value.au_login_id }).subscribe((result: any) => {
 		// 	if (result.status === 'ok') {
 		// 		this.commonAPIService.showSuccessErrorMessage('Deleted successfully', 'success');
 		// 		this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
@@ -447,143 +388,14 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 	deleteCancel() { }
 	openConfig() {
-		// if (this.processtypeService.getProcesstype() === '1') {
-		// 	window.open('/sis/school/setup/enquiry', '_blank');
-		// } else if (this.processtypeService.getProcesstype() === '2') {
-		// 	window.open('/sis/school/setup/registration', '_blank');
-		// } else if (this.processtypeService.getProcesstype() === '3') {
-		// 	window.open('/sis/school/setup/provisional-admission', '_blank');
-		// } else if (this.processtypeService.getProcesstype() === '4') {
-		// 	window.open('/sis/school/setup/admission', '_blank');
-		// } else {
-		// 	window.open('/sis/school/setup/alumini', '_blank');
-		// }
+		
 	}
 	isExistUserAccessMenu(actionT) {
-		// if (this.processtypeService.getProcesstype() === '1') {
-		// 	if (actionT === 'add') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('202');
-		// 	} else if (actionT === 'edit') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('203');
-		// 	} else if (actionT === 'delete') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('204');
-		// 	} else if (actionT === 'config') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('205');
-		// 	} else if (actionT === 'request') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('206');
-		// 	}
-		// } else if (this.processtypeService.getProcesstype() === '2') {
-		// 	if (actionT === 'add') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('209');
-		// 	} else if (actionT === 'edit') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('210');
-		// 	} else if (actionT === 'delete') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('211');
-		// 	} else if (actionT === 'config') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('212');
-		// 	} else if (actionT === 'request') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('213');
-		// 	}
-		// } else if (this.processtypeService.getProcesstype() === '3') {
-		// 	if (actionT === 'add') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('222');
-		// 	} else if (actionT === 'edit') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('223');
-		// 	} else if (actionT === 'delete') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('224');
-		// 	} else if (actionT === 'config') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('228');
-		// 	} else if (actionT === 'request') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('229');
-		// 	}
-		// } else if (this.processtypeService.getProcesstype() === '4') {
-		// 	if (actionT === 'add') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('225');
-		// 	} else if (actionT === 'edit') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('226');
-		// 	} else if (actionT === 'delete') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('227');
-		// 	} else if (actionT === 'config') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('239');
-		// 	} else if (actionT === 'request') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('240');
-		// 	}
-		// } else if (this.processtypeService.getProcesstype() === '5') {
-		// 	if (actionT === 'add') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('250');
-		// 	} else if (actionT === 'edit') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('251');
-		// 	} else if (actionT === 'delete') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('252');
-		// 	} else if (actionT === 'config') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('253');
-		// 	} else if (actionT === 'request') {
-		// 		return this.commonAPIService.isExistUserAccessMenu('254');
-		// 	}
-		// }
 	}
 	getLiveLabel() {
-		// if (this.processtypeService.getProcesstype() === '1') {
-		// 	return 'Live Enq.';
-		// } else if (this.processtypeService.getProcesstype() === '2') {
-		// 	return 'Live Reg.';
-		// } else if (this.processtypeService.getProcesstype() === '3') {
-		// 	return 'Live Pr. Adm.';
-		// } else if (this.processtypeService.getProcesstype() === '4') {
-		// 	return 'Live Adm.';
-		// } else if (this.processtypeService.getProcesstype() === '5') {
-		// 	return 'Live Alumini';
-		// }
 	}
 
 	backTo() {
-		let last_state_arr;
-		let url;
-		let login_id;
-		let enrolment_type;
-		let print_option;
-		if (localStorage.getItem('suspension_last_state')) {
-			this.backOnly = true;
-			last_state_arr = JSON.parse(localStorage.getItem('suspension_last_state'));
-			url = JSON.parse(last_state_arr['url']);
-			login_id = last_state_arr['login_id'];
-			this.router.navigate(url, { queryParams: { login_id: login_id }, relativeTo: this.route });
-		} else if (localStorage.getItem('change_enrolment_number_last_state')) {
-			this.backOnly = true;
-			last_state_arr = JSON.parse(localStorage.getItem('change_enrolment_number_last_state'));
-			url = JSON.parse(last_state_arr['url']);
-			login_id = last_state_arr['login_id'];
-			enrolment_type = last_state_arr['enrolment_type'];
-			this.router.navigate(url, { queryParams: { login_id: login_id, enrolment_type: enrolment_type }, relativeTo: this.route });
-		} else if (localStorage.getItem('change_enrolment_status_last_state')) {
-			this.backOnly = true;
-			last_state_arr = JSON.parse(localStorage.getItem('change_enrolment_status_last_state'));
-			url = JSON.parse(last_state_arr['url']);
-			login_id = last_state_arr['login_id'];
-			enrolment_type = last_state_arr['enrolment_type'];
-			this.router.navigate(url, { queryParams: { login_id: login_id, enrolment_type: enrolment_type }, relativeTo: this.route });
-		} else if (localStorage.getItem('id_card_view_last_state')) {
-			this.backOnly = true;
-			last_state_arr = JSON.parse(localStorage.getItem('id_card_view_last_state'));
-			url = JSON.parse(last_state_arr['url']);
-			login_id = last_state_arr['login_id'];
-			enrolment_type = last_state_arr['enrolment_type'];
-			print_option = last_state_arr['print_option'];
-			this.router.navigate(url, {
-				queryParams: {
-					login_id: login_id, enrolment_type: enrolment_type, print_option: print_option
-				},
-				relativeTo: this.route
-			});
-		} else if (localStorage.getItem('remark_entry_last_state')) {
-			this.backOnly = true;
-			last_state_arr = JSON.parse(localStorage.getItem('remark_entry_last_state'));
-			url = JSON.parse(last_state_arr['url']);
-			login_id = last_state_arr['login_id'];
-			this.router.navigate(url, { queryParams: { login_id: login_id }, relativeTo: this.route });
-		} else {
-			this.backOnly = false;
-		}
 	}
 	parent_type_fun(type) {
 		if (type === 'F') {
@@ -595,39 +407,6 @@ export class EmployeeCommonComponent implements OnInit {
 		}
 	}
 	openSearchDialog() {
-		// const diaogRef = this.dialog.open(SearchViaNameComponent, {
-		// 	width: '20%',
-		// 	height: '30%',
-		// 	position: {
-		// 		top: '10%'
-		// 	},
-		// 	data: {}
-		// });
-		// diaogRef.afterClosed().subscribe((result: any) => {
-		// 	if (result) {
-		// 		let url = '';
-		// 		if (Number(result.process_type) === 1) {
-		// 			url = 'enquiry';
-		// 		} else if (Number(result.process_type) === 2) {
-		// 			url = 'registration';
-		// 		} else if (Number(result.process_type) === 3) {
-		// 			url = 'provisional';
-		// 		} else if (Number(result.process_type) === 4) {
-		// 			url = 'admission';
-		// 		} else if (Number(result.process_type) === 5) {
-		// 			url = 'alumini';
-		// 		}
-		// 		this.commonAPIService.setStudentData(result.adm_no, result.process_type);
-		// 		if ((Number(result.process_type) === 1 && this.route.snapshot.routeConfig.path === 'enquiry')
-		// 			|| (Number(result.process_type) === 2 && this.route.snapshot.routeConfig.path === 'registration')
-		// 			|| (Number(result.process_type) === 3 && this.route.snapshot.routeConfig.path === 'provisional')
-		// 			|| (Number(result.process_type) === 4 && this.route.snapshot.routeConfig.path === 'admission')
-		// 			|| (Number(result.process_type) === 5 && this.route.snapshot.routeConfig.path === 'alumini')) {
-		// 			this.getStudentDetailsByAdmno(result.adm_no);
-		// 		} else {
-		// 			this.router.navigate(['../' + url], { relativeTo: this.route });
-		// 		}
-		// 	}
-		// });
+
 	}
 }

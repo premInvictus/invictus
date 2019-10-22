@@ -207,13 +207,23 @@ export class CommonAPIService {
 		return this.http.post(environment.apiHRUrl + '/employee/insert', value);
 	}
 
-	getEmployeeDetail(value) {
+	getAllEmployee(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + 'employee/getAll', value);
+	}
+
+	getEmployeeDetail(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'employee/get', value);
 	}
 
 	updateEmployee(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + 'employee/update', value);
+	}
+
+	getEmployeeNavigationRecords(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'employee/getNavigationId', value);
 	}
 }

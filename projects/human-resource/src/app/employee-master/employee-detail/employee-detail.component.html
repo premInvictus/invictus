@@ -3,8 +3,8 @@
 
     <div>
       <!-- [belongToForm]="formname" [config]="config" [configSetting]="settingsArray"-->
-      <app-employee-common [belongToForm]="formname" [config]="config" [configSetting]="settingsArray">
-      </app-employee-common>
+      <ng-container *ngIf="rendorForm">
+      <app-employee-common [employeedetails]="employeeRecord"></app-employee-common>
       <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
         <!-- <ng-container *ngFor="let tab of formsTab; let i=index">
         <mat-tab [disabled]="checkFormEnabled(i)">
@@ -17,7 +17,7 @@
         </mat-tab>
       </ng-container> -->
         <mat-tab label="Personal Details"> 
-          <app-employee-tab-one-container></app-employee-tab-one-container>  
+          <app-employee-tab-one-container [employeedetails]="employeeRecord"></app-employee-tab-one-container>  
         </mat-tab>
         <mat-tab label="Personal Contact"> <app-employee-tab-two-container></app-employee-tab-two-container>   </mat-tab>
         <mat-tab label="Salary Details"> <app-employee-tab-three-container></app-employee-tab-three-container>  </mat-tab>
@@ -25,6 +25,7 @@
         <mat-tab label="Class &amp; Section"> <app-employee-tab-five-container></app-employee-tab-five-container>  </mat-tab>
         <mat-tab label="Documents"> <app-employee-tab-six-container></app-employee-tab-six-container> </mat-tab>
       </mat-tab-group>
+    </ng-container>
     </div>
   </div>
 </div>

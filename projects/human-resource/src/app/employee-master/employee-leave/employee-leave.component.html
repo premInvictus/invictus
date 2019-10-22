@@ -9,9 +9,15 @@
           </div>
 
           <div class="col-2">
+            <!-- <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Employee Name</mat-label>
+              <input matInput [placeholder]="'Enter Employee Name'" formControlName="emp_id" autocomplete="off" (change)="getEmployeeData()" />
+            </mat-form-field> -->
             <mat-form-field class="form-field" appearance="outline">
-              <mat-label>Teacher Name</mat-label>
-              <mat-select formControlName="month_id" required>
+              <mat-label>Employee Name</mat-label>
+              <input matInput placeholder="Enter Employee Name" formControlName="emp_id" required
+                (keyup.enter)="getEmployeeDetail()" />
+              <!-- <mat-select formControlName="emp_id" required (selectionChange)="getEmployeeData()">
                 <mat-option value="1">January</mat-option>
                 <mat-option value="2">February</mat-option>
                 <mat-option value="3">March</mat-option>
@@ -24,7 +30,7 @@
                 <mat-option value="10">October</mat-option>
                 <mat-option value="11">November</mat-option>
                 <mat-option value="12">December</mat-option>
-              </mat-select>
+              </mat-select> -->
             </mat-form-field>
           </div>
 
@@ -37,112 +43,125 @@
 
   <div class="col-12 margin-top-15">
 
-    <mat-card class="margin-top-10 card-height-325">
-      <form [formGroup]="employeeForm">
+    <mat-card class="margin-top-10 card-height-325" [hidden]="!(EMPLOYEE_ELEMENT.length > 0)">
 
 
 
+
+
+
+      <div class="row margin-top-15 booklog" [hidden]="!(EMPLOYEE_ELEMENT.length > 0)">
         <div class="row">
           <div class="col-12 margin-top-15">
             <div class="col-12 remove-col-padding">
               <span class="font-size-14 font-bold">Employee ID : </span><span
-                class="font-size-14 opacity-7">{{currentVerificationData?.verfication_on_date | date: 'd-MMM-y'}}</span>
+                class="font-size-14 opacity-7">{{employeeData?.emp_id}}</span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Employee Name : </span><span
                 class="font-size-14 opacity-7">
-                {{currentVerificationData?.verfication_by_name}}
+                {{employeeData?.emp_name}}
               </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Designation : </span><span
-                class="font-size-14 font-bold">{{currentVerificationData?.details.length}} </span>
+                class="font-size-14 font-bold">{{employeeData?.emp_designation_detail?.des_name}} </span>
+              <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Department : </span><span
+                class="font-size-14 font-bold">
+                {{employeeData?.emp_department_detail?.dpt_name}}
+              </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Category : </span><span
                 class="font-size-14 font-bold">
-                {{currentDate | date: 'EEEE, d MMM y'}}
+                {{employeeData?.emp_category_detail?.cat_name}}
               </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Status : </span><span
                 class="font-size-14 font-bold">
-                {{currentDate | date: 'EEEE, d MMM y'}}
+                {{employeeData?.emp_status}}
               </span>
             </div>
 
           </div>
         </div>
-       
+        <div class="col-12 margin-top-15">
+         
+            <!-- <form [formGroup]="employeeForm"> -->
 
-        <div class="row margin-top-15 booklog" [hidden]="!(employeeData.length > 0)">
-          <div class="col-12 remove-col-padding">
-            <table class="table-100 custom-table">
-              <thead>
-                <tr class="custom-tr text-center">
-                  <th class="custom-th">Sr No.</th>
-                  <th class="custom-th">Emp. ID</th>
-                  <th class="custom-th">Employee Name</th>
-                  <th class="custom-th">Designation</th>
-                  <th class="custom-th">Present</th>
-                  <th class="custom-th">Leaves Availed</th>
-                  <th class="custom-th">Leaves Granted</th>
-                  <th class="custom-th">LWP</th>
-                  <th class="custom-th">Total Attendance</th>
-                  <th class="custom-th">Balance of Leaves</th>
-                  <th class="custom-th">Remarks</th>
-                  <th class="custom-th">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container *ngFor="let item of employeeData; let i=index;">
-                  <tr class="custom-tr book-list">
-                    <td width="5%" class="custom-td"
-                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span>{{i+1}}</span></td>
-                    <td width="5%" class="custom-td"
-                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span class="font-skyblue" (click)="openBookModal(item.reserv_id)">{{item?.reserv_id}}</span>
+            <div class="row">
+              <div class="col-12">
+                <div class="row ">
+                  <div class="col-10 remove-col-padding">
+                    <mat-form-field appearance="legacy lib-form">
+                      <input matInput placeholder="Search" (keyUp)="applyFilter($event.target.value)" />
+                      <mat-icon matPrefix>filter_list</mat-icon>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <table mat-table [dataSource]="employeedataSource" matSort class="table-100 text-center"
+                  id="report_table3">
+                  <ng-container matColumnDef="srno">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
+                    <td mat-cell *matCellDef="let element"> <p [innerHtml]="element.srno"> </p></td>
+                  </ng-container>
+                  <ng-container matColumnDef="month_name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Month  </th>
+                    <td mat-cell *matCellDef="let element">{{element.month_name}}
                     </td>
-                    <td width="50%" class="custom-td text-left"
-                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span>{{item?.title | titlecase | truncatetext: 45}}</span>
+                  </ng-container>
+                  <ng-container matColumnDef="leave_opening_balance">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="25%"> Opening Balance</th>
+                    <td mat-cell *matCellDef="let element" class="text-left">{{element.leave_opening_balance}} 
                     </td>
-                    <td width="20%" class="custom-td text-left"
-                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      {{item?.publisher | titlecase | truncatetext: 20}}
+                  </ng-container>
+                  <ng-container matColumnDef="leave_credited">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leave Credited </th>
+                    <td mat-cell *matCellDef="let element" class="text-left">
+                        <p [innerHtml]="element.leave_credited"></p>
                     </td>
-                    <td width="15%" class="custom-td text-nowrap"
-                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <div class="inline-flex date-width-100">
-                        <input matInput [matDatepicker]="picker" formControlName="due_date"
-                          (dateChange)="setDueDate(i, returnIssueReservoirForm.value.due_date)"
-                          [value]="item?.fdue_date">
-                        <mat-datepicker #picker></mat-datepicker>
-                        <div class="inline-flex" [hidden]="(item?.reserv_status == 'available')">
-                          <i class="fa fa-calendar" *ngIf="!(item?.reserv_status == 'available')" aria-hidden="true"
-                            (click)="picker.open();"></i>
-                        </div>
-                      </div>
+                  </ng-container>
+                  <ng-container matColumnDef="leave_availed">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leave Availed </th>
+                    <td mat-cell *matCellDef="let element">
+                        <p [innerHtml]="element.leave_availed"></p>
                     </td>
-                    <td width="5%" class="custom-td"
-                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'"><i
-                        class="fas fa-trash font-color-red" (click)="removeBook(i)"></i></td>
+                  </ng-container>
+                  <ng-container matColumnDef="leave_granted">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leave Granted </th>
+                    <td mat-cell *matCellDef="let element" class="text-left">
+                        <p [innerHtml]="element.leave_granted"></p>
+                    </td>
+
+                  </ng-container>
+                  <ng-container matColumnDef="lwp">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leave Without Pay</th>
+                    <td mat-cell *matCellDef="let element">
+                        <p [innerHtml]="element.lwp"></p>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="leave_closing_balance">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leaves Closing Balance </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.leave_closing_balance}}
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedEmployeeColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedEmployeeColumns;">
                   </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div>
+                </table>
+              </div>
+            </div>
+            <br />
+            
+            <!-- </form> -->
+            
         </div>
-        <br />
-        <div class="row text-center" *ngIf="employeeData.length > 0">
-          <div class="col-12">
-            <button mat-raised-button class="btn-success-green" (click)="saveIssueReturn()">Submit</button>
-            <button mat-raised-button class="btn-reset btn-spacer" (click)="resetIssueReturn()">
-              Confirm and Process
-            </button>
-          </div>
-        </div>
-        <div class="text-center" *ngIf="employeeData.length == 0">
-          <app-no-data
-            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
-            [noDataText]="" [subText]="'No Employee Found'"></app-no-data>
-        </div>
+      </div>
+      <br />
 
 
-      </form>
+
+    </mat-card>
+    <mat-card class="margin-top-10 card-height-325" *ngIf="EMPLOYEE_ELEMENT.length == 0">
+        <div class="text-center">
+            <app-no-data
+              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+              [noDataText]="" [subText]="'No Employee Leave Found'"></app-no-data>
+          </div>
     </mat-card>
   </div>
 </div>

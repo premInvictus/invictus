@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges, Input } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
 
 // import { ChildDetailsEmployeeComponent } from '../child-details-theme-two/child-details-theme-two.component';
@@ -14,6 +14,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 	styleUrls: ['./employee-tab-one-container.component.scss']
 })
 export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
+	@Input() employeedetails;
 	personalDetails: FormGroup;
 	personaldetails: any = {};
 	cityId: any;

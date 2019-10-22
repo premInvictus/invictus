@@ -16,6 +16,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	editFlag = false;
 	employeeData: any[] = [];
 	EMPLOYEE_ELEMENT: EmployeeElement[] = [];
+	session_id;
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	displayedEmployeeColumns: string[] = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_balance_leaves', 'emp_present', 'emp_leave_availed', 'emp_leave_granted', 'emp_lwp', 'emp_total_attendance', 'emp_remarks', 'emp_status', 'action'
 	];
@@ -27,7 +28,10 @@ export class EmployeeAttendanceComponent implements OnInit {
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
 		private sisService: SisService
-	) { }
+	) {
+
+		this.session_id = JSON.parse(localStorage.getItem('session'));
+	 }
 
 	ngOnInit() {
 		this.buildForm();
@@ -37,13 +41,20 @@ export class EmployeeAttendanceComponent implements OnInit {
 		this.searchForm = this.fbuild.group({
 			month_id: '',
 			status_id: '',
-			cat_id: ''
+			cat_id: '',
+			
 		});
 	}
 
 	getEmployeeDetail() {
 		if (this.searchForm.value.month_id) {
-			this.commonAPIService.getEmployeeDetail({}).subscribe((result: any) => {
+			let inputJson = {
+				month_id : this.searchForm.value.month_id,
+				emp_status : this.searchForm.value.status_id,
+				emp_cat_id : this.searchForm.value.cat_id,
+				session_id : this.session_id
+			};
+			this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
 				let element: any = {};
 				let recordArray = [];
 				this.employeeData = result;
@@ -55,17 +66,39 @@ export class EmployeeAttendanceComponent implements OnInit {
 					this.formGroupArray = [];
 					
 					for (const item of result) {
-						this.formGroupArray.push({
-							formGroup: this.fbuild.group({
-								emp_id: item.emp_id,
-								emp_present: item.emp_present ? item.emp_present : 0,
-								emp_leave_granted: item.emp_leave_granted ? item.emp_leave_granted : 0,
-								emp_remarks: item.emp_remarks ? item.emp_remarks : '',
-								emp_leave_availed: 0,
-								emp_total_attendance: '',
-								emp_balance_leaves: ''
-							})
-						});
+						for (var i = 0; i < item.emp_month_attendance_data.length;i++) {
+							var emp_month = item.emp_month_attendance_data[i].month_id;
+							var emp_attendance_detail = item.emp_month_attendance_data[i];
+							console.log(parseInt(this.searchForm.value.month_id, 10) , parseInt(emp_month,10));
+							if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month,10)) {
+								this.formGroupArray.push({
+									formGroup: this.fbuild.group({
+										emp_id: item.emp_id,
+										emp_present: emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : 0,
+										emp_leave_granted:  emp_attendance_detail.attendance_detail.emp_leave_granted ? emp_attendance_detail.attendance_detail.emp_leave_granted : 0,
+										emp_remarks: emp_attendance_detail.attendance_detail.emp_remarks ? emp_attendance_detail.attendance_detail.emp_remarks : '',
+										emp_leave_availed: emp_attendance_detail.attendance_detail.emp_leave_availed ? emp_attendance_detail.attendance_detail.emp_leave_availed : 0,
+										emp_total_attendance: emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : '',
+										emp_balance_leaves: emp_attendance_detail.attendance_detail.emp_balance_leaves ? emp_attendance_detail.attendance_detail.emp_balance_leaves : ''
+									})
+								});
+							} else {
+								this.formGroupArray.push({
+									formGroup: this.fbuild.group({
+										emp_id: item.emp_id,
+										emp_present: item.emp_present ? item.emp_present : 0,
+										emp_leave_granted: item.emp_leave_granted ? item.emp_leave_granted : 0,
+										emp_remarks: item.emp_remarks ? item.emp_remarks : '',
+										emp_leave_availed: 0,
+										emp_total_attendance: '',
+										emp_balance_leaves: ''
+									})
+								});
+							}
+						}
+						
+
+						
 					}
 					for (const item of recordArray) {
 						element = {
@@ -97,7 +130,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
 			if (this.EMPLOYEE_ELEMENT[i]['emp_id'] === this.formGroupArray[i].formGroup.value.emp_id) {
 				
-				inputJson['emp_month_attendance_data'] = {
+				inputJson = {
+					"session_id" : this.session_id,
 					"month_id": this.searchForm.value.month_id,
 					"month_name": this.currentMonthName,
 					"attendance_detail": {
@@ -110,10 +144,23 @@ export class EmployeeAttendanceComponent implements OnInit {
 						"emp_balance_leaves": this.EMPLOYEE_ELEMENT[i]['emp_balance_leaves'],
 					}
 				};
-				this.employeeData[i]['emp_month_attendance_data'] = inputJson;
+				var flag = false;
+				for (var j =0 ; j < this.employeeData[i]['emp_month_attendance_data'].length; j++) {
+					if (parseInt(this.employeeData[i]['emp_month_attendance_data'][j].month_id,10) === parseInt(this.searchForm.value.month_id,10)) {
+						this.employeeData[i]['emp_month_attendance_data'] = inputJson;
+						flag = true;
+					} else {
+						flag = false;
+					}
+				}
+				if (!flag) {
+					this.employeeData[i]['emp_month_attendance_data'].push(inputJson);
+				}
+				
+				
 			}
 		}
-
+		//console.log('this.employeeData', this.employeeData);
 		this.commonAPIService.updateEmployee(this.employeeData).subscribe((result: any) => {
 
 		});
