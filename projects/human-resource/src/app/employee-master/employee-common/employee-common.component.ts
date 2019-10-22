@@ -48,7 +48,9 @@ export class EmployeeCommonComponent implements OnInit {
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 	classArray = [];
 	sectionArray = [];
-	houseArray = [];
+	departmentArray = [];
+	wingArray = [];
+	designationArray = [];
 	multipleFileArray: any[] = [];
 	savedSettingsArray: any[] = [];
 	settingsArray: any[] = [];
@@ -56,8 +58,6 @@ export class EmployeeCommonComponent implements OnInit {
 	deleteMessage = 'Are you sure, you want to delete ?';
 	studentdetailsflag = false;
 	lastRecordId;
-	classPlaceHolder: any;
-	gender: any;
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('myInput') myInput: ElementRef;
 	openDeleteDialog = (data) => {
@@ -80,6 +80,9 @@ export class EmployeeCommonComponent implements OnInit {
 	ngOnInit() {
 		//this.settingsArray = this.configSetting;
 		this.buildForm();
+		this.getDepartment();
+		this.getDesignation();
+		this.getWing();
 		console.log( this.employeedetails);
 		//this.getEmployeeNavigationRecords();
 
@@ -104,6 +107,41 @@ export class EmployeeCommonComponent implements OnInit {
 	// 		this.getEmployeeDetail(result[0].emp_id);
 	// 	});
 	// }
+
+	getDepartment() {
+		this.sisService.getDepartment({}).subscribe((result: any) => {
+			if (result && result.status == 'ok') {
+				this.departmentArray = result.data;
+			} else {
+				this.departmentArray = [];
+			}
+			
+		});
+	}
+
+	getDesignation() {
+		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+			if (result) {
+				this.designationArray = result;
+			} else {
+				this.designationArray = [];
+			}
+			
+		});
+	}
+
+
+	getWing() {
+		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+			if (result) {
+				this.wingArray = result;
+			} else {
+				this.wingArray = [];
+			}
+			
+		});
+	}
+
 
 	getEmployeeDetail(emp_id) {
 		this.commonAPIService.getEmployeeDetail({emp_id:emp_id}).subscribe((result: any) => {
