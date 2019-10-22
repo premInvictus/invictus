@@ -476,7 +476,6 @@
                           </div>
                         </div>
 
-
                       </form>
                     </div>
 
@@ -571,7 +570,8 @@
                                           <span *ngIf="!item.grade_name">-</span>
                                         </td>
                                       </ng-container>
-                                      <!-- <ng-container *ngIf="configValue == '7'" matColumnDef="co_grade_name">
+                                      
+                                      <ng-container *ngIf="configValue == '7'" matColumnDef="co_grade_name">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Co-Scholastic
                                         </th>
@@ -579,8 +579,8 @@
                                           <span *ngIf="item.co_grade_name">{{ item.co_grade_name }}</span>
                                           <span *ngIf="!item.co_grade_name">-</span>
                                         </td>
-                                      </ng-container> -->
-                                      <!-- <ng-container *ngIf="configValue == '7'" matColumnDef="exam_type">
+                                      </ng-container> 
+                                       <ng-container *ngIf="configValue == '7'" matColumnDef="exam_type">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Exam Type
                                         </th>
@@ -588,7 +588,8 @@
                                           <span *ngIf="item.exam_type">{{ item.exam_type }}</span>
                                           <span *ngIf="!item.exam_type">-</span>
                                         </td>
-                                      </ng-container> -->
+                                      </ng-container>
+
                                       <!-- <ng-container *ngIf="configValue == '3'" matColumnDef="grade_value">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Grade Value
