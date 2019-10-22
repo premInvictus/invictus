@@ -51,7 +51,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 					param.tw_entry_date = this.commonAPIService.dateConvertion(dresult.tw_entry_date);
 				}
 				if  (dresult.mod_review_remark) {
-					param.mod_review_remark = dresult.mod_review_remark;
+					param.mod_review_remark = dresult.mod_review_remark;					
 				}
 				if (dresult.update) {
 					this.topicwiseInsert(param);
@@ -233,7 +233,7 @@ export class TopicwiseUpdateComponent implements OnInit {
 	toggleStatus(i, ctr, ctrStatus) {
 		const csArray = this.topicwiseforForm.value.tw_class_sec_id.split('-');
 		const param: any = {};
-		param.tw_teacher_id = this.topicwiseforForm.value.tw_teacher_id;
+		param.tw_teacher_id =this.teacherId;
 		param.tw_class_id = csArray[0];
 		param.tw_sec_id = csArray[1];
 		param.tw_topic_id = this.topicsubtopicDetailsArray[i].topic_id;

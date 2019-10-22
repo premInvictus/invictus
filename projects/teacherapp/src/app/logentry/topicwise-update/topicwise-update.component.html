@@ -12,7 +12,7 @@
             <div class="top-card-title-form">
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline"
                 *ngIf="!isTeacher">
-                <mat-label>Teacher Name</mat-label>
+                <mat-label>Teacher Name</mat-label> 
                 <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
                   [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
                 <mat-autocomplete #auto="matAutocomplete">

@@ -20,7 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -54,6 +54,19 @@ import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-s
 import { BookDetailComponent } from './book-detail/book-detail.component';
 import { BookReserveRequestConfirmationComponent } from './book-reserve-request-confirmation/book-reserve-request-confirmation.component';
 import { BookDetailsModalComponent } from './book-details-modal/book-details-modal.component';
+import * as _moment from 'moment';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+export const MY_FORMATS = {
+	parse: {
+		dateInput: 'L',
+	},
+	display: {
+		dateInput: 'DD-MMM-YYYY',
+		monthYearLabel: 'YYYY',
+		dateA11yLabel: 'LL',
+		monthYearA11yLabel: 'YYYY',
+	},
+};
 @NgModule({
 	imports: [
 		CommonModule,
@@ -179,10 +192,15 @@ import { BookDetailsModalComponent } from './book-details-modal/book-details-mod
 		AssignmentAttachmentDialogComponent,
 		AdvancedSearchModalComponent,
 		BookReserveRequestConfirmationComponent,
-		BookDetailsModalComponent]
+		BookDetailsModalComponent],
+		providers: [
+			{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+	
+			{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+		]
 })
 export class SharedModule {
-	constructor() {
+	constructor() { 
 		const script: any = document.createElement('script');
 		if (!(script.type === 'text/x-mathjax-config'
 			&& script.src === 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML')) {
