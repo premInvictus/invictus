@@ -190,6 +190,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     })
   }
   getCalculatedMarksSub(sub_id, exam_id, term){
+    console.log(this.subjectArray);  
     const currentSub = this.subjectArray.find(e => e.sub_id === sub_id);
     let totalscore = 0;
     if(currentSub.childSub.length > 0) {
@@ -228,9 +229,9 @@ export class ViewGradecardDialogComponent implements OnInit {
         });
       }
     });
-    console.log(percentageArray);
     let score = 0;
     if (this.gradeCardMarkArray && this.gradeCardMarkArray.length > 0 && percentageArray.length > 0) {
+      console.log(percentageArray);
       switch (Number(curExam.exam_calculation_rule)) {
         case 1:
           let max1 = percentageArray[0].obtained_percentage;
