@@ -106,4 +106,12 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/getUser', param);
 	}
+	getStateCountryByCity(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/getStateCountryByCity', value);
+	}
+	getState() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/setup/getState/');
+	}
 }

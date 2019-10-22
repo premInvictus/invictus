@@ -1,4 +1,186 @@
-<div class="row remove-top-margin">
-  
-  Employee Attendance
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <form [formGroup]="searchForm">
+        <div class="row">
+
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24">Employee Attendance</span>
+          </div>
+
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Month</mat-label>
+              <mat-select formControlName="month_id" required>
+                <mat-option value="1">January</mat-option>
+                <mat-option value="2">February</mat-option>
+                <mat-option value="3">March</mat-option>
+                <mat-option value="4">April</mat-option>
+                <mat-option value="5">May</mat-option>
+                <mat-option value="6">June</mat-option>
+                <mat-option value="7">July</mat-option>
+                <mat-option value="8">August</mat-option>
+                <mat-option value="9">September</mat-option>
+                <mat-option value="10">October</mat-option>
+                <mat-option value="11">November</mat-option>
+                <mat-option value="12">December</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status_id" required>
+                <mat-option value="live">Live</mat-option>
+                <mat-option value="left">Left</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Category</mat-label>
+              <mat-select formControlName="cat_id" required>
+                <mat-option value="1">Teaching</mat-option>
+                <mat-option value="2">Non Teaching (Administrative)</mat-option>
+                <mat-option value="3">Class IV Staff</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+        </div>
+      </form>
+    </mat-card>
+  </div>
+
+  <div class="col-12 margin-top-15">
+    <mat-card class="margin-top-10 card-height-325" [hidden]="!(EMPLOYEE_ELEMENT.length > 0)">
+      <!-- <form [formGroup]="employeeForm"> -->
+        <div class="row">
+          <div class="col-12 margin-top-15">
+            <span class="font-size-20 font-bold">Employee List</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="row ">
+              <div class="col-10 remove-col-padding">
+                <mat-form-field appearance="legacy lib-form">
+                  <input matInput placeholder="Search" (keyUp)="applyFilter($event.target.value)" />
+                  <mat-icon matPrefix>filter_list</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+            <table mat-table [dataSource]="employeedataSource" matSort class="table-100 text-center" id="report_table3">
+              <ng-container matColumnDef="srno">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
+                <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+              </ng-container>
+              <ng-container matColumnDef="emp_id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Emp. ID </th>
+                <td mat-cell *matCellDef="let element">{{element.emp_id  }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="emp_name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="25%"> Employee Name </th>
+                <td mat-cell *matCellDef="let element" class="text-left">{{element.emp_name | slice: 0:50}} <span
+                    *ngIf="element?.emp_name.length > 50">...</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="emp_designation">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Designation </th>
+                <td mat-cell *matCellDef="let element" class="text-left">{{element.emp_designation | slice: 0:50}} <span
+                    *ngIf="element?.emp_designation.length > 50">...</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="emp_balance_leaves">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Balance of Leaves </th>
+                  <td mat-cell *matCellDef="let element">{{element.emp_balance_leaves}}
+                  </td>
+                </ng-container>
+              <ng-container matColumnDef="emp_present">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Present </th>
+                <td mat-cell *matCellDef="let element" class="text-left">
+                    <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
+                        <mat-form-field class="form-field lib-form">
+                          <input matInput [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_present) ? 'Enter Present Count.' : ''"
+                            formControlName="emp_present"  autocomplete="off" />
+                        </mat-form-field>
+                      </form>
+                </td>
+                
+              </ng-container>
+              <ng-container matColumnDef="emp_leave_availed">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leaves Availed </th>
+                <td mat-cell *matCellDef="let element">{{element.emp_leave_availed}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="emp_leave_granted">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leaves Granted </th>
+                <td mat-cell *matCellDef="let element">
+                    <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
+                        <mat-form-field class="form-field lib-form">
+                          <input matInput [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_leave_granted) ? 'Enter Leave Granted.' : ''"
+                            formControlName="emp_leave_granted"  autocomplete="off" />
+                        </mat-form-field>
+                      </form>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="emp_lwp">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> LWP </th>
+                <td mat-cell *matCellDef="let element">{{element.emp_lwp}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="emp_total_attendance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Total Attendance </th>
+                <td mat-cell *matCellDef="let element">{{element.emp_total_attendance}}
+                </td>
+              </ng-container>
+             
+              <ng-container matColumnDef="emp_remarks">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Remarks </th>
+                <td mat-cell *matCellDef="let element">
+                    <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
+                        <mat-form-field class="form-field lib-form">
+                          <input matInput [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_remarks) ? 'Type Here.' : ''"
+                            formControlName="emp_remarks"  autocomplete="off" />
+                        </mat-form-field>
+                      </form>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="emp_status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Status </th>
+                <td mat-cell *matCellDef="let element">{{element.emp_status}}
+                </td>
+              </ng-container>
+
+
+              <tr mat-header-row *matHeaderRowDef="displayedEmployeeColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedEmployeeColumns;">
+              </tr>
+            </table>
+
+            <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+              <tr *ngIf="EMPLOYEE_ELEMENT.length == 0">
+                <td colspan="7">No Record Found</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <br />
+        <div class="row text-center" *ngIf="EMPLOYEE_ELEMENT.length > 0">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green" (click)="saveEmployeeAttendance()">Submit</button>
+            <button mat-raised-button class="btn-spacer" (click)="confirmEmployeeAttendance()">
+              Confirm and Process
+            </button>
+          </div>
+        </div>
+      <!-- </form> -->
+      <div class="text-center" *ngIf="EMPLOYEE_ELEMENT.length == 0">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'No Employee Found'"></app-no-data>
+        </div>
+    </mat-card>
+  </div>
 </div>

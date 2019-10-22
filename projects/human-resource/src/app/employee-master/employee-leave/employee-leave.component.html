@@ -1,4 +1,148 @@
-<div class="row remove-top-margin">
-  
-  Employee Leave
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <form [formGroup]="searchForm">
+        <div class="row">
+
+          <div class="col-10 margin-top-15">
+            <span class="font-size-24">Leave Master</span>
+          </div>
+
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Teacher Name</mat-label>
+              <mat-select formControlName="month_id" required>
+                <mat-option value="1">January</mat-option>
+                <mat-option value="2">February</mat-option>
+                <mat-option value="3">March</mat-option>
+                <mat-option value="4">April</mat-option>
+                <mat-option value="5">May</mat-option>
+                <mat-option value="6">June</mat-option>
+                <mat-option value="7">July</mat-option>
+                <mat-option value="8">August</mat-option>
+                <mat-option value="9">September</mat-option>
+                <mat-option value="10">October</mat-option>
+                <mat-option value="11">November</mat-option>
+                <mat-option value="12">December</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+
+
+        </div>
+      </form>
+    </mat-card>
+  </div>
+
+  <div class="col-12 margin-top-15">
+
+    <mat-card class="margin-top-10 card-height-325">
+      <form [formGroup]="employeeForm">
+
+
+
+        <div class="row">
+          <div class="col-12 margin-top-15">
+            <div class="col-12 remove-col-padding">
+              <span class="font-size-14 font-bold">Employee ID : </span><span
+                class="font-size-14 opacity-7">{{currentVerificationData?.verfication_on_date | date: 'd-MMM-y'}}</span>
+              <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Employee Name : </span><span
+                class="font-size-14 opacity-7">
+                {{currentVerificationData?.verfication_by_name}}
+              </span>
+              <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Designation : </span><span
+                class="font-size-14 font-bold">{{currentVerificationData?.details.length}} </span>
+              <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Category : </span><span
+                class="font-size-14 font-bold">
+                {{currentDate | date: 'EEEE, d MMM y'}}
+              </span>
+              <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Status : </span><span
+                class="font-size-14 font-bold">
+                {{currentDate | date: 'EEEE, d MMM y'}}
+              </span>
+            </div>
+
+          </div>
+        </div>
+       
+
+        <div class="row margin-top-15 booklog" [hidden]="!(employeeData.length > 0)">
+          <div class="col-12 remove-col-padding">
+            <table class="table-100 custom-table">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Sr No.</th>
+                  <th class="custom-th">Emp. ID</th>
+                  <th class="custom-th">Employee Name</th>
+                  <th class="custom-th">Designation</th>
+                  <th class="custom-th">Present</th>
+                  <th class="custom-th">Leaves Availed</th>
+                  <th class="custom-th">Leaves Granted</th>
+                  <th class="custom-th">LWP</th>
+                  <th class="custom-th">Total Attendance</th>
+                  <th class="custom-th">Balance of Leaves</th>
+                  <th class="custom-th">Remarks</th>
+                  <th class="custom-th">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of employeeData; let i=index;">
+                  <tr class="custom-tr book-list">
+                    <td width="5%" class="custom-td"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span>{{i+1}}</span></td>
+                    <td width="5%" class="custom-td"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span class="font-skyblue" (click)="openBookModal(item.reserv_id)">{{item?.reserv_id}}</span>
+                    </td>
+                    <td width="50%" class="custom-td text-left"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span>{{item?.title | titlecase | truncatetext: 45}}</span>
+                    </td>
+                    <td width="20%" class="custom-td text-left"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      {{item?.publisher | titlecase | truncatetext: 20}}
+                    </td>
+                    <td width="15%" class="custom-td text-nowrap"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <div class="inline-flex date-width-100">
+                        <input matInput [matDatepicker]="picker" formControlName="due_date"
+                          (dateChange)="setDueDate(i, returnIssueReservoirForm.value.due_date)"
+                          [value]="item?.fdue_date">
+                        <mat-datepicker #picker></mat-datepicker>
+                        <div class="inline-flex" [hidden]="(item?.reserv_status == 'available')">
+                          <i class="fa fa-calendar" *ngIf="!(item?.reserv_status == 'available')" aria-hidden="true"
+                            (click)="picker.open();"></i>
+                        </div>
+                      </div>
+                    </td>
+                    <td width="5%" class="custom-td"
+                      [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'"><i
+                        class="fas fa-trash font-color-red" (click)="removeBook(i)"></i></td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <br />
+        <div class="row text-center" *ngIf="employeeData.length > 0">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green" (click)="saveIssueReturn()">Submit</button>
+            <button mat-raised-button class="btn-reset btn-spacer" (click)="resetIssueReturn()">
+              Confirm and Process
+            </button>
+          </div>
+        </div>
+        <div class="text-center" *ngIf="employeeData.length == 0">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'No Employee Found'"></app-no-data>
+        </div>
+
+
+      </form>
+    </mat-card>
+  </div>
 </div>

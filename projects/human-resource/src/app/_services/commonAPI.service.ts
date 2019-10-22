@@ -202,4 +202,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiExamUrl + '/common/getClassTerm', value);
 	}
+
+	getEmployeeDetail(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'employee/getAll', value);
+	}
 }
