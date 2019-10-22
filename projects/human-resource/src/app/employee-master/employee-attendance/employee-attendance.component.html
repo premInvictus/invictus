@@ -111,7 +111,7 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Present </th>
               <td mat-cell *matCellDef="let element" class="text-left">
                 <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
-                  <mat-form-field class="form-field lib-form" appearance="outline">
+                  <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_present) ? 'Enter Present Count.' : ''"
                       formControlName="emp_present" autocomplete="off" (change)="getLWP(element,element.srno - 1)" />
@@ -124,7 +124,7 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leaves Availed </th>
               <td mat-cell *matCellDef="let element">
                 <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
-                  <mat-form-field class="form-field lib-form" appearance="outline">
+                  <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_leave_availed) ? 'Enter Leaves Availed' : ''"
                       formControlName="emp_leave_availed" autocomplete="off" (change)="getLWP(element,element.srno - 1)"/>
@@ -136,7 +136,7 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leaves Granted </th>
               <td mat-cell *matCellDef="let element">
                 <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
-                  <mat-form-field class="form-field lib-form" appearance="outline">
+                  <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_leave_granted) ? 'Enter Leave Granted.' : ''"
                       formControlName="emp_leave_granted" autocomplete="off" (change)="getLWP(element, element.srno - 1)"/>
@@ -152,8 +152,8 @@
             <ng-container matColumnDef="emp_total_attendance">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Total Attendance </th>
               <td mat-cell *matCellDef="let element">
-                <!-- <form [formGroup]="formGroupArray[element.srno - 1].formGroup" appearance="outline">
-                  <mat-form-field class="form-field lib-form" appearance="outline">
+                <!-- <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
+                  <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_total_attendance) ? 'Enter Total Attendance.' : ''"
                       formControlName="emp_total_attendance" autocomplete="off" />
@@ -167,7 +167,7 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Remarks </th>
               <td mat-cell *matCellDef="let element">
                 <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
-                  <mat-form-field class="form-field lib-form" appearance="outline">
+                  <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1].formGroup.value.emp_remarks) ? 'Type Here.' : ''"
                       formControlName="emp_remarks" autocomplete="off" />
