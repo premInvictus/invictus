@@ -27,9 +27,9 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
-                                <mat-form-field class="form-field" appearance="outline" *ngIf="!this.isTeacher">
+                                <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Class</mat-label>
-                                    <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass();getSubjectsByClass(); getAssignment()">
+                                    <mat-select formControlName="class_id" (selectionChange)="getSectionsByClass();">
                                         <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -37,13 +37,13 @@
                             <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
                                 <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Section</mat-label>
-                                    <mat-select formControlName="sec_id" (selectionChange)="getAssignment()">
+                                    <mat-select formControlName="sec_id" (selectionChange)="getSubjectsByClass()">
                                         <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
-                                <mat-form-field class="form-field" appearance="outline" *ngIf="!this.isTeacher">
+                                <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Subject</mat-label>
                                     <mat-select formControlName="sub_id" (selectionChange)="getAssignment()">
                                         <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
