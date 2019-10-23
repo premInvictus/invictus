@@ -12,16 +12,16 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl 
 	styleUrls: ['./salary-computation.component.scss']
 })
 export class SalaryComputationComponent implements OnInit {
-	
-	searchForm:FormGroup;
-	employeeData:any;
+	@ViewChild('searchModal') searchModal;
+	searchForm: FormGroup;
+	employeeData: any;
 	SALARY_COMPUTE_ELEMENT: SalaryComputeElement[] = [];
 	salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 	// tslint:disable-next-line: max-line-length
-	displayedSalaryComputeColumns: string[] = ['srno', 'emp_id','emp_name','emp_designation','emp_pay_scale','emp_salary_heads',	'emp_allowances',	'emp_total_earnings',	'emp_deductions',	'emp_present_days',	'emp_salary_payable',	'emp_pay_mode',	'emp_total',	'emp_status'];
+	displayedSalaryComputeColumns: string[] = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_pay_scale', 'emp_salary_heads', 'emp_allowances', 'emp_total_earnings', 'emp_deductions', 'emp_present_days', 'emp_salary_payable', 'emp_pay_mode', 'emp_total', 'emp_status'];
 
 	constructor(
-		private fbuild:FormBuilder,
+		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
 		private sisService: SisService
@@ -43,7 +43,7 @@ export class SalaryComputationComponent implements OnInit {
 	getAllEmployee() {
 		if (this.searchForm.value.month_id) {
 			let inputJson = {
-				month_id : this.searchForm.value.month_id,
+				month_id: this.searchForm.value.month_id,
 			};
 			this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
 				console.log('result', result);
@@ -55,13 +55,13 @@ export class SalaryComputationComponent implements OnInit {
 				if (result && result.length > 0) {
 					let pos = 1;
 					let recordArray = result;
-					
+
 					let emp_present_days;
 					for (const item of recordArray) {
-						for (var i = 0; i < item.emp_month_attendance_data.length;i++) {
+						for (var i = 0; i < item.emp_month_attendance_data.length; i++) {
 							var emp_month = item.emp_month_attendance_data[i].month_id;
 							var emp_attendance_detail = item.emp_month_attendance_data[i];
-							if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month,10)) {
+							if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
 								emp_present_days = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : 0;
 								break;
 							} else {
@@ -86,7 +86,7 @@ export class SalaryComputationComponent implements OnInit {
 						};
 						this.SALARY_COMPUTE_ELEMENT.push(element);
 						pos++;
-	
+
 					}
 					this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 				}
@@ -95,7 +95,7 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	openFilter() {
-
+		this.searchModal.openModal();
 	}
 
 	resetAll() {
@@ -108,8 +108,12 @@ export class SalaryComputationComponent implements OnInit {
 
 	applyFilter(filterValue: string) {
 		this.salaryComputeDataSource.filter = filterValue.trim().toLowerCase();
-  	}
-	
+	}
+
+	searchOk(event) {
+		console.log('event', event);
+	}
+
 }
 
 
