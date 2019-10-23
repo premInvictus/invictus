@@ -39,6 +39,7 @@ export class EmployeeDetailComponent implements OnInit {
 	getEmployeeDetail(emp_id) {
 		this.commonAPIService.getEmployeeDetail({emp_id:emp_id}).subscribe((result: any) => {
 			this.employeeRecord = result;
+			
 			this.rendorForm = true;
 		});
 	}
