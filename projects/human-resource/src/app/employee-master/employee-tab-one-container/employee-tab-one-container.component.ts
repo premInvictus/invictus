@@ -6,6 +6,7 @@ import { SisService, CommonAPIService } from '../../_services/index';
 // import { MedicalInformationEmployeeComponent } from '../medical-information-theme-two/medical-information-theme-two.component';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 
 
 @Component({
@@ -14,6 +15,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 	styleUrls: ['./employee-tab-one-container.component.scss']
 })
 export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
+	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	@Input() employeedetails;
 	personalDetails: FormGroup;
 	personaldetails: any = {};

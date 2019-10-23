@@ -12,7 +12,9 @@ import { DatePipe } from '@angular/common';
 export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 
 	Education_Form: FormGroup;
+	Experience_Form: FormGroup;
 	educationsArray: any[] = [];
+	experiencesArray: any[] = [];
 	qualficationArray: any[] = [];
 	boardArray: any[] = [];
 	panelOpenState = true;
@@ -28,7 +30,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		{ id: 1, name: 'Second Divison' },
 		{ id: 2, name: 'Third Divison' }
 	];
-	
+
 	@ViewChild('editReference') editReference;
 	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder, private axiomService: AxiomService,
 		private sisService: SisService) {
@@ -72,15 +74,15 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 
 	}
 	years() {
-		var currentYear = new Date().getFullYear(), 
-		years = [];
-		var startYear =  1980;  
-		while ( startYear <= currentYear ) {
+		var currentYear = new Date().getFullYear(),
+			years = [];
+		var startYear = 1980;
+		while (startYear <= currentYear) {
 			years.push(startYear++);
-		}   
+		}
 		console.log(years);
 	}
-	 
+
 	buildForm() {
 		this.Education_Form = this.fbuild.group({
 			qualification: '',
@@ -89,6 +91,13 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			division: '',
 			percentage: '',
 			subject: '',
+		});
+		this.Experience_Form = this.fbuild.group({
+			organisation: '',
+			designation: '',
+			last_salary: '',
+			start_date: '',
+			end_date: '',
 		});
 	}
 	addPreviousEducations() {
@@ -105,6 +114,25 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		} else {
 			Object.keys(this.Education_Form.value).forEach(key => {
 				const formControl = <FormControl>this.Education_Form.controls[key];
+				if (formControl.invalid) {
+					formControl.markAsDirty();
+				}
+			});
+		}
+	}
+	addexperience() {
+		if (this.Experience_Form.valid) {
+			this.experiencesArray.push(this.Experience_Form.value);
+			this.Experience_Form.patchValue({
+				organisation: '',
+				designation: '',
+				last_salary: '',
+				start_date: '',
+				end_date: '',
+			});
+		} else {
+			Object.keys(this.Experience_Form.value).forEach(key => {
+				const formControl = <FormControl>this.Experience_Form.controls[key];
 				if (formControl.invalid) {
 					formControl.markAsDirty();
 				}
@@ -131,4 +159,4 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		// }
 	}
 	editConfirm() { }
-}
+} 

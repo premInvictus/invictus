@@ -110,6 +110,7 @@
                   <mat-label>Designation</mat-label>
                   <mat-select formControlName="emp_designation_id" placeholder="Designation" required [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
+                    <mat-option value="{{item?.des_id}}" *ngFor="let item of designationArray">{{item?.des_name}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -117,7 +118,8 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Department</mat-label>
                   <mat-select formControlName="emp_department_id" placeholder="Department" required [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
+                      <mat-option value="">Please Select</mat-option>
+                    <mat-option value="{{item?.dept_id}}" *ngFor="let item of departmentArray">{{item?.dept_name}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -126,6 +128,7 @@
                   <mat-label>Wing</mat-label>
                   <mat-select formControlName="emp_wing_id" placeholder="Wing" required [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
+                    <mat-option value="{{item?.wing_id}}" *ngFor="let item of wingArray">{{item?.wing_name}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
