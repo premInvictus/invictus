@@ -199,6 +199,10 @@ export class EmployeeAttendanceComponent implements OnInit {
 		this.currentCategoryName = ev.source.selected.viewValue;
 	}
 
+	applyFilter(filterValue: string) {
+		this.employeedataSource.filter = filterValue.trim().toLowerCase();
+  	}
+
 }
 
 export interface EmployeeElement {

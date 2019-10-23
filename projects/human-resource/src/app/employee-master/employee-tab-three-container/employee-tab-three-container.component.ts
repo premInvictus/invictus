@@ -2,17 +2,18 @@ import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
+import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 @Component({
 	selector: 'app-employee-tab-three-container',
 	templateUrl: './employee-tab-three-container.component.html',
 	styleUrls: ['./employee-tab-three-container.component.scss']
 })
 export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
-
+	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	@ViewChild('general_remark') general_remark;
 	@ViewChild('management_remark') management_remark;
 	@ViewChild('admission_remark') admission_remark;
-
+	
 	addOnly = false;
 	editOnly = false;
 	viewOnly = true;
@@ -24,6 +25,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	admissionRemarkData: any;
 	managementRemarkData: any;
 	settingsArray: any[] = [];
+	documentsArray: any;
 	currentTab: number;
 	salaryDetails: FormGroup;
 	salaryDetailsArray: any[] = [];

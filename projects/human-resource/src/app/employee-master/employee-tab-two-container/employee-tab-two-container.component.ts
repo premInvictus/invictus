@@ -3,12 +3,14 @@ import { SisService, CommonAPIService } from '../../_services/index';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
+import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 @Component({
 	selector: 'app-employee-tab-two-container',
 	templateUrl: './employee-tab-two-container.component.html',
 	styleUrls: ['./employee-tab-two-container.component.scss']
 })
 export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
+	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	@ViewChild('edu') edu;
 	@ViewChild('skill') skill;
 	@ViewChild('doc') doc;
@@ -31,6 +33,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		{ id: 2, name: 'Guardian' },
 		{ id: 2, name: 'Spouse' }
 	];
+	editableStatus = '0';
 	cityId: any;
 	cityCountryArray: any[] = [];
 	arrayState: any[] = [];
