@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges, Input } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
@@ -11,9 +11,7 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 })
 export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
-	@ViewChild('edu') edu;
-	@ViewChild('skill') skill;
-	@ViewChild('doc') doc;
+	@Input() employeedetails;
 	addOnly = false;
 	viewOnly = true;
 	editOnly = false;
@@ -43,6 +41,11 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	ngOnInit() {
 		this.buildForm();
 		this.getState();
+		if (this.employeedetails) {
+			this.getPersonaContactsdata();
+		}
+		
+		console.log('second', this.employeedetails);
 	}
 	buildForm() {
 		this.personalContacts = this.fbuild.group({
@@ -62,6 +65,24 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	ngOnChanges() { }
+	getPersonaContactsdata() {
+		console.log('this.employeedetails',this.employeedetails);
+		this.personalContacts.patchValue({
+			relationship: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_category.rel_id,
+			fullname: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_full_name,
+			occupation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_occupation,
+			education: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_education,
+			mobile: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_mobile_no,
+			email: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_email,
+			organisation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_organisation,
+			designation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_designation,
+			address: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.address,
+			city: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.city,
+			state: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.state,
+			pincode: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.pin,
+			reference: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name
+		});
+	}
 	saveForm() {
 
 	}
@@ -80,9 +101,13 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	updateForm(isview) {
 		this.contactsArray['emp_personal_contact'] = {
 			relationship_personal_detail: {
-				rel_category: this.personalContacts.value.relationship,
-				rel_full_name: this.personalContacts.value.fullname,
+				rel_category: {
+					rel_id: this.personalContacts.value.relationship,
+					rel_name: this.personalContacts.value.relationship
+				},
+				rel_full_name: this.personalContacts.value.fullname,				
 				rel_occupation: this.personalContacts.value.occupation,
+				rel_education:this.personalContacts.value.education,
 				rel_organisation: this.personalContacts.value.organisation,
 				rel_designation: this.personalContacts.value.designation,
 				rel_contact_detail: {
@@ -91,18 +116,8 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 				},
 				rel_address_detail: {
 					address: this.personalContacts.value.address,
-					city: {
-						cit_id: this.personalContacts.value.city,
-						cit_name: this.getCityName(this.personalContacts.value.city)
-					},
-					state: {
-						sta_id: this.personalContacts.value.state,
-						sta_name: this.getStateName(this.personalContacts.value.state)
-					},
-					country: {
-						ct_id: 101,
-						ct_name: 'India'
-					},
+					city: this.personalContacts.value.city,
+					state: this.personalContacts.value.state,
 					pin: this.personalContacts.value.pincode
 				},
 				rel_reference_detail: {

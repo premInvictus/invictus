@@ -52,7 +52,6 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		private sisService: SisService, private fbuild: FormBuilder, ) {
 
 	}
-
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
@@ -84,7 +83,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	ngOnInit() {
 		this.buildForm();
 		this.getState();
-		console.log(this.employeedetails);
+		this.getPersonalDetailsdata();
+		//console.log(this.employeedetails);
 	}
 	ngOnChanges() {
 	}
@@ -103,6 +103,27 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			whatsapp_no: '',
 			email_id: '',
 		});
+	}
+	getPersonalDetailsdata() {
+		this.personalDetails.patchValue({
+			p_address: this.employeedetails.emp_personal_detail.address_detail.address,
+			p_city: this.employeedetails.emp_personal_detail.address_detail.city.cit_name,
+			p_state: this.employeedetails.emp_personal_detail.address_detail.state.sta_id,
+			p_pincode: this.employeedetails.emp_personal_detail.address_detail.pin,
+			r_address: this.employeedetails.emp_personal_detail.residential_address_detail.address,
+			r_city: this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_name,
+			r_state: this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id,
+			r_pincode: this.employeedetails.emp_personal_detail.residential_address_detail.pin,
+			pri_mobile: this.employeedetails.emp_personal_detail.contact_detail.primary_mobile_no,
+			sec_mobile: this.employeedetails.emp_personal_detail.contact_detail.secondary_mobile_no,
+			whatsapp_no: this.employeedetails.emp_personal_detail.contact_detail.whatsup_no,
+			email_id: this.employeedetails.emp_personal_detail.contact_detail.email_id,
+		});
+		if (this.employeedetails.emp_personal_detail.same_as_residential) {
+			this.addressFlag = true;
+		} else {
+			this.addressFlag = false;
+		}
 	}
 	saveForm() {
 		this.personaldetails['emp_id'] = '';
@@ -363,7 +384,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 
 			}
 		});
-		
+
 	}
 	isExistUserAccessMenu(actionT) {
 		// if (this.context && this.context.studentdetails) {

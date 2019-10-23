@@ -181,11 +181,6 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			return this.divisonArray[findex].name;
 		}
 	}
-	isExistUserAccessMenu(actionT) {
-		// if (this.context && this.context.studentdetails) {
-		// 	return this.context.studentdetails.isExistUserAccessMenu(actionT);
-		// }
-	}
 	editConfirm() { }
 	editEducation(value) {
 		this.educationUpdateFlag = true;
@@ -236,5 +231,8 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	deleteExperience(index) {
 		this.experiencesArray.splice(index, 1);
 		this.Experience_Form.reset();
+	}
+	isExistUserAccessMenu(isexist){
+
 	}
 } 
