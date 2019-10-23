@@ -9,12 +9,17 @@
 
     <div class="padding-15">
       <form [formGroup]="Education_Form">
-        <div class="row" >
+        <div class="row">
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Qualification</mat-label>
-              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
-                formControlName="qualification" required matInput placeholder="Qualification" [readonly]="viewOnly">
+              <mat-select formControlName="qualification" required [errorStateMatcher]="confirmValidParentMatcher"
+                placeholder="Qualification">
+                <mat-option>Please Select</mat-option>
+                <mat-option *ngFor="let item of qualficationArray" [value]="item.qlf_id">
+                  {{item.qlf_name}}
+                </mat-option>
+              </mat-select>
               <mat-error>
                 This field is required*
               </mat-error>
@@ -24,10 +29,10 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Board/University</mat-label>
               <mat-select formControlName="board" required [errorStateMatcher]="confirmValidParentMatcher"
-                placeholder="Board/University" [disabled]="viewOnly">
+                placeholder="Board/University">
                 <mat-option>Please Select</mat-option>
-                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                  {{item.class_name}}
+                <mat-option *ngFor="let item of boardArray" [value]="item.board_id">
+                  {{item.board_name}}
                 </mat-option>
               </mat-select>
               <mat-error>
@@ -38,13 +43,8 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Year</mat-label>
-              <mat-select formControlName="year" placeholder="Year" required
-                [disabled]="viewOnly">
-                <mat-option>Please Select</mat-option>
-                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                  {{item.class_name}}
-                </mat-option>
-              </mat-select>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="year"
+                required matInput placeholder="Year">
               <mat-error>
                 This field is required*
               </mat-error>
@@ -54,10 +54,10 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Division</mat-label>
               <mat-select formControlName="division" [errorStateMatcher]="confirmValidParentMatcher"
-                placeholder="Division" [disabled]="viewOnly">
+                placeholder="Division">
                 <mat-option>Please Select</mat-option>
-                <mat-option *ngFor="let item of reasonArray" [value]="item.reason_id">
-                  {{item.reason_title}}
+                <mat-option *ngFor="let item of divisonArray" [value]="item.id">
+                  {{item.name}}
                 </mat-option>
               </mat-select>
               <mat-error>
@@ -65,11 +65,11 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-2" >
+          <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>%/CGPA</mat-label>
               <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
-              formControlName="percentage" required matInput placeholder="%/CGPA" [readonly]="viewOnly">
+                formControlName="percentage" required matInput placeholder="%/CGPA">
               <mat-error>
                 This field is required*
               </mat-error>
@@ -78,21 +78,15 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Subject(Core)</mat-label>
-              <mat-select formControlName="subject" [errorStateMatcher]="confirmValidParentMatcher"
-                placeholder="Subject(Core)" [disabled]="viewOnly">
-                <mat-option>Please Select</mat-option>
-                <mat-option *ngFor="let item of reasonArray" [value]="item.reason_id">
-                  {{item.reason_title}}
-                </mat-option>
-              </mat-select>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="subject"
+                required matInput placeholder="Subject(Core)">
               <mat-error>
                 This field is required*
               </mat-error>
             </mat-form-field>
           </div>
           <div class="col-2 margin-top-10 margin-top-12">
-            <button  mat-raised-button class="btn-neutral"
-              (click)="addPreviousEducations()">Add To List</button>
+            <button mat-raised-button class="btn-neutral" (click)="addPreviousEducations()">Add To List</button>
             <button *ngIf="educationUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
               (click)="updatePreviousEducationList()">Update List</button>
           </div>
@@ -105,42 +99,42 @@
             <thead class="table-skill__head text-center">
               <tr class="custom-tr">
                 <th class="custom-th">Sr. No.</th>
-                <th class="custom-th" >Qualification</th>
-                <th class="custom-th" >Board/University</th>
-                <th class="custom-th" >Year</th>
-                <th class="custom-th" >Divison</th>
-                <th class="custom-th" >%/CGPA</th>
-                <th class="custom-th" >Subject</th>
+                <th class="custom-th">Qualification</th>
+                <th class="custom-th">Board/University</th>
+                <th class="custom-th">Year</th>
+                <th class="custom-th">Divison</th>
+                <th class="custom-th">%/CGPA</th>
+                <th class="custom-th">Subject</th>
                 <th *ngIf="!viewOnly" class="custom-th">Modify</th>
               </tr>
             </thead>
             <tbody class="table-skill__body text-center">
               <tr class="custom-tr" *ngFor="let item of educationsArray;let i=index">
                 <td>{{i+1}}</td>
-                <td>{{i+1}}</td>
-                <td>{{i+1}}</td>
-                <td>{{i+1}}</td>
-                <td>{{i+1}}</td>
-                <td>{{i+1}}</td>
-                
+                <td>{{item.qualification}}</td>
+                <td>{{item.board}}</td>
+                <td>{{item.year}}</td>
+                <td>{{item.division}}</td>
+                <td>{{item.percentage}}</td>
+                <td>{{item.subject}}</td>
+                <td>{{item.subject}}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <!-- <div class="row" *ngIf="educationsArray.length === 0 && viewOnly ">
+      <div class="row" *ngIf="educationsArray.length === 0 && viewOnly ">
         <div class="col-12">
           <table class="table table-borderd table-stripped custom-table">
             <thead class="table-skill__head text-center">
               <tr class="custom-tr">
                 <th class="custom-th">Sr. No.</th>
-                <th class="custom-th" *ngIf="checkIfFieldExist('eed_previous_school_name')">Name of prevous school</th>
-                <th class="custom-th" *ngIf="checkIfFieldExist('eed_current_class')">Last Class Attended</th>
-                <th class="custom-th" *ngIf="checkIfFieldExist('eed_admitted_class')">Admitted Class</th>
-                <th class="custom-th" *ngIf="checkIfFieldExist('eed_reason_of_leaving')">Reason for leaving</th>
-                <th class="custom-th" *ngIf="checkIfFieldExist('eed_joining_from')">Date of joining</th>
-                <th class="custom-th" *ngIf="checkIfFieldExist('eed_joining_to')">Date of leaving</th>
-                <th class="custom-th" *ngIf="checkIfFieldExist('eed_specify_reason')">Specified Reason</th>
+                <th class="custom-th">Qualification</th>
+                <th class="custom-th">Board/University</th>
+                <th class="custom-th">Year</th>
+                <th class="custom-th">Divison</th>
+                <th class="custom-th">%/CGPA</th>
+                <th class="custom-th">Subject</th>
                 <th *ngIf="!viewOnly" class="custom-th">Modify</th>
               </tr>
             </thead>
@@ -151,8 +145,123 @@
             </tbody>
           </table>
         </div>
-      </div> -->
+      </div>
+    </div>
 
+    <div class="padding-15">
+      <form [formGroup]="Experience_Form">
+        <div class="row">
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Organisation</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="organisation"
+              required matInput placeholder="Organisation">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2 sis-col-20">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Designation</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="designation"
+              required matInput placeholder="Designation">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Last salary drawn</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="last_salary"
+                required matInput placeholder="Last salary drawn">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2 sis-col-20">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Start Date</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="start_date"
+              required matInput placeholder="Start Date">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>End Date</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
+                formControlName="end_date" required matInput placeholder="End Date">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2 margin-top-10 margin-top-12">
+            <button mat-raised-button class="btn-neutral" (click)="addexperience()">Add To List</button>
+            <button *ngIf="educationUpdateFlag && !viewOnly" mat-raised-button class="btn-neutral"
+              (click)="updatePreviousEducationList()">Update List</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="row" *ngIf="educationsArray.length > 0 ">
+        <div class="col-12">
+          <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Sr. No.</th>
+                <th class="custom-th">Qualification</th>
+                <th class="custom-th">Board/University</th>
+                <th class="custom-th">Year</th>
+                <th class="custom-th">Divison</th>
+                <th class="custom-th">%/CGPA</th>
+                <th class="custom-th">Subject</th>
+                <th *ngIf="!viewOnly" class="custom-th">Modify</th>
+              </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+              <tr class="custom-tr" *ngFor="let item of educationsArray;let i=index">
+                <td>{{i+1}}</td>
+                <td>{{item.qualification}}</td>
+                <td>{{item.board}}</td>
+                <td>{{item.year}}</td>
+                <td>{{item.division}}</td>
+                <td>{{item.percentage}}</td>
+                <td>{{item.subject}}</td>
+                <td>{{item.subject}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row" *ngIf="educationsArray.length === 0 && viewOnly ">
+        <div class="col-12">
+          <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Sr. No.</th>
+                <th class="custom-th">Qualification</th>
+                <th class="custom-th">Board/University</th>
+                <th class="custom-th">Year</th>
+                <th class="custom-th">Divison</th>
+                <th class="custom-th">%/CGPA</th>
+                <th class="custom-th">Subject</th>
+                <th *ngIf="!viewOnly" class="custom-th">Modify</th>
+              </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+              <tr class="custom-tr">
+                <td colspan="8">No records Found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
 

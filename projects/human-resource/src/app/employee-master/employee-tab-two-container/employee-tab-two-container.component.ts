@@ -31,7 +31,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		{ id: 0, name: 'Father' },
 		{ id: 1, name: 'Mother' },
 		{ id: 2, name: 'Guardian' },
-		{ id: 2, name: 'Spouse' }
+		{ id: 3, name: 'Spouse' }
 	];
 	editableStatus = '0';
 	cityId: any;

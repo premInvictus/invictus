@@ -84,6 +84,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	ngOnInit() {
 		this.buildForm();
 		this.getState();
+		console.log(this.employeedetails);
 	}
 	ngOnChanges() {
 	}

@@ -96,4 +96,11 @@ export class AxiomService {
 		this.service.startLoading();
 		return this.http.get(environment.apiAxiomUrl + `/setupdetail/getSubtopicByTopic/${topic_id}`);
 	}
+
+	// fetch board
+	getBoard() {
+		this.service.startLoading();
+		return this.http.get(environment.apiAxiomUrl + '/setup/board');
+
+	}
 }
