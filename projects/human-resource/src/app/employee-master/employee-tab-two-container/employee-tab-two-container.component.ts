@@ -38,15 +38,63 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	@ViewChild('editReference') editReference;
 	constructor(private sisService: SisService, private fbuild: FormBuilder,
 		public common: CommonAPIService) { }
+
+
 	ngOnInit() {
 		this.buildForm();
 		this.getState();
 		if (this.employeedetails) {
 			this.getPersonaContactsdata();
 		}
-		
+
+		this.common.reRenderForm.subscribe((data: any) => {
+			console.log('data', data);
+			if (data) {
+				if (data.addMode) {
+					this.setActionControls({ addMode: true });
+				}
+			}
+		});
+
+
+
 		console.log('second', this.employeedetails);
 	}
+
+	setActionControls(data) {
+		if (data.addMode) {
+			this.addOnly = true;
+			this.personalContacts.patchValue({
+				relationship: '',
+				fullname: '',
+				occupation: '',
+				education: '',
+				mobile: '',
+				email: '',
+				organisation: '',
+				designation: '',
+				address: '',
+				city: '',
+				state: '',
+				pincode: '',
+				reference: ''
+			});
+		}
+		if (data.editMode) {
+			this.editOnly = true;
+			//this.viewOnly = false;
+			this.saveFlag = true;
+		}
+		if (data.viewMode) {
+			this.viewOnly = true;
+			this.saveFlag = false;
+			this.editRequestFlag = false;
+
+
+		}
+	}
+
+
 	buildForm() {
 		this.personalContacts = this.fbuild.group({
 			relationship: '',
@@ -64,24 +112,33 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 			reference: ''
 		});
 	}
-	ngOnChanges() { }
+	ngOnChanges() {
+		this.buildForm();
+		this.getState();
+		if (this.employeedetails) {
+			this.getPersonaContactsdata();
+		}
+	}
 	getPersonaContactsdata() {
-		console.log('this.employeedetails',this.employeedetails);
-		this.personalContacts.patchValue({
-			relationship: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_category.rel_id,
-			fullname: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_full_name,
-			occupation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_occupation,
-			education: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_education,
-			mobile: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_mobile_no,
-			email: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_email,
-			organisation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_organisation,
-			designation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_designation,
-			address: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.address,
-			city: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.city,
-			state: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.state,
-			pincode: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.pin,
-			reference: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name
-		});
+		console.log('this.employeedetails', this.employeedetails);
+		if (this.employeedetails) {
+			this.personalContacts.patchValue({
+				relationship: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_category.rel_id,
+				fullname: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_full_name,
+				occupation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_occupation,
+				education: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_education,
+				mobile: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_mobile_no,
+				email: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_email,
+				organisation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_organisation,
+				designation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_designation,
+				address: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.address,
+				city: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.city,
+				state: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.state,
+				pincode: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.pin,
+				reference: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name
+			});
+		}
+
 	}
 	saveForm() {
 
@@ -105,9 +162,9 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 					rel_id: this.personalContacts.value.relationship,
 					rel_name: this.personalContacts.value.relationship
 				},
-				rel_full_name: this.personalContacts.value.fullname,				
+				rel_full_name: this.personalContacts.value.fullname,
 				rel_occupation: this.personalContacts.value.occupation,
-				rel_education:this.personalContacts.value.education,
+				rel_education: this.personalContacts.value.education,
 				rel_organisation: this.personalContacts.value.organisation,
 				rel_designation: this.personalContacts.value.designation,
 				rel_contact_detail: {

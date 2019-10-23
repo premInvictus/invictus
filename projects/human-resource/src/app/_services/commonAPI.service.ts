@@ -20,7 +20,7 @@ export class CommonAPIService {
 	}
 	UserAccessMenu: any[] = [];
 	showLoading = new Subject();
-	studentData = new Subject();
+	employeeData = new Subject();
 	reRenderForm = new Subject();
 	renderTab = new Subject();
 	tabChange = new Subject();

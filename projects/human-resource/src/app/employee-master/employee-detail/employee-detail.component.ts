@@ -18,6 +18,7 @@ export class EmployeeDetailComponent implements OnInit {
 	settingsArray: any[] = [];
 	reRenderFormSubscription: any;
 	reRenderTabSubscription: any;
+	employeeDataSubscripton:any;
 	employeeRecord: any = {};
 	constructor(
 		private route: ActivatedRoute,
@@ -26,7 +27,37 @@ export class EmployeeDetailComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		this.reRenderFormSubscription = this.commonAPIService.reRenderForm.subscribe((data: any) => {
+			if (data && data.reRenderForm) {
+				this.tabSelectedIndex = 0;
+				this.getEmployeeNavigationRecords();
+			}
+			if (data && data.addMode) {
+				this.tabSelectedIndex = 0;
+			}
+			// if (data && (data.viewMode || data.editMode)) {
+			// 	for (let i = 0; i < this.formsTab.length; i++) {
+			// 		this.formEnabledTwoService.setFormEnabled(i);
+			// 	}
+			// }
+
+		});
+
+		this.reRenderTabSubscription = this.commonAPIService.renderTab.subscribe((data: any) => {
+			if (data && data.tabMove) {
+				this.tabSelectedIndex += 1;
+			}
+		});
+
+		this.employeeDataSubscripton = this.commonAPIService.employeeData.subscribe((data: any)=> {
+			console.log('fdg', data);
+			if (data && data.last_record) {
+				this.getEmployeeDetail(data.last_record);
+			}
+		});
+
 		this.getEmployeeNavigationRecords();
+		
 	}
 
 	getEmployeeNavigationRecords() {

@@ -36,7 +36,66 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		if (this.employeedetails) {
 			this.getSalartDetails();
 		}
+
+		this.commonAPIService.reRenderForm.subscribe((data: any) => {
+			console.log('data', data);
+			if (data) {
+				if (data.addMode) {
+					this.setActionControls({ addMode: true });
+				}
+			}
+		});
 	}
+
+	setActionControls(data) {
+		if (data.addMode) {
+			this.addOnly = true;
+			this.salaryDetails.patchValue({
+				pan: '',
+				aadhar: '',
+				pf_ac: '',
+				esi_ac: '',
+				nominee: '',
+				doj: '',
+				pf_doj: '',
+				esi_doj: '',
+				probation: '',
+				confirm_date: '',
+				category_1: '',
+				category_2: '',
+				category_3: '',
+				increment_month: '',
+				contract_period: '',
+				bank_name: '',
+				bank_ac: '',
+				ifsc_code: '',
+				sal_str: '',
+				pay_mode: '',
+				basic_pay: '',
+				da: '',
+				hra: '',
+				allowances: '',
+				pf_deduction: '',
+				esi_deduction: '',
+				tds_deduction: '',
+				net_salary: '',
+				total_deduction: ''
+			});
+		}
+		if (data.editMode) {
+			this.editOnly = true;
+			//this.viewOnly = false;
+			this.saveFlag = true;
+		}
+		if (data.viewMode) {
+			this.viewOnly = true;
+			this.saveFlag = false;
+
+
+		}
+	}
+
+
 	buildForm() {
 		this.salaryDetails = this.fbuild.group({
 			pan: '',
@@ -71,41 +130,49 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	ngOnChanges() {
+		this.buildForm();
 		// this.getRemarkData(this.login_id);
+
+		if (this.employeedetails) {
+			this.getSalartDetails();
+		}
 	}
 
 	getSalartDetails() {
-		this.salaryDetails.patchValue({	
-			pan: this.employeedetails.emp_salary_detail.account_docment_detail.pan_no,
-			aadhar: this.employeedetails.emp_salary_detail.account_docment_detail.aadhar_no,
-			pf_ac: this.employeedetails.emp_salary_detail.account_docment_detail.pf_acc_no,
-			esi_ac: this.employeedetails.emp_salary_detail.account_docment_detail.esi_acc_no,
-			nominee: this.employeedetails.emp_salary_detail.nominee_detail.name,
-			doj: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.doj,
-			pf_doj: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date,
-			esi_doj: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date,
-			probation: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date,
-			confirm_date: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.confirmation_date,
-			category_1: this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id,
-			category_2: this.employeedetails.emp_salary_detail.emp_job_detail.category_2.cat_id,
-			category_3: this.employeedetails.emp_salary_detail.emp_job_detail.category_3.cat_id,
-			increment_month: this.employeedetails.emp_salary_detail.emp_incremental_month_detail.month_data,
-			contract_period: this.employeedetails.emp_salary_detail.emp_job_detail.contact_period,
-			bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_id,
-			bank_ac: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no,
-			ifsc_code: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_ifsc,
-			sal_str: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_name,
-			pay_mode: '',
-			basic_pay: '',
-			da: '',
-			hra: '',
-			allowances: '',
-			pf_deduction: '',
-			esi_deduction: '',
-			tds_deduction: '',
-			net_salary: this.employeedetails.emp_salary_detail.emp_total_earning.emp_net_salary,
-			total_deduction: this.employeedetails.emp_salary_detail.emp_total_earning.emp_total_earning,
-		});
+		if (this.employeedetails && this.salaryDetails) {
+			this.salaryDetails.patchValue({
+				pan: this.employeedetails.emp_salary_detail.account_docment_detail.pan_no,
+				aadhar: this.employeedetails.emp_salary_detail.account_docment_detail.aadhar_no,
+				pf_ac: this.employeedetails.emp_salary_detail.account_docment_detail.pf_acc_no,
+				esi_ac: this.employeedetails.emp_salary_detail.account_docment_detail.esi_acc_no,
+				nominee: this.employeedetails.emp_salary_detail.nominee_detail.name,
+				doj: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.doj,
+				pf_doj: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date,
+				esi_doj: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date,
+				probation: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date,
+				confirm_date: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.confirmation_date,
+				category_1: this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id,
+				category_2: this.employeedetails.emp_salary_detail.emp_job_detail.category_2.cat_id,
+				category_3: this.employeedetails.emp_salary_detail.emp_job_detail.category_3.cat_id,
+				increment_month: this.employeedetails.emp_salary_detail.emp_incremental_month_detail.month_data,
+				contract_period: this.employeedetails.emp_salary_detail.emp_job_detail.contact_period,
+				bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_id,
+				bank_ac: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no,
+				ifsc_code: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_ifsc,
+				sal_str: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_name,
+				pay_mode: '',
+				basic_pay: '',
+				da: '',
+				hra: '',
+				allowances: '',
+				pf_deduction: '',
+				esi_deduction: '',
+				tds_deduction: '',
+				net_salary: this.employeedetails.emp_salary_detail.emp_net_salary ? this.employeedetails.emp_salary_detail.emp_net_salary : 0,
+				total_deduction: this.employeedetails.emp_salary_detail.emp_total_earning ? this.employeedetails.emp_salary_detail.emp_total_earning : 0,
+			});
+		}
+
 	}
 	saveForm() {
 		this.salaryDetailsArray['emp_salary_detail'] = {
