@@ -94,6 +94,33 @@ export class EmployeeCommonComponent implements OnInit {
 		// 		emp_wing_id: result.emp_wing_detail && result.emp_wing_detail.wing_id ? result.emp_wing_detail.wing_id : '',			
 		// 	});
 		// }
+
+		this.commonAPIService.employeeData.subscribe((data: any) => {
+			if (data && data.last_record) {
+				if (this.login_id !== data.last_record) {
+					this.studentdetailsflag = true;
+				}
+				this.login_id = data.last_record;
+				this.lastRecordId = data.last_record;
+				if (this.lastrecordFlag) {
+					this.lastrecordFlag = false;
+				}
+				this.getEmployeeDetail(data.last_record);
+				this.divFlag = true;
+				this.stopFlag = true;
+			}
+		});
+
+		this.commonAPIService.reRenderForm.subscribe((data: any) => {
+			if (data) {
+				this.studentdetailsflag = true;
+				if ((data && data.reRenderForm) || (data && data.viewMode)) {
+					this.getEmployeeDetail(this.lastRecordId);
+				}
+			}
+			this.setActionControls(data);
+		});
+
 		this.getEmployeeDetail(result.emp_id);
 
 	}
@@ -138,7 +165,6 @@ export class EmployeeCommonComponent implements OnInit {
 		this.nextB = true;
 		this.firstB = true;
 		this.lastB = true;
-		console.log('this.firstB', this.firstB, this.viewOnly);
 		this.commonAPIService.getEmployeeDetail({ emp_id: emp_id }).subscribe((result: any) => {
 			//console.log('result', result);
 			if (result) {
@@ -157,18 +183,12 @@ export class EmployeeCommonComponent implements OnInit {
 					this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 				}
 			}
-			
-			
-			
 			this.navigation_record = result.navigation;
-			console.log('this.employeeDetailsForm.value.emp_id', this.employeeDetailsForm.value.emp_id);
-			console.log('this.navigation_record.first_record', this.navigation_record.first_record);
 			if (this.navigation_record) {
 				this.viewOnly = true;
 				if (this.navigation_record.first_record &&
 					this.navigation_record.first_record !== this.employeeDetailsForm.value.emp_id &&
 					this.viewOnly) {
-						console.log('in');
 					this.firstB = false;
 				}
 				if (this.navigation_record.last_record &&
@@ -183,11 +203,13 @@ export class EmployeeCommonComponent implements OnInit {
 					this.previousB = false;
 				}
 			}
-			console.log('this.firstB', this.firstB, this.viewOnly);
+			// this.lastRecordId = result.emp_id;
+			// this.commonAPIService.employeeData.next(
+			// 	{
+			// 		last_record: emp_id
+			// 	});
 			const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 			inputElem.select();
-
-			// console.log('this.employeeDetailsForm', this.employeeDetailsForm);
 		});
 	}
 
@@ -222,7 +244,6 @@ export class EmployeeCommonComponent implements OnInit {
 			this.deleteOnly = true;
 			const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 			inputElem.select();
-			// this.commonAPIService.studentData.next(this.employeeDetailsForm.value.au_enrollment_id);
 			if (this.lastEmployeeDetails.emp_id === this.employeeDetailsForm.value.emp_id) {
 				this.firstB = false;
 				this.previousB = false;
@@ -254,7 +275,7 @@ export class EmployeeCommonComponent implements OnInit {
 	bindImageToForm(event) {
 		this.openCropDialog(event);
 	}
-	
+
 	uploadImage(fileName, au_profileimage) {
 		this.sisService.uploadDocuments([
 			{ fileName: fileName, imagebase64: au_profileimage, module: 'profile' }]).subscribe((result: any) => {
@@ -277,35 +298,41 @@ export class EmployeeCommonComponent implements OnInit {
 			});
 	}
 
-	// function to check filed belong to provisional or admission
-	fieldEnableAtAdmission() {
-		// if (this.belongToForm === 'provisional' || this.belongToForm === 'admission' || this.belongToForm === 'alumini') {
-		// 	return true;
-		// }
-		return false;
-	}
 	nextUser(next_au_login_id) {
 		this.nextEvent.next('1000');
 		//this.router.navigate([`../${this.belongToForm}`], { queryParams: { login_id: next_au_login_id }, relativeTo: this.route });
-		this.commonAPIService.studentData.next('1001');
+		this.commonAPIService.employeeData.next('1001');
 	}
 	nextId(admno) {
-		this.getEmployeeDetail(admno);
+		this.lastRecordId = admno;
+		this.commonAPIService.employeeData.next(
+			{
+				last_record: admno
+			});
 	}
 	previousId(admno) {
-		this.getEmployeeDetail(admno);
+		this.lastRecordId = admno;	
+		this.commonAPIService.employeeData.next(
+			{
+				last_record: admno
+			});
 	}
 	firstId(admno) {
-		this.getEmployeeDetail(admno);
+		this.lastRecordId = admno;
+		this.commonAPIService.employeeData.next(
+			{
+				last_record: admno
+			});
 	}
 	lastId(admno) {
-		this.getEmployeeDetail(admno);
+		this.lastRecordId = admno;
+		this.commonAPIService.employeeData.next(
+			{
+				last_record: admno
+			});
 	}
 	acceptCrop(result) {
 		this.uploadImage(result.filename, result.base64);
-	}
-	acceptNo(event) {
-		event.target.value = '';
 	}
 
 	getEmployeeId($event) {
@@ -315,7 +342,7 @@ export class EmployeeCommonComponent implements OnInit {
 
 	addNew() {
 		this.commonAPIService.reRenderForm.next({ reRenderForm: false, addMode: true, editMode: false, deleteMode: false });
-		this.setActionControls({addMode:true});
+		this.setActionControls({ addMode: true });
 		this.navigationEmployeeDetails(true);
 	}
 	navigationEmployeeDetails(value) {
@@ -327,7 +354,7 @@ export class EmployeeCommonComponent implements OnInit {
 
 	editForm() {
 		this.navigationEmployeeDetails(true);
-		this.setActionControls({editMode:true});
+		this.setActionControls({ editMode: true });
 		this.commonAPIService.reRenderForm.next({ reRenderForm: false, addMode: false, editMode: true, deleteMode: false });
 	}
 
@@ -346,8 +373,8 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 	isExistUserAccessMenu(actionT) {
 	}
-	
-	
+
+
 	openSearchDialog() {
 
 	}
