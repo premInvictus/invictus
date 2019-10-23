@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { AxiomService, SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
@@ -14,6 +14,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	Education_Form: FormGroup;
 	educationsArray: any[] = [];
 	qualficationArray: any[] = [];
+	boardArray: any[] = [];
 	panelOpenState = true;
 	addOnly = false;
 	editOnly = false;
@@ -22,11 +23,14 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	editRequestFlag = false;
 	taboneform: any = {};
 	login_id = '';
-
-
+	divisonArray: any[] = [
+		{ id: 0, name: 'First Divison' },
+		{ id: 1, name: 'Second Divison' },
+		{ id: 2, name: 'Third Divison' }
+	];
+	
 	@ViewChild('editReference') editReference;
-
-	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder,
+	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder, private axiomService: AxiomService,
 		private sisService: SisService) {
 
 	}
@@ -61,10 +65,22 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	ngOnInit() {
 		this.buildForm();
 		this.getQualifications();
+		this.getBoard();
+		this.years();
 	}
 	ngOnChanges() {
 
 	}
+	years() {
+		var currentYear = new Date().getFullYear(), 
+		years = [];
+		var startYear =  1980;  
+		while ( startYear <= currentYear ) {
+			years.push(startYear++);
+		}   
+		console.log(years);
+	}
+	 
 	buildForm() {
 		this.Education_Form = this.fbuild.group({
 			qualification: '',
@@ -95,10 +111,17 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			});
 		}
 	}
-	getQualifications(){
+	getQualifications() {
 		this.sisService.getQualifications().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.qualficationArray = result.data;
+			}
+		});
+	}
+	getBoard() {
+		this.axiomService.getBoard().subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.boardArray = result.data;
 			}
 		});
 	}
