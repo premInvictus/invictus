@@ -5,17 +5,17 @@
     </button>
   </div>
   <div class="functional-button-two">
-    <button mat-fab *ngIf="addOnly && isExistUserAccessMenu('add')" (click)="addNew()">
+    <button mat-fab *ngIf="addOnly" (click)="addNew()">
       <mat-icon class="btn-top-icon">person_add</mat-icon><span class="right-btn-text">Add Student</span>
     </button>
   </div>
   <div class="functional-button-three">
-    <button mat-fab *ngIf="editOnly && isExistUserAccessMenu('edit') && studentdetails?.editable_status == '1'"
+    <button mat-fab *ngIf="editOnly"
       (click)="editForm()"><i class="fas fa-user-edit float-btn-right"></i><span class="right-btn-text">Edit
         Student</span></button>
   </div>
   <div class="functional-button-four">
-    <button mat-fab *ngIf="deleteOnly && isExistUserAccessMenu('delete') && studentdetails?.editable_status == '1'"
+    <button mat-fab *ngIf="deleteOnly"
       (click)="openDeleteDialog()">
       <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Student</span>
     </button> 

@@ -26,22 +26,18 @@ export class EmployeeDetailComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		console.log('in employee detail');
 		this.getEmployeeNavigationRecords();
 	}
 
 	getEmployeeNavigationRecords() {
-		console.log('in employee navigation');
 		this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
-			console.log('result', result);
-			this.getEmployeeDetail(result[0].emp_id);
+			console.log('employee navigation records', result);
+			this.getEmployeeDetail(result.last_record);
 		});
 	}
 
 	getEmployeeDetail(emp_id) {
-		console.log('in employee get navigation');
 		this.commonAPIService.getEmployeeDetail({emp_id:emp_id}).subscribe((result: any) => {
-			console.log('result', result);
 			this.employeeRecord = result;
 			this.rendorForm = true;
 		});

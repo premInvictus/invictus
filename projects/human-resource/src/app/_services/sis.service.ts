@@ -122,4 +122,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/siSetup/department');
 	}
+	getGender() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/gender');
+	}
 }
