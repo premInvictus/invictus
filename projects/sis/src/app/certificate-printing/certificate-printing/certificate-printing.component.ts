@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from 
 import { Element } from './certificate-printing.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { SelectionModel } from '@angular/cdk/collections';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-certificate-printing',
@@ -31,7 +32,8 @@ export class CertificatePrintingComponent implements OnInit {
   selection = new SelectionModel<Element>(true, []);
   @ViewChild(MatSort) sort: MatSort;
   tabledivflag = false;
-  constructor(private commonApiService: CommonAPIService,
+  constructor(
+    private commonApiService: CommonAPIService,
     private sisService: SisService,
     private fbuild: FormBuilder) { }
 
@@ -132,9 +134,11 @@ export class CertificatePrintingComponent implements OnInit {
     const param: any = {};
     param.certificate_type = this.paramForm.value.certificate_type;
     param.printData = printData;
-    this.sisService.printcertAllCertificate({param}).subscribe((result: any) => {
+    this.sisService.printAllCertificate({param}).subscribe((result: any) => {
       if(result && result.status === 'ok') {
-        //logic here
+        this.commonApiService.showSuccessErrorMessage('Download Successfully', 'success');
+        const length = result.data.split('/').length;
+        saveAs(result.data, result.data.split('/')[length - 1]);
       }
     })
   }
