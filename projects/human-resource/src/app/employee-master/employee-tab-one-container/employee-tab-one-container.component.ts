@@ -55,7 +55,22 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
-			//this.viewOnly = false;
+			this.personalDetails.patchValue({
+				p_address: '',
+				p_city: '',
+				p_state: '',
+				p_pincode: '',
+				r_address: '',
+				r_city: '',
+				r_state: '',
+				r_pincode: '',
+				pri_mobile: '',
+				sec_mobile: '',
+				whatsapp_no: '',
+				email_id: '',
+				same_as_residential: false
+			});
+			this.addressFlag= false;
 		}
 		if (data.editMode) {
 			this.editOnly = true;
@@ -67,16 +82,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			this.saveFlag = false;
 			this.editRequestFlag = false;
 
-			if (this.addOnly) {
-				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-					if (result.status === 'ok') {
-						this.commonAPIService.studentData.next(result.data[0]);
-						this.addOnly = false;
-					}
-				});
-			} else {
-
-			}
+			
 		}
 	}
 
@@ -85,8 +91,20 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		this.getState();
 		this.getPersonalDetailsdata();
 		//console.log(this.employeedetails);
+		this.commonAPIService.reRenderForm.subscribe((data: any) => {
+			console.log('data', data);
+			if (data) {
+				if (data.addMode) {
+					this.setActionControls({ addMode: true });
+				} 
+			}
+		});
 	}
 	ngOnChanges() {
+		console.log('this.employeedetails', this.employeedetails);
+		this.buildForm();
+		this.getState();
+		this.getPersonalDetailsdata();
 	}
 	buildForm() {
 		this.personalDetails = this.fbuild.group({
@@ -105,25 +123,28 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	getPersonalDetailsdata() {
-		this.personalDetails.patchValue({
-			p_address: this.employeedetails.emp_personal_detail.address_detail.address,
-			p_city: this.employeedetails.emp_personal_detail.address_detail.city.cit_name,
-			p_state: this.employeedetails.emp_personal_detail.address_detail.state.sta_id,
-			p_pincode: this.employeedetails.emp_personal_detail.address_detail.pin,
-			r_address: this.employeedetails.emp_personal_detail.residential_address_detail.address,
-			r_city: this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_name,
-			r_state: this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id,
-			r_pincode: this.employeedetails.emp_personal_detail.residential_address_detail.pin,
-			pri_mobile: this.employeedetails.emp_personal_detail.contact_detail.primary_mobile_no,
-			sec_mobile: this.employeedetails.emp_personal_detail.contact_detail.secondary_mobile_no,
-			whatsapp_no: this.employeedetails.emp_personal_detail.contact_detail.whatsup_no,
-			email_id: this.employeedetails.emp_personal_detail.contact_detail.email_id,
-		});
-		if (this.employeedetails.emp_personal_detail.same_as_residential) {
-			this.addressFlag = true;
-		} else {
-			this.addressFlag = false;
+		if (this.employeedetails) {
+			this.personalDetails.patchValue({
+				p_address: this.employeedetails.emp_personal_detail.address_detail.address,
+				p_city: this.employeedetails.emp_personal_detail.address_detail.city.cit_name,
+				p_state: this.employeedetails.emp_personal_detail.address_detail.state.sta_id,
+				p_pincode: this.employeedetails.emp_personal_detail.address_detail.pin,
+				r_address: this.employeedetails.emp_personal_detail.residential_address_detail.address,
+				r_city: this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_name,
+				r_state: this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id,
+				r_pincode: this.employeedetails.emp_personal_detail.residential_address_detail.pin,
+				pri_mobile: this.employeedetails.emp_personal_detail.contact_detail.primary_mobile_no,
+				sec_mobile: this.employeedetails.emp_personal_detail.contact_detail.secondary_mobile_no,
+				whatsapp_no: this.employeedetails.emp_personal_detail.contact_detail.whatsup_no,
+				email_id: this.employeedetails.emp_personal_detail.contact_detail.email_id,
+			});
+			if (this.employeedetails.emp_personal_detail.same_as_residential) {
+				this.addressFlag = true;
+			} else {
+				this.addressFlag = false;
+			}
 		}
+		
 	}
 	saveForm() {
 		this.personaldetails['emp_id'] = '';
