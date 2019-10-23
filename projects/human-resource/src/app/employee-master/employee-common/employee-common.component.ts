@@ -141,15 +141,25 @@ export class EmployeeCommonComponent implements OnInit {
 		console.log('this.firstB', this.firstB, this.viewOnly);
 		this.commonAPIService.getEmployeeDetail({ emp_id: emp_id }).subscribe((result: any) => {
 			//console.log('result', result);
-			this.employeeDetailsForm.patchValue({
-				emp_profile_pic: '',
-				emp_id: result.emp_id,
-				emp_name: result.emp_name,
-				emp_honorific_id: result.emp_honorific_detail.hon_id,
-				emp_designation_id: result.emp_designation_detail.des_id,
-				emp_department_id: result.emp_department_detail.dpt_id,
-				emp_wing_id: result.emp_wing_detail.wing_id,
-			});
+			if (result) {
+				this.employeeDetailsForm.patchValue({
+					emp_profile_pic: result.emp_profile_pic,
+					emp_id: result.emp_id,
+					emp_name: result.emp_name,
+					emp_honorific_id: result.emp_honorific_detail.hon_id,
+					emp_designation_id: result.emp_designation_detail.des_id,
+					emp_department_id: result.emp_department_detail.dpt_id,
+					emp_wing_id: result.emp_wing_detail.wing_id,
+				});
+				if (result.emp_profile_pic) {
+					this.defaultsrc = result.emp_profile_pic
+				} else {
+					this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+				}
+			}
+			
+			
+			
 			this.navigation_record = result.navigation;
 			console.log('this.employeeDetailsForm.value.emp_id', this.employeeDetailsForm.value.emp_id);
 			console.log('this.navigation_record.first_record', this.navigation_record.first_record);
@@ -251,17 +261,17 @@ export class EmployeeCommonComponent implements OnInit {
 				if (result.status === 'ok') {
 					this.defaultsrc = result.data[0].file_url;
 					this.employeeDetailsForm.patchValue({
-						au_profileimage: result.data[0].file_url
+						emp_profile_pic: result.data[0].file_url
 					});
-					if (result.data[0].file_url && this.employeeDetailsForm.value.au_login_id) {
-						// this.sisService.studentImageProfileUpload({
-						// 	au_login_id: this.employeeDetailsForm.value.au_login_id,
-						// 	au_profileimage: result.data[0].file_url
-						// }).subscribe((result1: any) => {
-						// 	if (result1 && result1.status === 'ok') {
-						// 		this.commonAPIService.showSuccessErrorMessage(result1.data, 'success');
-						// 	}
-						// });
+					if (result.data[0].file_url && this.employeeDetailsForm.value.emp_id) {
+						this.commonAPIService.updateEmployee({
+							emp_id: this.employeeDetailsForm.value.emp_id,
+							emp_profile_pic: result.data[0].file_url
+						}).subscribe((result1: any) => {
+							if (result1 && result1.status === 'ok') {
+								this.commonAPIService.showSuccessErrorMessage(result1.data, 'success');
+							}
+						});
 					}
 				}
 			});
