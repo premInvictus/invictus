@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material';
 export class EmployeeLeaveComponent implements OnInit {
 	searchForm: FormGroup;
 	employeeForm: FormGroup;
-	employeeData: any[] = [];
+	employeeData: any;
 	EMPLOYEE_ELEMENT: EmployeeElement[] = [];
 	session_id;
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
@@ -91,6 +91,10 @@ export class EmployeeLeaveComponent implements OnInit {
 			}
 		});
 	}
+
+	applyFilter(filterValue: string) {
+		this.employeedataSource.filter = filterValue.trim().toLowerCase();
+  	}
 
 }
 

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-
+import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 
 @Component({
 	selector: 'app-employee-tab-four-container',
@@ -10,7 +10,7 @@ import { DatePipe } from '@angular/common';
 	styleUrls: ['./employee-tab-four-container.component.scss']
 })
 export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
-
+	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	Education_Form: FormGroup;
 	educationsArray: any[] = [];
 	qualficationArray: any[] = [];
@@ -22,7 +22,11 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	editRequestFlag = false;
 	taboneform: any = {};
 	login_id = '';
-
+	studentdetails:any;
+	classArray:any;
+	reasonArray:any;
+	educationUpdateFlag:false;
+	documentsArray:any;
 
 	@ViewChild('editReference') editReference;
 
