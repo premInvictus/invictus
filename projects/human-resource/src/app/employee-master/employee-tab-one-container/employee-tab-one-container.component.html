@@ -5,7 +5,7 @@
         (click)="editRequest()" (keydown.enter)="$event.preventDefault()">
         <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span>
       </button>
-    </div>
+    </div> 
     <div class="padding-15">
       <form [formGroup]="personalDetails">
         <div class="row remove-top-margin">
@@ -21,7 +21,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>City</mat-label>
               <input type="text" matInput placeholder="City" formControlName="p_city" required [readonly]="viewOnly"
-                [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
+                [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup" 
                 (keyup)="filterCityStateCountry($event)">
               <mat-autocomplete #autoGroup="matAutocomplete">
                 <mat-option (onSelectionChange)="getCityPerId(item)" (keyup.enter)="getCityPerId(item)"
@@ -143,7 +143,7 @@
         <div class="row">
           <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
             <span>Whether the address of correspondence is different from the Permanent address?</span>
-            <mat-slide-toggle class="btn-spacer"  (change)="address_change($event)">
+            <mat-slide-toggle class="btn-spacer" [checked]="addressFlag" (change)="address_change($event)">
             </mat-slide-toggle>
           </div>
         </div>
@@ -166,3 +166,4 @@
   </ng-container>
 </div>
 <app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>
+<app-employee-tab-two-container [employeedetails]="employeedetails"></app-employee-tab-two-container> 
