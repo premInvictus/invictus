@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { SisService, CommonAPIService, SmartService } from '../../_services/index';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
@@ -30,11 +30,15 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 	checkChangedFieldsArray: any = [];
 	finalArray: any = [];
 	settingsArray: any[] = [];
-	parentId;
+	classArray: any[] = [];
+	sectionArray: any[] = [];
+	subjectArray: any[] = [];
+	currentUser: any;
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder,
-		private sisService: SisService) {
+		private syllabusService: SmartService, private sisService: SisService) {
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
 	}
 
@@ -68,32 +72,33 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 
 	ngOnInit() {
 		this.buildForm();
+		this.getClass();
 	}
 	ngOnChanges() {
 	}
 	buildForm() {
 		this.classSection = this.fbuild.group({
-			class: '',
-			section: '',
-			subject: '',
+			syl_class_id: '',
+			syl_section_id: '',
+			syl_sub_id: '',
 		});
 	}
 	saveForm() {
-	
+
 	}
 	updateForm(isview) {
 		this.classSection['emp_class_section_detail'] = [
 			{
 				class_detail: {
-					class_id: this.classSection.value.class,
+					class_id: this.classSection.value.syl_class_id,
 					class_name: ''
 				},
 				section_detail: {
-					sec_id: this.classSection.value.section,
+					sec_id: this.classSection.value.syl_section_id,
 					sec_name: ''
 				},
 				subject_detail: {
-					sub_id:this.classSection.value.subject,
+					sub_id: this.classSection.value.syl_sub_id,
 					sub_name: ''
 				},
 				class_teacher_staus: false,
@@ -102,7 +107,62 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 		];
 	}
 
-
+	//  Get Class List function
+	getClass() {
+		const classParam: any = {};
+		classParam.role_id = this.currentUser.role_id;
+		classParam.login_id = this.currentUser.login_id;
+		this.syllabusService.getClassData(classParam)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.classArray = result.data;
+					}
+				}
+			);
+		this.classSection.patchValue({
+			'syl_sub_id': ''
+		});
+	}
+	// get section list according to selected class
+	getSectionsByClass() {
+		this.classSection.patchValue({
+			'syl_section_id': '',
+			'syl_sub_id': ''
+		});
+		const sectionParam: any = {};
+		sectionParam.class_id = this.classSection.value.syl_class_id;
+		this.syllabusService.getSectionsByClass(sectionParam)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.sectionArray = result.data;
+						this.getSubjectsByClass();
+					} else {
+						this.sectionArray = [];
+					}
+				}
+			);
+	}
+	//  Get Subject By Class function
+	getSubjectsByClass(): void {
+		this.classSection.patchValue({
+			'syl_sub_id': ''
+		});
+		const subjectParam: any = {};
+		subjectParam.class_id = this.classSection.value.syl_class_id;
+		this.syllabusService.getSubjectsByClass(subjectParam)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.subjectArray = result.data;
+					} else {
+						this.subjectArray = [];
+						this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
+					}
+				}
+			);
+	}
 	isExistUserAccessMenu(actionT) {
 		// if (this.context && this.context.studentdetails) {
 		// 	return this.context.studentdetails.isExistUserAccessMenu(actionT);

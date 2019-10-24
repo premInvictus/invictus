@@ -8,7 +8,11 @@
     </div>
 
     <div class="padding-15">
-      <div>SSSS</div>
+      <div class="row">
+        <div class="col-6">
+          <div class="heading-class">Education </div>
+        </div>
+      </div>
       <form [formGroup]="Education_Form">
         <div class="row">
           <div class="col-2">
@@ -87,9 +91,10 @@
             </mat-form-field>
           </div>
           <div class="col-2 margin-top-10 ">
-            <button mat-raised-button class="btn-neutral" *ngIf="!educationUpdateFlag" (click)="addPreviousEducations()">Add To List</button>
-            <button *ngIf="educationUpdateFlag" mat-raised-button class="btn-neutral"
-              (click)="updateEducation()">Update List</button>
+            <button mat-raised-button class="btn-neutral" *ngIf="!educationUpdateFlag"
+              (click)="addPreviousEducations()">Add To List</button>
+            <button *ngIf="educationUpdateFlag" mat-raised-button class="btn-neutral" (click)="updateEducation()">Update
+              List</button>
           </div>
         </div>
       </form>
@@ -154,6 +159,11 @@
     </div>
 
     <div class="padding-15">
+      <div class="row">
+        <div class="col-6">
+          <div class="heading-class">Experience </div>
+        </div>
+      </div>
       <form [formGroup]="Experience_Form">
         <div class="row">
           <div class="col-2">
@@ -209,7 +219,8 @@
             </mat-form-field>
           </div>
           <div class="col-2 margin-top-10 margin-top-12">
-            <button mat-raised-button class="btn-neutral" *ngIf="!experienceUpdateFlag" (click)="addexperience()">Add To List</button>
+            <button mat-raised-button class="btn-neutral" *ngIf="!experienceUpdateFlag" (click)="addexperience()">Add To
+              List</button>
             <button *ngIf="experienceUpdateFlag" mat-raised-button class="btn-neutral"
               (click)="updateExperience()">Update List</button>
           </div>
@@ -272,11 +283,66 @@
         </div>
       </div>
     </div>
+    <div class="padding-15">
+      <div class="row">
+        <div class="col-6">
+          <div class="heading-class">Skills </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <form [formGroup]="skillForm">
+            <div class="inline-flex ">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Skills</mat-label>
+                <input autocomplete="off" matInput placeholder="Placeholder" (keydown.enter)="insertSkill($event)"
+                  type="text" formControlName="skill_id">
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+        <div class="col-10">
+          <button *ngFor="let item of skillsArray" mat-stroked-button class="custom-entry-button margin-left-10">
+            <span class="custom-btn-text">{{item}}</span>
+            <i class="fas fa-times-circle custom-entry-btn-icon" (click)="deleteSkill(item)"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="padding-15">
+      <form [formGroup]="remarksForm">
+        <div class="row">
+          <div class="col-6">
+            <div class="row">
+              <div class="col-6">
+                <div class="heading-class">Managements Remarks </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 ">
+                <textarea rows="5" class="form-control"formControlName="management_remarks"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-6">
+                <div class="heading-class">Interview Remarks </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 ">
+                <textarea rows="5" class="form-control" formControlName="interview_remarks"></textarea>
+              </div>
+            </div>
+          </div>
 
-
+        </div>
+      </form>
+    </div>
     <div class="row">
       <div class="col-12 text-center ">
-        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
+        <button  mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
           Continue</button>
         <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
         <button *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer btn-save-continue"
