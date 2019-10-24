@@ -89,7 +89,7 @@
           <table mat-table [dataSource]="salaryComputeDataSource" matSort class="table-100 text-center" id="book_log"
             class="booklog">
             <ng-container matColumnDef="srno">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="2%"> Sr. No. </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="2%" [attr.rowspan]="2">  Sr. No. </th>
               <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
             </ng-container>
             <ng-container matColumnDef="emp_id">
@@ -118,7 +118,8 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_salary_heads">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Salary Heads</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header  [attr.rowspan]="2">Salary Heads</th>
+             
               <td mat-cell *matCellDef="let element">
                 {{element?.emp_salary_heads}}
               </td>
@@ -167,7 +168,7 @@
             <ng-container matColumnDef="emp_status">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Status</th>
               <td mat-cell *matCellDef="let element">
-                {{element?.emp_status}}
+                <span [ngClass]="element.emp_status === 'live' ? 'green':'red'">{{element.emp_status}}  </span>
               </td>
             </ng-container>
 
