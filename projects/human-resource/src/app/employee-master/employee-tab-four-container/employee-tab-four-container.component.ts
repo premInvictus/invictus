@@ -65,7 +65,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			if (this.addOnly) {
 				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 					if (result.status === 'ok') {
-						this.commonAPIService.studentData.next(result.data[0]);
+						//this.commonAPIService.studentData.next(result.data[0]);
 						this.addOnly = false;
 					}
 				});
