@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges,Input } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
 
 // import { ChildDetailsEmployeeComponent } from '../child-details-theme-two/child-details-theme-two.component';
@@ -13,8 +13,8 @@ import { FormControl } from '@angular/forms';
 	templateUrl: './employee-tab-six-container.component.html',
 	styleUrls: ['./employee-tab-six-container.component.scss']
 })
-export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
-
+export class EmployeeTabSixContainerComponent implements OnInit, OnChanges { 
+	@Input() employeedetails;
 	panelOpenState = true;
 	addOnly = false;
 	editOnly = false;
