@@ -28,7 +28,7 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 	finalSibReqArray = [];
 	finalSibReqArray2 = [];
 	checkChangedFieldsArray: any = [];
-	finalArray: any = [];
+	finalArray: any[] = [];
 	settingsArray: any[] = [];
 	classArray: any[] = [];
 	sectionArray: any[] = [];
@@ -162,6 +162,15 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 					}
 				}
 			);
+	}
+	addlist() {
+		if (this.classSection.valid) {
+			this.finalArray.push(this.classSection.value);
+		}
+		console.log(this.finalArray)
+	}
+	delete(index){
+		
 	}
 	isExistUserAccessMenu(actionT) {
 		// if (this.context && this.context.studentdetails) {
