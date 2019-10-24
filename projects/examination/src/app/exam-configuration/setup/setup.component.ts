@@ -651,7 +651,7 @@ export class SetupComponent implements OnInit {
 		} else if (Number(this.configValue) === 4) { // for exam remark setup
 			this.getExamActivityCategory(this);
 			this.getExamRemarkSetup(this);
-			this.displayedColumns = ['position', 'name', 'remark_grade_name', 'remark_type', 'remark_tone', 'remark_description', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'remark_type', 'remark_tone', 'remark_description', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 5) { // for exam activity setup
 			this.getExamActivityCategory(this);
@@ -729,7 +729,7 @@ export class SetupComponent implements OnInit {
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertExamGradeSetup', this.getExamGradeSetup);
 					break;
 				case '4': // for exam remark setup
-					this.formGroupArray[value - 1].formGroup.value.topic_status = '1';
+					this.formGroupArray[value - 1].formGroup.value.ers_status = '1';
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertExamRemarkSetup', this.getExamRemarkSetup);
 					break;
 				case '5': // for exam activity setup
@@ -896,6 +896,7 @@ export class SetupComponent implements OnInit {
 		});
 	}
 	addEntry(data, serviceName, next) {
+		console.log('remarks',data);
 		this.examService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.resetForm(this.configValue);
