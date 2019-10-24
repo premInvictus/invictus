@@ -20,7 +20,7 @@ export class CommonAPIService {
 	}
 	UserAccessMenu: any[] = [];
 	showLoading = new Subject();
-	studentData = new Subject();
+	employeeData = new Subject();
 	reRenderForm = new Subject();
 	renderTab = new Subject();
 	tabChange = new Subject();
@@ -236,4 +236,21 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + 'wing/getAll', value);
 	}
+	getCategoryOne(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'category-one/getAll', value);
+	}
+	getCategoryTwo(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'category-two/getAll', value);
+	}
+	getCategoryThree(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'category-three/getAll', value);
+	}
+	getSalaryStructure(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'salary-structure/getAll', value);
+	}
+	
 }

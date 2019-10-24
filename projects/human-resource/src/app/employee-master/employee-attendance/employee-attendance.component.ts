@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material';
 	styleUrls: ['./employee-attendance.component.scss']
 })
 export class EmployeeAttendanceComponent implements OnInit {
+	@ViewChild('paginator') paginator: MatPaginator;
+  	@ViewChild(MatSort) sort: MatSort;
 	employeeForm: FormGroup;
 	searchForm: FormGroup;
 	formGroupArray: any[] = [];
@@ -23,6 +25,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	currentMonthName = '';
 	currentStatusName = '';
 	currentCategoryName = '';
+	
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -31,7 +34,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	) {
 
 		this.session_id = JSON.parse(localStorage.getItem('session'));
-	 }
+	}
 
 	ngOnInit() {
 		this.buildForm();
@@ -42,17 +45,21 @@ export class EmployeeAttendanceComponent implements OnInit {
 			month_id: '',
 			status_id: '',
 			cat_id: '',
-			
+
 		});
+		// this.employeeForm = this.fbuild.group({
+		// 	search_id: ''
+
+		// });
 	}
 
 	getEmployeeDetail() {
 		if (this.searchForm.value.month_id) {
 			let inputJson = {
-				month_id : this.searchForm.value.month_id,
-				emp_status : this.searchForm.value.status_id,
-				emp_cat_id : this.searchForm.value.cat_id,
-				session_id : this.session_id
+				month_id: this.searchForm.value.month_id,
+				emp_status: this.searchForm.value.status_id,
+				emp_cat_id: this.searchForm.value.cat_id,
+				session_id: this.session_id
 			};
 			this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
 				let element: any = {};
@@ -64,64 +71,89 @@ export class EmployeeAttendanceComponent implements OnInit {
 					let pos = 1;
 					let recordArray = result;
 					this.formGroupArray = [];
-					
-					for (const item of result) {
-						for (var i = 0; i < item.emp_month_attendance_data.length;i++) {
-							var emp_month = item.emp_month_attendance_data[i].month_id;
-							var emp_attendance_detail = item.emp_month_attendance_data[i];
-							console.log(parseInt(this.searchForm.value.month_id, 10) , parseInt(emp_month,10));
-							if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month,10)) {
-								this.formGroupArray.push({
-									formGroup: this.fbuild.group({
-										emp_id: item.emp_id,
-										emp_present: emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : 0,
-										emp_leave_granted:  emp_attendance_detail.attendance_detail.emp_leave_granted ? emp_attendance_detail.attendance_detail.emp_leave_granted : 0,
-										emp_remarks: emp_attendance_detail.attendance_detail.emp_remarks ? emp_attendance_detail.attendance_detail.emp_remarks : '',
-										emp_leave_availed: emp_attendance_detail.attendance_detail.emp_leave_availed ? emp_attendance_detail.attendance_detail.emp_leave_availed : 0,
-										emp_total_attendance: emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : '',
-										emp_balance_leaves: emp_attendance_detail.attendance_detail.emp_balance_leaves ? emp_attendance_detail.attendance_detail.emp_balance_leaves : ''
-									})
-								});
-							} else {
-								this.formGroupArray.push({
-									formGroup: this.fbuild.group({
-										emp_id: item.emp_id,
-										emp_present: item.emp_present ? item.emp_present : 0,
-										emp_leave_granted: item.emp_leave_granted ? item.emp_leave_granted : 0,
-										emp_remarks: item.emp_remarks ? item.emp_remarks : '',
-										emp_leave_availed: 0,
-										emp_total_attendance: '',
-										emp_balance_leaves: ''
-									})
-								});
-							}
-						}
-						
 
-						
-					}
-					for (const item of recordArray) {
+					for (const item of result) {
+						var emp_month; 
+						var emp_attendance_detail ;
+						if (item.emp_month_attendance_data.length > 0) {
+							for (var i = 0; i < item.emp_month_attendance_data.length; i++) {
+								emp_month = item.emp_month_attendance_data[i].month_id;
+								emp_attendance_detail = item.emp_month_attendance_data[i];
+								console.log(parseInt(this.searchForm.value.month_id, 10), parseInt(emp_month, 10));
+								if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
+									this.formGroupArray.push({
+										formGroup: this.fbuild.group({
+											emp_id: item.emp_id,
+											emp_present: emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : '',
+											emp_leave_granted: emp_attendance_detail.attendance_detail.emp_leave_granted ? emp_attendance_detail.attendance_detail.emp_leave_granted : '',
+											emp_remarks: emp_attendance_detail.attendance_detail.emp_remarks ? emp_attendance_detail.attendance_detail.emp_remarks : '',
+											emp_leave_availed: emp_attendance_detail.attendance_detail.emp_leave_availed ? emp_attendance_detail.attendance_detail.emp_leave_availed : '',
+											emp_total_attendance: emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : '',
+											emp_balance_leaves: emp_attendance_detail.attendance_detail.emp_balance_leaves ? emp_attendance_detail.attendance_detail.emp_balance_leaves : '',
+											emp_lwp: emp_attendance_detail.attendance_detail.emp_lwp ? emp_attendance_detail.attendance_detail.emp_lwp : '',
+
+											editFlag: emp_attendance_detail.attendance_detail.emp_present ? false : true
+										})
+									});
+								} else {
+									this.formGroupArray.push({
+										formGroup: this.fbuild.group({
+											emp_id: item.emp_id,
+											emp_present: item.emp_present ? item.emp_present : '',
+											emp_leave_granted: item.emp_leave_granted ? item.emp_leave_granted : '',
+											emp_remarks: item.emp_remarks ? item.emp_remarks : '',
+											emp_leave_availed: '',
+											emp_total_attendance: '',
+											emp_balance_leaves: '',
+											editFlag: true
+										})
+									});
+								}
+							}
+						} else {
+							this.formGroupArray.push({
+								formGroup: this.fbuild.group({
+									emp_id: item.emp_id,
+									emp_present: item.emp_present ? item.emp_present : '',
+									emp_leave_granted: item.emp_leave_granted ? item.emp_leave_granted : '',
+									emp_remarks: item.emp_remarks ? item.emp_remarks : '',
+									emp_leave_availed: '',
+									emp_total_attendance: '',
+									emp_balance_leaves: '',
+									editFlag: true
+								})
+							});
+						}
+
 						element = {
 							srno: pos,
 							emp_id: item.emp_id,
 							emp_name: item.emp_name,
 							emp_designation: item.emp_designation_detail.des_name,
 							emp_balance_leaves: '30',
-							emp_lwp: '',
+							emp_lwp: emp_attendance_detail.attendance_detail.emp_lwp ? emp_attendance_detail.attendance_detail.emp_lwp: '',
+							emp_total_attendance: emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance: '',
 							emp_status: item.emp_status ? item.emp_status : 'live',
 							action: item
 						};
+
+
 						this.EMPLOYEE_ELEMENT.push(element);
 						pos++;
-	
+
+						this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
+						this.employeedataSource.paginator = this.paginator;
+						if (this.sort) {
+							this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+							this.employeedataSource.sort = this.sort;
+						}
 					}
-					this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 				}
 			});
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please Choose Atlease one month', 'error');
 		}
-		
+
 	}
 
 	saveEmployeeAttendance() {
@@ -129,9 +161,9 @@ export class EmployeeAttendanceComponent implements OnInit {
 		let employeeArrData = [];
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
 			if (this.EMPLOYEE_ELEMENT[i]['emp_id'] === this.formGroupArray[i].formGroup.value.emp_id) {
-				
+
 				inputJson = {
-					"session_id" : this.session_id,
+					"session_id": this.session_id,
 					"month_id": this.searchForm.value.month_id,
 					"month_name": this.currentMonthName,
 					"attendance_detail": {
@@ -145,8 +177,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 					}
 				};
 				var flag = false;
-				for (var j =0 ; j < this.employeeData[i]['emp_month_attendance_data'].length; j++) {
-					if (parseInt(this.employeeData[i]['emp_month_attendance_data'][j].month_id,10) === parseInt(this.searchForm.value.month_id,10)) {
+				for (var j = 0; j < this.employeeData[i]['emp_month_attendance_data'].length; j++) {
+					if (parseInt(this.employeeData[i]['emp_month_attendance_data'][j].month_id, 10) === parseInt(this.searchForm.value.month_id, 10)) {
 						this.employeeData[i]['emp_month_attendance_data'] = inputJson;
 						flag = true;
 					} else {
@@ -156,8 +188,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 				if (!flag) {
 					this.employeeData[i]['emp_month_attendance_data'].push(inputJson);
 				}
-				
-				
+
+
 			}
 		}
 		//console.log('this.employeeData', this.employeeData);
@@ -189,7 +221,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	}
 
 	getMonthName(ev) {
-		this.currentMonthName = ev.source.selected.viewValue;		
+		this.currentMonthName = ev.source.selected.viewValue;
 	}
 	getStatusName(ev) {
 		this.currentStatusName = ev.source.selected.viewValue;
@@ -197,6 +229,57 @@ export class EmployeeAttendanceComponent implements OnInit {
 
 	getCategoryName(ev) {
 		this.currentCategoryName = ev.source.selected.viewValue;
+	}
+
+	cancelUpdate(element, index) {
+		this.getEmployeeDetail();
+	}
+
+	updateAttendance(element) {
+		let inputJson = {};
+		let employeeArrData = [];
+		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
+			if (this.EMPLOYEE_ELEMENT[i]['emp_id'] === element.emp_id) {
+
+				inputJson = {
+					"session_id": this.session_id,
+					"month_id": this.searchForm.value.month_id,
+					"month_name": this.currentMonthName,
+					"attendance_detail": {
+						"emp_present": this.formGroupArray[i].formGroup.value.emp_present,
+						"emp_leave_granted": this.formGroupArray[i].formGroup.value.emp_leave_granted,
+						"emp_remarks": this.formGroupArray[i].formGroup.value.emp_remarks,
+						"emp_leave_availed": this.formGroupArray[i].formGroup.value.emp_leave_availed,
+						"emp_lwp": this.EMPLOYEE_ELEMENT[i]['emp_lwp'],
+						"emp_total_attendance": this.EMPLOYEE_ELEMENT[i]['emp_total_attendance'],
+						"emp_balance_leaves": this.EMPLOYEE_ELEMENT[i]['emp_balance_leaves'],
+					}
+				};
+				var flag = false;
+				for (var j = 0; j < this.employeeData[i]['emp_month_attendance_data'].length; j++) {
+					if (parseInt(this.employeeData[i]['emp_month_attendance_data'][j].month_id, 10) === parseInt(this.searchForm.value.month_id, 10)) {
+						this.employeeData[i]['emp_month_attendance_data'] = inputJson;
+						flag = true;
+					} else {
+						flag = false;
+					}
+				}
+				if (!flag) {
+					this.employeeData[i]['emp_month_attendance_data'].push(inputJson);
+				}
+
+
+			}
+		}
+		//console.log('this.employeeData', this.employeeData);
+		this.commonAPIService.updateEmployee(this.employeeData).subscribe((result: any) => {
+
+		});
+	}
+
+	applyFilter(filterValue:String) {
+		console.log('filterValue', filterValue);
+		this.employeedataSource.filter = filterValue.trim().toLowerCase();
 	}
 
 }

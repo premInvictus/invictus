@@ -6,6 +6,7 @@ import { SisService, CommonAPIService } from '../../_services/index';
 // import { MedicalInformationEmployeeComponent } from '../medical-information-theme-two/medical-information-theme-two.component';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 
 
 @Component({
@@ -14,6 +15,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 	styleUrls: ['./employee-tab-one-container.component.scss']
 })
 export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
+	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	@Input() employeedetails;
 	personalDetails: FormGroup;
 	personaldetails: any = {};
@@ -50,11 +52,25 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		private sisService: SisService, private fbuild: FormBuilder, ) {
 
 	}
-
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
-			//this.viewOnly = false;
+			this.personalDetails.patchValue({
+				p_address: '',
+				p_city: '',
+				p_state: '',
+				p_pincode: '',
+				r_address: '',
+				r_city: '',
+				r_state: '',
+				r_pincode: '',
+				pri_mobile: '',
+				sec_mobile: '',
+				whatsapp_no: '',
+				email_id: '',
+				same_as_residential: false
+			});
+			this.addressFlag= false;
 		}
 		if (data.editMode) {
 			this.editOnly = true;
@@ -66,24 +82,29 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			this.saveFlag = false;
 			this.editRequestFlag = false;
 
-			if (this.addOnly) {
-				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-					if (result.status === 'ok') {
-						this.commonAPIService.studentData.next(result.data[0]);
-						this.addOnly = false;
-					}
-				});
-			} else {
-
-			}
+			
 		}
 	}
 
 	ngOnInit() {
 		this.buildForm();
 		this.getState();
+		this.getPersonalDetailsdata();
+		//console.log(this.employeedetails);
+		this.commonAPIService.reRenderForm.subscribe((data: any) => {
+			console.log('data', data);
+			if (data) {
+				if (data.addMode) {
+					this.setActionControls({ addMode: true });
+				} 
+			}
+		});
 	}
 	ngOnChanges() {
+		console.log('this.employeedetails', this.employeedetails);
+		this.buildForm();
+		this.getState();
+		this.getPersonalDetailsdata();
 	}
 	buildForm() {
 		this.personalDetails = this.fbuild.group({
@@ -100,6 +121,30 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			whatsapp_no: '',
 			email_id: '',
 		});
+	}
+	getPersonalDetailsdata() {
+		if (this.employeedetails) {
+			this.personalDetails.patchValue({
+				p_address: this.employeedetails.emp_personal_detail.address_detail.address,
+				p_city: this.employeedetails.emp_personal_detail.address_detail.city.cit_name,
+				p_state: this.employeedetails.emp_personal_detail.address_detail.state.sta_id,
+				p_pincode: this.employeedetails.emp_personal_detail.address_detail.pin,
+				r_address: this.employeedetails.emp_personal_detail.residential_address_detail.address,
+				r_city: this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_name,
+				r_state: this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id,
+				r_pincode: this.employeedetails.emp_personal_detail.residential_address_detail.pin,
+				pri_mobile: this.employeedetails.emp_personal_detail.contact_detail.primary_mobile_no,
+				sec_mobile: this.employeedetails.emp_personal_detail.contact_detail.secondary_mobile_no,
+				whatsapp_no: this.employeedetails.emp_personal_detail.contact_detail.whatsup_no,
+				email_id: this.employeedetails.emp_personal_detail.contact_detail.email_id,
+			});
+			if (this.employeedetails.emp_personal_detail.same_as_residential) {
+				this.addressFlag = true;
+			} else {
+				this.addressFlag = false;
+			}
+		}
+		
 	}
 	saveForm() {
 		this.personaldetails['emp_id'] = '';
@@ -360,7 +405,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 
 			}
 		});
-		
+
 	}
 	isExistUserAccessMenu(actionT) {
 		// if (this.context && this.context.studentdetails) {

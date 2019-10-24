@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { AxiomService, SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+
 
 
 @Component({
@@ -12,21 +13,32 @@ import { DatePipe } from '@angular/common';
 export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 
 	Education_Form: FormGroup;
+	Experience_Form: FormGroup;
 	educationsArray: any[] = [];
+	experiencesArray: any[] = [];
 	qualficationArray: any[] = [];
+	boardArray: any[] = [];
 	panelOpenState = true;
+	educationUpdateFlag = false;
+	experienceUpdateFlag = false;
+	experienceaddFlag = true;
 	addOnly = false;
 	editOnly = false;
 	viewOnly = true;
 	saveFlag = false;
 	editRequestFlag = false;
+	educationValue: any;
+	experienceValue: any;
 	taboneform: any = {};
 	login_id = '';
-
+	divisonArray: any[] = [
+		{ id: 0, name: 'First Divison' },
+		{ id: 1, name: 'Second Divison' },
+		{ id: 2, name: 'Third Divison' }
+	];
 
 	@ViewChild('editReference') editReference;
-
-	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder,
+	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder, private axiomService: AxiomService,
 		private sisService: SisService) {
 
 	}
@@ -61,10 +73,26 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	ngOnInit() {
 		this.buildForm();
 		this.getQualifications();
+		this.getBoard();
+		this.years();
 	}
 	ngOnChanges() {
 
 	}
+	dateConversion(value, format) {
+		const datePipe = new DatePipe('en-in');
+		return datePipe.transform(value, format);
+	}
+	years() {
+		var currentYear = new Date().getFullYear(),
+			years = [];
+		var startYear = 1980;
+		while (startYear <= currentYear) {
+			years.push(startYear++);
+		}
+		console.log(years);
+	}
+
 	buildForm() {
 		this.Education_Form = this.fbuild.group({
 			qualification: '',
@@ -73,6 +101,13 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			division: '',
 			percentage: '',
 			subject: '',
+		});
+		this.Experience_Form = this.fbuild.group({
+			organisation: '',
+			designation: '',
+			last_salary: '',
+			start_date: '',
+			end_date: '',
 		});
 	}
 	addPreviousEducations() {
@@ -95,17 +130,109 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			});
 		}
 	}
-	getQualifications(){
+	addexperience() {
+		if (this.Experience_Form.valid) {
+			this.experiencesArray.push(this.Experience_Form.value);
+			this.Experience_Form.patchValue({
+				organisation: '',
+				designation: '',
+				last_salary: '',
+				start_date: '',
+				end_date: '',
+			});
+		} else {
+			Object.keys(this.Experience_Form.value).forEach(key => {
+				const formControl = <FormControl>this.Experience_Form.controls[key];
+				if (formControl.invalid) {
+					formControl.markAsDirty();
+				}
+			});
+		}
+	}
+	getQualifications() {
 		this.sisService.getQualifications().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.qualficationArray = result.data;
 			}
 		});
 	}
-	isExistUserAccessMenu(actionT) {
-		// if (this.context && this.context.studentdetails) {
-		// 	return this.context.studentdetails.isExistUserAccessMenu(actionT);
-		// }
+	getBoard() {
+		this.axiomService.getBoard().subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.boardArray = result.data;
+			}
+		});
+	}
+	getQualificationsName(value) {
+		const findex = this.qualficationArray.findIndex(f => Number(f.qlf_id) === Number(value));
+		if(findex !== -1){
+			return this.qualficationArray[findex].qlf_name;
+		}
+	}
+	getBoardName(value) {
+		const findex = this.boardArray.findIndex(f => Number(f.board_id) === Number(value));
+		if(findex !== -1){
+			return this.boardArray[findex].board_name;
+		}
+	}
+	getdivisonName(value) {
+		const findex = this.divisonArray.findIndex(f => Number(f.id) === Number(value));
+		if(findex !== -1){
+			return this.divisonArray[findex].name;
+		}
 	}
 	editConfirm() { }
-}
+	editEducation(value) {
+		this.educationUpdateFlag = true;
+		this.educationValue = value;
+		this.Education_Form.patchValue({
+			qualification: this.educationsArray[value].qualification,
+			board: this.educationsArray[value].board,
+			eed_specify_reason: this.educationsArray[value].eed_specify_reason,
+			year: this.educationsArray[value].year,
+			division: this.educationsArray[value].division,
+			percentage: this.educationsArray[value].percentage,
+			subject: this.educationsArray[value].subject
+		});
+	}
+	updateEducation(){
+		this.educationsArray[this.educationValue] = this.Education_Form.value;
+		this.commonAPIService.showSuccessErrorMessage('Education List Updated', 'success');
+		this.Education_Form.reset();
+		this.educationUpdateFlag = false;
+	}
+	editExperience(value) {
+		this.experienceUpdateFlag = true;
+		this.experienceValue = value;
+		this.Experience_Form.patchValue({
+			organisation: this.experiencesArray[value].organisation,
+			designation: this.experiencesArray[value].designation,
+			last_salary: this.experiencesArray[value].last_salary,
+			start_date: this.dateConversion(this.experiencesArray[value].start_date, 'yyyy-MM-dd'),
+			end_date: this.dateConversion(this.experiencesArray[value].end_date, 'yyyy-MM-dd'),
+		});
+	}
+	updateExperience() {
+		this.Experience_Form.patchValue({
+			'start_date': this.dateConversion(this.Experience_Form.value.start_date, 'd-MMM-y')
+		});
+		this.Experience_Form.patchValue({
+			'end_date': this.dateConversion(this.Experience_Form.value.end_date, 'd-MMM-y')
+		});
+		this.experiencesArray[this.experienceValue] = this.Experience_Form.value;
+		this.commonAPIService.showSuccessErrorMessage('Experience List Updated', 'success');
+		this.Experience_Form.reset();
+		this.experienceUpdateFlag = false;
+	}
+	deleteEducation(index) {
+		this.educationsArray.splice(index, 1);
+		this.Education_Form.reset();
+	}
+	deleteExperience(index) {
+		this.experiencesArray.splice(index, 1);
+		this.Experience_Form.reset();
+	}
+	isExistUserAccessMenu(isexist){
+
+	}
+} 

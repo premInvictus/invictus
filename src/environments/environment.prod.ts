@@ -6,6 +6,7 @@ export const environment = {
 	apiSmartUrl: 'https://apismart.invictusdigisoft.com',
 	apiExamUrl: 'https://apiexam.invictusdigisoft.com',
 	apiReservUrl: 'https://apireservoir.invictusdigisoft.com',
+	apiHRUrl: 'https://apireservoir.invictusdigisoft.com',
 	logoutUrl: 'https://login.invictusdigisoft.com',
 	socketUrl: 'https://sockets.invictusdigisoft.com',
 	testInitiateCode : 'T100',

@@ -33,6 +33,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 	checkChangedFieldsArray: any = [];
 	finalArray: any = [];
 	settingsArray: any[] = [];
+	documentsArray:any;
 	parentId;
 	// @ViewChild(ChildDetailsEmployeeComponent) childDetails: ChildDetailsEmployeeComponent;
 	// @ViewChild(ParentDetailsEmployeeComponent) parentDetails: ParentDetailsEmployeeComponent;
