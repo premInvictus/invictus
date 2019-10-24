@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from 
 import { DatePipe } from '@angular/common';
 
 
-
+ 
 @Component({
 	selector: 'app-employee-tab-four-container',
 	templateUrl: './employee-tab-four-container.component.html',
@@ -79,10 +79,21 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		this.buildForm();
 		this.getQualifications();
 		this.getBoard();
-		this.years();
+		//this.years();
+		this.getRemarksDetails();
+		console.log(this.employeedetails);
 	}
 	ngOnChanges() {
 
+	}
+	getRemarksDetails(){
+		this.remarksForm.patchValue({
+			management_remarks: this.employeedetails.emp_remark_detail.management_remark,
+			interview_remarks: this.employeedetails.emp_remark_detail.interview_remark,
+		});
+		this.skillsArray = this.employeedetails.emp_remark_detail.skills;
+		this.experiencesArray = this.employeedetails.emp_remark_detail.experience_detail;
+		this.educationsArray = this.employeedetails.emp_remark_detail.education_detail;
 	}
 	dateConversion(value, format) {
 		const datePipe = new DatePipe('en-in');
