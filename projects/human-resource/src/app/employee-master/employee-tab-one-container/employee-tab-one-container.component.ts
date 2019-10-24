@@ -334,7 +334,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					pc_id: '',
 					pc_name: ''
 				},
-				emp_pay_mode: {
+				emp_pay_mode: { 
 					pm_id: '',
 					pm_name: ''
 				},

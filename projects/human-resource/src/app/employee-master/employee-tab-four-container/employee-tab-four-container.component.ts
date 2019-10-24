@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges, Input } from '@angular/core';
 import { AxiomService, SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -11,13 +11,15 @@ import { DatePipe } from '@angular/common';
 	styleUrls: ['./employee-tab-four-container.component.scss']
 })
 export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
-
+	@Input() employeedetails;
 	Education_Form: FormGroup;
 	Experience_Form: FormGroup;
 	educationsArray: any[] = [];
 	experiencesArray: any[] = [];
 	qualficationArray: any[] = [];
 	boardArray: any[] = [];
+	skillsArray: any[] = [];
+	remarksArray: any = {};
 	panelOpenState = true;
 	educationUpdateFlag = false;
 	experienceUpdateFlag = false;
@@ -29,6 +31,9 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	editRequestFlag = false;
 	educationValue: any;
 	experienceValue: any;
+	skills: any;
+	skillForm: FormGroup;
+	remarksForm: FormGroup;
 	taboneform: any = {};
 	login_id = '';
 	divisonArray: any[] = [
@@ -109,6 +114,14 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			start_date: '',
 			end_date: '',
 		});
+		this.skillForm = this.fbuild.group({
+			skill_id: ''
+		});
+		this.remarksForm = this.fbuild.group({
+			management_remarks: '',
+			interview_remarks: ''
+		});
+
 	}
 	addPreviousEducations() {
 		if (this.Education_Form.valid) {
@@ -165,23 +178,22 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	}
 	getQualificationsName(value) {
 		const findex = this.qualficationArray.findIndex(f => Number(f.qlf_id) === Number(value));
-		if(findex !== -1){
+		if (findex !== -1) {
 			return this.qualficationArray[findex].qlf_name;
 		}
 	}
 	getBoardName(value) {
 		const findex = this.boardArray.findIndex(f => Number(f.board_id) === Number(value));
-		if(findex !== -1){
+		if (findex !== -1) {
 			return this.boardArray[findex].board_name;
 		}
 	}
 	getdivisonName(value) {
 		const findex = this.divisonArray.findIndex(f => Number(f.id) === Number(value));
-		if(findex !== -1){
+		if (findex !== -1) {
 			return this.divisonArray[findex].name;
 		}
 	}
-	editConfirm() { }
 	editEducation(value) {
 		this.educationUpdateFlag = true;
 		this.educationValue = value;
@@ -195,7 +207,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			subject: this.educationsArray[value].subject
 		});
 	}
-	updateEducation(){
+	updateEducation() {
 		this.educationsArray[this.educationValue] = this.Education_Form.value;
 		this.commonAPIService.showSuccessErrorMessage('Education List Updated', 'success');
 		this.Education_Form.reset();
@@ -232,7 +244,48 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		this.experiencesArray.splice(index, 1);
 		this.Experience_Form.reset();
 	}
-	isExistUserAccessMenu(isexist){
+	isExistUserAccessMenu(isexist) {
 
+	}
+	insertSkill($event) {
+		this.skills = $event.srcElement.value;
+		if ($event.code !== 'NumpadEnter' || $event.code !== 'Enter') {
+			const index = this.skillsArray.indexOf($event.srcElement.value);
+			if (index === -1) {
+				this.skillsArray.push(this.skillForm.value.skill_id);
+				this.skillForm.patchValue({
+					skill_id: ''
+				});
+			} else {
+				this.skillForm.patchValue({
+					skill_id: ''
+				});
+			}
+		} else {
+			const index = this.skillsArray.indexOf($event.srcElement.value);String
+			if (index === -1) {
+				this.skillForm.patchValue({
+					skill_id: ''
+				});
+			} else {
+				this.skillsArray.splice(index, 1);
+			}
+		}
+	}
+	deleteSkill(skill_id) {
+		const index = this.skillsArray.indexOf(skill_id);
+		if (index !== -1) {
+			this.skillsArray.splice(index, 1);
+		}
+	}
+	saveForm() {
+		this.employeedetails['emp_remark_detail'] = {
+			education_detail: this.educationsArray,
+			experience_detail: this.experienceValue,
+			management_remark: this.remarksForm.value.management_remarks,
+			interview_remark: this.remarksForm.value.interview_remarks,
+			skills: this.skillsArray
+		};
+		console.log('tttt',this.employeedetails);
 	}
 } 
