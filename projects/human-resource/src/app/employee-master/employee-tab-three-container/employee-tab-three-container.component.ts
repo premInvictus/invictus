@@ -3,6 +3,7 @@ import { SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
+import { FeeService } from 'projects/fee/src/app/_services';
 @Component({
 	selector: 'app-employee-tab-three-container',
 	templateUrl: './employee-tab-three-container.component.html',
@@ -26,19 +27,35 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	currentTab: number;
 	salaryDetails: FormGroup;
 	salaryDetailsArray: any[] = [];
-	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder,
-		private sisService: SisService) {
-
-	}
-
+	categoryOneArray: any[] = [];
+	categoryTwoArray: any[] = [];
+	categoryThreeArray: any[] = [];
+	scaleArray: any[] = [];
+	scaleData: any[] = [];
+	bankArray: any[] = [];
+	componentData: any[] = [];
+	payMode: any[] = [
+		{ id: 0, name: 'Bank Transfer' },
+		{ id: 1, name: 'Cash Payment' },
+		{ id: 2, name: 'Cheque Payment' }
+	];
+	constructor(
+		public commonAPIService: CommonAPIService,
+		private fbuild: FormBuilder,
+		private feeService: FeeService,
+		private sisService: SisService
+	) { }
 	ngOnInit() {
 		this.buildForm();
 		if (this.employeedetails) {
 			this.getSalartDetails();
+			this.getCategoryOne();
+			this.getCategoryTwo();
+			this.getCategoryThree();
+			this.getPayScale();
+			this.getBank();
 		}
-
 		this.commonAPIService.reRenderForm.subscribe((data: any) => {
-			console.log('data', data);
 			if (data) {
 				if (data.addMode) {
 					this.setActionControls({ addMode: true });
@@ -46,7 +63,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 		});
 	}
-
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
@@ -84,7 +100,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 		if (data.editMode) {
 			this.editOnly = true;
-			//this.viewOnly = false;
 			this.saveFlag = true;
 		}
 		if (data.viewMode) {
@@ -94,8 +109,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 		}
 	}
-
-
 	buildForm() {
 		this.salaryDetails = this.fbuild.group({
 			pan: '',
@@ -130,11 +143,72 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	ngOnChanges() {
-		this.buildForm();
-		// this.getRemarkData(this.login_id);
-
 		if (this.employeedetails) {
 			this.getSalartDetails();
+			this.getSalartDetails();
+			this.getCategoryOne();
+			this.getCategoryTwo();
+			this.getCategoryThree();
+			this.getPayScale();
+			this.getBank();
+		}
+	}
+	getCategoryOne() {
+		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
+			if (res) {
+				this.categoryOneArray = [];
+				this.categoryOneArray = res;
+			}
+		});
+	}
+	getCategoryTwo() {
+		this.commonAPIService.getCategoryTwo({}).subscribe((res: any) => {
+			if (res) {
+				this.categoryTwoArray = [];
+				this.categoryTwoArray = res;
+			}
+		});
+	}
+	getCategoryThree() {
+		this.commonAPIService.getCategoryThree({}).subscribe((res: any) => {
+			if (res) {
+				this.categoryThreeArray = [];
+				this.categoryThreeArray = res;
+			}
+		});
+	}
+	getPayScale() {
+		this.commonAPIService.getSalaryStructure({}).subscribe((res: any) => {
+			if (res) {
+				this.scaleArray = [];
+				this.scaleArray = res;
+			}
+		});
+	}
+
+	getBank() {
+		this.feeService.getBanksAll({}).subscribe((res: any) => {
+			if (res) {
+				this.bankArray = [];
+				this.bankArray = res.data;
+			}
+		});
+	}
+
+	onChangeData() {
+		const findex = this.scaleArray.findIndex(e => Number(e.ss_id) === Number(this.salaryDetails.value.sal_str));
+		if (findex !== -1) {
+			this.scaleData = this.scaleArray[findex].ss_component_data;
+			// this.salaryDetails = this.fbuild.group({
+
+			// });
+		} else {
+			this.scaleData = [];
+		}
+	}
+	getDynamicValue(weigtage, value) {
+		if (value > 0) {
+			return (value * weigtage) / 100;
 		}
 	}
 
