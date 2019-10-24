@@ -50,6 +50,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
+			this.viewOnly =false;
 			this.salaryDetails.patchValue({
 				pan: '',
 				aadhar: '',
@@ -252,6 +253,16 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 		};
 
+	}
+
+	cancelForm() {
+		if (this.addOnly) {
+			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		} else if (this.saveFlag ) {
+			//this.context.studentdetails.getStudentInformation(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
+			this.getSalartDetails();
+			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		}
 	}
 
 }

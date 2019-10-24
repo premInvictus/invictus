@@ -102,7 +102,9 @@ export class EmployeeCommonComponent implements OnInit {
 				}
 				this.login_id = data.last_record;
 				this.lastRecordId = data.last_record;
+				this.lastEmployeeDetails = {};
 				if (this.lastrecordFlag) {
+					this.lastEmployeeDetails.emp_id = this.lastRecordId;
 					this.lastrecordFlag = false;
 				}
 				this.getEmployeeDetail(data.last_record);
@@ -244,7 +246,8 @@ export class EmployeeCommonComponent implements OnInit {
 			this.deleteOnly = true;
 			const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 			inputElem.select();
-			if (this.lastEmployeeDetails.emp_id === this.employeeDetailsForm.value.emp_id) {
+			this.lastEmployeeDetails = {};
+			if (this.lastEmployeeDetails['emp_id'] === this.employeeDetailsForm.value.emp_id) {
 				this.firstB = false;
 				this.previousB = false;
 				this.lastB = true;

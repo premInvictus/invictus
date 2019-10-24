@@ -64,6 +64,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
+			this.viewOnly =false;
 			this.personalContacts.patchValue({
 				relationship: '',
 				fullname: '',
@@ -153,7 +154,13 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		this.saveFlag = false;
 	}
 	cancelForm() {
-
+		if (this.addOnly) {
+			this.common.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		} else if (this.saveFlag || this.editRequestFlag) {
+			//this.context.studentdetails.getStudentInformation(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
+			this.getPersonaContactsdata();
+			this.common.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		}
 	}
 	updateForm(isview) {
 		this.contactsArray['emp_personal_contact'] = {

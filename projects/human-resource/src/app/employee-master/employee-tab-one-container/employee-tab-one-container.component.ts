@@ -55,6 +55,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
+			this.viewOnly = false;
 			this.personalDetails.patchValue({
 				p_address: '',
 				p_city: '',
@@ -469,5 +470,14 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				}
 			}
 		);
+	}
+	cancelForm() {
+		if (this.addOnly) {
+			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		} else if (this.saveFlag || this.editRequestFlag) {
+			//this.context.studentdetails.getStudentInformation(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
+			this.getPersonalDetailsdata();
+			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		}
 	}
 }
