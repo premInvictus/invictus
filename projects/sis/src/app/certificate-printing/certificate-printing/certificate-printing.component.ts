@@ -16,6 +16,7 @@ export class CertificatePrintingComponent implements OnInit {
 
   paramForm: FormGroup;
   enrollMentTypeArray: any[] = [
+    { au_process_type: '2', au_process_name: 'Registration' },
     { au_process_type: '3', au_process_name: 'Provisional Admission' },
     { au_process_type: '4', au_process_name: 'Admission' },
     { au_process_type: '5', au_process_name: 'Alumini' }
@@ -35,8 +36,13 @@ export class CertificatePrintingComponent implements OnInit {
   constructor(
     private commonApiService: CommonAPIService,
     private sisService: SisService,
-    private fbuild: FormBuilder) { }
-
+    private fbuild: FormBuilder
+    ) { }
+  getProcesstypeHeading(processType) {
+    if(processType) {
+      return this.enrollMentTypeArray.find(e => e.au_process_type === processType).au_process_name;
+    }    
+  }
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -104,13 +110,23 @@ export class CertificatePrintingComponent implements OnInit {
         if (result && result.status === 'ok') {
           this.studentsArray = result.data;
           let counter = 1;
+          let enrollment_fieldname = '';
+          if(this.paramForm.value.enrollment_type === '2'){
+            enrollment_fieldname = 'em_regd_no';
+          } else if(this.paramForm.value.enrollment_type === '3'){
+            enrollment_fieldname = 'em_provisional_admission_no';
+          } else if(this.paramForm.value.enrollment_type === '4'){
+            enrollment_fieldname = 'em_admission_no';
+          }else if(this.paramForm.value.enrollment_type === '5'){
+            enrollment_fieldname = 'em_alumini_no';
+          }
           for (const item of this.studentsArray) {
             this.ELEMENT_DATA.push({
               select: counter++,
               no: item.au_login_id,
               name: item.au_full_name,
               class: item.sec_name ? item.class_name+'-'+item.sec_name : item.class_name,
-              em_admission_no: this.paramForm.value.enrollment_type === '4' ? item.em_admission_no : item.em_provisional_admission_no,
+              em_admission_no: item[enrollment_fieldname],
               action: item
             });
           }
