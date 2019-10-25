@@ -8,7 +8,7 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { FormControl } from '@angular/forms';
 
-
+import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 @Component({
 	selector: 'app-employee-tab-six-container',
 	templateUrl: './employee-tab-six-container.component.html',
@@ -17,6 +17,7 @@ import { FormControl } from '@angular/forms';
 export class EmployeeTabSixContainerComponent implements OnInit, OnChanges { 
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	@Input() employeedetails;
+	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	panelOpenState = true;
 	addOnly = false;
 	editOnly = false;

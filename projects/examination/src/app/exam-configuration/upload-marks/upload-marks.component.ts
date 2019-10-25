@@ -19,7 +19,7 @@ export class UploadMarksComponent implements OnInit {
 	constructor(
 		private examService: ExamService,
 		private smartService: SmartService,
-		private commonAPIService: CommonAPIService,
+		private commonAPIService: CommonAPIService, 
 		private fbuild: FormBuilder
 	) { }
 

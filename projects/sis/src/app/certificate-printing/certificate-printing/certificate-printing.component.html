@@ -119,8 +119,7 @@
                         <!-- Admission Column -->
                         <ng-container matColumnDef="no">
                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            {{paramForm.value.enrollment_type === '4' ? 'Admission No.': 
-                          'Pro. Adm. No.'}}
+                            {{getProcesstypeHeading(paramForm.value.enrollment_type)}} No.
                           </th>
                           <td mat-cell *matCellDef="let item">
                             <span class="text-center">{{ item.em_admission_no }}</span>

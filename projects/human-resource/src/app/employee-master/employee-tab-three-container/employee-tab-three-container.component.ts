@@ -71,6 +71,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
+			this.viewOnly = false;
 			this.salaryDetails.patchValue({
 				pan: '',
 				aadhar: '',
@@ -158,7 +159,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.getBank();
 		}
 	}
-	getPayModeName(id){
+	getPayModeName(id) {
 		const findex = this.payMode.findIndex(e => Number(e.id) === Number(id));
 		if (findex !== -1) {
 			return this.payMode[findex].name;
@@ -215,7 +216,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		});
 	}
 
-	getPayScaleName(ss_id){
+	getPayScaleName(ss_id) {
 		const findex = this.scaleArray.findIndex(e => Number(e.ss_id) === Number(ss_id));
 		if (findex !== -1) {
 			return this.scaleArray[findex].ss_name;
@@ -229,7 +230,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 		});
 	}
-	getBankName(bank_id){
+	getBankName(bank_id) {
 		const findex = this.bankArray.findIndex(e => Number(e.tb_id) === Number(bank_id));
 		if (findex !== -1) {
 			return this.bankArray[findex].tb_name;
@@ -407,4 +408,14 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 		}
 	}
+	cancelForm() {
+		if (this.addOnly) {
+			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		} else if (this.saveFlag) {
+			//this.context.studentdetails.getStudentInformation(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
+			this.getSalartDetails();
+			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		}
+	}
+
 }
