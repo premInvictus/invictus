@@ -275,6 +275,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		return datePipe.transform(value, format);
 	}
 	getSalartDetails() {
+		console.log('wwdwd',this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary);
 		if (this.employeedetails && this.salaryDetails) {
 			this.salaryDetails.patchValue({
 				pan: this.employeedetails.emp_salary_detail.account_docment_detail.pan_no,
@@ -296,16 +297,16 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				bank_ac: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no,
 				ifsc_code: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_ifsc,
 				sal_str: this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_name,
-				pay_mode: '',
-				basic_pay: '',
+				pay_mode: this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode.pm_id,
+				basic_pay: this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale,
 				da: '',
 				hra: '',
 				allowances: '',
 				pf_deduction: '',
 				esi_deduction: '',
 				tds_deduction: '',
-				net_salary: this.employeedetails.emp_salary_detail.emp_net_salary ? this.employeedetails.emp_salary_detail.emp_net_salary : 0,
-				total_earning: this.employeedetails.emp_salary_detail.emp_total_earning ? this.employeedetails.emp_salary_detail.emp_total_earning : 0,
+				net_salary: this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary,
+				total_earning:this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning,
 			});
 		}
 
