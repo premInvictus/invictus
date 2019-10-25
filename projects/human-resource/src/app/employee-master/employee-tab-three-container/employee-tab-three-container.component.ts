@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { FeeService } from 'projects/fee/src/app/_services';
+import { DatePipe } from '@angular/common';
 @Component({
 	selector: 'app-employee-tab-three-container',
 	templateUrl: './employee-tab-three-container.component.html',
@@ -34,6 +35,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	scaleData: any[] = [];
 	bankArray: any[] = [];
 	componentData: any[] = [];
+	formGroupArray2: any[] = [];
+	salaryFinalArray: any[] = [];
+	netSalary = 0;
+	deduction = 0;
 	payMode: any[] = [
 		{ id: 0, name: 'Bank Transfer' },
 		{ id: 1, name: 'Cash Payment' },
@@ -153,6 +158,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.getBank();
 		}
 	}
+	getPayModeName(id){
+		const findex = this.payMode.findIndex(e => Number(e.id) === Number(id));
+		if (findex !== -1) {
+			return this.payMode[findex].name;
+		}
+	}
 	getCategoryOne() {
 		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
 			if (res) {
@@ -160,6 +171,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				this.categoryOneArray = res;
 			}
 		});
+	}
+	getCategoryOneName(cat_id) {
+		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+		if (findex !== -1) {
+			return this.categoryOneArray[findex].cat_name;
+		}
 	}
 	getCategoryTwo() {
 		this.commonAPIService.getCategoryTwo({}).subscribe((res: any) => {
@@ -169,6 +186,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 		});
 	}
+	getCategoryTwoName(cat_id) {
+		const findex = this.categoryTwoArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+		if (findex !== -1) {
+			return this.categoryTwoArray[findex].cat_name;
+		}
+	}
 	getCategoryThree() {
 		this.commonAPIService.getCategoryThree({}).subscribe((res: any) => {
 			if (res) {
@@ -176,6 +199,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				this.categoryThreeArray = res;
 			}
 		});
+	}
+	getCategoryThreeName(cat_id) {
+		const findex = this.categoryThreeArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+		if (findex !== -1) {
+			return this.categoryThreeArray[findex].cat_name;
+		}
 	}
 	getPayScale() {
 		this.commonAPIService.getSalaryStructure({}).subscribe((res: any) => {
@@ -186,6 +215,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		});
 	}
 
+	getPayScaleName(ss_id){
+		const findex = this.scaleArray.findIndex(e => Number(e.ss_id) === Number(ss_id));
+		if (findex !== -1) {
+			return this.scaleArray[findex].ss_name;
+		}
+	}
 	getBank() {
 		this.feeService.getBanksAll({}).subscribe((res: any) => {
 			if (res) {
@@ -194,24 +229,48 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 		});
 	}
+	getBankName(bank_id){
+		const findex = this.bankArray.findIndex(e => Number(e.tb_id) === Number(bank_id));
+		if (findex !== -1) {
+			return this.bankArray[findex].tb_name;
+		}
+	}
 
 	onChangeData() {
 		const findex = this.scaleArray.findIndex(e => Number(e.ss_id) === Number(this.salaryDetails.value.sal_str));
 		if (findex !== -1) {
 			this.scaleData = this.scaleArray[findex].ss_component_data;
-			// this.salaryDetails = this.fbuild.group({
-
-			// });
 		} else {
 			this.scaleData = [];
+		}
+
+		let i = 0;
+		for (let item of this.scaleData) {
+			const salaryData: any = {};
+			salaryData['sc_calculation_type' + i] = item.sc_calculation_type;
+			salaryData['sc_name' + i] = item.sc_name;
+			salaryData['sc_order' + i] = item.sc_order;
+			salaryData['sc_id' + i] = item.sc_id;
+			salaryData['sc_type' + i] = item.sc_type;
+			salaryData['type' + i] = item.sc_type.type_id;
+			salaryData['sc_value' + i] = item.sc_value;
+			this.formGroupArray2.push({
+				formGroup: this.fbuild.group(salaryData)
+			});
+			i++;
 		}
 	}
 	getDynamicValue(weigtage, value) {
 		if (value > 0) {
 			return (value * weigtage) / 100;
+		} else {
+			return 0;
 		}
 	}
-
+	dateConversion(value, format) {
+		const datePipe = new DatePipe('en-in');
+		return datePipe.transform(value, format);
+	}
 	getSalartDetails() {
 		if (this.employeedetails && this.salaryDetails) {
 			this.salaryDetails.patchValue({
@@ -220,11 +279,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				pf_ac: this.employeedetails.emp_salary_detail.account_docment_detail.pf_acc_no,
 				esi_ac: this.employeedetails.emp_salary_detail.account_docment_detail.esi_acc_no,
 				nominee: this.employeedetails.emp_salary_detail.nominee_detail.name,
-				doj: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.doj,
-				pf_doj: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date,
-				esi_doj: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date,
-				probation: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date,
-				confirm_date: this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.confirmation_date,
+				doj: this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd'),
+				pf_doj: this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date, 'yyyy-MM-dd'),
+				esi_doj: this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date, 'yyyy-MM-dd'),
+				probation: this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date, 'yyyy-MM-dd'),
+				confirm_date: this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.confirmation_date, 'yyyy-MM-dd'),
 				category_1: this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id,
 				category_2: this.employeedetails.emp_salary_detail.emp_job_detail.category_2.cat_id,
 				category_3: this.employeedetails.emp_salary_detail.emp_job_detail.category_3.cat_id,
@@ -260,24 +319,24 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				name: this.salaryDetails.value.nominee
 			},
 			emp_organisation_relation_detail: {
-				doj: this.salaryDetails.value.doj,
-				pf_joining_date: this.salaryDetails.value.pf_doj,
-				esic_joining_date: this.salaryDetails.value.esi_doj,
-				probation_till_date: this.salaryDetails.value.probation,
-				confirmation_date: this.salaryDetails.value.confirm_date
+				doj: this.dateConversion(this.salaryDetails.value.doj, 'yyyy-MM-dd'),
+				pf_joining_date: this.dateConversion(this.salaryDetails.value.pf_doj, 'yyyy-MM-dd'),
+				esic_joining_date: this.dateConversion(this.salaryDetails.value.esi_doj, 'yyyy-MM-dd'),
+				probation_till_date: this.dateConversion(this.salaryDetails.value.probation, 'yyyy-MM-dd'),
+				confirmation_date: this.dateConversion(this.salaryDetails.value.confirm_date, 'yyyy-MM-dd')
 			},
 			emp_job_detail: {
 				category_1: {
 					cat_id: this.salaryDetails.value.category_1,
-					cat_name: this.salaryDetails.value.category_1
+					cat_name: this.getCategoryOneName(this.salaryDetails.value.category_1)
 				},
 				category_2: {
 					cat_id: this.salaryDetails.value.category_2,
-					cat_name: this.salaryDetails.value.category_2
+					cat_name: this.getCategoryTwoName(this.salaryDetails.value.category_2)
 				},
 				category_3: {
 					cat_id: this.salaryDetails.value.category_3,
-					cat_name: this.salaryDetails.value.category_3
+					cat_name: this.getCategoryThreeName(this.salaryDetails.value.category_3)
 				},
 				contact_period: this.salaryDetails.value.contract_period
 			},
@@ -288,7 +347,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				{
 					bnk_detail: {
 						bnk_id: this.salaryDetails.value.bank_name,
-						bnk_name: this.salaryDetails.value.bank_name,
+						bnk_name: this.getBankName(this.salaryDetails.value.bank_name),
 						bnk_ifsc: this.salaryDetails.value.ifsc_code,
 						bnk_acc_no: this.salaryDetails.value.bank_ac
 					}
@@ -297,23 +356,14 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			emp_salary_structure: {
 				emp_pay_scale: {
 					pc_id: this.salaryDetails.value.sal_str,
-					pc_name: this.salaryDetails.value.sal_str
+					pc_name: this.getPayScaleName(this.salaryDetails.value.sal_str)
 				},
 				emp_pay_mode: {
 					pm_id: this.salaryDetails.value.pay_mode,
-					pm_name: this.salaryDetails.value.pay_mode
+					pm_name: this.getPayModeName(this.salaryDetails.value.pay_mode)
 				},
-				emp_basic_pay_scale: {
-					bps_id: this.salaryDetails.value.basic_pay,
-					bps_name: this.salaryDetails.value.basic_pay
-				},
-				emp_salary_heads: [
-					{
-						id: '',
-						name: '',
-						value: ''
-					}
-				],
+				emp_basic_pay_scale: this.salaryDetails.value.basic_pay,
+				emp_salary_heads: this.salaryFinalArray,
 				emp_deduction_detail: [
 					{
 						pf_deduction: this.salaryDetails.value.pf_deduction,
@@ -325,7 +375,36 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				emp_total_earning: this.salaryDetails.value.total_deduction
 			}
 		};
+		console.log(this.salaryDetailsArray);
 
 	}
-
+	getNetSalary() {
+		this.deduction = 0;
+		this.netSalary = 0;
+		this.salaryFinalArray = [];
+		console.log(this.formGroupArray2);
+		if (this.formGroupArray2.length > 0) {
+			let i = 0;
+			this.netSalary = this.salaryDetails.value.basic_pay;
+			for (const item of this.formGroupArray2) {
+				if (Number(item.formGroup.value['type' + i]) === 1) {
+					this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value' + i]);
+				} else {
+					this.deduction = this.deduction + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
+					this.netSalary = Number(this.netSalary) - Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
+				}
+				this.salaryFinalArray.push(
+					{
+						sc_calculation_type: item.formGroup.value['sc_calculation_type' + i],
+						sc_id: item.formGroup.value['sc_id' + i],
+						sc_name: item.formGroup.value['sc_name' + i],
+						sc_order: item.formGroup.value['sc_order' + i],
+						sc_type: item.formGroup.value['sc_type' + i],
+						sc_value: item.formGroup.value['sc_value' + i]
+					}
+				);
+				i++;
+			}
+		}
+	}
 }

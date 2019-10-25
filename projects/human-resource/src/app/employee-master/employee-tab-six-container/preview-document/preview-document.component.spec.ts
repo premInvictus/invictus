@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EmployeeCommonComponent } from './employee-common.component';
+import { PreviewDocumentComponent } from './preview-document.component';
 
-describe('EmployeeCommonComponent', () => {
-	let component: EmployeeCommonComponent;
-	let fixture: ComponentFixture<EmployeeCommonComponent>;
+describe('PreviewDocumentComponent', () => {
+	let component: PreviewDocumentComponent;
+	let fixture: ComponentFixture<PreviewDocumentComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [EmployeeCommonComponent]
+			declarations: [PreviewDocumentComponent]
 		})
 			.compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(EmployeeCommonComponent);
+		fixture = TestBed.createComponent(PreviewDocumentComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
