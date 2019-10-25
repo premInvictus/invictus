@@ -33,7 +33,7 @@ import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dia
 import { PublishModalComponent } from './publish-modal/publish-modal.component';
 import { NoDataComponent } from './no-data/no-data.component';
 import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.component';
-import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { PreviewDocumentComponent } from '../employee-master/employee-tab-six-container/preview-document/preview-document.component';
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 const moment = _moment;

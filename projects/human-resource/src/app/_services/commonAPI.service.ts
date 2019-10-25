@@ -167,7 +167,7 @@ export class CommonAPIService {
 		return this.http.post(environment.apiSisUrl + '/dashboard/getProjectList', param);
 	}
 
-	dateConvertion(value, format= 'yyyy-MM-dd') {
+	dateConvertion(value, format = 'yyyy-MM-dd') {
 		const datePipe = new DatePipe('en-US');
 		return datePipe.transform(value, format);
 	}
@@ -202,9 +202,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiExamUrl + '/common/getClassTerm', value);
 	}
-	insertEmployeeDetails(value){
+	insertEmployeeDetails(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/employee/insert', value);
+		return this.http.post(environment.apiHRUrl + 'employee/insert', value);
 	}
 
 	getAllEmployee(value) {
@@ -256,7 +256,7 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + 'employee/getFilterData', value);
 	}
-	getSalaryHeads(value){
+	getSalaryHeads(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + 'salary-component/getAll', value);
 	}
@@ -276,4 +276,5 @@ export class CommonAPIService {
 	}
 
 	
+
 }

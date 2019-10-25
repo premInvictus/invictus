@@ -91,9 +91,9 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			management_remarks: this.employeedetails.emp_remark_detail.management_remark,
 			interview_remarks: this.employeedetails.emp_remark_detail.interview_remark,
 		});
-		this.skillsArray = this.employeedetails.emp_remark_detail.skills;
-		// this.experiencesArray = this.employeedetails.emp_remark_detail.experience_detail;
-		// this.educationsArray = this.employeedetails.emp_remark_detail.education_detail;
+		this.skillsArray = [this.employeedetails.emp_remark_detail.skills];
+		this.experiencesArray = this.employeedetails.emp_remark_detail.experience_detail;
+		this.educationsArray = this.employeedetails.emp_remark_detail.education_detail;
 	}
 	dateConversion(value, format) {
 		const datePipe = new DatePipe('en-in');
@@ -292,11 +292,16 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	saveForm() {
 		this.employeedetails['emp_remark_detail'] = {
 			education_detail: this.educationsArray,
-			experience_detail: this.experienceValue,
+			experience_detail: this.experiencesArray,
 			management_remark: this.remarksForm.value.management_remarks,
 			interview_remark: this.remarksForm.value.interview_remarks,
 			skills: this.skillsArray
 		};
+		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+			if (result.status === 'ok') {
+
+			}
+		});
 		console.log('tttt',this.employeedetails);
 	}
 } 

@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild, OnChanges,Input } from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges, Input } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
-
+import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 // import { ChildDetailsEmployeeComponent } from '../child-details-theme-two/child-details-theme-two.component';
 // import { ParentDetailsEmployeeComponent } from '../parent-details-theme-two/parent-details-theme-two.component';
 // import { MedicalInformationEmployeeComponent } from '../medical-information-theme-two/medical-information-theme-two.component';
@@ -13,7 +14,8 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 	templateUrl: './employee-tab-six-container.component.html',
 	styleUrls: ['./employee-tab-six-container.component.scss']
 })
-export class EmployeeTabSixContainerComponent implements OnInit, OnChanges { 
+export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
+	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	@Input() employeedetails;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	panelOpenState = true;
@@ -54,7 +56,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 	parentId;
 	@ViewChild('editReference') editReference;
 
-	constructor(public commonAPIService: CommonAPIService,
+	constructor(public commonAPIService: CommonAPIService, private dialog: MatDialog,
 		private sisService: SisService) {
 
 	}
@@ -92,9 +94,6 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 	}
 	ngOnChanges() {
 	}
-
-	saveForm() {
-	}
 	updateForm(isview) {
 
 	}
@@ -105,16 +104,28 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		// }
 	}
 	editConfirm() { }
+	previewImage(imgArray, index) {
+		console.log(imgArray);
+		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
+			data: {
+				imageArray: imgArray,
+				index: index
+			},
+			height: '100vh',
+			width: '100vh'
+		});
+	}
 	getDocuments() {
 		this.documentArray = [];
 		this.verifyArray = [];
 		this.finalDocumentArray = [];
 		this.imageArray = [];
-		this.documentArray = this.documentFormData;		
-		for (const item of this.finalDocumentArray) {
+		this.documentArray = this.employeedetails.emp_document_detail;
+
+		for (const item of this.documentArray) {
 			this.imageArray.push({
-				ed_docreq_id: item.ed_docreq_id,
-				imgName: item.ed_link
+				ed_docreq_id: item.document_id,
+				imgName: item.files_data.file_url
 			});
 		}
 		const tempArray: any[] = [];
@@ -125,6 +136,12 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 			}
 		}
 		this.verifyArray = tempArray;
+	}
+	getFileName(doc_req_id) {
+		const findIndex = this.documentsArray.findIndex(f => f.docreq_id === doc_req_id);
+		if (findIndex !== -1) {
+			return this.documentsArray[findIndex].docreq_alias;
+		}
 	}
 	fileChangeEvent(fileInput, doc_req_id) {
 		this.multipleFileArray = [];
@@ -151,10 +168,8 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
 					if (result) {
 						for (const item of result.data) {
-							const findex = this.finalDocumentArray.findIndex(f =>
-								f.ed_login_id === item.login_id && f.ed_docreq_id === doc_req_id);
-							const findex2 = this.imageArray.findIndex(f =>
-								f.imgName === item.file_url && f.ed_docreq_id === doc_req_id);
+							const findex = this.finalDocumentArray.findIndex(f => f.ed_docreq_id === doc_req_id);
+							const findex2 = this.imageArray.findIndex(f => f.imgName === item.file_url && f.ed_docreq_id === doc_req_id);
 							if (findex === -1) {
 								// this.finalDocumentArray.push({
 								// 	ed_docreq_id: doc_req_id,
@@ -163,16 +178,15 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 								// });
 								this.finalJSon.push({
 									document_id: doc_req_id,
-									document_name: '',
-									document_data: {
-										verified_staus: false,
-										files_data: [
-											{
-												file_name: item.file_name,
-												file_url: item.file_url
-											}
-										]
-									}
+									document_name: this.getFileName(doc_req_id),
+									verified_staus: false,
+									files_data: [
+										{
+											file_name: item.file_name,
+											file_url: item.file_url
+										}
+									]
+
 								});
 							} else {
 								this.finalDocumentArray.splice(findex, 1);
@@ -228,5 +242,17 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		if (findex2 !== -1) {
 			this.imageArray.splice(findex2, 1);
 		}
+	}
+	saveForm() {
+		this.employeedetails['emp_document_detail'] = {
+			document_data: this.finalJSon
+		};
+		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+			if (result.status === 'ok') {
+
+			}
+		});
+		console.log(this.employeedetails);
+
 	}
 }
