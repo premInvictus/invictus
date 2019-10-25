@@ -698,9 +698,9 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/slctc/approveSlcTc', value);
 	}
-	printcertAllCertificate(value) {
+	printAllCertificate(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiSisUrl + '/slctc/printcertAllCertificate', value);
+		return this.http.post(environment.apiSisUrl + '/slctc/printAllCertificate', value);
 	}
 
 	getSlcTc(value) {

@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from 
 import { Element } from './certificate-printing.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { SelectionModel } from '@angular/cdk/collections';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-certificate-printing',
@@ -15,6 +16,7 @@ export class CertificatePrintingComponent implements OnInit {
 
   paramForm: FormGroup;
   enrollMentTypeArray: any[] = [
+    { au_process_type: '2', au_process_name: 'Registration' },
     { au_process_type: '3', au_process_name: 'Provisional Admission' },
     { au_process_type: '4', au_process_name: 'Admission' },
     { au_process_type: '5', au_process_name: 'Alumini' }
@@ -31,10 +33,16 @@ export class CertificatePrintingComponent implements OnInit {
   selection = new SelectionModel<Element>(true, []);
   @ViewChild(MatSort) sort: MatSort;
   tabledivflag = false;
-  constructor(private commonApiService: CommonAPIService,
+  constructor(
+    private commonApiService: CommonAPIService,
     private sisService: SisService,
-    private fbuild: FormBuilder) { }
-
+    private fbuild: FormBuilder
+    ) { }
+  getProcesstypeHeading(processType) {
+    if(processType) {
+      return this.enrollMentTypeArray.find(e => e.au_process_type === processType).au_process_name;
+    }    
+  }
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -102,13 +110,23 @@ export class CertificatePrintingComponent implements OnInit {
         if (result && result.status === 'ok') {
           this.studentsArray = result.data;
           let counter = 1;
+          let enrollment_fieldname = '';
+          if(this.paramForm.value.enrollment_type === '2'){
+            enrollment_fieldname = 'em_regd_no';
+          } else if(this.paramForm.value.enrollment_type === '3'){
+            enrollment_fieldname = 'em_provisional_admission_no';
+          } else if(this.paramForm.value.enrollment_type === '4'){
+            enrollment_fieldname = 'em_admission_no';
+          }else if(this.paramForm.value.enrollment_type === '5'){
+            enrollment_fieldname = 'em_alumini_no';
+          }
           for (const item of this.studentsArray) {
             this.ELEMENT_DATA.push({
               select: counter++,
               no: item.au_login_id,
               name: item.au_full_name,
               class: item.sec_name ? item.class_name+'-'+item.sec_name : item.class_name,
-              em_admission_no: this.paramForm.value.enrollment_type === '4' ? item.em_admission_no : item.em_provisional_admission_no,
+              em_admission_no: item[enrollment_fieldname],
               action: item
             });
           }
@@ -132,9 +150,11 @@ export class CertificatePrintingComponent implements OnInit {
     const param: any = {};
     param.certificate_type = this.paramForm.value.certificate_type;
     param.printData = printData;
-    this.sisService.printcertAllCertificate({param}).subscribe((result: any) => {
+    this.sisService.printAllCertificate({param}).subscribe((result: any) => {
       if(result && result.status === 'ok') {
-        //logic here
+        this.commonApiService.showSuccessErrorMessage('Download Successfully', 'success');
+        const length = result.data.split('/').length;
+        saveAs(result.data, result.data.split('/')[length - 1]);
       }
     })
   }
