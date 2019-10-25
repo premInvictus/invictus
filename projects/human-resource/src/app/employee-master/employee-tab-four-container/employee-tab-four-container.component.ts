@@ -69,6 +69,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 						//this.commonAPIService.studentData.next(result.data[0]);
 						this.addOnly = false;
 					}
+					
 				});
 			} else {
 				//this.commonAPIService.studentData.next(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
@@ -92,8 +93,8 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			interview_remarks: this.employeedetails.emp_remark_detail.interview_remark,
 		});
 		this.skillsArray = [this.employeedetails.emp_remark_detail.skills];
-		this.experiencesArray = this.employeedetails.emp_remark_detail.experience_detail;
-		this.educationsArray = this.employeedetails.emp_remark_detail.education_detail;
+		this.experiencesArray = this.employeedetails.emp_remark_detail.experience_detail ? this.employeedetails.emp_remark_detail.experience_detail : [];
+		this.educationsArray = this.employeedetails.emp_remark_detail.education_detail ? this.employeedetails.emp_remark_detail.education_detail : [];
 	}
 	dateConversion(value, format) {
 		const datePipe = new DatePipe('en-in');

@@ -67,6 +67,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				if (data.addMode) {
 					this.setActionControls({ addMode: true });
 				}
+				if (data.editMode) {
+					this.setActionControls({ editMode: true });
+				} 
 			}
 		});
 	}
@@ -109,6 +112,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		if (data.editMode) {
 			this.editOnly = true;
 			this.saveFlag = true;
+			this.viewOnly = false;
 		}
 		if (data.viewMode) {
 			this.viewOnly = true;
@@ -438,6 +442,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.getSalartDetails();
 			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		}
+	}
+
+	remainOnSame() {
+		
 	}
 
 }

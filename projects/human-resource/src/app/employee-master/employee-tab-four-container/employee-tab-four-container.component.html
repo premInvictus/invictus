@@ -99,7 +99,7 @@
         </div>
       </form>
 
-      <div class="row" *ngIf="educationsArray.length > 0 ">
+      <div class="row" *ngIf="educationsArray?.length > 0 ">
         <div class="col-12">
           <table class="table table-borderd table-stripped custom-table">
             <thead class="table-skill__head text-center">
@@ -133,7 +133,7 @@
           </table>
         </div>
       </div>
-      <div class="row" *ngIf="educationsArray.length === 0 && viewOnly ">
+      <div class="row" *ngIf="educationsArray?.length === 0 && viewOnly ">
         <div class="col-12">
           <table class="table table-borderd table-stripped custom-table">
             <thead class="table-skill__head text-center">
@@ -227,7 +227,7 @@
         </div>
       </form>
 
-      <div class="row" *ngIf="experiencesArray.length > 0 ">
+      <div class="row" *ngIf="experiencesArray?.length > 0 ">
         <div class="col-12">
           <table class="table table-borderd table-stripped custom-table">
             <thead class="table-skill__head text-center">
@@ -260,7 +260,7 @@
           </table>
         </div>
       </div>
-      <div class="row" *ngIf="experiencesArray.length === 0 && viewOnly ">
+      <div class="row" *ngIf="experiencesArray?.length === 0 && viewOnly ">
         <div class="col-12">
           <table class="table table-borderd table-stripped custom-table">
             <thead class="table-skill__head text-center">
@@ -356,4 +356,4 @@
 
   </ng-container>
 </div>
-<app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>
+<!-- <app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal> -->

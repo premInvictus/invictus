@@ -68,7 +68,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		}
 		if (data.editMode) {
 			this.editOnly = true;
-			//this.viewOnly = false;
+			this.viewOnly = false;
 			this.saveFlag = true;
 		}
 		if (data.viewMode) {
@@ -90,6 +90,9 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			if (data) {
 				if (data.addMode) {
 					this.setActionControls({ addMode: true });
+				} 
+				if (data.editMode) {
+					this.setActionControls({ editMode: true });
 				} 
 			}
 		});
