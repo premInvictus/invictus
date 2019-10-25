@@ -252,5 +252,13 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + 'salary-structure/getAll', value);
 	}
+	getFilterData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'employee/getFilterData', value);
+	}
+	getSalaryHeads(value){
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'salary-component/getAll', value);
+	}
 	
 }
