@@ -1,7 +1,7 @@
 <div class="container-box__white">
   <ng-container>
     <div class="functional-button-five">
-      <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request') && studentdetails?.editable_status == '1')"
+      <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request'))"
         (click)="editRequest()" (keydown.enter)="$event.preventDefault()">
         <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span>
       </button>
