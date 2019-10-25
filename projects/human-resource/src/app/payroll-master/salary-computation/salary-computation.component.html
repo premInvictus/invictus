@@ -4,7 +4,7 @@
       <form [formGroup]="searchForm">
         <div class="row">
 
-          <div class="col-7 margin-top-15">
+          <div class="col-9 margin-top-15">
             <span class="font-size-24">Salary Computation</span>
           </div>
 
@@ -27,7 +27,7 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="col-2">
+          <!-- <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <input matInput [matDatepicker]="picker" placeholder="Pay Date" formControlName="pay_date" required
                 [min]="searchForm.controls.pay_date.value" (change)="getAllEmployee()" />
@@ -35,7 +35,7 @@
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
 
-          </div>
+          </div> -->
           <div class="col-1">
             <button mat-raised-button class="btn-success-blue" (click)="openFilter()">
               Filter
@@ -86,8 +86,7 @@
             </div>
 
           </div>
-          <table mat-table [dataSource]="salaryComputeDataSource" matSort class="table-100 text-center" id="book_log"
-            class="booklog">
+          <table mat-table [dataSource]="salaryComputeDataSource" matSort class="table-100 text-center" class="booklog">
             <ng-container matColumnDef="header-row-first-group">
               <th mat-header-cell *matHeaderCellDef [attr.colspan]="5"> </th>
             </ng-container>
@@ -152,11 +151,11 @@
               </td>
             </ng-container> -->
 
-            <ng-container *ngFor="let column of shacolumns" [matColumnDef]="column?.columnDef">
+            <ng-container *ngFor="let column of shacolumns; let i = index;" [matColumnDef]="column?.columnDef">
 
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">{{column?.header}}</th>
-              <td mat-cell *matCellDef="let row" class="text-left">
-                <span class="text-left text-capitalize">test </span>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                <span class="text-left text-capitalize">{{element?.empShacolumns[i]['value']}} </span>
               </td>
             </ng-container>
             <!-- <ng-container matColumnDef="emp_allowances">
@@ -170,10 +169,10 @@
               <td mat-cell *matCellDef="let element" class="text-left"> <span
                   *ngIf="element.emp_total_earnings">{{(element?.emp_total_earnings)}} </span> </td>
             </ng-container>
-            <ng-container *ngFor="let column of shdcolumns" [matColumnDef]="column?.columnDef">
+            <ng-container *ngFor="let column of shdcolumns; let i = index;" [matColumnDef]="column?.columnDef">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">{{column?.header}}</th>
-              <td mat-cell *matCellDef="let row" class="text-left">
-                <span class="text-left text-capitalize">test </span>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                <span class="text-left text-capitalize">{{element?.empShdcolumns[i]['value']}} </span>
               </td>
             </ng-container>
             <!-- <ng-container matColumnDef="emp_deductions">
@@ -188,26 +187,27 @@
                 {{element?.emp_present_days}}
               </td>
             </ng-container>
-           
+
             <ng-container matColumnDef="emp_advance">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2"> Advance/Arrear's</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2"> Advance/Arrear's
+              </th>
               <td mat-cell *matCellDef="let element">
                 <!-- {{element?.emp_advance}} -->
                 <form [formGroup]="formGroupArray[element.srno - 1]">
                   <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1]?.value.advance) ? 'Type Here.' : ''"
-                      formControlName="advance" autocomplete="off" />
+                      formControlName="advance" autocomplete="off" (change)="setNetSalary(element, $event)"/>
                   </mat-form-field>
                 </form>
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_salary_payable">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2"> Salary Payable</th>
-                <td mat-cell *matCellDef="let element">
-                  {{element?.emp_salary_payable}}
-                </td>
-              </ng-container>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2"> Salary Payable</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.emp_salary_payable}}
+              </td>
+            </ng-container>
             <ng-container matColumnDef="bank_transfer">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2">Bank Transfer</th>
               <td mat-cell *matCellDef="let element">
@@ -215,8 +215,8 @@
                 <form [formGroup]="formGroupArray[element.srno - 1]">
                   <mat-form-field class="form-field lib-form">
                     <input matInput
-                      [placeholder]="!(formGroupArray[element.srno - 1]?.value.pm_id_bank_transfer) ? 'Type Here.' : ''"
-                      formControlName="pm_id_bank_transfer" autocomplete="off" />
+                      [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[0]['pm_id']]) ? 'Type Here.' : ''"
+                      formControlName="{{paymentModeArray[0]['pm_id']}}" autocomplete="off" (change)="setNetTotal(element, $event)"/>
                   </mat-form-field>
                 </form>
               </td>
@@ -228,8 +228,8 @@
                 <form [formGroup]="formGroupArray[element.srno - 1]">
                   <mat-form-field class="form-field lib-form">
                     <input matInput
-                      [placeholder]="!(formGroupArray[element.srno - 1]?.value.pm_id_cheque_payment) ? 'Type Here.' : ''"
-                      formControlName="pm_id_cheque_payment" autocomplete="off" />
+                      [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[1]['pm_id']]) ? 'Type Here.' : ''"
+                      formControlName="{{paymentModeArray[1]['pm_id']}}" autocomplete="off" (change)="setNetTotal(element, $event)"/>
                   </mat-form-field>
                 </form>
               </td>
@@ -240,8 +240,8 @@
                 <form [formGroup]="formGroupArray[element.srno - 1]">
                   <mat-form-field class="form-field lib-form">
                     <input matInput
-                      [placeholder]="!(formGroupArray[element.srno - 1]?.value.pm_id_cash_payment) ? 'Type Here.' : ''"
-                      formControlName="pm_id_cash_payment" autocomplete="off" />
+                      [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[2]['pm_id']]) ? 'Type Here.' : ''"
+                      formControlName="{{paymentModeArray[2]['pm_id']}}" autocomplete="off" (change)="setNetTotal(element, $event)"/>
                   </mat-form-field>
                 </form>
               </td>
@@ -276,6 +276,15 @@
           </mat-paginator>
         </div>
       </div>
+      <div class="row text-center" *ngIf="SALARY_COMPUTE_ELEMENT.length > 0">
+        <div class="col-12" *ngIf="!editFlag">
+          <button mat-raised-button class="btn-success-green margin-right-15" (click)="save()">Confirm and
+            Process</button>
+          <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
+            Reset
+          </button>
+        </div>
+      </div>
     </mat-card>
     <mat-card *ngIf="SALARY_COMPUTE_ELEMENT.length == 0">
       <div class="text-center">
@@ -284,14 +293,7 @@
           [noDataText]="" [subText]="'No Employee Salary Compute'"></app-no-data>
       </div>
     </mat-card>
-    <div class="row text-center" *ngIf="SALARY_COMPUTE_ELEMENT.length > 0">
-        <div class="col-12" *ngIf="!editFlag">
-          <button mat-raised-button class="btn-success-green margin-right-15" (click)="save()">Confirm and Process</button>
-          <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
-            Reset
-          </button>
-        </div>
-      </div>
+
   </div>
 </div>
 

@@ -260,5 +260,20 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + 'salary-component/getAll', value);
 	}
+	insertSalaryCompute(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'salary-compute/insert', value);
+	}
+
+	updateSalaryCompute(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'salary-compute/update', value);
+	}
+
+	getSalaryCompute(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'salary-compute/getAll', value);
+	}
+
 	
 }
