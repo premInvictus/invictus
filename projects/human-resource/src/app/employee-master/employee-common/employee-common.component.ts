@@ -338,6 +338,10 @@ export class EmployeeCommonComponent implements OnInit {
 		this.uploadImage(result.filename, result.base64);
 	}
 
+	acceptNo(event) {
+		event.target.value = '';
+	}
+
 	getEmployeeId($event) {
 		$event.preventDefault();
 		this.getEmployeeDetail($event.target.value);
