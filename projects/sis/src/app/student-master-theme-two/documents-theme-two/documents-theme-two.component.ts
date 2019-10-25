@@ -72,8 +72,10 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 						this.documentsArray.push(item);
 					}
 				}
+				console.log('www',this.documentArray);
 			}
 		});
+		
 	}
 	fileChangeEvent(fileInput, doc_req_id) { 
 		this.multipleFileArray = [];

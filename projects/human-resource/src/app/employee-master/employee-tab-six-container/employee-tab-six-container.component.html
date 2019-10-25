@@ -8,7 +8,7 @@
     </div>
 
     <div class="container-box__white">
-      <div>
+      <div> 
         <div class="row remove-top-margin">
           <div class="col-6 remove-col-padding vertical-line-1">
             <div class="row remove-top-margin">
@@ -21,11 +21,11 @@
                   </div>
                   <div class="row height-100">
                     <div class="col-2 text-center">
-                      <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
+                      <input  type="file" class="form-control form-control-sm mv_top"
                         multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
                         style="display: none !important">
 
-                      <a class=" text-center cursor-pointer" *ngIf="!viewOnly">
+                      <a class=" text-center cursor-pointer" >
                         <mat-icon class="margin-top-10  cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>
                         &nbsp; &nbsp;<label class="sis-btn-document-label cursor-pointer" [for]="item.docreq_id">Choose
                           File</label>
@@ -40,14 +40,14 @@
                             <div>
                               <div>
                                 <div *ngIf="img.ed_docreq_id === item.docreq_id" style="float:right;">
-                                  <button *ngIf="!viewOnly" mat-button class="upload-document-delete-btn"
+                                  <button  mat-button class="upload-document-delete-btn"
                                     (click)="deleteFile(img.imgName,img.ed_docreq_id)">
                                     <mat-icon class="btn-upload-icon">delete</mat-icon>
                                   </button>
                                 </div>
                                 <div *ngIf="img.ed_docreq_id ===  item.docreq_id">
                                   <img *ngIf="checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
-                                    [src]="img.imgName" (click)="previewImage(imageArray, i)">
+                                    [src]="img.imgName" >
                                   <img *ngIf="!checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
                                     src="https://icons-for-free.com/free-icons/png/512/2109135.png"
                                     (click)="previewImage(imageArray, i)"><br>
