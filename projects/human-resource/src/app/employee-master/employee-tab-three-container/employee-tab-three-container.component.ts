@@ -38,7 +38,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	formGroupArray2: any[] = [];
 	salaryFinalArray: any[] = [];
 	netSalary = 0;
+	totalEarning = 0;
 	deduction = 0;
+	earning = 0;
 	payMode: any[] = [
 		{ id: 0, name: 'Bank Transfer' },
 		{ id: 1, name: 'Cash Payment' },
@@ -101,7 +103,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				esi_deduction: '',
 				tds_deduction: '',
 				net_salary: '',
-				total_deduction: ''
+				total_earning: ''
 			});
 		}
 		if (data.editMode) {
@@ -145,7 +147,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			esi_deduction: '',
 			tds_deduction: '',
 			net_salary: '',
-			total_deduction: ''
+			total_earning: ''
 		});
 	}
 	ngOnChanges() {
@@ -303,13 +305,13 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				esi_deduction: '',
 				tds_deduction: '',
 				net_salary: this.employeedetails.emp_salary_detail.emp_net_salary ? this.employeedetails.emp_salary_detail.emp_net_salary : 0,
-				total_deduction: this.employeedetails.emp_salary_detail.emp_total_earning ? this.employeedetails.emp_salary_detail.emp_total_earning : 0,
+				total_earning: this.employeedetails.emp_salary_detail.emp_total_earning ? this.employeedetails.emp_salary_detail.emp_total_earning : 0,
 			});
 		}
 
 	}
 	saveForm() {
-		this.salaryDetailsArray['emp_salary_detail'] = {
+		this.employeedetails['emp_salary_detail'] = {
 			account_docment_detail: {
 				pan_no: this.salaryDetails.value.pan,
 				aadhar_no: this.salaryDetails.value.addhar,
@@ -372,27 +374,46 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						tds_deduction: this.salaryDetails.value.tds_deduction
 					}
 				],
-				emp_net_salary: this.salaryDetails.value.net_salary,
-				emp_total_earning: this.salaryDetails.value.total_deduction
+				emp_net_salary: this.netSalary,
+				emp_total_earning: this.totalEarning
 			}
 		};
-		console.log(this.salaryDetailsArray);
+		console.log(this.employeedetails);
+		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+			if (result.status === 'ok') {
 
+			}
+		});
 	}
 	getNetSalary() {
+		this.earning = 0;
 		this.deduction = 0;
+		this.totalEarning = 0;
 		this.netSalary = 0;
+
 		this.salaryFinalArray = [];
 		console.log(this.formGroupArray2);
 		if (this.formGroupArray2.length > 0) {
 			let i = 0;
 			this.netSalary = this.salaryDetails.value.basic_pay;
 			for (const item of this.formGroupArray2) {
-				if (Number(item.formGroup.value['type' + i]) === 1) {
-					this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value' + i]);
-				} else {
-					this.deduction = this.deduction + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
-					this.netSalary = Number(this.netSalary) - Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
+				if (item.formGroup.value['sc_calculation_type' + i] === 'text') {
+					if (Number(item.formGroup.value['type' + i]) === 1) {
+						this.earning = this.earning + Number(item.formGroup.value['sc_value' + i]);
+						this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value' + i]);
+					} else {
+						this.deduction = this.deduction + Number(item.formGroup.value['sc_value' + i]);
+						this.netSalary = Number(this.netSalary) - Number(item.formGroup.value['sc_value' + i]);
+					}
+
+				} else if (item.formGroup.value['sc_calculation_type' + i] === '%') {
+					if (Number(item.formGroup.value['type' + i]) === 1) {
+						this.earning = this.earning + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
+						this.netSalary = Number(this.netSalary) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
+					} else {
+						this.deduction = this.deduction + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
+						this.netSalary = Number(this.netSalary) - Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
+					}
 				}
 				this.salaryFinalArray.push(
 					{
@@ -406,6 +427,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				);
 				i++;
 			}
+			this.totalEarning = Number(this.salaryDetails.value.basic_pay) + Number(this.deduction) + Number(this.earning);
 		}
 	}
 	cancelForm() {

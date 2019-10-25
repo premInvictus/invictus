@@ -6,7 +6,7 @@
                     <form [formGroup]="salaryDetails">
                         <div class="row remove-top-margin">
                             <div class="col-4 col-pad-5">
-                                <div class="row salary-card">
+                                <div class="row salary-card"> 
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Pan No.</mat-label>
                                         <input class="text-capitalize" formControlName="pan" matInput
@@ -37,7 +37,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>ESI A/c No.</mat-label>
                                         <input type="text" formControlName="esi_ac" matInput placeholder="ESI A/c No."
-                                            required [readonly]="viewOnly"
+                                            required 
                                             [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
@@ -272,9 +272,9 @@
                                         </mat-error>
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Total Deduction</mat-label>
-                                        <input type="text" formControlName="total_deduction" matInput
-                                            [value]="deduction" placeholder="Total Deduction" required
+                                        <mat-label>Total Earning</mat-label>
+                                        <input type="text" formControlName="total_earning" matInput
+                                            [value]="totalEarning" placeholder="Total Earning" required
                                             [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
