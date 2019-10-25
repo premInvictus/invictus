@@ -1,0 +1,207 @@
+<div class="add-question-content">
+    <div class="row">
+        <div class="col-lg-12 col-mobile-view-add-ques">
+            <div class="white-box">
+                <div class="container-box__white">
+                    <div class="row">
+                        <div class="col-lg-12 col-mobile-view-add-ques">
+                            <div class="white-box-content-title">
+                                <h4 class="text-uppercase text-center"><b>HRMS Setup Configuration</b></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3 col-mobile-view-add-ques">
+
+                            <div class="left-side-box">
+                                <div class="left-side-box-content">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Setup Option</mat-label>
+                                                    <mat-select (selectionChange)="loadConfiguration($event)"
+                                                        placeholder="Setup Options">
+                                                        <mat-option value="">Please Select</mat-option>
+                                                        <mat-option value="1">Master</mat-option>
+                                                        <mat-option value="2">Salary Compopnent</mat-option>
+                                                        <mat-option value="3">Salary Structure</mat-option>
+                                                        <!-- <mat-option value="2">Setup Configuration</mat-option> -->
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="configValue == '1'">
+                                            <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter Master Type</mat-label>
+                                                            <mat-select (selectionChange)="loadConfiguration($event)"
+                                                                placeholder="Setup Options" formControlName="type">
+                                                                <mat-option value="">Please Select</mat-option>
+                                                                <mat-option value="1">Wing Master</mat-option>
+                                                                <mat-option value="2">Designation Master</mat-option>
+                                                                <mat-option value="3">Category One</mat-option>
+                                                                <mat-option value="4">Category Two</mat-option>
+                                                                <mat-option value="5">Category Three</mat-option>
+                                                                <!-- <mat-option value="2">Setup Configuration</mat-option> -->
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter Name</mat-label>
+                                                            <input matInput placeholder="Enter Name"
+                                                                class="text-capitalize" type="text"
+                                                                formControlName="name"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('name').value | capitalize"
+                                                                required>
+                                                            <mat-error>Please Enter Name</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="text-center margin-top-15">
+                                            <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
+                                                (click)="addConfiguration(configValue)">Add</button>
+                                            <button *ngIf="setupUpdateFlag" mat-raised-button class="btn-success"
+                                                (click)="updateConfiguration(configValue)">Update</button>
+                                            <button mat-raised-button class="btn-danger btn-spacer"
+                                                (click)="resetForm(configValue)">Reset</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-9  col-mobile-view-add-ques remove-col-modal-padding">
+                            <div class="top-right-parameter">
+                                <div class="top-right-box">
+                                    <div>
+                                        <div class="top-right-box-content-title">
+                                            <div class="row">
+                                                <div
+                                                    class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                                                    <div [hidden]="!configFlag">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 col-mobile-view-add-ques">
+                                                                <div class=" mob-table-box">
+                                                                    <div class="example-container table-box-main">
+                                                                        <table mat-table #table
+                                                                            [dataSource]="configDataSource" matSort
+                                                                            class="table-100 text-center">
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    S.No.
+                                                                                </th>
+                                                                                <td mat-cell *matCellDef="let item">
+                                                                                    {{ item.position }}
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <!-- Name Column -->
+                                                                            <ng-container matColumnDef="name">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Genre Name
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.name">{{ item.name }}</span>
+                                                                                    <span *ngIf="!item.name">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="status">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Status
+                                                                                </th>
+                                                                                <td mat-cell *matCellDef="let item">
+                                                                                    <mat-slide-toggle
+                                                                                        class="inline-form-radio-spacing"
+                                                                                        [checked]="getActiveStatus(item.action)"
+                                                                                        aria-hidden="true"
+                                                                                        (click)="toggleStatus(item.action)">
+                                                                                    </mat-slide-toggle>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="action">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Action
+                                                                                </th>
+
+                                                                                <td mat-cell *matCellDef="let item">
+                                                                                    <i class="far fa-edit table-edit-icon"
+                                                                                        data-toggle="tooltip"
+                                                                                        data-placement="top"
+                                                                                        matTooltip="Edit"
+                                                                                        aria-hidden="true"
+                                                                                        (click)="formEdit(item.action)"></i>
+                                                                                    <i class="far fa-trash-alt table-delete-icon"
+                                                                                        data-toggle="tooltip"
+                                                                                        data-placement="top"
+                                                                                        matTooltip="Delete"
+                                                                                        aria-hidden="true"
+                                                                                        (click)="openDeleteDialog({data : item.action, type: configValue})"></i>
+                                                                                </td>
+                                                                                >
+                                                                            </ng-container>
+                                                                            <!-- Promote Column -->
+                                                                            <ng-container matColumnDef="modify">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Modify
+                                                                                </th>
+                                                                                <td mat-cell *matCellDef="let item">
+                                                                                    <i class="far fa-edit table-edit-icon"
+                                                                                        data-toggle="tooltip"
+                                                                                        data-placement="top"
+                                                                                        matTooltip="Edit"
+                                                                                        aria-hidden="true"
+                                                                                        (click)="formEdit(item.action)"></i>
+                                                                                    <i class="far fa-trash-alt table-delete-icon"
+                                                                                        data-toggle="tooltip"
+                                                                                        data-placement="top"
+                                                                                        matTooltip="Delete"
+                                                                                        aria-hidden="true"
+                                                                                        (click)="openDeleteDialog({data : item.action, type: configValue})"></i>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <tr mat-header-row class="header-normal"
+                                                                                *matHeaderRowDef="displayedColumns">
+                                                                            </tr>
+                                                                            <tr mat-row class="row-normal"
+                                                                                *matRowDef="let row; columns: displayedColumns">
+                                                                            </tr>
+                                                                            >
+                                                                        </table>
+                                                                    </div>
+                                                                    <mat-paginator #paginator
+                                                                        [pageSizeOptions]=[5,10,20] [pageSize]="10"
+                                                                        showFirstLastButtons>
+                                                                    </mat-paginator>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteConfirm($event)"
+        (deleteCancel)="deleteCancel()"></app-delete-modal>

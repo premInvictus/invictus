@@ -6,18 +6,18 @@
   </div>
   <div class="functional-button-two">
     <button mat-fab *ngIf="addOnly" (click)="addNew()">
-      <mat-icon class="btn-top-icon">person_add</mat-icon><span class="right-btn-text">Add Student</span>
+      <mat-icon class="btn-top-icon">person_add</mat-icon><span class="right-btn-text">Add Employee</span>
     </button>
   </div>
   <div class="functional-button-three">
     <button mat-fab *ngIf="editOnly"
       (click)="editForm()"><i class="fas fa-user-edit float-btn-right"></i><span class="right-btn-text">Edit
-        Student</span></button>
+        Employee</span></button>
   </div>
   <div class="functional-button-four">
     <button mat-fab *ngIf="deleteOnly"
       (click)="openDeleteDialog()">
-      <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Student</span>
+      <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Employee</span>
     </button> 
   </div>
   <div class="row remove-top-margin">

@@ -15,6 +15,7 @@ const routes: Routes = [
 			{ path: 'payroll-master', loadChildren:  '../payroll-master/payroll-master.module#PayrollMasterModule' },
 			{ path: 'auxillaries', loadChildren:  '../hr-auxiliaries/auxiliaries.module#AuxiliariesModule' },
 			{ path: 'reports', loadChildren:  '../hr-reports/reports.module#ReportsModule' },
+			{ path: 'configure', loadChildren:  '../hr-configure/hr-configure.module#HrConfigureModule' },
 		]
 	}
 ];
